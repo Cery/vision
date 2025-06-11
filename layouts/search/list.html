@@ -3,16 +3,18 @@
     <div class="container">
         <!-- 搜索框 -->
         <div class="search-header mb-5">
-            <form action="/search" method="get" class="search-form">
+            <form action="/search" method="get" class="search-form" id="searchForm">
                 <div class="row g-3">
                     <div class="col-md-8">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="q" value="{{ .Params.query }}" placeholder="输入关键词搜索...">
-                            <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                        <div class="input-group shadow-sm">
+                            <input type="text" class="form-control form-control-lg" name="q" value="{{ .Params.query }}" placeholder="输入关键词搜索..." autofocus>
+                            <button class="btn btn-primary px-4" type="submit">
+                                <i class="fas fa-search me-2"></i>搜索
+                            </button>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <select class="form-select" name="type">
+                        <select class="form-select form-select-lg shadow-sm" name="type" onchange="document.getElementById('searchForm').submit()">
                             <option value="all" {{ if eq .Params.type "all" }}selected{{ end }}>全部内容</option>
                             <option value="products" {{ if eq .Params.type "products" }}selected{{ end }}>产品</option>
                             <option value="categories" {{ if eq .Params.type "categories" }}selected{{ end }}>产品分类</option>
@@ -24,13 +26,13 @@
 
                 <!-- 高级筛选 -->
                 <div class="advanced-filters mt-4" id="advancedFilters" style="display: none;">
-                    <div class="card">
+                    <div class="card shadow-sm">
                         <div class="card-body">
                             <div class="row g-3">
                                 <!-- 产品分类筛选 -->
                                 <div class="col-md-4">
                                     <label class="form-label">产品分类</label>
-                                    <select class="form-select" name="category">
+                                    <select class="form-select" name="category" onchange="document.getElementById('searchForm').submit()">
                                         <option value="">全部分类</option>
                                         {{ range .Site.Taxonomies.categories }}
                                         <option value="{{ .Name }}" {{ if eq $.Params.category .Name }}selected{{ end }}>{{ .Name }}</option>
@@ -40,7 +42,7 @@
                                 <!-- 产品类型筛选 -->
                                 <div class="col-md-4">
                                     <label class="form-label">产品类型</label>
-                                    <select class="form-select" name="type">
+                                    <select class="form-select" name="type" onchange="document.getElementById('searchForm').submit()">
                                         <option value="">全部类型</option>
                                         {{ range .Site.Taxonomies.types }}
                                         <option value="{{ .Name }}" {{ if eq $.Params.type .Name }}selected{{ end }}>{{ .Name }}</option>
@@ -50,7 +52,7 @@
                                 <!-- 供应商筛选 -->
                                 <div class="col-md-4">
                                     <label class="form-label">供应商</label>
-                                    <select class="form-select" name="supplier">
+                                    <select class="form-select" name="supplier" onchange="document.getElementById('searchForm').submit()">
                                         <option value="">全部供应商</option>
                                         {{ range .Site.Taxonomies.suppliers }}
                                         <option value="{{ .Name }}" {{ if eq $.Params.supplier .Name }}selected{{ end }}>{{ .Name }}</option>
@@ -61,49 +63,89 @@
                                 <div class="col-md-6">
                                     <label class="form-label">价格区间</label>
                                     <div class="input-group">
-                                        <input type="number" class="form-control" name="price_min" placeholder="最低价">
+                                        <input type="number" class="form-control" name="price_min" placeholder="最低价" value="{{ .Params.price_min }}">
                                         <span class="input-group-text">-</span>
-                                        <input type="number" class="form-control" name="price_max" placeholder="最高价">
+                                        <input type="number" class="form-control" name="price_max" placeholder="最高价" value="{{ .Params.price_max }}">
                                     </div>
                                 </div>
                                 <!-- 发布时间 -->
                                 <div class="col-md-6">
                                     <label class="form-label">发布时间</label>
                                     <div class="input-group">
-                                        <input type="date" class="form-control" name="date_start">
+                                        <input type="date" class="form-control" name="date_start" value="{{ .Params.date_start }}">
                                         <span class="input-group-text">-</span>
-                                        <input type="date" class="form-control" name="date_end">
+                                        <input type="date" class="form-control" name="date_end" value="{{ .Params.date_end }}">
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-light">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <button type="reset" class="btn btn-outline-secondary">重置</button>
+                                <button type="submit" class="btn btn-primary">应用筛选</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="text-center mt-3">
-                    <button type="button" class="btn btn-link" onclick="toggleAdvancedFilters()">高级筛选 <i class="fas fa-chevron-down"></i></button>
+                    <button type="button" class="btn btn-link" onclick="toggleAdvancedFilters()">
+                        高级筛选 <i class="fas fa-chevron-down" id="filterIcon"></i>
+                    </button>
                 </div>
             </form>
         </div>
 
         <!-- 搜索结果 -->
         <div class="search-results">
-            <h2 class="mb-4">搜索结果 <small class="text-muted">(共 {{ len .Pages }} 项)</small></h2>
+            <!-- 搜索统计 -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="mb-0">搜索结果 <span class="badge bg-secondary">{{ len .Pages }}</span></h4>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline-primary active" data-view="grid">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" data-view="list">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
             
             <!-- 结果列表 -->
-            <div class="row g-4">
+            <div class="row g-4" id="searchResults">
                 {{ range .Pages }}
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100">
+                <div class="col-md-6 col-lg-4 search-item" data-type="{{ .Type }}">
+                    <div class="card h-100 shadow-sm hover-shadow">
                         {{ if .Params.feature_image }}
-                        <img src="{{ .Params.feature_image }}" class="card-img-top" alt="{{ .Title }}">
+                        <a href="{{ .Permalink }}" class="card-img-link">
+                            <img src="{{ .Params.feature_image }}" class="card-img-top" alt="{{ .Title }}" style="height: 200px; object-fit: cover;">
+                        </a>
                         {{ end }}
                         <div class="card-body">
-                            <h5 class="card-title">{{ .Title }}</h5>
-                            <p class="card-text">{{ .Summary }}</p>
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title mb-0">
+                                    <a href="{{ .Permalink }}" class="text-decoration-none text-dark">{{ .Title }}</a>
+                                </h5>
+                                <span class="badge bg-{{ if eq .Type "products" }}primary{{ else if eq .Type "suppliers" }}success{{ else if eq .Type "articles" }}info{{ else }}secondary{{ end }}">
+                                    {{ if eq .Type "products" }}产品
+                                    {{ else if eq .Type "suppliers" }}供应商
+                                    {{ else if eq .Type "articles" }}文章
+                                    {{ else }}{{ .Type }}
+                                    {{ end }}
+                                </span>
+                            </div>
+                            <p class="card-text text-muted">{{ .Summary | truncate 100 }}</p>
+                            {{ if eq .Type "products" }}
+                            <div class="product-info">
+                                {{ with .Params.model }}<small class="text-muted me-3"><i class="fas fa-tag me-1"></i>{{ . }}</small>{{ end }}
+                                {{ with .Params.series }}<small class="text-muted"><i class="fas fa-layer-group me-1"></i>{{ . }}</small>{{ end }}
+                            </div>
+                            {{ end }}
+                        </div>
+                        <div class="card-footer bg-white border-top-0">
                             <div class="d-flex justify-content-between align-items-center">
-                                <span class="badge bg-secondary">{{ .Type }}</span>
-                                <a href="{{ .Permalink }}" class="btn btn-primary btn-sm">查看详情</a>
+                                <small class="text-muted">{{ .Date.Format "2006-01-02" }}</small>
+                                <a href="{{ .Permalink }}" class="btn btn-sm btn-outline-primary">查看详情</a>
                             </div>
                         </div>
                     </div>
@@ -117,15 +159,111 @@
     </div>
 </div>
 
+<!-- 搜索相关样式 -->
+<style>
+.search-page .form-control:focus,
+.search-page .form-select:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+.search-page .hover-shadow {
+    transition: box-shadow 0.3s ease;
+}
+
+.search-page .hover-shadow:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.search-page .card-img-link {
+    overflow: hidden;
+}
+
+.search-page .card-img-link img {
+    transition: transform 0.3s ease;
+}
+
+.search-page .card-img-link:hover img {
+    transform: scale(1.05);
+}
+
+.search-page .badge {
+    font-weight: normal;
+    padding: 0.5em 0.75em;
+}
+
+.search-page .product-info {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.search-page .pagination {
+    margin-top: 2rem;
+}
+
+.search-page .pagination .page-link {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    margin: 0 0.25rem;
+}
+
+.search-page .pagination .page-item.active .page-link {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+</style>
+
 <!-- 搜索相关JS -->
 <script>
 function toggleAdvancedFilters() {
     const filters = document.getElementById('advancedFilters');
+    const icon = document.getElementById('filterIcon');
     if (filters.style.display === 'none') {
         filters.style.display = 'block';
+        icon.classList.remove('fa-chevron-down');
+        icon.classList.add('fa-chevron-up');
     } else {
         filters.style.display = 'none';
+        icon.classList.remove('fa-chevron-up');
+        icon.classList.add('fa-chevron-down');
     }
 }
+
+// 视图切换
+document.querySelectorAll('[data-view]').forEach(button => {
+    button.addEventListener('click', function() {
+        const view = this.dataset.view;
+        const results = document.getElementById('searchResults');
+        const items = document.querySelectorAll('.search-item');
+        
+        // 更新按钮状态
+        document.querySelectorAll('[data-view]').forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        
+        if (view === 'list') {
+            results.classList.remove('row-cols-1', 'row-cols-md-2', 'row-cols-lg-3');
+            results.classList.add('row-cols-1');
+            items.forEach(item => {
+                item.classList.remove('col-md-6', 'col-lg-4');
+                item.classList.add('col-12');
+            });
+        } else {
+            results.classList.remove('row-cols-1');
+            results.classList.add('row-cols-1', 'row-cols-md-2', 'row-cols-lg-3');
+            items.forEach(item => {
+                item.classList.remove('col-12');
+                item.classList.add('col-md-6', 'col-lg-4');
+            });
+        }
+    });
+});
+
+// 自动提交表单
+document.querySelectorAll('select[onchange]').forEach(select => {
+    select.addEventListener('change', function() {
+        this.form.submit();
+    });
+});
 </script>
 {{ end }}

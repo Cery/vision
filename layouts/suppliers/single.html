@@ -14,7 +14,20 @@
                             <dl class="row">
                                 <dt class="col-sm-4">企业名称</dt>
                                 <dd class="col-sm-8">
-                                    <a href="#" class="supplier-link text-decoration-none" data-supplier-id="{{ .File.ContentBaseName }}">
+                                    <a href="#" class="supplier-link text-decoration-none" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#supplierModal"
+                                        data-supplier-title="{{ .Title }}"
+                                        data-supplier-address="{{ .Params.address }}"
+                                        data-supplier-type="{{ .Params.type }}"
+                                        data-supplier-contact-person="{{ .Params.contact_person }}"
+                                        data-supplier-position="{{ .Params.position }}"
+                                        data-supplier-phone="{{ .Params.phone }}"
+                                        data-supplier-email="{{ .Params.email }}"
+                                        data-supplier-content="{{ .Content }}"
+                                        data-supplier-series="{{ .Params.series | jsonify }}"
+                                        data-supplier-models="{{ .Params.models | jsonify }}"
+                                        data-supplier-gallery="{{ .Params.gallery | jsonify }}">
                                         {{ .Title }}
                                     </a>
                                 </dd>
@@ -23,7 +36,7 @@
                                 <dd class="col-sm-8">{{ .Params.address }}</dd>
 
                                 <dt class="col-sm-4">企业类型</dt>
-                                <dd class="col-sm-8">{{ .Params.company_type }}</dd>
+                                <dd class="col-sm-8">{{ .Params.type }}</dd>
                             </dl>
                         </div>
                         <div class="col-md-6">
@@ -55,10 +68,18 @@
                             <div class="col-md-6">
                                 <dl class="row">
                                     <dt class="col-sm-4">产品系列</dt>
-                                    <dd class="col-sm-8">{{ .Params.product_series }}</dd>
+                                    <dd class="col-sm-8">
+                                        {{ range .Params.series }}
+                                        <span class="badge bg-light text-dark me-2">{{ . }}</span>
+                                        {{ end }}
+                                    </dd>
 
                                     <dt class="col-sm-4">产品型号</dt>
-                                    <dd class="col-sm-8">{{ .Params.product_models }}</dd>
+                                    <dd class="col-sm-8">
+                                        {{ range .Params.models }}
+                                        <span class="badge bg-light text-dark me-2">{{ . }}</span>
+                                        {{ end }}
+                                    </dd>
                                 </dl>
                             </div>
                         </div>
@@ -71,9 +92,8 @@
                         <div class="row g-4">
                             {{ range .Params.gallery }}
                             <div class="col-6 col-md-3">
-                                <a href="{{ .image | relURL }}" data-fslightbox="gallery" class="d-block gallery-item">
-                                    <img src="{{ .image | relURL }}" alt="{{ .alt }}" class="img-fluid rounded shadow-sm w-100" style="height: 200px; object-fit: cover;">
-                                    <div class="gallery-caption">{{ .caption }}</div>
+                                <a href="{{ . }}" data-fslightbox="gallery" class="d-block gallery-item">
+                                    <img src="{{ . }}" class="img-fluid rounded shadow-sm w-100" style="height: 200px; object-fit: cover;" onerror="handleImageError(this)">
                                 </a>
                             </div>
                             {{ end }}
@@ -82,14 +102,12 @@
                     {{ end }}
 
                     <!-- 公司简介 -->
-                    {{ with .Params.description }}
                     <div>
                         <h5 class="text-primary mb-3">公司简介</h5>
                         <div class="bg-light p-4 rounded">
-                            {{ . | markdownify }}
+                            {{ .Content }}
                         </div>
                     </div>
-                    {{ end }}
                 </div>
             </div>
         </div>
