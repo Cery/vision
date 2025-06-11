@@ -10,11 +10,10 @@
                 <div class="card-body">
                     <h5 class="card-title mb-3">产品分类</h5>
                     <div class="d-flex flex-wrap gap-2 mb-3">
-                        {{ $parsedURL := urls.Parse .Permalink }}
-                        {{ $currentPrimaryCategory := $parsedURL.Query.Get "primary_category" }}
-                        {{ $currentSecondaryCategory := $parsedURL.Query.Get "secondary_category" }}
+                        {{ $currentPrimaryCategory := .Params.primary_category }}
+                        {{ $currentSecondaryCategory := .Params.secondary_category }}
 
-                        <a href="{{ "/products/" | relURL }}" class="btn btn-outline-primary {{ if not $currentPrimaryCategory }}active{{ end }}">全部</a>
+                        <a href="{{ "products" | absURL }}" class="btn btn-outline-primary {{ if not $currentPrimaryCategory }}active{{ end }}">全部</a>
 
                         {{ $allProducts := where .Site.RegularPages "Type" "products" }}
                         {{ $primaryCategories := slice }}
@@ -29,14 +28,14 @@
                             {{ $category := . }}
                             {{ $productsInCategory := where $allProducts "Params.primary_category" $category }}
                             {{ if gt (len $productsInCategory) 0 }}
-                                <a href="{{ "/products/" | relURL }}?primary_category={{ . }}" class="btn btn-outline-primary {{ if eq $currentPrimaryCategory . }}active{{ end }}">{{ . }}</a>
+                                <a href='{{ printf "products?primary_category=%s" . | absURL }}' class="btn btn-outline-primary {{ if eq $currentPrimaryCategory . }}active{{ end }}">{{ . }}</a>
                             {{ end }}
                         {{ end }}
                     </div>
 
                     {{ if $currentPrimaryCategory }}
                     <div class="d-flex flex-wrap gap-2">
-                        <a href="{{ "/products/" | relURL }}?primary_category={{ $currentPrimaryCategory }}" class="btn btn-outline-secondary {{ if not $currentSecondaryCategory }}active{{ end }}">全部二级分类</a>
+                        <a href='{{ printf "products?primary_category=%s" $currentPrimaryCategory | absURL }}' class="btn btn-outline-secondary {{ if not $currentSecondaryCategory }}active{{ end }}">全部二级分类</a>
                         {{ $secondaryCategories := slice }}
                         {{ range (where $allProducts "Params.primary_category" $currentPrimaryCategory) }}
                             {{ with .Params.secondary_category }}
@@ -49,7 +48,7 @@
                             {{ $category := . }}
                             {{ $productsInCategory := where $allProducts "Params.secondary_category" $category }}
                             {{ if gt (len $productsInCategory) 0 }}
-                                <a href="{{ "/products/" | relURL }}?primary_category={{ $currentPrimaryCategory }}&secondary_category={{ . }}" class="btn btn-outline-secondary {{ if eq $currentSecondaryCategory . }}active{{ end }}">{{ . }}</a>
+                                <a href='{{ printf "products?primary_category=%s&secondary_category=%s" $currentPrimaryCategory . | absURL }}' class="btn btn-outline-secondary {{ if eq $currentSecondaryCategory . }}active{{ end }}">{{ . }}</a>
                             {{ end }}
                         {{ end }}
                     </div>
@@ -75,7 +74,7 @@
             <div class="card h-100 shadow-sm product-card">
                 <div class="card-img-wrapper">
                     {{ with (index .Params.gallery 0) }}
-                    <img src="{{ .image | relURL }}" class="card-img-top object-fit-cover" alt="{{ .alt }}" style="height: 220px;">
+                    <img src="{{ .image | absURL }}" class="card-img-top object-fit-cover" alt="{{ .alt }}" style="height: 220px;">
                     {{ else }}
                     <img src="https://picsum.photos/400/220?random={{ $index }}" class="card-img-top object-fit-cover" alt="{{ $page.Title }}" style="height: 220px;">
                     {{ end }}
@@ -125,7 +124,7 @@
         <ul class="pagination justify-content-center">
             {{ if $paginator.HasPrev }}
             <li class="page-item">
-                <a class="page-link" href="{{ $paginator.Prev.URL }}" aria-label="Previous">
+                <a class="page-link" href="{{ $paginator.Prev.URL | absURL }}" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
@@ -133,13 +132,13 @@
             
             {{ range $paginator.Pagers }}
             <li class="page-item {{ if eq . $paginator }}active{{ end }}">
-                <a class="page-link" href="{{ .URL }}">{{ .PageNumber }}</a>
+                <a class="page-link" href="{{ .URL | absURL }}">{{ .PageNumber }}</a>
             </li>
             {{ end }}
             
             {{ if $paginator.HasNext }}
             <li class="page-item">
-                <a class="page-link" href="{{ $paginator.Next.URL }}" aria-label="Next">
+                <a class="page-link" href="{{ $paginator.Next.URL | absURL }}" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>

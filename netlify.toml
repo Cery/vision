@@ -7,6 +7,9 @@
   HUGO_ENV = "production"
   HUGO_ENABLEGITINFO = "true"
 
+[context.production.environment]
+  HUGO_ENV = "production"
+
 [dev]
   port = 8888
   targetPort = 1313
@@ -28,10 +31,44 @@
 # 处理其他路径
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/products/*"
+  to = "/products/:splat"
   status = 200
   force = false
-  conditions = {Role = ["admin"]}
+
+[[redirects]]
+  from = "/news/*"
+  to = "/news/:splat"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/applications/*"
+  to = "/applications/:splat"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/cases/*"
+  to = "/cases/:splat"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/customs/*"
+  to = "/customs/:splat"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/cooperation/*"
+  to = "/cooperation/:splat"
+  status = 200
+  force = false
 
 # 确保Netlify Identity回调正确处理
 [[headers]]
