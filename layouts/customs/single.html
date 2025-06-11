@@ -1,0 +1,232 @@
+{{ define "main" }}
+<div class="container py-5">
+    {{ partial "breadcrumbs.html" . }}
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-10 text-center">
+            <h1 class="display-4 mb-3">{{ .Title }}</h1>
+            <p class="lead text-muted">我们提供专业的检测设备定制服务，满足您的特殊需求</p>
+            <div class="divider-custom">
+                <div class="divider-custom-line"></div>
+                <div class="divider-custom-icon"><i class="fas fa-tools"></i></div>
+                <div class="divider-custom-line"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- 左侧：定制说明 -->
+        <div class="col-lg-6 mb-4">
+            <!-- 页面描述 -->
+            <section class="mb-5">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="h4 mb-0">定制服务说明</h2>
+                    </div>
+                    <div class="card-body">
+                        {{ with .Params.page_description }}
+                        {{ . | markdownify }}
+                        {{ else }}
+                        <p>我们的定制服务流程：</p>
+                        <ol>
+                            <li>填写右侧定制需求表单，详细描述您的需求</li>
+                            <li>我们的技术团队会在1-2个工作日内与您联系</li>
+                            <li>根据您的需求进行技术评估和方案设计</li>
+                            <li>确认方案和报价后进入生产阶段</li>
+                            <li>产品完成后进行测试和验收</li>
+                            <li>交付产品并提供后续技术支持</li>
+                        </ol>
+                        <p>我们可以根据您的特殊需求定制各类检测设备，包括但不限于：</p>
+                        <ul>
+                            <li>特殊尺寸或形状的内窥镜探头</li>
+                            <li>特定行业应用的专用检测设备</li>
+                            <li>特殊环境下使用的防护型设备</li>
+                            <li>集成多种检测功能的综合设备</li>
+                        </ul>
+                        {{ end }}
+                    </div>
+                </div>
+            </section>
+
+            <!-- 定制需求列表 -->
+            {{ with .Params.request_list_title }}
+            <section class="mb-5">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="h4 mb-0">{{ . }}</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            {{ range .Site.Data.custom_requests }}
+                            <div class="list-group-item custom-request-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ .title }}</h5>
+                                    <span class="badge {{ if eq .status "已完成" }}bg-success{{ else if eq .status "处理中" }}bg-warning{{ else }}bg-info{{ end }}">{{ .status }}</span>
+                                </div>
+                                <p class="mb-1">{{ .description }}</p>
+                                <small class="text-muted">提交日期：{{ .date }}</small>
+                            </div>
+                            {{ end }}
+                        </div>
+                    </div>
+                </div>
+            </section>
+            {{ end }}
+
+            <!-- 主要内容 -->
+            {{ if .Content }}
+            <section class="mb-5">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="h4 mb-0">更多信息</h2>
+                    </div>
+                    <div class="card-body">
+                        {{ .Content }}
+                    </div>
+                </div>
+            </section>
+            {{ end }}
+        </div>
+
+        <!-- 右侧：定制需求表单 -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h4 mb-0">提交定制需求</h2>
+                </div>
+                <div class="card-body">
+                    <form id="customizationForm" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">您的姓名 <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                            <div class="invalid-feedback">请输入您的姓名</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="company" class="form-label">公司名称 <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="company" name="company" required>
+                            <div class="invalid-feedback">请输入公司名称</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">电子邮箱 <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                            <div class="invalid-feedback">请输入有效的电子邮箱</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">联系电话 <span class="text-danger">*</span></label>
+                            <input type="tel" class="form-control" id="phone" name="phone" required>
+                            <div class="invalid-feedback">请输入联系电话</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="product_type" class="form-label">产品类型 <span class="text-danger">*</span></label>
+                            <select class="form-select" id="product_type" name="product_type" required>
+                                <option value="" selected disabled>请选择产品类型</option>
+                                <option value="内窥镜">内窥镜</option>
+                                <option value="视频内窥镜">视频内窥镜</option>
+                                <option value="工业内窥镜">工业内窥镜</option>
+                                <option value="管道内窥镜">管道内窥镜</option>
+                                <option value="其他">其他</option>
+                            </select>
+                            <div class="invalid-feedback">请选择产品类型</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="requirements" class="form-label">定制需求详情 <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="requirements" name="requirements" rows="5" required></textarea>
+                            <div class="invalid-feedback">请描述您的定制需求</div>
+                            <small class="form-text text-muted">请详细描述您的需求，包括使用场景、技术参数、特殊要求等</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="budget" class="form-label">预算范围</label>
+                            <select class="form-select" id="budget" name="budget">
+                                <option value="" selected disabled>请选择预算范围</option>
+                                <option value="5万以下">5万以下</option>
+                                <option value="5-10万">5-10万</option>
+                                <option value="10-20万">10-20万</option>
+                                <option value="20-50万">20-50万</option>
+                                <option value="50万以上">50万以上</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="deadline" class="form-label">期望交付日期</label>
+                            <input type="date" class="form-control" id="deadline" name="deadline">
+                        </div>
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="agreement" name="agreement" required>
+                                <label class="form-check-label" for="agreement">
+                                    我同意贵公司收集和处理我的个人信息用于定制服务 <span class="text-danger">*</span>
+                                </label>
+                                <div class="invalid-feedback">
+                                    您必须同意才能提交
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">提交定制需求</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.divider-custom {
+    margin: 1.25rem 0 1.5rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.divider-custom .divider-custom-line {
+    width: 100%;
+    max-width: 7rem;
+    height: 0.25rem;
+    background-color: var(--bs-primary);
+    border-radius: 1rem;
+    border-color: var(--bs-primary);
+}
+
+.divider-custom .divider-custom-icon {
+    color: var(--bs-primary);
+    font-size: 1.5rem;
+    margin: 0 1.5rem;
+}
+
+.card-header {
+    border-bottom: 0;
+    padding: 1rem 1.25rem;
+}
+
+.custom-request-item {
+    transition: all 0.3s ease;
+}
+
+.custom-request-item:hover {
+    background-color: #f8f9fa;
+}
+
+.form-label {
+    font-weight: 500;
+}
+</style>
+
+<script>
+// 表单验证
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('customizationForm');
+    if (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            } else {
+                event.preventDefault();
+                // 这里可以添加表单提交的AJAX代码
+                alert('感谢您的提交！我们的团队将尽快与您联系。');
+                form.reset();
+            }
+            form.classList.add('was-validated');
+        });
+    }
+});
+</script>
+{{ end }} 

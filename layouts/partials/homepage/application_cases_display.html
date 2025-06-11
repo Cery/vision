@@ -1,0 +1,130 @@
+<section class="application-cases py-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="text-center mb-3">应用案例</h2>
+                <p class="text-center text-muted">精选行业应用案例展示</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div id="applicationCasesCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+                    <div class="carousel-inner">
+                        {{ $cases := where .Site.RegularPages "Type" "cases" }}
+                        {{ range $index, $case := first 3 $cases }}
+                        <div class="carousel-item {{ if eq $index 0 }}active{{ end }}">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="row g-0">
+                                    <div class="col-md-6">
+                                        {{ with .Params.featured_image }}
+                                        <img src="{{ . | relURL }}" class="img-fluid rounded-start h-100" alt="{{ $.Title }}" style="object-fit: cover;">
+                                        {{ else }}
+                                        <img src="https://picsum.photos/800/400?random={{ $index }}" class="img-fluid rounded-start h-100" alt="{{ .Title }}" style="object-fit: cover;">
+                                        {{ end }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card-body h-100 d-flex flex-column">
+                                            <div class="mb-3">
+                                                {{ range .Params.categories }}
+                                                <span class="badge bg-primary me-1">{{ . }}</span>
+                                                {{ end }}
+                                                {{ range .Params.areas }}
+                                                <span class="badge bg-secondary me-1">{{ . }}</span>
+                                                {{ end }}
+                                            </div>
+                                            <h3 class="card-title h4">{{ .Title }}</h3>
+                                            <p class="card-text flex-grow-1">{{ .Params.summary }}</p>
+                                            <div class="mt-3">
+                                                <a href="{{ .Permalink }}" class="btn btn-primary">查看详情</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{ end }}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#applicationCasesCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#applicationCasesCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                    <div class="carousel-indicators">
+                        {{ range $index, $_ := first 3 $cases }}
+                        <button type="button" data-bs-target="#applicationCasesCarousel" data-bs-slide-to="{{ $index }}" 
+                            {{ if eq $index 0 }}class="active" aria-current="true"{{ end }} 
+                            aria-label="Slide {{ add $index 1 }}"></button>
+                        {{ end }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.application-cases {
+    background-color: #f8f9fa;
+    margin: 2rem 0;
+}
+
+.application-cases .carousel-item {
+    padding: 1rem;
+}
+
+.application-cases .card {
+    min-height: 400px;
+    background-color: white;
+}
+
+.application-cases .card img {
+    height: 400px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.application-cases .carousel-control-prev,
+.application-cases .carousel-control-next {
+    width: 3rem;
+    opacity: 0.8;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    height: 3rem;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0 1rem;
+}
+
+.application-cases .carousel-indicators {
+    bottom: -2rem;
+}
+
+.application-cases .carousel-indicators [data-bs-target] {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--bs-primary);
+}
+
+.badge {
+    font-weight: 500;
+    padding: 0.5em 0.75em;
+}
+
+.card-title {
+    margin-bottom: 1rem;
+    color: var(--bs-primary);
+}
+
+.card-text {
+    color: #6c757d;
+    line-height: 1.6;
+}
+
+.card-body {
+    padding: 2rem;
+}
+</style>

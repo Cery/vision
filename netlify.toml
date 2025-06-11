@@ -1,0 +1,41 @@
+[build]
+  publish = "public"
+  command = "hugo --gc --minify"
+
+[build.environment]
+  HUGO_VERSION = "0.128.0"
+  HUGO_ENV = "production"
+  HUGO_ENABLEGITINFO = "true"
+
+[dev]
+  port = 8888
+  targetPort = 1313
+  publish = "public"
+  autoLaunch = true
+
+# 处理Netlify Identity邀请和恢复链接
+[[redirects]]
+  from = "/admin/*"
+  to = "/admin/index.html"
+  status = 200
+
+# 专门处理身份验证回调
+[[redirects]]
+  from = "/.netlify/identity/verify"
+  to = "/identity-callback.html"
+  status = 200
+
+# 处理其他路径
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
+  conditions = {Role = ["admin"]}
+
+# 确保Netlify Identity回调正确处理
+[[headers]]
+  for = "/identity-callback.html"
+  [headers.values]
+    Content-Type = "text/html"
+    Cache-Control = "no-store, no-cache"

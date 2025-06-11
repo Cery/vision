@@ -1,0 +1,111 @@
+{{ define "main" }}
+<div class="container py-5">
+    {{ partial "breadcrumbs.html" . }}
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 mb-3">应用领域</h1>
+            <p class="lead text-muted">我们的产品广泛应用于各个行业，为您提供专业的检测解决方案</p>
+            <div class="divider-custom">
+                <div class="divider-custom-line"></div>
+                <div class="divider-custom-icon"><i class="fas fa-industry"></i></div>
+                <div class="divider-custom-line"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {{ range .Pages }}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm application-card">
+                {{ with .Params.image }}
+                <img src="{{ . | relURL }}" class="card-img-top object-fit-cover" alt="{{ $.Title }}" style="height: 200px;">
+                {{ else }}
+                <img src="https://picsum.photos/400/200?random={{ .Title }}" class="card-img-top object-fit-cover" alt="{{ .Title }}" style="height: 200px;">
+                {{ end }}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ .Title }}</h5>
+                    {{ with .Params.summary }}
+                    <p class="card-text text-muted">{{ . }}</p>
+                    {{ else }}
+                    <p class="card-text text-muted">{{ .Summary }}</p>
+                    {{ end }}
+                    <div class="mt-auto">
+                        <a href="{{ .Permalink }}" class="btn btn-primary">了解更多</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{ else }}
+        <!-- 如果没有应用领域，显示占位内容 -->
+        {{ range seq 6 }}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm application-card">
+                <img src="https://picsum.photos/400/200?random={{ . }}" class="card-img-top object-fit-cover" alt="应用领域示例" style="height: 200px;">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">示例应用领域 {{ . }}</h5>
+                    <p class="card-text text-muted">这是一个示例应用领域描述，您可以在后台添加真实的应用领域内容。</p>
+                    <div class="mt-auto">
+                        <a href="#" class="btn btn-primary">了解更多</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{ end }}
+        {{ end }}
+    </div>
+</div>
+
+<style>
+.divider-custom {
+    margin: 1.25rem 0 1.5rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.divider-custom .divider-custom-line {
+    width: 100%;
+    max-width: 7rem;
+    height: 0.25rem;
+    background-color: var(--bs-primary);
+    border-radius: 1rem;
+    border-color: var(--bs-primary);
+}
+
+.divider-custom .divider-custom-icon {
+    color: var(--bs-primary);
+    font-size: 1.5rem;
+    margin: 0 1.5rem;
+}
+
+.application-card {
+    transition: all 0.3s ease;
+    border: none;
+    overflow: hidden;
+}
+
+.application-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.application-card .card-img-top {
+    transition: transform 0.5s ease;
+}
+
+.application-card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+.application-card .card-title {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--bs-primary);
+}
+
+.application-card .btn {
+    transition: all 0.3s ease;
+}
+</style>
+{{ end }} 

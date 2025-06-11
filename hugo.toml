@@ -1,0 +1,60 @@
+baseURL = 'http://localhost:1313/'
+languageCode = 'zh-cn'
+title = 'hugo-visndt-site'
+theme = 'ananke'
+
+[taxonomies]
+  primary_category = 'primary_categories'
+  secondary_category = 'secondary_categories'
+
+[menu]
+  [[menu.main]]
+    name = "首页"
+    url = "/"
+    weight = 10
+  [[menu.main]]
+    name = "产品中心"
+    url = "/products"
+    weight = 20
+  [[menu.main]]
+    name = "应用领域"
+    url = "/applications"
+    weight = 30
+  [[menu.main]]
+    name = "应用案例"
+    url = "/cases"
+    weight = 40
+  [[menu.main]]
+    name = "资讯中心"
+    url = "/news"
+    weight = 50
+  [[menu.main]]
+    name = "定制中心"
+    url = "/customs"
+    weight = 60
+  [[menu.main]]
+    name = "商务服务"
+    url = "/cooperation"
+    weight = 70
+
+[params]
+  [[params.carousel_images]]
+    title = "专业的工业内窥镜解决方案"
+    description = "为工业检测提供高品质、高效率的内窥镜设备"
+    link = "/products"
+    alt = "工业内窥镜解决方案"
+    image = "/images/carousel/carousel-1.jpg"
+
+  [[params.carousel_images]]
+    title = "全方位的应用领域支持"
+    description = "覆盖航空航天、能源电力、机械制造等多个领域"
+    link = "/applications"
+    alt = "应用领域展示"
+    image = "/images/carousel/carousel-2.jpg"
+
+  [[params.carousel_images]]
+    title = "创新的检测技术"
+    description = "持续创新，为客户提供更好的检测体验"
+    link = "/cases"
+    alt = "检测技术展示"
+    image = "/images/carousel/carousel-3.jpg"

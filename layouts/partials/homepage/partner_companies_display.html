@@ -1,0 +1,142 @@
+<section class="partner-companies-section py-4">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="section-title text-center">应用企业</h2>
+                <p class="text-center text-muted">值得信赖的合作伙伴</p>
+            </div>
+        </div>
+
+        <div class="partner-carousel-container">
+            <div class="partner-carousel">
+                <div class="partner-track">
+                    {{ if .Params.partner_companies_display.enable }}
+                    {{ range .Params.partner_companies_display.companies }}
+                    {{ $company := . }}
+                    <div class="partner-item">
+                        <div class="partner-card">
+                            {{ with .logo }}
+                            <img src="{{ . }}" alt="{{ $company.company_name }}" class="partner-logo">
+                            {{ end }}
+                            <p class="partner-name">{{ .company_name }}</p>
+                        </div>
+                    </div>
+                    {{ end }}
+                    {{ end }}
+                </div>
+                <!-- 复制一份用于无缝滚动 -->
+                <div class="partner-track">
+                    {{ if .Params.partner_companies_display.enable }}
+                    {{ range .Params.partner_companies_display.companies }}
+                    {{ $company := . }}
+                    <div class="partner-item">
+                        <div class="partner-card">
+                            {{ with .logo }}
+                            <img src="{{ . }}" alt="{{ $company.company_name }}" class="partner-logo">
+                            {{ end }}
+                            <p class="partner-name">{{ .company_name }}</p>
+                        </div>
+                    </div>
+                    {{ end }}
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.partner-companies-section {
+    background-color: #fff;
+}
+
+.partner-carousel-container {
+    position: relative;
+    overflow: hidden;
+    padding: 1rem 0;
+}
+
+.partner-carousel {
+    display: flex;
+    width: 200%;
+}
+
+.partner-track {
+    display: flex;
+    width: 50%;
+    animation: scroll 30s linear infinite;
+}
+
+.partner-item {
+    flex: 0 0 calc(100% / 6);
+    padding: 0 1rem;
+}
+
+.partner-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.partner-card:hover {
+    transform: translateY(-5px);
+}
+
+.partner-logo {
+    height: 60px;
+    width: auto;
+    margin-bottom: 1rem;
+    object-fit: contain;
+}
+
+.partner-name {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+/* 鼠标悬停时暂停动画 */
+.partner-carousel:hover .partner-track {
+    animation-play-state: paused;
+}
+
+/* 响应式调整 */
+@media (max-width: 1199.98px) {
+    .partner-item {
+        flex: 0 0 calc(100% / 5);
+    }
+}
+
+@media (max-width: 991.98px) {
+    .partner-item {
+        flex: 0 0 calc(100% / 4);
+    }
+}
+
+@media (max-width: 767.98px) {
+    .partner-item {
+        flex: 0 0 calc(100% / 3);
+    }
+}
+
+@media (max-width: 575.98px) {
+    .partner-item {
+        flex: 0 0 calc(100% / 2);
+    }
+}
+</style>

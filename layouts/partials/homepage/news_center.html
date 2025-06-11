@@ -1,0 +1,113 @@
+<section class="news-center py-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="text-center mb-3">资讯中心</h2>
+                <p class="text-center text-muted">了解最新行业动态与展会信息</p>
+            </div>
+        </div>
+        <div class="row">
+            <!-- 行业资讯 -->
+            <div class="col-lg-7 mb-4 mb-lg-0">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white border-0">
+                        <h3 class="h5 mb-0">{{ .Params.industry_news_title | default "行业资讯" }}</h3>
+                    </div>
+                    <div class="card-body">
+                        {{ $industryNews := where (where .Site.RegularPages "Type" "news") ".Params.categories" "intersect" (slice "行业资讯") }}
+                        {{ if gt (len $industryNews) 0 }}
+                        {{ range $index, $news := first 4 $industryNews }}
+                        <div class="news-item d-flex mb-4">
+                            <div class="news-image me-3">
+                                    {{ if .Params.thumbnail }}
+                                    <img src="{{ .Params.thumbnail | relURL }}" alt="{{ .Title }}" style="width: 120px; height: 80px; object-fit: cover;" class="rounded">
+                                {{ else }}
+                                <img src="https://picsum.photos/120/80?random={{ $index }}" alt="{{ .Title }}" style="width: 120px; height: 80px; object-fit: cover;" class="rounded">
+                                {{ end }}
+                            </div>
+                            <div class="news-content">
+                                <h4 class="h6 mb-2"><a href="{{ .Permalink }}" class="text-dark text-decoration-none hover-primary">{{ .Title }}</a></h4>
+                                <p class="small text-muted mb-1">{{ .Params.summary }}</p>
+                                <small class="text-muted">{{ .Date.Format "2006-01-02" }}</small>
+                            </div>
+                        </div>
+                            {{ end }}
+                        {{ else }}
+                            <!-- 占位资讯 -->
+                            {{ range $index := (seq 1 4) }}
+                            <div class="news-item d-flex mb-4">
+                                <div class="news-image me-3">
+                                    <img src="https://picsum.photos/120/80?random={{ $index }}" alt="示例资讯" style="width: 120px; height: 80px; object-fit: cover;" class="rounded">
+                                </div>
+                                <div class="news-content">
+                                    <h4 class="h6 mb-2"><a href="#" class="text-dark text-decoration-none hover-primary">示例行业资讯标题 {{ $index }}</a></h4>
+                                    <p class="small text-muted mb-1">这是一个示例行业资讯摘要，您可以在后台添加真实的资讯内容。</p>
+                                    <small class="text-muted">2023-{{ printf "%02d" (add 1 $index) }}-{{ printf "%02d" (add 10 $index) }}</small>
+                                </div>
+                            </div>
+                            {{ end }}
+                        {{ end }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- 展会资讯 -->
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white border-0">
+                        <h3 class="h5 mb-0">{{ .Params.exhibition_news_title | default "展会资讯" }}</h3>
+                    </div>
+                    <div class="card-body">
+                        {{ $exhibitionNews := where (where .Site.RegularPages "Type" "news") ".Params.categories" "intersect" (slice "展会资讯") }}
+                        {{ if gt (len $exhibitionNews) 0 }}
+                        {{ range first 8 $exhibitionNews }}
+                        <div class="exhibition-item d-flex justify-content-between align-items-center mb-3">
+                            <a href="{{ .Permalink }}" class="text-dark text-decoration-none hover-primary flex-grow-1">{{ .Title }}</a>
+                            <small class="text-muted ms-3">{{ .Date.Format "01-02" }}</small>
+                        </div>
+                            {{ end }}
+                        {{ else }}
+                            <!-- 占位展会资讯 -->
+                            {{ range $index := (seq 1 8) }}
+                            <div class="exhibition-item d-flex justify-content-between align-items-center mb-3">
+                                <a href="#" class="text-dark text-decoration-none hover-primary flex-grow-1">示例展会资讯标题 {{ $index }}</a>
+                                <small class="text-muted ms-3">{{ printf "%02d" (add 1 $index) }}-{{ printf "%02d" (add 10 $index) }}</small>
+                            </div>
+                            {{ end }}
+                        {{ end }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.hover-primary:hover {
+    color: var(--bs-primary) !important;
+}
+
+.news-item:last-child {
+    margin-bottom: 0 !important;
+}
+
+.exhibition-item:last-child {
+    margin-bottom: 0 !important;
+}
+
+.card-header {
+    padding: 1rem;
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+.news-image img {
+    transition: transform 0.3s ease;
+}
+
+.news-image:hover img {
+    transform: scale(1.05);
+}
+</style>

@@ -1,0 +1,211 @@
+{{ define "main" }}
+<div class="container py-5">
+    {{ partial "breadcrumbs.html" . }}
+    <h1 class="text-center mb-5">产品中心</h1>
+    
+    <!-- 产品分类筛选 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">产品分类</h5>
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        {{ $parsedURL := urls.Parse .Permalink }}
+                        {{ $currentPrimaryCategory := $parsedURL.Query.Get "primary_category" }}
+                        {{ $currentSecondaryCategory := $parsedURL.Query.Get "secondary_category" }}
+
+                        <a href="{{ "/products/" | relURL }}" class="btn btn-outline-primary {{ if not $currentPrimaryCategory }}active{{ end }}">全部</a>
+
+                        {{ $allProducts := where .Site.RegularPages "Type" "products" }}
+
+                        {{ range $primaryName, $primaryTerm := .Site.Taxonomies.primary_categories.ByCount }}
+                            {{ $productsInPrimary := where $allProducts "Params.primary_categories" "intersect" (slice $primaryTerm.Page.Title) }}
+                            {{ if gt (len $productsInPrimary) 0 }}
+                                <a href="{{ "/products/" | relURL }}?primary_category={{ $primaryTerm.Page.Title }}" class="btn btn-outline-primary {{ if eq $currentPrimaryCategory $primaryTerm.Page.Title }}active{{ end }}">{{ $primaryTerm.Page.Title }}</a>
+                            {{ end }}
+                        {{ end }}
+                    </div>
+
+                    {{ if $currentPrimaryCategory }}
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="{{ "/products/" | relURL }}?primary_category={{ $currentPrimaryCategory }}" class="btn btn-outline-secondary {{ if not $currentSecondaryCategory }}active{{ end }}">全部二级分类</a>
+                        {{ range $secondaryName, $secondaryTerm := .Site.Taxonomies.secondary_categories.ByCount }}
+                            {{ $productsInSecondary := where $allProducts "Params.primary_categories" "intersect" (slice $currentPrimaryCategory) }}
+                            {{ $productsInSecondary = where $productsInSecondary "Params.secondary_categories" "intersect" (slice $secondaryTerm.Page.Title) }}
+                            {{ if gt (len $productsInSecondary) 0 }}
+                                <a href="{{ "/products/" | relURL }}?primary_category={{ $currentPrimaryCategory }}&secondary_category={{ $secondaryTerm.Page.Title }}" class="btn btn-outline-secondary {{ if eq $currentSecondaryCategory $secondaryTerm.Page.Title }}active{{ end }}">{{ $secondaryTerm.Page.Title }}</a>
+                            {{ end }}
+                        {{ end }}
+                    </div>
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 产品列表 -->
+    <div class="row">
+        {{ $filteredProducts := $allProducts }}
+        {{ if $currentPrimaryCategory }}
+            {{ $filteredProducts = where $filteredProducts "Params.primary_categories" "intersect" (slice $currentPrimaryCategory) }}
+        {{ end }}
+        {{ if $currentSecondaryCategory }}
+            {{ $filteredProducts = where $filteredProducts "Params.secondary_categories" "intersect" (slice $currentSecondaryCategory) }}
+        {{ end }}
+
+        {{ $paginator := .Paginate $filteredProducts 12 }}
+        {{ range $index, $page := $paginator.Pages }}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm product-card">
+                <div class="card-img-wrapper">
+                    {{ with (index .Params.gallery 0) }}
+                    <img src="{{ .image | relURL }}" class="card-img-top object-fit-cover" alt="{{ .alt }}" style="height: 220px;">
+                    {{ else }}
+                    <img src="https://picsum.photos/400/220?random={{ $index }}" class="card-img-top object-fit-cover" alt="{{ $page.Title }}" style="height: 220px;">
+                    {{ end }}
+                    <div class="card-img-overlay d-flex align-items-end">
+                        <div class="w-100 text-end mb-3">
+                            <a href="{{ .Permalink }}" class="btn btn-primary">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-2">
+                        {{ with .Params.primary_categories }}
+                            {{ range . }}
+                                <span class="badge bg-primary me-1">{{ . }}</span>
+                            {{ end }}
+                        {{ end }}
+                        {{ with .Params.secondary_categories }}
+                            {{ range . }}
+                                <span class="badge bg-info text-dark">{{ . }}</span>
+                            {{ end }}
+                        {{ end }}
+                    </div>
+                    <h5 class="card-title">{{ .Title }}</h5>
+                    {{ with .Params.summary }}
+                    <p class="card-text text-muted">{{ . }}</p>
+                    {{ end }}
+                    <ul class="list-unstyled small text-muted mb-3">
+                        {{ with .Params.model }}
+                        <li><strong>型号：</strong>{{ . }}</li>
+                        {{ end }}
+                        {{ with .Params.series }}
+                        <li><strong>系列：</strong>{{ . }}</li>
+                        {{ end }}
+                        {{ with .Params.supplier }}
+                        <li><strong>供应商：</strong>{{ . }}</li>
+                        {{ end }}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {{ else }}
+            <div class="col-12 text-center">
+                <p>当前分类下暂无产品。</p>
+            </div>
+        {{ end }}
+    </div>
+
+    <!-- 分页 -->
+    {{ if gt $paginator.TotalPages 1 }}
+    <nav aria-label="Page navigation" class="mt-5">
+        <ul class="pagination justify-content-center">
+            {{ if $paginator.HasPrev }}
+            <li class="page-item">
+                <a class="page-link" href="{{ $paginator.Prev.URL }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {{ end }}
+            
+            {{ range $paginator.Pagers }}
+            <li class="page-item {{ if eq . $paginator }}active{{ end }}">
+                <a class="page-link" href="{{ .URL }}">{{ .PageNumber }}</a>
+            </li>
+            {{ end }}
+            
+            {{ if $paginator.HasNext }}
+            <li class="page-item">
+                <a class="page-link" href="{{ $paginator.Next.URL }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {{ end }}
+        </ul>
+    </nav>
+    {{ end }}
+</div>
+
+<style>
+.product-card {
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.card-img-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.card-img-wrapper img {
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .card-img-wrapper img {
+    transform: scale(1.05);
+}
+
+.card-img-overlay {
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.product-card:hover .card-img-overlay {
+    opacity: 1;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    color: var(--bs-primary);
+    margin-bottom: 0.75rem;
+}
+
+.badge {
+    padding: 0.5em 0.75em;
+    font-weight: 500;
+}
+
+.btn-outline-primary.active,
+.btn-outline-secondary.active {
+    color: white;
+}
+
+.pagination {
+    margin-bottom: 0;
+}
+
+.pagination .page-link {
+    color: var(--bs-primary);
+    border-radius: 0.25rem;
+    margin: 0 0.25rem;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+.pagination .page-link:hover {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+    color: white;
+}
+</style>
+{{ end }}

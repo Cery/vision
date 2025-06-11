@@ -1,0 +1,131 @@
+{{ define "main" }}
+<div class="search-page py-5">
+    <div class="container">
+        <!-- 搜索框 -->
+        <div class="search-header mb-5">
+            <form action="/search" method="get" class="search-form">
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="q" value="{{ .Params.query }}" placeholder="输入关键词搜索...">
+                            <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select" name="type">
+                            <option value="all" {{ if eq .Params.type "all" }}selected{{ end }}>全部内容</option>
+                            <option value="products" {{ if eq .Params.type "products" }}selected{{ end }}>产品</option>
+                            <option value="categories" {{ if eq .Params.type "categories" }}selected{{ end }}>产品分类</option>
+                            <option value="suppliers" {{ if eq .Params.type "suppliers" }}selected{{ end }}>供应商</option>
+                            <option value="articles" {{ if eq .Params.type "articles" }}selected{{ end }}>文章</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 高级筛选 -->
+                <div class="advanced-filters mt-4" id="advancedFilters" style="display: none;">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <!-- 产品分类筛选 -->
+                                <div class="col-md-4">
+                                    <label class="form-label">产品分类</label>
+                                    <select class="form-select" name="category">
+                                        <option value="">全部分类</option>
+                                        {{ range .Site.Taxonomies.categories }}
+                                        <option value="{{ .Name }}" {{ if eq $.Params.category .Name }}selected{{ end }}>{{ .Name }}</option>
+                                        {{ end }}
+                                    </select>
+                                </div>
+                                <!-- 产品类型筛选 -->
+                                <div class="col-md-4">
+                                    <label class="form-label">产品类型</label>
+                                    <select class="form-select" name="type">
+                                        <option value="">全部类型</option>
+                                        {{ range .Site.Taxonomies.types }}
+                                        <option value="{{ .Name }}" {{ if eq $.Params.type .Name }}selected{{ end }}>{{ .Name }}</option>
+                                        {{ end }}
+                                    </select>
+                                </div>
+                                <!-- 供应商筛选 -->
+                                <div class="col-md-4">
+                                    <label class="form-label">供应商</label>
+                                    <select class="form-select" name="supplier">
+                                        <option value="">全部供应商</option>
+                                        {{ range .Site.Taxonomies.suppliers }}
+                                        <option value="{{ .Name }}" {{ if eq $.Params.supplier .Name }}selected{{ end }}>{{ .Name }}</option>
+                                        {{ end }}
+                                    </select>
+                                </div>
+                                <!-- 价格区间 -->
+                                <div class="col-md-6">
+                                    <label class="form-label">价格区间</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="price_min" placeholder="最低价">
+                                        <span class="input-group-text">-</span>
+                                        <input type="number" class="form-control" name="price_max" placeholder="最高价">
+                                    </div>
+                                </div>
+                                <!-- 发布时间 -->
+                                <div class="col-md-6">
+                                    <label class="form-label">发布时间</label>
+                                    <div class="input-group">
+                                        <input type="date" class="form-control" name="date_start">
+                                        <span class="input-group-text">-</span>
+                                        <input type="date" class="form-control" name="date_end">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-3">
+                    <button type="button" class="btn btn-link" onclick="toggleAdvancedFilters()">高级筛选 <i class="fas fa-chevron-down"></i></button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 搜索结果 -->
+        <div class="search-results">
+            <h2 class="mb-4">搜索结果 <small class="text-muted">(共 {{ len .Pages }} 项)</small></h2>
+            
+            <!-- 结果列表 -->
+            <div class="row g-4">
+                {{ range .Pages }}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100">
+                        {{ if .Params.feature_image }}
+                        <img src="{{ .Params.feature_image }}" class="card-img-top" alt="{{ .Title }}">
+                        {{ end }}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ .Title }}</h5>
+                            <p class="card-text">{{ .Summary }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-secondary">{{ .Type }}</span>
+                                <a href="{{ .Permalink }}" class="btn btn-primary btn-sm">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{ end }}
+            </div>
+
+            <!-- 分页 -->
+            {{ template "_internal/pagination.html" . }}
+        </div>
+    </div>
+</div>
+
+<!-- 搜索相关JS -->
+<script>
+function toggleAdvancedFilters() {
+    const filters = document.getElementById('advancedFilters');
+    if (filters.style.display === 'none') {
+        filters.style.display = 'block';
+    } else {
+        filters.style.display = 'none';
+    }
+}
+</script>
+{{ end }}

@@ -1,0 +1,140 @@
+{{ define "main" }}
+<div class="container py-5">
+    {{ partial "breadcrumbs.html" . }}
+
+    <article class="case-detail">
+        <!-- 标题和元数据 -->
+        <header class="text-center mb-5">
+            <h1 class="display-4 mb-3">{{ .Title }}</h1>
+            <div class="meta text-muted mb-4">
+                <span class="me-3"><i class="bi bi-calendar3"></i> {{ .Date.Format "2006-01-02" }}</span>
+                {{ with .Params.author }}
+                <span class="me-3"><i class="bi bi-person"></i> {{ . }}</span>
+                {{ end }}
+            </div>
+            <div class="mb-4">
+                {{ range .Params.categories }}
+                <span class="badge bg-primary me-2">{{ . }}</span>
+                {{ end }}
+                {{ range .Params.areas }}
+                <span class="badge bg-info text-dark me-2">{{ . }}</span>
+                {{ end }}
+            </div>
+        </header>
+
+        <!-- 主图 -->
+        <div class="featured-image mb-5">
+            {{ with .Params.featured_image }}
+            <img src="{{ . | relURL }}" class="img-fluid rounded shadow-sm" alt="{{ $.Title }}">
+            {{ else }}
+            <img src="https://picsum.photos/1200/600" class="img-fluid rounded shadow-sm" alt="{{ .Title }}">
+            {{ end }}
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- 正文内容 -->
+                <div class="content-wrapper bg-white p-4 rounded shadow-sm">
+                    <div class="content">
+                        {{ .Content }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <!-- 侧边栏 -->
+                <div class="sidebar">
+                    <!-- 相关案例 -->
+                    {{ $related := .Site.RegularPages.Related . | first 3 }}
+                    {{ with $related }}
+                    <div class="related-cases bg-white p-4 rounded shadow-sm mb-4">
+                        <h4 class="mb-4">相关案例</h4>
+                        {{ range . }}
+                        <div class="related-case-item mb-4">
+                            <a href="{{ .Permalink }}" class="text-decoration-none">
+                                <div class="card hover-card">
+                                    {{ with .Params.featured_image }}
+                                    <img src="{{ . | relURL }}" class="card-img-top" alt="{{ $.Title }}" style="height: 150px; object-fit: cover;">
+                                    {{ else }}
+                                    <img src="https://picsum.photos/300/150?random={{ .Title }}" class="card-img-top" alt="{{ .Title }}" style="height: 150px; object-fit: cover;">
+                                    {{ end }}
+                                    <div class="card-body">
+                                        <h6 class="card-title text-primary mb-2">{{ .Title }}</h6>
+                                        <small class="text-muted">{{ .Date.Format "2006-01-02" }}</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        {{ end }}
+                    </div>
+                    {{ end }}
+
+                    <!-- 标签云 -->
+                    {{ if .Params.tags }}
+                    <div class="tags bg-white p-4 rounded shadow-sm">
+                        <h4 class="mb-4">标签</h4>
+                        <div class="tags-cloud">
+                            {{ range .Params.tags }}
+                            <a href="{{ "/tags/" | relLangURL }}{{ . | urlize }}" class="btn btn-outline-primary btn-sm me-2 mb-2">{{ . }}</a>
+                            {{ end }}
+                        </div>
+                    </div>
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+    </article>
+</div>
+
+<style>
+.case-detail .content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.case-detail .content img {
+    max-width: 100%;
+    height: auto;
+    margin: 2rem 0;
+    border-radius: 0.5rem;
+}
+
+.case-detail .content h2,
+.case-detail .content h3 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: var(--bs-primary);
+}
+
+.hover-card {
+    transition: all 0.3s ease;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.badge {
+    padding: 0.5em 0.75em;
+    font-weight: 500;
+}
+
+.sidebar h4 {
+    color: var(--bs-primary);
+    font-size: 1.25rem;
+}
+
+.tags-cloud .btn {
+    border-radius: 2rem;
+    transition: all 0.3s ease;
+}
+
+.tags-cloud .btn:hover {
+    background-color: var(--bs-primary);
+    color: white;
+    transform: translateY(-2px);
+}
+</style>
+{{ end }}

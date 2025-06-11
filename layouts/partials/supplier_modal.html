@@ -1,0 +1,248 @@
+<!-- 供应商详情弹窗 -->
+<div class="modal fade supplier-modal" id="supplierModal" tabindex="-1" aria-labelledby="supplierModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="supplierModalLabel">供应商详情</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="supplier-info">
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="supplier-basic-info">
+                <h6 class="mb-3"><i class="fas fa-building me-2"></i> 基本信息</h6>
+                <dl class="row mb-0">
+                  <dt class="col-sm-4">企业名称</dt>
+                  <dd class="col-sm-8" id="supplier-title"></dd>
+                  
+                  <dt class="col-sm-4">企业地址</dt>
+                  <dd class="col-sm-8" id="supplier-address"></dd>
+                  
+                  <dt class="col-sm-4">企业类型</dt>
+                  <dd class="col-sm-8" id="supplier-type"></dd>
+                </dl>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="supplier-contact-info">
+                <h6 class="mb-3"><i class="fas fa-address-card me-2"></i> 联系方式</h6>
+                <dl class="row mb-0">
+                  <dt class="col-sm-4">联系人</dt>
+                  <dd class="col-sm-8" id="supplier-contact-person"></dd>
+                  
+                  <dt class="col-sm-4">联系电话</dt>
+                  <dd class="col-sm-8"><a href="#" id="supplier-phone-link"><span id="supplier-phone"></span></a></dd>
+                  
+                  <dt class="col-sm-4">电子邮箱</dt>
+                  <dd class="col-sm-8"><a href="#" id="supplier-email-link"><span id="supplier-email"></span></a></dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 供应商描述 -->
+          <div class="supplier-description mb-4">
+            <h6 class="mb-3"><i class="fas fa-info-circle me-2"></i> 公司简介</h6>
+            <div id="supplier-description" class="description"></div>
+          </div>
+          
+          <!-- 产品系列 -->
+          <div class="supplier-series mb-4">
+            <h6 class="mb-3"><i class="fas fa-tags me-2"></i> 产品系列</h6>
+            <div id="supplier-series" class="d-flex flex-wrap gap-2">
+              <!-- 由JS动态填充 -->
+            </div>
+          </div>
+          
+          <!-- 企业相册 -->
+          <div class="supplier-gallery">
+            <h6 class="mb-3"><i class="fas fa-images me-2"></i> 企业相册</h6>
+            <div class="row g-3" id="supplier-gallery">
+              <!-- 由JS动态填充 -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+        <a href="#" class="btn btn-primary" id="supplier-contact-btn">联系供应商</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 引入 fslightbox 用于图片预览 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fslightbox/3.4.1/index.min.js"></script>
+
+<!-- 供应商弹窗脚本 -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // 初始化供应商弹窗
+  var supplierModal = document.getElementById('supplierModal');
+  if (supplierModal) {
+    supplierModal.addEventListener('show.bs.modal', function(event) {
+      // 获取触发按钮
+      var button = event.relatedTarget;
+      
+      // 获取数据
+      var title = button.getAttribute('data-supplier-title') || '未知供应商';
+      var address = button.getAttribute('data-supplier-address') || '未提供';
+      var type = button.getAttribute('data-supplier-type') || '未提供';
+      var contactPerson = button.getAttribute('data-supplier-contact-person') || '未提供';
+      var phone = button.getAttribute('data-supplier-phone') || '未提供';
+      var email = button.getAttribute('data-supplier-email') || '未提供';
+      var description = button.getAttribute('data-supplier-content') || '暂无简介';
+      var series = button.getAttribute('data-supplier-series');
+      var gallery = button.getAttribute('data-supplier-gallery');
+      
+      // 更新模态框内容
+      document.getElementById('supplierModalLabel').textContent = title;
+      document.getElementById('supplier-title').textContent = title;
+      document.getElementById('supplier-address').textContent = address;
+      document.getElementById('supplier-type').textContent = type;
+      document.getElementById('supplier-contact-person').textContent = contactPerson;
+      document.getElementById('supplier-phone').textContent = phone;
+      document.getElementById('supplier-email').textContent = email;
+      document.getElementById('supplier-description').innerHTML = description;
+      
+      // 设置电话和邮箱链接
+      var phoneLink = document.getElementById('supplier-phone-link');
+      var emailLink = document.getElementById('supplier-email-link');
+      phoneLink.href = 'tel:' + phone;
+      emailLink.href = 'mailto:' + email;
+      
+      // 设置联系按钮
+      var contactBtn = document.getElementById('supplier-contact-btn');
+      contactBtn.href = 'mailto:' + email + '?subject=询价: ' + title;
+      
+      // 处理产品系列
+      var seriesContainer = document.getElementById('supplier-series');
+      seriesContainer.innerHTML = '';
+      
+      if (series) {
+        try {
+          var seriesArray = JSON.parse(series);
+          seriesArray.forEach(function(item) {
+            var badge = document.createElement('span');
+            badge.className = 'badge bg-light text-dark';
+            badge.textContent = item;
+            seriesContainer.appendChild(badge);
+          });
+        } catch (e) {
+          seriesContainer.innerHTML = '<p class="text-muted">暂无产品系列信息</p>';
+        }
+      } else {
+        seriesContainer.innerHTML = '<p class="text-muted">暂无产品系列信息</p>';
+      }
+      
+      // 处理企业相册
+      var galleryContainer = document.getElementById('supplier-gallery');
+      galleryContainer.innerHTML = '';
+      
+      if (gallery) {
+        try {
+          var galleryArray = JSON.parse(gallery);
+          galleryArray.forEach(function(item, index) {
+            var col = document.createElement('div');
+            col.className = 'col-md-4 col-6';
+            
+            var imgWrapper = document.createElement('div');
+            imgWrapper.className = 'gallery-item';
+            
+            var img = document.createElement('img');
+            img.src = item.image;
+            img.className = 'img-fluid rounded';
+            img.alt = item.alt || '企业图片';
+            img.setAttribute('data-fslightbox', 'supplier-gallery');
+            img.setAttribute('data-caption', item.alt || '企业图片');
+            img.onclick = function() {
+              fsLightboxInstances['supplier-gallery'].open(index);
+            };
+            
+            imgWrapper.appendChild(img);
+            col.appendChild(imgWrapper);
+            galleryContainer.appendChild(col);
+          });
+          
+          // 刷新lightbox
+          refreshFsLightbox();
+        } catch (e) {
+          galleryContainer.innerHTML = '<div class="col-12"><p class="text-muted">暂无企业相册</p></div>';
+        }
+      } else {
+        galleryContainer.innerHTML = '<div class="col-12"><p class="text-muted">暂无企业相册</p></div>';
+      }
+    });
+  }
+});
+</script>
+
+<style>
+.supplier-modal .modal-content {
+  border: none;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.supplier-modal .modal-header {
+  border-bottom: none;
+  padding: 1rem 1.5rem;
+}
+
+.supplier-modal .modal-body {
+  padding: 1.5rem;
+}
+
+.supplier-modal h6 {
+  font-weight: 600;
+  position: relative;
+  color: var(--bs-primary);
+  margin-bottom: 1rem;
+}
+
+.supplier-modal dt {
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.supplier-modal dd {
+  margin-bottom: 0.5rem;
+}
+
+.supplier-modal a {
+  color: var(--bs-primary);
+  text-decoration: none;
+}
+
+.supplier-modal a:hover {
+  text-decoration: underline;
+}
+
+.supplier-modal .description {
+  line-height: 1.6;
+}
+
+.supplier-modal .badge {
+  padding: 0.5em 0.75em;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.supplier-modal .gallery-item {
+  overflow: hidden;
+  border-radius: 0.375rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  cursor: pointer;
+}
+
+.supplier-modal .gallery-item img {
+  transition: transform 0.3s ease;
+  height: 150px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.supplier-modal .gallery-item:hover img {
+  transform: scale(1.05);
+}
+</style>

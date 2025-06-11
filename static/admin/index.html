@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VisNDT管理系统</title>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <style>
+      /* 强制 Netlify CMS Markdown 编辑器的文本方向为从左到右 */
+      .nc-markdown-editor-styles {
+        direction: ltr !important;
+        text-align: left !important;
+      }
+      .nc-markdown-editor-styles textarea {
+        direction: ltr !important;
+        text-align: left !important;
+      }
+      .nc-markdown-editor-styles [contenteditable="true"] {
+        direction: ltr !important;
+        text-align: left !important;
+      }
+    </style>
+  </head>
+  <body dir="ltr">
+    <script>
+      // Check if the URL contains Netlify Identity parameters
+      const hash = window.location.hash;
+      if (hash.includes('invite_token=') || hash.includes('recovery_token=')) {
+        // 处理邀请或恢复令牌
+        window.netlifyIdentity = window.netlifyIdentity || {};
+        window.netlifyIdentity.on('init', user => {
+          if (!user) {
+            window.netlifyIdentity.on('login', () => {
+              document.location.href = '/admin/';
+            });
+          }
+        });
+      }
+    </script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  </body>
+</html>

@@ -1,0 +1,387 @@
+{{ define "main" }}
+<div class="container py-5">
+    {{ partial "breadcrumbs.html" . }}
+    <div class="row">
+        <!-- 左侧：产品画廊和信息 -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <!-- 主图 -->
+                    {{ with (index .Params.gallery 0) }}
+                    <img src="{{ .image | relURL }}" class="img-fluid rounded mb-3 main-product-image" alt="{{ .alt }}" id="main-product-image">
+                    {{ else }}
+                    <img src="https://picsum.photos/800/600?random=1" class="img-fluid rounded mb-3 main-product-image" alt="主图占位图" id="main-product-image">
+                    {{ end }}
+
+                    <!-- 副图 -->
+                    <div class="row g-2 thumbnail-gallery">
+                        {{ range first 4 (after 1 .Params.gallery) }}
+                        <div class="col-3">
+                            <img src="{{ .image | relURL }}" class="img-fluid rounded object-fit-cover thumbnail-image" alt="{{ .alt }}" style="height: 100px; width: 100%;" onclick="switchMainImage('{{ .image | relURL }}', '{{ .alt }}')">
+                        </div>
+                        {{ else }}
+                        {{ range seq 2 5 }}
+                        <div class="col-3">
+                            <img src="https://picsum.photos/150/100?random={{ . }}" class="img-fluid rounded object-fit-cover thumbnail-image" alt="副图占位图" style="height: 100px; width: 100%;" onclick="switchMainImage('https://picsum.photos/800/600?random={{ . }}', '副图占位图')">
+                        </div>
+                        {{ end }}
+                        {{ end }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧：产品基本信息和参数 -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h1 class="mb-3">{{ .Title }}</h1>
+                    {{ with .Params.summary }}
+                    <p class="lead text-muted">{{ . }}</p>
+                    {{ end }}
+
+                    <hr>
+
+                    <ul class="list-unstyled product-details-list">
+                        {{ with .Params.product_category }}
+                        <li><strong>产品分类：</strong> {{ . }}</li>
+                        {{ end }}
+                        {{ with .Params.product_type }}
+                        <li><strong>产品型式：</strong> {{ . }}</li>
+                        {{ end }}
+                        {{ with .Params.model }}
+                        <li><strong>型号：</strong> {{ . }}</li>
+                        {{ end }}
+                        {{ with .Params.series }}
+                        <li><strong>系列：</strong> {{ . }}</li>
+                        {{ end }}
+                        {{ with .Params.supplier }}
+                        <li><strong>供应商：</strong>
+                            {{ $supplierTitle := . }}
+                            {{ $foundSupplier := "" }}
+                            {{ range (where site.Pages "Section" "suppliers") }}
+                                {{ if eq .Title $supplierTitle }}
+                                    {{ $foundSupplier = . }}
+                                {{ end }}
+                            {{ end }}
+
+                            {{ if $foundSupplier }}
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#supplierModal"
+                                   data-supplier-title="{{ $foundSupplier.Title }}"
+                                   data-supplier-address="{{ $foundSupplier.Params.address }}"
+                                   data-supplier-type="{{ $foundSupplier.Params.type }}"
+                                   data-supplier-contact-person="{{ $foundSupplier.Params.contact_person }}"
+                                   data-supplier-phone="{{ $foundSupplier.Params.phone }}"
+                                   data-supplier-email="{{ $foundSupplier.Params.email }}"
+                                   data-supplier-content="{{ $foundSupplier.Params.description | safeHTML }}"
+                                   class="supplier-link">
+                                    {{ $supplierTitle }}
+                                </a>
+                            {{ else }}
+                                {{ $supplierTitle }}
+                            {{ end }}
+                        </li>
+                        {{ end }}
+                        {{ with .Params.published }}
+                        <li><strong>发布时间：</strong> {{ .Format "2006-01-02" }}</li>
+                        {{ end }}
+                    </ul>
+
+                    <!-- 联系按钮 -->
+                    <div class="mt-4 d-flex gap-3">
+                        <button class="btn btn-primary flex-grow-1" id="online-consult-btn">
+                            <i class="bi bi-chat-dots-fill me-2"></i>在线咨询
+                        </button>
+                        <button class="btn btn-outline-primary flex-grow-1" id="phone-contact-btn" data-bs-toggle="modal" data-bs-target="#phoneContactModal">
+                            <i class="bi bi-telephone-fill me-2"></i>电话沟通
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 参数组 -->
+            {{ with .Params.parameters }}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">产品参数</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {{ $displayCount := 0 }}
+                        {{ range . }}
+                            {{ if .group }}
+                                {{ range .items }}
+                                    {{ if or (eq .name "主机屏幕") (eq .name "待机时长") (eq .name "探头直径") (eq .name "像素") (eq .name "视向") (eq .name "光源") (eq .name "导向") (eq .name "管线材质") }}
+                                        {{ if lt $displayCount 8 }}
+                                            <div class="col-6 mb-2">
+                                                <strong>{{ .name }}：</strong> {{ .value }}
+                                            </div>
+                                            {{ $displayCount = add $displayCount 1 }}
+                                        {{ end }}
+                                    {{ end }}
+                                {{ end }}
+                            {{ else }}
+                                {{ if or (eq .name "主机屏幕") (eq .name "待机时长") (eq .name "探头直径") (eq .name "像素") (eq .name "视向") (eq .name "光源") (eq .name "导向") (eq .name "管线材质") }}
+                                    {{ if lt $displayCount 8 }}
+                                        <div class="col-6 mb-2">
+                                            <strong>{{ .name }}：</strong> {{ .value }}
+                                        </div>
+                                        {{ $displayCount = add $displayCount 1 }}
+                                    {{ end }}
+                                {{ end }}
+                            {{ end }}
+                        {{ end }}
+                    </div>
+                </div>
+            </div>
+            {{ end }}
+        </div>
+    </div>
+
+    <!-- 产品详细介绍 -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white p-0">
+                    <ul class="nav nav-tabs" id="productTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="intro-tab" data-bs-toggle="tab" data-bs-target="#intro" type="button" role="tab" aria-controls="intro" aria-selected="true">产品介绍</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="detailed-specs-tab" data-bs-toggle="tab" data-bs-target="#detailed-specs" type="button" role="tab" aria-controls="detailed-specs" aria-selected="false">详细参数</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="application-tab" data-bs-toggle="tab" data-bs-target="#application" type="button" role="tab" aria-controls="application" aria-selected="false">应用场景</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="download-tab" data-bs-toggle="tab" data-bs-target="#download" type="button" role="tab" aria-controls="download" aria-selected="false">资料下载</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="productTabContent">
+                        <div class="tab-pane fade show active" id="intro" role="tabpanel" aria-labelledby="intro-tab">
+                            <div class="content">
+                                {{ .Content }}
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="detailed-specs" role="tabpanel" aria-labelledby="detailed-specs-tab">
+                            {{ with .Params.parameters }}
+                            <table class="table table-bordered detailed-params-table">
+                                <tbody>
+                                    {{ range . }}
+                                        {{ if .group }}
+                                            <tr>
+                                                <td colspan="2" class="param-group-header"><h6>{{ .group }}</h6></td>
+                                            </tr>
+                                            {{ range .items }}
+                                            <tr>
+                                                <td class="param-name">{{ .name }}</td>
+                                                <td class="param-value">{{ .value }}</td>
+                                            </tr>
+                                            {{ end }}
+                                        {{ else }}
+                                            <tr>
+                                                <td class="param-name">{{ .name }}</td>
+                                                <td class="param-value">{{ .value }}</td>
+                                            </tr>
+                                        {{ end }}
+                                    {{ end }}
+                                </tbody>
+                            </table>
+                            {{ else }}
+                            <p>暂无详细参数信息。</p>
+                            {{ end }}
+                        </div>
+                        <div class="tab-pane fade" id="application" role="tabpanel" aria-labelledby="application-tab">
+                            {{ with .Params.application_scenarios }}
+                            <div class="content">
+                                {{ . }}
+                            </div>
+                            {{ else }}
+                            <p>暂无应用场景信息。</p>
+                            {{ end }}
+                        </div>
+                        <div class="tab-pane fade" id="download" role="tabpanel" aria-labelledby="download-tab">
+                            {{ with .Params.data_download }}
+                            <ul class="list-unstyled">
+                                {{ range . }}
+                                <li><a href="{{ .file_path | relURL }}" target="_blank">{{ .file_title }}</a></li>
+                                {{ end }}
+                            </ul>
+                            {{ else }}
+                            <p>暂无资料可供下载。</p>
+                            {{ end }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 相关产品 -->
+    {{ with .Params.related_products }}
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">相关产品</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled row row-cols-1 row-cols-md-3 g-4">
+                        {{ range . }}
+                        {{ $relatedProduct := site.GetPage (printf "products/%s" .) }}
+                        {{ with $relatedProduct }}
+                        <li class="col">
+                            <a href="{{ .Permalink }}" class="text-decoration-none">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-dark">{{ .Title }}</h6>
+                                        <p class="card-text text-muted small">{{ .Summary }}</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        {{ end }}
+                        {{ end }}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ end }}
+</div>
+
+<!-- Supplier Modal -->
+{{ partial "supplier_modal.html" . }}
+
+<!-- 电话联系模态框 -->
+<div class="modal fade" id="phoneContactModal" tabindex="-1" aria-labelledby="phoneContactModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="phoneContactModalLabel">联系我们</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <h4 class="mb-3">销售热线</h4>
+                <p class="fs-5 mb-2">王经理</p>
+                <p class="fs-4 mb-4 fw-bold">13800138000</p>
+                <p class="text-muted">工作时间：周一至周五 9:00-18:00</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                <a href="tel:13800138000" class="btn btn-primary" id="call-now-btn">立即拨打</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Supplier Modal -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var supplierModal = document.getElementById('supplierModal');
+        if (supplierModal) {
+            supplierModal.addEventListener('show.bs.modal', function (event) {
+                // Button that triggered the modal
+                var button = event.relatedTarget;
+                // Extract info from data-bs-* attributes
+                var supplierTitle = button.getAttribute('data-supplier-title');
+                var supplierContent = button.getAttribute('data-supplier-content');
+
+                // Update the modal's content.
+                var modalTitle = supplierModal.querySelector('.modal-title');
+                var modalBody = supplierModal.querySelector('.modal-body');
+
+                modalTitle.textContent = supplierTitle;
+                modalBody.innerHTML = supplierContent; // Use innerHTML to render HTML content
+            });
+        }
+        
+        // 在线咨询按钮点击事件
+        document.getElementById('online-consult-btn').addEventListener('click', function() {
+            // 这里后期可以接入第三方在线客服系统
+            alert('在线咨询功能即将上线，敬请期待！');
+        });
+        
+        // 检测是否为移动设备
+        function isMobileDevice() {
+            return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+        }
+        
+        // 根据设备类型设置电话按钮行为
+        var callNowBtn = document.getElementById('call-now-btn');
+        if (callNowBtn) {
+            if (isMobileDevice()) {
+                callNowBtn.classList.remove('d-none');
+            } else {
+                callNowBtn.classList.add('d-none');
+            }
+        }
+    });
+    
+    // 切换主图函数
+    function switchMainImage(src, alt) {
+        const mainImage = document.getElementById('main-product-image');
+        if (mainImage) {
+            mainImage.src = src;
+            mainImage.alt = alt;
+        }
+    }
+</script>
+
+<!-- 添加样式 -->
+<style>
+.product-details-list li {
+    margin-bottom: 0.5rem;
+}
+
+.content img {
+    max-width: 100%;
+    height: auto;
+    margin: 1rem 0;
+}
+
+.content p {
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+}
+
+.nav-tabs .nav-link.active {
+    border-color: #dee2e6 #dee2e6 #fff;
+    background-color: #fff;
+}
+
+.detailed-params-table .param-name {
+    background-color: #f8f9fa; /* Light grey background for name */
+    width: 30%; /* Adjust as needed */
+}
+
+.detailed-params-table .param-value {
+    background-color: #e9ecef; /* Slightly darker grey for value */
+}
+
+.detailed-params-table .param-group-header {
+    background-color: #ffffff; /* White background for group header */
+    font-weight: bold;
+    text-align: center;
+}
+
+/* 缩略图悬停效果 */
+.thumbnail-image {
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border: 2px solid transparent;
+}
+
+.thumbnail-image:hover {
+    transform: scale(1.05);
+    border-color: #0d6efd;
+}
+
+/* 主图动画效果 */
+.main-product-image {
+    transition: all 0.3s ease;
+}
+</style>
+{{ end }}

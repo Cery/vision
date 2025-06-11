@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>处理中...</title>
+    <meta charset="utf-8">
+    <script>
+        // This script will run when the page loads
+        window.onload = function() {
+            // Get the hash part of the URL (e.g., #invite_token=...)
+            const hash = window.location.hash;
+            const searchParams = new URLSearchParams(window.location.search);
+
+            // Check if the hash contains an invite_token or recovery_token
+            if (hash.includes('invite_token=') || hash.includes('recovery_token=')) {
+                // Store the hash in localStorage for admin page to use
+                localStorage.setItem('netlify_identity_hash', hash);
+                // Redirect to admin page
+                window.location.replace('/admin/');
+            } else if (searchParams.has('invite_token') || searchParams.has('recovery_token')) {
+                // Handle query params format
+                const token = searchParams.get('invite_token') || searchParams.get('recovery_token');
+                const tokenType = searchParams.has('invite_token') ? 'invite_token' : 'recovery_token';
+                // Store as hash format in localStorage
+                localStorage.setItem('netlify_identity_hash', `#${tokenType}=${token}`);
+                // Redirect to admin page
+                window.location.replace('/admin/');
+            } else {
+                // Otherwise, redirect to the homepage
+                window.location.replace('/');
+            }
+        };
+    </script>
+</head>
+<body>
+    <p>正在处理您的请求，请稍候...</p>
+</body>
+</html>

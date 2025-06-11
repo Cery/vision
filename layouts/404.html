@@ -1,0 +1,32 @@
+{{ define "main" }}
+<div class="error-page text-center py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h1 class="display-1 text-primary mb-4">404</h1>
+                <h2 class="mb-4">抱歉，页面未找到</h2>
+                <p class="lead mb-5">您访问的页面可能已被移除、名称已更改或暂时不可用。</p>
+                
+                <div class="suggestions mb-5">
+                    <h3 class="h5 mb-4">您可以尝试：</h3>
+                    <ul class="list-unstyled">
+                        <li><a href="/" class="btn btn-outline-primary mb-2"><i class="fas fa-home me-2"></i>返回首页</a></li>
+                        <li><a href="/products" class="btn btn-outline-primary mb-2"><i class="fas fa-box me-2"></i>浏览产品</a></li>
+                        <li><a href="/contact" class="btn btn-outline-primary mb-2"><i class="fas fa-envelope me-2"></i>联系我们</a></li>
+                    </ul>
+                </div>
+
+                <div class="search-box">
+                    <h3 class="h5 mb-4">搜索网站：</h3>
+                    <form action="/search" method="get" class="d-flex justify-content-center">
+                        <div class="input-group" style="max-width: 500px;">
+                            <input type="text" class="form-control" placeholder="输入关键词..." name="q">
+                            <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{ end }}

@@ -1,0 +1,165 @@
+{{ define "main" }}
+<div class="container py-5">
+    {{ partial "breadcrumbs.html" . }}
+
+    <div class="row">
+        <div class="col-lg-8">
+            <article class="card shadow-sm mb-4">
+                <!-- 文章头部信息 -->
+                <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                    <div class="d-flex flex-wrap align-items-center mb-2">
+                        {{ if eq .Params.category "industry" }}
+                        <span class="badge bg-primary me-2">行业资讯</span>
+                        {{ else if eq .Params.category "exhibition" }}
+                        <span class="badge bg-success me-2">展会资讯</span>
+                        {{ end }}
+                        {{ range .Params.tags }}
+                        <span class="badge bg-secondary me-2">{{ . }}</span>
+                        {{ end }}
+                    </div>
+                    <h1 class="card-title h2 mb-3">{{ .Title }}</h1>
+                    <div class="text-muted small mb-3">
+                        <span class="me-3"><i class="bi bi-calendar3"></i> {{ .Date.Format "2006-01-02" }}</span>
+                        {{ with .Params.author }}
+                        <span class="me-3"><i class="bi bi-person"></i> {{ . }}</span>
+                        {{ end }}
+                        {{ with .Params.views }}
+                        <span><i class="bi bi-eye"></i> {{ . }}次浏览</span>
+                        {{ end }}
+                    </div>
+                </div>
+
+                <!-- 特色图片 -->
+                {{ with .Params.featured_image }}
+                <img src="{{ . | relURL }}" class="card-img-top" alt="{{ $.Title }}" style="height: 400px; object-fit: cover;">
+                {{ else }}
+                <img src="https://picsum.photos/1200/400?random={{ .File.UniqueID }}" class="card-img-top" alt="{{ .Title }}" style="height: 400px; object-fit: cover;">
+                {{ end }}
+
+                <!-- 文章内容 -->
+                <div class="card-body px-4 py-5">
+                    <div class="content article-content">
+                        {{ .Content }}
+                    </div>
+
+                    <!-- 文章标签 -->
+                    {{ with .Params.tags }}
+                    <div class="mt-5 pt-4 border-top">
+                        <h5 class="mb-3">文章标签</h5>
+                        {{ range . }}
+                        <a href="/tags/{{ . | urlize }}/" class="btn btn-outline-secondary btn-sm me-2 mb-2">{{ . }}</a>
+                        {{ end }}
+                    </div>
+                    {{ end }}
+                </div>
+            </article>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- 相关文章 -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">相关文章</h5>
+                </div>
+                <div class="card-body p-0">
+                    {{ $currentPage := . }}
+                    {{ $relatedPages := where (where .Site.RegularPages "Type" "news") "Permalink" "ne" .Permalink }}
+                    {{ $relatedByCategory := where $relatedPages "Params.category" .Params.category }}
+                    {{ range first 5 $relatedByCategory }}
+                    <div class="related-article p-3 border-bottom">
+                        <div class="d-flex">
+                            {{ with .Params.featured_image }}
+                            <img src="{{ . | relURL }}" class="me-3 rounded" alt="{{ $.Title }}" style="width: 80px; height: 60px; object-fit: cover;">
+                            {{ else }}
+                            <img src="https://picsum.photos/160/120?random={{ .File.UniqueID }}" class="me-3 rounded" alt="{{ .Title }}" style="width: 80px; height: 60px; object-fit: cover;">
+                            {{ end }}
+                            <div>
+                                <h6 class="mb-1"><a href="{{ .Permalink }}" class="text-dark text-decoration-none hover-primary">{{ .Title }}</a></h6>
+                                <small class="text-muted">{{ .Date.Format "2006-01-02" }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {{ end }}
+                </div>
+            </div>
+
+            <!-- 热门文章 -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">热门文章</h5>
+                </div>
+                <div class="card-body p-0">
+                    {{ $popularPages := where .Site.RegularPages "Type" "news" }}
+                    {{ $sortedPages := first 5 (sort $popularPages "Date" "desc") }}
+                    {{ range $sortedPages }}
+                    <div class="popular-article p-3 border-bottom">
+                        <div class="d-flex">
+                            {{ with .Params.featured_image }}
+                            <img src="{{ . | relURL }}" class="me-3 rounded" alt="{{ $.Title }}" style="width: 80px; height: 60px; object-fit: cover;">
+                            {{ else }}
+                            <img src="https://picsum.photos/160/120?random={{ .File.UniqueID }}" class="me-3 rounded" alt="{{ .Title }}" style="width: 80px; height: 60px; object-fit: cover;">
+                            {{ end }}
+                            <div>
+                                <h6 class="mb-1"><a href="{{ .Permalink }}" class="text-dark text-decoration-none hover-primary">{{ .Title }}</a></h6>
+                                <small class="text-muted">{{ .Date.Format "2006-01-02" }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.article-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #2c3e50;
+}
+
+.article-content p {
+    margin-bottom: 1.5rem;
+}
+
+.article-content img {
+    max-width: 100%;
+    height: auto;
+    margin: 2rem 0;
+    border-radius: 0.5rem;
+}
+
+.article-content h2,
+.article-content h3,
+.article-content h4 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: var(--bs-primary);
+}
+
+.hover-primary:hover {
+    color: var(--bs-primary) !important;
+}
+
+.related-article:last-child,
+.popular-article:last-child {
+    border-bottom: none !important;
+}
+
+.badge {
+    padding: 0.5em 1em;
+    font-weight: 500;
+}
+
+.card-title.h2 {
+    color: #2c3e50;
+    line-height: 1.4;
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+</style>
+{{ end }}

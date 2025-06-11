@@ -1,0 +1,105 @@
+{{ define "main" }}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <!-- 供应商详情内容 -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h1 class="card-title h2 mb-4">{{ .Title }}</h1>
+                    
+                    <!-- 基本信息 -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5 class="text-primary mb-3">基本信息</h5>
+                            <dl class="row">
+                                <dt class="col-sm-4">企业名称</dt>
+                                <dd class="col-sm-8">
+                                    <a href="#" class="supplier-link text-decoration-none" data-supplier-id="{{ .File.ContentBaseName }}">
+                                        {{ .Title }}
+                                    </a>
+                                </dd>
+
+                                <dt class="col-sm-4">企业地址</dt>
+                                <dd class="col-sm-8">{{ .Params.address }}</dd>
+
+                                <dt class="col-sm-4">企业类型</dt>
+                                <dd class="col-sm-8">{{ .Params.company_type }}</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="text-primary mb-3">联系方式</h5>
+                            <dl class="row">
+                                <dt class="col-sm-4">联系人</dt>
+                                <dd class="col-sm-8">{{ .Params.contact_person }}</dd>
+
+                                <dt class="col-sm-4">职务</dt>
+                                <dd class="col-sm-8">{{ .Params.position }}</dd>
+
+                                <dt class="col-sm-4">电话</dt>
+                                <dd class="col-sm-8">
+                                    <a href="tel:{{ .Params.phone }}" class="text-decoration-none">{{ .Params.phone }}</a>
+                                </dd>
+
+                                <dt class="col-sm-4">邮箱</dt>
+                                <dd class="col-sm-8">
+                                    <a href="mailto:{{ .Params.email }}" class="text-decoration-none">{{ .Params.email }}</a>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <!-- 产品信息 -->
+                    <div class="mb-4">
+                        <h5 class="text-primary mb-3">产品信息</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <dl class="row">
+                                    <dt class="col-sm-4">产品系列</dt>
+                                    <dd class="col-sm-8">{{ .Params.product_series }}</dd>
+
+                                    <dt class="col-sm-4">产品型号</dt>
+                                    <dd class="col-sm-8">{{ .Params.product_models }}</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 企业相册 -->
+                    {{ if .Params.gallery }}
+                    <div class="mb-4">
+                        <h5 class="text-primary mb-3">企业相册</h5>
+                        <div class="row g-4">
+                            {{ range .Params.gallery }}
+                            <div class="col-6 col-md-3">
+                                <a href="{{ .image | relURL }}" data-fslightbox="gallery" class="d-block gallery-item">
+                                    <img src="{{ .image | relURL }}" alt="{{ .alt }}" class="img-fluid rounded shadow-sm w-100" style="height: 200px; object-fit: cover;">
+                                    <div class="gallery-caption">{{ .caption }}</div>
+                                </a>
+                            </div>
+                            {{ end }}
+                        </div>
+                    </div>
+                    {{ end }}
+
+                    <!-- 公司简介 -->
+                    {{ with .Params.description }}
+                    <div>
+                        <h5 class="text-primary mb-3">公司简介</h5>
+                        <div class="bg-light p-4 rounded">
+                            {{ . | markdownify }}
+                        </div>
+                    </div>
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 引入供应商弹窗模板 -->
+{{ partial "supplier_modal.html" . }}
+
+<!-- 引入相关样式和脚本 -->
+<link rel="stylesheet" href="/css/supplier-modal.css">
+<script src="/js/supplier-modal.js"></script>
+{{ end }}

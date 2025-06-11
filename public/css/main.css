@@ -1,0 +1,362 @@
+/* 自定义样式 */
+:root {
+    --small-font-size: 0.875rem; /* 统一小号字体 */
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --info-color: #0dcaf0;
+}
+
+body {
+    font-size: var(--small-font-size);
+    background-color: #f0f2f5; /* 添加一个明显的背景色 */
+}
+
+.logo-text {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 1.8rem;
+    color: #2c3e50;
+}
+
+.logo-subtext {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+/* 顶部栏样式 */
+.top-bar {
+    background-color: #f8f9fa;
+    font-size: var(--small-font-size);
+    position: relative;
+    z-index: 1000;
+    min-height: 40px;
+}
+
+/* 搜索框样式 */
+.search-container {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.search-icon {
+    cursor: pointer;
+    padding: 5px;
+    transition: transform 0.2s;
+    color: #6c757d;
+}
+
+.search-icon:hover {
+    transform: scale(1.1);
+    color: #495057;
+}
+
+.search-box {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 0;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1001;
+    overflow: hidden;
+    height: 30px;
+}
+
+.search-box.active {
+    opacity: 1;
+    visibility: visible;
+    width: 300px;
+}
+
+.search-content {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 15px;
+    width: 100%;
+}
+
+.search-tabs {
+    display: flex;
+    margin-right: 10px;
+    white-space: nowrap;
+}
+
+.search-tab {
+    padding: 0 5px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    font-size: 0.75rem;
+}
+
+.search-tab.active {
+    border-bottom-color: #0d6efd;
+    color: #0d6efd;
+    font-weight: 500;
+}
+
+.search-input {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    height: 100%;
+    padding: 0 10px;
+    font-size: var(--small-font-size);
+    background: transparent;
+    min-width: 150px;
+}
+
+.search-btn {
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0 5px;
+    flex-shrink: 0;
+}
+
+/* 主导航菜单左对齐 */
+.navbar-collapse {
+    justify-content: flex-start !important;
+}
+
+.navbar-nav {
+    margin-left: 0 !important;
+}
+
+.nav-item {
+    margin-right: 15px;
+}
+
+.social-icon {
+    transition: transform 0.3s ease;
+    margin: 0 5px;
+}
+
+.social-icon:hover {
+    transform: scale(1.2);
+}
+
+.qr-code {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    width: 120px;
+    height: 120px;
+    background-color: white;
+    padding: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.social-container {
+    position: relative;
+    display: inline-block;
+}
+
+.social-container:hover .qr-code {
+    display: block;
+}
+
+.navbar {
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.footer {
+    background-color: #2c3e50;
+    color: white;
+}
+
+.footer a {
+    color: #bdc3c7;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    color: white;
+}
+
+.working-hours {
+    background-color: #e74c3c;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: var(--small-font-size);
+}
+
+/* 底部logo样式 */
+.footer-logo {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 2rem;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.footer-logo-subtext {
+    font-size: 1rem;
+    color: #bdc3c7;
+    margin-bottom: 20px;
+}
+
+/* 友情链接样式 */
+.friend-links-container {
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.friend-links-title {
+    margin-right: 15px;
+    white-space: nowrap;
+}
+
+.friend-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.friend-links a {
+    margin: 0 10px;
+    white-space: nowrap;
+}
+
+/* 移动端优化 */
+@media (max-width: 767.98px) {
+    .top-bar {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        min-height: 60px;
+    }
+    
+    .top-bar .container {
+        position: relative;
+    }
+    
+    .top-bar .col-md-6:first-child {
+        margin-bottom: 10px;
+    }
+    
+    .search-container {
+        position: static;
+    }
+    
+    .search-box {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        width: auto;
+        height: 40px;
+        z-index: 1050;
+        transform: translateY(-100px);
+    }
+    
+    .search-box.active {
+        transform: translateY(0);
+        width: auto;
+    }
+    
+    .navbar {
+        margin-top: 10px;
+    }
+    
+    .navbar-brand {
+        margin-right: 0;
+    }
+    
+    .friend-links-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .friend-links {
+        justify-content: flex-start;
+        margin-top: 10px;
+    }
+    
+    .friend-links a {
+        margin: 0 10px 5px 0;
+    }
+    
+    .navbar-collapse {
+        justify-content: flex-end !important;
+    }
+}
+
+/* 产品详情页样式 */
+
+.product-details-list li,
+.parameters-list li {
+    margin-bottom: 8px;
+    font-size: var(--small-font-size);
+}
+
+.product-details-list strong,
+.parameters-list strong {
+    min-width: 80px; /* 确保标签对齐 */
+    display: inline-block;
+    color: #34495e;
+}
+
+.product-details-list,
+.parameters-list {
+    padding-left: 0;
+}
+
+.card-body .lead {
+    font-size: 1rem;
+}
+
+.related-products-section .card-img-top {
+    height: 220px;
+    object-fit: cover;
+}
+
+.product-detail-thumbnail {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.product-detail-thumbnail:hover {
+    transform: scale(1.05);
+}
+
+.tab-content {
+    padding-top: 15px;
+}
+
+.tab-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 15px 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* 响应式调整 */
+@media (max-width: 767.98px) {
+    .product-details-list strong,
+    .parameters-list strong {
+        min-width: 60px;
+    }
+}
+
+.card {
+    border: 1px solid #dee2e6; /* 为卡片添加边框 */
+} 

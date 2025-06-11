@@ -1,0 +1,185 @@
+backend:
+  name: git-gateway
+  branch: master
+
+media_folder: "static/images"
+public_folder: "/images"
+
+collections:
+  - name: "homepage"
+    label: "首页内容"
+    files:
+      - label: "首页设置"
+        name: "index"
+        file: "content/_index.md"
+        fields:
+          - {label: "标题", name: "title", widget: "string", required: false}
+          - label: "轮播图"
+            name: "carousel_images"
+            widget: "list"
+            fields:
+              - {label: "图片", name: "image", widget: "image"}
+              - {label: "alt文本", name: "alt", widget: "string", required: false}
+              - {label: "链接", name: "link", widget: "string", required: false}
+          - label: "新产品推荐"
+            name: "new_product_recommendations"
+            widget: "list"
+            fields:
+              - {label: "产品", name: "product", widget: "relation", collection: "products", search_fields: ["title", "model"], value_field: "title", display_fields: ["title"], multiple: true}
+              - {label: "显示/隐藏", name: "display", widget: "boolean", default: true}
+          - label: "应用领域"
+            name: "application_areas_display"
+            widget: "list"
+            fields:
+              - {label: "领域", name: "area", widget: "relation", collection: "application_areas", search_fields: ["title"], value_field: "slug", display_fields: ["title"], multiple: true}
+          - label: "应用案例"
+            name: "application_cases_display"
+            widget: "list"
+            fields:
+              - {label: "案例", name: "case", widget: "relation", collection: "application_cases", search_fields: ["title"], value_field: "slug", display_fields: ["title"], multiple: true}
+          - label: "应用企业"
+            name: "partner_companies_display"
+            widget: "list"
+            fields:
+              - {label: "企业", name: "company", widget: "relation", collection: "partner_companies", search_fields: ["name"], value_field: "slug", display_fields: ["name"], multiple: true}
+          - {label: "行业资讯标题", name: "industry_news_title", widget: "string", default: "行业资讯"}
+          - {label: "展会资讯标题", name: "exhibition_news_title", widget: "string", default: "展会资讯"}
+
+  - name: "news"
+    label: "资讯中心"
+    folder: "content/news"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "标题", name: "title", widget: "string"}
+      - {label: "发布日期", name: "date", widget: "datetime", format: "YYYY-MM-DD"}
+      - {label: "特色图片", name: "thumbnail", widget: "image", required: false}
+      - label: "分类"
+        name: "categories"
+        widget: "select"
+        multiple: true
+        options: ["行业资讯", "展会资讯", "技术动态", "公司新闻"]
+      - label: "标签"
+        name: "tags"
+        widget: "list"
+        required: false
+      - {label: "摘要", name: "summary", widget: "text"}
+      - {label: "正文", name: "body", widget: "markdown"}
+      - {label: "相关技术", name: "related_tech", widget: "list", required: false}
+      - {label: "浏览量", name: "views", widget: "number", default: 0, required: false}
+
+  - name: "product_categories"
+    label: "产品分类"
+    folder: "content/product_categories"
+    create: true
+    slug: "{{slug}}"
+    identifier_field: "title"
+    fields:
+      - {label: "标题", name: "title", widget: "string"}
+      - {label: "描述", name: "body", widget: "text"}
+
+  - name: "product_types"
+    label: "产品类型"
+    folder: "content/product_types"
+    create: true
+    slug: "{{slug}}"
+    identifier_field: "title"
+    fields:
+      - {label: "标题", name: "title", widget: "string"}
+      - {label: "描述", name: "body", widget: "text"}
+
+  - name: "products"
+    label: "产品"
+    folder: "content/products"
+    create: true
+    slug: "{{slug}}"
+    identifier_field: "title"
+    fields:
+      - {label: "标题", name: "title", widget: "string"}
+      - {label: "简述", name: "summary", widget: "text"}
+      - label: "一级分类"
+        name: "primary_category"
+        widget: "relation"
+        collection: "product_categories"
+        search_fields: ["title"]
+        value_field: "title"
+        display_fields: ["title"]
+      - label: "二级分类"
+        name: "secondary_category"
+        widget: "relation"
+        collection: "product_categories"
+        search_fields: ["title"]
+        value_field: "title"
+        display_fields: ["title"]
+      - {label: "型号", name: "model", widget: "string"}
+      - {label: "系列", name: "series", widget: "string"}
+      - {label: "供应商", name: "supplier", widget: "string"}
+      - {label: "发布时间", name: "published", widget: "datetime"}
+      - label: "产品图库"
+        name: "gallery"
+        widget: "list"
+        fields:
+          - {label: "图片", name: "image", widget: "image"}
+          - {label: "图片描述", name: "alt", widget: "string"}
+          - {label: "是否主图", name: "is_main", widget: "boolean", required: false, default: false}
+      - label: "参数规格"
+        name: "parameters"
+        widget: "list"
+        fields:
+          - {label: "参数名称", name: "name", widget: "string"}
+          - {label: "参数值", name: "value", widget: "string"}
+      - {label: "应用场景", name: "application_scenarios", widget: "markdown", required: false}
+      - label: "资料下载"
+        name: "data_download"
+        widget: "list"
+        required: false
+        fields:
+          - {label: "文件标题", name: "file_title", widget: "string"}
+          - {label: "文件路径", name: "file_path", widget: "string"}
+      - label: "相关产品"
+        name: "related_products"
+        widget: "relation"
+        collection: "products"
+        search_fields: ["title", "model"]
+        value_field: "title"
+        display_fields: ["title"]
+        multiple: true
+        required: false
+      - {label: "产品介绍", name: "body", widget: "markdown"}
+
+
+  - name: "suppliers"
+    label: "供应商"
+    folder: "content/suppliers"
+    create: true
+    fields:
+      - {label: "企业名称", name: "title", widget: "string"}
+      - {label: "企业地址", name: "address", widget: "string"}
+      - {label: "企业类型", name: "type", widget: "string"}
+      - label: "产品系列"
+        name: "series"
+        widget: "relation"
+        collection: "product_types"
+        search_fields: ["title"]
+        value_field: "title"
+        display_fields: ["title"]
+        multiple: true
+      - label: "产品型号"
+        name: "models"
+        widget: "relation"
+        collection: "products"
+        search_fields: ["title", "model"]
+        value_field: "title"
+        display_fields: ["title"]
+        multiple: true
+      - label: "企业相册"
+        name: "gallery"
+        widget: "list"
+        fields:
+          - {label: "图片", name: "image", widget: "image"}
+          - {label: "描述", name: "alt", widget: "string"}
+      - {label: "联系人", name: "contact_person", widget: "string"}
+      - {label: "职务", name: "position", widget: "string"}
+      - {label: "电话", name: "phone", widget: "string"}
+      - {label: "邮箱", name: "email", widget: "string"}
+      - {label: "公司简介", name: "body", widget: "markdown"}

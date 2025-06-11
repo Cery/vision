@@ -1,0 +1,255 @@
+{{ define "main" }}
+<div class="container py-5">
+    {{ partial "breadcrumbs.html" . }}
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-10 text-center">
+            <h1 class="display-4 mb-3">{{ .Title }}</h1>
+            <p class="lead text-muted">我们致力于为客户提供专业的商务服务与支持</p>
+            <div class="divider-custom">
+                <div class="divider-custom-line"></div>
+                <div class="divider-custom-icon"><i class="fas fa-handshake"></i></div>
+                <div class="divider-custom-line"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- 左侧内容 -->
+        <div class="col-lg-8 mb-4">
+            <!-- 平台目标 -->
+            <section class="mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="h4 mb-0">平台目标</h2>
+                    </div>
+                    <div class="card-body">
+                        {{ with .Params.platform_goal }}
+                        {{ . | markdownify }}
+                        {{ else }}
+                        <p>维森视觉检测仪器网致力于成为中国领先的工业内窥镜与视觉检测设备专业服务平台，为用户提供全面的产品信息、专业的技术支持和高效的商务服务。</p>
+                        <p>我们的目标是：</p>
+                        <ul>
+                            <li>汇聚国内外优质的视觉检测设备资源</li>
+                            <li>提供专业的行业知识与应用解决方案</li>
+                            <li>建立高效的供需对接渠道</li>
+                            <li>促进行业技术交流与创新发展</li>
+                        </ul>
+                        {{ end }}
+                    </div>
+                </div>
+            </section>
+
+            <!-- 服务与政策 -->
+            <section class="mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="h4 mb-0">服务与政策</h2>
+                    </div>
+                    <div class="card-body">
+                        {{ with .Params.service_policy }}
+                        {{ . | markdownify }}
+                        {{ else }}
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="service-item">
+                                    <div class="service-icon">
+                                        <i class="fas fa-search"></i>
+                                    </div>
+                                    <h3 class="h5">产品匹配服务</h3>
+                                    <p>根据您的需求，我们提供专业的产品推荐和技术参数匹配服务，帮助您找到最适合的检测设备。</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="service-item">
+                                    <div class="service-icon">
+                                        <i class="fas fa-tools"></i>
+                                    </div>
+                                    <h3 class="h5">技术支持</h3>
+                                    <p>提供产品使用培训、技术咨询和故障排除等全方位技术支持，确保您能充分发挥设备性能。</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="service-item">
+                                    <div class="service-icon">
+                                        <i class="fas fa-truck"></i>
+                                    </div>
+                                    <h3 class="h5">物流配送</h3>
+                                    <p>与多家物流公司合作，提供安全、快捷的配送服务，确保产品及时送达并完好无损。</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="service-item">
+                                    <div class="service-icon">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                    <h3 class="h5">售后保障</h3>
+                                    <p>提供标准的产品质保服务，以及延长保修、定期维护等增值服务，让您无后顾之忧。</p>
+                                </div>
+                            </div>
+                        </div>
+                        {{ end }}
+                    </div>
+                </div>
+            </section>
+
+            <!-- 主要内容 -->
+            {{ if .Content }}
+            <section class="mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="h4 mb-0">更多信息</h2>
+                    </div>
+                    <div class="card-body">
+                        {{ .Content }}
+                    </div>
+                </div>
+            </section>
+            {{ end }}
+        </div>
+
+        <!-- 右侧联系表单 -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm sticky-top" style="top: 20px; z-index: 100;">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h4 mb-0">商务咨询</h2>
+                </div>
+                <div class="card-body">
+                    <form id="businessForm" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="contact_name" class="form-label">联系人 <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="contact_name" name="contact_name" required>
+                            <div class="invalid-feedback">请输入联系人姓名</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contact_company" class="form-label">公司名称</label>
+                            <input type="text" class="form-control" id="contact_company" name="contact_company">
+                        </div>
+                        <div class="mb-3">
+                            <label for="contact_phone" class="form-label">联系电话 <span class="text-danger">*</span></label>
+                            <input type="tel" class="form-control" id="contact_phone" name="contact_phone" required>
+                            <div class="invalid-feedback">请输入联系电话</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contact_email" class="form-label">电子邮箱 <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="contact_email" name="contact_email" required>
+                            <div class="invalid-feedback">请输入有效的电子邮箱</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="business_type" class="form-label">业务类型 <span class="text-danger">*</span></label>
+                            <select class="form-select" id="business_type" name="business_type" required>
+                                <option value="" selected disabled>请选择业务类型</option>
+                                <option value="产品采购">产品采购</option>
+                                <option value="技术咨询">技术咨询</option>
+                                <option value="合作代理">合作代理</option>
+                                <option value="供应商合作">供应商合作</option>
+                                <option value="其他">其他</option>
+                            </select>
+                            <div class="invalid-feedback">请选择业务类型</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">咨询内容 <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                            <div class="invalid-feedback">请输入咨询内容</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">提交咨询</button>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="contact-info">
+                        <h3 class="h5 mb-3">联系方式</h3>
+                        <p><i class="fas fa-phone-alt me-2"></i> 电话：400-123-4567</p>
+                        <p><i class="fas fa-envelope me-2"></i> 邮箱：info@visndt.com</p>
+                        <p><i class="fas fa-map-marker-alt me-2"></i> 地址：上海市浦东新区张江高科技园区</p>
+                        <p><i class="fas fa-clock me-2"></i> 工作时间：周一至周五 9:00-18:00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.divider-custom {
+    margin: 1.25rem 0 1.5rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.divider-custom .divider-custom-line {
+    width: 100%;
+    max-width: 7rem;
+    height: 0.25rem;
+    background-color: var(--bs-primary);
+    border-radius: 1rem;
+    border-color: var(--bs-primary);
+}
+
+.divider-custom .divider-custom-icon {
+    color: var(--bs-primary);
+    font-size: 1.5rem;
+    margin: 0 1.5rem;
+}
+
+.card-header {
+    border-bottom: 0;
+    padding: 1rem 1.25rem;
+}
+
+.service-item {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.service-item:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-5px);
+}
+
+.service-icon {
+    width: 50px;
+    height: 50px;
+    background-color: var(--bs-primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.contact-info p {
+    margin-bottom: 0.5rem;
+}
+
+.form-label {
+    font-weight: 500;
+}
+</style>
+
+<script>
+// 表单验证
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('businessForm');
+    if (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            } else {
+                event.preventDefault();
+                // 这里可以添加表单提交的AJAX代码
+                alert('感谢您的咨询！我们将尽快与您联系。');
+                form.reset();
+            }
+            form.classList.add('was-validated');
+        });
+    }
+});
+</script>
+{{ end }} 

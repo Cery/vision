@@ -1,0 +1,116 @@
+<div class="card border-0 shadow-sm h-100">
+    <div class="card-header bg-primary text-white d-flex align-items-center">
+        <i class="fas fa-th-list me-2"></i>
+        <h5 class="mb-0">产品分类</h5>
+    </div>
+    <div class="list-group list-group-flush category-menu">
+        {{ $categories := where .Site.RegularPages "Type" "product_categories" }}
+        {{ range $categories }}
+        {{ if not .Params.parent }}
+        <div class="category-item">
+            <a href="/products?category={{ .File.BaseFileName }}" class="list-group-item list-group-item-action d-flex align-items-center">
+                {{ if .Params.icon }}
+                <i class="{{ .Params.icon }} me-2 category-icon"></i>
+                {{ else }}
+                <i class="fas fa-angle-right me-2 category-icon"></i>
+                {{ end }}
+                <span>{{ .Title }}</span>
+                {{ $currentCategory := .File.BaseFileName }}
+                {{ $subCategories := where $categories ".Params.parent" $currentCategory }}
+                {{ if $subCategories }}
+                <i class="fas fa-chevron-right ms-auto"></i>
+                {{ end }}
+            </a>
+            {{ if $subCategories }}
+            <div class="subcategory-menu">
+                {{ range $subCategories }}
+                <a href="/products?category={{ .File.BaseFileName }}" class="list-group-item list-group-item-action">
+                    {{ if .Params.icon }}
+                    <i class="{{ .Params.icon }} me-2"></i>
+                    {{ else }}
+                    <i class="fas fa-circle-notch me-2 fa-sm"></i>
+                    {{ end }}
+                    {{ .Title }}
+                </a>
+                {{ end }}
+            </div>
+            {{ end }}
+        </div>
+        {{ end }}
+        {{ end }}
+    </div>
+</div>
+
+<style>
+.category-menu {
+    position: relative;
+}
+
+.category-item {
+    position: relative;
+}
+
+.category-menu .list-group-item {
+    border: none;
+    padding: 0.75rem 1.25rem;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.category-menu .list-group-item:hover {
+    background-color: #f8f9fa;
+    border-left: 3px solid var(--bs-primary);
+    color: var(--bs-primary);
+}
+
+.category-menu .list-group-item:hover .category-icon {
+    transform: translateX(3px);
+    color: var(--bs-primary);
+}
+
+.category-icon {
+    transition: transform 0.2s ease;
+    width: 20px;
+    text-align: center;
+}
+
+.subcategory-menu {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    width: 220px;
+    background: white;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: 0.25rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
+    z-index: 1000;
+    padding: 0.5rem 0;
+}
+
+.category-item:hover .subcategory-menu {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+.subcategory-menu .list-group-item {
+    border-radius: 0;
+    padding: 0.6rem 1rem;
+    border-left: 3px solid transparent;
+}
+
+.subcategory-menu .list-group-item:hover {
+    background-color: #f8f9fa;
+    border-left: 3px solid var(--bs-primary);
+}
+
+.card-header {
+    border-bottom: 0;
+    padding: 1rem 1.25rem;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+</style>

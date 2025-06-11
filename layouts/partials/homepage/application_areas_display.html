@@ -1,0 +1,103 @@
+<section class="application-areas-section py-4">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="section-title text-center">应用领域</h2>
+                <p class="text-center text-muted">专业的无损检测解决方案</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            {{ if .Params.application_areas_display.enable }}
+            {{ range .Params.application_areas_display.areas }}
+            <div class="col-lg-4 col-md-6">
+                <div class="area-card h-100">
+                    <div class="area-image">
+                        <i class="{{ .icon }} area-icon"></i>
+                        <img src="{{ .image }}" alt="{{ .title }}" class="img-fluid">
+                    </div>
+                    <div class="area-content">
+                        <h3 class="area-title">{{ .title }}</h3>
+                        <p class="area-summary">{{ .summary }}</p>
+                        <a href="{{ .link }}" class="btn btn-outline-primary btn-sm">了解更多</a>
+                    </div>
+                </div>
+            </div>
+            {{ end }}
+            {{ end }}
+        </div>
+    </div>
+</section>
+
+<style>
+.application-areas-section {
+    background-color: #f8f9fa;
+}
+
+.area-card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.area-card:hover {
+    transform: translateY(-5px);
+}
+
+.area-image {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.area-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.area-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 2rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+.area-content {
+    position: relative;
+    padding: 1.5rem;
+    background: white;
+}
+
+.area-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+    color: var(--bs-primary);
+}
+
+.area-summary {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 767.98px) {
+    .area-image {
+        height: 160px;
+    }
+
+    .area-content {
+        padding: 1rem;
+    }
+
+    .area-title {
+        font-size: 1.1rem;
+    }
+}
+</style>

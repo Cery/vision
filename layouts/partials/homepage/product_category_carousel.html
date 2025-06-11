@@ -1,0 +1,94 @@
+<section class="product-carousel-section py-4">
+    <div class="container">
+        <div class="row">
+            <!-- 左侧产品分类菜单 -->
+            <div class="col-lg-3 col-md-4 mb-4 mb-md-0">
+                {{ partial "homepage/product_category_menu.html" . }}
+            </div>
+
+            <!-- 右侧轮播图 -->
+            <div class="col-lg-9 col-md-8">
+                <div id="homepageCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        {{ range $index, $_ := .Site.Params.carousel_images }}
+                        <button type="button" data-bs-target="#homepageCarousel" data-bs-slide-to="{{ $index }}" 
+                            {{ if eq $index 0 }}class="active" aria-current="true"{{ end }} 
+                            aria-label="Slide {{ add $index 1 }}"></button>
+                        {{ end }}
+                    </div>
+                    <div class="carousel-inner rounded shadow-sm">
+                        {{ range $index, $slide := .Site.Params.carousel_images }}
+                        <div class="carousel-item {{ if eq $index 0 }}active{{ end }}">
+                            <img src="{{ if $slide.image }}{{ $slide.image | relURL }}{{ else }}https://picsum.photos/1200/600?random={{ $index }}{{ end }}" 
+                                 class="d-block w-100" 
+                                 alt="{{ $slide.alt }}">
+                            <div class="carousel-caption">
+                                {{ if $slide.title }}
+                                <h3>{{ $slide.title }}</h3>
+                                {{ end }}
+                                {{ if $slide.description }}
+                                <p>{{ $slide.description }}</p>
+                                {{ end }}
+                                {{ if $slide.link }}
+                                <a href="{{ $slide.link }}" class="btn btn-light">了解更多</a>
+                                {{ end }}
+                            </div>
+                        </div>
+                        {{ end }}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#homepageCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#homepageCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.product-carousel-section {
+    margin: 2rem 0;
+}
+
+.carousel-item {
+    height: 400px;
+}
+
+.carousel-item img {
+    height: 100%;
+    object-fit: cover;
+}
+
+.carousel-caption {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 5px;
+    bottom: 20px;
+}
+
+.carousel-caption h3 {
+    font-size: 1.75rem;
+    margin-bottom: 10px;
+}
+
+.carousel-caption p {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
+.carousel-indicators {
+    margin-bottom: 1rem;
+}
+
+.carousel-indicators button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin: 0 5px;
+}
+</style>
