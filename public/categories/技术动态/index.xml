@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>技术动态 on </title>
+    <link>//localhost:1313/categories/%E6%8A%80%E6%9C%AF%E5%8A%A8%E6%80%81/</link>
+    <description>Recent content in 技术动态 on </description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 14 Mar 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:1313/categories/%E6%8A%80%E6%9C%AF%E5%8A%A8%E6%80%81/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>新一代工业内窥镜技术发展趋势</title>
+      <link>//localhost:1313/news/2024-03-14-test-news/</link>
+      <pubDate>Thu, 14 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/news/2024-03-14-test-news/</guid>
+      <description>探讨2024年工业内窥镜领域的最新技术发展趋势，包括AI图像识别、5G远程控制等创新应用</description>
+    </item>
+    <item>
+      <title>工业内窥镜技术发展趋势分析</title>
+      <link>//localhost:1313/news/2024-01-15-industry-news-example/</link>
+      <pubDate>Mon, 15 Jan 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/news/2024-01-15-industry-news-example/</guid>
+      <description>本文深入分析了工业内窥镜技术的最新发展趋势，包括高清成像、智能识别、远程操控等方面的创新突破，探讨了这些技术进步对工业检测领域带来的深远影响。同时对未来技术发展方向进行了展望，为行业从业者提供有价值的参考信息。</description>
+    </item>
+  </channel>
+</rss>

@@ -7,19 +7,19 @@ draft: false
 product_category_carousel:
   enable: true
   carousel_images:
-    - image: "https://picsum.photos/1920/600?random=1"
+    - image: "https://picsum.photos/1200/600?random=1"
       title: "工业内窥镜解决方案"
       description: "高清成像，精准检测"
       link: "/products/endoscopes"
-    - image: "https://picsum.photos/1920/600?random=2"
+    - image: "https://picsum.photos/1200/600?random=2"
       title: "X射线无损检测设备"
       description: "安全可靠，全面检测"
       link: "/products/xray"
-    - image: "https://picsum.photos/1920/600?random=3"
+    - image: "https://picsum.photos/1200/600?random=3"
       title: "超声波检测系统"
       description: "深度洞察，精确分析"
       link: "/products/ultrasonic"
-    - image: "https://picsum.photos/1920/600?random=4"
+    - image: "https://picsum.photos/1200/600?random=4"
       title: "涡流检测设备"
       description: "快速扫描，实时监测"
       link: "/products/eddy-current"

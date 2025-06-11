@@ -1,0 +1,36 @@
+{{ $image := .image }}
+{{ $alt := .alt }}
+{{ $class := .class }}
+{{ $sizes := .sizes | default "(min-width: 1200px) 1200px, 100vw" }}
+
+{{ with $image }}
+    {{ $small := $.Page.Resources.GetMatch . }}
+    {{ if $small }}
+        {{ $small = $small.Resize "600x" }}
+        {{ $medium := $.Page.Resources.GetMatch . }}
+        {{ $medium = $medium.Resize "1200x" }}
+        {{ $large := $.Page.Resources.GetMatch . }}
+        {{ $large = $large.Resize "1800x" }}
+        
+        <picture class="{{ $class }}">
+            <source 
+                srcset="{{ $large.RelPermalink }} 1800w,
+                        {{ $medium.RelPermalink }} 1200w,
+                        {{ $small.RelPermalink }} 600w"
+                sizes="{{ $sizes }}">
+            <img 
+                src="{{ $small.RelPermalink }}" 
+                alt="{{ $alt }}"
+                loading="lazy"
+                width="{{ $small.Width }}"
+                height="{{ $small.Height }}"
+                class="{{ $class }}">
+        </picture>
+    {{ else }}
+        <img 
+            src="{{ . }}" 
+            alt="{{ $alt }}"
+            loading="lazy"
+            class="{{ $class }}">
+    {{ end }}
+{{ end }} 

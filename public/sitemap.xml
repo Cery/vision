@@ -1,190 +1,1487 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+&lt;?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  
   <url>
     <loc>http://localhost:1313/applications/</loc>
-  </url><url>
-    <loc>http://localhost:1313/cooperation/</loc>
-  </url><url>
-    <loc>http://localhost:1313/news/exhibition-news-8/</loc>
-    <lastmod>2024-12-05T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/news/</loc>
-    <lastmod>2024-12-05T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/news/exhibition-news-7/</loc>
-    <lastmod>2024-11-10T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/news/exhibition-news-6/</loc>
-    <lastmod>2024-10-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/news/exhibition-news-5/</loc>
-    <lastmod>2024-09-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/news/exhibition-news-4/</loc>
-    <lastmod>2024-08-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/news/exhibition-news-3/</loc>
-    <lastmod>2024-07-10T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/news/exhibition-news-2/</loc>
-    <lastmod>2024-06-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/</loc>
-    <lastmod>2024-05-20T10:20:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/new-product-5/</loc>
-    <lastmod>2024-05-20T10:20:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/new-product-4/</loc>
-    <lastmod>2024-05-20T10:15:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/new-product-3/</loc>
-    <lastmod>2024-05-20T10:10:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/new-product-2/</loc>
-    <lastmod>2024-05-20T10:05:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/new-product-1/</loc>
-    <lastmod>2024-05-20T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/news/exhibition-news-1/</loc>
-    <lastmod>2024-05-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/news/industry-news-1/</loc>
-    <lastmod>2024-03-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/news/industry-news-2/</loc>
-    <lastmod>2024-03-18T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/news/industry-news-3/</loc>
-    <lastmod>2024-03-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/test-product-001/</loc>
-    <lastmod>2024-03-14T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/news/2024-03-14-test-news/</loc>
-    <lastmod>2024-03-14T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/news/industry-news-4/</loc>
-    <lastmod>2024-03-12T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/cases/</loc>
-    <lastmod>2024-02-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/cases/case-3/</loc>
-    <lastmod>2024-02-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/cases/case-2/</loc>
-    <lastmod>2024-01-25T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/cases/case-1/</loc>
-    <lastmod>2024-01-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/news/2024-01-20-product-launch/</loc>
-    <lastmod>2024-01-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/news/2024-01-16-exhibition-news/</loc>
-    <lastmod>2024-01-16T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/news/2024-01-15-industry-news-example/</loc>
-    <lastmod>2024-01-15T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/</loc>
-    <lastmod>2024-01-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/k09510-electronic-endoscope/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/primary_categories/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/secondary_categories/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/product-p6010%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2790/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2791/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2792/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2793/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2794/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2795/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2796/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2797/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2798/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2799/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2800/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2801/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/secondary_categories/%E5%B7%A5%E4%B8%9A%E8%A7%86%E5%B1%8F%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/sample-product-2/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/sample-product-3/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/primary_categories/%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/k1010-electronic-endoscope/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2790-copy/</loc>
-    <lastmod>2023-01-01T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/product_categories/</loc>
-  </url><url>
-    <loc>http://localhost:1313/product_types/</loc>
-  </url><url>
-    <loc>http://localhost:1313/suppliers/</loc>
-  </url><url>
-    <loc>http://localhost:1313/product_types/portable_type/</loc>
-  </url><url>
-    <loc>http://localhost:1313/product_categories/optical-endoscope/</loc>
-  </url><url>
-    <loc>http://localhost:1313/product_categories/fiber-endoscope/</loc>
-  </url><url>
-    <loc>http://localhost:1313/product_types/desktop_type/</loc>
-  </url><url>
-    <loc>http://localhost:1313/customs/</loc>
-  </url><url>
-    <loc>http://localhost:1313/product_categories/electronic-endoscope/industrial-pipeline-endoscope/</loc>
-  </url><url>
-    <loc>http://localhost:1313/product_categories/electronic-endoscope/industrial-video-endoscope/</loc>
-  </url><url>
-    <loc>http://localhost:1313/product_types/robot-arm/</loc>
-  </url><url>
-    <loc>http://localhost:1313/suppliers/my-supplier/</loc>
-  </url><url>
-    <loc>http://localhost:1313/product_categories/electronic-endoscope/crawler-robot/</loc>
-  </url><url>
-    <loc>http://localhost:1313/product_categories/electronic-endoscope/</loc>
+    
+    
+    
+    
+    
+
+    
   </url>
-</urlset>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/cooperation/</loc>
+    
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/news/exhibition-news-8/</loc>
+    <lastmod>2024-12-05T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/news/</loc>
+    <lastmod>2024-12-05T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/news/exhibition-news-7/</loc>
+    <lastmod>2024-11-10T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/news/exhibition-news-6/</loc>
+    <lastmod>2024-10-15T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/news/exhibition-news-5/</loc>
+    <lastmod>2024-09-20T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/news/exhibition-news-4/</loc>
+    <lastmod>2024-08-15T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/news/exhibition-news-3/</loc>
+    <lastmod>2024-07-10T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/news/exhibition-news-2/</loc>
+    <lastmod>2024-06-20T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/</loc>
+    <lastmod>2024-05-20T10:20:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/new-product-5/</loc>
+    <lastmod>2024-05-20T10:20:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=23</image:loc>
+      <image:title>测试产品5主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=24</image:loc>
+      <image:title>测试产品5副图1</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/new-product-4/</loc>
+    <lastmod>2024-05-20T10:15:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=21</image:loc>
+      <image:title>测试产品4主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=22</image:loc>
+      <image:title>测试产品4副图1</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/new-product-3/</loc>
+    <lastmod>2024-05-20T10:10:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=19</image:loc>
+      <image:title>测试产品3主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=20</image:loc>
+      <image:title>测试产品3副图1</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/new-product-2/</loc>
+    <lastmod>2024-05-20T10:05:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=17</image:loc>
+      <image:title>测试产品2主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=18</image:loc>
+      <image:title>测试产品2副图1</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/new-product-1/</loc>
+    <lastmod>2024-05-20T10:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=15</image:loc>
+      <image:title>测试产品1主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=16</image:loc>
+      <image:title>测试产品1副图1</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/news/exhibition-news-1/</loc>
+    <lastmod>2024-05-15T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/news/industry-news-1/</loc>
+    <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/news/industry-news-2/</loc>
+    <lastmod>2024-03-18T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/news/industry-news-3/</loc>
+    <lastmod>2024-03-15T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/test-product-001/</loc>
+    <lastmod>2024-03-14T10:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/test-product-001/main.jpg</image:loc>
+      <image:title>测试产品主图</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/news/2024-03-14-test-news/</loc>
+    <lastmod>2024-03-14T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/news/industry-news-4/</loc>
+    <lastmod>2024-03-12T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/cases/</loc>
+    <lastmod>2024-02-01T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/cases/case-3/</loc>
+    <lastmod>2024-02-01T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/cases/case-2/</loc>
+    <lastmod>2024-01-25T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/cases/case-1/</loc>
+    <lastmod>2024-01-20T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/news/2024-01-20-product-launch/</loc>
+    <lastmod>2024-01-20T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/news/2024-01-16-exhibition-news/</loc>
+    <lastmod>2024-01-16T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/news/2024-01-15-industry-news-example/</loc>
+    <lastmod>2024-01-15T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/k09510-electronic-endoscope/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/k09510-electronic-endoscope/main.jpg</image:loc>
+      <image:title>主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/k09510-electronic-endoscope/sub-1.jpg</image:loc>
+      <image:title>副图1</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/k09510-electronic-endoscope/sub-2.jpg</image:loc>
+      <image:title>副图2</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/k09510-electronic-endoscope/sub-3.jpg</image:loc>
+      <image:title>副图3</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/k09510-electronic-endoscope/sub-4.jpg</image:loc>
+      <image:title>副图4</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/primary_categories/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/secondary_categories/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/product-p6010%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
+      <image:title>主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
+      <image:title>副图1</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/P60/P-3.jpg</image:loc>
+      <image:title>副图2</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=4</image:loc>
+      <image:title>副图3</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=5</image:loc>
+      <image:title>副图4</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/product-p6020%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/P60/P-MAIN.jpg</image:loc>
+      <image:title>主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
+      <image:title>副图1</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/P60/P-3.jpg</image:loc>
+      <image:title>副图2</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
+      <image:title>副图3</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2790/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=1</image:loc>
+      <image:title>主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=2</image:loc>
+      <image:title>副图1</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=3</image:loc>
+      <image:title>副图2</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=4</image:loc>
+      <image:title>副图3</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=5</image:loc>
+      <image:title>副图4</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2791/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=1</image:loc>
+      <image:title>主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=2</image:loc>
+      <image:title>副图1</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=3</image:loc>
+      <image:title>副图2</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=4</image:loc>
+      <image:title>副图3</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=5</image:loc>
+      <image:title>副图4</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2792/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=1</image:loc>
+      <image:title>主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=2</image:loc>
+      <image:title>副图1</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=3</image:loc>
+      <image:title>副图2</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=4</image:loc>
+      <image:title>副图3</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=5</image:loc>
+      <image:title>副图4</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2793/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=1</image:loc>
+      <image:title>主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=2</image:loc>
+      <image:title>副图1</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=3</image:loc>
+      <image:title>副图2</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=4</image:loc>
+      <image:title>副图3</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=5</image:loc>
+      <image:title>副图4</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2794/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=1</image:loc>
+      <image:title>主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=2</image:loc>
+      <image:title>副图1</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=3</image:loc>
+      <image:title>副图2</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=4</image:loc>
+      <image:title>副图3</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=5</image:loc>
+      <image:title>副图4</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2795/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=1</image:loc>
+      <image:title>主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=2</image:loc>
+      <image:title>副图1</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=3</image:loc>
+      <image:title>副图2</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=4</image:loc>
+      <image:title>副图3</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=5</image:loc>
+      <image:title>副图4</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2796/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=1</image:loc>
+      <image:title>主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=2</image:loc>
+      <image:title>副图1</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=3</image:loc>
+      <image:title>副图2</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=4</image:loc>
+      <image:title>副图3</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=5</image:loc>
+      <image:title>副图4</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2797/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=1</image:loc>
+      <image:title>主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=2</image:loc>
+      <image:title>副图1</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=3</image:loc>
+      <image:title>副图2</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=4</image:loc>
+      <image:title>副图3</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=5</image:loc>
+      <image:title>副图4</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2798/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=1</image:loc>
+      <image:title>主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=2</image:loc>
+      <image:title>副图1</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=3</image:loc>
+      <image:title>副图2</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=4</image:loc>
+      <image:title>副图3</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=5</image:loc>
+      <image:title>副图4</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2799/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=1</image:loc>
+      <image:title>主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=2</image:loc>
+      <image:title>副图1</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=3</image:loc>
+      <image:title>副图2</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=4</image:loc>
+      <image:title>副图3</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=5</image:loc>
+      <image:title>副图4</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2800/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=1</image:loc>
+      <image:title>主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=2</image:loc>
+      <image:title>副图1</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=3</image:loc>
+      <image:title>副图2</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=4</image:loc>
+      <image:title>副图3</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=5</image:loc>
+      <image:title>副图4</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2801/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=1</image:loc>
+      <image:title>主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=2</image:loc>
+      <image:title>副图1</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=3</image:loc>
+      <image:title>副图2</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=4</image:loc>
+      <image:title>副图3</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=5</image:loc>
+      <image:title>副图4</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/secondary_categories/%E5%B7%A5%E4%B8%9A%E8%A7%86%E5%B1%8F%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/sample-product-2/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=9</image:loc>
+      <image:title>模拟产品2主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=10</image:loc>
+      <image:title>模拟产品2副图1</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/sample-product-3/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=11</image:loc>
+      <image:title>模拟产品3主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=12</image:loc>
+      <image:title>模拟产品3副图1</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/primary_categories/%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/k1010-electronic-endoscope/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/k09510-electronic-endoscope/main.jpg</image:loc>
+      <image:title>主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/k09510-electronic-endoscope/sub-1.jpg</image:loc>
+      <image:title>副图1</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/k09510-electronic-endoscope/sub-2.jpg</image:loc>
+      <image:title>副图2</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/k09510-electronic-endoscope/sub-3.jpg</image:loc>
+      <image:title>副图3</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/k09510-electronic-endoscope/sub-4.jpg</image:loc>
+      <image:title>副图4</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/product-93430%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C-2790copy/</loc>
+    <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=1</image:loc>
+      <image:title>主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=2</image:loc>
+      <image:title>副图1</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=3</image:loc>
+      <image:title>副图2</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=4</image:loc>
+      <image:title>副图3</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=5</image:loc>
+      <image:title>副图4</image:title>
+    </image:image>
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/product_categories/</loc>
+    
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/product_types/</loc>
+    
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/suppliers/</loc>
+    
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/product_types/portable_type/</loc>
+    
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/product_categories/optical-endoscope/</loc>
+    
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/product_categories/fiber-endoscope/</loc>
+    
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/product_types/desktop_type/</loc>
+    
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/customs/</loc>
+    
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/product_categories/electronic-endoscope/industrial-pipeline-endoscope/</loc>
+    
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/product_categories/electronic-endoscope/industrial-video-endoscope/</loc>
+    
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/product_types/robot-arm/</loc>
+    
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/suppliers/my-supplier/</loc>
+    
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/product_categories/electronic-endoscope/crawler-robot/</loc>
+    
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/product_categories/electronic-endoscope/</loc>
+    
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+</urlset> 

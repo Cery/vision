@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         });
                         
                         // 刷新lightbox
-                        refreshFsLightbox();
+    refreshFsLightbox();
                     } else {
                         galleryContainer.innerHTML = '<div class="col-12"><p class="text-muted">暂无企业相册</p></div>';
                     }

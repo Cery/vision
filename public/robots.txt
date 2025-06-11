@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# 禁止访问管理后台
+Disallow: /admin/
+Disallow: /admin/*
+
+# 禁止访问特定文件类型
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /*.txt$
+
+# 允许访问站点地图
+Allow: /sitemap.xml
+
+# 站点地图位置
+Sitemap: https://yourdomain.com/sitemap.xml 

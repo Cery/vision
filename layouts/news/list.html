@@ -2,7 +2,7 @@
 <div class="container py-5">
     {{ partial "breadcrumbs.html" . }}
     
-    <h1 class="text-center mb-5">资讯中心</h1>
+    <!-- <h1 class="text-center mb-5">资讯中心</h1> -->
     
     <!-- 资讯分类筛选 -->
     <div class="row mb-4">
@@ -47,9 +47,9 @@
                             <div class="mb-2">
                                 {{ range .Params.categories }}
                                     {{ if eq . "行业资讯" }}
-                                    <span class="badge bg-primary me-1">行业资讯</span>
+                                <span class="badge bg-primary me-1">行业资讯</span>
                                     {{ else if eq . "展会资讯" }}
-                                    <span class="badge bg-success me-1">展会资讯</span>
+                                <span class="badge bg-success me-1">展会资讯</span>
                                     {{ else if eq . "技术动态" }}
                                     <span class="badge bg-info me-1">技术动态</span>
                                     {{ end }}

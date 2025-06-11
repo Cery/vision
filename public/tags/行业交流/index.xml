@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>行业交流 on </title>
+    <link>//localhost:1313/tags/%E8%A1%8C%E4%B8%9A%E4%BA%A4%E6%B5%81/</link>
+    <description>Recent content in 行业交流 on </description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 16 Jan 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:1313/tags/%E8%A1%8C%E4%B8%9A%E4%BA%A4%E6%B5%81/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2024年工业检测设备展览会即将开幕</title>
+      <link>//localhost:1313/news/2024-01-16-exhibition-news/</link>
+      <pubDate>Tue, 16 Jan 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/news/2024-01-16-exhibition-news/</guid>
+      <description>第二十届中国国际工业检测设备展览会将于2024年3月在深圳会展中心隆重举行。本届展会将汇集全球500多家知名企业，展示最新的工业检测技术和产品。展会同期还将举办多场技术研讨会和行业论坛，探讨行业发展趋势和技术创新。</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>光学内窥镜 on </title>
+    <link>//localhost:1313/categories/%E5%85%89%E5%AD%A6%E5%86%85%E7%AA%A5%E9%95%9C/</link>
+    <description>Recent content in 光学内窥镜 on </description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 25 Jan 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:1313/categories/%E5%85%89%E5%AD%A6%E5%86%85%E7%AA%A5%E9%95%9C/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>航空发动机叶片检测应用</title>
+      <link>//localhost:1313/cases/case-2/</link>
+      <pubDate>Thu, 25 Jan 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/cases/case-2/</guid>
+      <description>为航空发动机制造商提供高精度叶片检测方案，实现微米级缺陷检测，保障飞行安全。</description>
+    </item>
+  </channel>
+</rss>

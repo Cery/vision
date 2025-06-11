@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>工业检测 on </title>
+    <link>//localhost:1313/categories/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/</link>
+    <description>Recent content in 工业检测 on </description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 20 Jan 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="//localhost:1313/categories/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>工业管道检测解决方案</title>
+      <link>//localhost:1313/cases/case-1/</link>
+      <pubDate>Sat, 20 Jan 2024 00:00:00 +0000</pubDate>
+      <guid>//localhost:1313/cases/case-1/</guid>
+      <description>针对大型工业管道内部检测的专业解决方案，采用高清电子内窥镜实现360度全方位检测，有效预防管道故障。</description>
+    </item>
+  </channel>
+</rss>
