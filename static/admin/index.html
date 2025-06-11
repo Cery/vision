@@ -6,7 +6,7 @@
     <title>VisNDT管理系统</title>
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <style>
-      /* 强制 Netlify CMS Markdown 编辑器的文本方向为从左到右 */
+      /* 强制 Decap CMS Markdown 编辑器的文本方向为从左到右 */
       .nc-markdown-editor-styles {
         direction: ltr !important;
         text-align: left !important;
@@ -21,17 +21,24 @@
       }
     </style>
   </head>
-  <body dir="ltr">
+  <body>
+    <!-- Add a menu:
+    Log in / Sign up - when the user is not logged in
+    Username / Log out - when the user is logged in
+    -->
+    <div data-netlify-identity-menu></div>
+
+    <!-- Add a simpler button:
+    Simple button that will open the modal.
+    -->
+    <div data-netlify-identity-button>登录管理系统</div>
+
     <script>
-      // Check if the URL contains Netlify Identity parameters
-      const hash = window.location.hash;
-      if (hash.includes('invite_token=') || hash.includes('recovery_token=')) {
-        // 处理邀请或恢复令牌
-        window.netlifyIdentity = window.netlifyIdentity || {};
-        window.netlifyIdentity.on('init', user => {
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", user => {
           if (!user) {
-            window.netlifyIdentity.on('login', () => {
-              document.location.href = '/admin/';
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
             });
           }
         });
@@ -40,5 +47,9 @@
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <script>
+      // 初始化 CMS
+      CMS.init();
+    </script>
   </body>
 </html>
