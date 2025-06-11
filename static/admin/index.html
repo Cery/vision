@@ -6,6 +6,9 @@
     <title>VisNDT管理系统</title>
     <!-- Netlify Identity Widget -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/netlify-cms@2.10.192/dist/netlify-cms.js"></script>
     <style>
       /* 强制 Decap CMS Markdown 编辑器的文本方向为从左到右 */
       .nc-markdown-editor-styles {
@@ -25,7 +28,7 @@
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         background-color: #f5f5f5;
         margin: 0;
-        padding: 0;
+        padding: 20px;
       }
       .login-container {
         display: flex;
@@ -33,7 +36,6 @@
         align-items: center;
         justify-content: center;
         min-height: 100vh;
-        padding: 20px;
       }
       .login-box {
         background: white;
@@ -74,13 +76,7 @@
       </div>
     </div>
 
-    <!-- React Dependencies -->
-    <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/netlify-cms-app@2.15.72/dist/netlify-cms-app.js"></script>
-    
     <script>
-      // 初始化 Netlify Identity
       if (window.netlifyIdentity) {
         window.netlifyIdentity.on("init", user => {
           if (!user) {
@@ -91,197 +87,189 @@
         });
       }
 
-      // 配置 CMS
-      window.CMS_MANUAL_INIT = true;
-
-      // 配置后端
-      const config = {
-        backend: {
-          name: "git-gateway",
-          branch: "master",
-          commit_messages: {
-            create: "创建 {{collection}} "{{slug}}"",
-            update: "更新 {{collection}} "{{slug}}"",
-            delete: "删除 {{collection}} "{{slug}}"",
-            uploadMedia: "上传媒体文件 [skip ci]",
-            deleteMedia: "删除媒体文件 [skip ci]",
+      // CMS Configuration
+      CMS.init({
+        config: {
+          backend: {
+            name: "git-gateway",
+            branch: "master",
+            repo: "Cery/VisNDT",
+            auth_endpoint: "/.netlify/identity",
+            commit_messages: {
+              create: "创建 {{collection}} "{{slug}}"",
+              update: "更新 {{collection}} "{{slug}}"",
+              delete: "删除 {{collection}} "{{slug}}"",
+              uploadMedia: "上传媒体文件 [skip ci]",
+              deleteMedia: "删除媒体文件 [skip ci]"
+            }
           },
-        },
-        load_config_file: false,
-        media_folder: "static/images",
-        public_folder: "/images",
-        locale: 'zh_Hans',
-        collections: [
-          // 首页内容
-          {
-            name: "homepage",
-            label: "首页内容",
-            files: [
-              {
-                label: "首页设置",
-                name: "index",
-                file: "content/_index.md",
-                fields: [
-                  {label: "标题", name: "title", widget: "string", required: false},
-                  {
-                    label: "轮播图",
-                    name: "carousel_images",
-                    widget: "list",
-                    fields: [
-                      {label: "图片", name: "image", widget: "image"},
-                      {label: "alt文本", name: "alt", widget: "string", required: false},
-                      {label: "链接", name: "link", widget: "string", required: false},
-                    ],
-                  },
-                  {
-                    label: "新产品推荐",
-                    name: "new_products",
-                    widget: "list",
-                    fields: [
-                      {label: "产品", name: "product", widget: "string"},
-                      {label: "显示/隐藏", name: "display", widget: "boolean", default: true},
-                    ],
-                  },
-                ],
-              }
-            ]
-          },
-          // 资讯中心
-          {
-            name: "news",
-            label: "资讯中心",
-            folder: "content/news",
-            create: true,
-            slug: "{{year}}-{{month}}-{{day}}-{{slug}}",
-            fields: [
-              {label: "标题", name: "title", widget: "string"},
-              {label: "发布日期", name: "date", widget: "datetime", format: "YYYY-MM-DD"},
-              {label: "特色图片", name: "thumbnail", widget: "image", required: false},
-              {
-                label: "分类",
-                name: "categories",
-                widget: "select",
-                multiple: true,
-                options: ["行业资讯", "展会资讯", "技术动态", "公司新闻"],
-              },
-              {label: "标签", name: "tags", widget: "list", required: false},
-              {label: "摘要", name: "summary", widget: "text"},
-              {label: "正文", name: "body", widget: "markdown"},
-            ]
-          },
-          // 产品中心
-          {
-            name: "products",
-            label: "产品中心",
-            folder: "content/products",
-            create: true,
-            slug: "{{slug}}",
-            fields: [
-              {label: "标题", name: "title", widget: "string"},
-              {label: "简述", name: "summary", widget: "text"},
-              {label: "一级分类", name: "primary_category", widget: "string"},
-              {label: "二级分类", name: "secondary_category", widget: "string"},
-              {label: "型号", name: "model", widget: "string"},
-              {label: "系列", name: "series", widget: "string"},
-              {label: "供应商", name: "supplier", widget: "string"},
-              {label: "发布时间", name: "published", widget: "datetime"},
-              {
-                label: "产品图库",
-                name: "gallery",
-                widget: "list",
-                fields: [
-                  {label: "图片", name: "image", widget: "image"},
-                  {label: "图片描述", name: "alt", widget: "string"},
-                  {label: "是否主图", name: "is_main", widget: "boolean", default: false},
-                ],
-              },
-              {
-                label: "参数规格",
-                name: "parameters",
-                widget: "list",
-                fields: [
-                  {label: "参数名称", name: "name", widget: "string"},
-                  {label: "参数值", name: "value", widget: "string"},
-                ],
-              },
-              {label: "应用场景", name: "application_scenarios", widget: "markdown", required: false},
-              {
-                label: "资料下载",
-                name: "data_download",
-                widget: "list",
-                required: false,
-                fields: [
-                  {label: "文件标题", name: "file_title", widget: "string"},
-                  {label: "文件路径", name: "file_path", widget: "file"},
-                ],
-              },
-              {label: "产品介绍", name: "body", widget: "markdown"}
-            ]
-          },
-          // 供应商
-          {
-            name: "suppliers",
-            label: "供应商",
-            folder: "content/suppliers",
-            create: true,
-            fields: [
-              {label: "企业名称", name: "title", widget: "string"},
-              {label: "企业地址", name: "address", widget: "string"},
-              {label: "企业类型", name: "type", widget: "string"},
-              {label: "产品系列", name: "series", widget: "list"},
-              {label: "产品型号", name: "models", widget: "list"},
-              {
-                label: "企业相册",
-                name: "gallery",
-                widget: "list",
-                fields: [
-                  {label: "图片", name: "image", widget: "image"},
-                  {label: "描述", name: "alt", widget: "string"},
-                ],
-              },
-              {label: "联系人", name: "contact_person", widget: "string"},
-              {label: "职务", name: "position", widget: "string"},
-              {label: "电话", name: "phone", widget: "string"},
-              {label: "邮箱", name: "email", widget: "string"},
-              {label: "公司简介", name: "body", widget: "markdown"},
-            ]
-          },
-          // 应用领域
-          {
-            name: "applications",
-            label: "应用领域",
-            folder: "content/applications",
-            create: true,
-            fields: [
-              {label: "标题", name: "title", widget: "string"},
-              {label: "排序", name: "weight", widget: "number", default: 100},
-              {label: "图标", name: "icon", widget: "image", required: false},
-              {label: "封面图", name: "cover", widget: "image", required: false},
-              {label: "简述", name: "summary", widget: "text"},
-              {label: "详细介绍", name: "body", widget: "markdown"},
-            ]
-          },
-          // 应用案例
-          {
-            name: "cases",
-            label: "应用案例",
-            folder: "content/cases",
-            create: true,
-            fields: [
-              {label: "标题", name: "title", widget: "string"},
-              {label: "发布日期", name: "date", widget: "datetime"},
-              {label: "封面图", name: "cover", widget: "image"},
-              {label: "所属领域", name: "application", widget: "string"},
-              {label: "使用产品", name: "products", widget: "list"},
-              {label: "案例简述", name: "summary", widget: "text"},
-              {label: "案例详情", name: "body", widget: "markdown"},
-            ]
-          }
-        ]
-      };
-
-      window.addEventListener('load', function() {
-        CMS.init(config);
+          local_backend: true,
+          load_config_file: false,
+          media_folder: "static/images",
+          public_folder: "/images",
+          locale: 'zh_Hans',
+          collections: [
+            {
+              name: "homepage",
+              label: "首页内容",
+              files: [
+                {
+                  label: "首页设置",
+                  name: "index",
+                  file: "content/_index.md",
+                  fields: [
+                    {label: "标题", name: "title", widget: "string", required: false},
+                    {
+                      label: "轮播图",
+                      name: "carousel_images",
+                      widget: "list",
+                      fields: [
+                        {label: "图片", name: "image", widget: "image"},
+                        {label: "alt文本", name: "alt", widget: "string", required: false},
+                        {label: "链接", name: "link", widget: "string", required: false}
+                      ]
+                    },
+                    {
+                      label: "新产品推荐",
+                      name: "new_products",
+                      widget: "list",
+                      fields: [
+                        {label: "产品", name: "product", widget: "string"},
+                        {label: "显示/隐藏", name: "display", widget: "boolean", default: true}
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              name: "news",
+              label: "资讯中心",
+              folder: "content/news",
+              create: true,
+              slug: "{{year}}-{{month}}-{{day}}-{{slug}}",
+              fields: [
+                {label: "标题", name: "title", widget: "string"},
+                {label: "发布日期", name: "date", widget: "datetime", format: "YYYY-MM-DD"},
+                {label: "特色图片", name: "thumbnail", widget: "image", required: false},
+                {
+                  label: "分类",
+                  name: "categories",
+                  widget: "select",
+                  multiple: true,
+                  options: ["行业资讯", "展会资讯", "技术动态", "公司新闻"]
+                },
+                {label: "标签", name: "tags", widget: "list", required: false},
+                {label: "摘要", name: "summary", widget: "text"},
+                {label: "正文", name: "body", widget: "markdown"}
+              ]
+            },
+            {
+              name: "products",
+              label: "产品中心",
+              folder: "content/products",
+              create: true,
+              slug: "{{slug}}",
+              fields: [
+                {label: "标题", name: "title", widget: "string"},
+                {label: "简述", name: "summary", widget: "text"},
+                {label: "一级分类", name: "primary_category", widget: "string"},
+                {label: "二级分类", name: "secondary_category", widget: "string"},
+                {label: "型号", name: "model", widget: "string"},
+                {label: "系列", name: "series", widget: "string"},
+                {label: "供应商", name: "supplier", widget: "string"},
+                {label: "发布时间", name: "published", widget: "datetime"},
+                {
+                  label: "产品图库",
+                  name: "gallery",
+                  widget: "list",
+                  fields: [
+                    {label: "图片", name: "image", widget: "image"},
+                    {label: "图片描述", name: "alt", widget: "string"},
+                    {label: "是否主图", name: "is_main", widget: "boolean", default: false}
+                  ]
+                },
+                {
+                  label: "参数规格",
+                  name: "parameters",
+                  widget: "list",
+                  fields: [
+                    {label: "参数名称", name: "name", widget: "string"},
+                    {label: "参数值", name: "value", widget: "string"}
+                  ]
+                },
+                {label: "应用场景", name: "application_scenarios", widget: "markdown", required: false},
+                {
+                  label: "资料下载",
+                  name: "data_download",
+                  widget: "list",
+                  required: false,
+                  fields: [
+                    {label: "文件标题", name: "file_title", widget: "string"},
+                    {label: "文件路径", name: "file_path", widget: "file"}
+                  ]
+                },
+                {label: "产品介绍", name: "body", widget: "markdown"}
+              ]
+            },
+            {
+              name: "suppliers",
+              label: "供应商",
+              folder: "content/suppliers",
+              create: true,
+              fields: [
+                {label: "企业名称", name: "title", widget: "string"},
+                {label: "企业地址", name: "address", widget: "string"},
+                {label: "企业类型", name: "type", widget: "string"},
+                {label: "产品系列", name: "series", widget: "list"},
+                {label: "产品型号", name: "models", widget: "list"},
+                {
+                  label: "企业相册",
+                  name: "gallery",
+                  widget: "list",
+                  fields: [
+                    {label: "图片", name: "image", widget: "image"},
+                    {label: "描述", name: "alt", widget: "string"}
+                  ]
+                },
+                {label: "联系人", name: "contact_person", widget: "string"},
+                {label: "职务", name: "position", widget: "string"},
+                {label: "电话", name: "phone", widget: "string"},
+                {label: "邮箱", name: "email", widget: "string"},
+                {label: "公司简介", name: "body", widget: "markdown"}
+              ]
+            },
+            {
+              name: "applications",
+              label: "应用领域",
+              folder: "content/applications",
+              create: true,
+              fields: [
+                {label: "标题", name: "title", widget: "string"},
+                {label: "排序", name: "weight", widget: "number", default: 100},
+                {label: "图标", name: "icon", widget: "image", required: false},
+                {label: "封面图", name: "cover", widget: "image", required: false},
+                {label: "简述", name: "summary", widget: "text"},
+                {label: "详细介绍", name: "body", widget: "markdown"}
+              ]
+            },
+            {
+              name: "cases",
+              label: "应用案例",
+              folder: "content/cases",
+              create: true,
+              fields: [
+                {label: "标题", name: "title", widget: "string"},
+                {label: "发布日期", name: "date", widget: "datetime"},
+                {label: "封面图", name: "cover", widget: "image"},
+                {label: "所属领域", name: "application", widget: "string"},
+                {label: "使用产品", name: "products", widget: "list"},
+                {label: "案例简述", name: "summary", widget: "text"},
+                {label: "案例详情", name: "body", widget: "markdown"}
+              ]
+            }
+          ]
+        }
       });
     </script>
   </body>

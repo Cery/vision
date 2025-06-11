@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=58531&amp;path=livereload" data-no-instant defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>K09510电子内窥镜 - 维森视觉检测仪器网</title>
@@ -108,7 +108,7 @@
             
         
             
-                <li class="breadcrumb-item"><a href="http://localhost:1313/products/">产品中心</a></li>
+                <li class="breadcrumb-item"><a href="http://localhost:58531/products/">产品中心</a></li>
             
         
         <li class="breadcrumb-item active" aria-current="page">K09510电子内窥镜</li>
@@ -494,7 +494,7 @@
                         
                         
                         <li class="col">
-                            <a href="http://localhost:1313/products/sample-product-2/" class="text-decoration-none">
+                            <a href="http://localhost:58531/products/sample-product-2/" class="text-decoration-none">
                                 <div class="card h-100">
                                     <div class="card-body">
                                         <h6 class="card-title text-dark">模拟产品2</h6>
@@ -508,7 +508,7 @@
                         
                         
                         <li class="col">
-                            <a href="http://localhost:1313/products/sample-product-3/" class="text-decoration-none">
+                            <a href="http://localhost:58531/products/sample-product-3/" class="text-decoration-none">
                                 <div class="card h-100">
                                     <div class="card-body">
                                         <h6 class="card-title text-dark">模拟产品3</h6>
@@ -561,49 +561,143 @@
                   <dt class="col-sm-4">联系人</dt>
                   <dd class="col-sm-8" id="supplier-contact-person"></dd>
                   
+                  <dt class="col-sm-4">职务</dt>
+                  <dd class="col-sm-8" id="supplier-position"></dd>
+                  
                   <dt class="col-sm-4">联系电话</dt>
-                  <dd class="col-sm-8"><a href="#" id="supplier-phone-link"><span id="supplier-phone"></span></a></dd>
+                  <dd class="col-sm-8">
+                    <a href="#" id="supplier-phone-link" class="text-decoration-none">
+                      <span id="supplier-phone"></span>
+                    </a>
+                  </dd>
                   
                   <dt class="col-sm-4">电子邮箱</dt>
-                  <dd class="col-sm-8"><a href="#" id="supplier-email-link"><span id="supplier-email"></span></a></dd>
+                  <dd class="col-sm-8">
+                    <a href="#" id="supplier-email-link" class="text-decoration-none">
+                      <span id="supplier-email"></span>
+                    </a>
+                  </dd>
                 </dl>
               </div>
             </div>
           </div>
           
           
-          <div class="supplier-description mb-4">
-            <h6 class="mb-3"><i class="fas fa-info-circle me-2"></i> 公司简介</h6>
-            <div id="supplier-description" class="description"></div>
-          </div>
-          
-          
-          <div class="supplier-series mb-4">
-            <h6 class="mb-3"><i class="fas fa-tags me-2"></i> 产品系列</h6>
-            <div id="supplier-series" class="d-flex flex-wrap gap-2">
-              
+          <div class="mb-4">
+            <h6 class="mb-3"><i class="fas fa-box me-2"></i> 产品信息</h6>
+            <div class="row">
+              <div class="col-md-6">
+                <dl class="row mb-0">
+                  <dt class="col-sm-4">产品系列</dt>
+                  <dd class="col-sm-8">
+                    <div id="supplier-series" class="d-flex flex-wrap gap-2"></div>
+                  </dd>
+                </dl>
+              </div>
+              <div class="col-md-6">
+                <dl class="row mb-0">
+                  <dt class="col-sm-4">产品型号</dt>
+                  <dd class="col-sm-8">
+                    <div id="supplier-models" class="d-flex flex-wrap gap-2"></div>
+                  </dd>
+                </dl>
+              </div>
             </div>
           </div>
           
           
-          <div class="supplier-gallery">
+          <div class="supplier-gallery mb-4">
             <h6 class="mb-3"><i class="fas fa-images me-2"></i> 企业相册</h6>
             <div class="row g-3" id="supplier-gallery">
               
             </div>
           </div>
+          
+          
+          <div class="supplier-description">
+            <h6 class="mb-3"><i class="fas fa-info-circle me-2"></i> 公司简介</h6>
+            <div id="supplier-description" class="bg-light p-3 rounded"></div>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-        <a href="#" class="btn btn-primary" id="supplier-contact-btn">联系供应商</a>
+        <a href="#" class="btn btn-primary" id="supplier-contact-btn">
+          <i class="fas fa-envelope me-2"></i>联系供应商
+        </a>
       </div>
     </div>
   </div>
 </div>
 
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fslightbox/3.4.1/index.min.js"></script>
+
+<style>
+.supplier-modal .modal-content {
+  border: none;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.supplier-modal .modal-header {
+  border-bottom: none;
+  padding: 1rem 1.5rem;
+}
+
+.supplier-modal .modal-body {
+  padding: 1.5rem;
+}
+
+.supplier-modal h6 {
+  font-weight: 600;
+  color: var(--bs-primary);
+  margin-bottom: 1rem;
+}
+
+.supplier-modal .gallery-item {
+  cursor: pointer;
+  transition: transform 0.2s;
+  overflow: hidden;
+}
+
+.supplier-modal .gallery-item:hover {
+  transform: scale(1.02);
+}
+
+.supplier-modal dl {
+  margin-bottom: 0;
+}
+
+.supplier-modal dt {
+  font-weight: 500;
+  color: #666;
+}
+
+.supplier-modal dd {
+  margin-bottom: 0.5rem;
+}
+
+.supplier-modal .badge {
+  font-weight: normal;
+  padding: 0.5rem 0.75rem;
+}
+
+.supplier-modal .supplier-description {
+  line-height: 1.6;
+}
+
+.supplier-modal .btn-primary {
+  padding: 0.5rem 1.5rem;
+}
+
+.supplier-modal .modal-footer {
+  border-top: none;
+  padding: 1rem 1.5rem;
+}
+</style>
 
 
 <script>
@@ -707,75 +801,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
-
-<style>
-.supplier-modal .modal-content {
-  border: none;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-}
-
-.supplier-modal .modal-header {
-  border-bottom: none;
-  padding: 1rem 1.5rem;
-}
-
-.supplier-modal .modal-body {
-  padding: 1.5rem;
-}
-
-.supplier-modal h6 {
-  font-weight: 600;
-  position: relative;
-  color: var(--bs-primary);
-  margin-bottom: 1rem;
-}
-
-.supplier-modal dt {
-  color: #6c757d;
-  font-weight: 500;
-}
-
-.supplier-modal dd {
-  margin-bottom: 0.5rem;
-}
-
-.supplier-modal a {
-  color: var(--bs-primary);
-  text-decoration: none;
-}
-
-.supplier-modal a:hover {
-  text-decoration: underline;
-}
-
-.supplier-modal .description {
-  line-height: 1.6;
-}
-
-.supplier-modal .badge {
-  padding: 0.5em 0.75em;
-  margin-right: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.supplier-modal .gallery-item {
-  overflow: hidden;
-  border-radius: 0.375rem;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-  cursor: pointer;
-}
-
-.supplier-modal .gallery-item img {
-  transition: transform 0.3s ease;
-  height: 150px;
-  width: 100%;
-  object-fit: cover;
-}
-
-.supplier-modal .gallery-item:hover img {
-  transform: scale(1.05);
-}
-</style>
 
 
 <div class="modal fade" id="phoneContactModal" tabindex="-1" aria-labelledby="phoneContactModalLabel" aria-hidden="true">
