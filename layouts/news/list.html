@@ -11,9 +11,11 @@
                 <div class="card-body">
                     <h5 class="card-title mb-3">资讯分类</h5>
                     <div class="d-flex flex-wrap gap-2">
-                        <a href="/news/" class="btn btn-outline-primary {{ if eq .RelPermalink "/news/" }}active{{ end }}">全部</a>
-                        <a href="/news/?category=industry" class="btn btn-outline-primary {{ if eq ($.Scratch.Get "category") "industry" }}active{{ end }}">行业资讯</a>
-                        <a href="/news/?category=exhibition" class="btn btn-outline-primary {{ if eq ($.Scratch.Get "category") "exhibition" }}active{{ end }}">展会资讯</a>
+                        {{ $currentCategory := .Params.category }}
+                        <a href="/news/" class="btn btn-outline-primary {{ if not $currentCategory }}active{{ end }}">全部</a>
+                        <a href="/news/?category=行业资讯" class="btn btn-outline-primary {{ if eq $currentCategory "行业资讯" }}active{{ end }}">行业资讯</a>
+                        <a href="/news/?category=展会资讯" class="btn btn-outline-primary {{ if eq $currentCategory "展会资讯" }}active{{ end }}">展会资讯</a>
+                        <a href="/news/?category=技术动态" class="btn btn-outline-primary {{ if eq $currentCategory "技术动态" }}active{{ end }}">技术动态</a>
                     </div>
                 </div>
             </div>
@@ -22,13 +24,19 @@
 
     <!-- 资讯列表 -->
     <div class="row" id="news-list">
-        {{ $paginator := .Paginate (where .Pages "Type" "news") 10 }}
+        {{ $allNews := where .Pages "Type" "news" }}
+        {{ $filteredNews := $allNews }}
+        {{ if $currentCategory }}
+            {{ $filteredNews = where $allNews "Params.categories" "intersect" (slice $currentCategory) }}
+        {{ end }}
+        {{ $paginator := .Paginate $filteredNews 10 }}
+        
         {{ range $paginator.Pages }}
         <div class="col-lg-6 mb-4 news-item">
             <div class="card h-100 shadow-sm hover-shadow">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        {{ with .Params.featured_image }}
+                        {{ with .Params.thumbnail }}
                         <img src="{{ . | relURL }}" class="img-fluid rounded-start h-100 object-fit-cover" alt="{{ $.Title }}">
                         {{ else }}
                         <img src="https://picsum.photos/300/200?random={{ .File.UniqueID }}" class="img-fluid rounded-start h-100 object-fit-cover" alt="{{ .Title }}">
@@ -37,10 +45,14 @@
                     <div class="col-md-8">
                         <div class="card-body d-flex flex-column h-100">
                             <div class="mb-2">
-                                {{ if eq .Params.category "industry" }}
-                                <span class="badge bg-primary me-1">行业资讯</span>
-                                {{ else if eq .Params.category "exhibition" }}
-                                <span class="badge bg-success me-1">展会资讯</span>
+                                {{ range .Params.categories }}
+                                    {{ if eq . "行业资讯" }}
+                                    <span class="badge bg-primary me-1">行业资讯</span>
+                                    {{ else if eq . "展会资讯" }}
+                                    <span class="badge bg-success me-1">展会资讯</span>
+                                    {{ else if eq . "技术动态" }}
+                                    <span class="badge bg-info me-1">技术动态</span>
+                                    {{ end }}
                                 {{ end }}
                                 {{ range .Params.tags }}
                                 <span class="badge bg-secondary me-1">{{ . }}</span>
@@ -56,6 +68,10 @@
                     </div>
                 </div>
             </div>
+        </div>
+        {{ else }}
+        <div class="col-12 text-center">
+            <p>当前分类下暂无资讯。</p>
         </div>
         {{ end }}
     </div>

@@ -17,11 +17,19 @@
                         <a href="{{ "/products/" | relURL }}" class="btn btn-outline-primary {{ if not $currentPrimaryCategory }}active{{ end }}">全部</a>
 
                         {{ $allProducts := where .Site.RegularPages "Type" "products" }}
+                        {{ $primaryCategories := slice }}
+                        {{ range $allProducts }}
+                            {{ with .Params.primary_category }}
+                                {{ $primaryCategories = $primaryCategories | append . }}
+                            {{ end }}
+                        {{ end }}
+                        {{ $primaryCategories = uniq $primaryCategories }}
 
-                        {{ range $primaryName, $primaryTerm := .Site.Taxonomies.primary_categories.ByCount }}
-                            {{ $productsInPrimary := where $allProducts "Params.primary_categories" "intersect" (slice $primaryTerm.Page.Title) }}
-                            {{ if gt (len $productsInPrimary) 0 }}
-                                <a href="{{ "/products/" | relURL }}?primary_category={{ $primaryTerm.Page.Title }}" class="btn btn-outline-primary {{ if eq $currentPrimaryCategory $primaryTerm.Page.Title }}active{{ end }}">{{ $primaryTerm.Page.Title }}</a>
+                        {{ range $primaryCategories }}
+                            {{ $category := . }}
+                            {{ $productsInCategory := where $allProducts "Params.primary_category" $category }}
+                            {{ if gt (len $productsInCategory) 0 }}
+                                <a href="{{ "/products/" | relURL }}?primary_category={{ . }}" class="btn btn-outline-primary {{ if eq $currentPrimaryCategory . }}active{{ end }}">{{ . }}</a>
                             {{ end }}
                         {{ end }}
                     </div>
@@ -29,11 +37,19 @@
                     {{ if $currentPrimaryCategory }}
                     <div class="d-flex flex-wrap gap-2">
                         <a href="{{ "/products/" | relURL }}?primary_category={{ $currentPrimaryCategory }}" class="btn btn-outline-secondary {{ if not $currentSecondaryCategory }}active{{ end }}">全部二级分类</a>
-                        {{ range $secondaryName, $secondaryTerm := .Site.Taxonomies.secondary_categories.ByCount }}
-                            {{ $productsInSecondary := where $allProducts "Params.primary_categories" "intersect" (slice $currentPrimaryCategory) }}
-                            {{ $productsInSecondary = where $productsInSecondary "Params.secondary_categories" "intersect" (slice $secondaryTerm.Page.Title) }}
-                            {{ if gt (len $productsInSecondary) 0 }}
-                                <a href="{{ "/products/" | relURL }}?primary_category={{ $currentPrimaryCategory }}&secondary_category={{ $secondaryTerm.Page.Title }}" class="btn btn-outline-secondary {{ if eq $currentSecondaryCategory $secondaryTerm.Page.Title }}active{{ end }}">{{ $secondaryTerm.Page.Title }}</a>
+                        {{ $secondaryCategories := slice }}
+                        {{ range (where $allProducts "Params.primary_category" $currentPrimaryCategory) }}
+                            {{ with .Params.secondary_category }}
+                                {{ $secondaryCategories = $secondaryCategories | append . }}
+                            {{ end }}
+                        {{ end }}
+                        {{ $secondaryCategories = uniq $secondaryCategories }}
+
+                        {{ range $secondaryCategories }}
+                            {{ $category := . }}
+                            {{ $productsInCategory := where $allProducts "Params.secondary_category" $category }}
+                            {{ if gt (len $productsInCategory) 0 }}
+                                <a href="{{ "/products/" | relURL }}?primary_category={{ $currentPrimaryCategory }}&secondary_category={{ . }}" class="btn btn-outline-secondary {{ if eq $currentSecondaryCategory . }}active{{ end }}">{{ . }}</a>
                             {{ end }}
                         {{ end }}
                     </div>
@@ -47,10 +63,10 @@
     <div class="row">
         {{ $filteredProducts := $allProducts }}
         {{ if $currentPrimaryCategory }}
-            {{ $filteredProducts = where $filteredProducts "Params.primary_categories" "intersect" (slice $currentPrimaryCategory) }}
+            {{ $filteredProducts = where $filteredProducts "Params.primary_category" $currentPrimaryCategory }}
         {{ end }}
         {{ if $currentSecondaryCategory }}
-            {{ $filteredProducts = where $filteredProducts "Params.secondary_categories" "intersect" (slice $currentSecondaryCategory) }}
+            {{ $filteredProducts = where $filteredProducts "Params.secondary_category" $currentSecondaryCategory }}
         {{ end }}
 
         {{ $paginator := .Paginate $filteredProducts 12 }}
@@ -71,15 +87,11 @@
                 </div>
                 <div class="card-body d-flex flex-column">
                     <div class="mb-2">
-                        {{ with .Params.primary_categories }}
-                            {{ range . }}
-                                <span class="badge bg-primary me-1">{{ . }}</span>
-                            {{ end }}
+                        {{ with .Params.primary_category }}
+                        <span class="badge bg-primary me-1">{{ . }}</span>
                         {{ end }}
-                        {{ with .Params.secondary_categories }}
-                            {{ range . }}
-                                <span class="badge bg-info text-dark">{{ . }}</span>
-                            {{ end }}
+                        {{ with .Params.secondary_category }}
+                        <span class="badge bg-info text-dark">{{ . }}</span>
                         {{ end }}
                     </div>
                     <h5 class="card-title">{{ .Title }}</h5>
