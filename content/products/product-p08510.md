@@ -17,7 +17,7 @@ gallery:
     alt: "工业内窥镜"
   - image: "/images/products/P60/P-3.jpg"
     alt: "工业内窥镜"
-  - image: "https://picsum.photos/800/600?random=5"
+  - image: "/images/products/P60/P-4.jpg"
     alt: "副图4"
 parameters:
   - name: "主机屏幕"
