@@ -5,7 +5,7 @@ primary_category: "电子内窥镜"
 secondary_category: "工业视频内窥镜"
 model: "TEST-001"
 series: "测试系列"
-supplier: "深圳市微视光电科技有限公司"
+supplier: "深圳华视内窥镜有限公司"
 published: 2024-03-14T10:00:00+08:00
 gallery:
   - image: "/images/products/test-product-001/main.jpg"

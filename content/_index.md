@@ -1,7 +1,15 @@
 ---
 title: "首页"
-date: 2024-01-01
+date: 2025-01-01
 draft: false
+new_product_recommendations:
+  products:
+    - product: "product-dz60"  # 产品文件的slug（文件名不带.md）
+      display: true
+    - product: "product-2"
+      display: true
+    - product: "product-3"
+      display: true
 
 # 产品分类轮播图
 product_category_carousel:
