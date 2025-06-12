@@ -7,9 +7,9 @@ series:
 models:
   - "K09510"
 gallery:
-  - "https://picsum.photos/200/100?random=1"
-  - "https://picsum.photos/200/100?random=2"
-  - "https://picsum.photos/200/100?random=3"
+  - "/images/supplier/vsndt-1.png"
+  - "/images/supplier/vsndt-2.png"
+  - "/images/supplier/vsndt-3.png"
 contact_person: "张三"
 position: "销售经理"
 phone: "13812345678"
