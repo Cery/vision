@@ -71,24 +71,20 @@
 
                             {{ if $foundSupplier }}
                             <a href="#" data-bs-toggle="modal" data-bs-target="#supplierModal"
-    class="supplier-link"
-    data-supplier-title="{{ $foundSupplier.Title }}"
-    data-supplier-address="{{ $foundSupplier.Params.address | default "未提供" }}"
-    data-supplier-type="{{ $foundSupplier.Params.type | default "未提供" }}"
-    data-supplier-contact-person="{{ $foundSupplier.Params.contact_person | default "未提供" }}"
-    data-supplier-position="{{ $foundSupplier.Params.position | default "未提供" }}"
-    data-supplier-phone="{{ $foundSupplier.Params.phone | default "未提供" }}"
-    data-supplier-email="{{ $foundSupplier.Params.email | default "未提供" }}"
-    data-supplier-content="{{ $foundSupplier.Params.description | safeHTML | default "暂无简介" }}"
-    data-supplier-series='{{ $foundSupplier.Params.series | jsonify | safeHTMLAttr }}'
-    data-supplier-models='{{ $foundSupplier.Params.models | jsonify | safeHTMLAttr }}'
-    data-supplier-gallery='{{ $foundSupplier.Params.gallery | jsonify | safeHTMLAttr }}'>
-    {{ $supplierTitle }}
-</a>
-
-
-
-                        
+                                class="supplier-link"
+                                data-supplier-title="{{ $foundSupplier.Title }}"
+                                data-supplier-address="{{ $foundSupplier.Params.address | default "未提供" }}"
+                                data-supplier-type="{{ $foundSupplier.Params.type | default "未提供" }}"
+                                data-supplier-contact-person="{{ $foundSupplier.Params.contact_person | default "未提供" }}"
+                                data-supplier-position="{{ $foundSupplier.Params.position | default "未提供" }}"
+                                data-supplier-phone="{{ $foundSupplier.Params.phone | default "未提供" }}"
+                                data-supplier-email="{{ $foundSupplier.Params.email | default "未提供" }}"
+                                data-supplier-content="{{ ($foundSupplier.Params.description | default "暂无简介") | safeHTML }}"
+                                data-supplier-series='{{ $foundSupplier.Params.series | jsonify | safeHTMLAttr }}'
+                                data-supplier-models='{{ $foundSupplier.Params.models | jsonify | safeHTMLAttr }}'
+                                data-supplier-gallery='{{ $foundSupplier.Params.gallery | jsonify | safeHTMLAttr }}'>
+                            {{ $foundSupplier.Title }}
+                            </a>            
                             {{ else }}
                                 {{ $supplierTitle }}
                             {{ end }}
@@ -274,7 +270,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center">
-                <h4 class="mb-3">沟通交流</h4>
+                <h4 class="mb-3">资讯电话</h4>
                 <p class="fs-5 mb-2">王工</p>
                 <p class="fs-4 mb-4 fw-bold">152 2218 9183</p>
                 <p class="text-muted">工作时间：周一至周五 08:00-18:00</p>
@@ -286,58 +282,6 @@
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var supplierModal = document.getElementById('supplierModal');
-        if (supplierModal) {
-            supplierModal.addEventListener('show.bs.modal', function (event) {
-                // Button that triggered the modal
-                var button = event.relatedTarget;
-                // Extract info from data-bs-* attributes
-                var supplierTitle = button.getAttribute('data-supplier-title');
-                var supplierContent = button.getAttribute('data-supplier-content');
-
-                // Update the modal's content.
-                var modalTitle = supplierModal.querySelector('.modal-title');
-                var modalBody = supplierModal.querySelector('.modal-body');
-
-                modalTitle.textContent = supplierTitle;
-                modalBody.innerHTML = supplierContent; // Use innerHTML to render HTML content
-            });
-        }
-        
-        // 在线咨询按钮点击事件
-        document.getElementById('online-consult-btn').addEventListener('click', function() {
-            // 这里后期可以接入第三方在线客服系统
-            alert('在线咨询功能即将上线，敬请期待！');
-        });
-        
-        // 检测是否为移动设备
-        function isMobileDevice() {
-            return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
-        }
-        
-        // 根据设备类型设置电话按钮行为
-        var callNowBtn = document.getElementById('call-now-btn');
-        if (callNowBtn) {
-            if (isMobileDevice()) {
-                callNowBtn.classList.remove('d-none');
-            } else {
-                callNowBtn.classList.add('d-none');
-            }
-        }
-    });
-    
-    // 切换主图函数
-    function switchMainImage(src, alt) {
-        const mainImage = document.getElementById('main-product-image');
-        if (mainImage) {
-            mainImage.src = src;
-            mainImage.alt = alt;
-        }
-    }
-</script>
 
 <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
 <script>

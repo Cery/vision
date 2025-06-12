@@ -190,24 +190,20 @@
 
                             
                             <a href="#" data-bs-toggle="modal" data-bs-target="#supplierModal"
-    class="supplier-link"
-    data-supplier-title="深圳市微视光电科技有限公司"
-    data-supplier-address="广东省深圳市南山区科技园"
-    data-supplier-type="制造商"
-    data-supplier-contact-person="张三"
-    data-supplier-position="销售经理"
-    data-supplier-phone="13812345678"
-    data-supplier-email="zhangsan@example.com"
-    data-supplier-content="深圳市微视光电科技有限公司位于深圳坪山首座大厦，是一家集研发、生产、销售、项目和服务于一体的国家高新技术企业。自公司成立以来一直专注于工业视频内窥镜、 无损内部视觉检测行业。公司拥有10年的内部视觉检测及工业内窥镜产品开发经验。微视工业视频内窥镜使用遍布全球各地，主要应用于: 航空航天研发制 造、维修,汽车研发、生产、售后，军工，油气化工，船舶铁路机车的制 造，发电厂 (火电、核电、风电、水电) 、科研高校、锅检/特检、电器 设备/电子工业、精密部件加工制造、机械制造等行业。 "
-    data-supplier-series='[&#34;K系列&#34;]'
-    data-supplier-models='[&#34;K09510&#34;]'
-    data-supplier-gallery='[&#34;https://picsum.photos/1200/800?random=1&#34;,&#34;https://picsum.photos/1200/800?random=2&#34;,&#34;https://picsum.photos/1200/800?random=3&#34;,&#34;https://picsum.photos/1200/800?random=4&#34;]'>
-    深圳市微视光电科技有限公司
-</a>
-
-
-
-                        
+                                class="supplier-link"
+                                data-supplier-title="深圳市微视光电科技有限公司"
+                                data-supplier-address="广东省深圳市南山区科技园"
+                                data-supplier-type="制造商"
+                                data-supplier-contact-person="张三"
+                                data-supplier-position="销售经理"
+                                data-supplier-phone="13812345678"
+                                data-supplier-email="wangxuan@sz-wise.cn"
+                                data-supplier-content="深圳市微视光电科技有限公司位于深圳坪山首座大厦，是一家集研发、生产、销售、项目和服务于一体的国家高新技术企业。自公司成立以来一直专注于工业视频内窥镜、 无损内部视觉检测行业。公司拥有10年的内部视觉检测及工业内窥镜产品开发经验。微视工业视频内窥镜使用遍布全球各地，主要应用于: 航空航天研发制 造、维修,汽车研发、生产、售后，军工，油气化工，船舶铁路机车的制 造，发电厂 (火电、核电、风电、水电) 、科研高校、锅检/特检、电器 设备/电子工业、精密部件加工制造、机械制造等行业。 "
+                                data-supplier-series='[&#34;K系列&#34;]'
+                                data-supplier-models='[&#34;K09510&#34;]'
+                                data-supplier-gallery='[&#34;https://picsum.photos/300/200?random=1&#34;,&#34;https://picsum.photos/300/200?random=2&#34;,&#34;https://picsum.photos/300/200?random=3&#34;,&#34;https://picsum.photos/300/200?random=4&#34;]'>
+                            深圳市微视光电科技有限公司
+                            </a>            
                             
                         </li>
                         
@@ -873,7 +869,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center">
-                <h4 class="mb-3">沟通交流</h4>
+                <h4 class="mb-3">资讯电话</h4>
                 <p class="fs-5 mb-2">王工</p>
                 <p class="fs-4 mb-4 fw-bold">152 2218 9183</p>
                 <p class="text-muted">工作时间：周一至周五 08:00-18:00</p>
@@ -885,58 +881,6 @@
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var supplierModal = document.getElementById('supplierModal');
-        if (supplierModal) {
-            supplierModal.addEventListener('show.bs.modal', function (event) {
-                
-                var button = event.relatedTarget;
-                
-                var supplierTitle = button.getAttribute('data-supplier-title');
-                var supplierContent = button.getAttribute('data-supplier-content');
-
-                
-                var modalTitle = supplierModal.querySelector('.modal-title');
-                var modalBody = supplierModal.querySelector('.modal-body');
-
-                modalTitle.textContent = supplierTitle;
-                modalBody.innerHTML = supplierContent; 
-            });
-        }
-        
-        
-        document.getElementById('online-consult-btn').addEventListener('click', function() {
-            
-            alert('在线咨询功能即将上线，敬请期待！');
-        });
-        
-        
-        function isMobileDevice() {
-            return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
-        }
-        
-        
-        var callNowBtn = document.getElementById('call-now-btn');
-        if (callNowBtn) {
-            if (isMobileDevice()) {
-                callNowBtn.classList.remove('d-none');
-            } else {
-                callNowBtn.classList.add('d-none');
-            }
-        }
-    });
-    
-    
-    function switchMainImage(src, alt) {
-        const mainImage = document.getElementById('main-product-image');
-        if (mainImage) {
-            mainImage.src = src;
-            mainImage.alt = alt;
-        }
-    }
-</script>
 
 <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
 <script>
