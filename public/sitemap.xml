@@ -592,6 +592,19 @@
   
   
   <url>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2025-01-01T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
     <loc>http://localhost:1313/news/exhibition-news-8/</loc>
     <lastmod>2024-12-05T00:00:00&#43;00:00</lastmod>
     
@@ -887,19 +900,6 @@
   
   
   <url>
-    <loc>http://localhost:1313/</loc>
-    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
     <loc>http://localhost:1313/primary_categories/</loc>
     <lastmod>2023-01-01T12:00:00&#43;08:00</lastmod>
     
@@ -1079,6 +1079,19 @@
     </image:image>
     
     
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/suppliers/hs-supplier/</loc>
+    
+    
+    
+    
+    
+
     
   </url>
   
