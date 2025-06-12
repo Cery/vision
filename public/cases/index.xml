@@ -2,31 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>应用案例 on hugo-visndt-site</title>
-    <link>http://localhost:1313/cases/</link>
+    <link>https://visndt.com/cases/</link>
     <description>Recent content in 应用案例 on hugo-visndt-site</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Thu, 01 Feb 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/cases/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://visndt.com/cases/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>新能源汽车电池检测方案</title>
-      <link>http://localhost:1313/cases/case-3/</link>
+      <link>https://visndt.com/cases/case-3/</link>
       <pubDate>Thu, 01 Feb 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/cases/case-3/</guid>
+      <guid>https://visndt.com/cases/case-3/</guid>
       <description>为新能源汽车电池生产线提供专业的质量检测方案，确保电池组装质量和安全性。</description>
     </item>
     <item>
       <title>航空发动机叶片检测应用</title>
-      <link>http://localhost:1313/cases/case-2/</link>
+      <link>https://visndt.com/cases/case-2/</link>
       <pubDate>Thu, 25 Jan 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/cases/case-2/</guid>
+      <guid>https://visndt.com/cases/case-2/</guid>
       <description>为航空发动机制造商提供高精度叶片检测方案，实现微米级缺陷检测，保障飞行安全。</description>
     </item>
     <item>
       <title>工业管道检测解决方案</title>
-      <link>http://localhost:1313/cases/case-1/</link>
+      <link>https://visndt.com/cases/case-1/</link>
       <pubDate>Sat, 20 Jan 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/cases/case-1/</guid>
+      <guid>https://visndt.com/cases/case-1/</guid>
       <description>针对大型工业管道内部检测的专业解决方案，采用高清电子内窥镜实现360度全方位检测，有效预防管道故障。</description>
     </item>
   </channel>

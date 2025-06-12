@@ -7,10 +7,9 @@ series:
 models:
   - "K09510"
 gallery:
-  - "https://picsum.photos/300/200?random=1"
-  - "https://picsum.photos/300/200?random=2"
-  - "https://picsum.photos/300/200?random=3"
-  - "https://picsum.photos/300/200?random=4"
+  - "https://picsum.photos/200/100?random=1"
+  - "https://picsum.photos/200/100?random=2"
+  - "https://picsum.photos/200/100?random=3"
 contact_person: "张三"
 position: "销售经理"
 phone: "13812345678"
