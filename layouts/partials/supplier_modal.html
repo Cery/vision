@@ -171,103 +171,140 @@
 
 <!-- 供应商弹窗脚本 -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // 初始化供应商弹窗
-  var supplierModal = document.getElementById('supplierModal');
-  if (supplierModal) {
-    supplierModal.addEventListener('show.bs.modal', function(event) {
-      // 获取触发按钮
-      var button = event.relatedTarget;
-      
-      // 获取数据
-      var title = button.getAttribute('data-supplier-title') || '未知供应商';
-      var address = button.getAttribute('data-supplier-address') || '未提供';
-      var type = button.getAttribute('data-supplier-type') || '未提供';
-      var contactPerson = button.getAttribute('data-supplier-contact-person') || '未提供';
-      var phone = button.getAttribute('data-supplier-phone') || '未提供';
-      var email = button.getAttribute('data-supplier-email') || '未提供';
-      var description = button.getAttribute('data-supplier-content') || '暂无简介';
-      var series = button.getAttribute('data-supplier-series');
-      var gallery = button.getAttribute('data-supplier-gallery');
-      
-      // 更新模态框内容
-      document.getElementById('supplierModalLabel').textContent = title;
-      document.getElementById('supplier-title').textContent = title;
-      document.getElementById('supplier-address').textContent = address;
-      document.getElementById('supplier-type').textContent = type;
-      document.getElementById('supplier-contact-person').textContent = contactPerson;
-      document.getElementById('supplier-phone').textContent = phone;
-      document.getElementById('supplier-email').textContent = email;
-      document.getElementById('supplier-description').innerHTML = description;
-      
-      // 设置电话和邮箱链接
-      var phoneLink = document.getElementById('supplier-phone-link');
-      var emailLink = document.getElementById('supplier-email-link');
-      phoneLink.href = 'tel:' + phone;
-      emailLink.href = 'mailto:' + email;
-      
-      // 设置联系按钮
-      var contactBtn = document.getElementById('supplier-contact-btn');
-      contactBtn.href = 'mailto:' + email + '?subject=询价: ' + title;
-      
-      // 处理产品系列
-      var seriesContainer = document.getElementById('supplier-series');
-      seriesContainer.innerHTML = '';
-      
-      if (series) {
-        try {
-          var seriesArray = JSON.parse(series);
-          seriesArray.forEach(function(item) {
-            var badge = document.createElement('span');
-            badge.className = 'badge bg-light text-dark';
-            badge.textContent = item;
-            seriesContainer.appendChild(badge);
-          });
-        } catch (e) {
+  document.addEventListener('DOMContentLoaded', function() {
+    var supplierModal = document.getElementById('supplierModal');
+    if (supplierModal) {
+      supplierModal.addEventListener('show.bs.modal', function(event) {
+        var button = event.relatedTarget;
+  
+        // 获取基础字段
+        var title = button.getAttribute('data-supplier-title') || '未知供应商';
+        var address = button.getAttribute('data-supplier-address') || '未提供';
+        var type = button.getAttribute('data-supplier-type') || '未提供';
+        var contactPerson = button.getAttribute('data-supplier-contact-person') || '未提供';
+        var position = button.getAttribute('data-supplier-position') || '未提供';
+        var phone = button.getAttribute('data-supplier-phone') || '未提供';
+        var email = button.getAttribute('data-supplier-email') || '未提供';
+        var description = button.getAttribute('data-supplier-content') || '暂无简介';
+        var series = button.getAttribute('data-supplier-series');
+        var models = button.getAttribute('data-supplier-models');
+        var gallery = button.getAttribute('data-supplier-gallery');
+  
+        // 填充基础信息
+        document.getElementById('supplierModalLabel').textContent = title;
+        document.getElementById('supplier-title').textContent = title;
+        document.getElementById('supplier-address').textContent = address;
+        document.getElementById('supplier-type').textContent = type;
+        document.getElementById('supplier-contact-person').textContent = contactPerson;
+        document.getElementById('supplier-position').textContent = position;
+        document.getElementById('supplier-phone').textContent = phone;
+        document.getElementById('supplier-email').textContent = email;
+        document.getElementById('supplier-description').innerHTML = description;
+  
+        // 设置链接
+        var phoneLink = document.getElementById('supplier-phone-link');
+        var emailLink = document.getElementById('supplier-email-link');
+        phoneLink.href = 'tel:' + phone;
+        emailLink.href = 'mailto:' + email;
+  
+        var contactBtn = document.getElementById('supplier-contact-btn');
+        contactBtn.href = 'mailto:' + email + '?subject=询价: ' + title;
+  
+        // 处理产品系列
+        var seriesContainer = document.getElementById('supplier-series');
+        seriesContainer.innerHTML = '';
+        if (series) {
+          try {
+            var seriesArray = JSON.parse(series);
+            if (seriesArray.length > 0) {
+              seriesArray.forEach(function(item) {
+                var badge = document.createElement('span');
+                badge.className = 'badge bg-light text-dark me-2 mb-2';
+                badge.textContent = item;
+                seriesContainer.appendChild(badge);
+              });
+            } else {
+              seriesContainer.innerHTML = '<p class="text-muted">暂无产品系列信息</p>';
+            }
+          } catch (e) {
+            seriesContainer.innerHTML = '<p class="text-muted">暂无产品系列信息</p>';
+          }
+        } else {
           seriesContainer.innerHTML = '<p class="text-muted">暂无产品系列信息</p>';
         }
-      } else {
-        seriesContainer.innerHTML = '<p class="text-muted">暂无产品系列信息</p>';
-      }
-      
-      // 处理企业相册
-      var galleryContainer = document.getElementById('supplier-gallery');
-      galleryContainer.innerHTML = '';
-      
-      if (gallery) {
-        try {
-          var galleryArray = JSON.parse(gallery);
-          galleryArray.forEach(function(item, index) {
-            var col = document.createElement('div');
-            col.className = 'col-md-4 col-6';
-            
-            var imgWrapper = document.createElement('div');
-            imgWrapper.className = 'gallery-item';
-            
-            var img = document.createElement('img');
-            img.src = item.image;
-            img.className = 'img-fluid rounded';
-            img.alt = item.alt || '企业图片';
-            img.setAttribute('data-fslightbox', 'supplier-gallery');
-            img.setAttribute('data-caption', item.alt || '企业图片');
-            img.onclick = function() {
-              fsLightboxInstances['supplier-gallery'].open(index);
-            };
-            
-            imgWrapper.appendChild(img);
-            col.appendChild(imgWrapper);
-            galleryContainer.appendChild(col);
-          });
-          
-          // 刷新lightbox
-          refreshFsLightbox();
-        } catch (e) {
+  
+        // 处理产品型号
+        var modelsContainer = document.getElementById('supplier-models');
+        modelsContainer.innerHTML = '';
+        if (models) {
+          try {
+            var modelsArray = JSON.parse(models);
+            if (modelsArray.length > 0) {
+              modelsArray.forEach(function(item) {
+                var badge = document.createElement('span');
+                badge.className = 'badge bg-light text-dark me-2 mb-2';
+                badge.textContent = item;
+                modelsContainer.appendChild(badge);
+              });
+            } else {
+              modelsContainer.innerHTML = '<p class="text-muted">暂无产品型号信息</p>';
+            }
+          } catch (e) {
+            modelsContainer.innerHTML = '<p class="text-muted">暂无产品型号信息</p>';
+          }
+        } else {
+          modelsContainer.innerHTML = '<p class="text-muted">暂无产品型号信息</p>';
+        }
+  
+        // 处理企业相册
+        var galleryContainer = document.getElementById('supplier-gallery');
+        galleryContainer.innerHTML = '';
+        if (gallery) {
+          try {
+            var galleryArray = JSON.parse(gallery);
+            if (galleryArray.length > 0) {
+              galleryArray.forEach(function(item, index) {
+                var col = document.createElement('div');
+                col.className = 'col-md-4 col-6';
+  
+                var imgWrapper = document.createElement('div');
+                imgWrapper.className = 'gallery-item';
+  
+                var img = document.createElement('img');
+                img.src = item; // 修复点：直接使用字符串
+                img.className = 'img-fluid rounded';
+                img.alt = '企业图片';
+                img.setAttribute('data-fslightbox', 'supplier-gallery');
+                img.onclick = function () {
+                  fsLightboxInstances['supplier-gallery'].open(index);
+                };
+  
+                img.onerror = function () {
+                  img.src = '/images/placeholder.jpg';
+                };
+  
+                imgWrapper.appendChild(img);
+                col.appendChild(imgWrapper);
+                galleryContainer.appendChild(col);
+              });
+  
+              refreshFsLightbox();
+            } else {
+              galleryContainer.innerHTML = '<div class="col-12"><p class="text-muted">暂无企业相册</p></div>';
+            }
+          } catch (e) {
+            galleryContainer.innerHTML = '<div class="col-12"><p class="text-muted">暂无企业相册</p></div>';
+          }
+        } else {
           galleryContainer.innerHTML = '<div class="col-12"><p class="text-muted">暂无企业相册</p></div>';
         }
-      } else {
-        galleryContainer.innerHTML = '<div class="col-12"><p class="text-muted">暂无企业相册</p></div>';
-      }
-    });
-  }
+  
+      });
+    }
+  });
+  console.log({
+  title, address, type, contactPerson, position, phone, email, description, series, models, gallery
 });
-</script>
+
+  </script>
+  

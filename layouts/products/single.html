@@ -2,27 +2,32 @@
 <div class="container py-5">
     {{ partial "breadcrumbs.html" . }}
     <div class="row">
-        <!-- 左侧：产品画廊和信息 -->
         <div class="col-lg-6">
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
-                    <!-- 主图 -->
-                    {{ with (index .Params.gallery 0) }}
-                    <img src="{{ .image | relURL }}" class="img-fluid rounded mb-3 main-product-image" alt="{{ .alt }}" id="main-product-image">
-                    {{ else }}
-                    <img src="https://picsum.photos/800/600?random=1" class="img-fluid rounded mb-3 main-product-image" alt="主图占位图" id="main-product-image">
-                    {{ end }}
+                    <!-- 主图容器 - 固定高度 -->
+                    <div class="main-image-container">
+                        {{ with (index .Params.gallery 0) }}
+                        <img src="{{ .image | relURL }}" class="img-fluid rounded mb-3 main-product-image" alt="{{ .alt }}" id="main-product-image">
+                        {{ else }}
+                        <img src="https://picsum.photos/800/600?random=1" class="img-fluid rounded mb-3 main-product-image" alt="主图占位图" id="main-product-image">
+                        {{ end }}
+                    </div>
 
-                    <!-- 副图 -->
+                    <!-- 缩略图容器 - 固定高度 -->
                     <div class="row g-2 thumbnail-gallery">
                         {{ range first 4 (after 1 .Params.gallery) }}
                         <div class="col-3">
-                            <img src="{{ .image | relURL }}" class="img-fluid rounded object-fit-cover thumbnail-image" alt="{{ .alt }}" style="height: 100px; width: 100%;" onclick="switchMainImage('{{ .image | relURL }}', '{{ .alt }}')">
+                            <div class="thumbnail-container">
+                                <img src="{{ .image | relURL }}" class="img-fluid rounded object-fit-cover thumbnail-image" alt="{{ .alt }}" onclick="switchMainImage('{{ .image | relURL }}', '{{ .alt }}')">
+                            </div>
                         </div>
                         {{ else }}
                         {{ range seq 2 5 }}
                         <div class="col-3">
-                            <img src="https://picsum.photos/150/100?random={{ . }}" class="img-fluid rounded object-fit-cover thumbnail-image" alt="副图占位图" style="height: 100px; width: 100%;" onclick="switchMainImage('https://picsum.photos/800/600?random={{ . }}', '副图占位图')">
+                            <div class="thumbnail-container">
+                                <img src="https://picsum.photos/150/100?random={{ . }}" class="img-fluid rounded object-fit-cover thumbnail-image" alt="副图占位图" onclick="switchMainImage('https://picsum.photos/800/600?random={{ . }}', '副图占位图')">
+                            </div>
                         </div>
                         {{ end }}
                         {{ end }}
@@ -31,11 +36,10 @@
             </div>
         </div>
 
-        <!-- 右侧：产品基本信息和参数 -->
         <div class="col-lg-6">
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
-                    <h1 class="mb-3">{{ .Title }}</h1>
+                    <h2 class="mb-3">{{ .Title }}</h2>
                     {{ with .Params.summary }}
                     <p class="lead text-muted">{{ . }}</p>
                     {{ end }}
@@ -66,28 +70,39 @@
                             {{ end }}
 
                             {{ if $foundSupplier }}
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#supplierModal"
-                                   data-supplier-title="{{ $foundSupplier.Title }}"
-                                   data-supplier-address="{{ $foundSupplier.Params.address }}"
-                                   data-supplier-type="{{ $foundSupplier.Params.type }}"
-                                   data-supplier-contact-person="{{ $foundSupplier.Params.contact_person }}"
-                                   data-supplier-phone="{{ $foundSupplier.Params.phone }}"
-                                   data-supplier-email="{{ $foundSupplier.Params.email }}"
-                                   data-supplier-content="{{ $foundSupplier.Params.description | safeHTML }}"
-                                   class="supplier-link">
-                                    {{ $supplierTitle }}
-                                </a>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#supplierModal"
+    class="supplier-link"
+    data-supplier-title="{{ $foundSupplier.Title }}"
+    data-supplier-address="{{ $foundSupplier.Params.address | default "未提供" }}"
+    data-supplier-type="{{ $foundSupplier.Params.type | default "未提供" }}"
+    data-supplier-contact-person="{{ $foundSupplier.Params.contact_person | default "未提供" }}"
+    data-supplier-position="{{ $foundSupplier.Params.position | default "未提供" }}"
+    data-supplier-phone="{{ $foundSupplier.Params.phone | default "未提供" }}"
+    data-supplier-email="{{ $foundSupplier.Params.email | default "未提供" }}"
+    data-supplier-content="{{ $foundSupplier.Params.description | safeHTML | default "暂无简介" }}"
+    data-supplier-series='{{ $foundSupplier.Params.series | jsonify | safeHTMLAttr }}'
+    data-supplier-models='{{ $foundSupplier.Params.models | jsonify | safeHTMLAttr }}'
+    data-supplier-gallery='{{ $foundSupplier.Params.gallery | jsonify | safeHTMLAttr }}'>
+    {{ $supplierTitle }}
+</a>
+
+
+
+                        
                             {{ else }}
                                 {{ $supplierTitle }}
                             {{ end }}
                         </li>
                         {{ end }}
+                        
                         {{ with .Params.published }}
                         <li><strong>发布时间：</strong> {{ .Format "2006-01-02" }}</li>
                         {{ end }}
-                    </ul>
+                        <li><strong>浏览次数：</strong> 
+                            <span class="vcount" data-x-id="{{ .RelPermalink }}">...</span>
+                        </li>
+                        </ul>
 
-                    <!-- 联系按钮 -->
                     <div class="mt-4 d-flex gap-3">
                         <button class="btn btn-primary flex-grow-1" id="online-consult-btn">
                             <i class="bi bi-chat-dots-fill me-2"></i>在线咨询
@@ -99,7 +114,6 @@
                 </div>
             </div>
 
-            <!-- 参数组 -->
             {{ with .Params.parameters }}
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white">
@@ -138,7 +152,6 @@
         </div>
     </div>
 
-    <!-- 产品详细介绍 -->
     <div class="row">
         <div class="col-12">
             <div class="card shadow-sm">
@@ -219,7 +232,6 @@
         </div>
     </div>
 
-    <!-- 相关产品 -->
     {{ with .Params.related_products }}
     <div class="row mt-4">
         <div class="col-12">
@@ -252,10 +264,8 @@
     {{ end }}
 </div>
 
-<!-- Supplier Modal -->
 {{ partial "supplier_modal.html" . }}
 
-<!-- 电话联系模态框 -->
 <div class="modal fade" id="phoneContactModal" tabindex="-1" aria-labelledby="phoneContactModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -277,7 +287,6 @@
     </div>
 </div>
 
-<!-- JavaScript for Supplier Modal -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var supplierModal = document.getElementById('supplierModal');
@@ -330,7 +339,16 @@
     }
 </script>
 
-<!-- 添加样式 -->
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<script>
+    new Valine({
+        appId: 'pUEgNUJ66pc7S4FqVpqxkTkx-MdYXbMMI', 
+        appKey: 'K9OXRf3L6Zp0s6TEzJElWQ5r', 
+        visitor: true, 
+        path: '{{ .RelPermalink }}' 
+    });
+</script>
+
 <style>
 .product-details-list li {
     margin-bottom: 0.5rem;
@@ -353,22 +371,60 @@
 }
 
 .detailed-params-table .param-name {
-    background-color: #f8f9fa; /* Light grey background for name */
-    width: 30%; /* Adjust as needed */
+    background-color: #f8f9fa;
+    width: 30%;
 }
 
 .detailed-params-table .param-value {
-    background-color: #e9ecef; /* Slightly darker grey for value */
+    background-color: #e9ecef;
 }
 
 .detailed-params-table .param-group-header {
-    background-color: #ffffff; /* White background for group header */
+    background-color: #ffffff;
     font-weight: bold;
     text-align: center;
 }
 
-/* 缩略图悬停效果 */
+/* 主图容器 - 固定高度 */
+.main-image-container {
+    height: 400px; /* 固定高度 */
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #f8f9fa;
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+}
+
+.main-product-image {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain; /* 保持图片比例，完整显示 */
+    transition: all 0.3s ease;
+}
+
+/* 缩略图容器 - 固定高度 */
+.thumbnail-container {
+    height: 100px; /* 固定高度 */
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #f8f9fa;
+    border-radius: 0.375rem;
+}
+
 .thumbnail-image {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: cover; /* 填充容器，可能会裁剪 */
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     border: 2px solid transparent;
@@ -379,9 +435,22 @@
     border-color: #0d6efd;
 }
 
-/* 主图动画效果 */
-.main-product-image {
-    transition: all 0.3s ease;
+/* 移动端响应式调整 */
+@media (max-width: 768px) {
+    .main-image-container {
+        height: 250px; /* 移动端较小高度 */
+    }
+    
+    .thumbnail-container {
+        height: 80px; /* 移动端较小高度 */
+    }
+}
+
+/* 更大屏幕的调整 */
+@media (min-width: 1400px) {
+    .main-image-container {
+        height: 450px; /* 大屏幕更大高度 */
+    }
 }
 </style>
 {{ end }}

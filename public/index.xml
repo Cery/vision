@@ -9,6 +9,41 @@
     <lastBuildDate>Wed, 01 Jan 2025 12:00:00 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>WS-DZ60高清三维测量工业视频内窥镜</title>
+      <link>http://localhost:1313/products/product-dz60/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/product-dz60/</guid>
+      <description>便携式三维测量高清工业内窥镜</description>
+    </item>
+    <item>
+      <title>WS-P-08510高清工业视频内窥镜</title>
+      <link>http://localhost:1313/products/product-p08510/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/product-p08510/</guid>
+      <description>高清光纤照明内窥镜</description>
+    </item>
+    <item>
+      <title>WS-P09510高清工业视频内窥镜</title>
+      <link>http://localhost:1313/products/product-p09510/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/product-p09510/</guid>
+      <description>高清光纤照明内窥镜</description>
+    </item>
+    <item>
+      <title>WS-P1010高清工业视频内窥镜</title>
+      <link>http://localhost:1313/products/product-p1010/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/product-p1010/</guid>
+      <description>高清光纤照明360度旋转镜头内窥镜</description>
+    </item>
+    <item>
+      <title>WS-P2810高清工业视频内窥镜</title>
+      <link>http://localhost:1313/products/product-p1210/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/product-p1210/</guid>
+      <description>高清光纤照明360度旋转镜头内窥镜</description>
+    </item>
+    <item>
       <title>WS-P2810高清工业视频内窥镜</title>
       <link>http://localhost:1313/products/product-p1510/</link>
       <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
@@ -41,20 +76,6 @@
       <link>http://localhost:1313/products/product-p2410/</link>
       <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
       <guid>http://localhost:1313/products/product-p2410/</guid>
-      <description>高清光纤照明360度旋转镜头内窥镜</description>
-    </item>
-    <item>
-      <title>WS-P2810高清工业视频内窥镜</title>
-      <link>http://localhost:1313/products/product-p2810-copy-2/</link>
-      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/product-p2810-copy-2/</guid>
-      <description>高清光纤照明360度旋转镜头内窥镜</description>
-    </item>
-    <item>
-      <title>WS-P2810高清工业视频内窥镜</title>
-      <link>http://localhost:1313/products/product-p2810-copy-3/</link>
-      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/product-p2810-copy-3/</guid>
       <description>高清光纤照明360度旋转镜头内窥镜</description>
     </item>
     <item>
@@ -238,6 +259,13 @@
       <pubDate>Sun, 01 Jan 2023 12:00:00 +0800</pubDate>
       <guid>http://localhost:1313/products/sample-product-3/</guid>
       <description>这是第三个模拟产品的简述。</description>
+    </item>
+    <item>
+      <title>超细弹簧管1mm电子内窥镜</title>
+      <link>http://localhost:1313/products/k1010-electronic-endoscope/</link>
+      <pubDate>Sun, 01 Jan 2023 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/k1010-electronic-endoscope/</guid>
+      <description>简述</description>
     </item>
     <item>
       <title>便携式</title>
