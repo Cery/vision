@@ -19,14 +19,22 @@
                         {{ range first 4 (after 1 .Params.gallery) }}
                         <div class="col-3">
                             <div class="thumbnail-container">
-                                <img src="{{ .image | relURL }}" class="img-fluid rounded object-fit-cover thumbnail-image" alt="{{ .alt }}" onclick="switchMainImage('{{ .image | relURL }}', '{{ .alt }}')">
+                                <img src="{{ .image | relURL }}" 
+                                     class="img-fluid rounded object-fit-cover thumbnail-image" 
+                                     alt="{{ .alt }}" 
+                                     onclick="switchMainImage('{{ .image | relURL }}', '{{ .alt }}')"
+                                     data-full-image="{{ .image | relURL }}">
                             </div>
                         </div>
                         {{ else }}
                         {{ range seq 2 5 }}
                         <div class="col-3">
                             <div class="thumbnail-container">
-                                <img src="https://picsum.photos/150/100?random={{ . }}" class="img-fluid rounded object-fit-cover thumbnail-image" alt="副图占位图" onclick="switchMainImage('https://picsum.photos/800/600?random={{ . }}', '副图占位图')">
+                                <img src="https://picsum.photos/150/100?random={{ . }}" 
+                                     class="img-fluid rounded object-fit-cover thumbnail-image" 
+                                     alt="副图占位图" 
+                                     onclick="switchMainImage('https://picsum.photos/800/600?random={{ . }}', '副图占位图')"
+                                     data-full-image="https://picsum.photos/800/600?random={{ . }}">
                             </div>
                         </div>
                         {{ end }}
@@ -204,8 +212,8 @@
                         </div>
                         <div class="tab-pane fade" id="application" role="tabpanel" aria-labelledby="application-tab">
                             {{ with .Params.application_scenarios }}
-                            <div class="content">
-                                {{ . }}
+                            <div class="content application-scenarios">
+                                {{ . | markdownify }}
                             </div>
                             {{ else }}
                             <p>暂无应用场景信息。</p>
@@ -291,6 +299,39 @@
         visitor: true, 
         path: '{{ .RelPermalink }}' 
     });
+</script>
+
+<script>
+function switchMainImage(imageUrl, altText) {
+    const mainImage = document.getElementById('main-product-image');
+    const thumbnails = document.querySelectorAll('.thumbnail-image');
+    
+    if (mainImage) {
+        mainImage.src = imageUrl;
+        mainImage.alt = altText;
+    }
+
+    // 高亮当前选中的缩略图
+    thumbnails.forEach(thumbnail => {
+        if (thumbnail.src === imageUrl) {
+            thumbnail.classList.add('active-thumbnail');
+        } else {
+            thumbnail.classList.remove('active-thumbnail');
+        }
+    });
+}
+
+// 为缩略图添加点击事件监听器
+document.addEventListener('DOMContentLoaded', function() {
+    const thumbnails = document.querySelectorAll('.thumbnail-image');
+    thumbnails.forEach(thumbnail => {
+        thumbnail.addEventListener('click', function() {
+            const imageUrl = this.getAttribute('data-full-image') || this.src;
+            const altText = this.alt;
+            switchMainImage(imageUrl, altText);
+        });
+    });
+});
 </script>
 
 <style>
@@ -379,6 +420,11 @@
     border-color: #0d6efd;
 }
 
+.thumbnail-image.active-thumbnail {
+    border: 2px solid #0d6efd;
+    transform: scale(1.05);
+}
+
 /* 移动端响应式调整 */
 @media (max-width: 768px) {
     .main-image-container {
@@ -395,6 +441,29 @@
     .main-image-container {
         height: 450px; /* 大屏幕更大高度 */
     }
+}
+
+/* 应用场景图片样式 */
+.application-scenarios img {
+    max-width: 100%;
+    height: auto;
+    margin: 1rem 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.application-scenarios h2, 
+.application-scenarios h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+.application-scenarios p {
+    line-height: 1.8;
+    margin-bottom: 1rem;
+}
+.application-scenarios ul {
+    padding-left: 2rem;
+    margin-bottom: 1rem;
 }
 </style>
 {{ end }}

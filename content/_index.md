@@ -10,6 +10,12 @@ new_product_recommendations:
       display: true
     - product: "product-3"
       display: true
+    - product: "product-p3910"
+      display: true
+    - product: "product-p6010"
+      display: true
+    - product: "product-p8020"
+      display: true
 
 # 产品分类轮播图
 product_category_carousel:

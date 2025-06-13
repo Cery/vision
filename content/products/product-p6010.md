@@ -4,7 +4,7 @@ summary: 百万像素、冷光源、360度旋转镜头内窥镜
 primary_category: "电子内窥镜"
 secondary_category: "工业视屏内窥镜"
 model: "WS-P6010"
-series: "K系列"
+series: "P系列"
 supplier: "深圳市微视光电科技有限公司"
 published: 2025-01-01T12:00:00+08:00
 gallery:
@@ -59,8 +59,6 @@ related_products:
   - "product-93430电子内窥镜-2800"
   - "sample-product-3"
 ---
-
-# 产品介绍
   - ![产品图片](https://vsndt.cn/static/upload/image/20241012/1728720020169235.jpg)
   - ![产品图片](https://vsndt.cn/static/upload/image/20241012/1728720128190726.jpg)
   - ![产品图片](https://vsndt.cn/static/upload/image/20241012/1728720138237129.jpg)

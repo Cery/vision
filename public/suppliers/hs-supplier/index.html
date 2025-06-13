@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> - 视觉检测仪器</title>
@@ -98,7 +98,7 @@
 </nav> 
     
     
-    <main class="container my-5 py-5">
+    <main class="container my-0 py-0 main-content">
         
 <div class="container py-4">
     <div class="row">
@@ -400,10 +400,26 @@ description: &ldquo;深圳市微视光电科技有限公司位于深圳坪山首
   cursor: pointer;
   transition: transform 0.2s;
   overflow: hidden;
+  height: 140px;  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.supplier-modal .gallery-item img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: cover;  
+  border-radius: 8px;
 }
 
 .supplier-modal .gallery-item:hover {
-  transform: scale(1.02);
+  transform: scale(1.05);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 
 .supplier-modal dl {
@@ -534,15 +550,15 @@ description: &ldquo;深圳市微视光电科技有限公司位于深圳坪山首
             if (galleryArray.length > 0) {
               galleryArray.forEach(function(item, index) {
                 var col = document.createElement('div');
-                col.className = 'col-md-4 col-6';
+                col.className = 'col-md-4 col-6 mb-3';
   
                 var imgWrapper = document.createElement('div');
                 imgWrapper.className = 'gallery-item';
   
                 var img = document.createElement('img');
-                img.src = item; 
-                img.className = 'img-fluid rounded';
-                img.alt = '企业图片';
+                img.src = item;
+                img.className = 'img-fluid';
+                img.alt = '企业图片 ' + (index + 1);
                 img.setAttribute('data-fslightbox', 'supplier-gallery');
                 img.onclick = function () {
                   fsLightboxInstances['supplier-gallery'].open(index);
@@ -550,6 +566,7 @@ description: &ldquo;深圳市微视光电科技有限公司位于深圳坪山首
   
                 img.onerror = function () {
                   img.src = '/images/placeholder.jpg';
+                  img.alt = '图片加载失败';
                 };
   
                 imgWrapper.appendChild(img);

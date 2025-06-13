@@ -1,9 +1,14 @@
 backend:
-  name: git-gateway
-  branch: master
+  name: proxy
+  proxy_url: http://localhost:8081/api/v1
+
+local_backend: true
 
 media_folder: "static/images"
 public_folder: "/images"
+
+site_url: http://localhost:1313
+logo_url: http://localhost:1313/logo.png
 
 collections:
   - name: "homepage"
@@ -13,7 +18,7 @@ collections:
         name: "index"
         file: "content/_index.md"
         fields:
-          - {label: "标题", name: "title", widget: "string", required: false}
+          - {label: "标题", name: "title", widget: "string"}
           - label: "轮播图"
             name: "carousel_images"
             widget: "list"
@@ -23,10 +28,15 @@ collections:
               - {label: "链接", name: "link", widget: "string", required: false}
           - label: "新产品推荐"
             name: "new_product_recommendations"
-            widget: "list"
+            widget: "object"
             fields:
-              - {label: "产品", name: "product", widget: "relation", collection: "products", search_fields: ["title", "model"], value_field: "title", display_fields: ["title"], multiple: true}
-              - {label: "显示/隐藏", name: "display", widget: "boolean", default: true}
+              - {label: "启用", name: "enable", widget: "boolean", default: true}
+              - label: "推荐产品"
+                name: "products"
+                widget: "list"
+                fields:
+                  - {label: "产品", name: "product", widget: "relation", collection: "products", search_fields: ["title", "model"], value_field: "title", display_fields: ["title"]}
+                  - {label: "显示/隐藏", name: "display", widget: "boolean", default: true}
           - label: "应用领域"
             name: "application_areas_display"
             widget: "list"
@@ -97,20 +107,8 @@ collections:
     fields:
       - {label: "标题", name: "title", widget: "string"}
       - {label: "简述", name: "summary", widget: "text"}
-      - label: "一级分类"
-        name: "primary_category"
-        widget: "relation"
-        collection: "product_categories"
-        search_fields: ["title"]
-        value_field: "title"
-        display_fields: ["title"]
-      - label: "二级分类"
-        name: "secondary_category"
-        widget: "relation"
-        collection: "product_categories"
-        search_fields: ["title"]
-        value_field: "title"
-        display_fields: ["title"]
+      - {label: "一级分类", name: "primary_category", widget: "string"}
+      - {label: "二级分类", name: "secondary_category", widget: "string"}
       - {label: "型号", name: "model", widget: "string"}
       - {label: "系列", name: "series", widget: "string"}
       - {label: "供应商", name: "supplier", widget: "string"}
@@ -121,7 +119,7 @@ collections:
         fields:
           - {label: "图片", name: "image", widget: "image"}
           - {label: "图片描述", name: "alt", widget: "string"}
-          - {label: "是否主图", name: "is_main", widget: "boolean", required: false, default: false}
+          - {label: "是否主图", name: "is_main", widget: "boolean", default: false}
       - label: "参数规格"
         name: "parameters"
         widget: "list"
@@ -146,7 +144,6 @@ collections:
         multiple: true
         required: false
       - {label: "产品介绍", name: "body", widget: "markdown"}
-
 
   - name: "suppliers"
     label: "供应商"

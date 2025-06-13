@@ -12,25 +12,25 @@
                 {{ if .Params.icon }}
                 <i class="{{ .Params.icon }} me-2 category-icon"></i>
                 {{ else }}
-                <i class="fas fa-angle-right me-2 category-icon"></i>
+                <img src="https://picsum.photos/32/32?random={{ .Title }}" class="category-small-icon me-2" alt="{{ .Title }}">
                 {{ end }}
-                <span>{{ .Title }}</span>
+                <span class="category-title">{{ .Title }}</span>
                 {{ $currentCategory := .File.BaseFileName }}
                 {{ $subCategories := where $categories ".Params.parent" $currentCategory }}
                 {{ if $subCategories }}
-                <i class="fas fa-chevron-right ms-auto"></i>
+                <i class="fas fa-caret-down ms-auto"></i>
                 {{ end }}
             </a>
             {{ if $subCategories }}
             <div class="subcategory-menu">
                 {{ range $subCategories }}
-                <a href="/products?category={{ .File.BaseFileName }}" class="list-group-item list-group-item-action">
+                <a href="/products?category={{ .File.BaseFileName }}" class="list-group-item list-group-item-action d-flex align-items-center">
                     {{ if .Params.icon }}
-                    <i class="{{ .Params.icon }} me-2"></i>
+                    <i class="{{ .Params.icon }} me-2 subcategory-icon"></i>
                     {{ else }}
-                    <i class="fas fa-circle-notch me-2 fa-sm"></i>
+                    <img src="https://picsum.photos/24/24?random={{ .Title }}" class="subcategory-small-icon me-2" alt="{{ .Title }}">
                     {{ end }}
-                    {{ .Title }}
+                    <span class="subcategory-title">{{ .Title }}</span>
                 </a>
                 {{ end }}
             </div>

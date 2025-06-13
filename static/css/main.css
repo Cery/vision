@@ -360,3 +360,54 @@ body {
 .card {
     border: 1px solid #dee2e6; /* 为卡片添加边框 */
 } 
+
+/* 调整主内容与头部间距 */
+.main-content {
+    margin-top: 0.2rem; /* 减少到原来的1/3 */
+    padding-top: 0.2rem;
+}
+
+/* 确保头部和主内容之间的间距更紧凑 */
+.header-main-separator {
+    margin-top: 0.2rem; /* 原来的1/3 */
+    padding-top: 0.2rem;
+}
+
+/* 如果使用Bootstrap的container或row */
+.container, .row {
+    margin-top: 0.5rem;
+}
+
+/* 产品分类菜单小图标样式 */
+.category-small-icon,
+.subcategory-small-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    object-fit: cover;
+    margin-right: 0.5rem;
+    transition: transform 0.2s ease;
+}
+
+.category-small-icon:hover,
+.subcategory-small-icon:hover {
+    transform: scale(1.1);
+}
+
+.category-title,
+.subcategory-title {
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.category-menu .list-group-item {
+    max-height: 48px; /* 限制菜单项高度 */
+    overflow: hidden;
+}
+
+.subcategory-menu {
+    max-height: 300px; /* 限制二级菜单高度 */
+    overflow-y: auto;
+} 
