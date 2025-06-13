@@ -23,30 +23,7 @@
     X-Frame-Options = "DENY"
     X-XSS-Protection = "1; mode=block"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self'; 
-      script-src 'self' 'unsafe-inline' 'unsafe-eval' 
-      https://identity.netlify.com 
-      https://unpkg.com 
-      https://cdn.jsdelivr.net 
-      https://cdnjs.cloudflare.com;
-      
-      style-src 'self' 'unsafe-inline' 
-      https://cdn.jsdelivr.net 
-      https://cdnjs.cloudflare.com;
-      
-      img-src 'self' data: 
-      https://picsum.photos 
-      https://fastly.picsum.photos 
-      https://cdn.jsdelivr.net 
-      https://cdnjs.cloudflare.com;
-      
-      font-src 'self' 
-      https://cdn.jsdelivr.net 
-      https://cdnjs.cloudflare.com;
-      
-      connect-src 'self' 
-      https://identity.netlify.com 
-      https://api.netlify.com"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://identity.netlify.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; img-src 'self' data: https://picsum.photos https://fastly.picsum.photos https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; font-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; connect-src 'self' https://identity.netlify.com https://api.netlify.com"
 
 # Identity and Git Gateway Redirects
 [[redirects]]
