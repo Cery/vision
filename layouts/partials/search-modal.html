@@ -1,0 +1,31 @@
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="searchModalLabel">站内搜索</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+        </div>
+        <div class="modal-body">
+          <!-- 分类Tab -->
+          <ul class="nav nav-tabs mb-3" id="searchTypeTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active search-type-btn" data-type="all" type="button" role="tab">全部</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link search-type-btn" data-type="product" type="button" role="tab">产品</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link search-type-btn" data-type="article" type="button" role="tab">文章资讯</button>
+            </li>
+          </ul>
+          <!-- 搜索输入+按钮 -->
+          <div class="input-group mb-3">
+            <input type="text" id="searchInput" class="form-control" placeholder="请输入关键词...">
+            <button class="btn btn-primary" id="searchBtn" type="button">搜索</button>
+          </div>
+          <!-- 搜索结果/建议/历史 -->
+          <div id="searchResults"></div>
+        </div>
+      </div>
+    </div>
+  </div>

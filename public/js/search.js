@@ -168,6 +168,33 @@ const SearchModule = {
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
         };
+    },
+
+    // 获取搜索建议
+    getSuggestions: function(query, limit = 5) {
+        if (!query || !this.searchEngine) {
+            return [];
+        }
+
+        // 使用更智能的建议算法
+        const suggestions = this.searchEngine.search(query)
+            .slice(0, limit)
+            .map(result => result.item.title);
+
+        // 如果没有精确匹配，尝试部分匹配
+        if (suggestions.length === 0) {
+            const partialMatches = this.documents
+                .filter(doc => 
+                    doc.title.toLowerCase().includes(query.toLowerCase()) ||
+                    doc.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()))
+                )
+                .slice(0, limit)
+                .map(doc => doc.title);
+
+            return partialMatches;
+        }
+
+        return suggestions;
     }
 };
 
@@ -175,3 +202,53 @@ const SearchModule = {
 document.addEventListener('DOMContentLoaded', () => {
     SearchModule.init();
 });
+
+(function() {
+    // 轻量级搜索管理器
+    class HugoSearchManager {
+        constructor() {
+            this.isReady = false;
+            this.index = [];
+            this.onReadyCallbacks = [];
+            this.init();
+        }
+        init() {
+            if (window.searchIndex) {
+                this.index = window.searchIndex;
+                this.isReady = true;
+                this.onReadyCallbacks.forEach(cb => cb());
+            } else {
+                setTimeout(() => this.init(), 100);
+            }
+        }
+        onReady(cb) {
+            if (this.isReady) cb();
+            else this.onReadyCallbacks.push(cb);
+        }
+        getSuggestions(query, type = 'all') {
+            return this.index
+                .filter(item => (type === 'all' || item.type === type) && (item.title.includes(query) || item.content.includes(query)))
+                .slice(0, 5)
+                .map(item => item.title);
+        }
+        search(query, type = 'all') {
+            return this.index
+                .filter(item => (type === 'all' || item.type === type) && (item.title.includes(query) || item.content.includes(query)))
+                .map(item => ({
+                    ...item,
+                    score: 0.7 // 可根据需要实现更复杂的相关度算法
+                }));
+        }
+    }
+
+    // 全局搜索管理器实例
+    window.visndtSearchManager = new HugoSearchManager();
+
+    // 页面加载后初始化搜索管理器
+    document.addEventListener('DOMContentLoaded', () => {
+        const initResult = window.visndtSearchManager.init();
+        if (!initResult) {
+            console.error('搜索管理器初始化失败！');
+        }
+    });
+})();

@@ -1,0 +1,36 @@
+{{ $products := where .Site.Pages "Type" "products" }}
+{{ $articles := where .Site.Pages "Type" "articles" }}
+
+<script>
+    // 产品索引
+    window.productIndex = [
+        {{ range $index, $product := $products }}
+        {
+            "id": "{{ $product.File.UniqueID }}",
+            "title": {{ $product.Title | jsonify }},
+            "description": {{ $product.Summary | jsonify }},
+            "category": {{ $product.Params.category | default "" | jsonify }},
+            "tags": {{ $product.Params.tags | default (slice) | jsonify }},
+            "url": "{{ $product.Permalink }}"
+        }{{ if lt (add $index 1) (len $products) }},{{ end }}
+        {{ end }}
+    ];
+
+    // 文章索引
+    window.articleIndex = [
+        {{ range $index, $article := $articles }}
+        {
+            "id": "{{ $article.File.UniqueID }}",
+            "title": {{ $article.Title | jsonify }},
+            "summary": {{ $article.Summary | jsonify }},
+            "category": {{ $article.Params.category | default "" | jsonify }},
+            "tags": {{ $article.Params.tags | default (slice) | jsonify }},
+            "url": "{{ $article.Permalink }}"
+        }{{ if lt (add $index 1) (len $articles) }},{{ end }}
+        {{ end }}
+    ];
+</script>
+
+<!-- 加载 Lunr.js 搜索库 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lunr.js/2.3.9/lunr.min.js"></script>
+<script src="/js/search-index.js"></script> 

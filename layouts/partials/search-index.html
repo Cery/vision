@@ -1,0 +1,15 @@
+<script>
+    window.searchIndex = [
+    {{- $first := true -}}
+    {{- range where .Site.RegularPages "Type" "in" (slice "products" "news" "cases") -}}
+      {{- if not $first }},{{ end -}}
+      {
+        "title": {{ .Title | jsonify }},
+        "url": {{ .RelPermalink | jsonify }},
+        "content": {{ .Plain | jsonify }},
+        "type": {{ if eq .Type "products" }}"product"{{else}}"article"{{end}}
+      }
+      {{- $first = false -}}
+    {{- end -}}
+    ];
+    </script>

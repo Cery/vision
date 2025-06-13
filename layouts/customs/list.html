@@ -1,0 +1,311 @@
+{{ define "main" }}
+<div class="container py-5">
+    {{ partial "breadcrumbs.html" . }}
+    <div class="row">
+        <!-- 左侧：定制需求表单 -->
+        <div class="col-lg-7 mb-4 mb-lg-0">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="card-title mb-4">发布定制需求</h4>
+                    <form id="customForm" class="needs-validation" novalidate>
+                        <!-- 定制需求参数 -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">需求参数</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="productType" class="form-label">产品类型</label>
+                                    <select class="form-select" id="productType">
+                                        <option value="">请选择产品类型</option>
+                                        <optgroup label="内窥镜">
+                                            <option value="电子内窥镜">电子内窥镜</option>
+                                            <option value="光学内窥镜">光学内窥镜</option>
+                                            <option value="光纤内窥镜">光纤内窥镜</option>
+                                            <option value="管道内窥镜">管道内窥镜</option>
+                                            <option value="爬行机器人">爬行机器人</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="screenSize" class="form-label">主机屏幕</label>
+                                        <select class="form-select" id="screenSize">
+                                            <option value="">请选择屏幕尺寸</option>
+                                            <option value='5"'>5英寸</option>
+                                            <option value='7"'>7英寸</option>
+                                            <option value='8"'>8英寸</option>
+                                            <option value='10"'>10英寸</option>
+                                            <option value='15"'>15.6英寸</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="batteryLife" class="form-label">待机时长</label>
+                                        <select class="form-select" id="batteryLife">
+                                            <option value="">请选择待机时长</option>
+                                            <option value="2小时">2小时</option>
+                                            <option value="4小时">4小时</option>
+                                            <option value="6小时">6小时</option>
+                                            <option value="8小时">8小时</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="probeDiameter" class="form-label">探头直径</label>
+                                        <select class="form-select" id="probeDiameter">
+                                            <option value="">请选择探头直径</option>
+                                            <option value="0.85mm">0.85mm</option>
+                                            <option value="0.95mm">0.95mm</option>
+                                            <option value="1.0mm">1.0mm</option>
+                                            <option value="1.2mm">1.2mm</option>
+                                            <option value="1.5mm">1.5mm</option>
+                                            <option value="1.8mm">1.8mm</option>
+                                            <option value="2.0mm">2.0mm</option>
+                                            <option value="2.2mm">2.2mm</option>
+                                            <option value="2.4mm">2.4mm</option>
+                                            <option value="2.8mm">2.8mm</option>
+                                            <option value="3.9mm">3.9mm</option>
+                                            <option value="6.0mm">6.0mm</option>
+                                            <option value="其它">其它</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="resolution" class="form-label">像素</label>
+                                        <select class="form-select" id="resolution">
+                                            <option value="">请选择像素</option>
+                                            <option value="16万像素">16万像素</option>
+                                            <option value="30万像素">30万像素</option>
+                                            <option value="52万像素">52万像素</option>
+                                            <option value="100万像素">100万像素</option>
+                                            <option value="其它">其它</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="viewingAngle" class="form-label">视向</label>
+                                        <select class="form-select" id="viewingAngle">
+                                            <option value="">请选择视向</option>
+                                            <option value="0度直视">0度直视</option>
+                                            <option value="90度侧视">90度侧视</option>
+                                            <option value="30度斜视">30度斜视</option>
+                                            <option value="70度斜视">70度斜视</option>
+                                            <option value="其它">其它</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="lightSource" class="form-label">光源</label>
+                                        <select class="form-select" id="lightSource">
+                                            <option value="">请选择光源</option>
+                                            <option value="LED">LED</option>
+                                            <option value="光纤">光纤</option>
+                                            <option value="红外">红外</option>
+                                            <option value="紫外">紫外</option>
+                                            <option value="激光">激光</option>
+                                            <option value="其它">其它</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="guidance" class="form-label">导向</label>
+                                    <select class="form-select" id="guidance">
+                                        <option value="">请选择导向方式</option>
+                                        <option value="无导向">无导向</option>
+                                        <option value="手动180度">手动180度</option>
+                                        <option value="手动360度">手动360度</option>
+                                        <option value="自动180度">自动180度</option>
+                                        <option value="自动360度">自动360度</option>
+                                        <option value="其它">其它</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="requirements" class="form-label">定制需求描述</label>
+                                    <textarea class="form-control" id="requirements" rows="3" placeholder="请详细描述您的具体定制需求和特殊要求"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 公司和联系人信息 -->
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">公司联系信息</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="companyName" class="form-label">公司名称</label>
+                                    <input type="text" class="form-control" id="companyName" placeholder="请输入公司全称">
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="department" class="form-label">部门</label>
+                                        <input type="text" class="form-control" id="department" placeholder="请输入部门名称">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="contact" class="form-label">联系人</label>
+                                        <input type="text" class="form-control" id="contact" placeholder="请输入联系人姓名">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="phone" class="form-label">联系电话</label>
+                                        <input type="tel" class="form-control" id="phone" placeholder="请输入11位手机号码">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">电子邮箱</label>
+                                        <input type="email" class="form-control" id="email" placeholder="请输入常用邮箱">
+                                    </div>
+                                </div>
+
+                                <!-- 附件上传 -->
+                                <div class="mb-3">
+                                    <label for="attachments" class="form-label">上传附件</label>
+                                    <input type="file" class="form-control" id="attachments" multiple accept=".pdf,.doc,.docx,.dwg,.jpg,.png">
+                                    <div class="form-text">支持PDF、Word、CAD图纸、图片等格式，单个文件不超过10MB</div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary w-100">提交定制需求</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧：定制需求列表 -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="card-title mb-4">最新需求</h4>
+                    <div class="custom-requirements-list">
+                        {{ $paginator := .Paginate .Pages 10 }}
+                        {{ range $paginator.Pages }}
+                        <div class="requirement-item p-3 mb-3 bg-light rounded">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h6 class="mb-2">{{ .Title }}</h6>
+                                <span class="badge bg-primary">{{ .Params.status }}</span>
+                            </div>
+                            <div class="text-muted small mb-2">
+                                <i class="bi bi-calendar3"></i> {{ .Date.Format "2006-01-02" }}
+                            </div>
+                            {{ with .Params.company }}
+                            <div class="text-muted small">
+                                <i class="bi bi-building"></i> {{ . }}
+                            </div>
+                            {{ end }}
+                        </div>
+                        {{ end }}
+                    </div>
+
+                    <!-- 分页 -->
+                    {{ if gt $paginator.TotalPages 1 }}
+                    <nav aria-label="Page navigation" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            {{ if $paginator.HasPrev }}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $paginator.Prev.URL }}">&laquo;</a>
+                            </li>
+                            {{ end }}
+                            
+                            {{ range $paginator.Pagers }}
+                            <li class="page-item {{ if eq . $paginator }}active{{ end }}">
+                                <a class="page-link" href="{{ .URL }}">{{ .PageNumber }}</a>
+                            </li>
+                            {{ end }}
+                            
+                            {{ if $paginator.HasNext }}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $paginator.Next.URL }}">&raquo;</a>
+                            </li>
+                            {{ end }}
+                        </ul>
+                    </nav>
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.required:after {
+    content: " *";
+    color: red;
+}
+
+.custom-requirements-list {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.requirement-item {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.requirement-item:hover {
+    transform: translateX(5px);
+    border-color: var(--bs-primary);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+.pagination .page-link {
+    color: var(--bs-primary);
+    border-radius: 0.25rem;
+    margin: 0 0.25rem;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+.pagination .page-link:hover {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+    color: white;
+}
+</style>
+
+<script>
+// 表单验证
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('customForm');
+    
+    form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+    });
+
+    // 文件上传大小限制
+    const attachments = document.getElementById('attachments');
+    attachments.addEventListener('change', function() {
+        const files = this.files;
+        const maxSize = 10 * 1024 * 1024; // 10MB
+
+        for (let i = 0; i < files.length; i++) {
+            if (files[i].size > maxSize) {
+                alert('文件 ' + files[i].name + ' 超过10MB限制，请重新选择');
+                this.value = '';
+                break;
+            }
+        }
+    });
+});
+</script>
+{{ end }}

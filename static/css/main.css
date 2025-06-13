@@ -369,8 +369,8 @@ body {
 
 /* 确保头部和主内容之间的间距更紧凑 */
 .header-main-separator {
-    margin-top: 0.2rem; /* 原来的1/3 */
-    padding-top: 0.2rem;
+    margin: 10px 0; /* 减小垂直外边距 */
+    padding: 5px 0; /* 减小垂直内边距 */
 }
 
 /* 如果使用Bootstrap的container或row */

@@ -1,0 +1,236 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ .Site.Title }}</title>
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+<!-- 自定义样式 -->
+<style>
+    /* 全局样式 */
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    /* 导航栏样式 */
+    .navbar {
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .navbar-brand img {
+        max-height: 50px;
+    }
+
+    /* 搜索模态框样式 */
+    #searchModal .modal-dialog {
+        max-width: 600px;
+    }
+
+    #searchModal .nav-tabs {
+        border-bottom: none;
+    }
+
+    #searchModal .nav-link {
+        color: #6c757d;
+        transition: all 0.3s ease;
+    }
+
+    #searchModal .nav-link.active {
+        color: var(--bs-primary);
+        border-bottom: 2px solid var(--bs-primary);
+    }
+
+    /* 搜索结果样式 */
+    .search-result-item {
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .search-result-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    /* 搜索历史和热门搜索 */
+    #history-container .badge,
+    #hot-keywords .badge {
+        margin: 0.25rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    #history-container .badge:hover,
+    #hot-keywords .badge:hover {
+        opacity: 0.8;}
+
+    /* 搜索高亮 */
+    .search-highlight {
+        background-color: #ffff00;
+        font-weight: bold;
+        padding: 0 2px;
+    }
+
+    /* 搜索建议 */
+    .search-suggestions {
+        position: absolute;
+        z-index: 1000;
+        background-color: white;
+        border: 1px solid #ddd;
+        border-top: none;
+        max-height: 300px;
+        overflow-y: auto;
+        width: 100%;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .search-suggestion-item {
+        padding: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .search-suggestion-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* 搜索结果和建议样式 */
+    .search-suggestion, 
+    .search-history-item, 
+    .search-result {
+        cursor: pointer;
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        transition: background-color 0.3s;
+    }
+
+    .search-suggestion:hover, 
+    .search-history-item:hover, 
+    .search-result:hover {
+        background-color: #f5f5f5;
+    }
+
+    .search-result mark {
+        background-color: #ffff00;
+        color: #333;
+        padding: 0 3px;
+        font-weight: bold;
+    }
+
+    .result-footer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        font-size: 0.8em;
+        color: #666;
+    }
+
+    .no-results, .search-hint {
+        text-align: center;
+        color: #999;
+        padding: 20px;
+    }
+
+    .social-hover {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+}
+.social-hover .qr-code-float {
+  display: none;
+  position: absolute;
+  left: 50%;
+  top: 120%;
+  transform: translateX(-50%);
+  z-index: 10;
+  background: #fff;
+  padding: 8px;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  min-width: 110px;
+}
+.social-hover:hover .qr-code-float,
+.social-hover:focus-within .qr-code-float {
+  display: block;
+}
+.social-hover .qr-code-float img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+@media (max-width: 768px) {
+  .social-hover .qr-code-float {
+    left: 50%;
+    top: 110%;
+    min-width: 90px;
+    padding: 4px;
+  }
+  .social-hover .qr-code-float img {
+    width: 80px;
+    height: 80px;
+  }
+}
+/* 返回顶部按钮 */
+#backToTopBtn {
+  transition: opacity 0.3s;
+  opacity: 0.85;
+}
+#backToTopBtn:hover {
+  opacity: 1;
+  background: #0056b3;
+}
+</style>
+
+<!-- 搜索状态管理 -->
+<script>
+    // 全局搜索状态管理
+    window.SearchState = {
+        isManagerReady: false,
+        readyCallbacks: [],
+        
+        // 等待搜索管理器就绪
+        waitForReady: function(callback) {
+            if (this.isManagerReady) {
+                callback();
+            } else {
+                this.readyCallbacks.push(callback);
+            }
+        }
+    };
+
+    // 兼容旧的就绪通知方法
+    function markSearchManagerReady() {
+        console.log('🎉 搜索管理器就绪（兼容模式）');
+        window.SearchState.isManagerReady = true;
+    }
+</script>
+
+<!-- 依赖库 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- 搜索索引生成 -->
+{{ partial "search-index.html" . }}
+
+<!-- 搜索相关脚本 -->
+<script src="/js/search.js"></script>
+<script src="/js/search-modal.js"></script>
+
+{{ block "head" . }}
+{{ end }}
+<!-- 返回顶部按钮 -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var btn = document.getElementById('backToTopBtn');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 200) {
+          btn.style.display = 'block';
+        } else {
+          btn.style.display = 'none';
+        }
+      });
+      btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+    </script>

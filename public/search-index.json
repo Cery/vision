@@ -1,0 +1,46 @@
+{
+    "products": [
+        {
+            "id": "1",
+            "title": "内窥镜检测系统",
+            "content": "高精度工业内窥镜，专为精密检测设计，适用于各种复杂环境的视觉检测需求。",
+            "type": "product",
+            "url": "/products/endoscope",
+            "tags": ["内窥镜", "工业检测"]
+        },
+        {
+            "id": "3", 
+            "title": "工业相机在无损检测中的应用",
+            "content": "工业相机作为无损检测的重要工具，能够快速、准确地捕捉微小缺陷，提高检测效率。",
+            "type": "product", 
+            "url": "/products/industrial-camera",
+            "tags": ["工业相机", "无损检测"]
+        },
+        {
+            "id": "5",
+            "title": "探伤仪器的创新与应用",
+            "content": "探伤仪器在工业无损检测中扮演着关键角色，能够精确检测材料内部缺陷。",
+            "type": "product",
+            "url": "/products/flaw-detector", 
+            "tags": ["探伤仪", "无损检测"]
+        }
+    ],
+    "articles": [
+        {
+            "id": "2",
+            "title": "视觉检测技术的发展趋势",
+            "content": "随着人工智能和机器视觉技术的快速发展，视觉检测正在向更智能、更精准的方向演进。",
+            "type": "article",
+            "url": "/articles/vision-detection-trends",
+            "tags": ["视觉检测", "技术趋势"]
+        },
+        {
+            "id": "4",
+            "title": "光纤内窥镜技术解析",
+            "content": "光纤内窥镜是现代医疗和工业检测的重要技术，具有高分辨率和精确定位的特点。",
+            "type": "article", 
+            "url": "/articles/fiber-endoscope",
+            "tags": ["光纤内窥镜", "技术"]
+        }
+    ]
+} 
