@@ -19,9 +19,11 @@
                     <div class="carousel-inner rounded shadow-sm">
                         {{ range $index, $slide := .Site.Params.carousel_images }}
                         <div class="carousel-item {{ if eq $index 0 }}active{{ end }}">
-                            <img src="{{ if $slide.image }}{{ $slide.image | relURL }}{{ else }}https://picsum.photos/1200/600?random={{ $index }}{{ end }}" 
-                                 class="d-block w-100" 
-                                 alt="{{ $slide.alt }}">
+                            <div class="img-container" data-fit="cover">
+                                <img src="{{ if $slide.image }}{{ $slide.image | relURL }}{{ else }}https://picsum.photos/1200/600?random={{ $index }}{{ end }}" 
+                                     class="d-block w-100" 
+                                     alt="{{ $slide.alt }}">
+                            </div>
                             <div class="carousel-caption">
                                 {{ if $slide.title }}
                                 <h3>{{ $slide.title }}</h3>
@@ -57,11 +59,19 @@
 
 .carousel-item {
     height: 400px;
+    position: relative;
+}
+
+.carousel-item .img-container {
+    height: 100%;
+    width: 100%;
 }
 
 .carousel-item img {
     height: 100%;
+    width: 100%;
     object-fit: cover;
+    object-position: center;
 }
 
 .carousel-caption {
@@ -69,6 +79,10 @@
     padding: 20px;
     border-radius: 5px;
     bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 800px;
 }
 
 .carousel-caption h3 {
@@ -90,5 +104,20 @@
     height: 10px;
     border-radius: 50%;
     margin: 0 5px;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .carousel-item {
+        height: 300px;
+    }
+    
+    .carousel-caption h3 {
+        font-size: 1.5rem;
+    }
+    
+    .carousel-caption p {
+        font-size: 1rem;
+    }
 }
 </style>
