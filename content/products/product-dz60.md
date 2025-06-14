@@ -8,17 +8,14 @@ series: "DZ系列"
 supplier: "深圳市微视光电科技有限公司"
 published: 2025-01-01T12:00:00+08:00
 gallery:
-  - image: "/images/products/DZ/DZ-main.jpg"
+  - image: "/images/products/DZ/DZ-1.jpg"
     alt: "主图"
     is_main: true
-  - image: "/images/products/P60/P-1.jpg"
+  - image: "/images/products/DZ/DZ-2.jpg"
     alt: "工业内窥镜"
-  - image: "/images/products/P60/P-2.jpg"
+  - image: "/images/products/DZ/DZ-3.jpg"
     alt: "工业内窥镜"
-  - image: "/images/products/P60/P-3.jpg"
-    alt: "工业内窥镜"
-  - image: "https://picsum.photos/800/600?random=5"
-    alt: "副图4"
+  - image: "/images/products/DZ/DZ-4.jpg"
 parameters:
   - name: "主机屏幕"
     value: "7英寸"
@@ -59,5 +56,5 @@ related_products:
   - "product-93430电子内窥镜-2800"
   - "sample-product-3"
 ---
-  - ![产品图片](.jpg)
+  - ![产品图片](/images/products/DZ/DZX-1.jpg)
   

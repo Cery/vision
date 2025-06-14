@@ -18,48 +18,6 @@
   
   
   <url>
-    <loc>http://localhost:1313/products/product-dz60/</loc>
-    <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
-    
-    
-    
-    
-
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/DZ/DZ-main.jpg</image:loc>
-      <image:title>主图</image:title>
-    </image:image>
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
-      <image:title>工业内窥镜</image:title>
-    </image:image>
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
-      <image:title>工业内窥镜</image:title>
-    </image:image>
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/P60/P-3.jpg</image:loc>
-      <image:title>工业内窥镜</image:title>
-    </image:image>
-    
-    <image:image>
-      <image:loc>https://picsum.photos/800/600?random=5</image:loc>
-      <image:title>副图4</image:title>
-    </image:image>
-    
-    
-    
-  </url>
-  
-  
-  
-  <url>
     <loc>http://localhost:1313/products/product-p08510/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
@@ -703,6 +661,48 @@
     
     
 
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/product-dz60/</loc>
+    <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/ws-dz60/main.jpg</image:loc>
+      <image:title>WS-DZ60高清三维测量工业视频内窥镜主图</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/ws-dz60/detail1.jpg</image:loc>
+      <image:title>WS-DZ60高清三维测量工业视频内窥镜细节图1</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/ws-dz60/detail2.jpg</image:loc>
+      <image:title>WS-DZ60高清三维测量工业视频内窥镜细节图2</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/ws-dz60/detail3.jpg</image:loc>
+      <image:title>WS-DZ60高清三维测量工业视频内窥镜细节图3</image:title>
+    </image:image>
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/ws-dz60/detail4.jpg</image:loc>
+      <image:title>WS-DZ60高清三维测量工业视频内窥镜细节图4</image:title>
+    </image:image>
+    
+    
     
   </url>
   
