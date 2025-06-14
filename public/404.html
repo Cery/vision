@@ -104,26 +104,49 @@
     }
 
      
-    .search-suggestion, 
-    .search-history-item, 
+    .search-suggestion {
+        display: flex !important;
+        align-items: center !important;
+        padding: 0.75rem 1rem !important;
+        border-radius: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
+        background: #f8f9fa !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+        border: 1px solid #e9ecef !important;
+        cursor: pointer !important;
+        transition: background 0.2s, box-shadow 0.2s !important;
+        text-decoration: none !important;
+        color: #222 !important;
+    }
+    .search-suggestion:hover {
+        background: #e3f2fd !important;
+        box-shadow: 0 4px 16px rgba(0,123,255,0.08) !important;
+        color: #1976d2 !important;
+    }
+    .search-suggestion .icon {
+        font-size: 1.2rem !important;
+        margin-right: 0.5rem !important;
+    }
     .search-result {
-        cursor: pointer;
-        padding: 10px;
-        border-bottom: 1px solid #eee;
-        transition: background-color 0.3s;
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 1rem !important;
+        border-radius: 0.75rem !important;
+        border: 1px solid #e9ecef !important;
+        margin-bottom: 1rem !important;
+        background: #fff !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03) !important;
+        transition: box-shadow 0.2s, border 0.2s !important;
+        cursor: pointer !important;
     }
-
-    .search-suggestion:hover, 
-    .search-history-item:hover, 
     .search-result:hover {
-        background-color: #f5f5f5;
+        box-shadow: 0 8px 24px rgba(0,123,255,0.10) !important;
+        border-color: #90caf9 !important;
+        background: #f1f8ff !important;
     }
-
-    .search-result mark {
-        background-color: #ffff00;
-        color: #333;
-        padding: 0 3px;
-        font-weight: bold;
+    .search-result .icon {
+        font-size: 1.1rem !important;
+        margin-right: 0.5rem !important;
     }
 
     .result-footer {
@@ -411,6 +434,8 @@
 <script src="/js/search.js"></script>
 <script src="/js/search-modal.js"></script>
 
+<link rel="stylesheet" href="/css/image-utils.css">
+
 
 
 
@@ -429,6 +454,7 @@
       });
     });
     </script>
+<script src="/js/image-handler.js" defer></script>
     
 </head>
 <body>
@@ -458,14 +484,17 @@
         <a class="navbar-brand" href="/">
             <img src="/images/logo.svg" alt="hugo-visndt-site" height="50">
         </a>
-
+        
+        <button class="btn btn-primary d-lg-none me-2" style="position:relative;z-index:1051;"
+                data-bs-toggle="modal" data-bs-target="#searchModal">
+            <i class="fas fa-search fa-lg"></i>
+        </button>
         
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
                 data-bs-target="#navbarNav" aria-controls="navbarNav" 
                 aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 
@@ -498,12 +527,11 @@
                 </li>
                 
             </ul>
-
             
-            <button class="btn btn-outline-primary" 
+            <button class="btn btn-outline-primary d-none d-lg-inline-block ms-2" 
                     data-bs-toggle="modal" 
                     data-bs-target="#searchModal">
-                <i class="fas fa-search"></i> 搜索
+                <i class="fas fa-search fa-lg"></i> 搜索
             </button>
         </div>
     </div>
@@ -545,7 +573,7 @@
 
     </main>
 
-    <footer class="footer py-5 bg-light border-top">
+    <footer class="footer py-5 border-top">
     <div class="container">
       <div class="row">
         

@@ -104,26 +104,49 @@
     }
 
      
-    .search-suggestion, 
-    .search-history-item, 
+    .search-suggestion {
+        display: flex !important;
+        align-items: center !important;
+        padding: 0.75rem 1rem !important;
+        border-radius: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
+        background: #f8f9fa !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+        border: 1px solid #e9ecef !important;
+        cursor: pointer !important;
+        transition: background 0.2s, box-shadow 0.2s !important;
+        text-decoration: none !important;
+        color: #222 !important;
+    }
+    .search-suggestion:hover {
+        background: #e3f2fd !important;
+        box-shadow: 0 4px 16px rgba(0,123,255,0.08) !important;
+        color: #1976d2 !important;
+    }
+    .search-suggestion .icon {
+        font-size: 1.2rem !important;
+        margin-right: 0.5rem !important;
+    }
     .search-result {
-        cursor: pointer;
-        padding: 10px;
-        border-bottom: 1px solid #eee;
-        transition: background-color 0.3s;
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 1rem !important;
+        border-radius: 0.75rem !important;
+        border: 1px solid #e9ecef !important;
+        margin-bottom: 1rem !important;
+        background: #fff !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03) !important;
+        transition: box-shadow 0.2s, border 0.2s !important;
+        cursor: pointer !important;
     }
-
-    .search-suggestion:hover, 
-    .search-history-item:hover, 
     .search-result:hover {
-        background-color: #f5f5f5;
+        box-shadow: 0 8px 24px rgba(0,123,255,0.10) !important;
+        border-color: #90caf9 !important;
+        background: #f1f8ff !important;
     }
-
-    .search-result mark {
-        background-color: #ffff00;
-        color: #333;
-        padding: 0 3px;
-        font-weight: bold;
+    .search-result .icon {
+        font-size: 1.1rem !important;
+        margin-right: 0.5rem !important;
     }
 
     .result-footer {
@@ -411,6 +434,8 @@
 <script src="/js/search.js"></script>
 <script src="/js/search-modal.js"></script>
 
+<link rel="stylesheet" href="/css/image-utils.css">
+
 
 
 
@@ -429,6 +454,7 @@
       });
     });
     </script>
+<script src="/js/image-handler.js" defer></script>
     
 </head>
 <body>
@@ -458,14 +484,17 @@
         <a class="navbar-brand" href="/">
             <img src="/images/logo.svg" alt="hugo-visndt-site" height="50">
         </a>
-
+        
+        <button class="btn btn-primary d-lg-none me-2" style="position:relative;z-index:1051;"
+                data-bs-toggle="modal" data-bs-target="#searchModal">
+            <i class="fas fa-search fa-lg"></i>
+        </button>
         
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
                 data-bs-target="#navbarNav" aria-controls="navbarNav" 
                 aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 
@@ -498,12 +527,11 @@
                 </li>
                 
             </ul>
-
             
-            <button class="btn btn-outline-primary" 
+            <button class="btn btn-outline-primary d-none d-lg-inline-block ms-2" 
                     data-bs-toggle="modal" 
                     data-bs-target="#searchModal">
-                <i class="fas fa-search"></i> 搜索
+                <i class="fas fa-search fa-lg"></i> 搜索
             </button>
         </div>
     </div>
@@ -557,209 +585,82 @@
 
 <style>
 .search-results .search-result-item {
-    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 1rem !important;
+    border-radius: 0.75rem !important;
+    border: 1px solid #e9ecef !important;
+    margin-bottom: 1rem !important;
+    background: #fff !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03) !important;
+    transition: box-shadow 0.2s, border 0.2s !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    color: #222 !important;
 }
-
 .search-results .search-result-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 24px rgba(0,123,255,0.10) !important;
+    border-color: #90caf9 !important;
+    background: #f1f8ff !important;
+    color: #1976d2 !important;
+}
+.search-results .icon {
+    font-size: 1.1rem !important;
+    margin-right: 0.5rem !important;
 }
 </style>
 
-
-
-
-
 <script>
+document.addEventListener('DOMContentLoaded', function() {
     
-    window.productIndex = [
-        
-        {
-            "id": "e2b2fe74df1e5db5c2771015dd788b2d",
-            "title": "\"WS-DZ60高清三维测量工业视频内窥镜\"",
-            "description": "\"便携式三维测量高清工业内窥镜\"",
-            "category": "\"\"",
-            "tags": "[]",
-            "url": "http:\/\/localhost:1313\/products\/product-dz60\/"
-        },
-        
-        {
-            "id": "eba858e97aab764c8de437019f15eef5",
-            "title": "\"WS-P-08510高清工业视频内窥镜\"",
-            "description": "\"高清光纤照明内窥镜\"",
-            "category": "\"\"",
-            "tags": "[]",
-            "url": "http:\/\/localhost:1313\/products\/product-p08510\/"
-        },
-        
-        {
-            "id": "6dcf5e34e3ecc7ae0984dd1e5e213a5e",
-            "title": "\"WS-P09510高清工业视频内窥镜\"",
-            "description": "\"高清光纤照明内窥镜\"",
-            "category": "\"\"",
-            "tags": "[]",
-            "url": "http:\/\/localhost:1313\/products\/product-p09510\/"
-        },
-        
-        {
-            "id": "a7a897d6a62f076ca3bdf0ac985fd27c",
-            "title": "\"WS-P1010高清工业视频内窥镜\"",
-            "description": "\"高清光纤照明360度旋转镜头内窥镜\"",
-            "category": "\"\"",
-            "tags": "[]",
-            "url": "http:\/\/localhost:1313\/products\/product-p1010\/"
-        },
-        
-        {
-            "id": "a127efd43cf4aaa5194c1194d3392d97",
-            "title": "\"WS-P2810高清工业视频内窥镜\"",
-            "description": "\"高清光纤照明360度旋转镜头内窥镜\"",
-            "category": "\"\"",
-            "tags": "[]",
-            "url": "http:\/\/localhost:1313\/products\/product-p1210\/"
-        },
-        
-        {
-            "id": "e89651148bb8c94d2e60e257c1756b56",
-            "title": "\"WS-P2810高清工业视频内窥镜\"",
-            "description": "\"高清光纤照明360度旋转镜头内窥镜\"",
-            "category": "\"\"",
-            "tags": "[]",
-            "url": "http:\/\/localhost:1313\/products\/product-p1510\/"
-        },
-        
-        {
-            "id": "d3ca2b7f80565ff5b2917a46f0e47d40",
-            "title": "\"WS-P2810高清工业视频内窥镜\"",
-            "description": "\"高清光纤照明360度旋转镜头内窥镜\"",
-            "category": "\"\"",
-            "tags": "[]",
-            "url": "http:\/\/localhost:1313\/products\/product-p1810\/"
-        },
-        
-        {
-            "id": "6451665fc6c4db42858abcf672dc6166",
-            "title": "\"WS-P2810高清工业视频内窥镜\"",
-            "description": "\"高清光纤照明360度旋转镜头内窥镜\"",
-            "category": "\"\"",
-            "tags": "[]",
-            "url": "http:\/\/localhost:1313\/products\/product-p2010\/"
-        },
-        
-        {
-            "id": "3d8cc25f2819d219fab700df2d4a93c1",
-            "title": "\"WS-P2810高清工业视频内窥镜\"",
-            "description": "\"高清光纤照明360度旋转镜头内窥镜\"",
-            "category": "\"\"",
-            "tags": "[]",
-            "url": "http:\/\/localhost:1313\/products\/product-p2210\/"
-        },
-        
-        {
-            "id": "366407bb8cf35d2d2b0867e12eaa93d6",
-            "title": "\"WS-P2810高清工业视频内窥镜\"",
-            "description": "\"高清光纤照明360度旋转镜头内窥镜\"",
-            "category": "\"\"",
-            "tags": "[]",
-            "url": "http:\/\/localhost:1313\/products\/product-p2410\/"
-        },
-        
-        {
-            "id": "8d62d5f6c87f68172f8ecad2f1a58225",
-            "title": "\"WS-P2810高清工业视频内窥镜\"",
-            "description": "\"高清光纤照明360度旋转镜头内窥镜\"",
-            "category": "\"\"",
-            "tags": "[]",
-            "url": "http:\/\/localhost:1313\/products\/product-p2810\/"
-        },
-        
-        {
-            "id": "8f8f5a7e3a475941c831a91344c9c5ea",
-            "title": "\"WS-P3910高清工业视频内窥镜\"",
-            "description": "\"百万像素、冷光源、360度旋转镜头内窥镜\"",
-            "category": "\"\"",
-            "tags": "[]",
-            "url": "http:\/\/localhost:1313\/products\/product-p3910\/"
-        },
-        
-        {
-            "id": "b13b7a214b3f85e29ad3cbc99cd92440",
-            "title": "\"WS-P6010高清工业视频内窥镜\"",
-            "description": "\"百万像素、冷光源、360度旋转镜头内窥镜\"",
-            "category": "\"\"",
-            "tags": "[]",
-            "url": "http:\/\/localhost:1313\/products\/product-p6010\/"
-        },
-        
-        {
-            "id": "a5de17d55a9b80cdac731fa24e6c61ab",
-            "title": "\"产品中心\"",
-            "description": "\"\"",
-            "category": "\"\"",
-            "tags": "[]",
-            "url": "http:\/\/localhost:1313\/products\/"
-        },
-        
-        {
-            "id": "86a779576cf44caa29626cc11d754dc3",
-            "title": "\"测试产品001\"",
-            "description": "\"这是一个用于测试的产品\"",
-            "category": "\"\"",
-            "tags": "[]",
-            "url": "http:\/\/localhost:1313\/products\/test-product-001\/"
-        },
-        
-        {
-            "id": "2334f6cd3ae6a31f1a2c742c5bc728fa",
-            "title": "\"WS-P8050高清工业视频内窥镜\"",
-            "description": "\"百万像素、冷光源、360度旋转镜头内窥镜\"",
-            "category": "\"\"",
-            "tags": "[]",
-            "url": "http:\/\/localhost:1313\/products\/product-p8020\/"
-        },
-        
-        {
-            "id": "3c142e26ad879bdaa9c894abf8f9ec90",
-            "title": "\"模拟产品2\"",
-            "description": "\"这是第二个模拟产品的简述。\"",
-            "category": "\"\"",
-            "tags": "[]",
-            "url": "http:\/\/localhost:1313\/products\/sample-product-2\/"
-        },
-        
-        {
-            "id": "47782e13994c4e10e217bb525fae1c16",
-            "title": "\"模拟产品3\"",
-            "description": "\"这是第三个模拟产品的简述。\"",
-            "category": "\"\"",
-            "tags": "[]",
-            "url": "http:\/\/localhost:1313\/products\/sample-product-3\/"
-        },
-        
-        {
-            "id": "ee47e60ef058549e14321ae47aaf2c98",
-            "title": "\"超细弹簧管1mm电子内窥镜\"",
-            "description": "\"简述\"",
-            "category": "\"\"",
-            "tags": "[]",
-            "url": "http:\/\/localhost:1313\/products\/k1010-electronic-endoscope\/"
+    const input = document.getElementById('search-input');
+    const typeSelect = document.getElementById('search-type');
+    const resultsContainer = document.getElementById('search-results');
+    function renderResults(results) {
+        if (!results || results.length === 0) {
+            resultsContainer.innerHTML = '<div class="no-results text-center text-muted py-4">未找到相关结果</div>';
+            return;
         }
-        
-    ];
-
+        resultsContainer.innerHTML = results.slice(0, 10).map(result => `
+            <a href="${result.url}" class="search-result-item">
+                <div class="d-flex align-items-center mb-1">
+                    <span class="icon me-2 text-success"><i class="fas fa-file-alt"></i></span>
+                    <span class="fw-bold">${result.title}</span>
+                    <span class="badge bg-secondary ms-2">${result.type === 'product' ? '产品' : '文章'}</span>
+                </div>
+                <div class="text-truncate text-muted small">${result.content.substring(0, 100)}...</div>
+            </a>
+        `).join('');
+    }
+    function doSearch() {
+        const q = input.value.trim().toLowerCase();
+        const type = typeSelect.value;
+        let results = window.searchIndex.filter(item => {
+            const matchQ = item.title.toLowerCase().includes(q) || item.content.toLowerCase().includes(q);
+            const matchType = type === 'all' || item.type === type;
+            return matchQ && matchType;
+        });
+        renderResults(results);
+    }
+    document.getElementById('search-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        doSearch();
+    });
+    input.addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            doSearch();
+        }
+    });
     
-    window.articleIndex = [
-        
-    ];
+    doSearch();
+});
 </script>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lunr.js/2.3.9/lunr.min.js"></script>
-<script src="/js/search-index.js"></script> 
-
     </main>
 
-    <footer class="footer py-5 bg-light border-top">
+    <footer class="footer py-5 border-top">
     <div class="container">
       <div class="row">
         

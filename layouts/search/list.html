@@ -44,15 +44,76 @@
 
 <style>
 .search-results .search-result-item {
-    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 1rem !important;
+    border-radius: 0.75rem !important;
+    border: 1px solid #e9ecef !important;
+    margin-bottom: 1rem !important;
+    background: #fff !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03) !important;
+    transition: box-shadow 0.2s, border 0.2s !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    color: #222 !important;
 }
-
 .search-results .search-result-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 24px rgba(0,123,255,0.10) !important;
+    border-color: #90caf9 !important;
+    background: #f1f8ff !important;
+    color: #1976d2 !important;
+}
+.search-results .icon {
+    font-size: 1.1rem !important;
+    margin-right: 0.5rem !important;
 }
 </style>
 
-<!-- 加载搜索相关脚本 -->
-{{ partial "search-index-generator.html" . }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 假设 window.searchIndex 已经加载
+    const input = document.getElementById('search-input');
+    const typeSelect = document.getElementById('search-type');
+    const resultsContainer = document.getElementById('search-results');
+    function renderResults(results) {
+        if (!results || results.length === 0) {
+            resultsContainer.innerHTML = '<div class="no-results text-center text-muted py-4">未找到相关结果</div>';
+            return;
+        }
+        resultsContainer.innerHTML = results.slice(0, 10).map(result => `
+            <a href="${result.url}" class="search-result-item">
+                <div class="d-flex align-items-center mb-1">
+                    <span class="icon me-2 text-success"><i class="fas fa-file-alt"></i></span>
+                    <span class="fw-bold">${result.title}</span>
+                    <span class="badge bg-secondary ms-2">${result.type === 'product' ? '产品' : '文章'}</span>
+                </div>
+                <div class="text-truncate text-muted small">${result.content.substring(0, 100)}...</div>
+            </a>
+        `).join('');
+    }
+    function doSearch() {
+        const q = input.value.trim().toLowerCase();
+        const type = typeSelect.value;
+        let results = window.searchIndex.filter(item => {
+            const matchQ = item.title.toLowerCase().includes(q) || item.content.toLowerCase().includes(q);
+            const matchType = type === 'all' || item.type === type;
+            return matchQ && matchType;
+        });
+        renderResults(results);
+    }
+    document.getElementById('search-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        doSearch();
+    });
+    input.addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            doSearch();
+        }
+    });
+    // 页面加载时自动搜索
+    doSearch();
+});
+</script>
+
 {{ end }}

@@ -103,7 +103,7 @@
                         <li><strong>发布时间：</strong> {{ .Format "2006-01-02" }}</li>
                         {{ end }}
                         <li><strong>浏览次数：</strong> 
-                            <span class="vcount" data-x-id="{{ .RelPermalink }}">...</span>
+                            <span class="vcount" data-x-id="{{ .RelPermalink }}" id="page-views">0</span>
                         </li>
                         </ul>
 
@@ -291,14 +291,210 @@
     </div>
 </div>
 
+<!-- 修复浏览次数的JavaScript -->
 <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
 <script>
-    new Valine({
-        appId: 'pUEgNUJ66pc7S4FqVpqxkTkx-MdYXbMMI', 
-        appKey: 'K9OXRf3L6Zp0s6TEzJElWQ5r', 
-        visitor: true, 
-        path: '{{ .RelPermalink }}' 
+// 强制创建Counter表并初始化访问统计
+let pageViewsElement;
+let currentPath = '{{ .RelPermalink }}';
+let pageTitle = '{{ .Title }}';
+
+// LeanCloud配置
+const LC_APP_ID = 'pUEgNUJ66pc7S4FqVpqxkTkx-MdYXbMMI';
+const LC_APP_KEY = 'K9OXRf3L6Zp0s6TEzJElWQ5r';
+
+function initPageViews() {
+    pageViewsElement = document.getElementById('page-views');
+    if (!pageViewsElement) return;
+
+    console.log('初始化页面访问统计, 路径:', currentPath);
+    
+    // 1. 先尝试Valine方式
+    initValineViews();
+    
+    // 2. 同时初始化直接LeanCloud方式（确保Counter表创建）
+    setTimeout(initLeanCloudViews, 1000);
+}
+
+function initValineViews() {
+    try {
+        // 创建一个隐藏的容器来初始化Valine
+        let valineContainer = document.getElementById('valine-visitor-container');
+        if (!valineContainer) {
+            valineContainer = document.createElement('div');
+            valineContainer.id = 'valine-visitor-container';
+            valineContainer.style.display = 'none';
+            document.body.appendChild(valineContainer);
+        }
+
+        const valine = new Valine({
+            appId: LC_APP_ID,
+            appKey: LC_APP_KEY,
+            el: '#valine-visitor-container',
+            visitor: true,
+            path: currentPath,
+            placeholder: '请输入评论...',
+            recordIP: true
+        });
+
+        console.log('Valine初始化完成');
+        
+        // 监听访问统计更新
+        setTimeout(checkValineViews, 2000);
+        
+    } catch (error) {
+        console.error('Valine初始化失败:', error);
+        // 如果Valine失败，直接使用LeanCloud API
+        initLeanCloudViews();
+    }
+}
+
+function checkValineViews() {
+    const vcountElements = document.querySelectorAll('.vcount');
+    let found = false;
+    
+    vcountElements.forEach(element => {
+        const elementPath = element.getAttribute('data-x-id');
+        if (elementPath === currentPath) {
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList' || mutation.type === 'characterData') {
+                        const newValue = element.textContent.trim();
+                        if (newValue && newValue !== '...' && newValue !== '0' && !isNaN(newValue)) {
+                            pageViewsElement.textContent = newValue;
+                            observer.disconnect();
+                            found = true;
+                            console.log('从Valine获取到访问次数:', newValue);
+                        }
+                    }
+                });
+            });
+            
+            observer.observe(element, {
+                childList: true,
+                subtree: true,
+                characterData: true
+            });
+            
+            // 检查是否已经有值
+            const currentValue = element.textContent.trim();
+            if (currentValue && currentValue !== '...' && currentValue !== '0' && !isNaN(currentValue)) {
+                pageViewsElement.textContent = currentValue;
+                found = true;
+                console.log('Valine已有访问次数:', currentValue);
+            }
+        }
     });
+    
+    // 如果5秒后还没有获取到，使用直接API方式
+    if (!found) {
+        setTimeout(() => {
+            if (pageViewsElement.textContent.trim() === '0') {
+                console.log('Valine访问统计未生效，使用LeanCloud API');
+                initLeanCloudViews();
+            }
+        }, 5000);
+    }
+}
+
+function initLeanCloudViews() {
+    // 直接使用LeanCloud REST API来创建和更新Counter
+    const url = 'https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter';
+    
+    // 先查询是否存在
+    fetch(url + '?where=' + encodeURIComponent(JSON.stringify({url: currentPath})), {
+        method: 'GET',
+        headers: {
+            'X-LC-Id': LC_APP_ID,
+            'X-LC-Key': LC_APP_KEY,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('查询Counter结果:', data);
+        if (data.results && data.results.length > 0) {
+            // 存在记录，更新访问次数
+            const record = data.results[0];
+            const newViews = (record.time || 0) + 1;
+            updateCounter(record.objectId, newViews);
+        } else {
+            // 不存在记录，创建新记录
+            createCounter();
+        }
+    })
+    .catch(error => {
+        console.error('查询Counter失败:', error);
+        // 使用本地存储作为最后备用方案
+        useLocalStorage();
+    });
+}
+
+function createCounter() {
+    const url = 'https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter';
+    
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-LC-Id': LC_APP_ID,
+            'X-LC-Key': LC_APP_KEY,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            url: currentPath,
+            title: pageTitle,
+            time: 1
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('创建Counter成功:', data);
+        pageViewsElement.textContent = '1';
+    })
+    .catch(error => {
+        console.error('创建Counter失败:', error);
+        useLocalStorage();
+    });
+}
+
+function updateCounter(objectId, views) {
+    const url = `https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter/${objectId}`;
+    
+    fetch(url, {
+        method: 'PUT',
+        headers: {
+            'X-LC-Id': LC_APP_ID,
+            'X-LC-Key': LC_APP_KEY,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            time: views
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('更新Counter成功:', data);
+        pageViewsElement.textContent = views.toString();
+    })
+    .catch(error => {
+        console.error('更新Counter失败:', error);
+        // 显示之前的值
+        pageViewsElement.textContent = (views - 1).toString();
+    });
+}
+
+function useLocalStorage() {
+    const storageKey = 'page_views_' + currentPath.replace(/[^a-zA-Z0-9]/g, '_');
+    let views = parseInt(localStorage.getItem(storageKey) || '0') + 1;
+    localStorage.setItem(storageKey, views.toString());
+    pageViewsElement.textContent = views.toString();
+    console.log('使用本地存储，访问次数:', views);
+}
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(initPageViews, 500);
+});
 </script>
 
 <script>
@@ -423,6 +619,19 @@ document.addEventListener('DOMContentLoaded', function() {
 .thumbnail-image.active-thumbnail {
     border: 2px solid #0d6efd;
     transform: scale(1.05);
+}
+
+/* 浏览次数样式 */
+#page-views {
+    color: #0d6efd;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+#page-views:empty::before {
+    content: "加载中...";
+    color: #6c757d;
+    font-style: italic;
 }
 
 /* 移动端响应式调整 */

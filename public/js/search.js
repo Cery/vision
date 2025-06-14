@@ -99,30 +99,28 @@ const SearchModule = {
     displayLiveSearchResults(results) {
         const resultsContainer = document.querySelector('.live-search-results');
         if (!resultsContainer) return;
-
         resultsContainer.innerHTML = '';
-        
-        if (results.length === 0) {
+        // 限制结果条数为10
+        const limitedResults = results.slice(0, 10);
+        if (limitedResults.length === 0) {
             resultsContainer.innerHTML = '<div class="no-results">未找到相关结果</div>';
             return;
         }
-
         const resultsList = document.createElement('ul');
-        results.forEach(result => {
+        limitedResults.forEach(result => {
             const li = document.createElement('li');
             li.innerHTML = `
                 <a href="${result.url}" class="search-result-item">
-                    ${result.image ? `<img src="${result.image}" alt="${result.title}">` : ''}
+                    ${result.image ? `<img src="${result.image}" alt="${escapeHTML(result.title)}">` : ''}
                     <div class="result-info">
-                        <h4>${result.title}</h4>
-                        <p>${result.summary}</p>
-                        <span class="result-type">${result.type}</span>
+                        <h4>${escapeHTML(result.title)}</h4>
+                        <p>${escapeHTML(result.summary)}</p>
+                        <span class="result-type">${escapeHTML(result.type)}</span>
                     </div>
                 </a>
             `;
             resultsList.appendChild(li);
         });
-
         resultsContainer.appendChild(resultsList);
     },
 
@@ -175,13 +173,13 @@ const SearchModule = {
         if (!query || !this.searchEngine) {
             return [];
         }
-
-        // 使用更智能的建议算法
+        // 返回带url的建议对象，限制为5条
         const suggestions = this.searchEngine.search(query)
             .slice(0, limit)
-            .map(result => result.item.title);
-
-        // 如果没有精确匹配，尝试部分匹配
+            .map(result => ({
+                title: result.item.title,
+                url: result.item.url
+            }));
         if (suggestions.length === 0) {
             const partialMatches = this.documents
                 .filter(doc => 
@@ -189,11 +187,12 @@ const SearchModule = {
                     doc.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()))
                 )
                 .slice(0, limit)
-                .map(doc => doc.title);
-
+                .map(doc => ({
+                    title: doc.title,
+                    url: doc.url
+                }));
             return partialMatches;
         }
-
         return suggestions;
     }
 };
@@ -252,3 +251,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 })();
+
+// HTML转义函数
+function escapeHTML(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}

@@ -57,4 +57,16 @@ theme = 'ananke'
     description = "持续创新，为客户提供更好的检测体验"
     link = "/cases"
     alt = "检测技术展示"
-    image = "/images/carousel/carousel-3.jpg"
+    image = "/images/carousel/carousel-3.webp"
+
+[mediaTypes]
+[mediaTypes."application/json"]
+  suffixes = ["json"]
+
+[outputFormats.SearchIndex]
+  mediaType = "application/json"
+  baseName = "search-index"
+  isPlainText = true
+
+[outputs]
+  home = ["HTML", "RSS", "SearchIndex"]

@@ -68,21 +68,53 @@
         }
 
         renderSuggestions(suggestions) {
-            if (!this.searchResults) return;
-            if (suggestions.length === 0) {
-                this.searchResults.innerHTML = `<div class="search-hint text-center text-muted py-4">未找到相关建议</div>`;
+            if (!Array.isArray(suggestions)) {
+                console.warn('搜索建议数据格式不正确:', suggestions);
                 return;
             }
-            this.searchResults.innerHTML = suggestions.map(suggestion => `
-                <div class="search-suggestion d-flex align-items-center" data-suggestion="${suggestion}">
-                    <span class="icon me-2 text-primary"><i class="fas fa-search"></i></span>
-                    <span>${this.highlightText(suggestion, this.searchInput.value)}</span>
-                </div>
-            `).join('');
-            document.querySelectorAll('.search-suggestion').forEach(item => {
+
+            // 规范化建议数据
+            const normalizedSuggestions = suggestions.map(suggestion => {
+                if (typeof suggestion === 'string') {
+                    return {
+                        title: suggestion,
+                        type: 'product', // 默认为产品类型
+                        url: `/products/${encodeURIComponent(suggestion)}/`
+                    };
+                }
+                return {
+                    title: suggestion.title,
+                    type: suggestion.type || 'product',
+                    url: suggestion.url || (suggestion.type === 'post' ? 
+                        `/posts/${encodeURIComponent(suggestion.title)}/` : 
+                        `/products/${encodeURIComponent(suggestion.title)}/`)
+                };
+            });
+
+            // 限制显示数量
+            const limitedSuggestions = normalizedSuggestions.slice(0, 5);
+
+            // 渲染建议列表
+            this.searchResults.innerHTML = limitedSuggestions.length > 0 ? 
+                limitedSuggestions.map(suggestion => `
+                    <a href="${suggestion.url}" class="search-suggestion d-flex align-items-center" data-type="${suggestion.type}" tabindex="0">
+                        <span class="icon me-2 text-primary"><i class="fas fa-arrow-circle-right"></i></span>
+                        <span>${this.highlightText(escapeHTML(suggestion.title), this.searchInput.value)}</span>
+                    </a>
+                `).join('') : 
+                '<div class="search-hint text-center text-muted py-4">未找到相关建议</div>';
+
+            // 添加点击事件处理
+            this.searchResults.querySelectorAll('.search-suggestion').forEach(item => {
                 item.addEventListener('click', (e) => {
-                    this.searchInput.value = e.currentTarget.dataset.suggestion;
-                    this.performSearch();
+                    e.preventDefault();
+                    const url = item.getAttribute('href');
+                    const type = item.getAttribute('data-type');
+                    
+                    if (url && url !== '#') {
+                        console.log('点击搜索建议:', {url, type});
+                        window.location.href = url;
+                    }
                 });
             });
         }
@@ -160,26 +192,28 @@
 
         displaySearchResults(results) {
             if (!this.searchResults) return;
-            if (results.length === 0) {
+            // 限制结果条数为10
+            const limitedResults = results.slice(0, 10);
+            if (limitedResults.length === 0) {
                 this.searchResults.innerHTML = `
-                    <div class="no-results text-center text-muted py-4">
-                        <i class="fas fa-search-minus fa-2x mb-2"></i>
-                        <p>未找到与"${this.searchInput.value}"相关的结果</p>
+                    <div class=\"no-results text-center text-muted py-4\">
+                        <i class=\"fas fa-search-minus fa-2x mb-2\"></i>
+                        <p>未找到与\"${this.searchInput.value}\"相关的结果</p>
                         <p>请尝试其他关键词</p>
                     </div>
                 `;
                 return;
             }
-            this.searchResults.innerHTML = results.map(result => `
-                <div class="search-result d-flex flex-column mb-2 p-2 border rounded" onclick="window.location.href='${result.url}'" style="cursor:pointer;">
-                    <div class="d-flex align-items-center mb-1">
-                        <span class="icon me-2 text-success"><i class="fas fa-file-alt"></i></span>
-                        <span class="fw-bold">${this.highlightText(result.title, this.searchInput.value)}</span>
-                        <span class="badge bg-secondary ms-2">${result.type === 'product' ? '产品' : '文章'}</span>
-                        <span class="ms-auto text-muted small">相关度：${(result.score * 100).toFixed(0)}%</span>
+            this.searchResults.innerHTML = limitedResults.map(result => `
+                <a href=\"${result.url}\" class=\"search-result d-flex flex-column mb-2 p-2 border rounded\" style=\"cursor:pointer;\">
+                    <div class=\"d-flex align-items-center mb-1\">
+                        <span class=\"icon me-2 text-success\"><i class=\"fas fa-file-alt\"></i></span>
+                        <span class=\"fw-bold\">${this.highlightText(escapeHTML(result.title), this.searchInput.value)}</span>
+                        <span class=\"badge bg-secondary ms-2\">${result.type === 'product' ? '产品' : '文章'}</span>
+                        <span class=\"ms-auto text-muted small\">相关度：${(result.score * 100).toFixed(0)}%</span>
                     </div>
-                    <div class="text-truncate text-muted small">${this.highlightText(result.content.substring(0, 100), this.searchInput.value)}...</div>
-                </div>
+                    <div class=\"text-truncate text-muted small\">${this.highlightText(escapeHTML(result.content.substring(0, 100)), this.searchInput.value)}...</div>
+                </a>
             `).join('');
         }
 
@@ -215,4 +249,14 @@
             window.searchModalManager = new SearchModalManager();
         });
     });
+
+    // HTML转义函数
+    function escapeHTML(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
 })();

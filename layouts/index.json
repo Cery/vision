@@ -1,0 +1,17 @@
+{{ $searchIndex := slice }}
+{{ range (where .Site.RegularPages "Type" "in" (slice "products" "articles" "news" "cases" "applications" "suppliers")) }}
+  {{ if (and .Permalink (ne .Permalink "/")) }}
+    {{ $pageURL := printf "/%s/%s/" (.Type | urlize) (.File.BaseFileName | urlize) }}
+    {{ $searchItem := dict
+      "id" .File.UniqueID
+      "title" .Title
+      "summary" .Summary
+      "content" .Plain
+      "type" .Type
+      "url" $pageURL
+      "tags" (.Params.tags | default (slice))
+    }}
+    {{ $searchIndex = $searchIndex | append $searchItem }}
+  {{ end }}
+{{ end }}
+{{ $searchIndex | jsonify }}

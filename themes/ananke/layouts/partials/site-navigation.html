@@ -1,11 +1,8 @@
 <nav class="pv3 ph3 ph4-ns" role="navigation">
   <div class="flex-l center items-center justify-between">
     <a href="{{ .Site.Home.RelPermalink }}" class="f3 fw2 hover-white white-90 dib no-underline">
-      {{ with .Site.Params.site_logo }}
-        <img src="{{ urls.RelURL . }}" class="w100 mw5-ns" alt="{{ $.Site.Title }}" />
-      {{ else }}
-        {{ .Site.Title }}
-      {{ end }}
+      VisNDT
+      <span class="f5 db light-silver">维森 · 视觉检测仪器</span>
     </a>
     <div class="flex-l items-center">
       {{ partials.Include "i18nlist.html" . }}
