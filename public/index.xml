@@ -9,6 +9,34 @@
     <lastBuildDate>Wed, 01 Jan 2025 12:00:00 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>行业资讯</title>
+      <link>http://localhost:1313/categories/industry-news/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/industry-news/</guid>
+      <description>&lt;hr&gt;&#xA;&lt;h2 id=&#34;weight-1&#34;&gt;title: &amp;ldquo;行业资讯&amp;rdquo;&#xA;description: &amp;ldquo;行业最新动态、市场趋势、政策解读等资讯内容&amp;rdquo;&#xA;color: &amp;ldquo;#0d6efd&amp;rdquo;&#xA;weight: 1&lt;/h2&gt;&#xA;&lt;p&gt;行业最新动态、市场趋势、政策解读等资讯内容。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>展会资讯</title>
+      <link>http://localhost:1313/categories/exhibition-news/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/exhibition-news/</guid>
+      <description>&lt;p&gt;展会动态、活动预告、展会回顾等资讯内容。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>技术动态</title>
+      <link>http://localhost:1313/categories/tech-news/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/tech-news/</guid>
+      <description>&lt;p&gt;技术创新、产品研发、技术应用等资讯内容。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>公司新闻</title>
+      <link>http://localhost:1313/categories/company-news/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/company-news/</guid>
+      <description>&lt;p&gt;公司动态、企业活动、发展成果等资讯内容。&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>WS-DZ60高清三维测量工业视频内窥镜</title>
       <link>http://localhost:1313/products/product-dz60/</link>
       <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
@@ -34,6 +62,13 @@
       <link>http://localhost:1313/products/product-p1010/</link>
       <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
       <guid>http://localhost:1313/products/product-p1010/</guid>
+      <description>高清光纤照明360度旋转镜头内窥镜</description>
+    </item>
+    <item>
+      <title>WS-P1010高清工业视频内窥镜</title>
+      <link>http://localhost:1313/products/sample-product-3/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/sample-product-3/</guid>
       <description>高清光纤照明360度旋转镜头内窥镜</description>
     </item>
     <item>
@@ -163,6 +198,13 @@
       <description>探讨最新内窥镜技术在工业检测领域的创新应用，提高检测效率和精度。</description>
     </item>
     <item>
+      <title>示例资讯标题</title>
+      <link>http://localhost:1313/news/example-news/</link>
+      <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/example-news/</guid>
+      <description>这是一个示例资讯，展示了如何在资讯中添加分类、标签和其他元数据。</description>
+    </item>
+    <item>
       <title>AI技术赋能工业内窥镜检测新突破</title>
       <link>http://localhost:1313/news/industry-news-2/</link>
       <pubDate>Mon, 18 Mar 2024 00:00:00 +0000</pubDate>
@@ -252,13 +294,6 @@
       <pubDate>Sun, 01 Jan 2023 12:00:00 +0800</pubDate>
       <guid>http://localhost:1313/products/sample-product-2/</guid>
       <description>这是第二个模拟产品的简述。</description>
-    </item>
-    <item>
-      <title>模拟产品3</title>
-      <link>http://localhost:1313/products/sample-product-3/</link>
-      <pubDate>Sun, 01 Jan 2023 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/sample-product-3/</guid>
-      <description>这是第三个模拟产品的简述。</description>
     </item>
     <item>
       <title>超细弹簧管1mm电子内窥镜</title>

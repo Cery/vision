@@ -2,20 +2,88 @@
 <div class="container py-5">
     {{ partial "breadcrumbs.html" . }}
     
-    <!-- <h1 class="text-center mb-5">资讯中心</h1> -->
-    
-    <!-- 资讯分类筛选 -->
+    {{/* 解析 URL 参数，这些参数主要用于 JavaScript 端初始化和UI更新 */}}
+    {{ $parsedURL := urls.Parse .Permalink }}
+    {{ $currentCategoryParam := $parsedURL.Query.Get "category" }}
+    {{ $currentTagsParam := $parsedURL.Query.Get "tags" }}
+    {{ $currentTagsArray := slice }}
+    {{ if $currentTagsParam }}
+        {{ $currentTagsArray = split $currentTagsParam "," }}
+    {{ end }}
+    {{ $currentSortParam := $parsedURL.Query.Get "sort" | default "date-desc" }}
+
+    <!-- 资讯筛选 -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title mb-3">资讯分类</h5>
-                    <div class="d-flex flex-wrap gap-2">
-                        {{ $currentCategory := .Params.category }}
-                        <a href="/news/" class="btn btn-outline-primary {{ if not $currentCategory }}active{{ end }}">全部</a>
-                        <a href="/news/?category=行业资讯" class="btn btn-outline-primary {{ if eq $currentCategory "行业资讯" }}active{{ end }}">行业资讯</a>
-                        <a href="/news/?category=展会资讯" class="btn btn-outline-primary {{ if eq $currentCategory "展会资讯" }}active{{ end }}">展会资讯</a>
-                        <a href="/news/?category=技术动态" class="btn btn-outline-primary {{ if eq $currentCategory "技术动态" }}active{{ end }}">技术动态</a>
+            <div class="card shadow-sm border-0 rounded-lg">
+                <div class="card-body p-4">
+                    <!-- 资讯分类筛选 -->
+                    <div class="mb-4 pb-3 border-bottom">
+                        <h5 class="card-title mb-3 d-flex align-items-center">
+                            <i class="fas fa-folder-open me-2 text-primary"></i>资讯分类
+                            <span id="current-category-display" class="text-muted ms-2 small"></span>
+                        </h5>
+                        <div class="d-flex flex-wrap gap-2" id="category-filters">
+                            <a href="javascript:void(0)" class="btn btn-outline-primary fw-bold" data-filter-type="category" data-filter-value="">
+                                <i class="fas fa-th-large me-1"></i>全部
+                            </a>
+                            {{ range $term := .Site.Taxonomies.categories }}
+                            {{ with $term.Page }}
+                            <a href="javascript:void(0)" class="btn btn-outline-primary fw-bold"
+                               data-filter-type="category" data-filter-value="{{ .Title }}"
+                               style="--bs-btn-color: {{ .Params.color }}; --bs-btn-border-color: {{ .Params.color }}; --bs-btn-hover-bg: {{ .Params.color }}; --bs-btn-hover-border-color: {{ .Params.color }}; --bs-btn-active-bg: {{ .Params.color }}; --bs-btn-active-border-color: {{ .Params.color }};">
+                                {{ .Title }}
+                                {{/* 移除数字标识: <span class="badge rounded-pill ms-1" style="background-color: {{ .Params.color }}">{{ $term.Count }}</span> */}}
+                            </a>
+                            {{ end }}
+                            {{ end }}
+                        </div>
+                    </div>
+
+                    <!-- 标签筛选 -->
+                    <div class="mb-4 pb-3 border-bottom">
+                        <h5 class="card-title mb-3 d-flex align-items-center">
+                            <i class="fas fa-tags me-2 text-primary"></i>标签筛选
+                            <span id="current-tags-display" class="text-muted ms-2 small"></span>
+                        </h5>
+                        <div class="d-flex flex-wrap gap-2" id="tag-filters">
+                            {{ range .Site.Taxonomies.tags }}
+                            <a href="javascript:void(0)" class="btn btn-outline-secondary" data-filter-type="tag" data-filter-value="{{ .Page.Title }}">
+                                {{ .Page.Title }}
+                                {{/* 移除数字标识: <span class="badge bg-secondary rounded-pill ms-1">{{ .Count }}</span> */}}
+                            </a>
+                            {{ end }}
+                        </div>
+                    </div>
+
+                    <!-- 排序选项 -->
+                    <div class="mb-4 pb-3 border-bottom">
+                        <h5 class="card-title mb-3 d-flex align-items-center">
+                            <i class="fas fa-sort me-2 text-primary"></i>排序方式
+                        </h5>
+                        <div class="btn-group" role="group" id="sort-options">
+                            <input type="radio" class="btn-check" name="sortOrder" id="sortDateDesc" value="date-desc">
+                            <label class="btn btn-outline-secondary" for="sortDateDesc">
+                                <i class="fas fa-clock me-1"></i>最新发布
+                            </label>
+                            
+                            <input type="radio" class="btn-check" name="sortOrder" id="sortDateAsc" value="date-asc">
+                            <label class="btn btn-outline-secondary" for="sortDateAsc">
+                                <i class="fas fa-history me-1"></i>最早发布
+                            </label>
+                            
+                            <input type="radio" class="btn-check" name="sortOrder" id="sortViews" value="views">
+                            <label class="btn btn-outline-secondary" for="sortViews">
+                                <i class="fas fa-eye me-1"></i>最多浏览
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 重置按钮 -->
+                    <div class="text-end pt-3">
+                        <button class="btn btn-outline-secondary" id="resetFiltersBtn">
+                            <i class="fas fa-redo me-1"></i>重置筛选
+                        </button>
                     </div>
                 </div>
             </div>
@@ -23,142 +91,544 @@
     </div>
 
     <!-- 资讯列表 -->
-    <div class="row" id="news-list">
-        {{ $allNews := where .Pages "Type" "news" }}
-        {{ $filteredNews := $allNews }}
-        {{ if $currentCategory }}
-            {{ $filteredNews = where $allNews "Params.categories" "intersect" (slice $currentCategory) }}
-        {{ end }}
-        {{ $paginator := .Paginate $filteredNews 10 }}
+    <div class="row" id="newsList">
+        {{ $allNews := where .Site.RegularPages "Type" "news" }}
+        {{ $paginator := .Paginate $allNews 12 }} {{/* paginate all news */}}
         
         {{ range $paginator.Pages }}
-        <div class="col-lg-6 mb-4 news-item">
-            <div class="card h-100 shadow-sm hover-shadow">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        {{ with .Params.thumbnail }}
-                        <img src="{{ . | relURL }}" class="img-fluid rounded-start h-100 object-fit-cover" alt="{{ $.Title }}">
-                        {{ else }}
-                        <img src="https://picsum.photos/300/200?random={{ .File.UniqueID }}" class="img-fluid rounded-start h-100 object-fit-cover" alt="{{ .Title }}">
+        <div class="col-md-6 col-lg-4 mb-4 news-item" 
+             data-categories="{{ delimit (.Params.categories | default (slice)) "," }}" 
+             data-tags="{{ delimit (.Params.tags | default (slice)) "," | safeHTMLAttr }}"
+             data-date="{{ .Date.Format "2006-01-02" }}"
+             data-views="{{ .Params.views | default 0 }}"
+             data-permalink="{{ .RelPermalink }}"> <!-- 添加 permalink 属性 -->
+            <div class="card h-100 shadow-sm news-card">
+                <a href="{{ .Permalink }}" class="text-decoration-none">
+                    {{ with .Params.featured_image }}
+                    <img src="{{ . | relURL }}" class="card-img-top" alt="{{ $.Title }}" style="height: 200px; object-fit: cover;">
+                    {{ else }}
+                    <img src="https://picsum.photos/800/400?random={{ .File.UniqueID }}" class="card-img-top" alt="{{ .Title }}" style="height: 200px; object-fit: cover;">
+                    {{ end }}
+                </a>
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-2">
+                        {{ range .Params.categories }}
+                        {{ $category := . }}
+                        {{ with $.Site.GetPage (printf "/categories/%s" (urlize $category)) }}
+                        <span class="badge rounded-pill" style="background-color: {{ .Params.color | default "#0d6efd" }}">{{ .Title }}</span>
+                        {{ end }}
+                        {{ end }}
+                        {{ range .Params.tags }}
+                        <span class="badge bg-secondary rounded-pill me-1">{{ . }}</span>
                         {{ end }}
                     </div>
-                    <div class="col-md-8">
-                        <div class="card-body d-flex flex-column h-100">
-                            <div class="mb-2">
-                                {{ range .Params.categories }}
-                                    {{ if eq . "行业资讯" }}
-                                <span class="badge bg-primary me-1">行业资讯</span>
-                                    {{ else if eq . "展会资讯" }}
-                                <span class="badge bg-success me-1">展会资讯</span>
-                                    {{ else if eq . "技术动态" }}
-                                    <span class="badge bg-info me-1">技术动态</span>
-                                    {{ end }}
-                                {{ end }}
-                                {{ range .Params.tags }}
-                                <span class="badge bg-secondary me-1">{{ . }}</span>
-                                {{ end }}
-                            </div>
-                            <h5 class="card-title">{{ .Title }}</h5>
-                            <p class="card-text text-muted">{{ .Params.summary }}</p>
-                            <div class="mt-auto d-flex justify-content-between align-items-center">
-                                <small class="text-muted">{{ .Date.Format "2006-01-02" }}</small>
-                                <a href="{{ .Permalink }}" class="btn btn-outline-primary btn-sm">阅读更多</a>
-                            </div>
+                    <h5 class="card-title">
+                        <a href="{{ .Permalink }}" class="text-dark text-decoration-none hover-primary">{{ .Title }}</a>
+                    </h5>
+                    <p class="card-text text-muted">{{ .Params.summary }}</p>
+                    <div class="mt-auto d-flex justify-content-between align-items-center">
+                        <div>
+                            <small class="text-muted"><i class="far fa-calendar-alt me-1"></i>{{ .Date.Format "2006-01-02" }}</small>
+                            {{ if .Params.author }}
+                            <small class="text-muted ms-2"><i class="far fa-user me-1"></i>{{ .Params.author }}</small>
+                            {{ end }}
+                        </div>
+                        <div>
+                            <small class="text-muted me-2"><i class="fas fa-eye"></i> <span class="view-count-display">{{ .Params.views | default 0 }}</span></small>
+                            <a href="{{ .Permalink }}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-arrow-right me-1"></i>阅读更多
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        {{ else }}
-        <div class="col-12 text-center">
-            <p>当前分类下暂无资讯。</p>
-        </div>
         {{ end }}
+        <div class="col-12 text-center py-5" id="no-news-message" style="display: none;">
+            <div class="text-muted">
+                <i class="fas fa-search fa-3x mb-3"></i>
+                <p class="mb-0">当前筛选条件下暂无资讯。</p>
+            </div>
+        </div>
     </div>
 
     <!-- 分页 -->
     {{ if gt $paginator.TotalPages 1 }}
-    <nav aria-label="Page navigation" class="mt-4">
-        <ul class="pagination justify-content-center">
-            {{ if $paginator.HasPrev }}
-            <li class="page-item">
-                <a class="page-link" href="{{ $paginator.Prev.URL }}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            {{ else }}
-            <li class="page-item disabled">
-                <span class="page-link" aria-hidden="true">&laquo;</span>
-            </li>
-            {{ end }}
-            
-            {{ range $paginator.Pagers }}
-            <li class="page-item {{ if eq . $paginator }}active{{ end }}">
-                <a class="page-link" href="{{ .URL }}">{{ .PageNumber }}</a>
-            </li>
-            {{ end }}
-            
-            {{ if $paginator.HasNext }}
-            <li class="page-item">
-                <a class="page-link" href="{{ $paginator.Next.URL }}" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-            {{ else }}
-            <li class="page-item disabled">
-                <span class="page-link" aria-hidden="true">&raquo;</span>
-            </li>
-            {{ end }}
-        </ul>
-    </nav>
+    <div class="row mt-4">
+        <div class="col-12">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {{ if $paginator.HasPrev }}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ $paginator.Prev.URL }}" aria-label="Previous">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                    {{ end }}
+                    
+                    {{ range $paginator.Pagers }}
+                    <li class="page-item {{ if eq . $paginator }}active{{ end }}">
+                        <a class="page-link" href="{{ .URL }}">{{ .PageNumber }}</a>
+                    </li>
+                    {{ end }}
+                    
+                    {{ if $paginator.HasNext }}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ $paginator.Next.URL }}" aria-label="Next">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                    {{ end }}
+                </ul>
+            </nav>
+        </div>
+    </div>
     {{ end }}
 </div>
 
 <style>
-.object-fit-cover {
-    object-fit: cover;
-    height: 200px;
+/* General hover effect for links */
+.hover-primary:hover {
+    color: var(--bs-primary) !important;
 }
 
-.card-title {
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-    color: var(--bs-primary);
+/* News card styling */
+.news-card {
+    transition: all 0.3s ease-in-out;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 0.5rem; /* Slightly rounded corners */
 }
 
+.news-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.75rem 1.5rem rgba(0,0,0,0.1) !important; /* Enhanced shadow on hover */
+}
+
+.card-img-top {
+    transition: opacity 0.3s ease-in-out;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+.news-card:hover .card-img-top {
+    opacity: 0.9;
+}
+
+/* Badges for categories and tags */
 .badge {
     font-weight: 500;
+    padding: 0.5em 0.8em;
+    border-radius: 0.3rem; /* Consistent border-radius for badges */
+    font-size: 0.85em; /* Slightly smaller font for badges */
 }
 
-.btn-outline-primary:hover {
-    color: white;
-}
-
-.hover-shadow {
-    transition: all 0.3s ease;
-}
-
-.hover-shadow:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-}
-
+/* Pagination styling */
 .pagination .page-link {
     color: var(--bs-primary);
-    border-radius: 0.25rem;
-    margin: 0 0.25rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.3rem; /* Rounded pagination buttons */
+    margin: 0 0.15rem; /* Small gap between buttons */
 }
 
 .pagination .page-item.active .page-link {
     background-color: var(--bs-primary);
     border-color: var(--bs-primary);
-    color: white;
+    color: #fff; /* Active page link text color */
 }
 
-.pagination .page-link:hover {
+/* Filter buttons (outline styles) */
+.btn-outline-primary,
+.btn-outline-secondary {
+    border-width: 2px; /* Thicker border for outline buttons */
+}
+
+.btn-outline-primary.active,
+.btn-outline-secondary.active {
+    color: #fff;
+    font-weight: 600; /* Bolder text for active buttons */
+}
+
+.btn-outline-primary.active {
     background-color: var(--bs-primary);
     border-color: var(--bs-primary);
-    color: white;
+}
+
+.btn-outline-secondary.active {
+    background-color: var(--bs-secondary);
+    border-color: var(--bs-secondary);
+}
+
+/* Radio button specific styles */
+.btn-check:checked + .btn-outline-secondary {
+    color: #fff;
+    background-color: var(--bs-secondary);
+    border-color: var(--bs-secondary);
+}
+
+/* UI hierarchy and spacing */
+.card-body.p-4 {
+    padding: 1.5rem !important; /* More padding inside filter card */
+}
+
+.pb-3.border-bottom {
+    padding-bottom: 1rem !important;
+    margin-bottom: 1.5rem !important; /* More space below bordered sections */
+    border-color: rgba(0,0,0,0.08) !important; /* Lighter border for separation */
+}
+
+.card-title.mb-3.d-flex.align-items-center {
+    font-size: 1.25rem; /* Larger title for filter sections */
+    color: #343a40; /* Darker title color */
+}
+
+.card-title .fas {
+    font-size: 1.1em; /* Adjust icon size relative to title */
+}
+
+.text-muted.small {
+    font-size: 0.8em; /* Smaller text for selected filter display */
+    margin-left: 0.5rem;
+    white-space: nowrap; /* Prevent wrapping for selected text */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .btn-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .btn-group .btn {
+        flex: 1;
+        min-width: 120px;
+    }
+    
+    .card-title {
+        font-size: 1.1rem;
+    }
+    
+    .card-text {
+        font-size: 0.9rem;
+    }
+
+    .card-body.p-4 {
+        padding: 1rem !important;
+    }
+}
+
+/* Loading animation */
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255,255,255,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    width: 3rem;
+    height: 3rem;
+    border: 0.25rem solid var(--bs-primary);
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
 </style>
+
+<script>
+const LC_APP_ID = 'pUEgNUJ66pc7S4FqVpqxkTkx-MdYXbMMI'; // 从您的 single.html 复制
+const LC_APP_KEY = 'K9OXRf3L6Zp0s6TEzJElWQ5r'; // 从您的 single.html 复制
+
+function showLoading() {
+    const loading = document.createElement('div');
+    loading.className = 'loading';
+    loading.innerHTML = '<div class="loading-spinner"></div>';
+    document.body.appendChild(loading);
+}
+
+function hideLoading() {
+    const loading = document.querySelector('.loading');
+    if (loading) {
+        loading.remove();
+    }
+}
+
+function fetchViewCountsForPermalinks(permalinks) {
+    if (permalinks.length === 0) {
+        return Promise.resolve({});
+    }
+
+    const query = {
+        "url": {
+            "$in": permalinks
+        }
+    };
+    // LeanCloud REST API 要求批量查询的 URL 参数为 JSON 字符串
+    const queryUrl = `https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter?where=${encodeURIComponent(JSON.stringify(query))}`;
+
+    return fetch(queryUrl, {
+        method: 'GET',
+        headers: {
+            'X-LC-Id': LC_APP_ID,
+            'X-LC-Key': LC_APP_KEY,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        const viewCountsMap = {};
+        if (data.results) {
+            data.results.forEach(record => {
+                viewCountsMap[record.url] = record.time || 0;
+            });
+        }
+        return viewCountsMap;
+    })
+    .catch(error => {
+        console.error('批量查询浏览次数失败:', error);
+        return {}; // 返回空对象，不影响后续排序
+    });
+}
+
+function updateNewsFilters(filterType, value) {
+    showLoading();
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // Handle sorting
+    const sortOrderRadio = document.querySelector('input[name="sortOrder"]:checked');
+    if (sortOrderRadio && sortOrderRadio.value && sortOrderRadio.value !== 'date-desc') {
+        urlParams.set('sort', sortOrderRadio.value);
+    } else {
+        urlParams.delete('sort');
+    }
+
+    // Handle category click
+    if (filterType === 'category') {
+        const currentCategory = urlParams.get('category');
+        if (currentCategory === value) {
+            urlParams.delete('category'); // Toggle off if already selected
+        } else if (value) {
+            urlParams.set('category', value);
+        } else {
+            urlParams.delete('category'); // "全部" category
+        }
+    }
+
+    // Handle tag click (toggle logic for multiple tags)
+    if (filterType === 'tag') {
+        let currentTags = urlParams.get('tags') ? urlParams.get('tags').split(',') : [];
+        const tagIndex = currentTags.indexOf(value);
+        if (tagIndex > -1) {
+            currentTags.splice(tagIndex, 1); // Remove tag
+        } else {
+            currentTags.push(value);
+        }
+        if (currentTags.length > 0) {
+            urlParams.set('tags', currentTags.join(','));
+        } else {
+            urlParams.delete('tags');
+        }
+    }
+
+    const newUrl = window.location.pathname + '?' + urlParams.toString();
+    history.pushState({path: newUrl}, '', newUrl); // Update URL without reloading
+    applyFiltersAndSort(); // Apply filters immediately
+}
+
+function resetNewsFilters() {
+    showLoading();
+    const newUrl = window.location.pathname;
+    history.pushState({path: newUrl}, '', newUrl); // Clear all parameters without reloading
+    applyFiltersAndSort(); // Apply filters immediately
+}
+
+function applyFiltersAndSort() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedCategory = urlParams.get('category') || '';
+    const selectedTags = urlParams.get('tags') ? urlParams.get('tags').split(',') : [];
+    const sortOrder = urlParams.get('sort') || 'date-desc';
+
+    const newsItemsContainer = document.getElementById('newsList');
+    const newsItems = Array.from(newsItemsContainer.getElementsByClassName('news-item'));
+    const noNewsMessage = document.getElementById('no-news-message');
+
+    let visibleNewsCount = 0;
+
+    // 在过滤和排序之前，先获取最新的浏览次数
+    const permalinksToFetch = newsItems.map(item => item.dataset.permalink);
+    
+    fetchViewCountsForPermalinks(permalinksToFetch).then(viewCountsMap => {
+        newsItems.forEach(item => {
+            const permalink = item.dataset.permalink;
+            const views = viewCountsMap[permalink] !== undefined ? viewCountsMap[permalink] : (item.dataset.views || 0);
+            item.dataset.views = views.toString(); // 更新 data-views 属性
+            // 同时更新页面上显示的浏览次数
+            const viewCountDisplayElement = item.querySelector('.view-count-display');
+            if (viewCountDisplayElement) {
+                viewCountDisplayElement.textContent = views.toString();
+            }
+        });
+
+        // Update active states for Category buttons
+        document.querySelectorAll('#category-filters .btn').forEach(button => {
+            const value = button.dataset.filterValue;
+            if (value === selectedCategory) {
+                button.classList.add('active');
+            } else {
+                button.classList.remove('active');
+            }
+            // Update active state for "全部" button
+            if (!selectedCategory && value === '') {
+                button.classList.add('active');
+            } else if (selectedCategory && value === '') {
+                button.classList.remove('active');
+            }
+        });
+
+        // Update active states for Tag buttons
+        document.querySelectorAll('#tag-filters .btn').forEach(button => {
+            const value = button.dataset.filterValue;
+            if (selectedTags.includes(value)) {
+                button.classList.add('active');
+            } else {
+                button.classList.remove('active');
+            }
+        });
+
+        // Update active state for Sort radio labels
+        document.querySelectorAll('input[name="sortOrder"]').forEach(radio => {
+            const label = document.querySelector(`label[for="${radio.id}"]`);
+            if (radio.value === sortOrder) {
+                radio.checked = true;
+                if (label) label.classList.add('active');
+            } else {
+                radio.checked = false;
+                if (label) label.classList.remove('active');
+            }
+        });
+
+        // Update current selected category and tags display
+        const currentCategoryDisplay = document.getElementById('current-category-display');
+        if (currentCategoryDisplay) {
+            currentCategoryDisplay.textContent = selectedCategory ? `(已选择: ${selectedCategory})` : '';
+        }
+        const currentTagsDisplay = document.getElementById('current-tags-display');
+        if (currentTagsDisplay) {
+            currentTagsDisplay.textContent = selectedTags.length > 0 ? `(已选择: ${selectedTags.join(', ')})` : '';
+        }
+
+        // Filter news items
+        newsItems.forEach(item => {
+            const itemCategories = item.dataset.categories ? item.dataset.categories.split(',') : [];
+            const itemTags = item.dataset.tags ? item.dataset.tags.split(',') : [];
+
+            let categoryMatch = true;
+            if (selectedCategory) {
+                categoryMatch = itemCategories.includes(selectedCategory);
+            }
+
+            let tagsMatch = true;
+            if (selectedTags.length > 0) {
+                tagsMatch = selectedTags.some(tag => itemTags.includes(tag));
+            } else if (selectedTags.length === 0) { // If no tags are selected, all tags match
+                tagsMatch = true;
+            }
+
+            if (categoryMatch && tagsMatch) {
+                item.style.display = 'block';
+                visibleNewsCount++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        // Sort visible news items
+        const visibleNewsItems = newsItems.filter(item => item.style.display !== 'none');
+
+        visibleNewsItems.sort((a, b) => {
+            if (sortOrder === 'date-asc') {
+                return new Date(a.dataset.date) - new Date(b.dataset.date);
+            } else if (sortOrder === 'date-desc') {
+                return new Date(b.dataset.date) - new Date(a.dataset.date);
+            } else if (sortOrder === 'views') {
+                return parseInt(b.dataset.views) - parseInt(a.dataset.views);
+            }
+            return 0;
+        });
+
+        // Reappend sorted items to maintain order in DOM
+        // 为了防止分页问题导致排序混乱，我们只对当前页面的可见新闻进行排序并重新添加
+        // 假设 newsItemsContainer 已经包含了当前页的所有新闻项目
+        const existingItems = Array.from(newsItemsContainer.children).filter(child => child.classList.contains('news-item'));
+        existingItems.forEach(item => newsItemsContainer.removeChild(item)); // 移除所有新闻项目
+
+        visibleNewsItems.forEach(item => newsItemsContainer.insertBefore(item, noNewsMessage)); // 在 noNewsMessage 之前插入
+
+        // Show/hide no news message
+        if (visibleNewsCount === 0) {
+            if (noNewsMessage) noNewsMessage.style.display = 'block';
+        } else {
+            if (noNewsMessage) noNewsMessage.style.display = 'none';
+        }
+
+        hideLoading();
+    });
+}
+
+// 页面加载完成后初始化筛选器和监听器
+document.addEventListener('DOMContentLoaded', () => {
+    // Attach event listeners to category buttons
+    document.querySelectorAll('#category-filters .btn').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const value = event.currentTarget.dataset.filterValue;
+            updateNewsFilters('category', value);
+        });
+    });
+
+    // Attach event listeners to tag buttons
+    document.querySelectorAll('#tag-filters .btn').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const value = event.currentTarget.dataset.filterValue;
+            updateNewsFilters('tag', value);
+        });
+    });
+
+    // Attach event listener to reset button
+    document.getElementById('resetFiltersBtn').addEventListener('click', resetNewsFilters);
+
+    // Attach event listeners to sort radio buttons
+    document.querySelectorAll('input[name="sortOrder"]').forEach(radio => {
+        radio.addEventListener('change', (event) => {
+            updateNewsFilters('sort', event.currentTarget.value);
+        });
+    });
+
+    // Apply filters and sorting on initial load
+    applyFiltersAndSort();
+    hideLoading();
+});
+
+// 监听页面加载状态
+window.addEventListener('load', hideLoading);
+
+// 监听浏览器前进/后退事件，重新应用筛选
+window.addEventListener('popstate', (event) => {
+    applyFiltersAndSort();
+});
+</script>
 {{ end }}

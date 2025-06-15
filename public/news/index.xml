@@ -72,6 +72,13 @@
       <description>探讨最新内窥镜技术在工业检测领域的创新应用，提高检测效率和精度。</description>
     </item>
     <item>
+      <title>示例资讯标题</title>
+      <link>http://localhost:1313/news/example-news/</link>
+      <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/example-news/</guid>
+      <description>这是一个示例资讯，展示了如何在资讯中添加分类、标签和其他元数据。</description>
+    </item>
+    <item>
       <title>AI技术赋能工业内窥镜检测新突破</title>
       <link>http://localhost:1313/news/industry-news-2/</link>
       <pubDate>Mon, 18 Mar 2024 00:00:00 +0000</pubDate>

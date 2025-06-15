@@ -23,9 +23,7 @@
                         {{ with .Params.author }}
                         <span class="me-3"><i class="bi bi-person"></i> {{ . }}</span>
                         {{ end }}
-                        {{ with .Params.views }}
-                        <span><i class="bi bi-eye"></i> {{ . }}次浏览</span>
-                        {{ end }}
+                        <span><i class="bi bi-eye"></i> <span id="page-views">加载中...</span>次浏览</span>
                     </div>
                 </div>
 
@@ -161,5 +159,173 @@
     background-color: var(--bs-primary);
     border-color: var(--bs-primary);
 }
+
+/* 浏览次数样式 */
+#page-views {
+    color: var(--bs-primary);
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
 </style>
+
+<script>
+// 防止重复初始化的标记
+let isInitialized = false;
+let pageViewsElement;
+let currentPath = '{{ .RelPermalink }}';
+let pageTitle = '{{ .Title }}';
+
+// LeanCloud配置
+const LC_APP_ID = 'pUEgNUJ66pc7S4FqVpqxkTkx-MdYXbMMI';
+const LC_APP_KEY = 'K9OXRf3L6Zp0s6TEzJElWQ5r';
+
+function initPageViews() {
+    // 防止重复初始化
+    if (isInitialized) {
+        console.log('页面访问统计已初始化，跳过重复初始化');
+        return;
+    }
+    
+    pageViewsElement = document.getElementById('page-views');
+    if (!pageViewsElement) {
+        console.log('未找到页面访问统计元素');
+        return;
+    }
+
+    console.log('初始化页面访问统计, 路径:', currentPath);
+    isInitialized = true;
+    
+    // 只使用LeanCloud直接API方式，避免Valine冲突
+    initLeanCloudViews();
+}
+
+function initLeanCloudViews() {
+    const url = 'https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter';
+    
+    // 查询现有记录
+    const queryUrl = url + '?where=' + encodeURIComponent(JSON.stringify({url: currentPath}));
+    
+    fetch(queryUrl, {
+        method: 'GET',
+        headers: {
+            'X-LC-Id': LC_APP_ID,
+            'X-LC-Key': LC_APP_KEY,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('查询Counter结果:', data);
+        if (data.results && data.results.length > 0) {
+            // 存在记录，先显示当前访问次数，然后更新
+            const record = data.results[0];
+            const currentViews = record.time || 0;
+            
+            // 先显示当前访问次数
+            pageViewsElement.textContent = currentViews.toString();
+            
+            // 然后更新访问次数
+            const newViews = currentViews + 1;
+            updateCounter(record.objectId, newViews);
+        } else {
+            // 不存在记录，创建新记录
+            createCounter();
+        }
+    })
+    .catch(error => {
+        console.error('查询Counter失败:', error);
+        // 使用本地存储作为备用方案
+        useLocalStorage();
+    });
+}
+
+function createCounter() {
+    const url = 'https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter';
+    
+    // 先显示1，然后尝试创建记录
+    pageViewsElement.textContent = '1';
+    
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-LC-Id': LC_APP_ID,
+            'X-LC-Key': LC_APP_KEY,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            url: currentPath,
+            title: pageTitle,
+            time: 1
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('创建Counter成功:', data);
+        // 确保显示正确的访问次数
+        pageViewsElement.textContent = '1';
+    })
+    .catch(error => {
+        console.error('创建Counter失败:', error);
+        // 创建失败时使用本地存储
+        useLocalStorage();
+    });
+}
+
+function updateCounter(objectId, views) {
+    const url = `https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter/${objectId}`;
+    
+    fetch(url, {
+        method: 'PUT',
+        headers: {
+            'X-LC-Id': LC_APP_ID,
+            'X-LC-Key': LC_APP_KEY,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            time: views,
+            updatedAt: new Date().toISOString() // 添加更新时间戳
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('更新Counter成功:', data, '新访问次数:', views);
+        pageViewsElement.textContent = views.toString();
+    })
+    .catch(error => {
+        console.error('更新Counter失败:', error);
+        // 更新失败时保持显示之前的值
+        pageViewsElement.textContent = (views - 1).toString();
+    });
+}
+
+function useLocalStorage() {
+    console.log('使用本地存储作为备用方案');
+    const storageKey = 'page_views_' + currentPath.replace(/[^a-zA-Z0-9]/g, '_');
+    let views = parseInt(localStorage.getItem(storageKey) || '0') + 1;
+    localStorage.setItem(storageKey, views.toString());
+    pageViewsElement.textContent = views.toString();
+    console.log('本地存储访问次数:', views);
+}
+
+// 页面加载完成后初始化 - 只初始化一次
+document.addEventListener('DOMContentLoaded', function() {
+    // 延迟初始化，确保页面完全加载
+    setTimeout(initPageViews, 1000);
+});
+</script>
 {{ end }}

@@ -1,12 +1,12 @@
 ---
 title: "工业内窥镜技术发展趋势分析"
 date: 2024-01-15
-thumbnail: "https://picsum.photos/800/400?random=1"
 categories: ["行业资讯", "技术动态"]
-tags: ["工业内窥镜", "技术趋势", "无损检测"]
+tags: ["工业内窥镜", "技术趋势", "无损检测", "智能识别", "远程检测"]
 summary: "本文深入分析了工业内窥镜技术的最新发展趋势，包括高清成像、智能识别、远程操控等方面的创新突破，探讨了这些技术进步对工业检测领域带来的深远影响。同时对未来技术发展方向进行了展望，为行业从业者提供有价值的参考信息。"
+featured_image: "/images/news/industrial-endoscope.jpg"
+author: "技术部"
 views: 128
-related_tech: ["高清成像", "智能识别", "远程操控"]
 ---
 
 # 引言

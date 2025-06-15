@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电子内窥镜 - 视觉检测仪器</title>
+    
+    
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>hugo-visndt-site</title>
+
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+
+<style>
+     
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+     
+    .navbar {
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .navbar-brand img {
+        max-height: 50px;
+    }
+
+     
+    #searchModal .modal-dialog {
+        max-width: 600px;
+    }
+
+    #searchModal .nav-tabs {
+        border-bottom: none;
+    }
+
+    #searchModal .nav-link {
+        color: #6c757d;
+        transition: all 0.3s ease;
+    }
+
+    #searchModal .nav-link.active {
+        color: var(--bs-primary);
+        border-bottom: 2px solid var(--bs-primary);
+    }
+
+     
+    .search-result-item {
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .search-result-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+     
+    #history-container .badge,
+    #hot-keywords .badge {
+        margin: 0.25rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    #history-container .badge:hover,
+    #hot-keywords .badge:hover {
+        opacity: 0.8;}
+
+     
+    .search-highlight {
+        background-color: #ffff00;
+        font-weight: bold;
+        padding: 0 2px;
+    }
+
+     
+    .search-suggestions {
+        position: absolute;
+        z-index: 1000;
+        background-color: white;
+        border: 1px solid #ddd;
+        border-top: none;
+        max-height: 300px;
+        overflow-y: auto;
+        width: 100%;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .search-suggestion-item {
+        padding: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .search-suggestion-item:hover {
+        background-color: #f8f9fa;
+    }
+
+     
+    .search-suggestion {
+        display: flex !important;
+        align-items: center !important;
+        padding: 0.75rem 1rem !important;
+        border-radius: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
+        background: #f8f9fa !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+        border: 1px solid #e9ecef !important;
+        cursor: pointer !important;
+        transition: background 0.2s, box-shadow 0.2s !important;
+        text-decoration: none !important;
+        color: #222 !important;
+    }
+    .search-suggestion:hover {
+        background: #e3f2fd !important;
+        box-shadow: 0 4px 16px rgba(0,123,255,0.08) !important;
+        color: #1976d2 !important;
+    }
+    .search-suggestion .icon {
+        font-size: 1.2rem !important;
+        margin-right: 0.5rem !important;
+    }
+    .search-result {
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 1rem !important;
+        border-radius: 0.75rem !important;
+        border: 1px solid #e9ecef !important;
+        margin-bottom: 1rem !important;
+        background: #fff !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03) !important;
+        transition: box-shadow 0.2s, border 0.2s !important;
+        cursor: pointer !important;
+    }
+    .search-result:hover {
+        box-shadow: 0 8px 24px rgba(0,123,255,0.10) !important;
+        border-color: #90caf9 !important;
+        background: #f1f8ff !important;
+    }
+    .search-result .icon {
+        font-size: 1.1rem !important;
+        margin-right: 0.5rem !important;
+    }
+
+    .result-footer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        font-size: 0.8em;
+        color: #666;
+    }
+
+    .no-results, .search-hint {
+        text-align: center;
+        color: #999;
+        padding: 20px;
+    }
+
+    .social-hover {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+}
+.social-hover .qr-code-float {
+  display: none;
+  position: absolute;
+  left: 50%;
+  top: 120%;
+  transform: translateX(-50%);
+  z-index: 10;
+  background: #fff;
+  padding: 8px;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  min-width: 110px;
+}
+.social-hover:hover .qr-code-float,
+.social-hover:focus-within .qr-code-float {
+  display: block;
+}
+.social-hover .qr-code-float img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+@media (max-width: 768px) {
+  .social-hover .qr-code-float {
+    left: 50%;
+    top: 110%;
+    min-width: 90px;
+    padding: 4px;
+  }
+  .social-hover .qr-code-float img {
+    width: 80px;
+    height: 80px;
+  }
+}
+ 
+#backToTopBtn {
+  transition: opacity 0.3s;
+  opacity: 0.85;
+}
+#backToTopBtn:hover {
+  opacity: 1;
+  background: #0056b3;
+}
+</style>
+
+
+<script>
+    
+    window.SearchState = {
+        isManagerReady: false,
+        readyCallbacks: [],
+        
+        
+        waitForReady: function(callback) {
+            if (this.isManagerReady) {
+                callback();
+            } else {
+                this.readyCallbacks.push(callback);
+            }
+        }
+    };
+
+    
+    function markSearchManagerReady() {
+        console.log('🎉 搜索管理器就绪（兼容模式）');
+        window.SearchState.isManagerReady = true;
+    }
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+    window.searchIndex = [{
+        "title": "\"WS-DZ60高清三维测量工业视频内窥镜\"",
+        "url": "\"/products/product-dz60/\"",
+        "content": "\" \"",
+        "type": "product"
+      },{
+        "title": "\"WS-P-08510高清工业视频内窥镜\"",
+        "url": "\"/products/product-p08510/\"",
+        "content": "\" \"",
+        "type": "product"
+      },{
+        "title": "\"WS-P09510高清工业视频内窥镜\"",
+        "url": "\"/products/product-p09510/\"",
+        "content": "\" \"",
+        "type": "product"
+      },{
+        "title": "\"WS-P1010高清工业视频内窥镜\"",
+        "url": "\"/products/product-p1010/\"",
+        "content": "\" \"",
+        "type": "product"
+      },{
+        "title": "\"WS-P2810高清工业视频内窥镜\"",
+        "url": "\"/products/product-p1210/\"",
+        "content": "\" \"",
+        "type": "product"
+      },{
+        "title": "\"WS-P2810高清工业视频内窥镜\"",
+        "url": "\"/products/product-p1510/\"",
+        "content": "\" \"",
+        "type": "product"
+      },{
+        "title": "\"WS-P2810高清工业视频内窥镜\"",
+        "url": "\"/products/product-p1810/\"",
+        "content": "\" \"",
+        "type": "product"
+      },{
+        "title": "\"WS-P2810高清工业视频内窥镜\"",
+        "url": "\"/products/product-p2010/\"",
+        "content": "\" \"",
+        "type": "product"
+      },{
+        "title": "\"WS-P2810高清工业视频内窥镜\"",
+        "url": "\"/products/product-p2210/\"",
+        "content": "\" \"",
+        "type": "product"
+      },{
+        "title": "\"WS-P2810高清工业视频内窥镜\"",
+        "url": "\"/products/product-p2410/\"",
+        "content": "\" \"",
+        "type": "product"
+      },{
+        "title": "\"WS-P2810高清工业视频内窥镜\"",
+        "url": "\"/products/product-p2810/\"",
+        "content": "\" \"",
+        "type": "product"
+      },{
+        "title": "\"WS-P3910高清工业视频内窥镜\"",
+        "url": "\"/products/product-p3910/\"",
+        "content": "\" \"",
+        "type": "product"
+      },{
+        "title": "\"WS-P6010高清工业视频内窥镜\"",
+        "url": "\"/products/product-p6010/\"",
+        "content": "\" \"",
+        "type": "product"
+      },{
+        "title": "\"2024杭州工业检测设备与技术展览会\"",
+        "url": "\"/news/exhibition-news-8/\"",
+        "content": "\"展会将全面展示工业检测设备与技术的创新成果\\u0026hellip;\\n\"",
+        "type": "article"
+      },{
+        "title": "\"2024西安工业自动化及机器人展览会\"",
+        "url": "\"/news/exhibition-news-7/\"",
+        "content": "\"展会将重点展示工业自动化及机器人检测领域的最新技术\\u0026hellip;\\n\"",
+        "type": "article"
+      },{
+        "title": "\"2024北京国际工业智能装备展览会\"",
+        "url": "\"/news/exhibition-news-6/\"",
+        "content": "\"展会将展示工业智能装备和检测技术的最新发展趋势\\u0026hellip;\\n\"",
+        "type": "article"
+      },{
+        "title": "\"2024深圳国际工业检测技术创新展\"",
+        "url": "\"/news/exhibition-news-5/\"",
+        "content": "\"展会将重点展示工业检测领域的创新技术和解决方案\\u0026hellip;\\n\"",
+        "type": "article"
+      },{
+        "title": "\"2024武汉国际工业装备博览会\"",
+        "url": "\"/news/exhibition-news-4/\"",
+        "content": "\"本届博览会将全面展示工业装备领域的前沿技术\\u0026hellip;\\n\"",
+        "type": "article"
+      },{
+        "title": "\"第8届成都工业自动化与机器人展览会\"",
+        "url": "\"/news/exhibition-news-3/\"",
+        "content": "\"展会将展示工业自动化检测和机器人技术的最新发展\\u0026hellip;\\n\"",
+        "type": "article"
+      },{
+        "title": "\"2024广州国际工业检测设备展览会\"",
+        "url": "\"/news/exhibition-news-2/\"",
+        "content": "\"展会将重点展示工业检测领域的创新技术和解决方案\\u0026hellip;\\n\"",
+        "type": "article"
+      },{
+        "title": "\"2024年第15届中国国际工业内窥镜技术展览会\"",
+        "url": "\"/news/exhibition-news-1/\"",
+        "content": "\"本届展会将集中展示工业内窥镜领域的最新技术和产品\\u0026hellip;\\n\"",
+        "type": "article"
+      },{
+        "title": "\"内窥镜技术在工业检测中的创新应用\"",
+        "url": "\"/news/industry-news-1/\"",
+        "content": "\"内窥镜技术作为工业检测的重要工具，在近年来有了显著的技术突破和创新应用\\u0026hellip;\\n\"",
+        "type": "article"
+      },{
+        "title": "\"示例资讯标题\"",
+        "url": "\"/news/example-news/\"",
+        "content": "\"这是示例资讯的正文内容。在创建新的资讯时，需要在front matter中添加必要的元数据。\\n元数据说明 分类（categories）：\\n行业资讯 展会资讯 技术动态 公司新闻 标签（tags）：\\n可以根据文章内容添加多个标签 标签用于更细粒度的内容分类 其他元数据：\\nsummary: 文章摘要 featured_image: 特色图片 author: 作者 views: 浏览量 related_tech: 相关技术 如何添加分类 在资讯的front matter中添加categories字段： categories: [\\u0026#34;行业资讯\\u0026#34;] # 可以添加多个分类 分类名称必须与content/categories/目录下的文件名对应： 行业资讯 -\\u0026gt; industry-news.md 展会资讯 -\\u0026gt; exhibition-news.md 技术动态 -\\u0026gt; tech-news.md 如果需要添加新的分类，只需要在content/categories/目录下创建对应的markdown文件即可。 示例内容 这里可以添加更多的正文内容，包括图片、表格等。\\n图片示例 表格示例 项目 说明 分类 行业资讯 标签 示例、测试、新功能 日期 2024-03-20 作者 管理员 浏览量 0 \"",
+        "type": "article"
+      },{
+        "title": "\"AI技术赋能工业内窥镜检测新突破\"",
+        "url": "\"/news/industry-news-2/\"",
+        "content": "\"随着人工智能技术的快速发展，工业内窥镜检测领域迎来了新的技术革新\\u0026hellip;\\n\"",
+        "type": "article"
+      },{
+        "title": "\"5G远程内窥镜检测系统解决方案发布\"",
+        "url": "\"/news/industry-news-3/\"",
+        "content": "\"5G技术的商用部署为工业检测领域带来了新的发展机遇\\u0026hellip;\\n\"",
+        "type": "article"
+      },{
+        "title": "\"测试产品001\"",
+        "url": "\"/products/test-product-001/\"",
+        "content": "\"产品介绍 这是一款用于测试的电子内窥镜产品，具有以下特点：\\n高清显示：7英寸大屏幕，1920x1080分辨率 长效续航：6小时超长待机 精准探测：4.5mm探头，LED光源 灵活操控：四向导向系统 技术优势 图像清晰度高 操作简单方便 续航时间长 防水防尘设计 应用领域 工业检测 设备维护 管道检查 质量控制 \"",
+        "type": "product"
+      },{
+        "title": "\"新一代工业内窥镜技术发展趋势\"",
+        "url": "\"/news/2024-03-14-test-news/\"",
+        "content": "\"工业内窥镜技术的新发展 近年来，工业内窥镜技术发展迅速，特别是在人工智能和5G技术的推动下，出现了许多创新应用。本文将详细介绍几个主要的技术发展趋势。\\n1. AI图像识别技术的应用 人工智能技术在工业内窥镜领域的应用主要体现在以下几个方面：\\n自动缺陷识别 尺寸精确测量 智能图像增强 预测性维护 2. 5G远程控制技术 5G技术的高带宽、低延迟特性为工业内窥镜带来了新的应用可能：\\n实时高清图像传输 远程专家指导 协同检测作业 云端数据处理 3. 3D重建技术的突破 三维重建技术让检测结果更直观：\\n实时3D建模 精确尺寸测量 缺陷位置定位 检测报告自动生成 未来展望 随着技术的不断进步，工业内窥镜将在以下方面获得更大发展：\\n图像质量进一步提升 智能化程度更高 操作更加便捷 应用领域更广泛 这些技术创新将为工业检测带来更高的效率和更好的检测效果。\\n\"",
+        "type": "article"
+      },{
+        "title": "\"新型管道爬行机器人技术取得重大突破\"",
+        "url": "\"/news/industry-news-4/\"",
+        "content": "\"管道爬行机器人作为工业内窥镜检测的重要载体，在技术创新方面取得重大突破\\u0026hellip;\\n\"",
+        "type": "article"
+      },{
+        "title": "\"新能源汽车电池检测方案\"",
+        "url": "\"/cases/case-3/\"",
+        "content": "\"项目背景 新能源汽车电池的质量直接影响车辆性能和安全性。某头部新能源汽车制造商需要一套可靠的电池检测系统，用于生产线质量控制。\\n解决方案 我们提供了完整的电池检测解决方案：\\n高精度微型内窥镜系统 自动化检测平台 AI辅助缺陷识别 实时数据分析和报警 实施效果 生产线检测效率提升150% 质量问题提前发现率达99% 产品合格率提升5% 质量追溯准确率100% 客户评价 \\u0026ldquo;该解决方案帮助我们建立了更严格的质量控制体系，显著提升了产品质量和生产效率。\\u0026rdquo;\\n\"",
+        "type": "article"
+      },{
+        "title": "\"航空发动机叶片检测应用\"",
+        "url": "\"/cases/case-2/\"",
+        "content": "\"项目背景 航空发动机叶片的完整性和精确度直接关系到飞行安全，需要在不拆解发动机的情况下进行定期检查。客户需要一个高精度、可靠的检测解决方案。\\n解决方案 我们定制开发了专业的光学内窥镜检测系统：\\n超高清光学成像系统 微米级测量功能 智能图像分析软件 专业检测报告生成 实施效果 检测精度达到0.01mm 检测时间缩短60% 漏检率降至0.1%以下 维护效率提升80% 客户评价 \\u0026ldquo;这套系统的检测精度和效率远超我们的预期，显著提升了我们的质量控制水平。\\u0026rdquo;\\n\"",
+        "type": "article"
+      },{
+        "title": "\"工业管道检测解决方案\"",
+        "url": "\"/cases/case-1/\"",
+        "content": "\"项目背景 某大型石化企业的工业管道系统需要定期进行内部检测，以预防可能的泄漏和损坏。传统的检测方法费时费力，且存在安全隐患。\\n解决方案 我们提供了一套完整的工业管道检测解决方案：\\n采用高清电子内窥镜进行检测 360度可旋转探头，全方位无死角检查 实时图像传输和记录 智能缺陷识别系统 实施效果 检测效率提升200% 预防性维护成功率达95% 年度维护成本降低30% 设备停机时间减少50% 客户评价 \\u0026ldquo;这套解决方案帮助我们显著提高了管道检测的效率和准确性，为企业节省了大量维护成本。\\u0026rdquo;\\n\"",
+        "type": "article"
+      },{
+        "title": "\"微视光电发布新一代K09520电子内窥镜\"",
+        "url": "\"/news/2024-01-20-product-launch/\"",
+        "content": "\"突破性创新，引领检测新未来 2024年1月20日，深圳市微视光电科技有限公司正式发布新一代K09520电子内窥镜。这款产品凝聚了公司多年的技术积累和创新成果，将为工业检测领域带来全新的解决方案。\\n产品亮点 新一代K09520电子内窥镜具有以下突出特点：\\n超高清成像系统\\n200万像素高清摄像头 HDR图像增强技术 120度超大视场角 优异的使用体验\\n7英寸IPS触摸屏 人性化操作界面 6小时超长续航 可靠的工业品质\\nIP67防护等级 坚固耐用的设计 适应各种工作环境 应用前景 K09520电子内窥镜针对多个行业应用场景进行了优化，包括：\\n航空航天领域的发动机检测 汽车制造业的质量控制 石油化工的管道检测 精密机械的维护保养 市场展望 随着工业4.0的深入推进，高端检测设备的市场需求持续增长。K09520的推出，不仅填补了市场空白，也为客户提供了更优质的选择。预计该产品将在未来的工业检测市场中占据重要地位。\\n获取更多信息 如需了解更多关于K09520电子内窥镜的详细信息，欢迎访问我们的产品页面或联系我们的销售团队。我们期待与您探讨如何借助这款创新产品提升检测效率。\\n\"",
+        "type": "article"
+      },{
+        "title": "\"2024年工业检测设备展览会即将开幕\"",
+        "url": "\"/news/2024-01-16-exhibition-news/\"",
+        "content": "\"展会概况 第二十届中国国际工业检测设备展览会（CIITE 2024）将于2024年3月15日-17日在深圳会展中心举行。本届展会以\\u0026quot;智能检测，引领未来\\u0026quot;为主题，展览面积达50000平方米，预计参观人数将超过80000人次。\\n展会亮点 1. 展商阵容 本届展会已确认参展的知名企业包括：\\n国际知名品牌：GE、OLYMPUS、FLIR 国内领军企业：微视光电、大恒科技、天准科技 新兴技术企业：20余家AI检测创新企业 2. 展品范围 展会将全面展示工业检测领域的最新产品和技术：\\n工业内窥镜系列 X射线检测设备 超声波检测仪器 红外热像仪 AI智能检测系统 3. 同期活动 展会期间将举办多场专业论坛和技术交流活动：\\n工业检测技术创新论坛 AI与工业检测深度融合研讨会 检测技术应用案例分享会 新产品发布会 参观指南 展会信息 时间：2024年3月15日-17日 地点：深圳会展中心 展馆：1号馆、2号馆、3号馆 交通方式 地铁：1号线会展中心站 公交：多条公交线路可达 自驾：展馆设有充足停车位 参观预登记 即日起可通过以下方式进行预登记：\\n官方网站在线登记 微信公众号预约 展会小程序报名 预登记观众可享受以下优惠：\\n免费入场 免费会刊 优先参加同期活动 展望 本届展会将是工业检测行业年度最具影响力的盛会之一，将为业内人士提供了解行业动态、把握发展趋势、寻求商业合作的重要平台。展会组委会诚挚邀请广大业内人士莅临参观指导。\\n\"",
+        "type": "article"
+      },{
+        "title": "\"工业内窥镜技术发展趋势分析\"",
+        "url": "\"/news/2024-01-15-industry-news-example/\"",
+        "content": "\"引言 随着工业4.0时代的到来，工业内窥镜作为重要的无损检测工具，正在经历着前所未有的技术革新。本文将从多个维度分析当前工业内窥镜技术的发展趋势，为行业从业者提供深入的见解。\\n高清成像技术的突破 近年来，工业内窥镜的成像质量有了显著提升。4K超高清成像技术的应用，使得检测人员能够捕捉到更多细节，提高了检测的准确性。同时，新一代图像处理芯片的使用，实现了更快的图像处理速度和更好的画质优化效果。\\n智能识别技术的应用 人工智能技术在工业内窥镜领域的应用日益广泛。通过深度学习算法，现代工业内窥镜能够：\\n自动识别缺陷 进行尺寸测量 生成检测报告 预测设备故障 这些功能大大提高了检测效率，减少了人为错误。\\n远程操控技术的发展 5G技术的普及为工业内窥镜的远程操控带来了新的可能。检测人员可以通过远程控制系统，实时操作数千公里外的内窥镜设备，这不仅提高了工作效率，也为疫情时期的远程检测提供了解决方案。\\n未来发展展望 展望未来，工业内窥镜技术将朝着以下方向发展：\\n更高分辨率的成像系统 更智能的缺陷识别算法 更便携的设备设计 更强大的远程协作功能 结论 工业内窥镜技术的发展正在改变传统的工业检测方式。通过持续的技术创新，工业内窥镜将为工业检测领域带来更多可能性，推动行业向更高效、更智能的方向发展。\\n\"",
+        "type": "article"
+      },{
+        "title": "\"WS-P8050高清工业视频内窥镜\"",
+        "url": "\"/products/product-p8020/\"",
+        "content": "\" \"",
+        "type": "product"
+      },{
+        "title": "\"模拟产品2\"",
+        "url": "\"/products/sample-product-2/\"",
+        "content": "\"产品介绍 这里是模拟产品2的详细描述，可以包含图文内容，例如：\\n产品特点 自动化程度高 易于操作 适用范围广 \"",
+        "type": "product"
+      },{
+        "title": "\"模拟产品3\"",
+        "url": "\"/products/sample-product-3/\"",
+        "content": "\"产品介绍 这里是模拟产品3的详细描述，可以包含图文内容，例如：\\n产品特性 高精度测量 稳定可靠 操作简便 这里是模拟产品3的详细描述。\\n\"",
+        "type": "product"
+      },{
+        "title": "\"超细弹簧管1mm电子内窥镜\"",
+        "url": "\"/products/k1010-electronic-endoscope/\"",
+        "content": "\"产品介绍 这里是产品的详细描述。\\n\"",
+        "type": "product"
+      }];
+    </script>
+
+
+<script src="/js/search.js"></script>
+<script src="/js/search-modal.js"></script>
+
+<link rel="stylesheet" href="/css/image-utils.css">
+
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var btn = document.getElementById('backToTopBtn');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 200) {
+          btn.style.display = 'block';
+        } else {
+          btn.style.display = 'none';
+        }
+      });
+      btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+    </script>
+<script src="/js/image-handler.js" defer></script>
+    
+</head>
+<body>
+    
+<div class="top-bar py-2">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <span>欢迎访问维森视觉检测仪器</span>
+            </div>
+            <div class="col-md-6 text-end">
+                <div class="d-inline-flex align-items-center">
+                    <div class="d-inline-flex align-items-center ms-3">
+                        <i class="fas fa-envelope me-1"></i>
+                        <span>商务咨询: <a href="mailto:info@visndt.com">info@visndt.com</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        
+        <a class="navbar-brand" href="/">
+            <img src="/images/logo.svg" alt="hugo-visndt-site" height="50">
+        </a>
+        
+        <button class="btn btn-primary d-lg-none me-2" style="position:relative;z-index:1051;"
+                data-bs-toggle="modal" data-bs-target="#searchModal">
+            <i class="fas fa-search fa-lg"></i>
+        </button>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+                data-bs-target="#navbarNav" aria-controls="navbarNav" 
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/">首页</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/products">产品中心</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/applications">应用领域</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/cases">应用案例</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/news">资讯中心</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/customs">定制中心</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/cooperation">商务服务</a>
+                </li>
+                
+            </ul>
+            
+            <button class="btn btn-outline-primary d-none d-lg-inline-block ms-2" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#searchModal">
+                <i class="fas fa-search fa-lg"></i> 搜索
+            </button>
+        </div>
+    </div>
+</nav> 
+    
+    
+    <main class="container my-0 py-0 main-content">
+        
+  <article class="cf pa3 pa4-m pa4-l">
+    <div class="measure-wide-l center f4 lh-copy nested-copy-line-height nested-links mid-gray">
+      <p>Below you will find pages that utilize the taxonomy term “电子内窥镜”</p>
+    </div>
+  </article>
+  <div class="mw8 center">
+    <section class="flex-ns mt5 flex-wrap justify-around">
+      
+        <div class="w-100 mb4 relative bg-white">
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">资讯中心</span>
+    <h1 class="f3 near-black">
+      <a href="/news/2024-01-20-product-launch/" class="link black dim">
+        微视光电发布新一代K09520电子内窥镜
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      深圳市微视光电科技有限公司正式发布新一代K09520电子内窥镜，该产品采用创新的图像处理技术，配备7英寸IPS触摸屏，具有超高清成像、长续航等特点，将为工业检测领域带来全新体验。
+    </div>
+    <a href="/news/2024-01-20-product-launch/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
+  </div>
+</div>
+
+        </div>
+      
+    </section>
+  </div>
+
+    </main>
+
+    <footer class="footer py-5 border-top">
+    <div class="container">
+      <div class="row">
+        
+        <div class="col-md-4 mb-4 mb-md-0 text-center text-md-start">
+          <div class="footer-logo h4 mb-2">VisNDT</div>
+          <div class="footer-logo-subtext mb-2 text-muted">维森 · 视觉检测仪器</div>
+          <div class="working-hours d-inline-block text-secondary">
+            <i class="fas fa-clock me-1"></i> 工作时间: 周一至周五 9:00-18:00
+          </div>
+        </div>
+        
+        <div class="col-md-4 mb-4 mb-md-0 text-center">
+          <h5 class="mb-3">联系我们</h5>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2"><i class="fas fa-envelope me-2"></i> 邮箱: <a href="mailto:info@visndt.com">info@visndt.com</a></li>
+          </ul>
+        </div>
+        
+        <div class="col-md-4 text-center">
+            <h5 class="mb-3">关注我们</h5>
+            <div class="d-flex flex-wrap justify-content-center mb-3">
+              <div class="social-hover mx-3 mb-3">
+                <i class="fab fa-weixin fa-2x social-icon" style="color: #09bb07;"></i>
+                <div class="qr-code-float">
+                  <img src="https://picsum.photos/100/100?random=2" alt="微信二维码" class="img-fluid rounded">
+                </div>
+              </div>
+              <div class="social-hover mx-3 mb-3">
+                <i class="fab fa-weibo fa-2x social-icon" style="color: #e6162d;"></i>
+                <div class="qr-code-float">
+                  <img src="https://picsum.photos/100/100?random=3" alt="微博二维码" class="img-fluid rounded">
+                </div>
+              </div>
+              <div class="social-hover mx-3 mb-3">
+                <i class="fab fa-tiktok fa-2x social-icon" style="color: #000;"></i>
+                <div class="qr-code-float">
+                  <img src="https://picsum.photos/100/100?random=5" alt="抖音二维码" class="img-fluid rounded">
+                </div>
+              </div>
+              <div class="social-hover mx-3 mb-3">
+                <i class="fas fa-video fa-2x social-icon" style="color: #07C160;"></i>
+                <div class="qr-code-float">
+                  <img src="https://picsum.photos/100/100?random=6" alt="视频号二维码" class="img-fluid rounded">
+                </div>
+              </div>
+              <div class="social-hover mx-3 mb-3">
+                <i class="fas fa-comment-dots fa-2x social-icon" style="color: #0086D6;"></i>
+                <div class="qr-code-float">
+                  <img src="https://picsum.photos/100/100?random=7" alt="钉钉二维码" class="img-fluid rounded">
+                </div>
+              </div>
+              <div class="social-hover mx-3 mb-3">
+                <i class="fas fa-building fa-2x social-icon" style="color: #1AAD19;"></i>
+                <div class="qr-code-float">
+                  <img src="https://picsum.photos/100/100?random=8" alt="企业微信二维码" class="img-fluid rounded">
+                </div>
+              </div>
+            </div>
+          </div>
+      
+      <div class="friend-links-container mt-4">
+        <h5 class="friend-links-title mb-2">友情链接</h5>
+        <div class="friend-links mb-3">
+          <a href="#" class="me-3 text-decoration-none text-primary">中国机器视觉网</a>
+          <a href="#" class="me-3 text-decoration-none text-primary">自动化检测协会</a>
+          <a href="#" class="me-3 text-decoration-none text-primary">工业4.0研究院</a>
+          <a href="#" class="me-3 text-decoration-none text-primary">视觉检测技术论坛</a>
+          <a href="#" class="me-3 text-decoration-none text-primary">智能制造联盟</a>
+        </div>
+      </div>
+      <hr class="my-4 bg-secondary">
+      <div class="row">
+        <div class="col-12 text-center">
+          <p class="mb-0 text-muted">© 2025 维森视觉检测仪器. 保留所有权利.</p>
+        </div>
+      </div>
+    </div>
+    
+    <script>
+      var _hmt = _hmt || [];
+      (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?90cc6b96ca32b2455d73fa05c28fd923";
+        var s = document.getElementsByTagName("script")[0]; 
+        s.parentNode.insertBefore(hm, s);
+      })();
+      </script>
+      
+
+    
+<button id="backToTopBtn" type="button" class="btn btn-primary rounded-circle shadow" 
+style="position: fixed; right: 32px; bottom: 48px; z-index: 999; display: none; width:48px; height:48px;">
+<i class="fas fa-arrow-up"></i>
+</button>
+  </footer>
+
+    
+    
+
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="searchModalLabel">站内搜索</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+        </div>
+        <div class="modal-body">
+          
+          <ul class="nav nav-tabs mb-3" id="searchTypeTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active search-type-btn" data-type="all" type="button" role="tab">全部</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link search-type-btn" data-type="product" type="button" role="tab">产品</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link search-type-btn" data-type="article" type="button" role="tab">文章资讯</button>
+            </li>
+          </ul>
+          
+          <div class="input-group mb-3">
+            <input type="text" id="searchInput" class="form-control" placeholder="请输入关键词...">
+            <button class="btn btn-primary" id="searchBtn" type="button">搜索</button>
+          </div>
+          
+          <div id="searchResults"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

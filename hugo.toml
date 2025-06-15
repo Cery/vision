@@ -4,8 +4,8 @@ title = 'hugo-visndt-site'
 theme = 'ananke'
 
 [taxonomies]
-  primary_category = 'primary_categories'
-  secondary_category = 'secondary_categories'
+  category = 'categories'
+  tag = 'tags'
 
 [menu]
   [[menu.main]]
