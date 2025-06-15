@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>首页 on hugo-visndt-site</title>
+    <title>首页 on 维森视觉检测仪器</title>
     <link>http://localhost:1313/</link>
-    <description>Recent content in 首页 on hugo-visndt-site</description>
+    <description>Recent content in 首页 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 01 Jan 2025 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 15 Jun 2025 12:00:00 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>行业资讯</title>
@@ -37,11 +37,123 @@
       <description>&lt;p&gt;公司动态、企业活动、发展成果等资讯内容。&lt;/p&gt;</description>
     </item>
     <item>
+      <title>WS-K1010工业内窥镜</title>
+      <link>http://localhost:1313/products/ws-k1010-a/</link>
+      <pubDate>Sun, 15 Jun 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-k1010-a/</guid>
+      <description>1.0mm直径高清探头，适配狭小空间高精度工业检测任务</description>
+    </item>
+    <item>
       <title>WS-DZ60高清三维测量工业视频内窥镜</title>
       <link>http://localhost:1313/products/product-dz60/</link>
       <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
       <guid>http://localhost:1313/products/product-dz60/</guid>
       <description>便携式三维测量高清工业内窥镜</description>
+    </item>
+    <item>
+      <title>WS-K08510超细工业电子内窥镜</title>
+      <link>http://localhost:1313/products/ws-k08510-a/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-k08510-a/</guid>
+      <description>0.85mm超小直径，高清成像，适用于极小空间检测</description>
+    </item>
+    <item>
+      <title>WS-K08510超细工业电子内窥镜</title>
+      <link>http://localhost:1313/products/ws-k08510-b/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-k08510-b/</guid>
+      <description>0.85mm超小直径，高清成像，适用于极小空间检测</description>
+    </item>
+    <item>
+      <title>WS-K09510工业级内窥镜高清检测系统</title>
+      <link>http://localhost:1313/products/ws-k09510-a/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-k09510-a/</guid>
+      <description>0.95mm直径探头，适用于精密部件检测</description>
+    </item>
+    <item>
+      <title>WS-K1210小型工业检测内窥镜</title>
+      <link>http://localhost:1313/products/ws-k1210-c/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-k1210-c/</guid>
+      <description>采用1.2mm微型探头，专注微观结构的工业级检测应用</description>
+    </item>
+    <item>
+      <title>WS-K1210工业内窥镜</title>
+      <link>http://localhost:1313/products/ws-k1210-a-copy-6/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-k1210-a-copy-6/</guid>
+      <description>1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务</description>
+    </item>
+    <item>
+      <title>WS-K1210工业内窥镜</title>
+      <link>http://localhost:1313/products/ws-k1210-a-copy-7/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-k1210-a-copy-7/</guid>
+      <description>1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务</description>
+    </item>
+    <item>
+      <title>WS-K1210工业内窥镜</title>
+      <link>http://localhost:1313/products/ws-k1210-a-copy-8/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-k1210-a-copy-8/</guid>
+      <description>1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务</description>
+    </item>
+    <item>
+      <title>WS-K1210工业内窥镜</title>
+      <link>http://localhost:1313/products/ws-k1210-a-copy-9/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-k1210-a-copy-9/</guid>
+      <description>1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务</description>
+    </item>
+    <item>
+      <title>WS-K1210工业内窥镜</title>
+      <link>http://localhost:1313/products/ws-k1210-a-copy/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-k1210-a-copy/</guid>
+      <description>1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务</description>
+    </item>
+    <item>
+      <title>WS-K1210工业内窥镜</title>
+      <link>http://localhost:1313/products/ws-k1210-a/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-k1210-a/</guid>
+      <description>1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务</description>
+    </item>
+    <item>
+      <title>WS-K1210工业内窥镜</title>
+      <link>http://localhost:1313/products/ws-k1510-b/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-k1510-b/</guid>
+      <description>1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务</description>
+    </item>
+    <item>
+      <title>WS-K1210工业内窥镜</title>
+      <link>http://localhost:1313/products/ws-k1510-c/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-k1510-c/</guid>
+      <description>1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务</description>
+    </item>
+    <item>
+      <title>WS-K1210工业内窥镜</title>
+      <link>http://localhost:1313/products/ws-k1810-a/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-k1810-a/</guid>
+      <description>1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务</description>
+    </item>
+    <item>
+      <title>WS-K1210工业级视频内窥镜</title>
+      <link>http://localhost:1313/products/ws-k1210-b/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-k1210-b/</guid>
+      <description>专为精细空间结构检测设计的1.2mm工业视频内窥镜，适配多行业复杂工况</description>
+    </item>
+    <item>
+      <title>WS-K1510工业内窥镜 1.5mm超细探头</title>
+      <link>http://localhost:1313/products/ws-k1510-a/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-k1510-a/</guid>
+      <description>采用1.5mm超细探头设计，兼顾灵活性与图像质量，适用于复杂工业检测场景</description>
     </item>
     <item>
       <title>WS-P-08510高清工业视频内窥镜</title>
@@ -59,9 +171,9 @@
     </item>
     <item>
       <title>WS-P1010高清工业视频内窥镜</title>
-      <link>http://localhost:1313/products/product-p1010/</link>
+      <link>http://localhost:1313/products/product-p1010-model/</link>
       <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/product-p1010/</guid>
+      <guid>http://localhost:1313/products/product-p1010-model/</guid>
       <description>高清光纤照明360度旋转镜头内窥镜</description>
     </item>
     <item>

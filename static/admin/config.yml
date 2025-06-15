@@ -1,14 +1,14 @@
 backend:
-  name: proxy
-  proxy_url: http://localhost:8081/api/v1
+  name: git-gateway
+  branch: master # 确保这是您的主分支名称，通常是 main 或 master
 
-local_backend: true
+# local_backend: true # 在生产环境中应禁用或移除，除非需要本地代理
 
 media_folder: "static/images"
 public_folder: "/images"
 
-site_url: http://localhost:1313
-logo_url: http://localhost:1313/logo.png
+site_url: https://visndt.com/
+logo_url: https://visndt.com/logo.png
 
 collections:
   - name: "homepage"
@@ -41,17 +41,17 @@ collections:
             name: "application_areas_display"
             widget: "list"
             fields:
-              - {label: "领域", name: "area", widget: "relation", collection: "application_areas", search_fields: ["title"], value_field: "slug", display_fields: ["title"], multiple: true}
+              - {label: "领域", name: "area", widget: "relation", collection: "applications", search_fields: ["title"], value_field: "slug", display_fields: ["title"], multiple: true}
           - label: "应用案例"
             name: "application_cases_display"
             widget: "list"
             fields:
-              - {label: "案例", name: "case", widget: "relation", collection: "application_cases", search_fields: ["title"], value_field: "slug", display_fields: ["title"], multiple: true}
+              - {label: "案例", name: "case", widget: "relation", collection: "cases", search_fields: ["title"], value_field: "slug", display_fields: ["title"], multiple: true}
           - label: "应用企业"
             name: "partner_companies_display"
             widget: "list"
             fields:
-              - {label: "企业", name: "company", widget: "relation", collection: "partner_companies", search_fields: ["name"], value_field: "slug", display_fields: ["name"], multiple: true}
+              - {label: "企业", name: "company", widget: "relation", collection: "suppliers", search_fields: ["title"], value_field: "slug", display_fields: ["title"], multiple: true}
           - {label: "行业资讯标题", name: "industry_news_title", widget: "string", default: "行业资讯"}
           - {label: "展会资讯标题", name: "exhibition_news_title", widget: "string", default: "展会资讯"}
 
@@ -180,3 +180,52 @@ collections:
       - {label: "电话", name: "phone", widget: "string"}
       - {label: "邮箱", name: "email", widget: "string"}
       - {label: "公司简介", name: "body", widget: "markdown"}
+
+  - name: "applications"
+    label: "应用领域"
+    folder: "content/applications"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "标题", name: "title", widget: "string"}
+      - {label: "描述", name: "body", widget: "markdown"}
+      - {label: "特色图片", name: "thumbnail", widget: "image", required: false}
+
+  - name: "cases"
+    label: "应用案例"
+    folder: "content/cases"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "标题", name: "title", widget: "string"}
+      - {label: "描述", name: "body", widget: "markdown"}
+      - {label: "特色图片", name: "thumbnail", widget: "image", required: false}
+      - label: "相关产品"
+        name: "related_products"
+        widget: "relation"
+        collection: "products"
+        search_fields: ["title", "model"]
+        value_field: "title"
+        display_fields: ["title"]
+        multiple: true
+        required: false
+
+  - name: "customs"
+    label: "定制中心"
+    folder: "content/customs"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "标题", name: "title", widget: "string"}
+      - {label: "描述", name: "body", widget: "markdown"}
+      - {label: "联系方式", name: "contact_info", widget: "string", required: false}
+
+  - name: "cooperation"
+    label: "商务服务"
+    folder: "content/cooperation"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "标题", name: "title", widget: "string"}
+      - {label: "描述", name: "body", widget: "markdown"}
+      - {label: "联系方式", name: "contact_info", widget: "string", required: false}

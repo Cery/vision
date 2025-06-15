@@ -117,4 +117,4 @@ partner_companies_display:
       logo: "https://picsum.photos/200/100?random=16"
 ---
 
-欢迎访问我们的网站！我们是专业的工业无损检测设备制造商，为客户提供全方位的检测解决方案。
+欢迎访问我们的网站！我们是专业内窥镜产品和资讯推广平台！

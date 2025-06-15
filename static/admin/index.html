@@ -6,8 +6,8 @@
     <title>VisNDT 内容管理系统</title>
     <!-- Netlify Identity Widget -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <script src="https://unpkg.com/netlify-cms@^2.10.0/dist/netlify-cms.js"></script>
-    <script src="https://unpkg.com/netlify-cms-app@^2.15.72/dist/netlify-cms-app.js"></script>
+    <!-- Decap CMS -->
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
     <style>
       /* 强制 Decap CMS Markdown 编辑器的文本方向为从左到右 */
       .nc-markdown-editor-styles {
@@ -91,8 +91,8 @@
 
       document.addEventListener('DOMContentLoaded', () => {
         try {
-          // 确保使用 netlify-cms-app
-          const CMS = window.NetlifyCmsApp || window.CMS;
+          // 确保使用 Decap CMS
+          const CMS = window.DecapCms || window.CMS;
           
           if (!CMS) {
             throw new Error('CMS 未正确加载');
@@ -102,10 +102,10 @@
           CMS.init({
             config: {
               backend: {
-                name: 'proxy',
-                proxy_url: 'http://localhost:8081/api/v1'
+                name: 'git-gateway',
+                branch: 'main' // 替换为您的主要分支名称，通常是 main 或 master
               },
-              local_backend: true
+              // local_backend: true // 在生产环境中应禁用或移除，除非需要本地代理
             }
           });
 

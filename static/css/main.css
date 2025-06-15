@@ -1,9 +1,13 @@
 /* 自定义样式 */
 :root {
     --small-font-size: 0.875rem; /* 统一小号字体 */
+    --medium-font-size: 1rem; /* 统一中号字体 */
+    --large-font-size: 1.2rem; /* 统一大号字体 */
     --primary-color: #0d6efd;
     --secondary-color: #6c757d;
     --info-color: #0dcaf0;
+    --hover-color: #0056b3;
+    --transition-speed: 0.3s;
 }
 
 body {
@@ -410,4 +414,72 @@ body {
 .subcategory-menu {
     max-height: 300px; /* 限制二级菜单高度 */
     overflow-y: auto;
+}
+
+/* 导航菜单统一样式 */
+.navbar-nav .nav-link {
+    font-size: var(--medium-font-size);
+    color: var(--secondary-color);
+    padding: 0.5rem 1rem;
+    transition: all var(--transition-speed) ease;
+    position: relative;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--primary-color);
+}
+
+.navbar-nav .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: var(--primary-color);
+    transition: all var(--transition-speed) ease;
+    transform: translateX(-50%);
+}
+
+.navbar-nav .nav-link:hover::after {
+    width: 100%;
+}
+
+/* 分类菜单统一样式 */
+.category-menu .list-group-item {
+    font-size: var(--medium-font-size);
+    color: var(--secondary-color);
+    padding: 0.75rem 1.25rem;
+    border: none;
+    background-color: transparent;
+    transition: all var(--transition-speed) ease;
+}
+
+.category-menu .list-group-item:hover {
+    color: var(--primary-color);
+    background-color: rgba(13, 110, 253, 0.1);
+    transform: translateX(5px);
+}
+
+.category-menu .list-group-item.active {
+    color: var(--primary-color);
+    background-color: rgba(13, 110, 253, 0.1);
+    font-weight: 500;
+}
+
+/* 子分类菜单样式 */
+.subcategory-menu {
+    font-size: var(--small-font-size);
+    padding-left: 1.5rem;
+}
+
+.subcategory-menu .list-group-item {
+    padding: 0.5rem 1rem;
+    color: var(--secondary-color);
+    transition: all var(--transition-speed) ease;
+}
+
+.subcategory-menu .list-group-item:hover {
+    color: var(--primary-color);
+    background-color: rgba(13, 110, 253, 0.05);
 } 
