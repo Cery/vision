@@ -17,6 +17,8 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
 
+<link href="/css/custom.css" rel="stylesheet">
+
 <style>
      
     body {
@@ -567,7 +569,9 @@
     <div class="container">
         
         <a class="navbar-brand" href="/">
-            <img src="/images/logo.svg" alt="维森视觉检测仪器" height="50">
+            <div class="footer-logo">
+                <span class="vis">vis</span><span class="ndt">NDT</span>
+            </div>
         </a>
         
         <button class="btn btn-primary d-lg-none me-2" style="position:relative;z-index:1051;"
@@ -1257,6 +1261,20 @@ function initLeanCloudViews() {
     const url = 'https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter';
     
     
+    const lastVisitTime = localStorage.getItem('last_visit_' + currentPath);
+    const now = new Date().getTime();
+    if (lastVisitTime && (now - parseInt(lastVisitTime)) < 3600000) { 
+        console.log('访问间隔太短，不增加计数');
+        return;
+    }
+    
+    
+    const visitedPages = JSON.parse(localStorage.getItem('visited_pages') || '[]');
+    if (visitedPages.includes(currentPath)) {
+        console.log('页面已访问过，不增加计数');
+        return;
+    }
+    
     const queryUrl = url + '?where=' + encodeURIComponent(JSON.stringify({url: currentPath}));
     
     fetch(queryUrl, {
@@ -1276,7 +1294,6 @@ function initLeanCloudViews() {
     .then(data => {
         console.log('查询Counter结果:', data);
         if (data.results && data.results.length > 0) {
-            
             const record = data.results[0];
             const currentViews = record.time || 0;
             
@@ -1284,17 +1301,21 @@ function initLeanCloudViews() {
             pageViewsElement.textContent = currentViews.toString();
             
             
+            localStorage.setItem('last_visit_' + currentPath, now.toString());
+            visitedPages.push(currentPath);
+            localStorage.setItem('visited_pages', JSON.stringify(visitedPages));
+            
+            
             const newViews = currentViews + 1;
             updateCounter(record.objectId, newViews);
         } else {
-            
             createCounter();
         }
     })
     .catch(error => {
         console.error('查询Counter失败:', error);
         
-        useLocalStorage();
+        pageViewsElement.textContent = '统计失败';
     });
 }
 
@@ -1303,6 +1324,13 @@ function createCounter() {
     
     
     pageViewsElement.textContent = '1';
+    
+    
+    const now = new Date().getTime();
+    localStorage.setItem('last_visit_' + currentPath, now.toString());
+    const visitedPages = JSON.parse(localStorage.getItem('visited_pages') || '[]');
+    visitedPages.push(currentPath);
+    localStorage.setItem('visited_pages', JSON.stringify(visitedPages));
     
     fetch(url, {
         method: 'POST',
@@ -1314,7 +1342,8 @@ function createCounter() {
         body: JSON.stringify({
             url: currentPath,
             title: pageTitle,
-            time: 1
+            time: 1,
+            createdAt: new Date().toISOString()
         })
     })
     .then(response => {
@@ -1325,13 +1354,11 @@ function createCounter() {
     })
     .then(data => {
         console.log('创建Counter成功:', data);
-        
         pageViewsElement.textContent = '1';
     })
     .catch(error => {
         console.error('创建Counter失败:', error);
-        
-        useLocalStorage();
+        pageViewsElement.textContent = '统计失败';
     });
 }
 
@@ -1347,7 +1374,7 @@ function updateCounter(objectId, views) {
         },
         body: JSON.stringify({
             time: views,
-            updatedAt: new Date().toISOString() 
+            updatedAt: new Date().toISOString()
         })
     })
     .then(response => {
@@ -1362,24 +1389,14 @@ function updateCounter(objectId, views) {
     })
     .catch(error => {
         console.error('更新Counter失败:', error);
-        
-        pageViewsElement.textContent = (views - 1).toString();
+        pageViewsElement.textContent = '统计失败';
     });
-}
-
-function useLocalStorage() {
-    console.log('使用本地存储作为备用方案');
-    const storageKey = 'page_views_' + currentPath.replace(/[^a-zA-Z0-9]/g, '_');
-    let views = parseInt(localStorage.getItem(storageKey) || '0') + 1;
-    localStorage.setItem(storageKey, views.toString());
-    pageViewsElement.textContent = views.toString();
-    console.log('本地存储访问次数:', views);
 }
 
 
 document.addEventListener('DOMContentLoaded', function() {
     
-    setTimeout(initPageViews, 1000);
+    setTimeout(initLeanCloudViews, 1000);
 });
 </script>
 
@@ -1563,8 +1580,10 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="row">
         
         <div class="col-md-4 mb-4 mb-md-0 text-center text-md-start">
-          <div class="footer-logo h4 mb-2">VisNDT</div>
-          <div class="footer-logo-subtext mb-2 text-muted">维森 · 视觉检测仪器</div>
+          <div class="footer-logo">
+            <span class="vis">vis</span><span class="ndt">NDT</span>
+          </div>
+          <div class="footer-logo-subtext mb-2">维森 · 视觉检测仪器</div>
           <div class="working-hours d-inline-block text-secondary">
             <i class="fas fa-clock me-1"></i> 工作时间: 周一至周五 9:00-18:00
           </div>
