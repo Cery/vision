@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisNDT 内容管理快速入门</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 0;
+        }
+        .step-card {
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+        .step-card:hover {
+            transform: translateY(-5px);
+        }
+        .step-number {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        .feature-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+        }
+        .demo-video {
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .quick-link {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 15px;
+        }
+        .quick-link:hover {
+            border-color: #007bff;
+            color: #007bff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,123,255,0.1);
+        }
+        .quick-link i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-rocket me-3"></i>VisNDT 内容管理快速入门</h1>
+                    <p class="lead">5分钟学会管理您的网站内容</p>
+                    <p class="mb-0">无需技术背景，轻松上手GitHub内容管理</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <a href="index.html" class="btn btn-light btn-lg">
+                        <i class="fas fa-arrow-left me-2"></i>返回管理中心
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-5">
+        <!-- 快速开始步骤 -->
+        <div class="row">
+            <div class="col-12">
+                <h2 class="text-center mb-5">
+                    <i class="fas fa-play-circle me-2"></i>三步开始内容管理
+                </h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="step-card card h-100">
+                    <div class="card-body text-center">
+                        <div class="step-number mx-auto">1</div>
+                        <h5>选择管理方式</h5>
+                        <p class="text-muted">根据您的需求选择合适的内容管理方式</p>
+                        <a href="index.html" class="btn btn-primary">
+                            <i class="fas fa-cog me-2"></i>选择管理方式
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="step-card card h-100">
+                    <div class="card-body text-center">
+                        <div class="step-number mx-auto">2</div>
+                        <h5>登录GitHub</h5>
+                        <p class="text-muted">使用您的GitHub账号登录（推荐方式）</p>
+                        <a href="https://github.com/login" target="_blank" class="btn btn-success">
+                            <i class="fab fa-github me-2"></i>登录GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="step-card card h-100">
+                    <div class="card-body text-center">
+                        <div class="step-number mx-auto">3</div>
+                        <h5>开始编辑</h5>
+                        <p class="text-muted">点击对应的编辑链接，开始管理内容</p>
+                        <a href="github-advanced.html" class="btn btn-warning">
+                            <i class="fas fa-edit me-2"></i>开始编辑
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 功能特色 -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="text-center mb-4">
+                    <i class="fas fa-star me-2"></i>为什么选择GitHub管理？
+                </h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="feature-box">
+                    <h5><i class="fas fa-shield-alt text-primary me-2"></i>安全可靠</h5>
+                    <p class="mb-0">GitHub是全球最大的代码托管平台，安全性有保障，您的内容不会丢失。</p>
+                </div>
+
+                <div class="feature-box">
+                    <h5><i class="fas fa-history text-primary me-2"></i>版本控制</h5>
+                    <p class="mb-0">每次修改都有记录，可以随时查看历史版本，误操作也能轻松恢复。</p>
+                </div>
+
+                <div class="feature-box">
+                    <h5><i class="fas fa-users text-primary me-2"></i>团队协作</h5>
+                    <p class="mb-0">支持多人同时编辑，团队成员可以协作管理网站内容。</p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="feature-box">
+                    <h5><i class="fas fa-rocket text-primary me-2"></i>自动部署</h5>
+                    <p class="mb-0">内容修改后自动更新网站，无需手动操作，2-5分钟即可生效。</p>
+                </div>
+
+                <div class="feature-box">
+                    <h5><i class="fas fa-mobile-alt text-primary me-2"></i>随时随地</h5>
+                    <p class="mb-0">支持手机、平板等设备，随时随地都能管理网站内容。</p>
+                </div>
+
+                <div class="feature-box">
+                    <h5><i class="fas fa-dollar-sign text-primary me-2"></i>完全免费</h5>
+                    <p class="mb-0">GitHub提供免费的公开仓库服务，无需额外费用。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 常用操作 -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="text-center mb-4">
+                    <i class="fas fa-tools me-2"></i>常用操作快速入口
+                </h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <a href="https://github.com/Cery/VisNDT/new/master/content/news" target="_blank" class="quick-link">
+                    <i class="fas fa-newspaper"></i>
+                    <h6>发布新闻</h6>
+                    <small class="text-muted">添加行业资讯</small>
+                </a>
+            </div>
+
+            <div class="col-md-3">
+                <a href="https://github.com/Cery/VisNDT/new/master/content/products" target="_blank" class="quick-link">
+                    <i class="fas fa-box"></i>
+                    <h6>添加产品</h6>
+                    <small class="text-muted">发布产品信息</small>
+                </a>
+            </div>
+
+            <div class="col-md-3">
+                <a href="https://github.com/Cery/VisNDT/new/master/content/cases" target="_blank" class="quick-link">
+                    <i class="fas fa-star"></i>
+                    <h6>添加案例</h6>
+                    <small class="text-muted">分享成功案例</small>
+                </a>
+            </div>
+
+            <div class="col-md-3">
+                <a href="https://github.com/Cery/VisNDT/edit/master/content/business/_index.md" target="_blank" class="quick-link">
+                    <i class="fas fa-briefcase"></i>
+                    <h6>编辑服务</h6>
+                    <small class="text-muted">修改商务服务</small>
+                </a>
+            </div>
+        </div>
+
+        <!-- 操作演示 -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="text-center mb-4">
+                    <i class="fas fa-play me-2"></i>操作演示
+                </h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-plus me-2"></i>如何添加新内容</h6>
+                    </div>
+                    <div class="card-body">
+                        <ol>
+                            <li>点击对应的"添加XXX"按钮</li>
+                            <li>在GitHub页面输入文件名</li>
+                            <li>复制并修改内容模板</li>
+                            <li>点击"Commit new file"保存</li>
+                            <li>等待2-5分钟网站自动更新</li>
+                        </ol>
+                        <div class="alert alert-info">
+                            <small><i class="fas fa-lightbulb me-2"></i>
+                            文件名建议格式：2024-01-15-title.md</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-edit me-2"></i>如何编辑现有内容</h6>
+                    </div>
+                    <div class="card-body">
+                        <ol>
+                            <li>点击"管理现有XXX"按钮</li>
+                            <li>在文件列表中找到目标文件</li>
+                            <li>点击文件名进入详情页</li>
+                            <li>点击编辑按钮（铅笔图标）</li>
+                            <li>修改内容后提交更改</li>
+                        </ol>
+                        <div class="alert alert-warning">
+                            <small><i class="fas fa-exclamation-triangle me-2"></i>
+                            建议编辑前先备份重要内容</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 帮助和支持 -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <h5><i class="fas fa-question-circle me-2"></i>需要帮助？</h5>
+                        <p class="mb-3">如果您在使用过程中遇到问题，可以：</p>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <a href="README.md" target="_blank" class="btn btn-outline-primary">
+                                    <i class="fas fa-book me-2"></i>查看详细文档
+                                </a>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="https://github.com/Cery/VisNDT/issues" target="_blank" class="btn btn-outline-success">
+                                    <i class="fas fa-bug me-2"></i>反馈问题
+                                </a>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="mailto:support@visndt.com" class="btn btn-outline-info">
+                                    <i class="fas fa-envelope me-2"></i>联系支持
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('快速入门指南已加载');
+            
+            // 添加点击统计
+            document.querySelectorAll('a[target="_blank"]').forEach(link => {
+                link.addEventListener('click', function() {
+                    console.log('访问外部链接:', this.href);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

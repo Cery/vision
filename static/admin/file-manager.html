@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisNDT 文件管理器</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f5f6fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .file-manager-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+        }
+
+        .breadcrumb-nav {
+            background: white;
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .breadcrumb-custom {
+            background: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .breadcrumb-custom .breadcrumb-item {
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb-custom .breadcrumb-item + .breadcrumb-item::before {
+            content: ">";
+            color: #6c757d;
+        }
+
+        .file-manager-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .file-manager-toolbar {
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .toolbar-left {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .toolbar-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .view-toggle {
+            display: flex;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .view-btn {
+            background: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #6c757d;
+        }
+
+        .view-btn.active {
+            background: #007bff;
+            color: white;
+        }
+
+        .view-btn:hover:not(.active) {
+            background: #f8f9fa;
+        }
+
+        .search-box {
+            position: relative;
+            width: 250px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 35px 8px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .file-list {
+            padding: 0;
+        }
+
+        .file-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .file-card:hover {
+            border-color: #007bff;
+            box-shadow: 0 4px 12px rgba(0,123,255,0.1);
+            transform: translateY(-2px);
+        }
+
+        .file-card.selected {
+            border-color: #007bff;
+            background: rgba(0,123,255,0.05);
+        }
+
+        .file-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #007bff;
+        }
+
+        .file-icon.folder {
+            color: #ffc107;
+        }
+
+        .file-icon.image {
+            color: #28a745;
+        }
+
+        .file-icon.document {
+            color: #dc3545;
+        }
+
+        .file-name {
+            font-weight: 500;
+            margin-bottom: 8px;
+            word-break: break-word;
+            color: #333;
+        }
+
+        .file-info {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        .file-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .file-card:hover .file-actions {
+            opacity: 1;
+        }
+
+        .action-dropdown {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .file-list-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            border-bottom: 1px solid #f8f9fa;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .file-list-item:hover {
+            background: #f8f9fa;
+        }
+
+        .file-list-item.selected {
+            background: rgba(0,123,255,0.05);
+            border-left: 3px solid #007bff;
+        }
+
+        .file-list-icon {
+            margin-right: 15px;
+            width: 30px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        .file-list-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .file-list-name {
+            font-weight: 500;
+            margin-bottom: 2px;
+            color: #333;
+        }
+
+        .file-list-path {
+            font-size: 0.8rem;
+            color: #6c757d;
+            font-family: 'Courier New', monospace;
+        }
+
+        .file-list-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 0.8rem;
+            color: #6c757d;
+            min-width: 200px;
+        }
+
+        .file-list-actions {
+            display: flex;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .file-list-item:hover .file-list-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #6c757d;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            background: rgba(0,0,0,0.1);
+            color: #007bff;
+        }
+
+        .upload-zone {
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            margin: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-zone:hover,
+        .upload-zone.dragover {
+            border-color: #007bff;
+            background: rgba(0,123,255,0.05);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        .upload-hint {
+            font-size: 0.8rem;
+            color: #adb5bd;
+        }
+
+        .context-menu {
+            position: fixed;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            min-width: 150px;
+            display: none;
+        }
+
+        .context-menu-item {
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+
+        .context-menu-item:hover {
+            background: #f8f9fa;
+        }
+
+        .context-menu-item:first-child {
+            border-radius: 6px 6px 0 0;
+        }
+
+        .context-menu-item:last-child {
+            border-radius: 0 0 6px 6px;
+        }
+
+        .context-menu-divider {
+            height: 1px;
+            background: #e9ecef;
+            margin: 5px 0;
+        }
+
+        .selection-info {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 6px;
+            padding: 10px 15px;
+            margin: 15px 20px;
+            display: none;
+        }
+
+        .selection-info.show {
+            display: block;
+        }
+
+        .progress-bar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(0,0,0,0.1);
+            z-index: 1001;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .file-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 10px;
+                padding: 15px;
+            }
+
+            .file-card {
+                padding: 15px;
+            }
+
+            .file-icon {
+                font-size: 2rem;
+                margin-bottom: 10px;
+            }
+
+            .search-box {
+                width: 200px;
+            }
+
+            .file-list-meta {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 进度条 -->
+    <div class="progress-bar-container" id="progressContainer">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- 头部 -->
+    <div class="file-manager-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-folder-open me-3"></i>VisNDT 文件管理器</h1>
+                    <p class="mb-0">管理网站内容文件和媒体资源</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <a href="local-cms.html" class="btn btn-light me-2">
+                        <i class="fas fa-edit me-2"></i>内容编辑器
+                    </a>
+                    <a href="../" class="btn btn-outline-light">
+                        <i class="fas fa-home me-2"></i>返回网站
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 面包屑导航 -->
+    <div class="breadcrumb-nav">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-custom" id="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#" onclick="navigateToPath('')">根目录</a></li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 文件管理器 -->
+        <div class="file-manager-container">
+            <!-- 工具栏 -->
+            <div class="file-manager-toolbar">
+                <div class="toolbar-left">
+                    <button class="btn btn-primary btn-sm" onclick="createNewFolder()">
+                        <i class="fas fa-folder-plus me-1"></i>新建文件夹
+                    </button>
+                    <button class="btn btn-success btn-sm" onclick="uploadFiles()">
+                        <i class="fas fa-upload me-1"></i>上传文件
+                    </button>
+                    <button class="btn btn-info btn-sm" onclick="createNewFile()">
+                        <i class="fas fa-file-plus me-1"></i>新建文件
+                    </button>
+                    <div class="vr"></div>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="refreshFiles()">
+                        <i class="fas fa-sync me-1"></i>刷新
+                    </button>
+                </div>
+                <div class="toolbar-right">
+                    <div class="search-box">
+                        <input type="text" class="search-input" placeholder="搜索文件..." id="searchInput">
+                        <i class="fas fa-search search-icon"></i>
+                    </div>
+                    <div class="view-toggle">
+                        <button class="view-btn active" onclick="switchView('grid')" title="网格视图">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button class="view-btn" onclick="switchView('list')" title="列表视图">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 选择信息 -->
+            <div class="selection-info" id="selectionInfo">
+                <span id="selectionText">已选择 0 个项目</span>
+                <div class="float-end">
+                    <button class="btn btn-sm btn-outline-primary me-2" onclick="downloadSelected()">
+                        <i class="fas fa-download me-1"></i>下载
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteSelected()">
+                        <i class="fas fa-trash me-1"></i>删除
+                    </button>
+                </div>
+            </div>
+
+            <!-- 文件列表容器 -->
+            <div id="fileContainer">
+                <!-- 网格视图 -->
+                <div id="gridView" class="file-grid">
+                    <!-- 文件项将通过JavaScript动态生成 -->
+                </div>
+
+                <!-- 列表视图 -->
+                <div id="listView" class="file-list" style="display: none;">
+                    <!-- 文件项将通过JavaScript动态生成 -->
+                </div>
+
+                <!-- 上传区域 -->
+                <div class="upload-zone" id="uploadZone" onclick="uploadFiles()">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="upload-text">点击或拖拽文件到此处上传</div>
+                    <div class="upload-hint">支持多文件上传，最大单文件 10MB</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 右键菜单 -->
+    <div class="context-menu" id="contextMenu">
+        <div class="context-menu-item" onclick="openFile()">
+            <i class="fas fa-folder-open"></i>
+            <span>打开</span>
+        </div>
+        <div class="context-menu-item" onclick="editFile()">
+            <i class="fas fa-edit"></i>
+            <span>编辑</span>
+        </div>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-item" onclick="renameFile()">
+            <i class="fas fa-edit"></i>
+            <span>重命名</span>
+        </div>
+        <div class="context-menu-item" onclick="copyFile()">
+            <i class="fas fa-copy"></i>
+            <span>复制</span>
+        </div>
+        <div class="context-menu-item" onclick="moveFile()">
+            <i class="fas fa-cut"></i>
+            <span>移动</span>
+        </div>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-item" onclick="downloadFile()">
+            <i class="fas fa-download"></i>
+            <span>下载</span>
+        </div>
+        <div class="context-menu-item" onclick="deleteFile()">
+            <i class="fas fa-trash"></i>
+            <span>删除</span>
+        </div>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-item" onclick="showProperties()">
+            <i class="fas fa-info-circle"></i>
+            <span>属性</span>
+        </div>
+    </div>
+
+    <!-- 隐藏的文件输入 -->
+    <input type="file" id="fileInput" multiple style="display: none;" onchange="handleFileUpload(event)">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // 全局变量
+        let currentPath = '';
+        let currentView = 'grid';
+        let selectedFiles = new Set();
+        let contextMenuTarget = null;
+        let fileStructure = {};
+
+        // 模拟文件系统数据
+        const mockFileSystem = {
+            '': {
+                type: 'folder',
+                children: ['content', 'static', 'layouts', 'data']
+            },
+            'content': {
+                type: 'folder',
+                children: ['_index.md', 'business', 'news', 'products', 'applications', 'cases']
+            },
+            'content/_index.md': {
+                type: 'file',
+                name: '_index.md',
+                size: 1024,
+                modified: '2024-01-15',
+                icon: 'fas fa-file-alt'
+            },
+            'content/business': {
+                type: 'folder',
+                children: ['_index.md']
+            },
+            'content/business/_index.md': {
+                type: 'file',
+                name: '_index.md',
+                size: 2048,
+                modified: '2024-01-15',
+                icon: 'fas fa-file-alt'
+            },
+            'content/news': {
+                type: 'folder',
+                children: ['_index.md', '2024-01-15-industry-news.md', '2024-01-10-tech-update.md']
+            },
+            'content/news/_index.md': {
+                type: 'file',
+                name: '_index.md',
+                size: 1536,
+                modified: '2024-01-15',
+                icon: 'fas fa-file-alt'
+            },
+            'content/news/2024-01-15-industry-news.md': {
+                type: 'file',
+                name: '2024-01-15-industry-news.md',
+                size: 3072,
+                modified: '2024-01-15',
+                icon: 'fas fa-newspaper'
+            },
+            'content/news/2024-01-10-tech-update.md': {
+                type: 'file',
+                name: '2024-01-10-tech-update.md',
+                size: 2560,
+                modified: '2024-01-10',
+                icon: 'fas fa-newspaper'
+            },
+            'content/products': {
+                type: 'folder',
+                children: ['_index.md', 'endoscope-series.md', 'camera-systems.md']
+            },
+            'content/products/_index.md': {
+                type: 'file',
+                name: '_index.md',
+                size: 1792,
+                modified: '2024-01-15',
+                icon: 'fas fa-file-alt'
+            },
+            'content/products/endoscope-series.md': {
+                type: 'file',
+                name: 'endoscope-series.md',
+                size: 4096,
+                modified: '2024-01-12',
+                icon: 'fas fa-box'
+            },
+            'content/products/camera-systems.md': {
+                type: 'file',
+                name: 'camera-systems.md',
+                size: 3584,
+                modified: '2024-01-08',
+                icon: 'fas fa-box'
+            },
+            'static': {
+                type: 'folder',
+                children: ['images', 'css', 'js', 'admin']
+            },
+            'static/images': {
+                type: 'folder',
+                children: ['logo.png', 'banner.jpg', 'products', 'news']
+            },
+            'static/images/logo.png': {
+                type: 'file',
+                name: 'logo.png',
+                size: 15360,
+                modified: '2024-01-01',
+                icon: 'fas fa-image'
+            },
+            'static/images/banner.jpg': {
+                type: 'file',
+                name: 'banner.jpg',
+                size: 51200,
+                modified: '2024-01-05',
+                icon: 'fas fa-image'
+            }
+        };
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeFileManager();
+        });
+
+        function initializeFileManager() {
+            console.log('初始化文件管理器...');
+
+            // 设置事件监听器
+            setupEventListeners();
+
+            // 加载文件列表
+            loadFiles(currentPath);
+
+            console.log('文件管理器初始化完成');
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 搜索功能
+            document.getElementById('searchInput').addEventListener('input', function(e) {
+                filterFiles(e.target.value);
+            });
+
+            // 拖拽上传
+            const uploadZone = document.getElementById('uploadZone');
+
+            uploadZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadZone.classList.add('dragover');
+            });
+
+            uploadZone.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadZone.classList.remove('dragover');
+            });
+
+            uploadZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadZone.classList.remove('dragover');
+                handleFileDrop(e.dataTransfer.files);
+            });
+
+            // 右键菜单
+            document.addEventListener('contextmenu', function(e) {
+                if (e.target.closest('.file-card') || e.target.closest('.file-list-item')) {
+                    e.preventDefault();
+                    showContextMenu(e);
+                }
+            });
+
+            // 点击其他地方关闭右键菜单
+            document.addEventListener('click', function() {
+                hideContextMenu();
+            });
+
+            // 键盘快捷键
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey || e.metaKey) {
+                    switch(e.key) {
+                        case 'a':
+                            e.preventDefault();
+                            selectAll();
+                            break;
+                        case 'n':
+                            e.preventDefault();
+                            createNewFile();
+                            break;
+                        case 'f':
+                            e.preventDefault();
+                            document.getElementById('searchInput').focus();
+                            break;
+                    }
+                }
+
+                if (e.key === 'Delete') {
+                    deleteSelected();
+                }
+
+                if (e.key === 'Escape') {
+                    clearSelection();
+                    hideContextMenu();
+                }
+            });
+        }
+
+        // 加载文件列表
+        function loadFiles(path) {
+            currentPath = path;
+            updateBreadcrumb(path);
+
+            const files = getFilesInPath(path);
+            renderFiles(files);
+
+            // 清除选择
+            clearSelection();
+        }
+
+        // 获取指定路径下的文件
+        function getFilesInPath(path) {
+            const pathData = mockFileSystem[path];
+            if (!pathData || pathData.type !== 'folder') {
+                return [];
+            }
+
+            return pathData.children.map(childName => {
+                const childPath = path ? `${path}/${childName}` : childName;
+                const childData = mockFileSystem[childPath];
+
+                return {
+                    name: childName,
+                    path: childPath,
+                    type: childData.type,
+                    size: childData.size || 0,
+                    modified: childData.modified || '2024-01-01',
+                    icon: childData.icon || (childData.type === 'folder' ? 'fas fa-folder' : 'fas fa-file')
+                };
+            });
+        }
+
+        // 渲染文件列表
+        function renderFiles(files) {
+            if (currentView === 'grid') {
+                renderGridView(files);
+            } else {
+                renderListView(files);
+            }
+        }
+
+        // 渲染网格视图
+        function renderGridView(files) {
+            const container = document.getElementById('gridView');
+            container.innerHTML = '';
+
+            files.forEach(file => {
+                const fileCard = createFileCard(file);
+                container.appendChild(fileCard);
+            });
+        }
+
+        // 渲染列表视图
+        function renderListView(files) {
+            const container = document.getElementById('listView');
+            container.innerHTML = '';
+
+            files.forEach(file => {
+                const fileItem = createFileListItem(file);
+                container.appendChild(fileItem);
+            });
+        }
+
+        // 创建文件卡片
+        function createFileCard(file) {
+            const card = document.createElement('div');
+            card.className = 'file-card';
+            card.dataset.path = file.path;
+            card.dataset.type = file.type;
+
+            card.innerHTML = `
+                <div class="file-actions">
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="dropdown">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="openFile('${file.path}')">
+                                <i class="fas fa-folder-open me-2"></i>打开
+                            </a></li>
+                            <li><a class="dropdown-item" href="#" onclick="editFile('${file.path}')">
+                                <i class="fas fa-edit me-2"></i>编辑
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="renameFile('${file.path}')">
+                                <i class="fas fa-edit me-2"></i>重命名
+                            </a></li>
+                            <li><a class="dropdown-item" href="#" onclick="deleteFile('${file.path}')">
+                                <i class="fas fa-trash me-2"></i>删除
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="file-icon ${file.type === 'folder' ? 'folder' : getFileIconClass(file.name)}">
+                    <i class="${file.icon}"></i>
+                </div>
+                <div class="file-name">${file.name}</div>
+                <div class="file-info">
+                    ${file.type === 'folder' ? '文件夹' : formatFileSize(file.size)}
+                    <br>
+                    ${file.modified}
+                </div>
+            `;
+
+            // 添加点击事件
+            card.addEventListener('click', function(e) {
+                if (e.ctrlKey || e.metaKey) {
+                    toggleSelection(file.path);
+                } else {
+                    if (file.type === 'folder') {
+                        navigateToPath(file.path);
+                    } else {
+                        openFile(file.path);
+                    }
+                }
+            });
+
+            return card;
+        }
+
+        // 创建文件列表项
+        function createFileListItem(file) {
+            const item = document.createElement('div');
+            item.className = 'file-list-item';
+            item.dataset.path = file.path;
+            item.dataset.type = file.type;
+
+            item.innerHTML = `
+                <div class="file-list-icon">
+                    <i class="${file.icon}"></i>
+                </div>
+                <div class="file-list-info">
+                    <div class="file-list-name">${file.name}</div>
+                    <div class="file-list-path">${file.path}</div>
+                </div>
+                <div class="file-list-meta">
+                    <span>${file.type === 'folder' ? '文件夹' : formatFileSize(file.size)}</span>
+                    <span>${file.modified}</span>
+                </div>
+                <div class="file-list-actions">
+                    <button class="action-btn" onclick="editFile('${file.path}')" title="编辑">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="action-btn" onclick="downloadFile('${file.path}')" title="下载">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="action-btn" onclick="deleteFile('${file.path}')" title="删除">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+
+            // 添加点击事件
+            item.addEventListener('click', function(e) {
+                if (e.ctrlKey || e.metaKey) {
+                    toggleSelection(file.path);
+                } else {
+                    if (file.type === 'folder') {
+                        navigateToPath(file.path);
+                    } else {
+                        openFile(file.path);
+                    }
+                }
+            });
+
+            return item;
+        }
+
+        // 切换视图
+        function switchView(view) {
+            currentView = view;
+
+            // 更新按钮状态
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[onclick="switchView('${view}')"]`).classList.add('active');
+
+            // 显示对应视图
+            if (view === 'grid') {
+                document.getElementById('gridView').style.display = 'grid';
+                document.getElementById('listView').style.display = 'none';
+            } else {
+                document.getElementById('gridView').style.display = 'none';
+                document.getElementById('listView').style.display = 'block';
+            }
+
+            // 重新渲染
+            const files = getFilesInPath(currentPath);
+            renderFiles(files);
+        }
+
+        // 导航到指定路径
+        function navigateToPath(path) {
+            loadFiles(path);
+        }
+
+        // 更新面包屑导航
+        function updateBreadcrumb(path) {
+            const breadcrumb = document.getElementById('breadcrumb');
+            breadcrumb.innerHTML = '';
+
+            // 根目录
+            const rootItem = document.createElement('li');
+            rootItem.className = 'breadcrumb-item';
+            rootItem.innerHTML = '<a href="#" onclick="navigateToPath(\'\')">根目录</a>';
+            breadcrumb.appendChild(rootItem);
+
+            if (path) {
+                const parts = path.split('/');
+                let currentPath = '';
+
+                parts.forEach((part, index) => {
+                    currentPath += (currentPath ? '/' : '') + part;
+                    const item = document.createElement('li');
+
+                    if (index === parts.length - 1) {
+                        item.className = 'breadcrumb-item active';
+                        item.textContent = part;
+                    } else {
+                        item.className = 'breadcrumb-item';
+                        item.innerHTML = `<a href="#" onclick="navigateToPath('${currentPath}')">${part}</a>`;
+                    }
+
+                    breadcrumb.appendChild(item);
+                });
+            }
+        }
+
+        // 文件操作函数
+        function openFile(path) {
+            const file = mockFileSystem[path];
+            if (file.type === 'folder') {
+                navigateToPath(path);
+            } else {
+                // 在内容编辑器中打开文件
+                window.open(`local-cms.html?file=${encodeURIComponent(path)}`, '_blank');
+            }
+        }
+
+        function editFile(path) {
+            window.open(`local-cms.html?file=${encodeURIComponent(path)}`, '_blank');
+        }
+
+        function createNewFile() {
+            const fileName = prompt('请输入文件名:', 'new-file.md');
+            if (fileName) {
+                const filePath = currentPath ? `${currentPath}/${fileName}` : fileName;
+
+                // 添加到模拟文件系统
+                mockFileSystem[filePath] = {
+                    type: 'file',
+                    name: fileName,
+                    size: 0,
+                    modified: new Date().toISOString().split('T')[0],
+                    icon: 'fas fa-file-alt'
+                };
+
+                // 更新父目录
+                const parentPath = currentPath;
+                if (mockFileSystem[parentPath]) {
+                    mockFileSystem[parentPath].children.push(fileName);
+                }
+
+                // 刷新视图
+                loadFiles(currentPath);
+
+                showNotification(`文件 ${fileName} 创建成功`, 'success');
+            }
+        }
+
+        function createNewFolder() {
+            const folderName = prompt('请输入文件夹名:', 'new-folder');
+            if (folderName) {
+                const folderPath = currentPath ? `${currentPath}/${folderName}` : folderName;
+
+                // 添加到模拟文件系统
+                mockFileSystem[folderPath] = {
+                    type: 'folder',
+                    children: []
+                };
+
+                // 更新父目录
+                const parentPath = currentPath;
+                if (mockFileSystem[parentPath]) {
+                    mockFileSystem[parentPath].children.push(folderName);
+                }
+
+                // 刷新视图
+                loadFiles(currentPath);
+
+                showNotification(`文件夹 ${folderName} 创建成功`, 'success');
+            }
+        }
+
+        function renameFile(path) {
+            const file = mockFileSystem[path];
+            const newName = prompt('请输入新名称:', file.name);
+
+            if (newName && newName !== file.name) {
+                // 这里应该实现重命名逻辑
+                showNotification(`文件重命名为 ${newName}`, 'success');
+                loadFiles(currentPath);
+            }
+        }
+
+        function deleteFile(path) {
+            const file = mockFileSystem[path];
+            if (confirm(`确定要删除 ${file.name} 吗？此操作不可恢复。`)) {
+                // 这里应该实现删除逻辑
+                showNotification(`${file.name} 已删除`, 'success');
+                loadFiles(currentPath);
+            }
+        }
+
+        function downloadFile(path) {
+            showNotification('开始下载文件...', 'info');
+            // 这里应该实现下载逻辑
+        }
+
+        function uploadFiles() {
+            document.getElementById('fileInput').click();
+        }
+
+        function handleFileUpload(event) {
+            const files = event.target.files;
+            handleFileDrop(files);
+        }
+
+        function handleFileDrop(files) {
+            if (files.length === 0) return;
+
+            showProgress();
+
+            Array.from(files).forEach((file, index) => {
+                setTimeout(() => {
+                    // 模拟上传过程
+                    const progress = ((index + 1) / files.length) * 100;
+                    updateProgress(progress);
+
+                    // 添加到文件系统
+                    const filePath = currentPath ? `${currentPath}/${file.name}` : file.name;
+                    mockFileSystem[filePath] = {
+                        type: 'file',
+                        name: file.name,
+                        size: file.size,
+                        modified: new Date().toISOString().split('T')[0],
+                        icon: getFileIcon(file.name)
+                    };
+
+                    if (index === files.length - 1) {
+                        hideProgress();
+                        loadFiles(currentPath);
+                        showNotification(`成功上传 ${files.length} 个文件`, 'success');
+                    }
+                }, index * 500);
+            });
+        }
+
+        // 选择相关函数
+        function toggleSelection(path) {
+            if (selectedFiles.has(path)) {
+                selectedFiles.delete(path);
+            } else {
+                selectedFiles.add(path);
+            }
+            updateSelectionUI();
+        }
+
+        function selectAll() {
+            const files = getFilesInPath(currentPath);
+            files.forEach(file => selectedFiles.add(file.path));
+            updateSelectionUI();
+        }
+
+        function clearSelection() {
+            selectedFiles.clear();
+            updateSelectionUI();
+        }
+
+        function updateSelectionUI() {
+            // 更新选择信息
+            const selectionInfo = document.getElementById('selectionInfo');
+            const selectionText = document.getElementById('selectionText');
+
+            if (selectedFiles.size > 0) {
+                selectionInfo.classList.add('show');
+                selectionText.textContent = `已选择 ${selectedFiles.size} 个项目`;
+            } else {
+                selectionInfo.classList.remove('show');
+            }
+
+            // 更新文件项的选中状态
+            document.querySelectorAll('.file-card, .file-list-item').forEach(item => {
+                const path = item.dataset.path;
+                if (selectedFiles.has(path)) {
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+        }
+
+        function deleteSelected() {
+            if (selectedFiles.size === 0) return;
+
+            if (confirm(`确定要删除选中的 ${selectedFiles.size} 个项目吗？此操作不可恢复。`)) {
+                selectedFiles.forEach(path => {
+                    // 这里应该实现删除逻辑
+                });
+
+                clearSelection();
+                loadFiles(currentPath);
+                showNotification(`已删除 ${selectedFiles.size} 个项目`, 'success');
+            }
+        }
+
+        function downloadSelected() {
+            if (selectedFiles.size === 0) return;
+
+            showNotification(`开始下载 ${selectedFiles.size} 个文件...`, 'info');
+            // 这里应该实现批量下载逻辑
+        }
+
+        // 右键菜单
+        function showContextMenu(event) {
+            const contextMenu = document.getElementById('contextMenu');
+            contextMenuTarget = event.target.closest('.file-card, .file-list-item');
+
+            contextMenu.style.display = 'block';
+            contextMenu.style.left = event.pageX + 'px';
+            contextMenu.style.top = event.pageY + 'px';
+        }
+
+        function hideContextMenu() {
+            document.getElementById('contextMenu').style.display = 'none';
+            contextMenuTarget = null;
+        }
+
+        // 搜索和过滤
+        function filterFiles(searchTerm) {
+            const files = getFilesInPath(currentPath);
+            const filteredFiles = files.filter(file =>
+                file.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            renderFiles(filteredFiles);
+        }
+
+        function refreshFiles() {
+            loadFiles(currentPath);
+            showNotification('文件列表已刷新', 'info');
+        }
+
+        // 进度条
+        function showProgress() {
+            document.getElementById('progressContainer').style.display = 'block';
+        }
+
+        function updateProgress(percent) {
+            document.getElementById('progressBar').style.width = percent + '%';
+        }
+
+        function hideProgress() {
+            setTimeout(() => {
+                document.getElementById('progressContainer').style.display = 'none';
+                document.getElementById('progressBar').style.width = '0%';
+            }, 500);
+        }
+
+        // 工具函数
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function getFileIcon(fileName) {
+            const ext = fileName.split('.').pop().toLowerCase();
+            const iconMap = {
+                'md': 'fas fa-file-alt',
+                'txt': 'fas fa-file-alt',
+                'jpg': 'fas fa-image',
+                'jpeg': 'fas fa-image',
+                'png': 'fas fa-image',
+                'gif': 'fas fa-image',
+                'pdf': 'fas fa-file-pdf',
+                'doc': 'fas fa-file-word',
+                'docx': 'fas fa-file-word',
+                'xls': 'fas fa-file-excel',
+                'xlsx': 'fas fa-file-excel',
+                'zip': 'fas fa-file-archive',
+                'rar': 'fas fa-file-archive'
+            };
+            return iconMap[ext] || 'fas fa-file';
+        }
+
+        function getFileIconClass(fileName) {
+            const ext = fileName.split('.').pop().toLowerCase();
+            if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
+                return 'image';
+            } else if (['pdf', 'doc', 'docx', 'txt', 'md'].includes(ext)) {
+                return 'document';
+            }
+            return '';
+        }
+
+        function showNotification(message, type = 'info') {
+            // 创建通知元素
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 1050; min-width: 300px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+
+            document.body.appendChild(notification);
+
+            // 3秒后自动移除
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

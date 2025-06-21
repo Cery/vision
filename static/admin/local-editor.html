@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisNDT 本地内容编辑器</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/material.min.css" rel="stylesheet">
+    <style>
+        .editor-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+        }
+        .file-browser {
+            background: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+            min-height: calc(100vh - 200px);
+        }
+        .file-item {
+            padding: 8px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #e9ecef;
+            transition: all 0.2s ease;
+        }
+        .file-item:hover {
+            background: #e9ecef;
+        }
+        .file-item.active {
+            background: #007bff;
+            color: white;
+        }
+        .editor-container {
+            min-height: calc(100vh - 200px);
+        }
+        .CodeMirror {
+            height: 500px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+        }
+        .toolbar {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-bottom: none;
+            padding: 10px;
+            border-radius: 4px 4px 0 0;
+        }
+        .status-bar {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-top: none;
+            padding: 8px 15px;
+            border-radius: 0 0 4px 4px;
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+        .preview-pane {
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 20px;
+            background: white;
+            min-height: 500px;
+            overflow-y: auto;
+        }
+        .tab-content {
+            border: 1px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            padding: 20px;
+            background: white;
+            min-height: 500px;
+        }
+        .nav-tabs {
+            border-bottom: 1px solid #dee2e6;
+        }
+        .file-path {
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="editor-header">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-edit me-3"></i>VisNDT 本地内容编辑器</h1>
+                    <p class="mb-0">直接编辑网站内容文件</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-light me-2" onclick="saveCurrentFile()">
+                        <i class="fas fa-save me-2"></i>保存文件
+                    </button>
+                    <button class="btn btn-outline-light" onclick="refreshFiles()">
+                        <i class="fas fa-sync me-2"></i>刷新
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 文件浏览器 -->
+            <div class="col-md-3 p-0">
+                <div class="file-browser">
+                    <div class="p-3 border-bottom">
+                        <h6 class="mb-0"><i class="fas fa-folder me-2"></i>内容文件</h6>
+                    </div>
+                    <div id="fileList">
+                        <div class="file-item" data-file="content/_index.md" data-type="markdown">
+                            <i class="fas fa-home me-2"></i>首页内容
+                            <div class="file-path">content/_index.md</div>
+                        </div>
+                        <div class="file-item" data-file="content/business/_index.md" data-type="markdown">
+                            <i class="fas fa-briefcase me-2"></i>商务服务
+                            <div class="file-path">content/business/_index.md</div>
+                        </div>
+                        <div class="file-item" data-file="content/news/_index.md" data-type="markdown">
+                            <i class="fas fa-newspaper me-2"></i>资讯中心
+                            <div class="file-path">content/news/_index.md</div>
+                        </div>
+                        <div class="file-item" data-file="content/products/_index.md" data-type="markdown">
+                            <i class="fas fa-box me-2"></i>产品中心
+                            <div class="file-path">content/products/_index.md</div>
+                        </div>
+                        <div class="file-item" data-file="content/applications/_index.md" data-type="markdown">
+                            <i class="fas fa-cogs me-2"></i>应用领域
+                            <div class="file-path">content/applications/_index.md</div>
+                        </div>
+                        <div class="file-item" data-file="content/cases/_index.md" data-type="markdown">
+                            <i class="fas fa-clipboard-list me-2"></i>应用案例
+                            <div class="file-path">content/cases/_index.md</div>
+                        </div>
+                        <div class="file-item" data-file="hugo.toml" data-type="toml">
+                            <i class="fas fa-cog me-2"></i>网站配置
+                            <div class="file-path">hugo.toml</div>
+                        </div>
+                        <div class="file-item" data-file="netlify.toml" data-type="toml">
+                            <i class="fas fa-server me-2"></i>部署配置
+                            <div class="file-path">netlify.toml</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 编辑器区域 -->
+            <div class="col-md-9 p-4">
+                <div id="editorArea">
+                    <!-- 工具栏 -->
+                    <div class="toolbar">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <span id="currentFileName" class="fw-bold">请选择文件进行编辑</span>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-primary" onclick="insertMarkdown('**', '**')" title="粗体">
+                                        <i class="fas fa-bold"></i>
+                                    </button>
+                                    <button class="btn btn-outline-primary" onclick="insertMarkdown('*', '*')" title="斜体">
+                                        <i class="fas fa-italic"></i>
+                                    </button>
+                                    <button class="btn btn-outline-primary" onclick="insertMarkdown('## ', '')" title="标题">
+                                        <i class="fas fa-heading"></i>
+                                    </button>
+                                    <button class="btn btn-outline-primary" onclick="insertMarkdown('[', '](url)')" title="链接">
+                                        <i class="fas fa-link"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 编辑器标签页 -->
+                    <ul class="nav nav-tabs" id="editorTabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="edit-tab" data-bs-toggle="tab" href="#edit-pane">
+                                <i class="fas fa-edit me-2"></i>编辑
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="preview-tab" data-bs-toggle="tab" href="#preview-pane">
+                                <i class="fas fa-eye me-2"></i>预览
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="help-tab" data-bs-toggle="tab" href="#help-pane">
+                                <i class="fas fa-question-circle me-2"></i>帮助
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- 标签页内容 -->
+                    <div class="tab-content">
+                        <!-- 编辑器面板 -->
+                        <div class="tab-pane fade show active" id="edit-pane">
+                            <textarea id="codeEditor" placeholder="请选择左侧文件开始编辑..."></textarea>
+                        </div>
+
+                        <!-- 预览面板 -->
+                        <div class="tab-pane fade" id="preview-pane">
+                            <div id="previewContent">
+                                <div class="text-center text-muted">
+                                    <i class="fas fa-eye fa-3x mb-3"></i>
+                                    <p>在编辑面板中输入内容，然后切换到此处查看预览</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 帮助面板 -->
+                        <div class="tab-pane fade" id="help-pane">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-markdown me-2"></i>Markdown 语法</h5>
+                                    <table class="table table-sm">
+                                        <tbody>
+                                            <tr><td><code># 标题</code></td><td>一级标题</td></tr>
+                                            <tr><td><code>## 标题</code></td><td>二级标题</td></tr>
+                                            <tr><td><code>**粗体**</code></td><td><strong>粗体文字</strong></td></tr>
+                                            <tr><td><code>*斜体*</code></td><td><em>斜体文字</em></td></tr>
+                                            <tr><td><code>[链接](URL)</code></td><td>创建链接</td></tr>
+                                            <tr><td><code>![图片](URL)</code></td><td>插入图片</td></tr>
+                                            <tr><td><code>- 列表项</code></td><td>无序列表</td></tr>
+                                            <tr><td><code>1. 列表项</code></td><td>有序列表</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-file-alt me-2"></i>文件头部格式</h5>
+                                    <pre class="bg-light p-3 rounded"><code>---
+title: "页面标题"
+description: "页面描述"
+date: 2024-01-15
+draft: false
+---
+
+# 页面内容开始
+
+这里是页面的主要内容...</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 状态栏 -->
+                    <div class="status-bar">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <span id="fileStatus">就绪</span>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <span id="cursorPosition">行: 1, 列: 1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 空状态 -->
+                <div id="emptyState" class="text-center py-5" style="display: none;">
+                    <i class="fas fa-file-alt fa-4x text-muted mb-3"></i>
+                    <h4 class="text-muted">选择文件开始编辑</h4>
+                    <p class="text-muted">从左侧文件列表中选择要编辑的文件</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 保存确认模态框 -->
+    <div class="modal fade" id="saveModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">保存文件</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>确定要保存当前文件吗？</p>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>注意：</strong>这是演示版本，实际保存功能需要后端支持。
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="confirmSave()">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/markdown/markdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/toml/toml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.2/marked.min.js"></script>
+    <script>
+        let editor;
+        let currentFile = null;
+        let isModified = false;
+
+        // 初始化编辑器
+        function initEditor() {
+            editor = CodeMirror.fromTextArea(document.getElementById('codeEditor'), {
+                lineNumbers: true,
+                mode: 'markdown',
+                theme: 'material',
+                lineWrapping: true,
+                autoCloseBrackets: true,
+                matchBrackets: true,
+                indentUnit: 2,
+                tabSize: 2
+            });
+
+            // 监听内容变化
+            editor.on('change', function() {
+                isModified = true;
+                updateStatus();
+                updatePreview();
+            });
+
+            // 监听光标位置变化
+            editor.on('cursorActivity', function() {
+                const cursor = editor.getCursor();
+                document.getElementById('cursorPosition').textContent = 
+                    `行: ${cursor.line + 1}, 列: ${cursor.ch + 1}`;
+            });
+        }
+
+        // 文件选择事件
+        document.querySelectorAll('.file-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // 更新选中状态
+                document.querySelectorAll('.file-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+
+                // 加载文件
+                loadFile(this.dataset.file, this.dataset.type);
+            });
+        });
+
+        // 加载文件内容
+        function loadFile(filePath, fileType) {
+            currentFile = filePath;
+            document.getElementById('currentFileName').textContent = filePath;
+            
+            // 设置编辑器模式
+            const mode = fileType === 'toml' ? 'toml' : 'markdown';
+            editor.setOption('mode', mode);
+
+            // 加载模拟内容
+            const content = getMockFileContent(filePath);
+            editor.setValue(content);
+            
+            isModified = false;
+            updateStatus();
+            updatePreview();
+
+            // 显示编辑器
+            document.getElementById('editorArea').style.display = 'block';
+            document.getElementById('emptyState').style.display = 'none';
+        }
+
+        // 获取模拟文件内容
+        function getMockFileContent(filePath) {
+            const mockContents = {
+                'content/business/_index.md': `---
+title: "商务服务"
+description: "维森视觉检测仪器网商务合作平台，为视觉检测设备制造商提供专业的信息发布、广告投放、品牌推广等一站式商务服务"
+date: 2024-01-15
+draft: false
+---
+
+# 商务服务中心
+
+## 🌟 平台核心价值
+
+维森视觉检测仪器网作为国内视觉检测设备行业的权威门户平台，已成为连接制造商与用户的重要桥梁。
+
+### 📈 平台数据表现
+- **用户规模**：50,000+ 活跃专业用户
+- **用户质量**：90% 为行业决策者、技术专家
+- **转化效果**：平均询盘转化率达到15%
+- **客户满意度**：98% 的合作客户表示满意
+
+## 💼 专业服务体系
+
+### 1. 代厂家发布信息服务
+为视觉检测设备制造商提供专业的产品信息发布和推广服务...`,
+                'content/_index.md': `---
+title: "维森视觉检测仪器"
+---
+
+# 欢迎来到维森视觉检测仪器网
+
+专业的视觉检测设备信息与资讯发布平台，为行业提供全方位的产品信息和技术支持。`,
+                'hugo.toml': `baseURL = 'https://visndt.com/'
+languageCode = 'zh-cn'
+title = '维森视觉检测仪器'
+theme = 'ananke'
+
+[taxonomies]
+  category = 'categories'
+  tag = 'tags'
+
+paginate = 12`
+            };
+
+            return mockContents[filePath] || `# 新文件
+
+请在此编辑 ${filePath} 的内容...`;
+        }
+
+        // 更新状态
+        function updateStatus() {
+            const status = isModified ? '已修改' : '已保存';
+            document.getElementById('fileStatus').textContent = status;
+        }
+
+        // 更新预览
+        function updatePreview() {
+            if (!editor) return;
+            
+            const content = editor.getValue();
+            const htmlContent = marked.parse(content);
+            document.getElementById('previewContent').innerHTML = htmlContent;
+        }
+
+        // 插入Markdown语法
+        function insertMarkdown(before, after) {
+            if (!editor) return;
+            
+            const selection = editor.getSelection();
+            const replacement = before + (selection || '文本') + after;
+            editor.replaceSelection(replacement);
+            editor.focus();
+        }
+
+        // 保存文件
+        function saveCurrentFile() {
+            if (!currentFile) {
+                alert('请先选择要保存的文件');
+                return;
+            }
+            
+            const modal = new bootstrap.Modal(document.getElementById('saveModal'));
+            modal.show();
+        }
+
+        // 确认保存
+        function confirmSave() {
+            // 这里应该是实际的保存逻辑
+            alert('文件保存成功！\n\n注意：这是演示版本，实际保存需要后端支持。');
+            isModified = false;
+            updateStatus();
+            
+            const modal = bootstrap.Modal.getInstance(document.getElementById('saveModal'));
+            modal.hide();
+        }
+
+        // 刷新文件列表
+        function refreshFiles() {
+            alert('文件列表已刷新');
+        }
+
+        // 预览标签页切换事件
+        document.getElementById('preview-tab').addEventListener('click', function() {
+            setTimeout(updatePreview, 100);
+        });
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initEditor();
+            console.log('本地编辑器已初始化');
+        });
+    </script>
+</body>
+</html>
