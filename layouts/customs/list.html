@@ -7,7 +7,12 @@
             <div class="card shadow-sm">
                 <div class="card-body p-4">
                     <h4 class="card-title mb-4">发布定制需求</h4>
-                    <form id="customForm" class="needs-validation" novalidate>
+                    <form id="customForm" class="needs-validation" name="custom-requirements" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
+                        <!-- Netlify隐藏字段 -->
+                        <input type="hidden" name="form-name" value="custom-requirements">
+                        <div style="display: none;">
+                            <label>Don't fill this out if you're human: <input name="bot-field" /></label>
+                        </div>
                         <!-- 定制需求参数 -->
                         <div class="card mb-4">
                             <div class="card-header bg-light">
@@ -15,8 +20,8 @@
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <label for="productType" class="form-label">产品类型</label>
-                                    <select class="form-select" id="productType">
+                                    <label for="productType" class="form-label">产品类型 <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="productType" name="productType" required>
                                         <option value="">请选择产品类型</option>
                                         <optgroup label="内窥镜">
                                             <option value="电子内窥镜">电子内窥镜</option>
@@ -26,12 +31,13 @@
                                             <option value="爬行机器人">爬行机器人</option>
                                         </optgroup>
                                     </select>
+                                    <div class="invalid-feedback">请选择产品类型</div>
                                 </div>
 
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="screenSize" class="form-label">主机屏幕</label>
-                                        <select class="form-select" id="screenSize">
+                                        <select class="form-select" id="screenSize" name="screenSize">
                                             <option value="">请选择屏幕尺寸</option>
                                             <option value='5"'>5英寸</option>
                                             <option value='7"'>7英寸</option>
@@ -42,7 +48,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="batteryLife" class="form-label">待机时长</label>
-                                        <select class="form-select" id="batteryLife">
+                                        <select class="form-select" id="batteryLife" name="batteryLife">
                                             <option value="">请选择待机时长</option>
                                             <option value="2小时">2小时</option>
                                             <option value="4小时">4小时</option>
@@ -55,7 +61,7 @@
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="probeDiameter" class="form-label">探头直径</label>
-                                        <select class="form-select" id="probeDiameter">
+                                        <select class="form-select" id="probeDiameter" name="probeDiameter">
                                             <option value="">请选择探头直径</option>
                                             <option value="0.85mm">0.85mm</option>
                                             <option value="0.95mm">0.95mm</option>
@@ -74,7 +80,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="resolution" class="form-label">像素</label>
-                                        <select class="form-select" id="resolution">
+                                        <select class="form-select" id="resolution" name="resolution">
                                             <option value="">请选择像素</option>
                                             <option value="16万像素">16万像素</option>
                                             <option value="30万像素">30万像素</option>
@@ -88,7 +94,7 @@
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="viewingAngle" class="form-label">视向</label>
-                                        <select class="form-select" id="viewingAngle">
+                                        <select class="form-select" id="viewingAngle" name="viewingAngle">
                                             <option value="">请选择视向</option>
                                             <option value="0度直视">0度直视</option>
                                             <option value="90度侧视">90度侧视</option>
@@ -99,7 +105,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="lightSource" class="form-label">光源</label>
-                                        <select class="form-select" id="lightSource">
+                                        <select class="form-select" id="lightSource" name="lightSource">
                                             <option value="">请选择光源</option>
                                             <option value="LED">LED</option>
                                             <option value="光纤">光纤</option>
@@ -113,7 +119,7 @@
 
                                 <div class="mb-3">
                                     <label for="guidance" class="form-label">导向</label>
-                                    <select class="form-select" id="guidance">
+                                    <select class="form-select" id="guidance" name="guidance">
                                         <option value="">请选择导向方式</option>
                                         <option value="无导向">无导向</option>
                                         <option value="手动180度">手动180度</option>
@@ -125,8 +131,9 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="requirements" class="form-label">定制需求描述</label>
-                                    <textarea class="form-control" id="requirements" rows="3" placeholder="请详细描述您的具体定制需求和特殊要求"></textarea>
+                                    <label for="requirements" class="form-label">定制需求描述 <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="requirements" name="requirements" rows="3" placeholder="请详细描述您的具体定制需求和特殊要求" required></textarea>
+                                    <div class="invalid-feedback">请描述您的定制需求</div>
                                 </div>
                             </div>
                         </div>
@@ -138,40 +145,52 @@
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <label for="companyName" class="form-label">公司名称</label>
-                                    <input type="text" class="form-control" id="companyName" placeholder="请输入公司全称">
+                                    <label for="companyName" class="form-label">公司名称 <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="companyName" name="companyName" placeholder="请输入公司全称" required>
+                                    <div class="invalid-feedback">请输入公司名称</div>
                                 </div>
 
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="department" class="form-label">部门</label>
-                                        <input type="text" class="form-control" id="department" placeholder="请输入部门名称">
+                                        <input type="text" class="form-control" id="department" name="department" placeholder="请输入部门名称">
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="contact" class="form-label">联系人</label>
-                                        <input type="text" class="form-control" id="contact" placeholder="请输入联系人姓名">
+                                        <label for="contact" class="form-label">联系人 <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="contact" name="contact" placeholder="请输入联系人姓名" required>
+                                        <div class="invalid-feedback">请输入联系人姓名</div>
                                     </div>
                                 </div>
 
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label for="phone" class="form-label">联系电话</label>
-                                        <input type="tel" class="form-control" id="phone" placeholder="请输入11位手机号码">
+                                        <label for="phone" class="form-label">联系电话 <span class="text-danger">*</span></label>
+                                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="请输入11位手机号码" pattern="[0-9]{11}" required>
+                                        <div class="invalid-feedback">请输入正确的11位手机号码</div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="email" class="form-label">电子邮箱</label>
-                                        <input type="email" class="form-control" id="email" placeholder="请输入常用邮箱">
+                                        <label for="email" class="form-label">电子邮箱 <span class="text-danger">*</span></label>
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="请输入常用邮箱" required>
+                                        <div class="invalid-feedback">请输入正确的邮箱地址</div>
                                     </div>
                                 </div>
 
                                 <!-- 附件上传 -->
                                 <div class="mb-3">
                                     <label for="attachments" class="form-label">上传附件</label>
-                                    <input type="file" class="form-control" id="attachments" multiple accept=".pdf,.doc,.docx,.dwg,.jpg,.png">
+                                    <input type="file" class="form-control" id="attachments" name="attachments" multiple accept=".pdf,.doc,.docx,.dwg,.jpg,.png">
                                     <div class="form-text">支持PDF、Word、CAD图纸、图片等格式，单个文件不超过10MB</div>
                                 </div>
 
-                                <button type="submit" class="btn btn-primary w-100">提交定制需求</button>
+                                <!-- 提交状态显示 -->
+                                <div id="submitStatus" class="alert" style="display: none;" role="alert">
+                                    <div id="submitMessage"></div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary w-100" id="submitBtn">
+                                    <span id="submitText">提交定制需求</span>
+                                    <span id="submitSpinner" class="spinner-border spinner-border-sm ms-2" style="display: none;" role="status" aria-hidden="true"></span>
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -280,31 +299,159 @@
 </style>
 
 <script>
-// 表单验证
+// 表单验证和提交处理
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('customForm');
-    
+    const submitBtn = document.getElementById('submitBtn');
+    const submitText = document.getElementById('submitText');
+    const submitSpinner = document.getElementById('submitSpinner');
+    const submitStatus = document.getElementById('submitStatus');
+    const submitMessage = document.getElementById('submitMessage');
+
+    // 表单提交处理
     form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        // 验证表单
         if (!form.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
+            form.classList.add('was-validated');
+            showStatus('请填写所有必填项', 'danger');
+            return;
         }
-        form.classList.add('was-validated');
+
+        // 显示提交中状态
+        setSubmitState(true);
+        hideStatus();
+
+        // 收集表单数据
+        const formData = new FormData(form);
+
+        // 提交到Netlify
+        fetch('/', {
+            method: 'POST',
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams(formData).toString()
+        })
+        .then(response => {
+            if (response.ok) {
+                showStatus('✅ 定制需求提交成功！我们将在24小时内与您联系。', 'success');
+                form.reset();
+                form.classList.remove('was-validated');
+
+                // 添加到需求列表
+                addToRequirementsList(formData);
+            } else {
+                throw new Error('提交失败');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showStatus('❌ 提交失败，请稍后重试或直接联系我们。', 'danger');
+        })
+        .finally(() => {
+            setSubmitState(false);
+        });
     });
 
     // 文件上传大小限制
     const attachments = document.getElementById('attachments');
-    attachments.addEventListener('change', function() {
-        const files = this.files;
-        const maxSize = 10 * 1024 * 1024; // 10MB
+    if (attachments) {
+        attachments.addEventListener('change', function() {
+            const files = this.files;
+            const maxSize = 10 * 1024 * 1024; // 10MB
 
-        for (let i = 0; i < files.length; i++) {
-            if (files[i].size > maxSize) {
-                alert('文件 ' + files[i].name + ' 超过10MB限制，请重新选择');
-                this.value = '';
-                break;
+            for (let i = 0; i < files.length; i++) {
+                if (files[i].size > maxSize) {
+                    showStatus('文件 ' + files[i].name + ' 超过10MB限制，请重新选择', 'warning');
+                    this.value = '';
+                    break;
+                }
             }
+        });
+    }
+
+    // 设置提交状态
+    function setSubmitState(isSubmitting) {
+        if (isSubmitting) {
+            submitBtn.disabled = true;
+            submitText.textContent = '提交中...';
+            submitSpinner.style.display = 'inline-block';
+        } else {
+            submitBtn.disabled = false;
+            submitText.textContent = '提交定制需求';
+            submitSpinner.style.display = 'none';
         }
+    }
+
+    // 显示状态消息
+    function showStatus(message, type) {
+        submitMessage.innerHTML = message;
+        submitStatus.className = `alert alert-${type}`;
+        submitStatus.style.display = 'block';
+
+        // 滚动到状态消息
+        submitStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        // 成功消息5秒后自动隐藏
+        if (type === 'success') {
+            setTimeout(hideStatus, 5000);
+        }
+    }
+
+    // 隐藏状态消息
+    function hideStatus() {
+        submitStatus.style.display = 'none';
+    }
+
+    // 添加到需求列表（模拟）
+    function addToRequirementsList(formData) {
+        const requirementsList = document.querySelector('.custom-requirements-list');
+        if (requirementsList) {
+            const newItem = document.createElement('div');
+            newItem.className = 'requirement-item p-3 mb-3 bg-light rounded border-success';
+            newItem.innerHTML = `
+                <div class="d-flex justify-content-between align-items-start">
+                    <h6 class="mb-2">${formData.get('productType')} 定制需求</h6>
+                    <span class="badge bg-warning text-dark">待处理</span>
+                </div>
+                <div class="text-muted small mb-2">
+                    <i class="bi bi-calendar3"></i> ${new Date().toLocaleDateString('zh-CN')}
+                </div>
+                <div class="text-muted small">
+                    <i class="bi bi-building"></i> ${formData.get('companyName')}
+                </div>
+            `;
+
+            // 添加到列表顶部
+            requirementsList.insertBefore(newItem, requirementsList.firstChild);
+
+            // 高亮新添加的项目
+            setTimeout(() => {
+                newItem.classList.add('border-primary');
+                newItem.style.backgroundColor = '#e3f2fd';
+            }, 100);
+        }
+    }
+
+    // 实时验证
+    const requiredFields = form.querySelectorAll('[required]');
+    requiredFields.forEach(field => {
+        field.addEventListener('blur', function() {
+            if (this.checkValidity()) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            } else {
+                this.classList.remove('is-valid');
+                this.classList.add('is-invalid');
+            }
+        });
+
+        field.addEventListener('input', function() {
+            if (this.classList.contains('is-invalid') && this.checkValidity()) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            }
+        });
     });
 });
 </script>

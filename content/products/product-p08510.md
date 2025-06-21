@@ -2,7 +2,7 @@
 title: "WS-P-08510高清工业视频内窥镜"
 summary: 高清光纤照明内窥镜
 primary_category: "电子内窥镜"
-secondary_category: "工业视屏内窥镜"
+secondary_category: "工业视频内窥镜"
 model: "WS-P08510"
 series: "P系列"
 supplier: "深圳市微视光电科技有限公司"

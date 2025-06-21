@@ -1,0 +1,355 @@
+/* 统一主题样式 - 全站字体、颜色、配色风格 */
+
+/* ===== 全局重置和基础样式 ===== */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212121;
+    background-color: #fafafa;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* ===== 统一字体大小系统 ===== */
+.text-xs { font-size: 12px; }
+.text-sm { font-size: 14px; }
+.text-base { font-size: 16px; }
+.text-lg { font-size: 18px; }
+.text-xl { font-size: 20px; }
+.text-2xl { font-size: 24px; }
+.text-3xl { font-size: 30px; }
+
+/* ===== 统一字重系统 ===== */
+.font-light { font-weight: 300; }
+.font-normal { font-weight: 400; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+
+/* ===== 统一颜色系统 ===== */
+.text-primary { color: #1976d2 !important; }
+.text-secondary { color: #616161 !important; }
+.text-muted { color: #9e9e9e !important; }
+.text-success { color: #4caf50 !important; }
+.text-warning { color: #ff9800 !important; }
+.text-error { color: #f44336 !important; }
+.text-info { color: #2196f3 !important; }
+
+.bg-primary { background-color: #1976d2 !important; }
+.bg-secondary { background-color: #fafafa !important; }
+.bg-light { background-color: #f5f5f5 !important; }
+.bg-white { background-color: #ffffff !important; }
+
+/* ===== 标题系统统一 ===== */
+h1, .h1 {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: #212121;
+    margin-bottom: 1rem;
+}
+
+h2, .h2 {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #212121;
+    margin-bottom: 0.75rem;
+}
+
+h3, .h3 {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: #212121;
+    margin-bottom: 0.75rem;
+}
+
+h4, .h4 {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #212121;
+    margin-bottom: 0.5rem;
+}
+
+h5, .h5 {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #212121;
+    margin-bottom: 0.5rem;
+}
+
+h6, .h6 {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #616161;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ===== 段落和文本统一 ===== */
+p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #212121;
+    margin-bottom: 1rem;
+}
+
+.lead {
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: #616161;
+}
+
+small, .small {
+    font-size: 12px;
+    color: #757575;
+}
+
+/* ===== 链接统一样式 ===== */
+a {
+    color: #1976d2;
+    text-decoration: none;
+    transition: color 0.15s ease-in-out;
+}
+
+a:hover {
+    color: #1565c0;
+    text-decoration: underline;
+}
+
+a:focus {
+    outline: 2px solid #42a5f5;
+    outline-offset: 2px;
+}
+
+/* ===== 按钮统一样式 ===== */
+.btn {
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    transition: all 0.15s ease-in-out;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn:focus {
+    outline: 2px solid #42a5f5;
+    outline-offset: 2px;
+}
+
+.btn-primary {
+    background-color: #1976d2;
+    border-color: #1976d2;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #1565c0;
+    border-color: #1565c0;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #616161;
+    border-color: #616161;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #424242;
+    border-color: #424242;
+    color: white;
+}
+
+.btn-outline-primary {
+    background-color: transparent;
+    border-color: #1976d2;
+    color: #1976d2;
+}
+
+.btn-outline-primary:hover {
+    background-color: #1976d2;
+    border-color: #1976d2;
+    color: white;
+}
+
+/* ===== 表单元素统一 ===== */
+.form-control {
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #212121;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.25);
+    outline: none;
+}
+
+.form-control::placeholder {
+    color: #9e9e9e;
+    opacity: 1;
+}
+
+.form-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #616161;
+    margin-bottom: 0.5rem;
+}
+
+/* ===== 卡片统一样式 ===== */
+.card {
+    background-color: #ffffff;
+    border: 1px solid #f5f5f5;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    transition: all 0.15s ease-in-out;
+}
+
+.card:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+    transform: translateY(-1px);
+}
+
+.card-header {
+    background-color: #fafafa;
+    border-bottom: 1px solid #f5f5f5;
+    padding: 1rem;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.card-body {
+    padding: 1rem;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #212121;
+    margin-bottom: 0.5rem;
+}
+
+.card-text {
+    font-size: 14px;
+    color: #616161;
+    line-height: 1.5;
+}
+
+/* ===== 导航栏统一样式 ===== */
+.navbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #f5f5f5;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    padding: 0.5rem 0;
+}
+
+.navbar-nav .nav-link {
+    font-size: 14px;
+    font-weight: 500;
+    color: #616161;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    transition: all 0.15s ease-in-out;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #1976d2;
+    background-color: rgba(25, 118, 210, 0.08);
+}
+
+/* ===== 页脚统一样式 ===== */
+.footer {
+    background-color: #424242;
+    color: #e0e0e0;
+    padding: 2rem 0 1rem;
+    border-top: 1px solid #616161;
+}
+
+.footer h5 {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.footer p {
+    font-size: 14px;
+    color: #bdbdbd;
+    line-height: 1.6;
+}
+
+.footer a {
+    color: #bdbdbd;
+    transition: color 0.15s ease-in-out;
+}
+
+.footer a:hover {
+    color: #ffffff;
+}
+
+/* ===== 响应式字体调整 ===== */
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+    
+    h1, .h1 { font-size: 20px; }
+    h2, .h2 { font-size: 18px; }
+    h3, .h3 { font-size: 16px; }
+    
+    .lead {
+        font-size: 16px;
+    }
+    
+    .btn {
+        font-size: 13px;
+        padding: 0.4rem 0.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    html {
+        font-size: 14px;
+    }
+    
+    h1, .h1 { font-size: 18px; }
+    h2, .h2 { font-size: 16px; }
+    
+    .card-body {
+        padding: 0.75rem;
+    }
+}

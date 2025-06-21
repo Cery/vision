@@ -1,10 +1,15 @@
 ---
 title: "航空发动机叶片检测应用"
-categories: ["光学内窥镜", "精密检测"]
-areas: ["航空航天", "发动机维护"]
+primary_category: ["光学内窥镜"]
+application_field: ["航空航天"]
+application_scenario: ["航空叶片"]
 featured_image: "https://picsum.photos/800/400?random=2"
 summary: "为航空发动机制造商提供高精度叶片检测方案，实现微米级缺陷检测，保障飞行安全。"
 date: 2024-01-25
+client: "某航空发动机制造商"
+industry: "航空航天"
+detection_object: "发动机叶片"
+equipment_used: "WS-O系列光学内窥镜"
 ---
 
 ## 项目背景

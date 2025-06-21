@@ -10,52 +10,84 @@
                 <div class="card-body">
                     <!-- 产品分类筛选 -->
                     <div class="filter-section mb-4">
-                        <h5 class="card-title mb-3">产品分类</h5>
-                        <div class="d-flex flex-wrap gap-2 mb-3">
-                            {{ $parsedURL := urls.Parse .Permalink }}
-                            {{ $currentPrimaryCategory := $parsedURL.Query.Get "primary_category" }}
-                            {{ $currentSecondaryCategory := $parsedURL.Query.Get "secondary_category" }}
+                        <h5 class="card-title mb-3">
+                            <i class="fas fa-layer-group me-2 text-primary"></i>产品分类
+                        </h5>
 
-                            <a href="{{ "products" | absURL }}" class="btn btn-outline-primary {{ if not $currentPrimaryCategory }}active{{ end }}">全部</a>
+                        <!-- 一级分类 -->
+                        <div class="category-primary-container mb-3">
+                            <div class="category-level-label">
+                                <span class="badge bg-primary me-2">一级分类</span>
+                                <small class="text-muted">选择产品主要类别</small>
+                            </div>
+                            <div class="category-primary bg-gradient p-3 rounded-3 border-2 border-primary">
+                                <div class="d-flex flex-wrap gap-2 align-items-center">
+                                    {{ $currentPrimaryCategory := "" }}
+                                    {{ $currentSecondaryCategory := "" }}
 
-                            {{ $allProducts := where .Site.RegularPages "Type" "products" }}
-                            {{ $primaryCategories := slice }}
-                            {{ range $allProducts }}
-                                {{ with .Params.primary_category }}
-                                    {{ $primaryCategories = $primaryCategories | append . }}
-                                {{ end }}
-                            {{ end }}
-                            {{ $primaryCategories = uniq $primaryCategories }}
+                                    <a href="{{ "products" | absURL }}" class="btn btn-lg btn-primary fw-bold shadow-sm primary-btn {{ if not $currentPrimaryCategory }}active{{ end }}">
+                                        <i class="fas fa-home me-1"></i>全部分类
+                                    </a>
 
-                            {{ range $primaryCategories }}
-                                {{ $category := . }}
-                                {{ $productsInCategory := where $allProducts "Params.primary_category" $category }}
-                                {{ if gt (len $productsInCategory) 0 }}
-                                    <a href='{{ printf "products?primary_category=%s" . | absURL }}' class="btn btn-outline-primary {{ if eq $currentPrimaryCategory . }}active{{ end }}">{{ . }}</a>
-                                {{ end }}
-                            {{ end }}
+                                    {{ $allProducts := where .Site.RegularPages "Type" "products" }}
+                                    {{ $primaryCategories := slice }}
+                                    {{ range $allProducts }}
+                                        {{ with .Params.primary_category }}
+                                            {{ $primaryCategories = $primaryCategories | append . }}
+                                        {{ end }}
+                                    {{ end }}
+                                    {{ $primaryCategories = uniq $primaryCategories }}
+
+                                    {{ range $primaryCategories }}
+                                        {{ $category := . }}
+                                        {{ $productsInCategory := where $allProducts "Params.primary_category" $category }}
+                                        {{ if gt (len $productsInCategory) 0 }}
+                                            <a href='{{ printf "products?primary_category=%s" . | absURL }}' class="btn btn-lg btn-outline-primary fw-bold shadow-sm primary-btn {{ if eq $currentPrimaryCategory . }}active{{ end }}">
+                                                <i class="fas fa-folder me-1"></i>{{ . }}
+                                                <span class="badge bg-light text-dark ms-1">{{ len $productsInCategory }}</span>
+                                            </a>
+                                        {{ end }}
+                                    {{ end }}
+                                </div>
+                            </div>
                         </div>
 
-                        {{ if $currentPrimaryCategory }}
-                        <div class="d-flex flex-wrap gap-2">
-                            <a href='{{ printf "products?primary_category=%s" $currentPrimaryCategory | absURL }}' class="btn btn-outline-secondary {{ if not $currentSecondaryCategory }}active{{ end }}">全部二级分类</a>
-                            {{ $secondaryCategories := slice }}
-                            {{ range (where $allProducts "Params.primary_category" $currentPrimaryCategory) }}
-                                {{ with .Params.secondary_category }}
-                                    {{ $secondaryCategories = $secondaryCategories | append . }}
-                                {{ end }}
-                            {{ end }}
-                            {{ $secondaryCategories = uniq $secondaryCategories }}
+                        <!-- 二级分类 -->
+                        <div class="category-secondary-container">
+                            <div class="category-level-label">
+                                <span class="badge bg-secondary me-2">二级分类</span>
+                                <small class="text-muted">选择产品细分类别</small>
+                            </div>
+                            <div class="category-secondary bg-light p-2 rounded-2 border border-secondary border-opacity-25 position-relative">
+                                <!-- 连接线 -->
+                                <div class="category-connector"></div>
 
-                            {{ range $secondaryCategories }}
-                                {{ $category := . }}
-                                {{ $productsInCategory := where $allProducts "Params.secondary_category" $category }}
-                                {{ if gt (len $productsInCategory) 0 }}
-                                    <a href='{{ printf "products?primary_category=%s&secondary_category=%s" $currentPrimaryCategory . | absURL }}' class="btn btn-outline-secondary {{ if eq $currentSecondaryCategory . }}active{{ end }}">{{ . }}</a>
-                                {{ end }}
-                            {{ end }}
+                                <div class="d-flex flex-wrap gap-1 align-items-center">
+                                    <a href="{{ "products" | absURL }}" class="btn btn-outline-secondary btn-sm secondary-btn {{ if not $currentSecondaryCategory }}active{{ end }}">
+                                        <i class="fas fa-list me-1"></i>全部二级分类
+                                    </a>
+
+                                    {{ $allSecondaryCategories := slice }}
+                                    {{ range $allProducts }}
+                                        {{ with .Params.secondary_category }}
+                                            {{ $allSecondaryCategories = $allSecondaryCategories | append . }}
+                                        {{ end }}
+                                    {{ end }}
+                                    {{ $allSecondaryCategories = uniq $allSecondaryCategories }}
+
+                                    {{ range $allSecondaryCategories }}
+                                        {{ $category := . }}
+                                        {{ $productsInCategory := where $allProducts "Params.secondary_category" $category }}
+                                        {{ if gt (len $productsInCategory) 0 }}
+                                            <a href='{{ printf "products?secondary_category=%s" . | absURL }}' class="btn btn-outline-secondary btn-sm secondary-btn {{ if eq $currentSecondaryCategory . }}active{{ end }}">
+                                                <i class="fas fa-tag me-1"></i>{{ . }}
+                                                <span class="badge bg-light text-dark ms-1">{{ len $productsInCategory }}</span>
+                                            </a>
+                                        {{ end }}
+                                    {{ end }}
+                                </div>
+                            </div>
                         </div>
-                        {{ end }}
                     </div>
 
                     <!-- 产品参数筛选 -->
@@ -194,8 +226,7 @@
             {{ $filteredProducts = where $filteredProducts "Params.secondary_category" $currentSecondaryCategory }}
         {{ end }}
 
-        {{ $paginator := .Paginate $filteredProducts 12 }}
-        {{ range $index, $page := $paginator.Pages }}
+        {{ range $filteredProducts }}
         {{ $screenSize := "" }}
         {{ $batteryLife := "" }}
         {{ $probeDiameter := "" }}
@@ -215,6 +246,8 @@
         {{ end }}
 
         <div class="col-md-6 col-lg-4 mb-4 product-item"
+             data-primary-category="{{ .Params.primary_category }}"
+             data-secondary-category="{{ .Params.secondary_category }}"
              data-screen-size="{{ $screenSize }}"
              data-battery-life="{{ $batteryLife }}"
              data-probe-diameter="{{ $probeDiameter }}"
@@ -298,44 +331,93 @@
     </div>
 
     <!-- 分页 -->
-    {{ if gt $paginator.TotalPages 1 }}
-    <nav aria-label="Page navigation" class="mt-5">
-        <ul class="pagination justify-content-center">
-            {{ if $paginator.HasPrev }}
-            <li class="page-item">
-                <a class="page-link" href="{{ $paginator.Prev.URL | absURL }}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            {{ end }}
-            
-            {{ range $paginator.Pagers }}
-            <li class="page-item {{ if eq . $paginator }}active{{ end }}">
-                <a class="page-link" href="{{ .URL | absURL }}">{{ .PageNumber }}</a>
-            </li>
-            {{ end }}
-            
-            {{ if $paginator.HasNext }}
-            <li class="page-item">
-                <a class="page-link" href="{{ $paginator.Next.URL | absURL }}" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-            {{ end }}
+    <nav aria-label="Page navigation" class="mt-5" id="pagination" style="display: none;">
+        <ul class="pagination justify-content-center" id="paginationList">
+            <!-- 分页按钮将由JavaScript生成 -->
         </ul>
+
+        <!-- 分页信息 -->
+        <div class="text-center mt-3">
+            <small class="text-muted" id="paginationInfo">
+                <!-- 分页信息将由JavaScript生成 -->
+            </small>
+        </div>
     </nav>
+
+    <!-- 当没有产品时显示的信息 -->
+    {{ if eq (len $filteredProducts) 0 }}
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-info text-center py-5" role="alert">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h4 class="alert-heading">暂无产品</h4>
+                <p class="mb-0">当前筛选条件下没有找到相关产品，请尝试调整筛选条件。</p>
+                <hr>
+                <button class="btn btn-outline-primary mt-2" onclick="resetFilters()">
+                    <i class="fas fa-redo me-1"></i>重置筛选条件
+                </button>
+            </div>
+        </div>
+    </div>
     {{ end }}
 </div>
 
 <style>
+/* 产品列表页面样式 - 统一设计 */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* 筛选卡片样式 */
+.card.shadow-sm {
+    border: 1px solid #f5f5f5;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #212121;
+}
+
+.card-title i {
+    color: #1976d2;
+    font-size: 14px;
+}
+
+/* 表单元素样式 */
+.form-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #616161;
+    margin-bottom: 0.5rem;
+}
+
+.form-select {
+    font-size: 14px;
+    border-color: #e0e0e0;
+    border-radius: 8px;
+    transition: all 0.15s ease-in-out;
+}
+
+.form-select:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.25);
+}
+
 /* 产品卡片样式 */
 .product-item .card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.15s ease-in-out;
+    border: 1px solid #f5f5f5;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
 }
 
 .product-item .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
 .product-item .card-img-link {
@@ -344,11 +426,13 @@
 }
 
 .product-item .card-img-top {
-    transition: transform 0.3s ease;
+    transition: all 0.15s ease-in-out;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
 }
 
 .product-item .card-img-link:hover .card-img-top {
-    transform: scale(1.05);
+    transform: scale(1.02);
 }
 
 .product-item .product-tags {
@@ -360,7 +444,11 @@
 
 .product-item .product-tags .badge {
     margin-left: 5px;
-    font-weight: normal;
+    font-weight: 500;
+    font-size: 12px;
+    padding: 0.3rem 0.6rem;
+    border-radius: 8px;
+    background-color: #1976d2 !important;
 }
 
 .product-item .product-title {
@@ -369,20 +457,61 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     height: 48px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #212121;
 }
 
 .product-item .product-title:hover {
-    color: var(--bs-primary) !important;
+    color: #1976d2 !important;
+    text-decoration: none;
 }
 
 .product-item .product-info {
     padding-top: 1rem;
     margin-top: 1rem;
-    border-top: 1px solid rgba(0,0,0,0.1);
+    border-top: 1px solid #f5f5f5;
+}
+
+.product-item .product-info small {
+    font-size: 12px;
+    color: #757575;
+}
+
+.product-item .product-info i {
+    color: #9e9e9e;
+}
+
+.product-item .card-text {
+    font-size: 14px;
+    color: #757575;
+    line-height: 1.5;
 }
 
 .product-item .card-footer {
     background-color: transparent;
+    border-top: 1px solid #f5f5f5;
+}
+
+.product-item .product-meta small {
+    font-size: 12px;
+    color: #9e9e9e;
+}
+
+.product-item .btn-primary {
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    background-color: #1976d2;
+    border-color: #1976d2;
+    transition: all 0.15s ease-in-out;
+}
+
+.product-item .btn-primary:hover {
+    background-color: #1565c0;
+    border-color: #1565c0;
 }
 
 /* 分页样式 */
@@ -391,27 +520,213 @@
 }
 
 .pagination .page-link {
-    color: var(--bs-primary);
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
+    color: #1976d2;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
     margin: 0 0.25rem;
+    font-size: 14px;
+    border-color: #e0e0e0;
+    transition: all 0.15s ease-in-out;
 }
 
 .pagination .page-item.active .page-link {
-    background-color: var(--bs-primary);
-    border-color: var(--bs-primary);
+    background-color: #1976d2;
+    border-color: #1976d2;
     color: white;
 }
 
 .pagination .page-link:hover {
-    background-color: var(--bs-primary);
-    border-color: var(--bs-primary);
+    background-color: #1976d2;
+    border-color: #1976d2;
     color: white;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #9e9e9e;
+    background-color: #f5f5f5;
+    border-color: #e0e0e0;
+}
+
+/* 分页信息 */
+#paginationInfo {
+    font-size: 14px;
+    color: #757575;
+}
+
+/* 分类筛选区样式 - 统一设计 */
+.category-level-label {
+    margin-bottom: 0.5rem;
+    padding-left: 0.25rem;
+}
+
+.category-level-label .badge {
+    font-size: 12px;
+    padding: 0.25rem 0.5rem;
+    font-weight: 500;
+    border-radius: 6px;
+}
+
+.category-level-label .badge.bg-primary {
+    background-color: #1976d2 !important;
+}
+
+.category-level-label .badge.bg-secondary {
+    background-color: #616161 !important;
+}
+
+.category-level-label small {
+    font-size: 12px;
+    color: #757575;
+}
+
+.category-primary-container {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.category-primary {
+    background: linear-gradient(135deg, #fafafa 0%, rgba(25, 118, 210, 0.05) 100%) !important;
+    border: 2px solid #1976d2 !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
+    box-shadow: 0 1px 3px rgba(25, 118, 210, 0.1), 0 1px 2px rgba(25, 118, 210, 0.06);
+    position: relative;
+    overflow: hidden;
+}
+
+.category-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #1976d2, #42a5f5, #1976d2);
+    border-radius: 12px 12px 0 0;
+}
+
+.category-primary .btn {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 20px !important;
+    margin-bottom: 0.25rem !important;
+    margin-right: 0.25rem !important;
+    box-shadow: 0 1px 3px rgba(25, 118, 210, 0.1);
+    transition: all 0.15s ease-in-out;
+    border: 1px solid transparent !important;
+}
+
+.category-primary .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(13,110,253,0.2);
+}
+
+.category-primary .btn.active, .category-primary .btn:focus {
+    background: #0d6efd !important;
+    color: #fff !important;
+    border-color: #0d6efd !important;
+    transform: translateY(-1px);
+}
+
+.category-primary .btn .badge {
+    font-size: 0.65rem;
+    padding: 0.15rem 0.3rem;
+    font-weight: 500;
+}
+
+.category-secondary-container {
+    position: relative;
+    margin-left: 1.5rem;
+    margin-top: 0.75rem;
+}
+
+.category-connector {
+    position: absolute;
+    top: -1rem;
+    left: -1.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-left: 2px solid #6c757d;
+    border-bottom: 2px solid #6c757d;
+    border-radius: 0 0 0 0.5rem;
+    opacity: 0.5;
+}
+
+.category-secondary {
+    background: #f8f9fa !important;
+    border: 1.5px solid #dee2e6 !important;
+    border-radius: 0.5rem !important;
+    padding: 0.75rem !important;
+    box-shadow: 0 1px 4px rgba(108,117,125,0.06);
+    position: relative;
+}
+
+.category-secondary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #dee2e6, #adb5bd, #dee2e6);
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.category-secondary .btn {
+    font-size: 0.75rem !important;
+    font-weight: 500 !important;
+    padding: 0.35rem 0.75rem !important;
+    border-radius: 1rem !important;
+    color: #6c757d !important;
+    background: #fff !important;
+    border: 1px solid #dee2e6 !important;
+    margin-bottom: 0.25rem !important;
+    margin-right: 0.25rem !important;
+    transition: all 0.25s ease;
+}
+
+.category-secondary .btn:hover {
+    background: #e9ecef !important;
+    border-color: #6c757d !important;
+    transform: translateY(-0.5px);
+    box-shadow: 0 1px 3px rgba(108,117,125,0.15);
+}
+
+.category-secondary .btn.active, .category-secondary .btn:focus {
+    background: #6c757d !important;
+    color: #fff !important;
+    border-color: #6c757d !important;
+    transform: translateY(-0.5px);
+    box-shadow: 0 1px 3px rgba(108,117,125,0.2);
+}
+
+.category-secondary .btn .badge {
+    font-size: 0.6rem;
+    padding: 0.1rem 0.25rem;
+    font-weight: 500;
 }
 </style>
 
 <script>
+// 分页配置
+const ITEMS_PER_PAGE = 12;
+let currentPage = 1;
+let filteredProducts = [];
+
+// 统一的筛选函数
 function updateFilters() {
+    applyAllFilters();
+}
+
+// 应用所有筛选条件
+function applyAllFilters() {
+    // 获取URL参数
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentPrimaryCategory = urlParams.get('primary_category');
+    const currentSecondaryCategory = urlParams.get('secondary_category');
+
+    // 获取产品参数筛选条件
     const screenSize = document.getElementById('screenSize').value;
     const batteryLife = document.getElementById('batteryLife').value;
     const probeDiameter = document.getElementById('probeDiameter').value;
@@ -420,12 +735,25 @@ function updateFilters() {
     const lightSource = document.getElementById('lightSource').value;
     const guidance = document.getElementById('guidance').value;
 
+    // 获取所有产品并应用筛选
     const products = document.querySelectorAll('.product-item');
-    let visibleCount = 0;
-    
+    filteredProducts = [];
+
     products.forEach(product => {
         let show = true;
-        
+
+        // 分类筛选
+        const productPrimary = product.dataset.primaryCategory;
+        const productSecondary = product.dataset.secondaryCategory;
+
+        if (currentPrimaryCategory && productPrimary !== currentPrimaryCategory) {
+            show = false;
+        }
+        if (currentSecondaryCategory && productSecondary !== currentSecondaryCategory) {
+            show = false;
+        }
+
+        // 产品参数筛选
         if (screenSize && product.dataset.screenSize !== screenSize) show = false;
         if (batteryLife && product.dataset.batteryLife !== batteryLife) show = false;
         if (probeDiameter && product.dataset.probeDiameter !== probeDiameter) show = false;
@@ -434,11 +762,12 @@ function updateFilters() {
         if (lightSource && product.dataset.lightSource !== lightSource) show = false;
         if (guidance && product.dataset.guidance !== guidance) show = false;
 
-        product.style.display = show ? '' : 'none';
-        if (show) visibleCount++;
+        if (show) {
+            filteredProducts.push(product);
+        }
     });
 
-    // 更新URL参数
+    // 更新URL参数（只更新产品参数，分类参数由分类按钮处理）
     const params = new URLSearchParams(window.location.search);
     if (screenSize) params.set('screen_size', screenSize); else params.delete('screen_size');
     if (batteryLife) params.set('battery_life', batteryLife); else params.delete('battery_life');
@@ -451,20 +780,15 @@ function updateFilters() {
     const newUrl = `${window.location.pathname}?${params.toString()}`;
     window.history.replaceState({}, '', newUrl);
 
-    // 显示无结果消息
-    const noProductsMessage = document.querySelector('.no-products-message');
-    if (visibleCount === 0) {
-        if (!noProductsMessage) {
-            const message = document.createElement('div');
-            message.className = 'col-12 text-center no-products-message';
-            message.innerHTML = '<p>没有符合条件的产品。</p>';
-            document.getElementById('productList').appendChild(message);
-        }
-    } else {
-        if (noProductsMessage) {
-            noProductsMessage.remove();
-        }
-    }
+    // 重置到第一页
+    currentPage = 1;
+
+    // 显示产品和更新分页
+    displayProducts();
+    updatePagination();
+
+    // 更新分类按钮状态
+    updateCategoryButtons(currentPrimaryCategory, currentSecondaryCategory);
 }
 
 function resetFilters() {
@@ -500,7 +824,166 @@ function setFiltersFromURL() {
     updateFilters();
 }
 
+// 处理分类筛选
+function handleCategoryFilter() {
+    // 使用统一的筛选系统
+    applyAllFilters();
+}
+
+function updateCategoryButtons(currentPrimary, currentSecondary) {
+    // 更新一级分类按钮状态
+    document.querySelectorAll('.primary-btn').forEach(btn => {
+        btn.classList.remove('active');
+        const href = btn.getAttribute('href');
+        if (!currentPrimary && href.includes('products') && !href.includes('?')) {
+            btn.classList.add('active');
+        } else if (currentPrimary && href.includes(`primary_category=${currentPrimary}`)) {
+            btn.classList.add('active');
+        }
+    });
+
+    // 更新二级分类按钮状态
+    document.querySelectorAll('.secondary-btn').forEach(btn => {
+        btn.classList.remove('active');
+        const href = btn.getAttribute('href');
+        if (!currentSecondary && href.includes('products') && !href.includes('?')) {
+            btn.classList.add('active');
+        } else if (currentSecondary && href.includes(`secondary_category=${currentSecondary}`)) {
+            btn.classList.add('active');
+        }
+    });
+}
+
+// 显示产品
+function displayProducts() {
+    const products = document.querySelectorAll('.product-item');
+
+    // 隐藏所有产品
+    products.forEach(product => {
+        product.style.display = 'none';
+    });
+
+    // 计算当前页要显示的产品
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const currentPageProducts = filteredProducts.slice(startIndex, endIndex);
+
+    // 显示当前页的产品
+    currentPageProducts.forEach(product => {
+        product.style.display = '';
+    });
+
+    // 处理无产品情况
+    handleNoProducts();
+}
+
+// 更新分页
+function updatePagination() {
+    const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+    const pagination = document.getElementById('pagination');
+    const paginationList = document.getElementById('paginationList');
+    const paginationInfo = document.getElementById('paginationInfo');
+
+    if (totalPages <= 1) {
+        pagination.style.display = 'none';
+        return;
+    }
+
+    pagination.style.display = 'block';
+
+    // 生成分页按钮
+    let paginationHTML = '';
+
+    // 上一页按钮
+    if (currentPage > 1) {
+        paginationHTML += `
+            <li class="page-item">
+                <a class="page-link" href="#" onclick="goToPage(${currentPage - 1})" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        `;
+    }
+
+    // 页码按钮
+    for (let i = 1; i <= totalPages; i++) {
+        if (i === currentPage) {
+            paginationHTML += `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`;
+        } else {
+            paginationHTML += `<li class="page-item"><a class="page-link" href="#" onclick="goToPage(${i})">${i}</a></li>`;
+        }
+    }
+
+    // 下一页按钮
+    if (currentPage < totalPages) {
+        paginationHTML += `
+            <li class="page-item">
+                <a class="page-link" href="#" onclick="goToPage(${currentPage + 1})" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        `;
+    }
+
+    paginationList.innerHTML = paginationHTML;
+
+    // 更新分页信息
+    const startItem = (currentPage - 1) * ITEMS_PER_PAGE + 1;
+    const endItem = Math.min(currentPage * ITEMS_PER_PAGE, filteredProducts.length);
+    paginationInfo.innerHTML = `显示第 ${currentPage} 页，共 ${totalPages} 页 (总计 ${filteredProducts.length} 个产品，当前显示 ${startItem}-${endItem})`;
+}
+
+// 跳转到指定页面
+function goToPage(page) {
+    currentPage = page;
+    displayProducts();
+    updatePagination();
+
+    // 滚动到产品列表顶部
+    document.getElementById('productList').scrollIntoView({ behavior: 'smooth' });
+}
+
+function handleNoProducts() {
+    const noProductsMessage = document.querySelector('.no-products-message');
+
+    if (filteredProducts.length === 0) {
+        if (!noProductsMessage) {
+            const message = document.createElement('div');
+            message.className = 'col-12 no-products-message';
+            message.innerHTML = `
+                <div class="alert alert-info text-center py-5" role="alert">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h4 class="alert-heading">暂无产品</h4>
+                    <p class="mb-0">当前筛选条件下没有找到相关产品，请尝试调整筛选条件。</p>
+                    <hr>
+                    <a href="/products/" class="btn btn-outline-primary mt-2">
+                        <i class="fas fa-home me-1"></i>查看全部产品
+                    </a>
+                </div>
+            `;
+            document.getElementById('productList').appendChild(message);
+        }
+    } else {
+        if (noProductsMessage) noProductsMessage.remove();
+    }
+}
+
+
+
 // 页面加载完成后初始化筛选器
-document.addEventListener('DOMContentLoaded', setFiltersFromURL);
+document.addEventListener('DOMContentLoaded', function() {
+    // 为分类按钮添加事件监听器
+    document.querySelectorAll('.primary-btn, .secondary-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const href = this.getAttribute('href');
+            window.history.pushState({}, '', href);
+            handleCategoryFilter();
+        });
+    });
+
+    setFiltersFromURL();
+    handleCategoryFilter();
+});
 </script>
 {{ end }}

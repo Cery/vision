@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>电子视频内窥镜 on 维森视觉检测仪器</title>
+    <link>http://localhost:1313/tags/%E7%94%B5%E5%AD%90%E8%A7%86%E9%A2%91%E5%86%85%E7%AA%A5%E9%95%9C/</link>
+    <description>Recent content in 电子视频内窥镜 on 维森视觉检测仪器</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 15 May 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/%E7%94%B5%E5%AD%90%E8%A7%86%E9%A2%91%E5%86%85%E7%AA%A5%E9%95%9C/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2024年第15届中国国际工业内窥镜技术展览会</title>
+      <link>http://localhost:1313/news/exhibition-news-1/</link>
+      <pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/exhibition-news-1/</guid>
+      <description>展会将于5月15-17日在上海新国际博览中心举行，汇聚全球工业内窥镜技术创新成果</description>
+    </item>
+    <item>
+      <title>AI技术赋能工业内窥镜检测新突破</title>
+      <link>http://localhost:1313/news/industry-news-2/</link>
+      <pubDate>Mon, 18 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/industry-news-2/</guid>
+      <description>人工智能技术与工业内窥镜的深度融合，实现智能缺陷识别和自动化检测</description>
+    </item>
+    <item>
+      <title>5G远程内窥镜检测系统解决方案发布</title>
+      <link>http://localhost:1313/news/industry-news-3/</link>
+      <pubDate>Fri, 15 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/industry-news-3/</guid>
+      <description>基于5G技术的远程内窥镜检测系统，实现远程实时监控和专家指导</description>
+    </item>
+    <item>
+      <title>新型管道爬行机器人技术取得重大突破</title>
+      <link>http://localhost:1313/news/industry-news-4/</link>
+      <pubDate>Tue, 12 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/industry-news-4/</guid>
+      <description>创新型管道爬行机器人技术突破，提升复杂管道检测能力，为工业检测领域带来革命性进展</description>
+    </item>
+    <item>
+      <title>微视光电发布新一代K09520电子内窥镜</title>
+      <link>http://localhost:1313/news/2024-01-20-product-launch/</link>
+      <pubDate>Sat, 20 Jan 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/2024-01-20-product-launch/</guid>
+      <description>深圳市微视光电科技有限公司正式发布新一代K09520电子内窥镜，该产品采用创新的图像处理技术，配备7英寸IPS触摸屏，具有超高清成像、长续航等特点</description>
+    </item>
+  </channel>
+</rss>

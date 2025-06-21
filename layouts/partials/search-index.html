@@ -7,9 +7,20 @@
         "title": {{ .Title | jsonify }},
         "url": {{ .RelPermalink | jsonify }},
         "content": {{ .Plain | jsonify }},
-        "type": {{ if eq .Type "products" }}"product"{{else}}"article"{{end}}
+        "type": {{ if eq .Type "products" }}"product"{{else if eq .Type "news"}}"article"{{else if eq .Type "cases"}}"case"{{else}}"other"{{end}}
       }
       {{- $first = false -}}
     {{- end -}}
     ];
+
+    // 数据清理函数
+    if (window.searchIndex) {
+        window.searchIndex = window.searchIndex.map(item => ({
+            ...item,
+            title: item.title,
+            url: item.url,
+            content: item.content
+        }));
+        console.log('搜索索引已加载:', window.searchIndex.length, '个项目');
+    }
     </script>

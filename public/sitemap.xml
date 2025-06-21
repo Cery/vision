@@ -316,48 +316,6 @@
   
   
   <url>
-    <loc>http://localhost:1313/products/ws-k1210-c/</loc>
-    <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
-    
-    
-    
-    
-
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
-      <image:title>主图</image:title>
-    </image:image>
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
-      <image:title>工业内窥镜副图1</image:title>
-    </image:image>
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
-      <image:title>工业内窥镜副图2</image:title>
-    </image:image>
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
-      <image:title>工业内窥镜副图3</image:title>
-    </image:image>
-    
-    <image:image>
-      <image:loc>https://picsum.photos/800/600?random=7</image:loc>
-      <image:title>副图4</image:title>
-    </image:image>
-    
-    
-    
-  </url>
-  
-  
-  
-  <url>
     <loc>http://localhost:1313/products/ws-k1210-a-copy-6/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
@@ -1374,8 +1332,86 @@
   
   
   <url>
-    <loc>http://localhost:1313/news/exhibition-news-8/</loc>
-    <lastmod>2024-12-05T00:00:00&#43;00:00</lastmod>
+    <loc>http://localhost:1313/news/exhibition-news-2/</loc>
+    <lastmod>2024-06-20T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2024-06-20T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%85%89%E5%AD%A6%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <lastmod>2024-06-20T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/categories/%E5%B1%95%E4%BC%9A%E8%B5%84%E8%AE%AF/</loc>
+    <lastmod>2024-06-20T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E5%B1%95%E4%BC%9A/</loc>
+    <lastmod>2024-06-20T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/categories/</loc>
+    <lastmod>2024-06-20T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E6%A3%80%E6%B5%8B%E8%AE%BE%E5%A4%87/</loc>
+    <lastmod>2024-06-20T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -1388,84 +1424,6 @@
   
   <url>
     <loc>http://localhost:1313/news/</loc>
-    <lastmod>2024-12-05T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/news/exhibition-news-7/</loc>
-    <lastmod>2024-11-10T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/news/exhibition-news-6/</loc>
-    <lastmod>2024-10-15T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/news/exhibition-news-5/</loc>
-    <lastmod>2024-09-20T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/news/exhibition-news-4/</loc>
-    <lastmod>2024-08-15T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/news/exhibition-news-3/</loc>
-    <lastmod>2024-07-10T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/news/exhibition-news-2/</loc>
     <lastmod>2024-06-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -1491,8 +1449,21 @@
   
   
   <url>
-    <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
+    <loc>http://localhost:1313/tags/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <lastmod>2024-05-15T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E7%94%B5%E5%AD%90%E8%A7%86%E9%A2%91%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <lastmod>2024-05-15T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -1517,7 +1488,7 @@
   
   
   <url>
-    <loc>http://localhost:1313/categories/</loc>
+    <loc>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/</loc>
     <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -1530,7 +1501,7 @@
   
   
   <url>
-    <loc>http://localhost:1313/tags/%E6%96%B0%E5%8A%9F%E8%83%BD/</loc>
+    <loc>http://localhost:1313/tags/%E6%8A%80%E6%9C%AF%E5%88%9B%E6%96%B0/</loc>
     <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -1543,46 +1514,7 @@
   
   
   <url>
-    <loc>http://localhost:1313/tags/%E6%B5%8B%E8%AF%95/</loc>
-    <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/tags/%E7%A4%BA%E4%BE%8B/</loc>
-    <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/news/example-news/</loc>
-    <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/categories/%E8%A1%8C%E4%B8%9A%E8%B5%84%E8%AE%AF/</loc>
+    <loc>http://localhost:1313/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/</loc>
     <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -1608,7 +1540,46 @@
   
   
   <url>
+    <loc>http://localhost:1313/tags/%E6%99%BA%E8%83%BD%E8%AF%86%E5%88%AB/</loc>
+    <lastmod>2024-03-18T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/5g%E6%8A%80%E6%9C%AF/</loc>
+    <lastmod>2024-03-15T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
     <loc>http://localhost:1313/news/industry-news-3/</loc>
+    <lastmod>2024-03-15T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E8%BF%9C%E7%A8%8B%E6%A3%80%E6%B5%8B/</loc>
     <lastmod>2024-03-15T00:00:00&#43;00:00</lastmod>
     
     
@@ -1643,59 +1614,7 @@
   
   
   <url>
-    <loc>http://localhost:1313/tags/ai%E5%BA%94%E7%94%A8/</loc>
-    <lastmod>2024-03-14T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2024-03-14T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/tags/%E6%8A%80%E6%9C%AF%E5%88%9B%E6%96%B0/</loc>
-    <lastmod>2024-03-14T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/categories/%E6%8A%80%E6%9C%AF%E5%8A%A8%E6%80%81/</loc>
-    <lastmod>2024-03-14T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/news/2024-03-14-test-news/</loc>
+    <loc>http://localhost:1313/news/2024-03-14-tech-trends/</loc>
     <lastmod>2024-03-14T00:00:00&#43;00:00</lastmod>
     
     
@@ -1721,8 +1640,8 @@
   
   
   <url>
-    <loc>http://localhost:1313/cases/</loc>
-    <lastmod>2024-02-01T00:00:00&#43;00:00</lastmod>
+    <loc>http://localhost:1313/tags/%E7%AE%A1%E9%81%93%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2024-03-12T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -1734,7 +1653,7 @@
   
   
   <url>
-    <loc>http://localhost:1313/categories/%E6%96%B0%E8%83%BD%E6%BA%90/</loc>
+    <loc>http://localhost:1313/cases/</loc>
     <lastmod>2024-02-01T00:00:00&#43;00:00</lastmod>
     
     
@@ -1760,45 +1679,6 @@
   
   
   <url>
-    <loc>http://localhost:1313/categories/%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2024-02-01T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/categories/%E5%85%89%E5%AD%A6%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2024-01-25T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/categories/%E7%B2%BE%E5%AF%86%E6%A3%80%E6%B5%8B/</loc>
-    <lastmod>2024-01-25T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
     <loc>http://localhost:1313/cases/case-2/</loc>
     <lastmod>2024-01-25T00:00:00&#43;00:00</lastmod>
     
@@ -1812,8 +1692,8 @@
   
   
   <url>
-    <loc>http://localhost:1313/tags/k09520/</loc>
-    <lastmod>2024-01-20T00:00:00&#43;00:00</lastmod>
+    <loc>http://localhost:1313/cases/aviation-blade-inspection/</loc>
+    <lastmod>2024-01-25T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -1825,8 +1705,8 @@
   
   
   <url>
-    <loc>http://localhost:1313/categories/%E4%BA%A7%E5%93%81%E8%B5%84%E8%AE%AF/</loc>
-    <lastmod>2024-01-20T00:00:00&#43;00:00</lastmod>
+    <loc>http://localhost:1313/cases/automotive-manufacturing/</loc>
+    <lastmod>2024-01-22T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -1838,20 +1718,7 @@
   
   
   <url>
-    <loc>http://localhost:1313/categories/%E5%85%AC%E5%8F%B8%E6%96%B0%E9%97%BB/</loc>
-    <lastmod>2024-01-20T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/categories/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/</loc>
+    <loc>http://localhost:1313/categories/%E4%BC%81%E4%B8%9A%E6%96%B0%E9%97%BB/</loc>
     <lastmod>2024-01-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -1903,8 +1770,21 @@
   
   
   <url>
-    <loc>http://localhost:1313/tags/%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <loc>http://localhost:1313/cases/wind-turbine-gearbox/</loc>
     <lastmod>2024-01-20T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/cases/gas-turbine-inspection/</loc>
+    <lastmod>2024-01-18T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -1929,47 +1809,8 @@
   
   
   <url>
-    <loc>http://localhost:1313/tags/%E5%B1%95%E4%BC%9A/</loc>
-    <lastmod>2024-01-16T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/categories/%E5%B1%95%E4%BC%9A%E8%B5%84%E8%AE%AF/</loc>
-    <lastmod>2024-01-16T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/</loc>
-    <lastmod>2024-01-16T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/tags/%E8%A1%8C%E4%B8%9A%E4%BA%A4%E6%B5%81/</loc>
-    <lastmod>2024-01-16T00:00:00&#43;00:00</lastmod>
+    <loc>http://localhost:1313/business/</loc>
+    <lastmod>2024-01-15T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -1994,46 +1835,7 @@
   
   
   <url>
-    <loc>http://localhost:1313/tags/%E6%8A%80%E6%9C%AF%E8%B6%8B%E5%8A%BF/</loc>
-    <lastmod>2024-01-15T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/tags/%E6%97%A0%E6%8D%9F%E6%A3%80%E6%B5%8B/</loc>
-    <lastmod>2024-01-15T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/tags/%E6%99%BA%E8%83%BD%E8%AF%86%E5%88%AB/</loc>
-    <lastmod>2024-01-15T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/tags/%E8%BF%9C%E7%A8%8B%E6%A3%80%E6%B5%8B/</loc>
+    <loc>http://localhost:1313/cases/industrial-pipeline/</loc>
     <lastmod>2024-01-15T00:00:00&#43;00:00</lastmod>
     
     
@@ -2047,6 +1849,19 @@
   
   <url>
     <loc>http://localhost:1313/cooperation/</loc>
+    <lastmod>2023-12-20T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/categories/%E5%85%89%E5%AD%A6%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
     <lastmod>2023-12-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -2099,6 +1914,19 @@
   
   <url>
     <loc>http://localhost:1313/categories/%E7%88%AC%E8%A1%8C%E6%9C%BA%E5%99%A8%E4%BA%BA/</loc>
+    <lastmod>2023-12-20T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/categories/%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
     <lastmod>2023-12-20T00:00:00&#43;00:00</lastmod>
     
     

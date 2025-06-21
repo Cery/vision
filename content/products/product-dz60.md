@@ -2,7 +2,7 @@
 title: "WS-DZ60高清三维测量工业视频内窥镜"
 summary: 便携式三维测量高清工业内窥镜
 primary_category: "电子内窥镜"
-secondary_category: "工业视屏内窥镜"
+secondary_category: "工业视频内窥镜"
 model: "WS-DZ60"
 series: "DZ系列"
 supplier: "深圳市微视光电科技有限公司"

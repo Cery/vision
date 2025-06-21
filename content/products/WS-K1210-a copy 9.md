@@ -2,7 +2,7 @@
 title: "WS-K1210工业内窥镜"
 summary: 1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务
 primary_category: "电子内窥镜"
-secondary_category: "工业视频内窥镜"
+secondary_category: "爬行机器人"
 model: "WS-K1210"
 series: "K系列"
 supplier: "深圳市微视光电科技有限公司"

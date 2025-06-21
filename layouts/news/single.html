@@ -111,21 +111,25 @@
 </div>
 
 <style>
+/* 新闻文章页面样式 - 统一设计 */
 .article-content {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: #2c3e50;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #212121;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .article-content p {
     margin-bottom: 1.5rem;
+    color: #212121;
 }
 
 .article-content img {
     max-width: 100%;
     height: auto;
-    margin: 2rem 0;
-    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
 .article-content h2,
@@ -133,11 +137,24 @@
 .article-content h4 {
     margin-top: 2rem;
     margin-bottom: 1rem;
-    color: var(--bs-primary);
+    color: #1976d2;
+    font-weight: 600;
+}
+
+.article-content h2 {
+    font-size: 20px;
+}
+
+.article-content h3 {
+    font-size: 18px;
+}
+
+.article-content h4 {
+    font-size: 16px;
 }
 
 .hover-primary:hover {
-    color: var(--bs-primary) !important;
+    color: #1976d2 !important;
 }
 
 .related-article:last-child,
@@ -146,25 +163,63 @@
 }
 
 .badge {
-    padding: 0.5em 1em;
+    padding: 0.4rem 0.8rem;
     font-weight: 500;
+    font-size: 12px;
+    border-radius: 8px;
 }
 
 .card-title.h2 {
-    color: #2c3e50;
-    line-height: 1.4;
+    color: #212121;
+    line-height: 1.3;
+    font-size: 24px;
+    font-weight: 700;
 }
 
 .btn-outline-secondary:hover {
-    background-color: var(--bs-primary);
-    border-color: var(--bs-primary);
+    background-color: #1976d2;
+    border-color: #1976d2;
+    color: white;
 }
 
 /* 浏览次数样式 */
 #page-views {
-    color: var(--bs-primary);
+    color: #1976d2;
     font-weight: 500;
-    transition: color 0.3s ease;
+    transition: color 0.15s ease-in-out;
+}
+
+/* 文章元信息样式 */
+.text-muted.small {
+    font-size: 14px;
+    color: #757575;
+}
+
+.text-muted.small i {
+    margin-right: 0.25rem;
+    color: #9e9e9e;
+}
+
+/* 相关文章和热门文章样式 */
+.related-article h6 a,
+.popular-article h6 a {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #212121;
+    transition: color 0.15s ease-in-out;
+}
+
+.related-article h6 a:hover,
+.popular-article h6 a:hover {
+    color: #1976d2;
+    text-decoration: none;
+}
+
+.related-article small,
+.popular-article small {
+    font-size: 12px;
+    color: #9e9e9e;
 }
 </style>
 
@@ -201,19 +256,29 @@ function initPageViews() {
 
 function initLeanCloudViews() {
     const url = 'https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter';
-    
+
+    // 检查pageViewsElement是否存在
+    if (!pageViewsElement) {
+        console.error('pageViewsElement未初始化，无法显示浏览次数');
+        return;
+    }
+
     // 检查是否在访问间隔内
     const lastVisitTime = localStorage.getItem('last_visit_' + currentPath);
     const now = new Date().getTime();
     if (lastVisitTime && (now - parseInt(lastVisitTime)) < 3600000) { // 1小时内不重复计数
         console.log('访问间隔太短，不增加计数');
+        // 仍然显示当前浏览次数
+        fetchCurrentViews();
         return;
     }
-    
+
     // 检查是否已访问过
     const visitedPages = JSON.parse(localStorage.getItem('visited_pages') || '[]');
     if (visitedPages.includes(currentPath)) {
         console.log('页面已访问过，不增加计数');
+        // 仍然显示当前浏览次数
+        fetchCurrentViews();
         return;
     }
     
@@ -304,6 +369,39 @@ function createCounter() {
     });
 }
 
+function fetchCurrentViews() {
+    const url = 'https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter';
+    const queryUrl = url + '?where=' + encodeURIComponent(JSON.stringify({url: currentPath}));
+
+    fetch(queryUrl, {
+        method: 'GET',
+        headers: {
+            'X-LC-Id': LC_APP_ID,
+            'X-LC-Key': LC_APP_KEY,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.results && data.results.length > 0) {
+            const record = data.results[0];
+            const currentViews = record.time || 0;
+            pageViewsElement.textContent = currentViews.toString();
+        } else {
+            pageViewsElement.textContent = '0';
+        }
+    })
+    .catch(error => {
+        console.error('获取浏览次数失败:', error);
+        pageViewsElement.textContent = '统计失败';
+    });
+}
+
 function updateCounter(objectId, views) {
     const url = `https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter/${objectId}`;
     
@@ -338,7 +436,7 @@ function updateCounter(objectId, views) {
 // 页面加载完成后初始化 - 只初始化一次
 document.addEventListener('DOMContentLoaded', function() {
     // 延迟初始化，确保页面完全加载
-    setTimeout(initLeanCloudViews, 1000);
+    setTimeout(initPageViews, 1000);
 });
 </script>
 {{ end }}

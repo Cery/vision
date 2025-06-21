@@ -2,7 +2,7 @@
 title: "WS-P8050高清工业视频内窥镜"
 summary: 百万像素、冷光源、360度旋转镜头内窥镜
 primary_category: "电子内窥镜"
-secondary_category: "工业视屏内窥镜"
+secondary_category: "工业视频内窥镜"
 model: "K8050"
 series: "P系列"
 supplier: "深圳市微视光电科技有限公司"

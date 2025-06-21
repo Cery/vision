@@ -2,7 +2,7 @@
 title: "WS-P2810高清工业视频内窥镜"
 summary: 高清光纤照明360度旋转镜头内窥镜
 primary_category: "电子内窥镜"
-secondary_category: "工业视屏内窥镜"
+secondary_category: "工业视频内窥镜"
 model: "WS-P2810"
 series: "P系列"
 supplier: "深圳市微视光电科技有限公司"

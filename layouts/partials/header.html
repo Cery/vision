@@ -22,15 +22,15 @@
     <div class="container">
         <!-- 网站 Logo -->
         <a class="navbar-brand" href="/">
-            <div class="footer-logo">
-                <span class="vis">vis</span><span class="ndt">NDT</span>
-            </div>
+            <img src="/images/logo-dark.svg" alt="{{ .Site.Title }}" height="50" class="logo-img">
         </a>
         <!-- 移动端搜索按钮（放在汉堡菜单左侧） -->
         <button class="btn btn-primary d-lg-none me-2" style="position:relative;z-index:1051;"
                 data-bs-toggle="modal" data-bs-target="#searchModal">
             <i class="fas fa-search fa-lg"></i>
         </button>
+
+
         <!-- 导航菜单 -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
                 data-bs-target="#navbarNav" aria-controls="navbarNav" 
@@ -46,11 +46,13 @@
                 {{ end }}
             </ul>
             <!-- 桌面端搜索按钮 -->
-            <button class="btn btn-outline-primary d-none d-lg-inline-block ms-2" 
-                    data-bs-toggle="modal" 
+            <button class="btn btn-outline-primary d-none d-lg-inline-block ms-2"
+                    data-bs-toggle="modal"
                     data-bs-target="#searchModal">
                 <i class="fas fa-search fa-lg"></i> 搜索
             </button>
+
+
         </div>
     </div>
 </nav> 

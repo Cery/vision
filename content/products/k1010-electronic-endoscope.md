@@ -2,7 +2,7 @@
 title: "超细弹簧管1mm电子内窥镜"
 summary: "简述"
 primary_category: "电子内窥镜"
-secondary_category: "工业视屏内窥镜"
+secondary_category: "工业视频内窥镜"
 model: "K1010"
 series: "K系列"
 supplier: "广东微视科技有限公司"

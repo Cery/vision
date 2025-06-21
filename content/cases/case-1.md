@@ -1,10 +1,15 @@
 ---
 title: "工业管道检测解决方案"
-categories: ["电子内窥镜", "工业检测"]
-areas: ["管道检测", "工业维护"]
+primary_category: ["电子内窥镜"]
+application_field: ["工业检测", "石油化工"]
+application_scenario: ["工业管道"]
 featured_image: "https://picsum.photos/800/400?random=1"
 summary: "针对大型工业管道内部检测的专业解决方案，采用高清电子内窥镜实现360度全方位检测，有效预防管道故障。"
 date: 2024-01-20
+client: "某大型石化企业"
+industry: "石油化工"
+detection_object: "工业管道系统"
+equipment_used: "WS-K1010电子内窥镜"
 ---
 
 ## 项目背景

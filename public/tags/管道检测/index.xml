@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>管道检测 on 维森视觉检测仪器</title>
+    <link>http://localhost:1313/tags/%E7%AE%A1%E9%81%93%E6%A3%80%E6%B5%8B/</link>
+    <description>Recent content in 管道检测 on 维森视觉检测仪器</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 12 Mar 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/%E7%AE%A1%E9%81%93%E6%A3%80%E6%B5%8B/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>新型管道爬行机器人技术取得重大突破</title>
+      <link>http://localhost:1313/news/industry-news-4/</link>
+      <pubDate>Tue, 12 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/industry-news-4/</guid>
+      <description>创新型管道爬行机器人技术突破，提升复杂管道检测能力，为工业检测领域带来革命性进展</description>
+    </item>
+  </channel>
+</rss>

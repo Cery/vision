@@ -203,40 +203,228 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 (function() {
-    // 轻量级搜索管理器
+    // 增强的搜索管理器
     class HugoSearchManager {
         constructor() {
             this.isReady = false;
             this.index = [];
             this.onReadyCallbacks = [];
+            this.searchCache = new Map();
+            this.maxCacheSize = 100;
             this.init();
         }
+
         init() {
             if (window.searchIndex) {
-                this.index = window.searchIndex;
+                this.index = this.preprocessIndex(window.searchIndex);
                 this.isReady = true;
                 this.onReadyCallbacks.forEach(cb => cb());
+                console.log(`搜索引擎已就绪，索引了 ${this.index.length} 个项目`);
             } else {
                 setTimeout(() => this.init(), 100);
             }
         }
+
+        preprocessIndex(rawIndex) {
+            return rawIndex.map(item => {
+                // 深度清理数据 - 处理Hugo jsonify的双重编码问题
+                let cleanTitle = item.title || '';
+                let cleanUrl = item.url || '';
+                let cleanContent = item.content || '';
+
+                // 如果数据是字符串形式的JSON，先解析
+                if (typeof cleanTitle === 'string' && cleanTitle.startsWith('"') && cleanTitle.endsWith('"')) {
+                    try {
+                        cleanTitle = JSON.parse(cleanTitle);
+                    } catch (e) {
+                        // 如果JSON解析失败，手动清理
+                        cleanTitle = cleanTitle.replace(/^"|"$/g, '').replace(/\\"/g, '"');
+                    }
+                }
+
+                if (typeof cleanUrl === 'string' && cleanUrl.startsWith('"') && cleanUrl.endsWith('"')) {
+                    try {
+                        cleanUrl = JSON.parse(cleanUrl);
+                    } catch (e) {
+                        cleanUrl = cleanUrl.replace(/^"|"$/g, '').replace(/\\"/g, '"');
+                    }
+                }
+
+                if (typeof cleanContent === 'string' && cleanContent.startsWith('"') && cleanContent.endsWith('"')) {
+                    try {
+                        cleanContent = JSON.parse(cleanContent);
+                    } catch (e) {
+                        cleanContent = cleanContent.replace(/^"|"$/g, '').replace(/\\"/g, '"');
+                    }
+                }
+
+                // 进一步清理
+                cleanTitle = cleanTitle.replace(/\\n/g, ' ').trim();
+                cleanContent = cleanContent.replace(/\\n/g, ' ').trim();
+
+                // 确保URL格式正确
+                if (cleanUrl && !cleanUrl.startsWith('/') && !cleanUrl.startsWith('http')) {
+                    cleanUrl = '/' + cleanUrl;
+                }
+
+                return {
+                    ...item,
+                    title: cleanTitle,
+                    url: cleanUrl,
+                    content: cleanContent,
+                    titleLower: cleanTitle.toLowerCase(),
+                    contentLower: cleanContent.toLowerCase(),
+                    keywords: this.extractKeywords(cleanTitle + ' ' + cleanContent)
+                };
+            });
+        }
+
+        extractKeywords(text) {
+            // 提取关键词，去除常见停用词
+            const stopWords = new Set(['的', '了', '在', '是', '我', '有', '和', '就', '不', '人', '都', '一', '一个', '上', '也', '很', '到', '说', '要', '去', '你', '会', '着', '没有', '看', '好', '自己', '这']);
+            return text.toLowerCase()
+                .replace(/[^\w\s\u4e00-\u9fff]/g, ' ')
+                .split(/\s+/)
+                .filter(word => word.length > 1 && !stopWords.has(word))
+                .slice(0, 20); // 限制关键词数量
+        }
+
         onReady(cb) {
             if (this.isReady) cb();
             else this.onReadyCallbacks.push(cb);
         }
+
         getSuggestions(query, type = 'all') {
-            return this.index
-                .filter(item => (type === 'all' || item.type === type) && (item.title.includes(query) || item.content.includes(query)))
-                .slice(0, 5)
-                .map(item => item.title);
-        }
-        search(query, type = 'all') {
-            return this.index
-                .filter(item => (type === 'all' || item.type === type) && (item.title.includes(query) || item.content.includes(query)))
+            if (!query || query.length < 1) return [];
+
+            const cacheKey = `suggestions_${query}_${type}`;
+            if (this.searchCache.has(cacheKey)) {
+                return this.searchCache.get(cacheKey);
+            }
+
+            const queryLower = query.toLowerCase();
+            const suggestions = this.index
+                .filter(item => {
+                    if (type !== 'all' && item.type !== type) return false;
+                    return item.titleLower.includes(queryLower) ||
+                           item.keywords.some(keyword => keyword.includes(queryLower));
+                })
+                .slice(0, 6)
                 .map(item => ({
-                    ...item,
-                    score: 0.7 // 可根据需要实现更复杂的相关度算法
+                    title: item.title,
+                    type: item.type,
+                    url: item.url
                 }));
+
+            this.setCacheItem(cacheKey, suggestions);
+            return suggestions;
+        }
+
+        search(query, type = 'all') {
+            if (!query || query.length < 1) return [];
+
+            const cacheKey = `search_${query}_${type}`;
+            if (this.searchCache.has(cacheKey)) {
+                return this.searchCache.get(cacheKey);
+            }
+
+            const queryLower = query.toLowerCase();
+            const queryWords = queryLower.split(/\s+/).filter(word => word.length > 0);
+
+            const results = this.index
+                .map(item => {
+                    if (type !== 'all' && item.type !== type) return null;
+
+                    const score = this.calculateRelevanceScore(item, queryLower, queryWords);
+                    if (score <= 0) return null;
+
+                    return {
+                        ...item,
+                        score: score
+                    };
+                })
+                .filter(item => item !== null)
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 20); // 限制结果数量
+
+            this.setCacheItem(cacheKey, results);
+            return results;
+        }
+
+        calculateRelevanceScore(item, query, queryWords) {
+            let score = 0;
+            const title = item.titleLower;
+            const content = item.contentLower;
+
+            // 完全匹配标题
+            if (title === query) {
+                score += 10;
+            }
+            // 标题包含完整查询
+            else if (title.includes(query)) {
+                score += 8;
+                // 标题开头匹配加分
+                if (title.startsWith(query)) {
+                    score += 2;
+                }
+            }
+
+            // 内容包含完整查询
+            if (content.includes(query)) {
+                score += 3;
+            }
+
+            // 分词匹配
+            queryWords.forEach(word => {
+                if (title.includes(word)) {
+                    score += 2;
+                }
+                if (content.includes(word)) {
+                    score += 1;
+                }
+                // 关键词匹配
+                if (item.keywords.includes(word)) {
+                    score += 1.5;
+                }
+            });
+
+            // 类型权重
+            const typeWeights = {
+                'product': 1.2,
+                'article': 1.0,
+                'case': 1.1
+            };
+            score *= (typeWeights[item.type] || 1.0);
+
+            // 标题长度权重（较短的标题可能更相关）
+            if (score > 0) {
+                const titleLength = item.title.length;
+                const lengthFactor = Math.max(0.5, 1 - (titleLength - 20) / 100);
+                score *= lengthFactor;
+            }
+
+            return score;
+        }
+
+        setCacheItem(key, value) {
+            if (this.searchCache.size >= this.maxCacheSize) {
+                // 删除最旧的缓存项
+                const firstKey = this.searchCache.keys().next().value;
+                this.searchCache.delete(firstKey);
+            }
+            this.searchCache.set(key, value);
+        }
+
+        clearCache() {
+            this.searchCache.clear();
+        }
+
+        getStats() {
+            return {
+                indexSize: this.index.length,
+                cacheSize: this.searchCache.size,
+                isReady: this.isReady
+            };
         }
     }
 

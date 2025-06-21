@@ -2,90 +2,537 @@
 <div class="container py-5">
     {{ partial "breadcrumbs.html" . }}
 
-    <!-- <h1 class="text-center mb-5">应用案例</h1> -->
-
-    <!-- 案例列表 -->
     <div class="row">
-        {{ $paginator := .Paginate .Pages 9 }}
-        {{ range $index, $page := $paginator.Pages }}
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100 shadow-sm hover-card">
-                <div class="card-img-wrapper">
-                    {{ with .Params.featured_image }}
-                    <img src="{{ . | relURL }}" class="card-img-top object-fit-cover" alt="{{ $page.Title }}" style="height: 220px;">
-                    {{ else }}
-                    <img src="https://picsum.photos/400/220?random={{ $index }}" class="card-img-top object-fit-cover" alt="{{ $page.Title }}" style="height: 220px;">
-                    {{ end }}
-                    <div class="card-img-overlay d-flex align-items-end">
-                        <div class="w-100 text-end mb-3">
-                            <a href="{{ .Permalink }}" class="btn btn-primary">查看详情</a>
+        <!-- 筛选侧边栏 -->
+        <div class="col-lg-3 col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-filter me-2"></i>筛选条件</h5>
+                </div>
+                <div class="card-body">
+                    <!-- 产品一级分类 -->
+                    <div class="mb-4">
+                        <h6 class="filter-section-title">
+                            <i class="fas fa-layer-group me-2"></i>产品分类
+                        </h6>
+                        <div class="filter-buttons-container" id="primary-category-filters">
+                            <a href="javascript:void(0)" class="filter-btn active" data-filter-type="primary_category" data-filter-value="">
+                                全部
+                            </a>
+                            {{ $casePages := where .Site.RegularPages "Type" "cases" }}
+                            {{ $primaryCategories := dict }}
+                            {{ range $casePages }}
+                                {{ range .Params.primary_category }}
+                                    {{ $primaryCategories = merge $primaryCategories (dict . (add (index $primaryCategories . | default 0) 1)) }}
+                                {{ end }}
+                            {{ end }}
+                            {{ range $category, $count := $primaryCategories }}
+                            <a href="javascript:void(0)" class="filter-btn" data-filter-type="primary_category" data-filter-value="{{ $category }}">
+                                {{ $category }} <span class="badge bg-light text-dark">{{ $count }}</span>
+                            </a>
+                            {{ end }}
                         </div>
                     </div>
-                </div>
-                <div class="card-body d-flex flex-column">
-                    <div class="mb-2">
-                        {{ range .Params.categories }}
-                        <span class="badge bg-primary me-1">{{ . }}</span>
-                        {{ end }}
-                        {{ range .Params.areas }}
-                        <span class="badge bg-info text-dark me-1">{{ . }}</span>
-                        {{ end }}
+
+                    <!-- 应用领域 -->
+                    <div class="mb-4">
+                        <h6 class="filter-section-title">
+                            <i class="fas fa-industry me-2"></i>应用领域
+                        </h6>
+                        <div class="filter-buttons-container" id="application-field-filters">
+                            {{ $applicationFields := dict }}
+                            {{ range $casePages }}
+                                {{ range .Params.application_field }}
+                                    {{ $applicationFields = merge $applicationFields (dict . (add (index $applicationFields . | default 0) 1)) }}
+                                {{ end }}
+                            {{ end }}
+                            {{ range $field, $count := $applicationFields }}
+                            <a href="javascript:void(0)" class="filter-btn" data-filter-type="application_field" data-filter-value="{{ $field }}">
+                                {{ $field }} <span class="badge bg-light text-dark">{{ $count }}</span>
+                            </a>
+                            {{ end }}
+                        </div>
                     </div>
-                    <h5 class="card-title">{{ .Title }}</h5>
-                    {{ with .Params.summary }}
-                    <p class="card-text text-muted">{{ . }}</p>
-                    {{ end }}
-                    <div class="mt-3">
-                        <small class="text-muted"><i class="bi bi-calendar3"></i> {{ .Date.Format "2006-01-02" }}</small>
+
+                    <!-- 应用场景 -->
+                    <div class="mb-4">
+                        <h6 class="filter-section-title">
+                            <i class="fas fa-cogs me-2"></i>应用场景
+                        </h6>
+                        <div class="filter-buttons-container" id="application-scenario-filters">
+                            {{ $applicationScenarios := dict }}
+                            {{ range $casePages }}
+                                {{ range .Params.application_scenario }}
+                                    {{ $applicationScenarios = merge $applicationScenarios (dict . (add (index $applicationScenarios . | default 0) 1)) }}
+                                {{ end }}
+                            {{ end }}
+                            {{ range $scenario, $count := $applicationScenarios }}
+                            <a href="javascript:void(0)" class="filter-btn" data-filter-type="application_scenario" data-filter-value="{{ $scenario }}">
+                                {{ $scenario }} <span class="badge bg-light text-dark">{{ $count }}</span>
+                            </a>
+                            {{ end }}
+                        </div>
+                    </div>
+
+                    <!-- 清除筛选 -->
+                    <div class="text-center">
+                        <button class="btn btn-outline-secondary btn-sm" id="clearAllFilters">
+                            <i class="fas fa-times me-1"></i>清除全部
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-        {{ end }}
+
+        <!-- 案例列表 -->
+        <div class="col-lg-9 col-md-8">
+            <!-- 筛选结果信息 -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h4 class="mb-0">应用案例</h4>
+                    <small class="text-muted" id="case-count-info">共 {{ len $casePages }} 个案例</small>
+                </div>
+                <div class="d-flex align-items-center">
+                    <label for="sortOrder" class="form-label me-2 mb-0">排序：</label>
+                    <select class="form-select form-select-sm" id="sortOrder" style="width: auto;">
+                        <option value="date-desc">最新发布</option>
+                        <option value="date-asc">最早发布</option>
+                        <option value="title">标题排序</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 案例卡片容器 -->
+            <div class="row" id="cases-container">
+                {{ range $index, $page := $casePages }}
+                <div class="col-lg-6 col-xl-4 mb-4 case-item"
+                     data-primary-category="{{ delimit (.Params.primary_category | default (slice)) "," }}"
+                     data-application-field="{{ delimit (.Params.application_field | default (slice)) "," }}"
+                     data-application-scenario="{{ delimit (.Params.application_scenario | default (slice)) "," }}"
+                     data-date="{{ .Date.Format "2006-01-02" }}"
+                     data-title="{{ .Title }}">
+                    <div class="card h-100 shadow-sm hover-card">
+                        <div class="card-img-wrapper">
+                            {{ with .Params.featured_image }}
+                            <img src="{{ . | relURL }}" class="card-img-top object-fit-cover" alt="{{ $page.Title }}" style="height: 200px;">
+                            {{ else }}
+                            <img src="https://picsum.photos/400/200?random={{ $index }}" class="card-img-top object-fit-cover" alt="{{ $page.Title }}" style="height: 200px;">
+                            {{ end }}
+                            <div class="card-img-overlay d-flex align-items-end">
+                                <div class="w-100 text-end mb-3">
+                                    <a href="{{ .Permalink }}" class="btn btn-primary btn-sm">查看详情</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <div class="mb-2">
+                                {{ range .Params.primary_category }}
+                                <span class="badge bg-primary me-1">{{ . }}</span>
+                                {{ end }}
+                                {{ range .Params.application_field }}
+                                <span class="badge bg-success me-1">{{ . }}</span>
+                                {{ end }}
+                                {{ range .Params.application_scenario }}
+                                <span class="badge bg-info me-1">{{ . }}</span>
+                                {{ end }}
+                            </div>
+                            <h5 class="card-title">{{ .Title }}</h5>
+                            {{ with .Params.summary }}
+                            <p class="card-text text-muted flex-grow-1">{{ . }}</p>
+                            {{ end }}
+                            <div class="mt-auto">
+                                <small class="text-muted"><i class="far fa-calendar-alt me-1"></i>{{ .Date.Format "2006-01-02" }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{ end }}
+            </div>
+
+            <!-- 无结果提示 -->
+            <div id="no-cases-message" class="text-center py-5" style="display: none;">
+                <div class="text-muted">
+                    <i class="fas fa-search fa-3x mb-3"></i>
+                    <h5>未找到匹配的案例</h5>
+                    <p>请尝试调整筛选条件</p>
+                </div>
+            </div>
+
+            <!-- 分页 -->
+            <nav aria-label="案例分页" class="mt-5" id="pagination-container">
+                <ul class="pagination justify-content-center" id="pagination-list">
+                    <!-- 分页按钮将由JavaScript生成 -->
+                </ul>
+                <div class="text-center mt-3">
+                    <small class="text-muted" id="pagination-info">
+                        <!-- 分页信息将由JavaScript生成 -->
+                    </small>
+                </div>
+            </nav>
+        </div>
     </div>
 
-    <!-- 分页 -->
-    {{ if gt $paginator.TotalPages 1 }}
-    <nav aria-label="Page navigation" class="mt-5">
-        <ul class="pagination justify-content-center">
-            {{ if $paginator.HasPrev }}
-            <li class="page-item">
-                <a class="page-link" href="{{ $paginator.Prev.URL }}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            {{ else }}
-            <li class="page-item disabled">
-                <span class="page-link" aria-hidden="true">&laquo;</span>
-            </li>
-            {{ end }}
-            
-            {{ range $paginator.Pagers }}
-            <li class="page-item {{ if eq . $paginator }}active{{ end }}">
-                <a class="page-link" href="{{ .URL }}">{{ .PageNumber }}</a>
-            </li>
-            {{ end }}
-            
-            {{ if $paginator.HasNext }}
-            <li class="page-item">
-                <a class="page-link" href="{{ $paginator.Next.URL }}" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-            {{ else }}
-            <li class="page-item disabled">
-                <span class="page-link" aria-hidden="true">&raquo;</span>
-            </li>
-            {{ end }}
-        </ul>
-    </nav>
-    {{ end }}
 </div>
 
+<script>
+// 案例筛选功能
+const CASES_PER_PAGE = 6;
+let currentPage = 1;
+let filteredCases = [];
+let allCases = [];
+
+// 初始化
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 案例筛选系统初始化');
+
+    // 获取所有案例元素
+    allCases = Array.from(document.querySelectorAll('.case-item'));
+    filteredCases = [...allCases];
+
+    // 初始化筛选器事件
+    initializeFilters();
+
+    // 初始化排序
+    initializeSorting();
+
+    // 应用初始筛选和分页
+    applyFiltersAndSort();
+
+    console.log(`✅ 找到 ${allCases.length} 个案例`);
+});
+
+function initializeFilters() {
+    // 产品分类筛选
+    document.querySelectorAll('#primary-category-filters .filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            toggleFilter(this, 'primary_category');
+        });
+    });
+
+    // 应用领域筛选
+    document.querySelectorAll('#application-field-filters .filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            toggleFilter(this, 'application_field');
+        });
+    });
+
+    // 应用场景筛选
+    document.querySelectorAll('#application-scenario-filters .filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            toggleFilter(this, 'application_scenario');
+        });
+    });
+
+    // 清除全部筛选
+    document.getElementById('clearAllFilters').addEventListener('click', clearAllFilters);
+}
+
+function initializeSorting() {
+    document.getElementById('sortOrder').addEventListener('change', function() {
+        applyFiltersAndSort();
+    });
+}
+
+function toggleFilter(button, filterType) {
+    const value = button.dataset.filterValue;
+
+    // 如果是"全部"按钮
+    if (value === '') {
+        // 清除同类型的其他选中状态
+        button.parentElement.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        button.classList.add('active');
+    } else {
+        // 取消"全部"按钮的选中状态
+        const allBtn = button.parentElement.querySelector('[data-filter-value=""]');
+        if (allBtn) allBtn.classList.remove('active');
+
+        // 切换当前按钮状态
+        button.classList.toggle('active');
+
+        // 如果没有任何按钮被选中，则选中"全部"
+        const activeButtons = button.parentElement.querySelectorAll('.filter-btn.active');
+        if (activeButtons.length === 0 && allBtn) {
+            allBtn.classList.add('active');
+        }
+    }
+
+    // 重置到第一页
+    currentPage = 1;
+
+    // 应用筛选
+    applyFiltersAndSort();
+}
+
+function clearAllFilters() {
+    // 清除所有筛选按钮的选中状态
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    // 选中所有"全部"按钮
+    document.querySelectorAll('[data-filter-value=""]').forEach(btn => {
+        btn.classList.add('active');
+    });
+
+    // 重置排序
+    document.getElementById('sortOrder').value = 'date-desc';
+
+    // 重置到第一页
+    currentPage = 1;
+
+    // 应用筛选
+    applyFiltersAndSort();
+}
+
+function applyFiltersAndSort() {
+    console.log('🔄 应用筛选和排序');
+
+    // 获取选中的筛选条件
+    const selectedPrimaryCategories = getSelectedFilters('#primary-category-filters');
+    const selectedApplicationFields = getSelectedFilters('#application-field-filters');
+    const selectedApplicationScenarios = getSelectedFilters('#application-scenario-filters');
+    const sortOrder = document.getElementById('sortOrder').value;
+
+    console.log('筛选条件:', {
+        primaryCategories: selectedPrimaryCategories,
+        applicationFields: selectedApplicationFields,
+        applicationScenarios: selectedApplicationScenarios,
+        sortOrder: sortOrder
+    });
+
+    // 筛选案例
+    filteredCases = allCases.filter(caseItem => {
+        const primaryCategories = caseItem.dataset.primaryCategory ?
+            caseItem.dataset.primaryCategory.split(',').map(c => c.trim()) : [];
+        const applicationFields = caseItem.dataset.applicationField ?
+            caseItem.dataset.applicationField.split(',').map(f => f.trim()) : [];
+        const applicationScenarios = caseItem.dataset.applicationScenario ?
+            caseItem.dataset.applicationScenario.split(',').map(s => s.trim()) : [];
+
+        // 检查产品分类匹配
+        let primaryCategoryMatch = selectedPrimaryCategories.length === 0 ||
+            selectedPrimaryCategories.some(cat => primaryCategories.includes(cat));
+
+        // 检查应用领域匹配
+        let applicationFieldMatch = selectedApplicationFields.length === 0 ||
+            selectedApplicationFields.some(field => applicationFields.includes(field));
+
+        // 检查应用场景匹配
+        let applicationScenarioMatch = selectedApplicationScenarios.length === 0 ||
+            selectedApplicationScenarios.some(scenario => applicationScenarios.includes(scenario));
+
+        return primaryCategoryMatch && applicationFieldMatch && applicationScenarioMatch;
+    });
+
+    // 排序
+    sortCases(filteredCases, sortOrder);
+
+    console.log(`✅ 筛选完成: ${filteredCases.length} / ${allCases.length} 个案例符合条件`);
+
+    // 更新显示
+    updateCaseDisplay();
+    updatePagination();
+    updateCaseCount();
+}
+
+function getSelectedFilters(containerSelector) {
+    const activeButtons = document.querySelectorAll(`${containerSelector} .filter-btn.active`);
+    const selected = [];
+
+    activeButtons.forEach(btn => {
+        const value = btn.dataset.filterValue;
+        if (value !== '') {
+            selected.push(value);
+        }
+    });
+
+    return selected;
+}
+
+function sortCases(cases, sortOrder) {
+    cases.sort((a, b) => {
+        switch (sortOrder) {
+            case 'date-desc':
+                return new Date(b.dataset.date) - new Date(a.dataset.date);
+            case 'date-asc':
+                return new Date(a.dataset.date) - new Date(b.dataset.date);
+            case 'title':
+                return a.dataset.title.localeCompare(b.dataset.title, 'zh-CN');
+            default:
+                return 0;
+        }
+    });
+}
+
+function updateCaseDisplay() {
+    // 隐藏所有案例
+    allCases.forEach(caseItem => {
+        caseItem.style.display = 'none';
+    });
+
+    // 计算当前页要显示的案例
+    const startIndex = (currentPage - 1) * CASES_PER_PAGE;
+    const endIndex = startIndex + CASES_PER_PAGE;
+    const currentPageCases = filteredCases.slice(startIndex, endIndex);
+
+    // 显示当前页的案例
+    currentPageCases.forEach(caseItem => {
+        caseItem.style.display = 'block';
+    });
+
+    // 显示/隐藏无结果提示
+    const noResultsMessage = document.getElementById('no-cases-message');
+    if (filteredCases.length === 0) {
+        noResultsMessage.style.display = 'block';
+    } else {
+        noResultsMessage.style.display = 'none';
+    }
+}
+
+function updatePagination() {
+    const totalPages = Math.ceil(filteredCases.length / CASES_PER_PAGE);
+    const paginationList = document.getElementById('pagination-list');
+    const paginationInfo = document.getElementById('pagination-info');
+    const paginationContainer = document.getElementById('pagination-container');
+
+    // 更新分页信息
+    if (filteredCases.length > 0) {
+        const startItem = (currentPage - 1) * CASES_PER_PAGE + 1;
+        const endItem = Math.min(currentPage * CASES_PER_PAGE, filteredCases.length);
+        paginationInfo.innerHTML = `显示第 ${currentPage} 页，共 ${totalPages} 页 (总计 ${filteredCases.length} 个案例，当前显示 ${startItem}-${endItem})`;
+    } else {
+        paginationInfo.innerHTML = '总计 0 个案例';
+    }
+
+    // 如果只有一页或没有结果，隐藏分页按钮
+    if (totalPages <= 1) {
+        paginationList.style.display = 'none';
+        return;
+    } else {
+        paginationList.style.display = 'flex';
+    }
+
+    // 生成分页按钮
+    let paginationHTML = '';
+
+    // 上一页按钮
+    if (currentPage > 1) {
+        paginationHTML += `<li class="page-item">
+            <a class="page-link" href="javascript:void(0)" onclick="goToPage(${currentPage - 1})" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>`;
+    } else {
+        paginationHTML += `<li class="page-item disabled">
+            <span class="page-link" aria-hidden="true">&laquo;</span>
+        </li>`;
+    }
+
+    // 页码按钮
+    for (let i = 1; i <= totalPages; i++) {
+        if (i === currentPage) {
+            paginationHTML += `<li class="page-item active">
+                <span class="page-link">${i}</span>
+            </li>`;
+        } else {
+            paginationHTML += `<li class="page-item">
+                <a class="page-link" href="javascript:void(0)" onclick="goToPage(${i})">${i}</a>
+            </li>`;
+        }
+    }
+
+    // 下一页按钮
+    if (currentPage < totalPages) {
+        paginationHTML += `<li class="page-item">
+            <a class="page-link" href="javascript:void(0)" onclick="goToPage(${currentPage + 1})" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>`;
+    } else {
+        paginationHTML += `<li class="page-item disabled">
+            <span class="page-link" aria-hidden="true">&raquo;</span>
+        </li>`;
+    }
+
+    paginationList.innerHTML = paginationHTML;
+}
+
+function updateCaseCount() {
+    const countInfo = document.getElementById('case-count-info');
+    if (filteredCases.length === allCases.length) {
+        countInfo.textContent = `共 ${allCases.length} 个案例`;
+    } else {
+        countInfo.textContent = `找到 ${filteredCases.length} 个案例 (共 ${allCases.length} 个)`;
+    }
+}
+
+function goToPage(page) {
+    currentPage = page;
+    updateCaseDisplay();
+    updatePagination();
+
+    // 滚动到案例列表顶部
+    document.getElementById('cases-container').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+}
+</script>
+
 <style>
+/* 筛选器样式 */
+.filter-section-title {
+    color: var(--bs-primary);
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--bs-primary);
+}
+
+.filter-buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    color: #495057;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    background-color: #fff;
+}
+
+.filter-btn:hover {
+    background-color: #f8f9fa;
+    border-color: var(--bs-primary);
+    color: var(--bs-primary);
+    text-decoration: none;
+}
+
+.filter-btn.active {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+    color: white;
+}
+
+.filter-btn.active .badge {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+}
+
+/* 案例卡片样式 */
 .hover-card {
     transition: all 0.3s ease;
     overflow: hidden;
+    border: none;
 }
 
 .hover-card:hover {
@@ -117,16 +564,19 @@
 }
 
 .card-title {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     color: var(--bs-primary);
     margin-bottom: 0.75rem;
+    font-weight: 600;
 }
 
 .badge {
-    padding: 0.5em 0.75em;
+    padding: 0.4em 0.6em;
     font-weight: 500;
+    font-size: 0.75em;
 }
 
+/* 分页样式 */
 .pagination {
     margin-bottom: 0;
 }
@@ -135,6 +585,7 @@
     color: var(--bs-primary);
     border-radius: 0.25rem;
     margin: 0 0.25rem;
+    border: 1px solid #dee2e6;
 }
 
 .pagination .page-item.active .page-link {
@@ -146,6 +597,51 @@
     background-color: var(--bs-primary);
     border-color: var(--bs-primary);
     color: white;
+}
+
+/* 排序选择器样式 */
+.form-select-sm {
+    padding: 0.25rem 1.75rem 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .filter-buttons-container {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .filter-btn {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+
+    .card-title {
+        font-size: 1rem;
+    }
+}
+
+/* 加载动画 */
+.case-item {
+    transition: opacity 0.3s ease;
+}
+
+.case-item.fade-out {
+    opacity: 0;
+}
+
+.case-item.fade-in {
+    opacity: 1;
+}
+
+/* 无结果提示样式 */
+#no-cases-message {
+    color: #6c757d;
+}
+
+#no-cases-message i {
+    color: #dee2e6;
 }
 </style>
 {{ end }}

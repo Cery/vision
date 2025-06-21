@@ -6,76 +6,34 @@
     <description>Recent content in 所有资讯分类 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 20 Mar 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 20 Jun 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>行业资讯</title>
-      <link>http://localhost:1313/categories/%E8%A1%8C%E4%B8%9A%E8%B5%84%E8%AE%AF/</link>
+      <title>展会资讯</title>
+      <link>http://localhost:1313/categories/%E5%B1%95%E4%BC%9A%E8%B5%84%E8%AE%AF/</link>
+      <pubDate>Thu, 20 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/%E5%B1%95%E4%BC%9A%E8%B5%84%E8%AE%AF/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>技术文章</title>
+      <link>http://localhost:1313/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/</link>
       <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/%E8%A1%8C%E4%B8%9A%E8%B5%84%E8%AE%AF/</guid>
+      <guid>http://localhost:1313/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/</guid>
       <description></description>
     </item>
     <item>
-      <title>技术动态</title>
-      <link>http://localhost:1313/categories/%E6%8A%80%E6%9C%AF%E5%8A%A8%E6%80%81/</link>
-      <pubDate>Thu, 14 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/%E6%8A%80%E6%9C%AF%E5%8A%A8%E6%80%81/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>新能源</title>
-      <link>http://localhost:1313/categories/%E6%96%B0%E8%83%BD%E6%BA%90/</link>
-      <pubDate>Thu, 01 Feb 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/%E6%96%B0%E8%83%BD%E6%BA%90/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>电子内窥镜</title>
-      <link>http://localhost:1313/categories/%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C/</link>
-      <pubDate>Thu, 01 Feb 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C/</guid>
+      <title>企业新闻</title>
+      <link>http://localhost:1313/categories/%E4%BC%81%E4%B8%9A%E6%96%B0%E9%97%BB/</link>
+      <pubDate>Sat, 20 Jan 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/%E4%BC%81%E4%B8%9A%E6%96%B0%E9%97%BB/</guid>
       <description></description>
     </item>
     <item>
       <title>光学内窥镜</title>
       <link>http://localhost:1313/categories/%E5%85%89%E5%AD%A6%E5%86%85%E7%AA%A5%E9%95%9C/</link>
-      <pubDate>Thu, 25 Jan 2024 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 20 Dec 2023 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/categories/%E5%85%89%E5%AD%A6%E5%86%85%E7%AA%A5%E9%95%9C/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>精密检测</title>
-      <link>http://localhost:1313/categories/%E7%B2%BE%E5%AF%86%E6%A3%80%E6%B5%8B/</link>
-      <pubDate>Thu, 25 Jan 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/%E7%B2%BE%E5%AF%86%E6%A3%80%E6%B5%8B/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>产品资讯</title>
-      <link>http://localhost:1313/categories/%E4%BA%A7%E5%93%81%E8%B5%84%E8%AE%AF/</link>
-      <pubDate>Sat, 20 Jan 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/%E4%BA%A7%E5%93%81%E8%B5%84%E8%AE%AF/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>公司新闻</title>
-      <link>http://localhost:1313/categories/%E5%85%AC%E5%8F%B8%E6%96%B0%E9%97%BB/</link>
-      <pubDate>Sat, 20 Jan 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/%E5%85%AC%E5%8F%B8%E6%96%B0%E9%97%BB/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>工业检测</title>
-      <link>http://localhost:1313/categories/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/</link>
-      <pubDate>Sat, 20 Jan 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>展会资讯</title>
-      <link>http://localhost:1313/categories/%E5%B1%95%E4%BC%9A%E8%B5%84%E8%AE%AF/</link>
-      <pubDate>Tue, 16 Jan 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/%E5%B1%95%E4%BC%9A%E8%B5%84%E8%AE%AF/</guid>
       <description></description>
     </item>
     <item>
@@ -97,6 +55,13 @@
       <link>http://localhost:1313/categories/%E7%88%AC%E8%A1%8C%E6%9C%BA%E5%99%A8%E4%BA%BA/</link>
       <pubDate>Wed, 20 Dec 2023 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/categories/%E7%88%AC%E8%A1%8C%E6%9C%BA%E5%99%A8%E4%BA%BA/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>电子内窥镜</title>
+      <link>http://localhost:1313/categories/%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C/</link>
+      <pubDate>Wed, 20 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C/</guid>
       <description></description>
     </item>
     <item>
