@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品数量测试 - VisNDT管理系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .test-result {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0.5rem;
+            border: 2px solid;
+        }
+        .test-success {
+            background-color: #d1edff;
+            border-color: #0d6efd;
+            color: #0d6efd;
+        }
+        .test-warning {
+            background-color: #fff3cd;
+            border-color: #ffc107;
+            color: #664d03;
+        }
+        .test-error {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        .product-count {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mb-4">
+                    <i class="fas fa-chart-bar me-2"></i>产品数量测试
+                </h2>
+                
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">预期产品数</h5>
+                                <div class="product-count text-primary">33</div>
+                                <small class="text-muted">前台显示的产品数量</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">实际加载数</h5>
+                                <div class="product-count text-success" id="actualCount">-</div>
+                                <small class="text-muted">后台实际加载的产品数量</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">匹配状态</h5>
+                                <div class="product-count" id="matchStatus">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </div>
+                                <small class="text-muted" id="matchText">检测中...</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="testResults"></div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-list me-2"></i>产品列表
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>ID</th>
+                                        <th>标题</th>
+                                        <th>型号</th>
+                                        <th>系列</th>
+                                        <th>状态</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productList">
+                                    <tr><td colspan="6" class="text-center">加载中...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button class="btn btn-primary me-2" onclick="runTest()">
+                        <i class="fas fa-play me-1"></i>重新测试
+                    </button>
+                    <button class="btn btn-success me-2" onclick="openAdminPanel()">
+                        <i class="fas fa-external-link-alt me-1"></i>打开管理后台
+                    </button>
+                    <button class="btn btn-info" onclick="exportResults()">
+                        <i class="fas fa-download me-1"></i>导出结果
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="data-loader.js"></script>
+    <script>
+        let testResults = [];
+        let loadedProducts = [];
+
+        async function runTest() {
+            testResults = [];
+            loadedProducts = [];
+            
+            addTestResult('开始产品数量测试...', 'info');
+            
+            try {
+                // 初始化数据加载器
+                addTestResult('初始化数据加载器...', 'info');
+                const dataLoader = new ContentDataLoader();
+                
+                // 加载产品数据
+                addTestResult('加载产品数据...', 'info');
+                await dataLoader.loadProducts();
+                
+                // 获取产品数据
+                if (dataLoader.contentData && dataLoader.contentData.products) {
+                    loadedProducts = dataLoader.contentData.products;
+                    const count = loadedProducts.length;
+                    
+                    addTestResult(`✅ 成功加载 ${count} 个产品`, 'success');
+                    
+                    // 更新显示
+                    document.getElementById('actualCount').textContent = count;
+                    
+                    // 检查是否匹配预期数量
+                    if (count === 33) {
+                        document.getElementById('matchStatus').innerHTML = '<i class="fas fa-check text-success"></i>';
+                        document.getElementById('matchText').textContent = '完全匹配！';
+                        addTestResult('🎉 产品数量完全匹配预期！', 'success');
+                    } else if (count > 20) {
+                        document.getElementById('matchStatus').innerHTML = '<i class="fas fa-exclamation-triangle text-warning"></i>';
+                        document.getElementById('matchText').textContent = '基本匹配';
+                        addTestResult(`⚠️ 产品数量 ${count} 接近预期，但不完全匹配`, 'warning');
+                    } else {
+                        document.getElementById('matchStatus').innerHTML = '<i class="fas fa-times text-danger"></i>';
+                        document.getElementById('matchText').textContent = '不匹配';
+                        addTestResult(`❌ 产品数量 ${count} 远少于预期的 33 个`, 'error');
+                    }
+                    
+                    // 更新产品列表
+                    updateProductList();
+                    
+                } else {
+                    addTestResult('❌ 未能获取产品数据', 'error');
+                    document.getElementById('actualCount').textContent = '0';
+                    document.getElementById('matchStatus').innerHTML = '<i class="fas fa-times text-danger"></i>';
+                    document.getElementById('matchText').textContent = '加载失败';
+                }
+                
+            } catch (error) {
+                addTestResult(`❌ 测试失败: ${error.message}`, 'error');
+                console.error('测试失败:', error);
+                document.getElementById('actualCount').textContent = 'ERROR';
+                document.getElementById('matchStatus').innerHTML = '<i class="fas fa-times text-danger"></i>';
+                document.getElementById('matchText').textContent = '测试失败';
+            }
+        }
+
+        function addTestResult(message, type) {
+            const timestamp = new Date().toLocaleTimeString();
+            testResults.push({ timestamp, message, type });
+            updateTestResults();
+        }
+
+        function updateTestResults() {
+            const container = document.getElementById('testResults');
+            container.innerHTML = testResults.map(result => {
+                const typeClass = result.type === 'success' ? 'test-success' : 
+                                result.type === 'warning' ? 'test-warning' : 
+                                result.type === 'error' ? 'test-error' : 'test-info';
+                
+                return `
+                    <div class="test-result ${typeClass}">
+                        <strong>[${result.timestamp}]</strong> ${result.message}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateProductList() {
+            const tbody = document.getElementById('productList');
+            
+            if (loadedProducts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">无产品数据</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = loadedProducts.map((product, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td><code>${product.id}</code></td>
+                    <td>${product.title}</td>
+                    <td>${product.model || '-'}</td>
+                    <td><span class="badge bg-secondary">${product.series || '-'}</span></td>
+                    <td><span class="badge ${product.status === 'published' ? 'bg-success' : 'bg-warning'}">${product.statusName || product.status}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function openAdminPanel() {
+            window.open('admin.html', '_blank');
+        }
+
+        function exportResults() {
+            const data = {
+                timestamp: new Date().toISOString(),
+                expectedCount: 33,
+                actualCount: loadedProducts.length,
+                isMatch: loadedProducts.length === 33,
+                testResults: testResults,
+                products: loadedProducts.map(p => ({
+                    id: p.id,
+                    title: p.title,
+                    model: p.model,
+                    series: p.series,
+                    status: p.status
+                }))
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `product-count-test-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // 页面加载时自动运行测试
+        document.addEventListener('DOMContentLoaded', function() {
+            runTest();
+        });
+    </script>
+</body>
+</html>

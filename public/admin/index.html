@@ -193,111 +193,153 @@
       <div class="cms-container">
         <div class="cms-header">
           <h1><i class="fas fa-cog me-3"></i>VisNDT 内容管理系统</h1>
-          <p>选择适合您的内容管理方式</p>
+          <p>统一的内容管理平台，匹配前台网站展示规则</p>
         </div>
 
-        <div class="row g-4">
-          <!-- GitHub 管理 (推荐) -->
-          <div class="col-md-4">
+        <!-- GitHub版本控制管理 -->
+        <div class="row g-4 mb-4">
+          <div class="col-md-6">
             <a href="github-cms.html" class="cms-option recommended">
               <span class="recommended-badge">推荐</span>
               <div class="cms-icon">
                 <i class="fab fa-github"></i>
               </div>
-              <h3 class="cms-title">GitHub 管理</h3>
-              <p class="cms-description">直接在 GitHub 上编辑内容文件，简单可靠</p>
+              <h3 class="cms-title">GitHub 版本控制管理</h3>
+              <p class="cms-description">基于GitHub的专业内容管理，支持版本控制、多人协作和自动部署</p>
               <ul class="cms-features">
-                <li><i class="fas fa-check"></i>无需额外配置</li>
-                <li><i class="fas fa-check"></i>版本控制</li>
-                <li><i class="fas fa-check"></i>协作编辑</li>
-                <li><i class="fas fa-check"></i>自动部署</li>
+                <li><i class="fas fa-check"></i>完整的版本控制和历史记录</li>
+                <li><i class="fas fa-check"></i>支持多人协作和权限管理</li>
+                <li><i class="fas fa-check"></i>自动部署和实时同步</li>
+                <li><i class="fas fa-check"></i>移动端友好的编辑界面</li>
               </ul>
             </a>
           </div>
 
-          <!-- GitHub 高级管理 -->
-          <div class="col-md-4">
+          <div class="col-md-6">
             <a href="github-advanced.html" class="cms-option">
               <div class="cms-icon">
                 <i class="fas fa-rocket"></i>
               </div>
               <h3 class="cms-title">GitHub 高级管理</h3>
-              <p class="cms-description">完整的内容管理功能，包含模板和操作指南</p>
+              <p class="cms-description">完整的GitHub内容管理功能，包含模板和操作指南</p>
               <ul class="cms-features">
-                <li><i class="fas fa-check"></i>完整增删改查</li>
-                <li><i class="fas fa-check"></i>内容模板</li>
-                <li><i class="fas fa-check"></i>操作指南</li>
-                <li><i class="fas fa-check"></i>系统配置</li>
+                <li><i class="fas fa-check"></i>完整增删改查功能</li>
+                <li><i class="fas fa-check"></i>内容模板和向导</li>
+                <li><i class="fas fa-check"></i>详细操作指南</li>
+                <li><i class="fas fa-check"></i>系统配置管理</li>
+              </ul>
+            </a>
+          </div>
+        </div>
+
+        <!-- 本地CMS管理模块 -->
+        <h4 class="text-center mb-4 text-muted">本地内容管理系统</h4>
+        <div class="row g-4">
+
+          <!-- 内容管理中心 -->
+          <div class="col-md-6">
+            <a href="content-manager.html" class="cms-option">
+              <div class="cms-icon">
+                <i class="fas fa-newspaper"></i>
+              </div>
+              <h3 class="cms-title">内容管理中心</h3>
+              <p class="cms-description">统一管理资讯、产品、案例，支持列表展示、发布流程和批量操作</p>
+              <ul class="cms-features">
+                <li><i class="fas fa-check"></i>资讯管理：分类、标签、发布状态</li>
+                <li><i class="fas fa-check"></i>产品管理：系列、参数、供应商</li>
+                <li><i class="fas fa-check"></i>案例管理：行业、应用、效果展示</li>
+                <li><i class="fas fa-check"></i>批量操作和搜索过滤</li>
               </ul>
             </a>
           </div>
 
-          <!-- 本地编辑器 -->
+          <!-- 首页内容管理 -->
           <div class="col-md-6">
-            <a href="local-editor.html" class="cms-option">
+            <a href="content-manager.html?section=homepage" class="cms-option">
               <div class="cms-icon">
-                <i class="fas fa-edit"></i>
+                <i class="fas fa-home"></i>
               </div>
-              <h3 class="cms-title">本地编辑器</h3>
-              <p class="cms-description">功能丰富的在线编辑器，支持实时预览</p>
+              <h3 class="cms-title">首页内容管理</h3>
+              <p class="cms-description">管理首页轮播图、推荐产品、公司介绍等核心展示内容</p>
               <ul class="cms-features">
-                <li><i class="fas fa-check"></i>语法高亮</li>
-                <li><i class="fas fa-check"></i>实时预览</li>
-                <li><i class="fas fa-check"></i>Markdown 支持</li>
-                <li><i class="fas fa-check"></i>文件管理</li>
-              </ul>
-            </a>
-          </div>
-
-          <!-- Netlify CMS -->
-          <div class="col-md-6">
-            <a href="#" onclick="initNetlifyCMS()" class="cms-option">
-              <div class="cms-icon">
-                <i class="fas fa-cloud"></i>
-              </div>
-              <h3 class="cms-title">Netlify CMS</h3>
-              <p class="cms-description">专业的内容管理系统，需要身份验证</p>
-              <ul class="cms-features">
-                <li><i class="fas fa-check"></i>可视化编辑</li>
-                <li><i class="fas fa-check"></i>媒体管理</li>
-                <li><i class="fas fa-check"></i>工作流程</li>
-                <li><i class="fas fa-check"></i>用户权限</li>
+                <li><i class="fas fa-check"></i>轮播图管理：图片、链接、排序</li>
+                <li><i class="fas fa-check"></i>推荐产品：选择、排序、展示</li>
+                <li><i class="fas fa-check"></i>公司信息：简介、价值观、联系方式</li>
+                <li><i class="fas fa-check"></i>SEO设置：标题、描述、关键词</li>
               </ul>
             </a>
           </div>
         </div>
 
         <div class="row mt-4">
-          <!-- 本地CMS -->
-          <div class="col-md-4">
-            <a href="local-cms.html" class="cms-option">
+          <!-- 页面内容管理 -->
+          <div class="col-md-6">
+            <a href="page-manager.html" class="cms-option">
               <div class="cms-icon">
-                <i class="fas fa-desktop"></i>
+                <i class="fas fa-file-alt"></i>
               </div>
-              <h3 class="cms-title">本地CMS系统</h3>
-              <p class="cms-description">功能完整的本地内容管理系统，可视化编辑</p>
+              <h3 class="cms-title">页面内容管理</h3>
+              <p class="cms-description">管理商务服务、应用领域、关于我们等静态页面内容</p>
               <ul class="cms-features">
-                <li><i class="fas fa-check"></i>可视化编辑器</li>
-                <li><i class="fas fa-check"></i>实时预览</li>
-                <li><i class="fas fa-check"></i>分屏编辑</li>
-                <li><i class="fas fa-check"></i>文件管理</li>
+                <li><i class="fas fa-check"></i>商务服务：套餐、价格、服务介绍</li>
+                <li><i class="fas fa-check"></i>应用领域：行业分类、技术介绍</li>
+                <li><i class="fas fa-check"></i>关于我们：公司历程、团队介绍</li>
+                <li><i class="fas fa-check"></i>联系我们：地址、电话、营业时间</li>
               </ul>
             </a>
           </div>
 
-          <!-- 文件管理器 -->
-          <div class="col-md-4">
-            <a href="file-manager.html" class="cms-option">
+          <!-- 媒体资源管理 -->
+          <div class="col-md-6">
+            <a href="media-library.html" class="cms-option">
               <div class="cms-icon">
-                <i class="fas fa-folder-open"></i>
+                <i class="fas fa-images"></i>
               </div>
-              <h3 class="cms-title">文件管理器</h3>
-              <p class="cms-description">专业的文件管理系统，支持上传、下载、组织</p>
+              <h3 class="cms-title">媒体资源管理</h3>
+              <p class="cms-description">统一管理图片、文档等媒体资源，支持分类和批量操作</p>
               <ul class="cms-features">
-                <li><i class="fas fa-check"></i>拖拽上传</li>
-                <li><i class="fas fa-check"></i>批量操作</li>
-                <li><i class="fas fa-check"></i>搜索过滤</li>
-                <li><i class="fas fa-check"></i>多种视图</li>
+                <li><i class="fas fa-check"></i>图片管理：上传、分类、压缩优化</li>
+                <li><i class="fas fa-check"></i>文档管理：PDF、Word等文件管理</li>
+                <li><i class="fas fa-check"></i>批量操作：上传、删除、移动</li>
+                <li><i class="fas fa-check"></i>智能搜索：按名称、类型、日期</li>
+              </ul>
+            </a>
+          </div>
+        </div>
+
+        <!-- 工具和帮助 -->
+        <h4 class="text-center mb-4 mt-5 text-muted">工具和帮助</h4>
+        <div class="row">
+          <!-- 帮助文档 -->
+          <div class="col-md-4">
+            <a href="README.md" target="_blank" class="cms-option">
+              <div class="cms-icon">
+                <i class="fas fa-book"></i>
+              </div>
+              <h3 class="cms-title">帮助文档</h3>
+              <p class="cms-description">详细的使用指南和操作说明</p>
+              <ul class="cms-features">
+                <li><i class="fas fa-check"></i>使用指南</li>
+                <li><i class="fas fa-check"></i>操作说明</li>
+                <li><i class="fas fa-check"></i>常见问题</li>
+                <li><i class="fas fa-check"></i>功能介绍</li>
+              </ul>
+            </a>
+          </div>
+
+          <!-- 高级编辑器 -->
+          <div class="col-md-4">
+            <a href="local-cms.html" class="cms-option">
+              <div class="cms-icon">
+                <i class="fas fa-edit"></i>
+              </div>
+              <h3 class="cms-title">高级编辑器</h3>
+              <p class="cms-description">功能完整的可视化编辑器，支持实时预览</p>
+              <ul class="cms-features">
+                <li><i class="fas fa-check"></i>可视化编辑器</li>
+                <li><i class="fas fa-check"></i>实时预览</li>
+                <li><i class="fas fa-check"></i>语法高亮</li>
+                <li><i class="fas fa-check"></i>媒体库集成</li>
               </ul>
             </a>
           </div>
@@ -306,7 +348,7 @@
           <div class="col-md-4">
             <a href="../" class="cms-option">
               <div class="cms-icon">
-                <i class="fas fa-home"></i>
+                <i class="fas fa-external-link-alt"></i>
               </div>
               <h3 class="cms-title">返回网站</h3>
               <p class="cms-description">返回到网站首页查看内容效果</p>
@@ -320,40 +362,6 @@
           </div>
         </div>
 
-        <div class="row mt-4">
-          <!-- 简易管理 -->
-          <div class="col-md-6">
-            <a href="simple-cms.html" class="cms-option">
-              <div class="cms-icon">
-                <i class="fas fa-tools"></i>
-              </div>
-              <h3 class="cms-title">简易管理</h3>
-              <p class="cms-description">基础的内容管理功能，适合快速编辑</p>
-              <ul class="cms-features">
-                <li><i class="fas fa-check"></i>简单易用</li>
-                <li><i class="fas fa-check"></i>快速上手</li>
-                <li><i class="fas fa-check"></i>基础功能</li>
-              </ul>
-            </a>
-          </div>
-
-          <!-- 帮助文档 -->
-          <div class="col-md-6">
-            <a href="README.md" target="_blank" class="cms-option">
-              <div class="cms-icon">
-                <i class="fas fa-book"></i>
-              </div>
-              <h3 class="cms-title">帮助文档</h3>
-              <p class="cms-description">详细的使用指南和操作说明</p>
-              <ul class="cms-features">
-                <li><i class="fas fa-check"></i>使用指南</li>
-                <li><i class="fas fa-check"></i>操作说明</li>
-                <li><i class="fas fa-check"></i>常见问题</li>
-              </ul>
-            </a>
-          </div>
-        </div>
-
         <div class="text-center mt-4">
           <div class="mb-3">
             <a href="quick-start.html" class="btn btn-success btn-lg me-2">
@@ -362,9 +370,12 @@
             <a href="comparison.html" class="btn btn-warning btn-lg me-2">
               <i class="fas fa-balance-scale me-2"></i>功能对比
             </a>
-            <a href="https://github.com/Cery/VisNDT" target="_blank" class="btn btn-outline-primary btn-lg">
+            <a href="https://github.com/Cery/VisNDT" target="_blank" class="btn btn-outline-primary btn-lg me-2">
               <i class="fab fa-github me-2"></i>访问GitHub仓库
             </a>
+            <button onclick="logout()" class="btn btn-outline-danger btn-lg">
+              <i class="fas fa-sign-out-alt me-2"></i>退出登录
+            </button>
           </div>
           <p class="text-muted">
             <i class="fas fa-info-circle me-2"></i>
@@ -374,77 +385,64 @@
       </div>
     </div>
 
-    <!-- Netlify CMS 界面 -->
-    <div id="netlify-cms" class="cms-selector-hidden">
-      <h1>VisNDT Netlify CMS</h1>
-      <div id="login-status">正在加载...</div>
-      <div id="debug-info"></div>
-    </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      // 初始化 Netlify CMS
-      function initNetlifyCMS() {
-        // 隐藏选择界面，显示 CMS
-        document.getElementById('cms-selector').className = 'cms-selector cms-selector-hidden';
-        document.getElementById('netlify-cms').className = 'cms-selector cms-selector-active';
 
-        try {
-          // 确保使用 Decap CMS
-          const CMS = window.DecapCms || window.CMS;
-
-          if (!CMS) {
-            throw new Error('CMS 未正确加载');
+      // 检查登录状态
+      function checkAuth() {
+        // 检查会话存储
+        const sessionData = sessionStorage.getItem('visndt_admin_session');
+        if (sessionData) {
+          const session = JSON.parse(sessionData);
+          // 会话有效期为8小时
+          if (Date.now() - session.loginTime < 8 * 60 * 60 * 1000) {
+            return true;
           }
+        }
 
-          // 直接初始化 CMS
-          CMS.init({
-            config: {
-              backend: {
-                name: 'git-gateway',
-                branch: 'main'
-              }
-            }
-          });
-
-          console.log('Netlify CMS 初始化完成');
-        } catch (error) {
-          const debugInfoElement = document.getElementById('debug-info');
-          if (debugInfoElement) {
-            debugInfoElement.style.display = 'block';
-            debugInfoElement.textContent += `CMS 初始化错误: ${error.message}\n`;
+        // 检查记住我
+        const rememberData = localStorage.getItem('visndt_admin_remember');
+        if (rememberData) {
+          const remember = JSON.parse(rememberData);
+          // 记住我有效期为30天
+          if (Date.now() - remember.loginTime < 30 * 24 * 60 * 60 * 1000) {
+            // 重新设置会话
+            const sessionData = {
+              username: remember.username,
+              loginTime: Date.now(),
+              remember: true
+            };
+            sessionStorage.setItem('visndt_admin_session', JSON.stringify(sessionData));
+            return true;
           }
-          console.error('CMS 初始化错误:', error);
+        }
 
-          // 显示错误信息并提供返回选项
-          alert('Netlify CMS 初始化失败，请尝试其他管理方式。\n\n推荐使用 GitHub 管理，更加简单可靠。');
+        return false;
+      }
 
-          // 返回选择界面
-          document.getElementById('cms-selector').className = 'cms-selector cms-selector-active';
-          document.getElementById('netlify-cms').className = 'cms-selector cms-selector-hidden';
+      // 登出功能
+      function logout() {
+        if (confirm('确定要退出登录吗？')) {
+          sessionStorage.removeItem('visndt_admin_session');
+          localStorage.removeItem('visndt_admin_remember');
+          window.location.href = 'login.html';
         }
       }
 
-      // 全局错误处理
-      window.addEventListener('error', function(event) {
-        console.error('全局错误:', event.error);
-      });
+      function showComingSoon() {
+        alert('该功能正在开发中，敬请期待！');
+      }
 
       document.addEventListener('DOMContentLoaded', () => {
-        console.log('VisNDT 内容管理系统已加载');
-
-        // Netlify Identity 处理
-        if (window.netlifyIdentity) {
-          window.netlifyIdentity.on('init', user => {
-            console.log('Netlify Identity 初始化');
-            if (!user) {
-              window.netlifyIdentity.on('login', () => {
-                console.log('登录成功');
-                initNetlifyCMS();
-              });
-            }
-          });
+        // 检查登录状态
+        if (!checkAuth()) {
+          window.location.href = 'login.html';
+          return;
         }
+
+        console.log('VisNDT 内容管理系统已加载');
       });
     </script>
   </body>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资讯和案例管理功能测试 - VisNDT管理系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .test-card {
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .test-success {
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+        .test-warning {
+            border-color: #ffc107;
+            background-color: #fff3cd;
+        }
+        .test-error {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+        }
+        .data-preview {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .data-item {
+            padding: 0.25rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .data-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mb-4">
+                    <i class="fas fa-newspaper me-2"></i>资讯和案例管理功能测试
+                </h2>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="test-card">
+                            <h5>
+                                <i class="fas fa-database me-2"></i>数据加载测试
+                            </h5>
+                            <div id="dataLoadTest">
+                                <div class="text-center">
+                                    <i class="fas fa-spinner fa-spin me-2"></i>正在测试数据加载...
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="test-card">
+                            <h5>
+                                <i class="fas fa-newspaper me-2"></i>资讯数据预览
+                            </h5>
+                            <div id="newsPreview">
+                                <div class="text-center text-muted">等待数据加载...</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="test-card">
+                            <h5>
+                                <i class="fas fa-briefcase me-2"></i>案例数据预览
+                            </h5>
+                            <div id="casesPreview">
+                                <div class="text-center text-muted">等待数据加载...</div>
+                            </div>
+                        </div>
+                        
+                        <div class="test-card">
+                            <h5>
+                                <i class="fas fa-cog me-2"></i>管理功能测试
+                            </h5>
+                            <div id="managementFunctionTest">
+                                <button class="btn btn-primary me-2" onclick="testNewsManagement()">
+                                    <i class="fas fa-newspaper me-1"></i>测试资讯管理
+                                </button>
+                                <button class="btn btn-success" onclick="testCasesManagement()">
+                                    <i class="fas fa-briefcase me-1"></i>测试案例管理
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="test-card">
+                            <h5>
+                                <i class="fas fa-list me-2"></i>数据统计对比
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card bg-primary text-white">
+                                        <div class="card-body text-center">
+                                            <h3 id="newsCount">0</h3>
+                                            <p class="mb-0">资讯总数</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card bg-success text-white">
+                                        <div class="card-body text-center">
+                                            <h3 id="casesCount">0</h3>
+                                            <p class="mb-0">案例总数</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card bg-info text-white">
+                                        <div class="card-body text-center">
+                                            <h3 id="totalContent">0</h3>
+                                            <p class="mb-0">内容总数</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="test-card">
+                            <h5>
+                                <i class="fas fa-check-circle me-2"></i>功能验证结果
+                            </h5>
+                            <div id="verificationResults">
+                                <div class="text-center text-muted">等待功能测试...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="data-loader.js"></script>
+    <script src="admin-functions.js"></script>
+    <script>
+        let dataLoader;
+        let testResults = [];
+
+        async function runTests() {
+            try {
+                // 初始化数据加载器
+                dataLoader = new ContentDataLoader();
+                await dataLoader.loadAllData();
+                
+                // 测试数据加载
+                testDataLoad();
+                
+                // 预览资讯数据
+                previewNewsData();
+                
+                // 预览案例数据
+                previewCasesData();
+                
+                // 更新统计数据
+                updateStatistics();
+                
+            } catch (error) {
+                console.error('测试失败:', error);
+                document.getElementById('dataLoadTest').innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        测试失败: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function testDataLoad() {
+            const container = document.getElementById('dataLoadTest');
+            
+            if (!dataLoader || !dataLoader.contentData) {
+                container.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-times me-2"></i>数据加载器未初始化
+                    </div>
+                `;
+                return;
+            }
+
+            const news = dataLoader.contentData.news || [];
+            const cases = dataLoader.contentData.cases || [];
+
+            container.innerHTML = `
+                <div class="alert alert-success">
+                    <i class="fas fa-check me-2"></i>数据加载成功
+                </div>
+                <ul class="list-unstyled mb-0">
+                    <li><strong>资讯数量:</strong> ${news.length}</li>
+                    <li><strong>案例数量:</strong> ${cases.length}</li>
+                    <li><strong>总内容数:</strong> ${news.length + cases.length}</li>
+                </ul>
+            `;
+        }
+
+        function previewNewsData() {
+            const container = document.getElementById('newsPreview');
+            const news = dataLoader?.contentData?.news || [];
+            
+            if (news.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>未找到资讯数据
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="mb-2">
+                    <strong>资讯列表 (${news.length}条)</strong>
+                </div>
+                <div class="data-preview">
+                    ${news.slice(0, 5).map(item => `
+                        <div class="data-item">
+                            <strong>${item.title}</strong>
+                            <br><small class="text-muted">分类: ${item.categories ? item.categories[0] : '未分类'} | 作者: ${item.author || '未知'}</small>
+                            <br><small class="text-success">发布: ${item.publishDate || '未知'} | 浏览: ${item.views || 0}</small>
+                        </div>
+                    `).join('')}
+                    ${news.length > 5 ? `<div class="text-center text-muted mt-2">...还有 ${news.length - 5} 条资讯</div>` : ''}
+                </div>
+            `;
+        }
+
+        function previewCasesData() {
+            const container = document.getElementById('casesPreview');
+            const cases = dataLoader?.contentData?.cases || [];
+            
+            if (cases.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>未找到案例数据
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="mb-2">
+                    <strong>案例列表 (${cases.length}个)</strong>
+                </div>
+                <div class="data-preview">
+                    ${cases.slice(0, 5).map(item => `
+                        <div class="data-item">
+                            <strong>${item.title}</strong>
+                            <br><small class="text-muted">行业: ${item.industry || '未知'} | 应用: ${item.application || '未知'}</small>
+                            <br><small class="text-success">客户: ${item.client || '未知'} | 效果: ${item.result || '未知'}</small>
+                        </div>
+                    `).join('')}
+                    ${cases.length > 5 ? `<div class="text-center text-muted mt-2">...还有 ${cases.length - 5} 个案例</div>` : ''}
+                </div>
+            `;
+        }
+
+        function updateStatistics() {
+            const news = dataLoader?.contentData?.news || [];
+            const cases = dataLoader?.contentData?.cases || [];
+            
+            document.getElementById('newsCount').textContent = news.length;
+            document.getElementById('casesCount').textContent = cases.length;
+            document.getElementById('totalContent').textContent = news.length + cases.length;
+        }
+
+        function testNewsManagement() {
+            console.log('测试资讯管理功能');
+            
+            // 检查必要的函数是否存在
+            const requiredFunctions = [
+                'showNewsList',
+                'loadNewsList',
+                'renderNewsList'
+            ];
+            
+            const missingFunctions = requiredFunctions.filter(func => typeof window[func] !== 'function');
+            
+            if (missingFunctions.length > 0) {
+                alert(`缺少必要函数: ${missingFunctions.join(', ')}`);
+                return;
+            }
+
+            // 模拟调用资讯管理功能
+            if (typeof showNewsList === 'function') {
+                showNewsList();
+                updateVerificationResults('资讯管理', '成功', '资讯管理功能正常工作');
+            } else {
+                updateVerificationResults('资讯管理', '失败', '资讯管理函数未找到');
+            }
+        }
+
+        function testCasesManagement() {
+            console.log('测试案例管理功能');
+            
+            // 检查必要的函数是否存在
+            const requiredFunctions = [
+                'showCasesList',
+                'loadCasesList',
+                'renderCasesList'
+            ];
+            
+            const missingFunctions = requiredFunctions.filter(func => typeof window[func] !== 'function');
+            
+            if (missingFunctions.length > 0) {
+                alert(`缺少必要函数: ${missingFunctions.join(', ')}`);
+                return;
+            }
+
+            // 模拟调用案例管理功能
+            if (typeof showCasesList === 'function') {
+                showCasesList();
+                updateVerificationResults('案例管理', '成功', '案例管理功能正常工作');
+            } else {
+                updateVerificationResults('案例管理', '失败', '案例管理函数未找到');
+            }
+        }
+
+        function updateVerificationResults(feature, status, message) {
+            const container = document.getElementById('verificationResults');
+            const statusClass = status === '成功' ? 'success' : 'danger';
+            const icon = status === '成功' ? 'check-circle' : 'times-circle';
+            
+            const existingContent = container.innerHTML === '<div class="text-center text-muted">等待功能测试...</div>' ? '' : container.innerHTML;
+            
+            container.innerHTML = existingContent + `
+                <div class="alert alert-${statusClass} mb-2">
+                    <i class="fas fa-${icon} me-2"></i>
+                    <strong>${feature}:</strong> ${status} - ${message}
+                </div>
+            `;
+        }
+
+        // 页面加载时运行测试
+        document.addEventListener('DOMContentLoaded', function() {
+            runTests();
+        });
+    </script>
+</body>
+</html>

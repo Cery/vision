@@ -447,6 +447,21 @@
         "content": "\" \"",
         "type": "product"
       },{
+        "title": "\"2024杭州工业检测设备与技术展览会\"",
+        "url": "\"/news/exhibition-news-8/\"",
+        "content": "\"展会将全面展示工业检测设备与技术的创新成果\\u0026hellip;\\n\"",
+        "type": "article"
+      },{
+        "title": "\"2024西安工业自动化及机器人展览会\"",
+        "url": "\"/news/exhibition-news-7/\"",
+        "content": "\"展会将重点展示工业自动化及机器人检测领域的最新技术\\u0026hellip;\\n\"",
+        "type": "article"
+      },{
+        "title": "\"2024北京国际工业智能装备展览会\"",
+        "url": "\"/news/exhibition-news-6/\"",
+        "content": "\"展会将展示工业智能装备和检测技术的最新发展趋势\\u0026hellip;\\n\"",
+        "type": "article"
+      },{
         "title": "\"2024广州国际工业检测设备展览会\"",
         "url": "\"/news/exhibition-news-2/\"",
         "content": "\"2024广州国际工业检测设备展览会 展会信息 2024广州国际工业检测设备展览会将于6月20-22日在广州国际会展中心举办。本届展会聚焦工业检测设备与技术创新，为华南地区工业检测行业搭建专业的交流合作平台。\\n展示内容 检测设备展区 工业内窥镜系列产品 无损检测设备 精密测量仪器 自动化检测系统 技术解决方案 智能检测软件 数据分析平台 远程监控系统 质量管理解决方案 目标观众 制造业质量控制人员 检测设备采购商 技术研发工程师 行业专家学者 展会价值 本届展会将为参展商和观众提供：\\n最新技术产品展示 行业发展趋势分析 商务合作机会 技术交流与学习 欢迎业界同仁莅临参观交流！\\n\"",
@@ -754,6 +769,20 @@
                     
                     <p class="lead text-muted">采用1.5mm超细探头设计，兼顾灵活性与图像质量，适用于复杂工业检测场景</p>
                     
+
+                    
+                    <div class="product-categories mb-3">
+                        
+                        <span class="badge bg-primary me-2 mb-1" style="font-size: 0.9rem; padding: 0.5rem 0.8rem;">
+                            <i class="fas fa-folder me-1"></i>电子内窥镜
+                        </span>
+                        
+                        
+                        <span class="badge bg-secondary me-2 mb-1" style="font-size: 0.9rem; padding: 0.5rem 0.8rem;">
+                            <i class="fas fa-tag me-1"></i>工业视频内窥镜
+                        </span>
+                        
+                    </div>
 
                     <hr>
 
@@ -1590,7 +1619,7 @@ function initLeanCloudViews() {
     .catch(error => {
         console.error('查询Counter失败:', error);
         
-        pageViewsElement.textContent = '统计失败';
+        pageViewsElement.textContent = '0';
     });
 }
 
@@ -1633,7 +1662,7 @@ function createCounter() {
     })
     .catch(error => {
         console.error('创建Counter失败:', error);
-        pageViewsElement.textContent = '统计失败';
+        pageViewsElement.textContent = '1';
     });
 }
 
@@ -1666,7 +1695,7 @@ function fetchCurrentViews() {
     })
     .catch(error => {
         console.error('获取浏览次数失败:', error);
-        pageViewsElement.textContent = '统计失败';
+        pageViewsElement.textContent = '0';
     });
 }
 
@@ -1697,7 +1726,8 @@ function updateCounter(objectId, views) {
     })
     .catch(error => {
         console.error('更新Counter失败:', error);
-        pageViewsElement.textContent = '统计失败';
+        
+        console.log('更新失败，保持当前显示');
     });
 }
 

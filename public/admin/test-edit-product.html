@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品编辑功能测试 - VisNDT管理系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .test-card {
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .test-success {
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+        .test-warning {
+            border-color: #ffc107;
+            background-color: #fff3cd;
+        }
+        .test-error {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+        }
+        .category-preview {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mb-4">
+                    <i class="fas fa-edit me-2"></i>产品编辑功能测试
+                </h2>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="test-card">
+                            <h5>
+                                <i class="fas fa-database me-2"></i>数据加载测试
+                            </h5>
+                            <div id="dataLoadTest">
+                                <div class="text-center">
+                                    <i class="fas fa-spinner fa-spin me-2"></i>正在测试数据加载...
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="test-card">
+                            <h5>
+                                <i class="fas fa-tags me-2"></i>分类数据预览
+                            </h5>
+                            <div id="categoryPreview">
+                                <div class="text-center text-muted">等待数据加载...</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="test-card">
+                            <h5>
+                                <i class="fas fa-truck me-2"></i>供应商数据预览
+                            </h5>
+                            <div id="supplierPreview">
+                                <div class="text-center text-muted">等待数据加载...</div>
+                            </div>
+                        </div>
+                        
+                        <div class="test-card">
+                            <h5>
+                                <i class="fas fa-cog me-2"></i>编辑功能测试
+                            </h5>
+                            <div id="editFunctionTest">
+                                <button class="btn btn-primary" onclick="testEditFunction()">
+                                    <i class="fas fa-play me-1"></i>测试编辑功能
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="test-card">
+                            <h5>
+                                <i class="fas fa-list me-2"></i>产品列表 - 点击编辑测试
+                            </h5>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>产品ID</th>
+                                            <th>产品标题</th>
+                                            <th>型号</th>
+                                            <th>主要分类</th>
+                                            <th>次要分类</th>
+                                            <th>供应商</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="productTestList">
+                                        <tr><td colspan="7" class="text-center">加载中...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="data-loader.js"></script>
+    <script src="admin-functions.js"></script>
+    <script>
+        let dataLoader;
+        let testResults = [];
+
+        async function runTests() {
+            try {
+                // 初始化数据加载器
+                dataLoader = new ContentDataLoader();
+                await dataLoader.loadAllData();
+                
+                // 测试数据加载
+                testDataLoad();
+                
+                // 预览分类数据
+                previewCategories();
+                
+                // 预览供应商数据
+                previewSuppliers();
+                
+                // 更新产品列表
+                updateProductTestList();
+                
+            } catch (error) {
+                console.error('测试失败:', error);
+                document.getElementById('dataLoadTest').innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        测试失败: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function testDataLoad() {
+            const container = document.getElementById('dataLoadTest');
+            
+            if (!dataLoader || !dataLoader.contentData) {
+                container.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-times me-2"></i>数据加载器未初始化
+                    </div>
+                `;
+                return;
+            }
+
+            const products = dataLoader.contentData.products || [];
+            const categories = dataLoader.contentData.categories || [];
+            const suppliers = dataLoader.contentData.suppliers || [];
+
+            container.innerHTML = `
+                <div class="alert alert-success">
+                    <i class="fas fa-check me-2"></i>数据加载成功
+                </div>
+                <ul class="list-unstyled mb-0">
+                    <li><strong>产品数量:</strong> ${products.length}</li>
+                    <li><strong>分类数量:</strong> ${categories.length}</li>
+                    <li><strong>供应商数量:</strong> ${suppliers.length}</li>
+                </ul>
+            `;
+        }
+
+        function previewCategories() {
+            const container = document.getElementById('categoryPreview');
+            const categories = dataLoader?.contentData?.categories || [];
+            
+            if (categories.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>未找到分类数据
+                    </div>
+                `;
+                return;
+            }
+
+            const primaryCategories = categories.filter(cat => !cat.parent);
+            const secondaryCategories = categories.filter(cat => cat.parent);
+
+            container.innerHTML = `
+                <div class="mb-3">
+                    <h6>主要分类 (${primaryCategories.length}个)</h6>
+                    ${primaryCategories.map(cat => `
+                        <div class="category-preview">
+                            <strong>${cat.title}</strong> (${cat.id})
+                            <br><small class="text-muted">${cat.description}</small>
+                        </div>
+                    `).join('')}
+                </div>
+                <div>
+                    <h6>次要分类 (${secondaryCategories.length}个)</h6>
+                    ${secondaryCategories.map(cat => `
+                        <div class="category-preview">
+                            <strong>${cat.title}</strong> (${cat.id})
+                            <br><small class="text-muted">父分类: ${cat.parent}</small>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function previewSuppliers() {
+            const container = document.getElementById('supplierPreview');
+            const suppliers = dataLoader?.contentData?.suppliers || [];
+            
+            if (suppliers.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>未找到供应商数据
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = suppliers.map(supplier => `
+                <div class="category-preview">
+                    <strong>${supplier.title}</strong>
+                    <br><small class="text-muted">${supplier.address}</small>
+                    <br><small class="text-success">联系人: ${supplier.contact_person} (${supplier.phone})</small>
+                </div>
+            `).join('');
+        }
+
+        function updateProductTestList() {
+            const tbody = document.getElementById('productTestList');
+            const products = dataLoader?.contentData?.products || [];
+            
+            if (products.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">无产品数据</td></tr>';
+                return;
+            }
+
+            // 只显示前10个产品
+            const displayProducts = products.slice(0, 10);
+            
+            tbody.innerHTML = displayProducts.map(product => `
+                <tr>
+                    <td><code class="small">${product.id}</code></td>
+                    <td>${product.title}</td>
+                    <td><span class="badge bg-secondary">${product.model || '-'}</span></td>
+                    <td><span class="badge bg-primary">${product.primary_category || '-'}</span></td>
+                    <td><span class="badge bg-info">${product.secondary_category || '-'}</span></td>
+                    <td class="small">${product.supplier || '-'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" onclick="testEditProduct('${product.id}')">
+                            <i class="fas fa-edit"></i> 测试编辑
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function testEditProduct(productId) {
+            console.log('测试编辑产品:', productId);
+            
+            // 查找产品
+            const product = dataLoader.contentData.products.find(p => p.id === productId);
+            if (!product) {
+                alert('未找到产品数据');
+                return;
+            }
+
+            // 调用编辑函数
+            if (typeof showEditProductModal === 'function') {
+                showEditProductModal(product);
+            } else {
+                alert('编辑函数未找到，请确保 admin-functions.js 已正确加载');
+            }
+        }
+
+        function testEditFunction() {
+            const container = document.getElementById('editFunctionTest');
+            
+            // 检查必要的函数是否存在
+            const requiredFunctions = [
+                'showEditProductModal',
+                'renderProductParameters',
+                'renderProductGallery',
+                'updateProduct'
+            ];
+            
+            const missingFunctions = requiredFunctions.filter(func => typeof window[func] !== 'function');
+            
+            if (missingFunctions.length > 0) {
+                container.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-times me-2"></i>缺少必要函数: ${missingFunctions.join(', ')}
+                    </div>
+                `;
+                return;
+            }
+
+            // 测试编辑第一个产品
+            const products = dataLoader?.contentData?.products || [];
+            if (products.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>没有产品可供测试
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="alert alert-success">
+                    <i class="fas fa-check me-2"></i>编辑功能检查通过
+                </div>
+                <button class="btn btn-success" onclick="testEditProduct('${products[0].id}')">
+                    <i class="fas fa-edit me-1"></i>编辑第一个产品
+                </button>
+            `;
+        }
+
+        // 页面加载时运行测试
+        document.addEventListener('DOMContentLoaded', function() {
+            runTests();
+        });
+    </script>
+</body>
+</html>

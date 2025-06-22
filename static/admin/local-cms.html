@@ -533,6 +533,9 @@
                 <button class="navbar-btn" onclick="createNewFile()">
                     <i class="fas fa-plus me-1"></i>新建
                 </button>
+                <button class="navbar-btn" onclick="openMediaLibrary()">
+                    <i class="fas fa-images me-1"></i>媒体库
+                </button>
                 <a href="../" class="navbar-btn">
                     <i class="fas fa-home me-1"></i>返回网站
                 </a>
@@ -558,6 +561,13 @@
                 <i class="fas fa-bolt me-2"></i>快速操作
             </div>
             <div class="file-tree">
+                <div class="file-item" onclick="openContentWizard()">
+                    <i class="fas fa-magic file-icon text-info"></i>
+                    <div class="file-info">
+                        <div class="file-name">内容创建向导</div>
+                        <div class="file-path">智能创建内容</div>
+                    </div>
+                </div>
                 <div class="file-item" onclick="createNewFile('news')">
                     <i class="fas fa-newspaper file-icon text-success"></i>
                     <div class="file-info">
@@ -671,7 +681,7 @@
                         <button class="toolbar-btn" onclick="insertMarkdown('[', '](url)')" title="链接">
                             <i class="fas fa-link"></i>
                         </button>
-                        <button class="toolbar-btn" onclick="insertMarkdown('![', '](image-url)')" title="图片">
+                        <button class="toolbar-btn" onclick="openImagePicker()" title="插入图片">
                             <i class="fas fa-image"></i>
                         </button>
                         <button class="toolbar-btn" onclick="insertMarkdown('`', '`')" title="代码">
@@ -773,6 +783,7 @@
 
     <!-- 脚本文件 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="auth.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/markdown/markdown.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/yaml/yaml.min.js"></script>
@@ -1222,6 +1233,34 @@ paginate = 12`
             const replacement = before + (selection || '文本') + after;
             editor.replaceSelection(replacement);
             editor.focus();
+        }
+
+        // 打开图片选择器
+        function openImagePicker() {
+            // 打开媒体库窗口
+            const mediaWindow = window.open('media-library.html', 'mediaLibrary',
+                'width=1200,height=800,scrollbars=yes,resizable=yes');
+
+            // 监听媒体库的消息
+            window.addEventListener('message', function(event) {
+                if (event.data.type === 'insertMedia') {
+                    const imageMarkdown = `![${event.data.name}](${event.data.url})`;
+                    insertMarkdown('', imageMarkdown);
+                    showNotification('图片已插入到编辑器', 'success');
+                }
+            });
+        }
+
+        // 打开媒体库
+        function openMediaLibrary() {
+            window.open('media-library.html', 'mediaLibrary',
+                'width=1200,height=800,scrollbars=yes,resizable=yes');
+        }
+
+        // 打开内容创建向导
+        function openContentWizard() {
+            window.open('content-wizard.html', 'contentWizard',
+                'width=1400,height=900,scrollbars=yes,resizable=yes');
         }
 
         // 保存当前文件

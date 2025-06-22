@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>最终测试 - 产品数据一致性验证</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .status-card {
+            transition: all 0.3s ease;
+        }
+        .status-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+        .status-warning {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+            color: white;
+        }
+        .status-error {
+            background: linear-gradient(135deg, #dc3545, #e83e8c);
+            color: white;
+        }
+        .test-log {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+        }
+        .log-entry {
+            margin-bottom: 0.5rem;
+            padding: 0.25rem 0;
+        }
+        .log-success { color: #28a745; }
+        .log-warning { color: #ffc107; }
+        .log-error { color: #dc3545; }
+        .log-info { color: #17a2b8; }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="mb-1">
+                            <i class="fas fa-check-double me-2"></i>产品数据一致性验证
+                        </h2>
+                        <p class="text-muted mb-0">验证前台和后台产品数据是否一致</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary me-2" onclick="runFullTest()">
+                            <i class="fas fa-play me-1"></i>运行完整测试
+                        </button>
+                        <button class="btn btn-success" onclick="openAdminPanel()">
+                            <i class="fas fa-external-link-alt me-1"></i>打开管理后台
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 状态卡片 -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card status-card" id="dataLoaderCard">
+                            <div class="card-body text-center">
+                                <i class="fas fa-database fa-2x mb-2"></i>
+                                <h5>数据加载器</h5>
+                                <div class="h3" id="dataLoaderCount">-</div>
+                                <small id="dataLoaderStatus">检测中...</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card status-card" id="adminFunctionsCard">
+                            <div class="card-body text-center">
+                                <i class="fas fa-cogs fa-2x mb-2"></i>
+                                <h5>管理功能</h5>
+                                <div class="h3" id="adminFunctionsCount">-</div>
+                                <small id="adminFunctionsStatus">检测中...</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card status-card" id="consistencyCard">
+                            <div class="card-body text-center">
+                                <i class="fas fa-balance-scale fa-2x mb-2"></i>
+                                <h5>一致性检查</h5>
+                                <div class="h3" id="consistencyStatus">-</div>
+                                <small id="consistencyText">检测中...</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card status-card" id="performanceCard">
+                            <div class="card-body text-center">
+                                <i class="fas fa-tachometer-alt fa-2x mb-2"></i>
+                                <h5>加载性能</h5>
+                                <div class="h3" id="loadTime">-</div>
+                                <small id="performanceText">检测中...</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 测试日志 -->
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-list-alt me-2"></i>测试日志
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="test-log" id="testLog">
+                                    <div class="log-entry log-info">等待测试开始...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-chart-pie me-2"></i>统计信息
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <strong>预期产品数:</strong>
+                                    <span class="badge bg-primary fs-6">33</span>
+                                </div>
+                                <div class="mb-3">
+                                    <strong>实际加载数:</strong>
+                                    <span class="badge bg-success fs-6" id="actualProductCount">-</span>
+                                </div>
+                                <div class="mb-3">
+                                    <strong>匹配率:</strong>
+                                    <span class="badge bg-info fs-6" id="matchRate">-</span>
+                                </div>
+                                <div class="mb-3">
+                                    <strong>已发布产品:</strong>
+                                    <span class="badge bg-warning fs-6" id="publishedCount">-</span>
+                                </div>
+                                <div class="mb-3">
+                                    <strong>推荐产品:</strong>
+                                    <span class="badge bg-secondary fs-6" id="featuredCount">-</span>
+                                </div>
+                                <hr>
+                                <div class="mb-2">
+                                    <strong>K系列:</strong>
+                                    <span class="badge bg-outline-primary" id="kSeriesCount">-</span>
+                                </div>
+                                <div class="mb-2">
+                                    <strong>P系列:</strong>
+                                    <span class="badge bg-outline-success" id="pSeriesCount">-</span>
+                                </div>
+                                <div class="mb-2">
+                                    <strong>DZ系列:</strong>
+                                    <span class="badge bg-outline-info" id="dzSeriesCount">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 产品列表预览 -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-table me-2"></i>产品列表预览
+                                </h5>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="exportProductList()">
+                                        <i class="fas fa-download me-1"></i>导出列表
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-hover">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>产品ID</th>
+                                                <th>产品标题</th>
+                                                <th>型号</th>
+                                                <th>系列</th>
+                                                <th>状态</th>
+                                                <th>推荐</th>
+                                                <th>发布时间</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="productTableBody">
+                                            <tr><td colspan="8" class="text-center">等待数据加载...</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="data-loader.js"></script>
+    <script>
+        let testStartTime;
+        let loadedProducts = [];
+        let testResults = [];
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            logEntry.innerHTML = `<strong>[${timestamp}]</strong> ${message}`;
+            
+            const logContainer = document.getElementById('testLog');
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+            
+            testResults.push({ timestamp, message, type });
+        }
+
+        function updateCard(cardId, count, status, statusClass) {
+            const card = document.getElementById(cardId);
+            const countElement = card.querySelector('.h3');
+            const statusElement = card.querySelector('small');
+            
+            countElement.textContent = count;
+            statusElement.textContent = status;
+            
+            card.className = `card status-card status-${statusClass}`;
+        }
+
+        async function runFullTest() {
+            testStartTime = Date.now();
+            testResults = [];
+            loadedProducts = [];
+            
+            // 清空日志
+            document.getElementById('testLog').innerHTML = '';
+            
+            log('🚀 开始完整的产品数据一致性测试', 'info');
+            
+            try {
+                // 测试数据加载器
+                log('📊 测试数据加载器...', 'info');
+                const dataLoader = new ContentDataLoader();
+                await dataLoader.loadProducts();
+                
+                if (dataLoader.contentData && dataLoader.contentData.products) {
+                    const count = dataLoader.contentData.products.length;
+                    loadedProducts = dataLoader.contentData.products;
+                    
+                    log(`✅ 数据加载器成功加载 ${count} 个产品`, 'success');
+                    updateCard('dataLoaderCard', count, '加载成功', 'success');
+                    
+                    // 更新统计信息
+                    updateStatistics();
+                    
+                    // 更新产品表格
+                    updateProductTable();
+                    
+                    // 检查一致性
+                    checkConsistency(count);
+                    
+                } else {
+                    log('❌ 数据加载器未能获取产品数据', 'error');
+                    updateCard('dataLoaderCard', 0, '加载失败', 'error');
+                }
+                
+                // 计算性能
+                const loadTime = Date.now() - testStartTime;
+                updateCard('performanceCard', `${loadTime}ms`, '加载完成', 'success');
+                log(`⏱️ 总加载时间: ${loadTime}ms`, 'info');
+                
+                log('🎉 测试完成！', 'success');
+                
+            } catch (error) {
+                log(`❌ 测试失败: ${error.message}`, 'error');
+                console.error('测试失败:', error);
+            }
+        }
+
+        function checkConsistency(actualCount) {
+            const expectedCount = 33;
+            const matchRate = Math.round((actualCount / expectedCount) * 100);
+            
+            document.getElementById('matchRate').textContent = `${matchRate}%`;
+            
+            if (actualCount === expectedCount) {
+                log(`🎯 完美匹配！实际产品数 ${actualCount} 等于预期数 ${expectedCount}`, 'success');
+                updateCard('consistencyCard', '100%', '完美匹配', 'success');
+            } else if (matchRate >= 90) {
+                log(`✅ 基本匹配！实际产品数 ${actualCount}，匹配率 ${matchRate}%`, 'success');
+                updateCard('consistencyCard', `${matchRate}%`, '基本匹配', 'success');
+            } else if (matchRate >= 70) {
+                log(`⚠️ 部分匹配！实际产品数 ${actualCount}，匹配率 ${matchRate}%`, 'warning');
+                updateCard('consistencyCard', `${matchRate}%`, '部分匹配', 'warning');
+            } else {
+                log(`❌ 匹配度低！实际产品数 ${actualCount}，匹配率 ${matchRate}%`, 'error');
+                updateCard('consistencyCard', `${matchRate}%`, '匹配度低', 'error');
+            }
+        }
+
+        function updateStatistics() {
+            const total = loadedProducts.length;
+            const published = loadedProducts.filter(p => p.status === 'published').length;
+            const featured = loadedProducts.filter(p => p.featured === true).length;
+            const kSeries = loadedProducts.filter(p => p.series === 'K系列').length;
+            const pSeries = loadedProducts.filter(p => p.series === 'P系列').length;
+            const dzSeries = loadedProducts.filter(p => p.series === 'DZ系列').length;
+            
+            document.getElementById('actualProductCount').textContent = total;
+            document.getElementById('publishedCount').textContent = published;
+            document.getElementById('featuredCount').textContent = featured;
+            document.getElementById('kSeriesCount').textContent = kSeries;
+            document.getElementById('pSeriesCount').textContent = pSeries;
+            document.getElementById('dzSeriesCount').textContent = dzSeries;
+            
+            log(`📈 统计信息: 总数=${total}, 已发布=${published}, 推荐=${featured}`, 'info');
+            log(`📊 系列分布: K系列=${kSeries}, P系列=${pSeries}, DZ系列=${dzSeries}`, 'info');
+        }
+
+        function updateProductTable() {
+            const tbody = document.getElementById('productTableBody');
+            
+            if (loadedProducts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">无产品数据</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = loadedProducts.map((product, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td><code class="small">${product.id}</code></td>
+                    <td>${product.title}</td>
+                    <td><span class="badge bg-secondary">${product.model || '-'}</span></td>
+                    <td><span class="badge bg-primary">${product.series || '-'}</span></td>
+                    <td><span class="badge ${product.status === 'published' ? 'bg-success' : 'bg-warning'}">${product.statusName || product.status}</span></td>
+                    <td>${product.featured ? '<i class="fas fa-star text-warning"></i>' : '-'}</td>
+                    <td class="small">${product.published ? new Date(product.published).toLocaleDateString() : '-'}</td>
+                </tr>
+            `).join('');
+        }
+
+        function exportProductList() {
+            const data = {
+                timestamp: new Date().toISOString(),
+                summary: {
+                    totalProducts: loadedProducts.length,
+                    expectedProducts: 33,
+                    matchRate: Math.round((loadedProducts.length / 33) * 100),
+                    testDuration: Date.now() - testStartTime
+                },
+                products: loadedProducts,
+                testResults: testResults
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `product-consistency-test-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            log('📁 测试结果已导出', 'success');
+        }
+
+        function openAdminPanel() {
+            window.open('admin.html', '_blank');
+        }
+
+        // 页面加载时自动运行测试
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(runFullTest, 1000);
+        });
+    </script>
+</body>
+</html>

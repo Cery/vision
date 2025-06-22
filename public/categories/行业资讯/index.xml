@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>行业资讯 on 维森视觉检测仪器</title>
+    <link>http://localhost:1313/categories/%E8%A1%8C%E4%B8%9A%E8%B5%84%E8%AE%AF/</link>
+    <description>Recent content in 行业资讯 on 维森视觉检测仪器</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 10 Nov 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/categories/%E8%A1%8C%E4%B8%9A%E8%B5%84%E8%AE%AF/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2024西安工业自动化及机器人展览会</title>
+      <link>http://localhost:1313/news/exhibition-news-7/</link>
+      <pubDate>Sun, 10 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/exhibition-news-7/</guid>
+      <description>展会将在西安曲江国际会展中心举办</description>
+    </item>
+  </channel>
+</rss>

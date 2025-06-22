@@ -286,11 +286,25 @@
                         <a href="{{ .Permalink }}" class="text-decoration-none text-dark product-title">{{ .Title }}</a>
                     </h5>
 
+                    <!-- 产品分类标签 -->
+                    <div class="product-categories mb-3">
+                        {{ with .Params.primary_category }}
+                        <span class="badge bg-primary me-1 mb-1">
+                            <i class="fas fa-folder me-1"></i>{{ . }}
+                        </span>
+                        {{ end }}
+                        {{ with .Params.secondary_category }}
+                        <span class="badge bg-secondary me-1 mb-1">
+                            <i class="fas fa-tag me-1"></i>{{ . }}
+                        </span>
+                        {{ end }}
+                    </div>
+
                     <!-- 产品信息 -->
                     <div class="product-info">
                         {{ with .Params.model }}
                         <div class="mb-2">
-                            <small class="text-muted"><i class="fas fa-tag me-2"></i>型号：{{ . }}</small>
+                            <small class="text-muted"><i class="fas fa-barcode me-2"></i>型号：{{ . }}</small>
                         </div>
                         {{ end }}
                         {{ with .Params.series }}

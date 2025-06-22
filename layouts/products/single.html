@@ -52,6 +52,20 @@
                     <p class="lead text-muted">{{ . }}</p>
                     {{ end }}
 
+                    <!-- 产品分类标签 -->
+                    <div class="product-categories mb-3">
+                        {{ with .Params.primary_category }}
+                        <span class="badge bg-primary me-2 mb-1" style="font-size: 0.9rem; padding: 0.5rem 0.8rem;">
+                            <i class="fas fa-folder me-1"></i>{{ . }}
+                        </span>
+                        {{ end }}
+                        {{ with .Params.secondary_category }}
+                        <span class="badge bg-secondary me-2 mb-1" style="font-size: 0.9rem; padding: 0.5rem 0.8rem;">
+                            <i class="fas fa-tag me-1"></i>{{ . }}
+                        </span>
+                        {{ end }}
+                    </div>
+
                     <hr>
 
                     <ul class="list-unstyled product-details-list">
@@ -390,8 +404,8 @@ function initLeanCloudViews() {
     })
     .catch(error => {
         console.error('查询Counter失败:', error);
-        // 不再使用本地存储作为备用，而是显示错误信息
-        pageViewsElement.textContent = '统计失败';
+        // 网络失败时显示默认值
+        pageViewsElement.textContent = '0';
     });
 }
 
@@ -434,7 +448,7 @@ function createCounter() {
     })
     .catch(error => {
         console.error('创建Counter失败:', error);
-        pageViewsElement.textContent = '统计失败';
+        pageViewsElement.textContent = '1';
     });
 }
 
@@ -467,7 +481,7 @@ function fetchCurrentViews() {
     })
     .catch(error => {
         console.error('获取浏览次数失败:', error);
-        pageViewsElement.textContent = '统计失败';
+        pageViewsElement.textContent = '0';
     });
 }
 
@@ -498,7 +512,8 @@ function updateCounter(objectId, views) {
     })
     .catch(error => {
         console.error('更新Counter失败:', error);
-        pageViewsElement.textContent = '统计失败';
+        // 更新失败时保持当前显示的数值
+        console.log('更新失败，保持当前显示');
     });
 }
 

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品数据测试 - VisNDT管理系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-database me-2"></i>产品数据加载测试
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <div class="card bg-primary text-white">
+                                    <div class="card-body text-center">
+                                        <h6>Data Loader 产品数</h6>
+                                        <h3 id="dataLoaderCount">-</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-success text-white">
+                                    <div class="card-body text-center">
+                                        <h6>Admin Functions 产品数</h6>
+                                        <h3 id="adminFunctionsCount">-</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-info text-white">
+                                    <div class="card-body text-center">
+                                        <h6>已发布产品数</h6>
+                                        <h3 id="publishedCount">-</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-warning text-white">
+                                    <div class="card-body text-center">
+                                        <h6>推荐产品数</h6>
+                                        <h3 id="featuredCount">-</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Data Loader 产品列表</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>标题</th>
+                                                        <th>状态</th>
+                                                        <th>推荐</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="dataLoaderProducts">
+                                                    <tr><td colspan="4" class="text-center">加载中...</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Admin Functions 产品列表</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>标题</th>
+                                                        <th>状态</th>
+                                                        <th>推荐</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="adminFunctionsProducts">
+                                                    <tr><td colspan="4" class="text-center">加载中...</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">数据对比结果</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="comparisonResult">
+                                            <div class="text-center text-muted">
+                                                <i class="fas fa-spinner fa-spin me-2"></i>正在对比数据...
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <button class="btn btn-primary me-2" onclick="refreshData()">
+                                    <i class="fas fa-refresh me-1"></i>刷新数据
+                                </button>
+                                <button class="btn btn-success me-2" onclick="testProductLoad()">
+                                    <i class="fas fa-test-tube me-1"></i>测试产品加载
+                                </button>
+                                <button class="btn btn-info" onclick="exportComparison()">
+                                    <i class="fas fa-download me-1"></i>导出对比结果
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="data-loader.js"></script>
+    <script src="admin-functions.js"></script>
+    <script>
+        let dataLoader;
+        let dataLoaderProducts = [];
+        let adminFunctionsProducts = [];
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', async function() {
+            await initializeTest();
+        });
+
+        async function initializeTest() {
+            try {
+                // 初始化数据加载器
+                dataLoader = new ContentDataLoader();
+                await dataLoader.loadAllData();
+                
+                // 获取数据
+                await loadDataLoaderProducts();
+                await loadAdminFunctionsProducts();
+                
+                // 更新显示
+                updateDisplay();
+                compareData();
+                
+            } catch (error) {
+                console.error('初始化测试失败:', error);
+                document.getElementById('comparisonResult').innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        初始化失败: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function loadDataLoaderProducts() {
+            if (dataLoader && dataLoader.contentData && dataLoader.contentData.products) {
+                dataLoaderProducts = dataLoader.contentData.products;
+            } else {
+                dataLoaderProducts = [];
+            }
+            console.log('Data Loader 产品数据:', dataLoaderProducts);
+        }
+
+        async function loadAdminFunctionsProducts() {
+            // 模拟 admin-functions.js 中的产品加载逻辑
+            if (dataLoader && dataLoader.contentData && dataLoader.contentData.products) {
+                adminFunctionsProducts = dataLoader.contentData.products.map((product, index) => ({
+                    id: product.id || index + 1,
+                    title: product.title,
+                    summary: product.summary,
+                    model: product.model,
+                    series: product.series,
+                    primary_category: product.primary_category,
+                    secondary_category: product.secondary_category,
+                    status: product.status,
+                    statusName: product.status === 'published' ? '已发布' : '草稿',
+                    published: product.published,
+                    thumbnail: product.thumbnail || '/images/placeholder.jpg',
+                    supplier: product.supplier,
+                    featured: product.featured
+                }));
+            } else {
+                // 备用数据
+                adminFunctionsProducts = [
+                    {
+                        id: 'WS-K08510-a',
+                        title: 'WS-K08510超细工业电子内窥镜',
+                        summary: '0.85mm超小直径，高清成像，适用于极小空间检测',
+                        model: 'WS-K08510',
+                        series: 'K系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '工业视频内窥镜',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2025-01-01T12:00:00+08:00',
+                        thumbnail: '/images/products/K-series/K-main.jpg',
+                        featured: true
+                    },
+                    {
+                        id: 'WS-K08510-b',
+                        title: 'WS-K08510B超细工业电子内窥镜',
+                        summary: '0.85mm超小直径，升级版高清成像，适用于极小空间检测',
+                        model: 'WS-K08510B',
+                        series: 'K系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '工业视频内窥镜',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2025-01-02T12:00:00+08:00',
+                        thumbnail: '/images/products/K-series/K-main.jpg',
+                        featured: false
+                    },
+                    {
+                        id: 'WS-K09510-a',
+                        title: 'WS-K09510工业电子内窥镜',
+                        summary: '0.95mm直径，高性能检测，工业应用首选',
+                        model: 'WS-K09510',
+                        series: 'K系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '工业视频内窥镜',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2025-01-03T12:00:00+08:00',
+                        thumbnail: '/images/products/K-series/K-main.jpg',
+                        featured: false
+                    },
+                    {
+                        id: 'product-p08510',
+                        title: 'P08510工业内窥镜',
+                        summary: 'P系列经济型工业内窥镜，性价比优选',
+                        model: 'P08510',
+                        series: 'P系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '工业视频内窥镜',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2025-01-04T12:00:00+08:00',
+                        thumbnail: '/images/products/P-series/P-main.jpg',
+                        featured: false
+                    },
+                    {
+                        id: 'product-p1210',
+                        title: 'P1210工业内窥镜',
+                        summary: 'P系列标准型工业内窥镜，功能全面',
+                        model: 'P1210',
+                        series: 'P系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '工业视频内窥镜',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2025-01-05T12:00:00+08:00',
+                        thumbnail: '/images/products/P-series/P-main.jpg',
+                        featured: true
+                    },
+                    {
+                        id: 'product-dz60',
+                        title: 'DZ60爬行机器人',
+                        summary: '管道爬行检测机器人，远程操控，适用大口径管道',
+                        model: 'DZ60',
+                        series: 'DZ系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '爬行机器人',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2025-01-06T12:00:00+08:00',
+                        thumbnail: '/images/products/DZ-series/DZ-main.jpg',
+                        featured: true
+                    }
+                ];
+            }
+            console.log('Admin Functions 产品数据:', adminFunctionsProducts);
+        }
+
+        function updateDisplay() {
+            // 更新统计数字
+            document.getElementById('dataLoaderCount').textContent = dataLoaderProducts.length;
+            document.getElementById('adminFunctionsCount').textContent = adminFunctionsProducts.length;
+            
+            const publishedCount = adminFunctionsProducts.filter(p => p.status === 'published').length;
+            const featuredCount = adminFunctionsProducts.filter(p => p.featured === true).length;
+            
+            document.getElementById('publishedCount').textContent = publishedCount;
+            document.getElementById('featuredCount').textContent = featuredCount;
+
+            // 更新产品列表
+            updateProductTable('dataLoaderProducts', dataLoaderProducts);
+            updateProductTable('adminFunctionsProducts', adminFunctionsProducts);
+        }
+
+        function updateProductTable(tableId, products) {
+            const tbody = document.getElementById(tableId);
+            if (products.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">无数据</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = products.map(product => `
+                <tr>
+                    <td><code>${product.id}</code></td>
+                    <td>${product.title}</td>
+                    <td><span class="badge ${product.status === 'published' ? 'bg-success' : 'bg-warning'}">${product.statusName || product.status}</span></td>
+                    <td>${product.featured ? '<i class="fas fa-star text-warning"></i>' : '-'}</td>
+                </tr>
+            `).join('');
+        }
+
+        function compareData() {
+            const result = document.getElementById('comparisonResult');
+            
+            if (dataLoaderProducts.length === adminFunctionsProducts.length) {
+                result.innerHTML = `
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <strong>数据一致！</strong> 两个数据源的产品数量相同 (${dataLoaderProducts.length} 个产品)
+                    </div>
+                `;
+            } else {
+                result.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>数据不一致！</strong> 
+                        Data Loader: ${dataLoaderProducts.length} 个产品，
+                        Admin Functions: ${adminFunctionsProducts.length} 个产品
+                    </div>
+                `;
+            }
+        }
+
+        async function refreshData() {
+            document.getElementById('comparisonResult').innerHTML = `
+                <div class="text-center text-muted">
+                    <i class="fas fa-spinner fa-spin me-2"></i>正在刷新数据...
+                </div>
+            `;
+            
+            await initializeTest();
+        }
+
+        function testProductLoad() {
+            console.log('=== 产品数据测试 ===');
+            console.log('Data Loader 产品:', dataLoaderProducts);
+            console.log('Admin Functions 产品:', adminFunctionsProducts);
+            
+            alert(`测试完成！\n\nData Loader: ${dataLoaderProducts.length} 个产品\nAdmin Functions: ${adminFunctionsProducts.length} 个产品\n\n详细信息请查看控制台`);
+        }
+
+        function exportComparison() {
+            const data = {
+                timestamp: new Date().toISOString(),
+                dataLoaderProducts: dataLoaderProducts,
+                adminFunctionsProducts: adminFunctionsProducts,
+                comparison: {
+                    dataLoaderCount: dataLoaderProducts.length,
+                    adminFunctionsCount: adminFunctionsProducts.length,
+                    isConsistent: dataLoaderProducts.length === adminFunctionsProducts.length
+                }
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `product-data-comparison-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
