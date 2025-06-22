@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>快速测试 - 产品列表修复验证</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f8f9fa; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin: 20px 0; }
+        .success { border-left: 4px solid #28a745; background: #f8fff9; }
+        .error { border-left: 4px solid #dc3545; background: #fff8f8; }
+        .warning { border-left: 4px solid #ffc107; background: #fffbf0; }
+        button { padding: 12px 24px; margin: 10px 5px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-warning { background: #ffc107; color: black; }
+        .result { margin: 15px 0; padding: 15px; border-radius: 4px; }
+        .log { background: #f8f9fa; padding: 10px; border-radius: 4px; font-family: monospace; max-height: 200px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 快速测试 - 产品列表修复验证</h1>
+        
+        <div class="card">
+            <h3>测试说明</h3>
+            <p>此页面用于快速验证产品列表加载修复是否生效。</p>
+            <p><strong>修复内容：</strong></p>
+            <ul>
+                <li>在content-manager.html中内联了ContentDataLoader类</li>
+                <li>添加了强制数据加载器初始化逻辑</li>
+                <li>修复了数据字段映射问题</li>
+                <li>增强了错误处理机制</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>快速验证</h3>
+            <button class="btn-primary" onclick="testContentDataLoader()">测试ContentDataLoader</button>
+            <button class="btn-success" onclick="testProductData()">测试产品数据</button>
+            <button class="btn-warning" onclick="openContentManager()">打开内容管理器</button>
+            <button class="btn-danger" onclick="clearCache()">清除缓存</button>
+        </div>
+
+        <div class="card">
+            <h3>测试结果</h3>
+            <div id="testResults">
+                <p>点击上方按钮开始测试...</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>测试日志</h3>
+            <div id="testLog" class="log">
+                等待测试开始...
+            </div>
+            <button onclick="clearLog()">清空日志</button>
+        </div>
+
+        <div class="card">
+            <h3>验证步骤</h3>
+            <ol>
+                <li><strong>测试ContentDataLoader：</strong>验证类是否正确定义</li>
+                <li><strong>测试产品数据：</strong>验证数据是否能正确加载</li>
+                <li><strong>打开内容管理器：</strong>在新窗口中打开并测试产品列表</li>
+                <li><strong>验证产品列表：</strong>在内容管理器中点击"产品列表"，确认能正常显示</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        let testLog = [];
+
+        function addLog(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${type.toUpperCase()}: ${message}`;
+            testLog.push(logEntry);
+            updateLogDisplay();
+            console.log(logEntry);
+        }
+
+        function updateLogDisplay() {
+            document.getElementById('testLog').textContent = testLog.join('\n');
+        }
+
+        function clearLog() {
+            testLog = [];
+            updateLogDisplay();
+        }
+
+        function showResult(message, type = 'info') {
+            const resultDiv = document.getElementById('testResults');
+            const className = type === 'success' ? 'success' : type === 'error' ? 'error' : 'warning';
+            resultDiv.innerHTML = `<div class="result ${className}">${message}</div>`;
+        }
+
+        async function testContentDataLoader() {
+            addLog('开始测试ContentDataLoader类');
+            showResult('🔄 正在测试ContentDataLoader...', 'warning');
+
+            try {
+                // 动态加载content-manager.html中的脚本
+                const response = await fetch('/admin/content-manager.html');
+                const html = await response.text();
+                
+                // 检查是否包含内联的ContentDataLoader
+                const hasInlineLoader = html.includes('class ContentDataLoader');
+                
+                if (hasInlineLoader) {
+                    addLog('✅ content-manager.html中包含内联ContentDataLoader类');
+                    
+                    // 尝试执行内联脚本
+                    const scriptMatch = html.match(/<script>\s*\/\/ 内联ContentDataLoader类[\s\S]*?<\/script>/);
+                    if (scriptMatch) {
+                        const scriptContent = scriptMatch[0].replace(/<\/?script[^>]*>/g, '');
+                        eval(scriptContent);
+                        
+                        if (typeof ContentDataLoader !== 'undefined') {
+                            addLog('✅ ContentDataLoader类成功加载');
+                            
+                            // 测试实例化
+                            const loader = new ContentDataLoader();
+                            addLog('✅ ContentDataLoader实例创建成功');
+                            
+                            showResult('✅ ContentDataLoader测试通过！类已正确定义并可以实例化。', 'success');
+                            return true;
+                        } else {
+                            throw new Error('ContentDataLoader类执行后仍未定义');
+                        }
+                    } else {
+                        throw new Error('未找到内联脚本内容');
+                    }
+                } else {
+                    throw new Error('content-manager.html中未找到内联ContentDataLoader类');
+                }
+
+            } catch (error) {
+                addLog(`❌ ContentDataLoader测试失败: ${error.message}`, 'error');
+                showResult(`❌ ContentDataLoader测试失败: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        async function testProductData() {
+            addLog('开始测试产品数据加载');
+            showResult('🔄 正在测试产品数据...', 'warning');
+
+            try {
+                // 确保ContentDataLoader可用
+                if (typeof ContentDataLoader === 'undefined') {
+                    addLog('ContentDataLoader未定义，先运行ContentDataLoader测试');
+                    const loaderTestResult = await testContentDataLoader();
+                    if (!loaderTestResult) {
+                        throw new Error('ContentDataLoader测试失败，无法继续');
+                    }
+                }
+
+                // 创建数据加载器实例
+                const loader = new ContentDataLoader();
+                addLog('创建ContentDataLoader实例');
+
+                // 加载数据
+                await loader.loadAllData();
+                addLog('数据加载完成');
+
+                // 检查产品数据
+                const products = loader.contentData?.products || [];
+                addLog(`产品数量: ${products.length}`);
+
+                if (products.length > 0) {
+                    addLog(`第一个产品: ${products[0].title}`);
+                    addLog(`产品字段: ${Object.keys(products[0]).join(', ')}`);
+                    
+                    // 检查关键字段
+                    const firstProduct = products[0];
+                    const hasRequiredFields = firstProduct.id && firstProduct.title && firstProduct.model;
+                    
+                    if (hasRequiredFields) {
+                        addLog('✅ 产品数据结构验证通过');
+                        showResult(`✅ 产品数据测试通过！成功加载${products.length}个产品，数据结构完整。`, 'success');
+                        return true;
+                    } else {
+                        throw new Error('产品数据缺少必需字段');
+                    }
+                } else {
+                    throw new Error('没有加载到产品数据');
+                }
+
+            } catch (error) {
+                addLog(`❌ 产品数据测试失败: ${error.message}`, 'error');
+                showResult(`❌ 产品数据测试失败: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        function openContentManager() {
+            addLog('打开内容管理器进行手动验证');
+            showResult('📖 已在新窗口中打开内容管理器，请手动点击"产品列表"进行验证。', 'warning');
+            window.open('/admin/content-manager.html', '_blank');
+        }
+
+        function clearCache() {
+            addLog('清除浏览器缓存');
+            showResult('🔄 正在清除缓存...', 'warning');
+            
+            // 清除可能的全局变量
+            if (window.ContentDataLoader) {
+                delete window.ContentDataLoader;
+                addLog('清除全局ContentDataLoader');
+            }
+            if (window.contentDataLoader) {
+                delete window.contentDataLoader;
+                addLog('清除全局contentDataLoader实例');
+            }
+
+            // 提示用户手动刷新
+            setTimeout(() => {
+                showResult('✅ 缓存清除完成。建议手动刷新浏览器页面以确保使用最新代码。', 'success');
+                addLog('缓存清除完成');
+            }, 1000);
+        }
+
+        // 页面加载时自动运行基础检查
+        document.addEventListener('DOMContentLoaded', function() {
+            addLog('快速测试页面加载完成');
+            addLog('准备进行产品列表修复验证');
+            
+            // 显示当前状态
+            showResult('🔧 产品列表修复验证工具已就绪。点击上方按钮开始测试。', 'warning');
+        });
+    </script>
+</body>
+</html>

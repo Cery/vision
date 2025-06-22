@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>最终修复测试 - VisNDT</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .test-container { max-width: 800px; margin: 0 auto; }
+        .test-card { background: white; margin: 15px 0; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .success { border-left: 4px solid #28a745; }
+        .error { border-left: 4px solid #dc3545; }
+        .warning { border-left: 4px solid #ffc107; }
+        .info { border-left: 4px solid #17a2b8; }
+        button { padding: 10px 20px; margin: 5px; border: none; border-radius: 4px; cursor: pointer; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-warning { background: #ffc107; color: black; }
+        .log { background: #f8f9fa; padding: 10px; border-radius: 4px; font-family: monospace; max-height: 300px; overflow-y: auto; }
+        .status { font-weight: bold; padding: 5px 10px; border-radius: 3px; }
+        .status-success { background: #d4edda; color: #155724; }
+        .status-error { background: #f8d7da; color: #721c24; }
+        .status-warning { background: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔧 最终修复测试</h1>
+        <p>测试产品列表加载的最终修复方案</p>
+
+        <div class="test-card info">
+            <h3>测试状态</h3>
+            <div id="test-status">
+                <span class="status status-warning">等待测试</span>
+            </div>
+        </div>
+
+        <div class="test-card">
+            <h3>快速测试</h3>
+            <button class="btn-primary" onclick="runQuickTest()">运行快速测试</button>
+            <button class="btn-success" onclick="openContentManager()">打开内容管理器</button>
+            <button class="btn-warning" onclick="openEmergencyDebug()">打开紧急调试</button>
+            <button class="btn-danger" onclick="forceReset()">强制重置</button>
+        </div>
+
+        <div class="test-card">
+            <h3>详细测试结果</h3>
+            <div id="test-results">
+                <p>点击"运行快速测试"开始测试...</p>
+            </div>
+        </div>
+
+        <div class="test-card">
+            <h3>测试日志</h3>
+            <div id="test-log" class="log">
+                等待测试开始...
+            </div>
+            <button onclick="clearLog()">清空日志</button>
+        </div>
+
+        <div class="test-card">
+            <h3>手动验证步骤</h3>
+            <ol>
+                <li>点击"运行快速测试"按钮</li>
+                <li>检查测试结果是否显示成功</li>
+                <li>点击"打开内容管理器"</li>
+                <li>在内容管理器中点击"产品列表"</li>
+                <li>验证产品列表是否正确显示</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        let testLog = [];
+
+        function addLog(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${type.toUpperCase()}: ${message}`;
+            testLog.push(logEntry);
+            updateLogDisplay();
+            console.log(logEntry);
+        }
+
+        function updateLogDisplay() {
+            document.getElementById('test-log').textContent = testLog.join('\n');
+        }
+
+        function clearLog() {
+            testLog = [];
+            updateLogDisplay();
+        }
+
+        function updateTestStatus(status, message) {
+            const statusElement = document.getElementById('test-status');
+            const className = status === 'success' ? 'status-success' : 
+                             status === 'error' ? 'status-error' : 'status-warning';
+            statusElement.innerHTML = `<span class="status ${className}">${message}</span>`;
+        }
+
+        async function runQuickTest() {
+            addLog('开始运行快速测试');
+            updateTestStatus('warning', '测试中...');
+            
+            const results = document.getElementById('test-results');
+            results.innerHTML = '<p>🔄 测试进行中...</p>';
+
+            try {
+                let testResults = [];
+                let passedTests = 0;
+                let totalTests = 0;
+
+                // 测试1: 检查基础环境
+                totalTests++;
+                addLog('测试1: 检查基础环境');
+                try {
+                    const hasWindow = typeof window !== 'undefined';
+                    const hasDocument = typeof document !== 'undefined';
+                    const hasConsole = typeof console !== 'undefined';
+                    
+                    if (hasWindow && hasDocument && hasConsole) {
+                        testResults.push('✅ 基础环境检查通过');
+                        passedTests++;
+                        addLog('基础环境检查通过');
+                    } else {
+                        testResults.push('❌ 基础环境检查失败');
+                        addLog('基础环境检查失败', 'error');
+                    }
+                } catch (error) {
+                    testResults.push('❌ 基础环境检查异常: ' + error.message);
+                    addLog('基础环境检查异常: ' + error.message, 'error');
+                }
+
+                // 测试2: 检查网络连接
+                totalTests++;
+                addLog('测试2: 检查网络连接');
+                try {
+                    const response = await fetch('/admin/content-manager.html', { method: 'HEAD' });
+                    if (response.ok) {
+                        testResults.push('✅ 网络连接正常');
+                        passedTests++;
+                        addLog('网络连接正常');
+                    } else {
+                        testResults.push('❌ 网络连接异常: ' + response.status);
+                        addLog('网络连接异常: ' + response.status, 'error');
+                    }
+                } catch (error) {
+                    testResults.push('❌ 网络连接失败: ' + error.message);
+                    addLog('网络连接失败: ' + error.message, 'error');
+                }
+
+                // 测试3: 检查JavaScript文件
+                totalTests++;
+                addLog('测试3: 检查JavaScript文件');
+                try {
+                    const dataLoaderResponse = await fetch('/admin/data-loader.js', { method: 'HEAD' });
+                    const adminFunctionsResponse = await fetch('/admin/admin-functions.js', { method: 'HEAD' });
+                    
+                    if (dataLoaderResponse.ok && adminFunctionsResponse.ok) {
+                        testResults.push('✅ JavaScript文件可访问');
+                        passedTests++;
+                        addLog('JavaScript文件可访问');
+                    } else {
+                        testResults.push('❌ JavaScript文件访问失败');
+                        addLog('JavaScript文件访问失败', 'error');
+                    }
+                } catch (error) {
+                    testResults.push('❌ JavaScript文件检查异常: ' + error.message);
+                    addLog('JavaScript文件检查异常: ' + error.message, 'error');
+                }
+
+                // 测试4: 动态加载数据加载器
+                totalTests++;
+                addLog('测试4: 动态加载数据加载器');
+                try {
+                    // 动态加载data-loader.js
+                    await loadScript('/admin/data-loader.js');
+                    
+                    if (typeof ContentDataLoader !== 'undefined') {
+                        const loader = new ContentDataLoader();
+                        await loader.loadAllData();
+                        
+                        const productCount = loader.contentData?.products?.length || 0;
+                        testResults.push(`✅ 数据加载器测试通过 (${productCount}个产品)`);
+                        passedTests++;
+                        addLog(`数据加载器测试通过，加载了${productCount}个产品`);
+                        
+                        // 设置全局数据加载器
+                        window.contentDataLoader = loader;
+                        
+                    } else {
+                        testResults.push('❌ ContentDataLoader类未定义');
+                        addLog('ContentDataLoader类未定义', 'error');
+                    }
+                } catch (error) {
+                    testResults.push('❌ 数据加载器测试失败: ' + error.message);
+                    addLog('数据加载器测试失败: ' + error.message, 'error');
+                }
+
+                // 测试5: 模拟产品列表显示
+                totalTests++;
+                addLog('测试5: 模拟产品列表显示');
+                try {
+                    if (window.contentDataLoader && window.contentDataLoader.contentData) {
+                        const products = window.contentDataLoader.contentData.products || [];
+                        
+                        if (products.length > 0) {
+                            // 模拟渲染第一个产品
+                            const firstProduct = products[0];
+                            const mockHtml = `
+                                <tr>
+                                    <td>${firstProduct.title || '未命名产品'}</td>
+                                    <td>${firstProduct.model || '-'}</td>
+                                    <td>${firstProduct.series || '-'}</td>
+                                    <td>${firstProduct.status || 'published'}</td>
+                                </tr>
+                            `;
+                            
+                            testResults.push(`✅ 产品列表模拟成功 (首个产品: ${firstProduct.title})`);
+                            passedTests++;
+                            addLog(`产品列表模拟成功，首个产品: ${firstProduct.title}`);
+                        } else {
+                            testResults.push('⚠️ 产品数据为空');
+                            addLog('产品数据为空', 'warning');
+                        }
+                    } else {
+                        testResults.push('❌ 数据加载器不可用');
+                        addLog('数据加载器不可用', 'error');
+                    }
+                } catch (error) {
+                    testResults.push('❌ 产品列表模拟失败: ' + error.message);
+                    addLog('产品列表模拟失败: ' + error.message, 'error');
+                }
+
+                // 显示测试结果
+                const successRate = Math.round((passedTests / totalTests) * 100);
+                const overallStatus = passedTests === totalTests ? 'success' : 
+                                    passedTests > totalTests / 2 ? 'warning' : 'error';
+
+                results.innerHTML = `
+                    <h4>测试结果总览</h4>
+                    <p><strong>通过率: ${successRate}% (${passedTests}/${totalTests})</strong></p>
+                    <ul>
+                        ${testResults.map(result => `<li>${result}</li>`).join('')}
+                    </ul>
+                    <div style="margin-top: 20px;">
+                        <h5>建议操作:</h5>
+                        ${successRate >= 80 ? 
+                            '<p style="color: green;">✅ 测试基本通过，可以尝试打开内容管理器测试产品列表功能。</p>' :
+                            '<p style="color: red;">❌ 测试未完全通过，建议使用紧急调试工具进一步排查问题。</p>'
+                        }
+                    </div>
+                `;
+
+                updateTestStatus(overallStatus, 
+                    overallStatus === 'success' ? '测试通过' : 
+                    overallStatus === 'warning' ? '部分通过' : '测试失败'
+                );
+
+                addLog(`测试完成，通过率: ${successRate}%`);
+
+            } catch (error) {
+                addLog('测试过程中发生异常: ' + error.message, 'error');
+                results.innerHTML = `<p style="color: red;">❌ 测试过程中发生异常: ${error.message}</p>`;
+                updateTestStatus('error', '测试异常');
+            }
+        }
+
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                // 检查是否已经加载
+                const existingScript = document.querySelector(`script[src="${src}"]`);
+                if (existingScript) {
+                    resolve();
+                    return;
+                }
+
+                const script = document.createElement('script');
+                script.src = src + '?t=' + Date.now(); // 添加时间戳避免缓存
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        function openContentManager() {
+            addLog('打开内容管理器');
+            window.open('/admin/content-manager.html', '_blank');
+        }
+
+        function openEmergencyDebug() {
+            addLog('打开紧急调试工具');
+            window.open('/admin/emergency-debug.html', '_blank');
+        }
+
+        function forceReset() {
+            addLog('执行强制重置');
+            
+            // 清除所有全局变量
+            if (window.contentDataLoader) {
+                delete window.contentDataLoader;
+            }
+            if (window.ContentDataLoader) {
+                delete window.ContentDataLoader;
+            }
+            
+            // 移除动态加载的脚本
+            const scripts = document.querySelectorAll('script[src*="data-loader"], script[src*="admin-functions"]');
+            scripts.forEach(script => script.remove());
+            
+            // 重置测试状态
+            updateTestStatus('warning', '已重置');
+            document.getElementById('test-results').innerHTML = '<p>已执行强制重置，请重新运行测试。</p>';
+            
+            addLog('强制重置完成');
+        }
+
+        // 页面加载时的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            addLog('测试页面加载完成');
+            addLog('准备运行测试，请点击"运行快速测试"按钮');
+        });
+    </script>
+</body>
+</html>

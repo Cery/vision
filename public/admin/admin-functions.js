@@ -1045,15 +1045,35 @@ let filteredProducts = [];
 
 // 确保数据加载器已初始化
 async function ensureDataLoaderInitialized() {
-    if (!window.contentDataLoader) {
-        console.log('初始化数据加载器...');
-        window.contentDataLoader = new ContentDataLoader();
-        await window.contentDataLoader.loadAllData();
-        console.log('数据加载器初始化完成');
-    } else if (!window.contentDataLoader.contentData || !window.contentDataLoader.contentData.products) {
-        console.log('重新加载产品数据...');
-        await window.contentDataLoader.loadProducts();
-        console.log('产品数据重新加载完成');
+    try {
+        if (!window.contentDataLoader) {
+            console.log('初始化数据加载器...');
+            if (typeof ContentDataLoader === 'undefined') {
+                throw new Error('ContentDataLoader 类未定义');
+            }
+            window.contentDataLoader = new ContentDataLoader();
+            await window.contentDataLoader.loadAllData();
+            console.log('数据加载器初始化完成，产品数量:', window.contentDataLoader.contentData.products?.length || 0);
+        } else if (!window.contentDataLoader.contentData || !window.contentDataLoader.contentData.products || window.contentDataLoader.contentData.products.length === 0) {
+            console.log('重新加载产品数据...');
+            await window.contentDataLoader.loadProducts();
+            console.log('产品数据重新加载完成，产品数量:', window.contentDataLoader.contentData.products?.length || 0);
+        } else {
+            console.log('数据加载器已就绪，产品数量:', window.contentDataLoader.contentData.products?.length || 0);
+        }
+    } catch (error) {
+        console.error('数据加载器初始化失败:', error);
+        // 创建一个最小的备用数据加载器
+        window.contentDataLoader = {
+            contentData: {
+                products: [],
+                news: [],
+                cases: [],
+                categories: [],
+                suppliers: []
+            }
+        };
+        throw error;
     }
 }
 
@@ -6003,77 +6023,124 @@ function uploadCoverImage() {
 
 // 产品管理相关函数
 async function loadProductsList() {
-    // 确保数据加载器已初始化
-    await ensureDataLoaderInitialized();
+    try {
+        console.log('开始加载产品列表...');
 
-    // 从数据加载器获取实际产品数据
-    const dataLoader = window.contentDataLoader;
-    let productData = [];
+        // 确保数据加载器已初始化
+        await ensureDataLoaderInitialized();
 
-    if (dataLoader && dataLoader.contentData && dataLoader.contentData.products) {
-        productData = dataLoader.contentData.products.map((product, index) => ({
-            id: product.id || index + 1,
-            title: product.title,
-            summary: product.summary,
-            model: product.model,
-            series: product.series,
-            primary_category: product.primary_category,
-            secondary_category: product.secondary_category,
-            status: product.status,
-            statusName: product.status === 'published' ? '已发布' : '草稿',
-            published: product.published,
-            thumbnail: product.thumbnail || '/images/placeholder.jpg',
-            supplier: product.supplier,
-            featured: product.featured
-        }));
-    } else {
-        // 备用数据 - 如果数据加载器不可用，尝试直接调用其方法
-        try {
-            if (window.ContentDataLoader) {
-                const tempLoader = new ContentDataLoader();
-                productData = await tempLoader.loadProductsFromKnownFiles();
-                console.log(`通过临时加载器获取了 ${productData.length} 个产品`);
-            } else {
-                throw new Error('ContentDataLoader 不可用');
-            }
-        } catch (error) {
-            console.warn('临时加载器失败，使用最小备用数据:', error);
-            // 最小备用数据集
-            productData = [
-                {
-                    id: 'WS-K08510-a',
-                    title: 'WS-K08510超细工业电子内窥镜',
-                    summary: '0.85mm超小直径，高清成像，适用于极小空间检测',
-                    model: 'WS-K08510',
-                    series: 'K系列',
-                    supplier: '深圳市微视光电科技有限公司',
-                    primary_category: '电子内窥镜',
-                    secondary_category: '工业视频内窥镜',
-                    status: 'published',
-                    statusName: '已发布',
-                    published: '2025-01-01T12:00:00+08:00',
-                    thumbnail: '/images/products/K-series/K-main.jpg',
-                    featured: true
+        // 从数据加载器获取实际产品数据
+        const dataLoader = window.contentDataLoader;
+        let productData = [];
+
+        if (dataLoader && dataLoader.contentData && dataLoader.contentData.products && dataLoader.contentData.products.length > 0) {
+            console.log(`从数据加载器获取到 ${dataLoader.contentData.products.length} 个产品`);
+            productData = dataLoader.contentData.products.map((product, index) => ({
+                id: product.id || `product-${index + 1}`,
+                title: product.title || '未命名产品',
+                summary: product.summary || '',
+                model: product.model || '',
+                series: product.series || '',
+                primary_category: product.primary_category || '电子内窥镜',
+                secondary_category: product.secondary_category || '',
+                status: product.status || 'published',
+                statusName: product.status === 'published' ? '已发布' : product.status === 'draft' ? '草稿' : '已归档',
+                published: product.published || new Date().toISOString(),
+                thumbnail: product.thumbnail || '/images/placeholder.jpg',
+                supplier: product.supplier || '深圳市微视光电科技有限公司',
+                featured: product.featured || false
+            }));
+        } else {
+            console.warn('数据加载器中没有产品数据，尝试备用方案...');
+            // 备用数据 - 如果数据加载器不可用，尝试直接调用其方法
+            try {
+                if (window.ContentDataLoader) {
+                    console.log('尝试使用临时加载器...');
+                    const tempLoader = new ContentDataLoader();
+                    const tempData = await tempLoader.loadProductsFromKnownFiles();
+                    if (tempData && tempData.length > 0) {
+                        productData = tempData;
+                        console.log(`通过临时加载器获取了 ${productData.length} 个产品`);
+                        // 更新主数据加载器
+                        if (dataLoader && dataLoader.contentData) {
+                            dataLoader.contentData.products = tempData;
+                        }
+                    } else {
+                        throw new Error('临时加载器返回空数据');
+                    }
+                } else {
+                    throw new Error('ContentDataLoader 不可用');
                 }
-            ];
+            } catch (error) {
+                console.warn('临时加载器失败，使用最小备用数据:', error);
+                // 最小备用数据集
+                productData = [
+                    {
+                        id: 'WS-K08510-a',
+                        title: 'WS-K08510超细工业电子内窥镜',
+                        summary: '0.85mm超小直径，高清成像，适用于极小空间检测',
+                        model: 'WS-K08510',
+                        series: 'K系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '工业视频内窥镜',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2025-01-01T12:00:00+08:00',
+                        thumbnail: '/images/products/K-series/K-main.jpg',
+                        featured: true
+                    }
+                ];
+            }
         }
+
+        console.log(`最终获取到 ${productData.length} 个产品数据`);
+
+        // 设置全局变量
+        filteredProducts = [...productData];
+        totalProducts = filteredProducts.length;
+
+        // 渲染当前页的产品
+        renderProductsPage();
+
+        // 渲染分页控件
+        renderProductPagination();
+
+        // 绑定复选框事件
+        bindProductCheckboxEvents();
+
+        // 更新统计信息
+        updateProductStats();
+
+        console.log('产品列表加载完成');
+
+    } catch (error) {
+        console.error('加载产品列表失败:', error);
+
+        // 显示错误状态
+        const tbody = document.getElementById('productTableBody');
+        if (tbody) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="9" class="text-center py-4">
+                        <div class="empty-state">
+                            <i class="fas fa-exclamation-triangle text-warning fa-3x mb-3"></i>
+                            <div class="empty-title">产品列表加载失败</div>
+                            <div class="empty-description">错误信息: ${error.message}</div>
+                            <button class="btn btn-primary mt-3" onclick="loadProductsList()">
+                                <i class="fas fa-refresh me-2"></i>重新加载
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+
+        // 显示通知
+        showNotification(`产品列表加载失败: ${error.message}`, 'danger');
+
+        throw error;
     }
-
-    // 设置全局变量
-    filteredProducts = [...productData];
-    totalProducts = filteredProducts.length;
-
-    // 渲染当前页的产品
-    renderProductsPage();
-
-    // 渲染分页控件
-    renderProductPagination();
-
-    // 绑定复选框事件
-    bindProductCheckboxEvents();
-
-    // 更新统计信息
-    updateProductStats();
 }
 
 // 渲染产品页面

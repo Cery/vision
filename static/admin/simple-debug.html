@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简单调试工具 - VisNDT</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .step { margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .warning { background-color: #fff3cd; border-color: #ffeaa7; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        button { padding: 8px 16px; margin: 5px; border: none; border-radius: 3px; cursor: pointer; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+    <h1>🔍 简单调试工具</h1>
+    <p>逐步检查产品列表加载问题</p>
+
+    <div id="step1" class="step">
+        <h3>步骤1: 检查JavaScript文件加载</h3>
+        <div id="step1-result">等待检查...</div>
+    </div>
+
+    <div id="step2" class="step">
+        <h3>步骤2: 检查ContentDataLoader类</h3>
+        <div id="step2-result">等待检查...</div>
+    </div>
+
+    <div id="step3" class="step">
+        <h3>步骤3: 测试数据加载</h3>
+        <div id="step3-result">等待检查...</div>
+        <button class="btn-primary" onclick="testDataLoading()">开始测试</button>
+    </div>
+
+    <div id="step4" class="step">
+        <h3>步骤4: 测试产品列表函数</h3>
+        <div id="step4-result">等待检查...</div>
+        <button class="btn-success" onclick="testProductListFunction()">测试函数</button>
+    </div>
+
+    <div id="step5" class="step">
+        <h3>步骤5: 查看错误详情</h3>
+        <div id="step5-result">等待检查...</div>
+        <button class="btn-danger" onclick="showDetailedErrors()">显示详细错误</button>
+    </div>
+
+    <div id="console-output" class="step">
+        <h3>控制台输出</h3>
+        <pre id="console-log"></pre>
+        <button onclick="clearConsole()">清空</button>
+    </div>
+
+    <!-- 引入JavaScript文件 -->
+    <script src="data-loader.js"></script>
+    <script src="admin-functions.js"></script>
+
+    <script>
+        let logs = [];
+        
+        // 重写console方法来捕获日志
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addLog('LOG', args.join(' '));
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addLog('ERROR', args.join(' '));
+        };
+
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            addLog('WARN', args.join(' '));
+        };
+
+        function addLog(type, message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logs.push(`[${timestamp}] ${type}: ${message}`);
+            updateConsoleDisplay();
+        }
+
+        function updateConsoleDisplay() {
+            document.getElementById('console-log').textContent = logs.join('\n');
+        }
+
+        function clearConsole() {
+            logs = [];
+            updateConsoleDisplay();
+        }
+
+        function setStepResult(stepId, content, className = 'info') {
+            const element = document.getElementById(stepId + '-result');
+            element.innerHTML = content;
+            const stepElement = document.getElementById(stepId);
+            stepElement.className = 'step ' + className;
+        }
+
+        // 步骤1: 检查JavaScript文件加载
+        function checkJavaScriptFiles() {
+            console.log('开始检查JavaScript文件...');
+            
+            let result = '<ul>';
+            let allLoaded = true;
+
+            // 检查data-loader.js
+            if (typeof ContentDataLoader !== 'undefined') {
+                result += '<li>✅ data-loader.js 已加载，ContentDataLoader类可用</li>';
+            } else {
+                result += '<li>❌ data-loader.js 未加载或ContentDataLoader类未定义</li>';
+                allLoaded = false;
+            }
+
+            // 检查admin-functions.js
+            if (typeof showProductsList !== 'undefined') {
+                result += '<li>✅ admin-functions.js 已加载，showProductsList函数可用</li>';
+            } else {
+                result += '<li>❌ admin-functions.js 未加载或showProductsList函数未定义</li>';
+                allLoaded = false;
+            }
+
+            if (typeof ensureDataLoaderInitialized !== 'undefined') {
+                result += '<li>✅ ensureDataLoaderInitialized函数可用</li>';
+            } else {
+                result += '<li>❌ ensureDataLoaderInitialized函数未定义</li>';
+                allLoaded = false;
+            }
+
+            result += '</ul>';
+            
+            setStepResult('step1', result, allLoaded ? 'success' : 'error');
+            return allLoaded;
+        }
+
+        // 步骤2: 检查ContentDataLoader类
+        function checkContentDataLoader() {
+            console.log('开始检查ContentDataLoader类...');
+            
+            if (typeof ContentDataLoader === 'undefined') {
+                setStepResult('step2', '❌ ContentDataLoader类未定义', 'error');
+                return false;
+            }
+
+            try {
+                const loader = new ContentDataLoader();
+                let result = '<ul>';
+                result += '<li>✅ ContentDataLoader类可以实例化</li>';
+                result += `<li>✅ 基础URL: ${loader.baseUrl}</li>`;
+                result += '<li>✅ contentData结构已初始化</li>';
+                
+                // 检查方法
+                if (typeof loader.loadAllData === 'function') {
+                    result += '<li>✅ loadAllData方法存在</li>';
+                } else {
+                    result += '<li>❌ loadAllData方法不存在</li>';
+                }
+
+                if (typeof loader.loadProducts === 'function') {
+                    result += '<li>✅ loadProducts方法存在</li>';
+                } else {
+                    result += '<li>❌ loadProducts方法不存在</li>';
+                }
+
+                result += '</ul>';
+                setStepResult('step2', result, 'success');
+                return true;
+            } catch (error) {
+                setStepResult('step2', `❌ ContentDataLoader实例化失败: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // 步骤3: 测试数据加载
+        async function testDataLoading() {
+            console.log('开始测试数据加载...');
+            setStepResult('step3', '🔄 正在测试数据加载...', 'warning');
+
+            try {
+                const loader = new ContentDataLoader();
+                await loader.loadAllData();
+
+                let result = '<ul>';
+                result += `<li>✅ 数据加载完成</li>`;
+                result += `<li>产品数量: ${loader.contentData.products?.length || 0}</li>`;
+                result += `<li>资讯数量: ${loader.contentData.news?.length || 0}</li>`;
+                result += `<li>案例数量: ${loader.contentData.cases?.length || 0}</li>`;
+                result += `<li>分类数量: ${loader.contentData.categories?.length || 0}</li>`;
+                result += `<li>供应商数量: ${loader.contentData.suppliers?.length || 0}</li>`;
+
+                if (loader.contentData.products && loader.contentData.products.length > 0) {
+                    result += '<li>✅ 产品数据不为空</li>';
+                    const firstProduct = loader.contentData.products[0];
+                    result += `<li>第一个产品: ${firstProduct.title || firstProduct.id}</li>`;
+                } else {
+                    result += '<li>⚠️ 产品数据为空</li>';
+                }
+
+                result += '</ul>';
+                setStepResult('step3', result, 'success');
+
+                // 设置全局数据加载器
+                window.contentDataLoader = loader;
+                console.log('全局数据加载器已设置');
+
+            } catch (error) {
+                console.error('数据加载失败:', error);
+                setStepResult('step3', `❌ 数据加载失败: ${error.message}`, 'error');
+            }
+        }
+
+        // 步骤4: 测试产品列表函数
+        async function testProductListFunction() {
+            console.log('开始测试产品列表函数...');
+            setStepResult('step4', '🔄 正在测试产品列表函数...', 'warning');
+
+            try {
+                if (typeof ensureDataLoaderInitialized !== 'function') {
+                    throw new Error('ensureDataLoaderInitialized函数未定义');
+                }
+
+                await ensureDataLoaderInitialized();
+
+                if (!window.contentDataLoader) {
+                    throw new Error('全局数据加载器未初始化');
+                }
+
+                const productCount = window.contentDataLoader.contentData?.products?.length || 0;
+                
+                let result = '<ul>';
+                result += '<li>✅ ensureDataLoaderInitialized函数执行成功</li>';
+                result += '<li>✅ 全局数据加载器已初始化</li>';
+                result += `<li>产品数量: ${productCount}</li>`;
+
+                if (typeof loadProductsList === 'function') {
+                    result += '<li>✅ loadProductsList函数存在</li>';
+                    
+                    // 尝试调用loadProductsList
+                    try {
+                        await loadProductsList();
+                        result += '<li>✅ loadProductsList函数执行成功</li>';
+                    } catch (loadError) {
+                        result += `<li>❌ loadProductsList函数执行失败: ${loadError.message}</li>';
+                    }
+                } else {
+                    result += '<li>❌ loadProductsList函数不存在</li>';
+                }
+
+                result += '</ul>';
+                setStepResult('step4', result, productCount > 0 ? 'success' : 'warning');
+
+            } catch (error) {
+                console.error('产品列表函数测试失败:', error);
+                setStepResult('step4', `❌ 测试失败: ${error.message}`, 'error');
+            }
+        }
+
+        // 步骤5: 显示详细错误
+        function showDetailedErrors() {
+            console.log('显示详细错误信息...');
+            
+            let result = '<h4>环境检查:</h4><ul>';
+            result += `<li>用户代理: ${navigator.userAgent}</li>`;
+            result += `<li>当前URL: ${window.location.href}</li>`;
+            result += `<li>协议: ${window.location.protocol}</li>`;
+            result += '</ul>';
+
+            result += '<h4>全局对象检查:</h4><ul>';
+            result += `<li>window.ContentDataLoader: ${typeof window.ContentDataLoader}</li>`;
+            result += `<li>window.contentDataLoader: ${typeof window.contentDataLoader}</li>`;
+            result += `<li>window.showProductsList: ${typeof window.showProductsList}</li>`;
+            result += `<li>window.ensureDataLoaderInitialized: ${typeof window.ensureDataLoaderInitialized}</li>`;
+            result += '</ul>';
+
+            result += '<h4>网络检查:</h4>';
+            result += '<button onclick="testNetworkAccess()">测试网络访问</button>';
+            result += '<div id="network-test-result"></div>';
+
+            setStepResult('step5', result, 'info');
+        }
+
+        async function testNetworkAccess() {
+            const resultDiv = document.getElementById('network-test-result');
+            resultDiv.innerHTML = '🔄 测试网络访问...';
+
+            try {
+                // 测试访问产品文件
+                const testUrls = [
+                    '/products/WS-K08510-a/index.md',
+                    '/api/products.json',
+                    '/admin/data-loader.js',
+                    '/admin/admin-functions.js'
+                ];
+
+                let results = '<ul>';
+                for (const url of testUrls) {
+                    try {
+                        const response = await fetch(url);
+                        results += `<li>${url}: ${response.status} ${response.statusText}</li>`;
+                    } catch (error) {
+                        results += `<li>${url}: ❌ ${error.message}</li>`;
+                    }
+                }
+                results += '</ul>';
+                resultDiv.innerHTML = results;
+
+            } catch (error) {
+                resultDiv.innerHTML = `❌ 网络测试失败: ${error.message}`;
+            }
+        }
+
+        // 页面加载时自动运行前两个步骤
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('页面加载完成，开始自动检查...');
+            
+            setTimeout(() => {
+                const step1Success = checkJavaScriptFiles();
+                if (step1Success) {
+                    setTimeout(() => {
+                        checkContentDataLoader();
+                    }, 500);
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

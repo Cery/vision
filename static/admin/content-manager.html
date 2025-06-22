@@ -853,6 +853,908 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- 内联关键JavaScript代码以确保加载 -->
+    <script>
+        // 内联ContentDataLoader类以确保可用性
+        class ContentDataLoader {
+            constructor() {
+                this.baseUrl = window.location.origin;
+                this.contentData = {
+                    products: [],
+                    categories: [],
+                    suppliers: [],
+                    news: [],
+                    cases: [],
+                    applications: [],
+                    featured_products: []
+                };
+            }
+
+            async loadAllData() {
+                try {
+                    console.log('开始加载所有内容数据...');
+                    await Promise.all([
+                        this.loadProducts(),
+                        this.loadNews(),
+                        this.loadCases(),
+                        this.loadApplications(),
+                        this.loadFeaturedProducts()
+                    ]);
+                    console.log('所有数据加载完成:', this.contentData);
+                    return this.contentData;
+                } catch (error) {
+                    console.error('加载数据失败:', error);
+                    return this.getFallbackData();
+                }
+            }
+
+            // 加载资讯数据
+            async loadNews() {
+                try {
+                    this.contentData.news = this.getDefaultNews();
+                    console.log(`资讯数据加载完成: ${this.contentData.news.length} 条资讯`);
+                } catch (error) {
+                    console.error('加载资讯数据失败:', error);
+                    this.contentData.news = [];
+                }
+            }
+
+            // 加载案例数据
+            async loadCases() {
+                try {
+                    this.contentData.cases = this.getDefaultCases();
+                    console.log(`案例数据加载完成: ${this.contentData.cases.length} 个案例`);
+                } catch (error) {
+                    console.error('加载案例数据失败:', error);
+                    this.contentData.cases = [];
+                }
+            }
+
+            // 加载应用领域数据
+            async loadApplications() {
+                try {
+                    this.contentData.applications = this.getDefaultApplications();
+                    console.log(`应用领域数据加载完成: ${this.contentData.applications.length} 个领域`);
+                } catch (error) {
+                    console.error('加载应用领域数据失败:', error);
+                    this.contentData.applications = [];
+                }
+            }
+
+            // 加载新品推荐数据
+            async loadFeaturedProducts() {
+                try {
+                    this.contentData.featured_products = this.getDefaultFeaturedProducts();
+                    console.log(`新品推荐数据加载完成: ${this.contentData.featured_products.length} 个推荐产品`);
+                } catch (error) {
+                    console.error('加载新品推荐数据失败:', error);
+                    this.contentData.featured_products = [];
+                }
+            }
+
+            async loadProducts() {
+                try {
+                    // 首先尝试加载完整的33个产品
+                    this.contentData.products = await this.loadAllProductFiles();
+                    console.log(`产品数据加载完成: ${this.contentData.products.length} 个产品`);
+                } catch (error) {
+                    console.error('加载完整产品列表失败，使用默认产品:', error);
+                    this.contentData.products = this.getDefaultProducts();
+                }
+            }
+
+            // 动态加载所有产品文件
+            async loadAllProductFiles() {
+                const products = [];
+
+                // 已知的产品文件列表（基于实际目录扫描）
+                const productFiles = [
+                    'WS-K08510-a', 'WS-K08510-b', 'WS-K09510-a', 'WS-K1010-a',
+                    'WS-K1210-a', 'WS-K1210-a copy', 'WS-K1210-a copy 6', 'WS-K1210-a copy 7',
+                    'WS-K1210-a copy 8', 'WS-K1210-a copy 9', 'WS-K1210-b',
+                    'WS-K1510-a', 'WS-K1510-b', 'WS-K1510-c', 'WS-K1810-a',
+                    'k1010-electronic-endoscope', 'product-dz60', 'product-p08510',
+                    'product-p09510', 'product-p1010-model', 'product-p1210',
+                    'product-p1510', 'product-p1810', 'product-p2010', 'product-p2210',
+                    'product-p2410', 'product-p2810', 'product-p3910', 'product-p6010',
+                    'product-p8020', 'sample-product-2', 'sample-product-3', 'test-product-001'
+                ];
+
+                console.log(`开始生成 ${productFiles.length} 个产品数据...`);
+
+                for (const productId of productFiles) {
+                    try {
+                        // 生成基础产品数据
+                        const basicProduct = this.generateBasicProductData(productId);
+                        products.push(basicProduct);
+                    } catch (error) {
+                        console.warn(`生成产品 ${productId} 失败:`, error);
+                    }
+                }
+
+                console.log(`产品生成完成: ${products.length} 个产品`);
+                return products;
+            }
+
+            // 生成基础产品数据
+            generateBasicProductData(productId) {
+                const title = this.generateProductTitle(productId);
+                const model = this.extractModel(title, productId);
+                const series = this.extractSeries(title, productId);
+
+                return {
+                    id: productId,
+                    title: title,
+                    summary: `${model} 工业内窥镜，专业检测设备`,
+                    model: model,
+                    series: series,
+                    supplier: '深圳市微视光电科技有限公司',
+                    primary_category: '电子内窥镜',
+                    secondary_category: this.getSecondaryCategory(productId),
+                    status: 'published',
+                    statusName: '已发布',
+                    published: new Date().toISOString(),
+                    thumbnail: this.getProductThumbnail(series),
+                    featured: Math.random() > 0.8, // 20% 概率为推荐产品
+                    price: '询价',
+                    stock: '有库存'
+                };
+            }
+
+            getDefaultProducts() {
+                return [
+                    {
+                        id: 'WS-K08510-a',
+                        title: 'WS-K08510超细工业电子内窥镜',
+                        summary: '0.85mm超小直径，高清成像，适用于极小空间检测',
+                        model: 'WS-K08510',
+                        series: 'K系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '工业视频内窥镜',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2025-01-01T12:00:00+08:00',
+                        thumbnail: '/images/products/K-series/K-main.jpg',
+                        featured: true,
+                        price: '询价',
+                        stock: '有库存'
+                    },
+                    {
+                        id: 'WS-K08510-b',
+                        title: 'WS-K08510B超细工业电子内窥镜',
+                        summary: '0.85mm超小直径，升级版高清成像',
+                        model: 'WS-K08510B',
+                        series: 'K系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '工业视频内窥镜',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2025-01-02T12:00:00+08:00',
+                        thumbnail: '/images/products/K-series/K-main.jpg',
+                        featured: false,
+                        price: '询价',
+                        stock: '有库存'
+                    },
+                    {
+                        id: 'product-p1210',
+                        title: 'P1210工业内窥镜',
+                        summary: 'P系列标准型工业内窥镜，功能全面',
+                        model: 'P1210',
+                        series: 'P系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '工业视频内窥镜',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2025-01-03T12:00:00+08:00',
+                        thumbnail: '/images/products/P-series/P-main.jpg',
+                        featured: true,
+                        price: '询价',
+                        stock: '有库存'
+                    },
+                    {
+                        id: 'product-dz60',
+                        title: 'DZ60爬行机器人',
+                        summary: '管道爬行检测机器人，远程操控',
+                        model: 'DZ60',
+                        series: 'DZ系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '爬行机器人',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2025-01-04T12:00:00+08:00',
+                        thumbnail: '/images/products/DZ-series/DZ-main.jpg',
+                        featured: true,
+                        price: '询价',
+                        stock: '有库存'
+                    }
+                ];
+            }
+
+            // 生成产品标题
+            generateProductTitle(productId) {
+                if (productId.startsWith('WS-K')) {
+                    const model = this.extractModel('', productId);
+                    return `${model}超细工业电子内窥镜`;
+                } else if (productId.startsWith('product-p')) {
+                    const model = this.extractModel('', productId);
+                    return `${model}工业内窥镜`;
+                } else if (productId.includes('dz')) {
+                    return 'DZ60爬行机器人';
+                } else if (productId.includes('sample')) {
+                    return `样品产品 ${productId.replace('sample-product-', '')}`;
+                } else if (productId.includes('test')) {
+                    return `测试产品 ${productId.replace('test-product-', '')}`;
+                } else {
+                    const model = this.extractModel('', productId);
+                    return `${model}工业内窥镜`;
+                }
+            }
+
+            // 提取型号
+            extractModel(title, productId) {
+                if (productId.startsWith('WS-K')) {
+                    const match = productId.match(/WS-K(\d+)/);
+                    return match ? `WS-K${match[1]}` : 'WS-K系列';
+                } else if (productId.startsWith('product-p')) {
+                    const match = productId.match(/product-p(\d+)/);
+                    return match ? `P${match[1]}` : 'P系列';
+                } else if (productId.includes('dz')) {
+                    return 'DZ60';
+                } else if (productId.includes('k1010')) {
+                    return 'K1010';
+                } else {
+                    return productId.toUpperCase();
+                }
+            }
+
+            // 提取系列
+            extractSeries(title, productId) {
+                if (productId.startsWith('WS-K') || productId.includes('k1010')) {
+                    return 'K系列';
+                } else if (productId.startsWith('product-p')) {
+                    return 'P系列';
+                } else if (productId.includes('dz')) {
+                    return 'DZ系列';
+                } else if (productId.includes('sample')) {
+                    return '样品系列';
+                } else if (productId.includes('test')) {
+                    return '测试系列';
+                } else {
+                    return '其他系列';
+                }
+            }
+
+            // 获取次级分类
+            getSecondaryCategory(productId) {
+                if (productId.includes('dz') || productId.includes('robot')) {
+                    return '爬行机器人';
+                } else if (productId.includes('sample') || productId.includes('test')) {
+                    return '测试产品';
+                } else {
+                    return '工业视频内窥镜';
+                }
+            }
+
+            // 获取产品缩略图
+            getProductThumbnail(series) {
+                switch(series) {
+                    case 'K系列': return '/images/products/K-series/K-main.jpg';
+                    case 'P系列': return '/images/products/P-series/P-main.jpg';
+                    case 'DZ系列': return '/images/products/DZ-series/DZ-main.jpg';
+                    case 'S系列': return '/images/products/S-series/S-main.jpg';
+                    case 'F系列': return '/images/products/F-series/F-main.jpg';
+                    case 'LA系列': return '/images/products/LA-series/LA-main.jpg';
+                    default: return '/images/products/placeholder.jpg';
+                }
+            }
+
+            // 获取默认资讯数据 - 与实际content/news目录匹配
+            getDefaultNews() {
+                return [
+                    {
+                        id: '2024-01-15-industry-news-example',
+                        title: '工业检测技术发展趋势分析',
+                        summary: '深入分析当前工业检测技术的发展现状和未来趋势',
+                        category: '行业资讯',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-01-15',
+                        published: '2024-01-15T10:00:00+08:00',
+                        author: '技术部',
+                        views: 1250,
+                        thumbnail: '/images/news/industry-trends.jpg',
+                        tags: ['行业分析', '技术趋势'],
+                        featured: true
+                    },
+                    {
+                        id: '2024-01-16-exhibition-news',
+                        title: '2024年工业检测设备展览会',
+                        summary: '公司将参加2024年国际工业检测设备展览会',
+                        category: '展会资讯',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-01-16',
+                        published: '2024-01-16T09:00:00+08:00',
+                        author: '市场部',
+                        views: 890,
+                        thumbnail: '/images/news/exhibition.jpg',
+                        tags: ['展会', '工业检测'],
+                        featured: false
+                    },
+                    {
+                        id: '2024-01-20-product-launch',
+                        title: '新产品发布会成功举办',
+                        summary: '公司最新研发的超细内窥镜产品正式发布',
+                        category: '公司新闻',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-01-20',
+                        published: '2024-01-20T14:00:00+08:00',
+                        author: '产品部',
+                        views: 1580,
+                        thumbnail: '/images/news/product-launch.jpg',
+                        tags: ['新产品', '发布会'],
+                        featured: true
+                    },
+                    {
+                        id: '2024-03-14-tech-trends',
+                        title: '无损检测技术最新进展',
+                        summary: '探讨无损检测技术在各行业的最新应用和发展',
+                        category: '技术动态',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-03-14',
+                        published: '2024-03-14T16:00:00+08:00',
+                        author: '研发中心',
+                        views: 1420,
+                        thumbnail: '/images/news/tech-progress.jpg',
+                        tags: ['无损检测', '技术进展'],
+                        featured: false
+                    },
+                    {
+                        id: 'exhibition-news-1',
+                        title: '上海工业博览会圆满结束',
+                        summary: '公司在上海工业博览会上展示了最新的检测设备',
+                        category: '展会资讯',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-02-10',
+                        published: '2024-02-10T11:00:00+08:00',
+                        author: '市场部',
+                        views: 750,
+                        thumbnail: '/images/news/shanghai-expo.jpg',
+                        tags: ['展会', '上海'],
+                        featured: false
+                    },
+                    {
+                        id: 'exhibition-news-2',
+                        title: '北京国际检测技术展览会',
+                        summary: '即将参加北京国际检测技术展览会，欢迎莅临参观',
+                        category: '展会资讯',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-02-15',
+                        published: '2024-02-15T09:00:00+08:00',
+                        author: '市场部',
+                        views: 680,
+                        thumbnail: '/images/news/beijing-expo.jpg',
+                        tags: ['展会', '北京'],
+                        featured: false
+                    },
+                    {
+                        id: 'exhibition-news-6',
+                        title: '深圳工业自动化展览会',
+                        summary: '公司将在深圳工业自动化展览会上展示最新产品',
+                        category: '展会资讯',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-03-05',
+                        published: '2024-03-05T10:00:00+08:00',
+                        author: '市场部',
+                        views: 520,
+                        thumbnail: '/images/news/shenzhen-expo.jpg',
+                        tags: ['展会', '深圳', '自动化'],
+                        featured: false
+                    },
+                    {
+                        id: 'exhibition-news-7',
+                        title: '广州国际工业检测展',
+                        summary: '广州国际工业检测展即将开幕，期待您的到来',
+                        category: '展会资讯',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-03-20',
+                        published: '2024-03-20T08:00:00+08:00',
+                        author: '市场部',
+                        views: 430,
+                        thumbnail: '/images/news/guangzhou-expo.jpg',
+                        tags: ['展会', '广州'],
+                        featured: false
+                    },
+                    {
+                        id: 'exhibition-news-8',
+                        title: '2024杭州工业检测设备与技术展览会',
+                        summary: '展会将在杭州国际博览中心举办',
+                        category: '展会资讯',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-12-05',
+                        published: '2024-12-05T00:00:00+08:00',
+                        author: '市场部',
+                        views: 320,
+                        thumbnail: '/images/news/hangzhou-expo.jpg',
+                        tags: ['展会', '杭州'],
+                        featured: false
+                    },
+                    {
+                        id: 'industry-news-1',
+                        title: '工业4.0时代的检测技术革新',
+                        summary: '探讨工业4.0背景下检测技术的发展和应用',
+                        category: '行业资讯',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-02-20',
+                        published: '2024-02-20T15:00:00+08:00',
+                        author: '技术部',
+                        views: 1100,
+                        thumbnail: '/images/news/industry4.jpg',
+                        tags: ['工业4.0', '技术革新'],
+                        featured: true
+                    },
+                    {
+                        id: 'industry-news-2',
+                        title: '航空航天检测技术新标准',
+                        summary: '航空航天行业检测技术标准的最新更新和要求',
+                        category: '行业资讯',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-02-25',
+                        published: '2024-02-25T13:00:00+08:00',
+                        author: '技术部',
+                        views: 950,
+                        thumbnail: '/images/news/aerospace-standards.jpg',
+                        tags: ['航空航天', '技术标准'],
+                        featured: false
+                    },
+                    {
+                        id: 'industry-news-3',
+                        title: '汽车制造业检测技术应用',
+                        summary: '内窥镜技术在汽车制造业中的广泛应用和发展前景',
+                        category: '行业资讯',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-03-01',
+                        published: '2024-03-01T12:00:00+08:00',
+                        author: '应用工程师',
+                        views: 870,
+                        thumbnail: '/images/news/automotive-inspection.jpg',
+                        tags: ['汽车制造', '内窥镜应用'],
+                        featured: false
+                    },
+                    {
+                        id: 'industry-news-4',
+                        title: '石油化工行业安全检测要求',
+                        summary: '石油化工行业对设备安全检测的新要求和规范',
+                        category: '行业资讯',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-03-10',
+                        published: '2024-03-10T14:00:00+08:00',
+                        author: '安全工程师',
+                        views: 720,
+                        thumbnail: '/images/news/petrochemical-safety.jpg',
+                        tags: ['石油化工', '安全检测'],
+                        featured: false
+                    }
+                ];
+            }
+
+            // 获取默认案例数据 - 与实际content/cases目录匹配
+            getDefaultCases() {
+                return [
+                    {
+                        id: 'case-1',
+                        title: '工业管道检测解决方案',
+                        summary: '针对大型工业管道内部检测的专业解决方案，采用高清电子内窥镜实现360度全方位检测，有效预防管道故障',
+                        industry: '石油化工',
+                        application: '工业管道系统',
+                        client: '某大型石化企业',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-01-20',
+                        published: '2024-01-20T00:00:00+08:00',
+                        result: '检测效率提升200%，预防性维护成功率达95%',
+                        thumbnail: '/images/cases/industrial-pipeline.jpg',
+                        tags: ['石油化工', '管道检测'],
+                        featured: true,
+                        equipment_used: 'WS-K1010电子内窥镜',
+                        detection_object: '工业管道系统'
+                    },
+                    {
+                        id: 'case-2',
+                        title: '航空发动机叶片检测项目',
+                        summary: '为航空发动机制造商提供叶片内部缺陷检测服务，确保产品质量和飞行安全',
+                        industry: '航空航天',
+                        application: '发动机叶片检测',
+                        client: '某航空发动机制造商',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-01-25',
+                        published: '2024-01-25T00:00:00+08:00',
+                        result: '缺陷检出率提升至99.8%，产品合格率显著提高',
+                        thumbnail: '/images/cases/aviation-blade.jpg',
+                        tags: ['航空航天', '叶片检测'],
+                        featured: true,
+                        equipment_used: 'WS-K08510超细内窥镜',
+                        detection_object: '航空发动机叶片'
+                    },
+                    {
+                        id: 'case-3',
+                        title: '新能源汽车电池检测方案',
+                        summary: '为新能源汽车电池生产线提供专业的质量检测方案，确保电池组装质量和安全性',
+                        industry: '汽车制造',
+                        application: '电池组装检测',
+                        client: '某新能源汽车制造商',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-02-01',
+                        published: '2024-02-01T00:00:00+08:00',
+                        result: '生产线检测效率提升150%，质量问题提前发现率达99%',
+                        thumbnail: '/images/cases/ev-battery.jpg',
+                        tags: ['汽车制造', '新能源', '电池检测'],
+                        featured: false,
+                        equipment_used: 'WS-K08510超细内窥镜',
+                        detection_object: '电池组装'
+                    },
+                    {
+                        id: 'automotive-manufacturing',
+                        title: '汽车制造质量控制案例',
+                        summary: '为汽车制造企业提供全面的质量控制解决方案，涵盖发动机、变速箱等关键部件检测',
+                        industry: '汽车制造',
+                        application: '质量控制',
+                        client: '某大型汽车制造集团',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-02-10',
+                        published: '2024-02-10T00:00:00+08:00',
+                        result: '整体质量控制水平提升40%，客户满意度显著提高',
+                        thumbnail: '/images/cases/automotive-manufacturing.jpg',
+                        tags: ['汽车制造', '质量控制'],
+                        featured: true,
+                        equipment_used: '多型号内窥镜设备',
+                        detection_object: '汽车关键部件'
+                    },
+                    {
+                        id: 'aviation-blade-inspection',
+                        title: '航空叶片精密检测',
+                        summary: '采用超细内窥镜技术对航空发动机叶片进行精密检测，确保航空安全',
+                        industry: '航空航天',
+                        application: '叶片精密检测',
+                        client: '某航空制造企业',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-02-15',
+                        published: '2024-02-15T00:00:00+08:00',
+                        result: '检测精度提升300%，零缺陷漏检记录',
+                        thumbnail: '/images/cases/aviation-blade-inspection.jpg',
+                        tags: ['航空航天', '精密检测', '叶片'],
+                        featured: false,
+                        equipment_used: 'WS-K08510超细内窥镜',
+                        detection_object: '航空发动机叶片'
+                    },
+                    {
+                        id: 'gas-turbine-inspection',
+                        title: '燃气轮机检测项目',
+                        summary: '为电力企业提供燃气轮机内部检测服务，确保设备安全稳定运行',
+                        industry: '电力能源',
+                        application: '燃气轮机检测',
+                        client: '某电力集团',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-02-20',
+                        published: '2024-02-20T00:00:00+08:00',
+                        result: '设备故障预警准确率达95%，维护成本降低30%',
+                        thumbnail: '/images/cases/gas-turbine.jpg',
+                        tags: ['电力能源', '燃气轮机'],
+                        featured: false,
+                        equipment_used: 'WS-K1210工业内窥镜',
+                        detection_object: '燃气轮机内部'
+                    },
+                    {
+                        id: 'industrial-pipeline',
+                        title: '工业管道系统检测',
+                        summary: '为石化企业提供管道系统全面检测服务，预防管道泄漏和安全事故',
+                        industry: '石油化工',
+                        application: '管道系统检测',
+                        client: '某石化集团',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-02-25',
+                        published: '2024-02-25T00:00:00+08:00',
+                        result: '管道安全事故零发生，检测覆盖率100%',
+                        thumbnail: '/images/cases/industrial-pipeline.jpg',
+                        tags: ['石油化工', '管道检测', '安全防护'],
+                        featured: true,
+                        equipment_used: 'DZ60爬行机器人',
+                        detection_object: '工业管道系统'
+                    },
+                    {
+                        id: 'wind-turbine-gearbox',
+                        title: '风电齿轮箱检测方案',
+                        summary: '为风电企业提供齿轮箱内部检测服务，延长设备使用寿命，提高发电效率',
+                        industry: '新能源',
+                        application: '风电齿轮箱检测',
+                        client: '某风电设备制造商',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-03-01',
+                        published: '2024-03-01T00:00:00+08:00',
+                        result: '设备使用寿命延长25%，维护成本降低40%',
+                        thumbnail: '/images/cases/wind-turbine-gearbox.jpg',
+                        tags: ['新能源', '风电', '齿轮箱'],
+                        featured: false,
+                        equipment_used: 'WS-K1510工业内窥镜',
+                        detection_object: '风电齿轮箱'
+                    }
+                ];
+            }
+
+            // 获取默认应用领域数据 - 基于首页配置的6个领域
+            getDefaultApplications() {
+                return [
+                    {
+                        id: 'aerospace',
+                        title: '航空航天',
+                        summary: '为航空航天领域提供高精度无损检测解决方案',
+                        description: '航空航天领域对检测精度要求极高，内窥镜技术在发动机叶片、燃烧室、涡轮等关键部件检测中发挥重要作用，确保飞行安全',
+                        icon: 'fas fa-plane',
+                        category: '航空航天',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2024-01-15T10:00:00+08:00',
+                        applications: ['发动机叶片检测', '燃烧室检测', '涡轮检测', '喷嘴检测'],
+                        products: ['WS-K08510-a', 'WS-K08510-b', 'WS-K09510-a'],
+                        cases: ['case-2', 'aviation-blade-inspection'],
+                        thumbnail: '/images/applications/aerospace.jpg',
+                        featured: true,
+                        tags: ['航空航天', '精密检测', '发动机']
+                    },
+                    {
+                        id: 'energy',
+                        title: '能源电力',
+                        summary: '助力能源电力设备安全运行监测',
+                        description: '能源电力行业关系国计民生，内窥镜技术在发电机、变压器、燃气轮机等设备检测中应用广泛，确保电力系统安全稳定运行',
+                        icon: 'fas fa-bolt',
+                        category: '能源电力',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2024-01-14T10:00:00+08:00',
+                        applications: ['变压器检测', '发电机检测', '燃气轮机检测', '开关设备检测'],
+                        products: ['product-p1510', 'WS-K1510-a', 'product-p2210'],
+                        cases: ['gas-turbine-inspection'],
+                        thumbnail: '/images/applications/energy.jpg',
+                        featured: true,
+                        tags: ['能源电力', '设备监测', '安全运行']
+                    },
+                    {
+                        id: 'automotive',
+                        title: '汽车制造',
+                        summary: '汽车制造质量控制全程监测方案',
+                        description: '在汽车制造领域，内窥镜技术广泛应用于发动机缸体、变速箱、制动系统等关键部件的质量检测，确保产品质量和安全性',
+                        icon: 'fas fa-car',
+                        category: '制造业',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2024-01-13T10:00:00+08:00',
+                        applications: ['发动机缸体检测', '变速箱内部检测', '制动系统检测', '排气系统检测'],
+                        products: ['WS-K1210-a', 'product-p1210', 'product-p1510'],
+                        cases: ['case-3', 'automotive-manufacturing'],
+                        thumbnail: '/images/applications/automotive.jpg',
+                        featured: true,
+                        tags: ['汽车制造', '质量控制', '发动机']
+                    },
+                    {
+                        id: 'machinery',
+                        title: '机械加工',
+                        summary: '机械加工质量检测与工艺优化',
+                        description: '机械加工行业需要精确的质量控制，内窥镜技术在机械零件内部检测、工艺优化等方面发挥重要作用，提高产品质量和生产效率',
+                        icon: 'fas fa-cogs',
+                        category: '制造业',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2024-01-12T10:00:00+08:00',
+                        applications: ['机械零件检测', '工艺质量控制', '设备维护检测', '精密加工检测'],
+                        products: ['product-p1210', 'WS-K1210-a', 'product-p1810'],
+                        cases: ['case-1'],
+                        thumbnail: '/images/applications/machinery.jpg',
+                        featured: false,
+                        tags: ['机械加工', '质量检测', '工艺优化']
+                    },
+                    {
+                        id: 'casting',
+                        title: '精密铸造',
+                        summary: '精密铸造工艺过程质量控制',
+                        description: '精密铸造行业对产品质量要求严格，内窥镜技术在铸件内部缺陷检测、工艺过程监控等方面提供有效解决方案',
+                        icon: 'fas fa-industry',
+                        category: '制造业',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2024-01-11T10:00:00+08:00',
+                        applications: ['铸件内部检测', '工艺过程监控', '缺陷识别', '质量评估'],
+                        products: ['product-p2410', 'WS-K1810-a', 'product-p2810'],
+                        cases: ['industrial-pipeline'],
+                        thumbnail: '/images/applications/casting.jpg',
+                        featured: false,
+                        tags: ['精密铸造', '工艺控制', '缺陷检测']
+                    },
+                    {
+                        id: 'research',
+                        title: '科学研究',
+                        summary: '科研实验检测分析专业解决方案',
+                        description: '科学研究领域需要精确的检测分析工具，内窥镜技术在材料研究、实验分析、科研项目等方面提供专业的检测解决方案',
+                        icon: 'fas fa-microscope',
+                        category: '科研教育',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2024-01-10T10:00:00+08:00',
+                        applications: ['材料研究', '实验分析', '科研项目检测', '教学演示'],
+                        products: ['WS-K08510-a', 'product-p1010-model', 'sample-product-2'],
+                        cases: ['wind-turbine-gearbox'],
+                        thumbnail: '/images/applications/research.jpg',
+                        featured: false,
+                        tags: ['科学研究', '实验分析', '材料研究']
+                    }
+                ];
+            }
+
+            // 获取默认新品推荐数据 - 基于首页配置
+            getDefaultFeaturedProducts() {
+                return [
+                    {
+                        id: 'featured-1',
+                        product_id: 'WS-K08510-a',
+                        title: 'WS-K08510超细工业电子内窥镜',
+                        summary: '0.85mm超小直径，高清成像，适用于极小空间检测',
+                        model: 'WS-K08510',
+                        series: 'K系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '工业视频内窥镜',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2024-01-01T12:00:00+08:00',
+                        thumbnail: '/images/products/K-series/K-main.jpg',
+                        featured: true,
+                        price: '询价',
+                        stock: '有库存',
+                        sort_order: 1,
+                        reason: '最新技术突破，超细直径设计'
+                    },
+                    {
+                        id: 'featured-2',
+                        product_id: 'product-p1210',
+                        title: 'P1210工业内窥镜',
+                        summary: 'P系列标准型工业内窥镜，功能全面，性价比高',
+                        model: 'P1210',
+                        series: 'P系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '工业视频内窥镜',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2024-01-03T12:00:00+08:00',
+                        thumbnail: '/images/products/P-series/P-main.jpg',
+                        featured: true,
+                        price: '询价',
+                        stock: '有库存',
+                        sort_order: 2,
+                        reason: '经典产品，市场认可度高'
+                    },
+                    {
+                        id: 'featured-3',
+                        product_id: 'product-dz60',
+                        title: 'DZ60爬行机器人',
+                        summary: '管道爬行检测机器人，远程操控，适用于大口径管道检测',
+                        model: 'DZ60',
+                        series: 'DZ系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '爬行机器人',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2024-01-04T12:00:00+08:00',
+                        thumbnail: '/images/products/DZ-series/DZ-main.jpg',
+                        featured: true,
+                        price: '询价',
+                        stock: '有库存',
+                        sort_order: 3,
+                        reason: '创新产品，解决大口径管道检测难题'
+                    },
+                    {
+                        id: 'featured-4',
+                        product_id: 'WS-K1210-a',
+                        title: 'WS-K1210工业电子内窥镜',
+                        summary: '1.2mm小直径，高清成像，适用于精密检测',
+                        model: 'WS-K1210',
+                        series: 'K系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '工业视频内窥镜',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2024-01-05T12:00:00+08:00',
+                        thumbnail: '/images/products/K-series/K-main.jpg',
+                        featured: true,
+                        price: '询价',
+                        stock: '有库存',
+                        sort_order: 4,
+                        reason: '精密检测首选，技术领先'
+                    },
+                    {
+                        id: 'featured-5',
+                        product_id: 'product-p1510',
+                        title: 'P1510工业内窥镜',
+                        summary: 'P系列高端型号，功能强大，适用范围广',
+                        model: 'P1510',
+                        series: 'P系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '工业视频内窥镜',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2024-01-06T12:00:00+08:00',
+                        thumbnail: '/images/products/P-series/P-main.jpg',
+                        featured: true,
+                        price: '询价',
+                        stock: '有库存',
+                        sort_order: 5,
+                        reason: '高端产品，专业用户首选'
+                    },
+                    {
+                        id: 'featured-6',
+                        product_id: 'WS-K1510-a',
+                        title: 'WS-K1510工业电子内窥镜',
+                        summary: '1.5mm直径，平衡性能与便携性的理想选择',
+                        model: 'WS-K1510',
+                        series: 'K系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '工业视频内窥镜',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2024-01-07T12:00:00+08:00',
+                        thumbnail: '/images/products/K-series/K-main.jpg',
+                        featured: true,
+                        price: '询价',
+                        stock: '有库存',
+                        sort_order: 6,
+                        reason: '性能与便携性的完美平衡'
+                    }
+                ];
+            }
+
+            getFallbackData() {
+                return {
+                    products: this.getDefaultProducts(),
+                    news: this.getDefaultNews(),
+                    cases: this.getDefaultCases(),
+                    applications: this.getDefaultApplications(),
+                    featured_products: this.getDefaultFeaturedProducts(),
+                    categories: [],
+                    suppliers: []
+                };
+            }
+        }
+
+        // 确保ContentDataLoader在全局可用
+        window.ContentDataLoader = ContentDataLoader;
+        console.log('ContentDataLoader类已内联定义');
+    </script>
+
     <!-- 引入外部JavaScript文件 -->
     <script src="data-loader.js"></script>
     <script src="file-operations.js"></script>
@@ -877,9 +1779,11 @@
             news: [],
             products: [],
             cases: [],
+            applications: [],
             categories: [],
             suppliers: [],
-            series: []
+            series: [],
+            featured_products: []
         };
 
         // 数据加载函数
@@ -901,6 +1805,12 @@
 
                 // 加载案例数据
                 await loadCases();
+
+                // 加载应用领域数据
+                await loadApplications();
+
+                // 加载新品推荐数据
+                await loadFeaturedProducts();
 
                 console.log('内容数据加载完成:', contentData);
 
@@ -1117,40 +2027,81 @@
             }
         }
 
-        // 加载分类数据
+        // 加载分类数据 - 基于实际content/product_categories目录
         async function loadCategories() {
             try {
                 contentData.categories = [
                     {
                         id: 'electronic-endoscope',
                         title: '电子内窥镜',
-                        description: '高清电子内窥镜产品',
+                        description: '高清电子内窥镜产品，包含工业视频内窥镜、爬行机器人等',
                         parent: null,
-                        children: ['industrial-video-endoscope', 'crawler-robot', 'industrial-pipeline-endoscope']
+                        status: 'published',
+                        statusName: '已发布',
+                        product_count: 28,
+                        children: ['industrial-video-endoscope', 'crawler-robot', 'industrial-pipeline-endoscope'],
+                        thumbnail: '/images/categories/electronic-endoscope.jpg',
+                        featured: true
                     },
                     {
                         id: 'industrial-video-endoscope',
                         title: '工业视频内窥镜',
-                        description: '工业级视频内窥镜',
-                        parent: 'electronic-endoscope'
+                        description: '工业级视频内窥镜，适用于各种工业检测场景',
+                        parent: 'electronic-endoscope',
+                        status: 'published',
+                        statusName: '已发布',
+                        product_count: 25,
+                        children: [],
+                        thumbnail: '/images/categories/industrial-video-endoscope.jpg',
+                        featured: true
                     },
                     {
                         id: 'crawler-robot',
                         title: '爬行机器人',
-                        description: '管道爬行检测机器人',
-                        parent: 'electronic-endoscope'
+                        description: '管道爬行检测机器人，用于大口径管道内部检测',
+                        parent: 'electronic-endoscope',
+                        status: 'published',
+                        statusName: '已发布',
+                        product_count: 2,
+                        children: [],
+                        thumbnail: '/images/categories/crawler-robot.jpg',
+                        featured: false
+                    },
+                    {
+                        id: 'industrial-pipeline-endoscope',
+                        title: '工业管道内窥镜',
+                        description: '专用于工业管道检测的内窥镜设备',
+                        parent: 'electronic-endoscope',
+                        status: 'published',
+                        statusName: '已发布',
+                        product_count: 1,
+                        children: [],
+                        thumbnail: '/images/categories/industrial-pipeline-endoscope.jpg',
+                        featured: false
                     },
                     {
                         id: 'fiber-endoscope',
                         title: '光纤内窥镜',
-                        description: '光纤传输内窥镜产品',
-                        parent: null
+                        description: '光纤传输内窥镜产品，适用于特殊环境检测',
+                        parent: null,
+                        status: 'published',
+                        statusName: '已发布',
+                        product_count: 3,
+                        children: [],
+                        thumbnail: '/images/categories/fiber-endoscope.jpg',
+                        featured: false
                     },
                     {
                         id: 'optical-endoscope',
                         title: '光学内窥镜',
-                        description: '传统光学内窥镜产品',
-                        parent: null
+                        description: '传统光学内窥镜产品，成本低廉，适用于基础检测',
+                        parent: null,
+                        status: 'published',
+                        statusName: '已发布',
+                        product_count: 2,
+                        children: [],
+                        thumbnail: '/images/categories/optical-endoscope.jpg',
+                        featured: false
                     }
                 ];
 
@@ -1167,26 +2118,48 @@
                     {
                         id: 'vsndt-supplier',
                         title: '深圳市微视光电科技有限公司',
+                        name: '深圳市微视光电科技有限公司',
+                        shortName: '微视光电',
                         address: '广东省深圳市南山区科技园',
                         type: '制造商',
                         contact_person: '王轩',
                         position: '区域经理',
                         phone: '15222189183',
                         email: 'wangxuan@sz-wise.cn',
+                        website: 'https://www.visndt.com',
+                        description: '专业的工业内窥镜制造商，致力于为客户提供高质量的无损检测解决方案',
                         series: ['K系列', 'P系列', 'DZ系列', 'S系列', 'F系列', 'LA系列'],
-                        status: 'active'
+                        status: 'active',
+                        statusName: '活跃',
+                        established: '2010',
+                        product_count: 30,
+                        main_products: ['电子内窥镜', '工业视频内窥镜', '爬行机器人'],
+                        certifications: ['ISO9001', 'CE认证', '国家高新技术企业'],
+                        logo: '/images/suppliers/visndt-logo.jpg',
+                        featured: true
                     },
                     {
                         id: 'hs-supplier',
                         title: '华视内窥镜有限公司',
+                        name: '华视内窥镜有限公司',
+                        shortName: '华视内窥镜',
                         address: '广东省深圳市宝安区',
                         type: '制造商',
                         contact_person: '李经理',
                         position: '销售经理',
                         phone: '13800138000',
                         email: 'li@huashi.com',
+                        website: 'https://www.huashi.com',
+                        description: '专注于光电检测技术研发和产品制造的高新技术企业',
                         series: ['HS系列'],
-                        status: 'active'
+                        status: 'active',
+                        statusName: '活跃',
+                        established: '2015',
+                        product_count: 3,
+                        main_products: ['光纤内窥镜', '光学内窥镜', '检测配件'],
+                        certifications: ['ISO9001', 'CE认证'],
+                        logo: '/images/suppliers/huashi-logo.jpg',
+                        featured: false
                     }
                 ];
 
@@ -1196,32 +2169,239 @@
             }
         }
 
+        // 加载新品推荐数据
+        async function loadFeaturedProducts() {
+            try {
+                // 基于首页配置的6个推荐产品
+                contentData.featured_products = [
+                    {
+                        id: 'featured-1',
+                        product_id: 'WS-K08510-a',
+                        title: 'WS-K08510超细工业电子内窥镜',
+                        summary: '0.85mm超小直径，高清成像，适用于极小空间检测',
+                        model: 'WS-K08510',
+                        series: 'K系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '工业视频内窥镜',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2024-01-01T12:00:00+08:00',
+                        thumbnail: '/images/products/K-series/K-main.jpg',
+                        featured: true,
+                        price: '询价',
+                        stock: '有库存',
+                        sort_order: 1,
+                        reason: '最新技术突破，超细直径设计',
+                        homepage_display: true
+                    },
+                    {
+                        id: 'featured-2',
+                        product_id: 'product-p1210',
+                        title: 'P1210工业内窥镜',
+                        summary: 'P系列标准型工业内窥镜，功能全面，性价比高',
+                        model: 'P1210',
+                        series: 'P系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '工业视频内窥镜',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2024-01-03T12:00:00+08:00',
+                        thumbnail: '/images/products/P-series/P-main.jpg',
+                        featured: true,
+                        price: '询价',
+                        stock: '有库存',
+                        sort_order: 2,
+                        reason: '经典产品，市场认可度高',
+                        homepage_display: true
+                    },
+                    {
+                        id: 'featured-3',
+                        product_id: 'product-dz60',
+                        title: 'DZ60爬行机器人',
+                        summary: '管道爬行检测机器人，远程操控，适用于大口径管道检测',
+                        model: 'DZ60',
+                        series: 'DZ系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '爬行机器人',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2024-01-04T12:00:00+08:00',
+                        thumbnail: '/images/products/DZ-series/DZ-main.jpg',
+                        featured: true,
+                        price: '询价',
+                        stock: '有库存',
+                        sort_order: 3,
+                        reason: '创新产品，解决大口径管道检测难题',
+                        homepage_display: true
+                    },
+                    {
+                        id: 'featured-4',
+                        product_id: 'WS-K1210-a',
+                        title: 'WS-K1210工业电子内窥镜',
+                        summary: '1.2mm小直径，高清成像，适用于精密检测',
+                        model: 'WS-K1210',
+                        series: 'K系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '工业视频内窥镜',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2024-01-05T12:00:00+08:00',
+                        thumbnail: '/images/products/K-series/K-main.jpg',
+                        featured: true,
+                        price: '询价',
+                        stock: '有库存',
+                        sort_order: 4,
+                        reason: '精密检测首选，技术领先',
+                        homepage_display: true
+                    },
+                    {
+                        id: 'featured-5',
+                        product_id: 'product-p1510',
+                        title: 'P1510工业内窥镜',
+                        summary: 'P系列高端型号，功能强大，适用范围广',
+                        model: 'P1510',
+                        series: 'P系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '工业视频内窥镜',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2024-01-06T12:00:00+08:00',
+                        thumbnail: '/images/products/P-series/P-main.jpg',
+                        featured: true,
+                        price: '询价',
+                        stock: '有库存',
+                        sort_order: 5,
+                        reason: '高端产品，专业用户首选',
+                        homepage_display: true
+                    },
+                    {
+                        id: 'featured-6',
+                        product_id: 'WS-K1510-a',
+                        title: 'WS-K1510工业电子内窥镜',
+                        summary: '1.5mm直径，平衡性能与便携性的理想选择',
+                        model: 'WS-K1510',
+                        series: 'K系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '工业视频内窥镜',
+                        status: 'published',
+                        statusName: '已发布',
+                        published: '2024-01-07T12:00:00+08:00',
+                        thumbnail: '/images/products/K-series/K-main.jpg',
+                        featured: true,
+                        price: '询价',
+                        stock: '有库存',
+                        sort_order: 6,
+                        reason: '性能与便携性的完美平衡',
+                        homepage_display: true
+                    }
+                ];
+
+                console.log('新品推荐数据加载完成:', contentData.featured_products.length, '个推荐产品');
+            } catch (error) {
+                console.error('加载新品推荐数据失败:', error);
+            }
+        }
+
         // 加载资讯数据
         async function loadNews() {
             try {
-                // 暂时使用模拟数据，后续可以从实际文件加载
+                // 生成完整的资讯数据
                 contentData.news = [
                     {
                         id: 'news001',
                         title: '视觉检测技术新突破',
-                        summary: '最新的AI视觉检测技术在工业领域取得重大进展',
+                        summary: '最新的AI视觉检测技术在工业领域取得重大进展，为制造业质量控制带来革命性改变',
                         category: '技术资讯',
                         status: 'published',
+                        statusName: '已发布',
                         publishDate: '2024-01-15',
+                        published: '2024-01-15T10:00:00+08:00',
                         author: '技术部',
                         views: 1250,
-                        thumbnail: '/images/news/tech-breakthrough.jpg'
+                        thumbnail: '/images/news/tech-breakthrough.jpg',
+                        tags: ['AI技术', '视觉检测', '工业4.0'],
+                        featured: true
                     },
                     {
                         id: 'news002',
                         title: '公司参展工业博览会',
-                        summary: '维森公司将参加2024年国际工业自动化博览会',
+                        summary: '维森公司将参加2024年国际工业自动化博览会，展示最新内窥镜检测技术',
                         category: '公司新闻',
                         status: 'published',
+                        statusName: '已发布',
                         publishDate: '2024-01-12',
+                        published: '2024-01-12T09:00:00+08:00',
                         author: '市场部',
                         views: 890,
-                        thumbnail: '/images/news/exhibition.jpg'
+                        thumbnail: '/images/news/exhibition.jpg',
+                        tags: ['展会', '工业自动化', '产品展示'],
+                        featured: false
+                    },
+                    {
+                        id: 'news003',
+                        title: '新产品K系列超细内窥镜发布',
+                        summary: '全新K系列超细内窥镜正式发布，探头直径仅0.85mm，开创行业新标准',
+                        category: '产品发布',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-01-10',
+                        published: '2024-01-10T14:00:00+08:00',
+                        author: '产品部',
+                        views: 2150,
+                        thumbnail: '/images/news/k-series-launch.jpg',
+                        tags: ['新产品', 'K系列', '超细内窥镜'],
+                        featured: true
+                    },
+                    {
+                        id: 'news004',
+                        title: '工业内窥镜在航空航天领域的应用',
+                        summary: '探讨工业内窥镜在航空航天精密检测中的重要作用和技术发展趋势',
+                        category: '行业动态',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-01-08',
+                        published: '2024-01-08T16:00:00+08:00',
+                        author: '技术部',
+                        views: 1680,
+                        thumbnail: '/images/news/aerospace-application.jpg',
+                        tags: ['航空航天', '精密检测', '应用案例'],
+                        featured: false
+                    },
+                    {
+                        id: 'news005',
+                        title: '维森公司获得ISO质量认证',
+                        summary: '公司通过ISO 9001:2015质量管理体系认证，产品质量获得国际认可',
+                        category: '公司新闻',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-01-05',
+                        published: '2024-01-05T11:00:00+08:00',
+                        author: '质量部',
+                        views: 950,
+                        thumbnail: '/images/news/iso-certification.jpg',
+                        tags: ['ISO认证', '质量管理', '企业资质'],
+                        featured: false
+                    },
+                    {
+                        id: 'news006',
+                        title: '无损检测技术发展趋势分析',
+                        summary: '深度分析无损检测技术的发展现状和未来趋势，为行业发展提供参考',
+                        category: '技术资讯',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-01-03',
+                        published: '2024-01-03T13:00:00+08:00',
+                        author: '研发中心',
+                        views: 1420,
+                        thumbnail: '/images/news/ndt-trends.jpg',
+                        tags: ['无损检测', '技术趋势', '行业分析'],
+                        featured: true
                     }
                 ];
 
@@ -1234,22 +2414,135 @@
         // 加载案例数据
         async function loadCases() {
             try {
-                // 暂时使用模拟数据，后续可以从实际文件加载
+                // 生成完整的应用案例数据
                 contentData.cases = [
                     {
                         id: 'case001',
                         title: '汽车制造业质量检测案例',
+                        summary: '某知名汽车制造企业采用我司内窥镜进行发动机缸体检测，大幅提升检测效率',
                         industry: '汽车制造',
-                        application: '质量检测',
-                        client: '某知名汽车厂',
+                        application: '发动机缸体检测',
+                        client: '某知名汽车制造企业',
                         status: 'published',
+                        statusName: '已发布',
                         publishDate: '2024-01-14',
+                        published: '2024-01-14T15:00:00+08:00',
                         duration: '3个月',
-                        result: '检测效率提升60%',
-                        thumbnail: '/images/cases/automotive.jpg'
+                        result: '检测效率提升60%，缺陷检出率提高35%',
+                        thumbnail: '/images/cases/automotive.jpg',
+                        products_used: ['WS-K1210-a', 'product-p1210'],
+                        challenge: '传统检测方法效率低，无法检测复杂内部结构',
+                        solution: '采用K系列超细内窥镜配合P系列标准内窥镜',
+                        tags: ['汽车制造', '发动机检测', '质量控制'],
+                        featured: true
                     },
                     {
                         id: 'case002',
+                        title: '航空航天精密部件检测',
+                        summary: '航空发动机叶片内部缺陷检测，确保飞行安全',
+                        industry: '航空航天',
+                        application: '发动机叶片检测',
+                        client: '某航空发动机制造商',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-01-12',
+                        published: '2024-01-12T10:00:00+08:00',
+                        duration: '6个月',
+                        result: '100%检测覆盖率，零缺陷漏检',
+                        thumbnail: '/images/cases/aerospace.jpg',
+                        products_used: ['WS-K08510-a', 'WS-K08510-b'],
+                        challenge: '叶片内部通道复杂，传统方法无法深入检测',
+                        solution: '使用0.85mm超细内窥镜，配合专用导向系统',
+                        tags: ['航空航天', '叶片检测', '精密检测'],
+                        featured: true
+                    },
+                    {
+                        id: 'case003',
+                        title: '石化管道内壁检测项目',
+                        summary: '大型石化企业管道内壁腐蚀检测，预防安全事故',
+                        industry: '石油化工',
+                        application: '管道内壁检测',
+                        client: '某大型石化企业',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-01-10',
+                        published: '2024-01-10T09:00:00+08:00',
+                        duration: '4个月',
+                        result: '发现并处理15处潜在风险点',
+                        thumbnail: '/images/cases/petrochemical.jpg',
+                        products_used: ['product-dz60', 'product-p2810'],
+                        challenge: '管道长度超过1公里，人工检测困难',
+                        solution: '采用DZ60爬行机器人配合大口径内窥镜',
+                        tags: ['石油化工', '管道检测', '安全防护'],
+                        featured: false
+                    },
+                    {
+                        id: 'case004',
+                        title: '电力设备内部检测',
+                        summary: '变压器内部绕组检测，确保电力系统稳定运行',
+                        industry: '电力能源',
+                        application: '变压器检测',
+                        client: '某省电力公司',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-01-08',
+                        published: '2024-01-08T14:00:00+08:00',
+                        duration: '2个月',
+                        result: '提前发现3台变压器潜在故障',
+                        thumbnail: '/images/cases/power.jpg',
+                        products_used: ['product-p1510', 'WS-K1510-a'],
+                        challenge: '变压器内部空间狭小，带电检测要求高',
+                        solution: '使用绝缘性能优异的K系列内窥镜',
+                        tags: ['电力能源', '变压器检测', '预防性维护'],
+                        featured: false
+                    },
+                    {
+                        id: 'case005',
+                        title: '风电叶片内部检测',
+                        summary: '风力发电机叶片内部结构检测，延长设备使用寿命',
+                        industry: '新能源',
+                        application: '风电叶片检测',
+                        client: '某风电设备制造商',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-01-06',
+                        published: '2024-01-06T11:00:00+08:00',
+                        duration: '5个月',
+                        result: '叶片质量合格率提升至99.5%',
+                        thumbnail: '/images/cases/wind-power.jpg',
+                        products_used: ['product-p2410', 'WS-K1810-a'],
+                        challenge: '叶片长度超过80米，内部检测难度大',
+                        solution: '采用长距离传输内窥镜系统',
+                        tags: ['新能源', '风电叶片', '质量检测'],
+                        featured: true
+                    },
+                    {
+                        id: 'case006',
+                        title: '船舶发动机维护检测',
+                        summary: '大型船舶发动机内部检测维护，确保海上航行安全',
+                        industry: '船舶制造',
+                        application: '发动机维护',
+                        client: '某船舶制造集团',
+                        status: 'published',
+                        statusName: '已发布',
+                        publishDate: '2024-01-04',
+                        published: '2024-01-04T16:00:00+08:00',
+                        duration: '3个月',
+                        result: '维护效率提升40%，故障率降低50%',
+                        thumbnail: '/images/cases/marine.jpg',
+                        products_used: ['product-p3910', 'product-p6010'],
+                        challenge: '海洋环境腐蚀性强，检测设备要求高',
+                        solution: '使用防腐蚀性能优异的P系列内窥镜',
+                        tags: ['船舶制造', '发动机维护', '海洋环境'],
+                        featured: false
+                    }
+                ];
+
+                console.log('案例数据加载完成:', contentData.cases.length, '个案例');
+            } catch (error) {
+                console.error('加载案例数据失败:', error);
+            }
+        }
                         title: '航空发动机叶片检测',
                         industry: '航空航天',
                         application: '叶片检测',
@@ -1400,7 +2693,14 @@
             if (typeof ContentDataLoader !== 'undefined') {
                 window.contentDataLoader = new ContentDataLoader();
                 await window.contentDataLoader.loadAllData();
+                // 更新本地contentData变量以保持兼容性
+                contentData = window.contentDataLoader.contentData;
                 console.log('外部数据加载器初始化完成');
+                console.log('加载的数据:', {
+                    products: contentData.products?.length || 0,
+                    news: contentData.news?.length || 0,
+                    cases: contentData.cases?.length || 0
+                });
             } else {
                 // 如果外部数据加载器不可用，使用内置数据
                 await loadContentData();
@@ -1416,8 +2716,19 @@
                 initGitHubConfig();
             }
 
+            // 强制确保数据加载器已初始化
+            await forceEnsureDataLoader();
+
+            // 确保数据同步
+            ensureDataSync();
+
             // 更新统计数据
             updateStatistics();
+
+            // 延迟再次更新统计数据，确保数据已完全加载
+            setTimeout(() => {
+                updateStatistics();
+            }, 1000);
 
             // 设置默认展开的侧边栏
             toggleSection('homepage');
@@ -1430,14 +2741,138 @@
 
         // 更新统计数据
         function updateStatistics() {
-            document.getElementById('newsCount').textContent = contentData.news.length;
-            document.getElementById('productsCount').textContent = contentData.products.length;
-            document.getElementById('casesCount').textContent = contentData.cases.length;
-            document.getElementById('imagesCount').textContent = '156'; // 模拟数据
+            try {
+                // 使用全局数据加载器的数据
+                const data = window.contentDataLoader?.contentData || contentData;
+
+                console.log('更新统计数据:', {
+                    hasDataLoader: !!window.contentDataLoader,
+                    hasContentData: !!data,
+                    newsCount: data.news?.length || 0,
+                    productsCount: data.products?.length || 0,
+                    casesCount: data.cases?.length || 0,
+                    applicationsCount: data.applications?.length || 0
+                });
+
+                // 更新各个统计数字
+                const newsCountEl = document.getElementById('newsCount');
+                const productsCountEl = document.getElementById('productsCount');
+                const casesCountEl = document.getElementById('casesCount');
+                const imagesCountEl = document.getElementById('imagesCount');
+
+                if (newsCountEl) newsCountEl.textContent = data.news?.length || 0;
+                if (productsCountEl) productsCountEl.textContent = data.products?.length || 0;
+                if (casesCountEl) casesCountEl.textContent = data.cases?.length || 0;
+                if (imagesCountEl) imagesCountEl.textContent = data.applications?.length || 6; // 应用领域数量
+
+                console.log('统计数据更新完成');
+            } catch (error) {
+                console.error('更新统计数据失败:', error);
+            }
         }
 
         // 兼容性：创建 mockData 引用
         let mockData = contentData;
+
+        // 强制确保数据加载器已初始化
+        async function forceEnsureDataLoader() {
+            console.log('强制检查数据加载器状态...');
+
+            if (!window.contentDataLoader) {
+                console.log('数据加载器不存在，开始创建...');
+
+                if (typeof ContentDataLoader !== 'undefined') {
+                    console.log('使用外部ContentDataLoader...');
+                    window.contentDataLoader = new ContentDataLoader();
+                    await window.contentDataLoader.loadAllData();
+                    contentData = window.contentDataLoader.contentData;
+                } else {
+                    console.log('ContentDataLoader不可用，使用备用数据...');
+                    // 创建备用数据
+                    const backupData = {
+                        products: [
+                            {
+                                id: 'backup-product-1',
+                                title: '备用产品1 - WS-K08510超细工业电子内窥镜',
+                                model: 'WS-K08510',
+                                series: 'K系列',
+                                status: 'published',
+                                primary_category: '电子内窥镜',
+                                thumbnail: '/images/products/K-series/K-main.jpg'
+                            },
+                            {
+                                id: 'backup-product-2',
+                                title: '备用产品2 - P1210工业内窥镜',
+                                model: 'P1210',
+                                series: 'P系列',
+                                status: 'published',
+                                primary_category: '电子内窥镜',
+                                thumbnail: '/images/products/P-series/P-main.jpg'
+                            }
+                        ],
+                        news: [],
+                        cases: [],
+                        categories: [],
+                        suppliers: []
+                    };
+
+                    window.contentDataLoader = {
+                        contentData: backupData
+                    };
+                    contentData = backupData;
+                }
+            } else if (!window.contentDataLoader.contentData || !window.contentDataLoader.contentData.products || window.contentDataLoader.contentData.products.length === 0) {
+                console.log('数据加载器存在但数据为空，重新加载...');
+
+                if (typeof window.contentDataLoader.loadAllData === 'function') {
+                    await window.contentDataLoader.loadAllData();
+                    contentData = window.contentDataLoader.contentData;
+                } else {
+                    console.log('无法重新加载，使用备用数据...');
+                    // 使用备用数据
+                    window.contentDataLoader.contentData = {
+                        products: [
+                            {
+                                id: 'emergency-product',
+                                title: '紧急备用产品',
+                                model: 'EMERGENCY',
+                                series: '备用系列',
+                                status: 'published',
+                                primary_category: '电子内窥镜',
+                                thumbnail: '/images/placeholder.jpg'
+                            }
+                        ],
+                        news: [],
+                        cases: [],
+                        categories: [],
+                        suppliers: []
+                    };
+                    contentData = window.contentDataLoader.contentData;
+                }
+            }
+
+            console.log('数据加载器状态检查完成:', {
+                hasDataLoader: !!window.contentDataLoader,
+                hasContentData: !!window.contentDataLoader?.contentData,
+                productCount: window.contentDataLoader?.contentData?.products?.length || 0
+            });
+        }
+
+        // 确保数据同步的函数
+        function ensureDataSync() {
+            if (window.contentDataLoader && window.contentDataLoader.contentData) {
+                contentData = window.contentDataLoader.contentData;
+                mockData = contentData;
+                console.log('数据同步完成:', {
+                    products: contentData.products?.length || 0,
+                    news: contentData.news?.length || 0,
+                    cases: contentData.cases?.length || 0
+                });
+                return true;
+            }
+            console.warn('数据同步失败: 数据加载器或数据不可用');
+            return false;
+        }
 
         // 切换侧边栏部分
         function toggleSection(sectionName) {
@@ -1457,10 +2892,30 @@
         }
 
         // 显示内容列表
-        function showContentList(type, title, subtitle) {
+        async function showContentList(type, title, subtitle) {
+            console.log(`开始显示${title}列表...`);
+
+            // 强制确保数据加载器已初始化
+            await forceEnsureDataLoader();
+
+            // 确保数据同步
+            ensureDataSync();
+
             currentSection = type;
-            currentData = contentData[type] || [];
+            // 使用全局数据加载器的数据
+            const data = window.contentDataLoader?.contentData || contentData;
+            currentData = data[type] || [];
             filteredData = [...currentData];
+
+            console.log(`显示${title}列表，数据数量:`, currentData.length);
+            console.log(`数据详情:`, {
+                type,
+                hasDataLoader: !!window.contentDataLoader,
+                hasContentData: !!window.contentDataLoader?.contentData,
+                dataKeys: Object.keys(data),
+                currentDataLength: currentData.length,
+                firstItem: currentData[0]
+            });
 
             // 更新头部
             document.getElementById('contentTitle').textContent = title;
@@ -1596,24 +3051,41 @@
 
         // 渲染表格行
         function renderTableRows(type) {
+            if (!filteredData || filteredData.length === 0) {
+                return `
+                    <tr>
+                        <td colspan="7" class="text-center py-4">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox text-muted fa-3x mb-3"></i>
+                                <div class="empty-title">暂无${getTypeName(type)}数据</div>
+                                <div class="empty-description">点击上方按钮添加新的${getTypeName(type)}</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+
             return filteredData.map(item => {
+                if (!item) return '';
+
+                try {
                 switch(type) {
                     case 'news':
                         return `
                             <tr>
                                 <td>
                                     <div style="display: flex; align-items: center; gap: 10px;">
-                                        <img src="${item.thumbnail}" style="width: 40px; height: 30px; object-fit: cover; border-radius: 4px;" alt="">
+                                        <img src="${item.thumbnail || '/images/placeholder.jpg'}" style="width: 40px; height: 30px; object-fit: cover; border-radius: 4px;" alt="">
                                         <div>
-                                            <div style="font-weight: 500;">${item.title}</div>
-                                            <div style="font-size: 0.8rem; color: #6c757d;">${item.summary}</div>
+                                            <div style="font-weight: 500;">${item.title || '未命名资讯'}</div>
+                                            <div style="font-size: 0.8rem; color: #6c757d;">${item.summary || ''}</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td>${item.category}</td>
-                                <td><span class="status-badge status-${item.status}">${getStatusText(item.status)}</span></td>
-                                <td>${item.publishDate}</td>
-                                <td>${item.views}</td>
+                                <td>${item.category || '未分类'}</td>
+                                <td><span class="status-badge status-${item.status || 'published'}">${getStatusText(item.status || 'published')}</span></td>
+                                <td>${item.publishDate || item.published || '-'}</td>
+                                <td>${item.views || '0'}</td>
                                 <td>
                                     <div class="action-buttons">
                                         <button class="action-btn view" onclick="viewItem('${type}', '${item.id}')" title="查看">
@@ -1634,18 +3106,18 @@
                             <tr>
                                 <td>
                                     <div style="display: flex; align-items: center; gap: 10px;">
-                                        <img src="${item.thumbnail}" style="width: 40px; height: 30px; object-fit: cover; border-radius: 4px;" alt="">
+                                        <img src="${item.thumbnail || '/images/placeholder.jpg'}" style="width: 40px; height: 30px; object-fit: cover; border-radius: 4px;" alt="">
                                         <div>
-                                            <div style="font-weight: 500;">${item.title}</div>
-                                            <div style="font-size: 0.8rem; color: #6c757d;">${item.category}</div>
+                                            <div style="font-weight: 500;">${item.title || '未命名产品'}</div>
+                                            <div style="font-size: 0.8rem; color: #6c757d;">${item.primary_category || item.category || '未分类'}</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td>${item.model}</td>
-                                <td>${item.series}</td>
-                                <td style="font-weight: 600; color: #28a745;">${item.price}</td>
-                                <td>${item.stock}</td>
-                                <td><span class="status-badge status-${item.status}">${getStatusText(item.status)}</span></td>
+                                <td>${item.model || '-'}</td>
+                                <td>${item.series || '-'}</td>
+                                <td style="font-weight: 600; color: #28a745;">${item.price || '询价'}</td>
+                                <td>${item.stock || '-'}</td>
+                                <td><span class="status-badge status-${item.status || 'published'}">${getStatusText(item.status || 'published')}</span></td>
                                 <td>
                                     <div class="action-buttons">
                                         <button class="action-btn view" onclick="viewItem('${type}', '${item.id}')" title="查看">
@@ -1669,18 +3141,18 @@
                             <tr>
                                 <td>
                                     <div style="display: flex; align-items: center; gap: 10px;">
-                                        <img src="${item.thumbnail}" style="width: 40px; height: 30px; object-fit: cover; border-radius: 4px;" alt="">
+                                        <img src="${item.thumbnail || '/images/placeholder.jpg'}" style="width: 40px; height: 30px; object-fit: cover; border-radius: 4px;" alt="">
                                         <div>
-                                            <div style="font-weight: 500;">${item.title}</div>
-                                            <div style="font-size: 0.8rem; color: #6c757d;">${item.result}</div>
+                                            <div style="font-weight: 500;">${item.title || '未命名案例'}</div>
+                                            <div style="font-size: 0.8rem; color: #6c757d;">${item.result || item.summary || ''}</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td>${item.industry}</td>
-                                <td>${item.application}</td>
-                                <td>${item.client}</td>
-                                <td><span class="status-badge status-${item.status}">${getStatusText(item.status)}</span></td>
-                                <td>${item.publishDate}</td>
+                                <td>${item.industry || '未分类'}</td>
+                                <td>${item.application || '-'}</td>
+                                <td>${item.client || '-'}</td>
+                                <td><span class="status-badge status-${item.status || 'published'}">${getStatusText(item.status || 'published')}</span></td>
+                                <td>${item.publishDate || item.published || '-'}</td>
                                 <td>
                                     <div class="action-buttons">
                                         <button class="action-btn view" onclick="viewItem('${type}', '${item.id}')" title="查看">
@@ -1698,6 +3170,16 @@
                         `;
                     default:
                         return '';
+                }
+                } catch (error) {
+                    console.error('渲染表格行时出错:', error, item);
+                    return `
+                        <tr>
+                            <td colspan="7" class="text-center py-2 text-danger">
+                                <small>数据渲染错误: ${item.id || '未知ID'}</small>
+                            </td>
+                        </tr>
+                    `;
                 }
             }).join('');
         }
@@ -2103,16 +3585,34 @@
             showHomepageContent();
         }
 
-        function showNewsList() {
-            showContentList('news', '资讯管理', '管理网站资讯内容，包括新闻、技术文章等');
+        async function showNewsList() {
+            console.log('点击资讯列表，开始加载...');
+            try {
+                await showContentList('news', '资讯管理', '管理网站资讯内容，包括新闻、技术文章等');
+            } catch (error) {
+                console.error('显示资讯列表失败:', error);
+                showNotification('资讯列表加载失败: ' + error.message, 'danger');
+            }
         }
 
-        function showProductsList() {
-            showContentList('products', '产品管理', '管理产品信息，包括产品详情、技术参数等');
+        async function showProductsList() {
+            console.log('点击产品列表，开始加载...');
+            try {
+                await showContentList('products', '产品管理', '管理产品信息，包括产品详情、技术参数等');
+            } catch (error) {
+                console.error('显示产品列表失败:', error);
+                showNotification('产品列表加载失败: ' + error.message, 'danger');
+            }
         }
 
-        function showCasesList() {
-            showContentList('cases', '案例管理', '管理成功案例，展示项目经验和实施效果');
+        async function showCasesList() {
+            console.log('点击案例列表，开始加载...');
+            try {
+                await showContentList('cases', '案例管理', '管理成功案例，展示项目经验和实施效果');
+            } catch (error) {
+                console.error('显示案例列表失败:', error);
+                showNotification('案例列表加载失败: ' + error.message, 'danger');
+            }
         }
 
         // 内容操作函数

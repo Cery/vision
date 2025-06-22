@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据加载诊断 - VisNDT管理系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .diagnostic-card {
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .success {
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+        .warning {
+            border-color: #ffc107;
+            background-color: #fff3cd;
+        }
+        .error {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+        }
+        .code-block {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 0.25rem;
+            padding: 0.5rem;
+            font-family: monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .test-result {
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+        }
+        .test-pass {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .test-fail {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mb-4">
+                    <i class="fas fa-bug me-2"></i>数据加载诊断工具
+                </h2>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="diagnostic-card">
+                            <h5>
+                                <i class="fas fa-file-code me-2"></i>JavaScript文件加载检查
+                            </h5>
+                            <div id="fileLoadingCheck">
+                                <div class="text-center">
+                                    <i class="fas fa-spinner fa-spin me-2"></i>正在检查文件加载...
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="diagnostic-card">
+                            <h5>
+                                <i class="fas fa-database me-2"></i>数据加载器状态
+                            </h5>
+                            <div id="dataLoaderStatus">
+                                <div class="text-center text-muted">等待检查...</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="diagnostic-card">
+                            <h5>
+                                <i class="fas fa-network-wired me-2"></i>网络请求检查
+                            </h5>
+                            <div id="networkCheck">
+                                <div class="text-center text-muted">等待检查...</div>
+                            </div>
+                        </div>
+                        
+                        <div class="diagnostic-card">
+                            <h5>
+                                <i class="fas fa-exclamation-triangle me-2"></i>控制台错误
+                            </h5>
+                            <div id="consoleErrors">
+                                <div class="text-center text-muted">监听中...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="diagnostic-card">
+                            <h5>
+                                <i class="fas fa-list me-2"></i>数据内容检查
+                            </h5>
+                            <div id="dataContentCheck">
+                                <div class="text-center text-muted">等待数据加载...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="diagnostic-card">
+                            <h5>
+                                <i class="fas fa-tools me-2"></i>修复建议
+                            </h5>
+                            <div id="fixSuggestions">
+                                <div class="text-center text-muted">分析中...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- 尝试加载数据文件 -->
+    <script src="data-loader.js"></script>
+    <script src="admin-functions.js"></script>
+    
+    <script>
+        let diagnosticResults = {
+            fileLoading: {},
+            dataLoader: {},
+            network: {},
+            dataContent: {},
+            errors: []
+        };
+
+        // 捕获控制台错误
+        const originalConsoleError = console.error;
+        console.error = function(...args) {
+            diagnosticResults.errors.push({
+                type: 'error',
+                message: args.join(' '),
+                timestamp: new Date().toISOString()
+            });
+            originalConsoleError.apply(console, args);
+            updateConsoleErrors();
+        };
+
+        const originalConsoleWarn = console.warn;
+        console.warn = function(...args) {
+            diagnosticResults.errors.push({
+                type: 'warning',
+                message: args.join(' '),
+                timestamp: new Date().toISOString()
+            });
+            originalConsoleWarn.apply(console, args);
+            updateConsoleErrors();
+        };
+
+        async function runDiagnostics() {
+            console.log('开始运行诊断...');
+            
+            // 检查文件加载
+            checkFileLoading();
+            
+            // 检查数据加载器
+            await checkDataLoader();
+            
+            // 检查网络请求
+            await checkNetworkRequests();
+            
+            // 检查数据内容
+            await checkDataContent();
+            
+            // 生成修复建议
+            generateFixSuggestions();
+        }
+
+        function checkFileLoading() {
+            const container = document.getElementById('fileLoadingCheck');
+            const results = [];
+
+            // 检查 ContentDataLoader 是否存在
+            if (typeof ContentDataLoader !== 'undefined') {
+                results.push({
+                    test: 'ContentDataLoader 类',
+                    status: 'pass',
+                    message: 'data-loader.js 加载成功'
+                });
+                diagnosticResults.fileLoading.dataLoader = true;
+            } else {
+                results.push({
+                    test: 'ContentDataLoader 类',
+                    status: 'fail',
+                    message: 'data-loader.js 未正确加载或 ContentDataLoader 未定义'
+                });
+                diagnosticResults.fileLoading.dataLoader = false;
+            }
+
+            // 检查 admin functions 是否存在
+            if (typeof showProductsList !== 'undefined') {
+                results.push({
+                    test: 'Admin Functions',
+                    status: 'pass',
+                    message: 'admin-functions.js 加载成功'
+                });
+                diagnosticResults.fileLoading.adminFunctions = true;
+            } else {
+                results.push({
+                    test: 'Admin Functions',
+                    status: 'fail',
+                    message: 'admin-functions.js 未正确加载或函数未定义'
+                });
+                diagnosticResults.fileLoading.adminFunctions = false;
+            }
+
+            // 检查全局变量
+            if (typeof window.contentDataLoader !== 'undefined') {
+                results.push({
+                    test: '全局数据加载器',
+                    status: 'pass',
+                    message: 'window.contentDataLoader 已初始化'
+                });
+                diagnosticResults.fileLoading.globalLoader = true;
+            } else {
+                results.push({
+                    test: '全局数据加载器',
+                    status: 'fail',
+                    message: 'window.contentDataLoader 未初始化'
+                });
+                diagnosticResults.fileLoading.globalLoader = false;
+            }
+
+            container.innerHTML = results.map(result => `
+                <div class="test-result ${result.status === 'pass' ? 'test-pass' : 'test-fail'}">
+                    <i class="fas fa-${result.status === 'pass' ? 'check' : 'times'} me-2"></i>
+                    <strong>${result.test}:</strong> ${result.message}
+                </div>
+            `).join('');
+        }
+
+        async function checkDataLoader() {
+            const container = document.getElementById('dataLoaderStatus');
+            
+            if (typeof ContentDataLoader === 'undefined') {
+                container.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-times me-2"></i>ContentDataLoader 未定义，无法进行数据加载测试
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                const dataLoader = new ContentDataLoader();
+                container.innerHTML = `
+                    <div class="alert alert-info">
+                        <i class="fas fa-spinner fa-spin me-2"></i>正在加载数据...
+                    </div>
+                `;
+
+                await dataLoader.loadAllData();
+                
+                const products = dataLoader.contentData?.products || [];
+                const news = dataLoader.contentData?.news || [];
+                const cases = dataLoader.contentData?.cases || [];
+
+                diagnosticResults.dataLoader = {
+                    success: true,
+                    products: products.length,
+                    news: news.length,
+                    cases: cases.length
+                };
+
+                container.innerHTML = `
+                    <div class="alert alert-success">
+                        <i class="fas fa-check me-2"></i>数据加载成功
+                    </div>
+                    <ul class="list-unstyled mb-0">
+                        <li><strong>产品数量:</strong> ${products.length}</li>
+                        <li><strong>资讯数量:</strong> ${news.length}</li>
+                        <li><strong>案例数量:</strong> ${cases.length}</li>
+                    </ul>
+                `;
+
+                // 设置全局数据加载器
+                window.contentDataLoader = dataLoader;
+
+            } catch (error) {
+                diagnosticResults.dataLoader = {
+                    success: false,
+                    error: error.message
+                };
+
+                container.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-times me-2"></i>数据加载失败: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function checkNetworkRequests() {
+            const container = document.getElementById('networkCheck');
+            const testUrls = [
+                '/content/products/ws-k08510-a.md',
+                '/content/news/industry-news-1.md',
+                '/content/cases/automotive-manufacturing.md'
+            ];
+
+            const results = [];
+
+            for (const url of testUrls) {
+                try {
+                    const response = await fetch(url);
+                    results.push({
+                        url: url,
+                        status: response.status,
+                        success: response.ok
+                    });
+                } catch (error) {
+                    results.push({
+                        url: url,
+                        status: 'Error',
+                        success: false,
+                        error: error.message
+                    });
+                }
+            }
+
+            diagnosticResults.network = results;
+
+            container.innerHTML = `
+                <div class="mb-2"><strong>网络请求测试结果:</strong></div>
+                ${results.map(result => `
+                    <div class="test-result ${result.success ? 'test-pass' : 'test-fail'}">
+                        <i class="fas fa-${result.success ? 'check' : 'times'} me-2"></i>
+                        ${result.url}: ${result.status}
+                        ${result.error ? ` (${result.error})` : ''}
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        async function checkDataContent() {
+            const container = document.getElementById('dataContentCheck');
+            
+            if (!window.contentDataLoader || !window.contentDataLoader.contentData) {
+                container.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>数据加载器未初始化或数据为空
+                    </div>
+                `;
+                return;
+            }
+
+            const data = window.contentDataLoader.contentData;
+            const products = data.products || [];
+            const news = data.news || [];
+            const cases = data.cases || [];
+
+            diagnosticResults.dataContent = {
+                products: products.slice(0, 3).map(p => ({ id: p.id, title: p.title })),
+                news: news.slice(0, 3).map(n => ({ id: n.id, title: n.title })),
+                cases: cases.slice(0, 3).map(c => ({ id: c.id, title: c.title }))
+            };
+
+            container.innerHTML = `
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6>产品示例 (${products.length}个)</h6>
+                        <div class="code-block">
+${products.slice(0, 3).map(p => `ID: ${p.id}\n标题: ${p.title}`).join('\n\n')}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>资讯示例 (${news.length}个)</h6>
+                        <div class="code-block">
+${news.slice(0, 3).map(n => `ID: ${n.id}\n标题: ${n.title}`).join('\n\n')}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>案例示例 (${cases.length}个)</h6>
+                        <div class="code-block">
+${cases.slice(0, 3).map(c => `ID: ${c.id}\n标题: ${c.title}`).join('\n\n')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateConsoleErrors() {
+            const container = document.getElementById('consoleErrors');
+            const errors = diagnosticResults.errors;
+
+            if (errors.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-success">
+                        <i class="fas fa-check me-2"></i>暂无控制台错误
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>发现 ${errors.length} 个问题
+                </div>
+                <div class="code-block">
+${errors.map(error => `[${error.type.toUpperCase()}] ${error.message}`).join('\n')}
+                </div>
+            `;
+        }
+
+        function generateFixSuggestions() {
+            const container = document.getElementById('fixSuggestions');
+            const suggestions = [];
+
+            // 基于诊断结果生成建议
+            if (!diagnosticResults.fileLoading.dataLoader) {
+                suggestions.push({
+                    issue: 'data-loader.js 未正确加载',
+                    solution: '检查文件路径是否正确，确保 data-loader.js 在 static/admin/ 目录下'
+                });
+            }
+
+            if (!diagnosticResults.fileLoading.adminFunctions) {
+                suggestions.push({
+                    issue: 'admin-functions.js 未正确加载',
+                    solution: '检查文件路径是否正确，确保 admin-functions.js 在 static/admin/ 目录下'
+                });
+            }
+
+            if (!diagnosticResults.dataLoader.success) {
+                suggestions.push({
+                    issue: '数据加载失败',
+                    solution: '检查 Hugo 服务器是否正常运行，确保内容文件存在于 content/ 目录下'
+                });
+            }
+
+            if (diagnosticResults.network.some(r => !r.success)) {
+                suggestions.push({
+                    issue: '网络请求失败',
+                    solution: '确保 Hugo 服务器正在运行，并且可以访问 /content/ 路径下的文件'
+                });
+            }
+
+            if (diagnosticResults.errors.length > 0) {
+                suggestions.push({
+                    issue: '存在JavaScript错误',
+                    solution: '检查控制台错误信息，修复相关的JavaScript问题'
+                });
+            }
+
+            if (suggestions.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-success">
+                        <i class="fas fa-check me-2"></i>未发现明显问题，系统应该正常工作
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="alert alert-info mb-3">
+                        <i class="fas fa-info-circle me-2"></i>发现 ${suggestions.length} 个需要修复的问题
+                    </div>
+                    ${suggestions.map((suggestion, index) => `
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <h6 class="card-title">问题 ${index + 1}: ${suggestion.issue}</h6>
+                                <p class="card-text">${suggestion.solution}</p>
+                            </div>
+                        </div>
+                    `).join('')}
+                `;
+            }
+        }
+
+        // 页面加载时运行诊断
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(runDiagnostics, 1000); // 延迟1秒确保所有脚本加载完成
+        });
+    </script>
+</body>
+</html>
