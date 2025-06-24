@@ -1,0 +1,4160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisNDT 完整内容管理中心</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Quill富文本编辑器 -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+            --dark-color: #343a40;
+            --light-color: #f8f9fa;
+            --sidebar-width: 280px;
+            --header-height: 70px;
+        }
+
+        body {
+            background: #f5f6fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 顶部导航 */
+        .top-navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            height: var(--header-height);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            text-decoration: none;
+            margin-right: 30px;
+        }
+
+        .navbar-nav {
+            display: flex;
+            gap: 20px;
+            margin-left: auto;
+        }
+
+        .navbar-btn {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .navbar-btn:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        /* 侧边栏 */
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--header-height));
+            background: white;
+            border-right: 1px solid #e9ecef;
+            overflow-y: auto;
+            z-index: 999;
+        }
+
+        .sidebar-section {
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .section-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            font-weight: 600;
+            color: var(--dark-color);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .section-header:hover {
+            background: #e9ecef;
+        }
+
+        .section-content {
+            padding: 0;
+            max-height: 300px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .section-content.collapsed {
+            max-height: 0;
+        }
+
+        .sidebar-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #f8f9fa;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-item:hover {
+            background: #f8f9fa;
+        }
+
+        .sidebar-item.active {
+            background: rgba(0,123,255,0.1);
+            border-left: 3px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .sidebar-icon {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* 主内容区 */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
+            padding: 30px;
+            min-height: calc(100vh - var(--header-height));
+        }
+
+        .content-header {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .content-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+        }
+
+        .content-subtitle {
+            color: #6c757d;
+            margin-bottom: 20px;
+        }
+
+        .content-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .content-body {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* 工具栏样式 */
+        .list-toolbar {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .toolbar-left {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .toolbar-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-box {
+            position: relative;
+            width: 250px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 35px 8px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+
+        /* 表格样式 */
+        .content-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .content-table th,
+        .content-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .content-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .content-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-published {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-draft {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #6c757d;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .action-btn:hover {
+            background: rgba(0,0,0,0.1);
+        }
+
+        .action-btn.edit:hover {
+            color: var(--primary-color);
+        }
+
+        .action-btn.delete:hover {
+            color: var(--danger-color);
+        }
+
+        .action-btn.view:hover {
+            color: var(--success-color);
+        }
+
+        /* 富文本编辑器样式 */
+        .ql-editor {
+            min-height: 200px;
+        }
+
+        /* 图片上传区域 */
+        .image-upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #f8f9fa;
+        }
+
+        .image-upload-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(0,123,255,0.05);
+        }
+
+        .upload-placeholder {
+            color: #6c757d;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 20px 15px;
+            }
+
+            .search-box {
+                width: 200px;
+            }
+        }
+
+        /* 加载动画 */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <nav class="top-navbar">
+        <a href="#" class="navbar-brand">
+            <i class="fas fa-cogs me-2"></i>VisNDT 完整内容管理中心
+        </a>
+        <div class="navbar-nav">
+            <span id="serverStatus" class="navbar-btn" style="cursor: default;">
+                <i class="fas fa-circle text-secondary me-1"></i>检查中...
+            </span>
+            <button onclick="syncLocalData()" class="navbar-btn" id="syncBtn" style="display: none;">
+                <i class="fas fa-sync me-1"></i>同步数据
+            </button>
+            <a href="../" class="navbar-btn">
+                <i class="fas fa-home me-1"></i>返回网站
+            </a>
+            <a href="index.html" class="navbar-btn">
+                <i class="fas fa-arrow-left me-1"></i>返回管理首页
+            </a>
+            <button onclick="logout()" class="navbar-btn">
+                <i class="fas fa-sign-out-alt me-1"></i>退出登录
+            </button>
+        </div>
+    </nav>
+
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+        <!-- 产品管理 -->
+        <div class="sidebar-section">
+            <div class="section-header" onclick="toggleSection('products')">
+                <span><i class="fas fa-box me-2"></i>产品管理</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="section-content" id="products-section">
+                <div class="sidebar-item" onclick="showProductsList()">
+                    <i class="sidebar-icon fas fa-list"></i>
+                    <span>产品列表</span>
+                </div>
+                <div class="sidebar-item" onclick="showProductCategories()">
+                    <i class="sidebar-icon fas fa-tags"></i>
+                    <span>产品分类</span>
+                </div>
+                <div class="sidebar-item" onclick="showSuppliers()">
+                    <i class="sidebar-icon fas fa-building"></i>
+                    <span>供应商管理</span>
+                </div>
+                <div class="sidebar-item" onclick="showProductSeries()">
+                    <i class="sidebar-icon fas fa-layer-group"></i>
+                    <span>产品系列</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 内容管理 -->
+        <div class="sidebar-section">
+            <div class="section-header" onclick="toggleSection('content')">
+                <span><i class="fas fa-newspaper me-2"></i>内容管理</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="section-content" id="content-section">
+                <div class="sidebar-item" onclick="showNewsList()">
+                    <i class="sidebar-icon fas fa-newspaper"></i>
+                    <span>资讯管理</span>
+                </div>
+                <div class="sidebar-item" onclick="showCasesList()">
+                    <i class="sidebar-icon fas fa-briefcase"></i>
+                    <span>案例管理</span>
+                </div>
+                <div class="sidebar-item" onclick="showApplications()">
+                    <i class="sidebar-icon fas fa-cogs"></i>
+                    <span>应用领域</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 系统管理 -->
+        <div class="sidebar-section">
+            <div class="section-header" onclick="toggleSection('system')">
+                <span><i class="fas fa-cog me-2"></i>系统管理</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="section-content" id="system-section">
+                <div class="sidebar-item" onclick="showImportExport()">
+                    <i class="sidebar-icon fas fa-exchange-alt"></i>
+                    <span>导入导出</span>
+                </div>
+                <div class="sidebar-item" onclick="showMediaLibrary()">
+                    <i class="sidebar-icon fas fa-images"></i>
+                    <span>媒体库</span>
+                </div>
+                <div class="sidebar-item" onclick="showSystemSettings()">
+                    <i class="sidebar-icon fas fa-sliders-h"></i>
+                    <span>系统设置</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <!-- 内容头部 -->
+        <div class="content-header">
+            <h1 class="content-title" id="contentTitle">欢迎使用完整内容管理中心</h1>
+            <p class="content-subtitle" id="contentSubtitle">选择左侧菜单开始管理您的内容</p>
+            <div class="content-actions" id="contentActions">
+                <!-- 动态生成的操作按钮 -->
+            </div>
+        </div>
+
+        <!-- 内容主体 -->
+        <div class="content-body" id="contentBody">
+            <div class="text-center py-5">
+                <div class="mb-4">
+                    <i class="fas fa-rocket fa-4x text-primary mb-3"></i>
+                    <h3>完整内容管理系统</h3>
+                    <p class="text-muted">功能完整的内容管理解决方案，支持产品、资讯、案例的全生命周期管理</p>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-box fa-2x text-primary mb-3"></i>
+                                <h5>产品管理</h5>
+                                <p class="text-muted">完整的产品信息管理，支持分类、供应商、系列等</p>
+                                <button class="btn btn-primary btn-sm" onclick="showProductsList()">开始管理</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-newspaper fa-2x text-success mb-3"></i>
+                                <h5>内容管理</h5>
+                                <p class="text-muted">资讯、案例、应用领域等内容的统一管理</p>
+                                <button class="btn btn-success btn-sm" onclick="showNewsList()">开始管理</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-exchange-alt fa-2x text-warning mb-3"></i>
+                                <h5>导入导出</h5>
+                                <p class="text-muted">批量导入导出功能，支持Excel和JSON格式</p>
+                                <button class="btn btn-warning btn-sm" onclick="showImportExport()">开始使用</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 产品编辑弹窗 -->
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalLabel">添加产品</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="productForm">
+                        <div class="row">
+                            <!-- 基本信息 -->
+                            <div class="col-md-6">
+                                <h6 class="mb-3"><i class="fas fa-info-circle me-2"></i>基本信息</h6>
+
+                                <div class="mb-3">
+                                    <label for="productTitle" class="form-label">产品名称 *</label>
+                                    <input type="text" class="form-control" id="productTitle" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="productModel" class="form-label">产品型号 *</label>
+                                    <input type="text" class="form-control" id="productModel" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="productId" class="form-label">产品编号 *</label>
+                                    <input type="text" class="form-control" id="productId" placeholder="6位数字编号" maxlength="6" pattern="[0-9]{6}" required>
+                                    <div class="form-text">请输入6位数字编号</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="productSummary" class="form-label">产品简述</label>
+                                    <textarea class="form-control" id="productSummary" rows="3"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- 分类和供应商 -->
+                            <div class="col-md-6">
+                                <h6 class="mb-3"><i class="fas fa-tags me-2"></i>分类和供应商</h6>
+
+                                <div class="mb-3">
+                                    <label for="primaryCategory" class="form-label">产品一级分类 *</label>
+                                    <select class="form-select" id="primaryCategory" required onchange="updateSecondaryCategories()">
+                                        <option value="">请选择一级分类</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="secondaryCategory" class="form-label">产品二级分类</label>
+                                    <select class="form-select" id="secondaryCategory">
+                                        <option value="">请先选择一级分类</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="productSupplier" class="form-label">供应商 *</label>
+                                    <select class="form-select" id="productSupplier" required onchange="updateProductSeries()">
+                                        <option value="">请选择供应商</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="productSeries" class="form-label">产品系列</label>
+                                    <select class="form-select" id="productSeries">
+                                        <option value="">请先选择供应商</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 产品图库 -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h6 class="mb-3"><i class="fas fa-images me-2"></i>产品图库</h6>
+
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    产品图片将根据产品系列自动设置默认图片，您也可以在产品图库中添加更多图片。
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">产品图库</label>
+                                    <div class="row" id="galleryContainer">
+                                        <div class="col-md-3 mb-3">
+                                            <div class="image-upload-area" onclick="addGalleryImage()">
+                                                <div class="upload-placeholder">
+                                                    <i class="fas fa-plus fa-2x mb-2"></i>
+                                                    <p>添加图片</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 产品参数 -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h6 class="mb-3"><i class="fas fa-cog me-2"></i>产品参数</h6>
+
+                                <div class="mb-3">
+                                    <button type="button" class="btn btn-outline-success btn-sm me-2" onclick="loadDefaultParameters()">
+                                        <i class="fas fa-magic me-1"></i>加载默认参数模板
+                                    </button>
+                                    <button type="button" class="btn btn-outline-warning btn-sm" onclick="clearAllParameters()">
+                                        <i class="fas fa-trash me-1"></i>清空所有参数
+                                    </button>
+                                </div>
+
+                                <div id="parametersContainer">
+                                    <!-- 参数将在这里动态生成 -->
+                                </div>
+
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="addParameter()">
+                                    <i class="fas fa-plus me-1"></i>添加参数
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 应用场景和详细描述 -->
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <h6 class="mb-3"><i class="fas fa-lightbulb me-2"></i>应用场景</h6>
+                                <div id="applicationScenariosEditor" style="height: 200px;"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="mb-3"><i class="fas fa-file-alt me-2"></i>产品详细描述</h6>
+                                <div id="productDescriptionEditor" style="height: 200px;"></div>
+                            </div>
+                        </div>
+
+                        <!-- 资料下载 -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h6 class="mb-3"><i class="fas fa-download me-2"></i>资料下载</h6>
+
+                                <div id="dataDownloadContainer">
+                                    <!-- 资料下载项目将在这里动态生成 -->
+                                </div>
+
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="addDataDownload()">
+                                    <i class="fas fa-plus me-1"></i>添加资料
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 相关产品 -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h6 class="mb-3"><i class="fas fa-link me-2"></i>相关产品</h6>
+                                <div class="mb-3">
+                                    <label for="relatedProductsSelect" class="form-label">选择相关产品</label>
+                                    <select class="form-select" id="relatedProductsSelect" onchange="addRelatedProduct()">
+                                        <option value="">请选择相关产品</option>
+                                    </select>
+                                </div>
+                                <div id="relatedProductsList">
+                                    <!-- 已选择的相关产品列表 -->
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProduct()">保存产品</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 资讯编辑弹窗 -->
+    <div class="modal fade" id="newsModal" tabindex="-1" aria-labelledby="newsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newsModalLabel">添加资讯</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="newsForm">
+                        <div class="row">
+                            <!-- 基本信息 -->
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label for="newsTitle" class="form-label">标题 *</label>
+                                    <input type="text" class="form-control" id="newsTitle" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="newsSummary" class="form-label">摘要 *</label>
+                                    <textarea class="form-control" id="newsSummary" rows="3" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="newsContent" class="form-label">内容 *</label>
+                                    <div id="newsContentEditor" style="height: 300px;"></div>
+                                    <textarea id="newsContentHidden" style="display: none;"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- 侧边栏信息 -->
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="newsCategory" class="form-label">分类 *</label>
+                                    <select class="form-select" id="newsCategory" required>
+                                        <option value="">选择分类</option>
+                                        <option value="技术资讯">技术资讯</option>
+                                        <option value="产品发布">产品发布</option>
+                                        <option value="公司动态">公司动态</option>
+                                        <option value="行业新闻">行业新闻</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="newsAuthor" class="form-label">作者</label>
+                                    <input type="text" class="form-control" id="newsAuthor" value="管理员">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="newsPublishDate" class="form-label">发布日期</label>
+                                    <input type="date" class="form-control" id="newsPublishDate">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="newsStatus" class="form-label">状态</label>
+                                    <select class="form-select" id="newsStatus">
+                                        <option value="草稿">草稿</option>
+                                        <option value="已发布">已发布</option>
+                                        <option value="待审核">待审核</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="newsFeatured">
+                                        <label class="form-check-label" for="newsFeatured">
+                                            推荐资讯
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="newsImage" class="form-label">封面图片</label>
+                                    <input type="url" class="form-control" id="newsImage" placeholder="图片URL">
+                                    <div class="mt-2">
+                                        <img id="newsImagePreview" src="" alt="预览" style="max-width: 100%; height: auto; display: none;">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="newsTags" class="form-label">标签</label>
+                                    <input type="text" class="form-control" id="newsTags" placeholder="用逗号分隔多个标签">
+                                    <small class="form-text text-muted">例如：技术,内窥镜,工业</small>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="saveNews()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通知组件 -->
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong class="me-auto">系统通知</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="notificationBody">
+                <!-- 通知内容 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="data-loader.js"></script>
+    <script src="product-api.js"></script>
+    <script>
+        // 全局变量
+        let currentSection = 'dashboard';
+        let currentData = [];
+        let filteredData = [];
+        let editingProduct = null;
+        let applicationScenariosEditor = null;
+        let productDescriptionEditor = null;
+        let productCategories = [];
+        let suppliers = [];
+        let allProducts = [];
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', async function() {
+            // 检查登录状态
+            if (!checkAuth()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 初始化富文本编辑器
+            initializeEditors();
+
+            // 加载基础数据
+            await loadBaseData();
+
+            // 检查服务器状态
+            await checkServerStatus();
+
+            console.log('完整内容管理系统已加载');
+        });
+
+        // 检查登录状态
+        function checkAuth() {
+            const sessionData = sessionStorage.getItem('visndt_admin_session');
+            if (sessionData) {
+                const session = JSON.parse(sessionData);
+                if (Date.now() - session.loginTime < 8 * 60 * 60 * 1000) {
+                    return true;
+                }
+            }
+
+            const rememberData = localStorage.getItem('visndt_admin_remember');
+            if (rememberData) {
+                const remember = JSON.parse(rememberData);
+                if (Date.now() - remember.loginTime < 30 * 24 * 60 * 60 * 1000) {
+                    const sessionData = {
+                        username: remember.username,
+                        loginTime: Date.now(),
+                        remember: true
+                    };
+                    sessionStorage.setItem('visndt_admin_session', JSON.stringify(sessionData));
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // 登出功能
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                sessionStorage.removeItem('visndt_admin_session');
+                localStorage.removeItem('visndt_admin_remember');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // 初始化富文本编辑器
+        function initializeEditors() {
+            // 应用场景编辑器
+            applicationScenariosEditor = new Quill('#applicationScenariosEditor', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline'],
+                        ['link', 'image'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['clean']
+                    ]
+                }
+            });
+
+            // 产品详细描述编辑器
+            productDescriptionEditor = new Quill('#productDescriptionEditor', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline'],
+                        ['link', 'image'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['clean']
+                    ]
+                }
+            });
+        }
+
+        // 加载基础数据
+        async function loadBaseData() {
+            try {
+                // 加载产品分类
+                productCategories = await loadProductCategories();
+
+                // 加载供应商
+                suppliers = await loadSuppliers();
+
+                // 加载所有产品
+                allProducts = await loadAllProducts();
+
+                // 更新下拉选项
+                updateCategoryOptions();
+                updateSupplierOptions();
+                updateRelatedProductsOptions();
+
+                console.log('基础数据加载完成');
+            } catch (error) {
+                console.error('加载基础数据失败:', error);
+                showNotification('基础数据加载失败: ' + error.message, 'danger');
+            }
+        }
+
+        // 加载产品分类
+        async function loadProductCategories() {
+            // 从前台内容文件加载产品分类，与前台保持一致，电子内窥镜排第一
+            return [
+                {
+                    id: 'electronic-endoscope',
+                    title: '电子内窥镜',
+                    icon: 'fas fa-video',
+                    description: '各类电子内窥镜及相关设备',
+                    weight: 1,
+                    subcategories: [
+                        { id: 'industrial-video-endoscope', title: '工业视频内窥镜', description: '专业工业视频内窥镜设备', icon: 'fas fa-camera', weight: 1 },
+                        { id: 'industrial-pipeline-endoscope', title: '工业管道内窥镜', description: '专用管道检测内窥镜', icon: 'fas fa-pipe-section', weight: 2 },
+                        { id: 'crawler-robot', title: '爬行机器人', description: '管道爬行检测机器人', icon: 'fas fa-robot', weight: 3 }
+                    ]
+                },
+                {
+                    id: 'fiber-endoscope',
+                    title: '光纤内窥镜',
+                    icon: 'fas fa-eye',
+                    description: '高性能光纤内窥镜设备',
+                    weight: 2,
+                    subcategories: [
+                        { id: 'flexible-fiber', title: '柔性光纤内窥镜', description: '灵活弯曲检测设备', icon: 'fas fa-wave-square', weight: 1 },
+                        { id: 'rigid-fiber', title: '硬性光纤内窥镜', description: '直线型检测设备', icon: 'fas fa-minus', weight: 2 }
+                    ]
+                },
+                {
+                    id: 'optical-endoscope',
+                    title: '光学内窥镜',
+                    icon: 'fas fa-search',
+                    description: '专业光学内窥镜设备',
+                    weight: 3,
+                    subcategories: [
+                        { id: 'rigid-optical', title: '硬性光学内窥镜', description: '传统光学检测设备', icon: 'fas fa-binoculars', weight: 1 },
+                        { id: 'flexible-optical', title: '柔性光学内窥镜', description: '弯曲光学检测设备', icon: 'fas fa-eye-dropper', weight: 2 }
+                    ]
+                }
+            ];
+        }
+
+        // 加载供应商
+        async function loadSuppliers() {
+            // 模拟从API或文件加载供应商
+            return [
+                {
+                    id: 'vis',
+                    title: '天津维森科技有限公司',
+                    series: ['VIS-P系列', 'VIS-T系列']
+                },
+                {
+                    id: 'vsndt',
+                    title: '深圳市微视光电科技有限公司',
+                    series: ['K系列', 'P系列', 'DZ系列']
+                },
+                {
+                    id: 'hs',
+                    title: '深圳华视内窥镜有限公司',
+                    series: ['HS-A系列', 'HS-B系列']
+                }
+            ];
+        }
+
+        // 加载所有产品
+        async function loadAllProducts() {
+            try {
+                // 使用ContentDataLoader加载所有产品
+                if (typeof ContentDataLoader !== 'undefined') {
+                    const dataLoader = new ContentDataLoader();
+                    await dataLoader.loadAllData();
+                    return dataLoader.contentData.products || [];
+                } else {
+                    // 如果ContentDataLoader不可用，尝试直接加载
+                    return await loadProductsDirectly();
+                }
+            } catch (error) {
+                console.error('加载产品数据失败:', error);
+                return await loadProductsDirectly();
+            }
+        }
+
+        // 直接加载产品数据
+        async function loadProductsDirectly() {
+            const products = [];
+
+            // 已知的所有产品文件列表
+            const productFiles = [
+                'WS-K08510-a', 'WS-K08510-b', 'WS-K09510-a', 'WS-K1010-a',
+                'WS-K1210-a', 'WS-K1210-a copy', 'WS-K1210-a copy 6', 'WS-K1210-a copy 7',
+                'WS-K1210-a copy 8', 'WS-K1210-a copy 9', 'WS-K1210-b',
+                'WS-K1510-a', 'WS-K1510-b', 'WS-K1510-c', 'WS-K1810-a',
+                'k1010-electronic-endoscope', 'product-dz60', 'product-p08510',
+                'product-p09510', 'product-p1010-model', 'product-p1210',
+                'product-p1510', 'product-p1810', 'product-p2010', 'product-p2210',
+                'product-p2410', 'product-p2810', 'product-p3910', 'product-p6010',
+                'product-p8020', 'sample-product-2', 'sample-product-3', 'test-product-001'
+            ];
+
+            console.log(`开始加载 ${productFiles.length} 个产品...`);
+
+            for (const productId of productFiles) {
+                try {
+                    const product = await loadSingleProductData(productId);
+                    if (product) {
+                        products.push(product);
+                        console.log(`✅ 加载产品: ${product.title}`);
+                    }
+                } catch (error) {
+                    console.warn(`❌ 加载产品 ${productId} 失败:`, error);
+                    // 生成基础产品数据
+                    const basicProduct = generateBasicProductData(productId);
+                    products.push(basicProduct);
+                }
+            }
+
+            console.log(`产品加载完成: ${products.length} 个产品`);
+            return products;
+        }
+
+        // 加载单个产品数据
+        async function loadSingleProductData(productId) {
+            try {
+                // 尝试从产品页面加载
+                const response = await fetch(`/products/${productId}/`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                // 提取产品信息
+                const title = doc.querySelector('h1')?.textContent?.trim() || productId;
+                const summary = doc.querySelector('.product-summary, .lead')?.textContent?.trim() || '';
+
+                // 从页面提取详细信息
+                const detailsList = doc.querySelectorAll('.product-details-list li');
+                let model = '', series = '', supplier = '', published = '';
+
+                detailsList.forEach(li => {
+                    const text = li.textContent;
+                    if (text.includes('型号：')) {
+                        model = text.replace('型号：', '').trim();
+                    } else if (text.includes('系列：')) {
+                        series = text.replace('系列：', '').trim();
+                    } else if (text.includes('供应商：')) {
+                        supplier = text.replace('供应商：', '').trim();
+                    } else if (text.includes('发布时间：')) {
+                        published = text.replace('发布时间：', '').trim();
+                    }
+                });
+
+                // 提取参数
+                const parameters = extractParametersFromPage(doc);
+
+                // 提取图库
+                const gallery = extractGalleryFromPage(doc);
+
+                // 提取应用场景
+                const applicationScenarios = extractApplicationScenariosFromPage(doc);
+
+                // 提取资料下载
+                const dataDownload = extractDataDownloadFromPage(doc);
+
+                return {
+                    id: productId,
+                    title: title,
+                    summary: summary,
+                    model: model || extractModelFromTitle(title),
+                    series: series || extractSeriesFromTitle(title),
+                    supplier: supplier || '深圳市微视光电科技有限公司',
+                    primary_category: '电子内窥镜',
+                    secondary_category: getSecondaryCategory(productId),
+                    status: 'published',
+                    statusName: '已发布',
+                    published: published ? new Date(published).toISOString() : new Date().toISOString(),
+                    thumbnail: gallery.length > 0 ? gallery[0].image : getDefaultThumbnail(series),
+                    parameters: parameters,
+                    gallery: gallery,
+                    application_scenarios: applicationScenarios,
+                    data_download: dataDownload,
+                    related_products: [],
+                    featured: Math.random() > 0.8,
+                    tags: generateProductTags(model, series),
+                    content: `# ${title}\n\n${summary}`
+                };
+            } catch (error) {
+                console.warn(`无法从页面加载产品 ${productId}:`, error);
+                return generateBasicProductData(productId);
+            }
+        }
+
+        // 从页面提取参数
+        function extractParametersFromPage(doc) {
+            const parameters = [];
+
+            // 查找参数表格或列表
+            const paramElements = doc.querySelectorAll('.parameter-item, .spec-item, .product-spec tr, .parameters-table tr');
+
+            paramElements.forEach(element => {
+                const nameEl = element.querySelector('.param-name, .spec-name, td:first-child, .parameter-name');
+                const valueEl = element.querySelector('.param-value, .spec-value, td:last-child, .parameter-value');
+
+                if (nameEl && valueEl) {
+                    const name = nameEl.textContent.trim().replace('：', '').replace(':', '');
+                    const value = valueEl.textContent.trim();
+                    if (name && value) {
+                        parameters.push({ name, value });
+                    }
+                }
+            });
+
+            // 如果没有找到参数，返回默认的电子内窥镜参数模板
+            if (parameters.length === 0) {
+                return getDefaultEndoscopeParameters();
+            }
+
+            return parameters;
+        }
+
+        // 获取默认的电子内窥镜参数模板（8种参数）
+        function getDefaultEndoscopeParameters() {
+            return [
+                { name: "主机屏幕", value: "6英寸" },
+                { name: "待机时长", value: "8小时" },
+                { name: "探头直径", value: "1.0mm" },
+                { name: "像素", value: "16万" },
+                { name: "景深", value: "3mm~70mm" },
+                { name: "视场角", value: "120度" },
+                { name: "视向", value: "直视" },
+                { name: "光源", value: "光纤光源" }
+            ];
+        }
+
+        // 从页面提取图库
+        function extractGalleryFromPage(doc) {
+            const gallery = [];
+
+            // 查找主图
+            const mainImage = doc.querySelector('.main-product-image, .product-main-image, #main-product-image');
+            if (mainImage) {
+                gallery.push({
+                    image: mainImage.src,
+                    alt: mainImage.alt || '主图',
+                    is_main: true
+                });
+            }
+
+            // 查找缩略图
+            const thumbnails = doc.querySelectorAll('.thumbnail-image, .gallery-thumb, .product-thumb');
+            thumbnails.forEach((thumb, index) => {
+                if (thumb.src && thumb.src !== mainImage?.src) {
+                    gallery.push({
+                        image: thumb.getAttribute('data-full-image') || thumb.src,
+                        alt: thumb.alt || `副图${index + 1}`,
+                        is_main: false
+                    });
+                }
+            });
+
+            return gallery;
+        }
+
+        // 从页面提取应用场景
+        function extractApplicationScenariosFromPage(doc) {
+            const scenarioElements = doc.querySelectorAll('.application-scenarios, .product-applications, .scenarios-content');
+            if (scenarioElements.length > 0) {
+                return scenarioElements[0].innerHTML;
+            }
+            return '';
+        }
+
+        // 从页面提取资料下载
+        function extractDataDownloadFromPage(doc) {
+            const downloads = [];
+            const downloadLinks = doc.querySelectorAll('.download-link, .data-download a, .product-downloads a');
+
+            downloadLinks.forEach(link => {
+                const title = link.textContent.trim() || link.getAttribute('title') || '产品资料';
+                const path = link.href;
+                if (path) {
+                    downloads.push({
+                        file_title: title,
+                        file_path: path
+                    });
+                }
+            });
+
+            return downloads;
+        }
+
+        // 生成基础产品数据
+        function generateBasicProductData(productId) {
+            const title = generateProductTitle(productId);
+            const model = extractModelFromTitle(title);
+            const series = extractSeriesFromTitle(title);
+
+            return {
+                id: productId,
+                title: title,
+                summary: `${model} 工业内窥镜，专业检测设备`,
+                model: model,
+                series: series,
+                supplier: '深圳市微视光电科技有限公司',
+                primary_category: '电子内窥镜',
+                secondary_category: getSecondaryCategory(productId),
+                status: 'published',
+                statusName: '已发布',
+                published: new Date().toISOString(),
+                thumbnail: getDefaultThumbnail(series),
+                parameters: getDefaultEndoscopeParameters(),
+                gallery: [
+                    { image: getDefaultThumbnail(series), alt: "主图", is_main: true }
+                ],
+                application_scenarios: `${model} 专业工业检测解决方案`,
+                data_download: [],
+                related_products: [],
+                featured: Math.random() > 0.8,
+                tags: generateProductTags(model, series),
+                content: `# ${title}\n\n${model} 是一款专业的工业内窥镜设备。`
+            };
+        }
+
+        // 生成产品标题
+        function generateProductTitle(productId) {
+            if (productId.startsWith('WS-K')) {
+                const model = extractModelFromTitle('', productId);
+                return `${model}超细工业电子内窥镜`;
+            } else if (productId.startsWith('product-p')) {
+                const model = extractModelFromTitle('', productId);
+                return `${model}工业内窥镜`;
+            } else if (productId.includes('dz')) {
+                return 'DZ60爬行机器人';
+            } else if (productId.includes('sample')) {
+                return `样品产品 ${productId.replace('sample-product-', '')}`;
+            } else if (productId.includes('test')) {
+                return `测试产品 ${productId.replace('test-product-', '')}`;
+            } else {
+                const model = extractModelFromTitle('', productId);
+                return `${model}工业内窥镜`;
+            }
+        }
+
+        // 从标题或ID提取型号
+        function extractModelFromTitle(title, productId = '') {
+            if (title) {
+                const match = title.match(/([A-Z]{1,3}-?[A-Z]?\d{4,5}[A-Z]?)/);
+                if (match) return match[1];
+            }
+
+            if (productId) {
+                if (productId.startsWith('WS-')) {
+                    return productId.split('-').slice(0, 2).join('-');
+                } else if (productId.startsWith('product-')) {
+                    const parts = productId.replace('product-', '').toUpperCase();
+                    return parts.includes('P') ? parts : `P${parts}`;
+                }
+            }
+
+            return 'MODEL-001';
+        }
+
+        // 从标题或ID提取系列
+        function extractSeriesFromTitle(title, productId = '') {
+            if (title && title.includes('K')) return 'K系列';
+            if (title && title.includes('P')) return 'P系列';
+            if (title && title.includes('DZ')) return 'DZ系列';
+
+            if (productId) {
+                if (productId.includes('K') || productId.includes('k')) return 'K系列';
+                if (productId.includes('p') || productId.includes('P')) return 'P系列';
+                if (productId.includes('dz') || productId.includes('DZ')) return 'DZ系列';
+            }
+
+            return 'K系列';
+        }
+
+        // 获取次级分类
+        function getSecondaryCategory(productId) {
+            if (productId.includes('dz') || productId.includes('robot')) {
+                return '爬行机器人';
+            } else if (productId.includes('sample') || productId.includes('test')) {
+                return '测试产品';
+            } else {
+                return '工业视频内窥镜';
+            }
+        }
+
+        // 获取默认缩略图
+        function getDefaultThumbnail(series) {
+            switch(series) {
+                case 'K系列': return '/images/products/K-series/K-main.jpg';
+                case 'P系列': return '/images/products/P-series/P-main.jpg';
+                case 'DZ系列': return '/images/products/DZ-series/DZ-main.jpg';
+                default: return 'https://picsum.photos/300/200?random=1';
+            }
+        }
+
+        // 生成产品标签
+        function generateProductTags(model, series) {
+            const tags = [series];
+
+            if (model.includes('K08') || model.includes('K09')) {
+                tags.push('超细探头', '高清成像');
+            } else if (model.includes('P')) {
+                tags.push('经济型', '性价比');
+            } else if (model.includes('DZ')) {
+                tags.push('爬行机器人', '远程操控');
+            }
+
+            tags.push('工业级');
+            return tags;
+        }
+
+        // 侧边栏功能
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId + '-section');
+            const header = section.previousElementSibling;
+            const icon = header.querySelector('i.fa-chevron-down, i.fa-chevron-up');
+
+            section.classList.toggle('collapsed');
+
+            if (section.classList.contains('collapsed')) {
+                icon.className = 'fas fa-chevron-up';
+            } else {
+                icon.className = 'fas fa-chevron-down';
+            }
+        }
+
+        // 显示通知
+        function showNotification(message, type = 'info') {
+            const toast = document.getElementById('notificationToast');
+            const body = document.getElementById('notificationBody');
+
+            body.textContent = message;
+
+            // 设置图标和颜色
+            const header = toast.querySelector('.toast-header');
+            const icon = header.querySelector('i');
+
+            switch (type) {
+                case 'success':
+                    icon.className = 'fas fa-check-circle me-2 text-success';
+                    break;
+                case 'warning':
+                    icon.className = 'fas fa-exclamation-triangle me-2 text-warning';
+                    break;
+                case 'danger':
+                    icon.className = 'fas fa-exclamation-circle me-2 text-danger';
+                    break;
+                default:
+                    icon.className = 'fas fa-info-circle me-2 text-info';
+            }
+
+            const bsToast = new bootstrap.Toast(toast);
+            bsToast.show();
+        }
+
+        // 产品管理功能
+        async function showProductsList() {
+            currentSection = 'products';
+
+            // 更新头部
+            document.getElementById('contentTitle').textContent = '产品管理';
+            document.getElementById('contentSubtitle').textContent = '管理产品信息，包括产品详情、技术参数、供应商等';
+
+            // 更新操作按钮
+            const actionsHtml = `
+                <button class="btn btn-primary" onclick="addProduct()">
+                    <i class="fas fa-plus me-1"></i>添加产品
+                </button>
+                <button class="btn btn-success" onclick="showImportExport()">
+                    <i class="fas fa-file-import me-1"></i>导入产品
+                </button>
+                <button class="btn btn-warning" onclick="exportProducts()">
+                    <i class="fas fa-file-export me-1"></i>导出产品
+                </button>
+            `;
+            document.getElementById('contentActions').innerHTML = actionsHtml;
+
+            // 加载产品数据
+            try {
+                currentData = await loadAllProducts();
+                filteredData = [...currentData];
+                renderProductsList();
+            } catch (error) {
+                console.error('加载产品列表失败:', error);
+                showNotification('产品列表加载失败: ' + error.message, 'danger');
+            }
+        }
+
+        // 渲染产品列表
+        function renderProductsList() {
+            const contentBody = document.getElementById('contentBody');
+
+            const toolbarHtml = `
+                <div class="list-toolbar">
+                    <div class="toolbar-left">
+                        <select class="form-select form-select-sm" id="supplierFilter" onchange="filterBySupplier()">
+                            <option value="">所有供应商</option>
+                            ${suppliers.map(supplier => `<option value="${supplier.title}">${supplier.title}</option>`).join('')}
+                        </select>
+                        <select class="form-select form-select-sm" id="categoryFilter" onchange="filterByCategory()">
+                            <option value="">所有分类</option>
+                            ${productCategories.map(cat => `<option value="${cat.title}">${cat.title}</option>`).join('')}
+                        </select>
+                        <select class="form-select form-select-sm" id="statusFilter" onchange="filterByStatus()">
+                            <option value="">所有状态</option>
+                            <option value="published">已发布</option>
+                            <option value="draft">草稿</option>
+                        </select>
+                    </div>
+                    <div class="toolbar-right">
+                        <div class="search-box">
+                            <input type="text" class="search-input" id="productSearch" placeholder="搜索产品..." onkeyup="searchProducts()">
+                            <i class="search-icon fas fa-search"></i>
+                        </div>
+                        <span class="badge bg-secondary">${filteredData.length} 个产品</span>
+                    </div>
+                </div>
+            `;
+
+            const tableHtml = `
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>产品编号</th>
+                            <th>产品名称</th>
+                            <th>型号</th>
+                            <th>供应商</th>
+                            <th>分类</th>
+                            <th>系列</th>
+                            <th>状态</th>
+                            <th>发布时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${filteredData.map(product => `
+                            <tr>
+                                <td>${product.id || '未设置'}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="${product.thumbnail || 'https://picsum.photos/40/40'}"
+                                             alt="${product.title}"
+                                             style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; margin-right: 10px;">
+                                        <div>
+                                            <div class="fw-bold">${product.title}</div>
+                                            <small class="text-muted">${product.summary || ''}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>${product.model || ''}</td>
+                                <td>${product.supplier || ''}</td>
+                                <td>
+                                    <span class="badge bg-primary">${product.primary_category || ''}</span>
+                                    ${product.secondary_category ? `<br><span class="badge bg-secondary mt-1">${product.secondary_category}</span>` : ''}
+                                </td>
+                                <td>${product.series || ''}</td>
+                                <td>
+                                    <span class="status-badge ${product.status === 'published' ? 'status-published' : 'status-draft'}">
+                                        ${product.statusName || product.status || '草稿'}
+                                    </span>
+                                </td>
+                                <td>${product.published ? new Date(product.published).toLocaleDateString() : ''}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn view" onclick="viewProduct('${product.id}')" title="查看">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn edit" onclick="editProduct('${product.id}')" title="编辑">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn" onclick="copyProduct('${product.id}')" title="复制">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                        <button class="action-btn delete" onclick="deleteProduct('${product.id}')" title="删除">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            contentBody.innerHTML = toolbarHtml + tableHtml;
+
+            // 设置活动状态
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('.sidebar-item[onclick="showProductsList()"]').classList.add('active');
+        }
+
+        // 筛选功能
+        function filterBySupplier() {
+            const supplierFilter = document.getElementById('supplierFilter').value;
+            applyFilters();
+        }
+
+        function filterByCategory() {
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            applyFilters();
+        }
+
+        function filterByStatus() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            applyFilters();
+        }
+
+        function searchProducts() {
+            const searchTerm = document.getElementById('productSearch').value.toLowerCase();
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const supplierFilter = document.getElementById('supplierFilter')?.value || '';
+            const categoryFilter = document.getElementById('categoryFilter')?.value || '';
+            const statusFilter = document.getElementById('statusFilter')?.value || '';
+            const searchTerm = document.getElementById('productSearch')?.value.toLowerCase() || '';
+
+            filteredData = currentData.filter(product => {
+                const matchesSupplier = !supplierFilter || product.supplier === supplierFilter;
+                const matchesCategory = !categoryFilter || product.primary_category === categoryFilter;
+                const matchesStatus = !statusFilter || product.status === statusFilter;
+                const matchesSearch = !searchTerm ||
+                    product.title.toLowerCase().includes(searchTerm) ||
+                    product.model.toLowerCase().includes(searchTerm) ||
+                    (product.summary && product.summary.toLowerCase().includes(searchTerm));
+
+                return matchesSupplier && matchesCategory && matchesStatus && matchesSearch;
+            });
+
+            renderProductsList();
+        }
+
+        // 产品操作功能
+        function addProduct() {
+            editingProduct = null;
+            document.getElementById('productModalLabel').textContent = '添加产品';
+            resetProductForm();
+            generateProductId();
+            const modal = new bootstrap.Modal(document.getElementById('productModal'));
+            modal.show();
+        }
+
+        function editProduct(productId) {
+            const product = currentData.find(p => p.id === productId);
+            if (!product) {
+                showNotification('产品不存在', 'danger');
+                return;
+            }
+
+            editingProduct = product;
+            document.getElementById('productModalLabel').textContent = '编辑产品';
+            fillProductForm(product);
+            const modal = new bootstrap.Modal(document.getElementById('productModal'));
+            modal.show();
+        }
+
+        function viewProduct(productId) {
+            const product = currentData.find(p => p.id === productId);
+            if (!product) {
+                showNotification('产品不存在', 'danger');
+                return;
+            }
+
+            // 在新窗口中打开产品详情页
+            const productUrl = `/products/${productId}`;
+            window.open(productUrl, '_blank');
+        }
+
+        function copyProduct(productId) {
+            const product = currentData.find(p => p.id === productId);
+            if (!product) {
+                showNotification('产品不存在', 'danger');
+                return;
+            }
+
+            editingProduct = null;
+            document.getElementById('productModalLabel').textContent = '复制产品';
+            fillProductForm(product);
+            generateProductId(); // 生成新的产品编号
+            document.getElementById('productTitle').value = product.title + ' (副本)';
+            const modal = new bootstrap.Modal(document.getElementById('productModal'));
+            modal.show();
+        }
+
+        async function deleteProduct(productId) {
+            const product = currentData.find(p => p.id === productId);
+            if (!product) {
+                showNotification('产品不存在', 'danger');
+                return;
+            }
+
+            if (confirm(`确定要删除产品 "${product.title}" 吗？此操作不可恢复。`)) {
+                try {
+                    // 调用API删除产品
+                    const result = await window.ProductAPI.deleteProduct(productId);
+
+                    if (result.success) {
+                        // 从内存中删除
+                        currentData = currentData.filter(p => p.id !== productId);
+                        filteredData = filteredData.filter(p => p.id !== productId);
+                        allProducts = allProducts.filter(p => p.id !== productId);
+
+                        renderProductsList();
+                        updateRelatedProductsOptions();
+                        showNotification(result.message || '产品删除成功', 'success');
+                    } else {
+                        showNotification(result.message || '产品删除失败', 'danger');
+                    }
+                } catch (error) {
+                    console.error('删除产品失败:', error);
+                    showNotification('删除产品失败: ' + error.message, 'danger');
+                }
+            }
+        }
+
+        // 表单操作
+        function resetProductForm() {
+            document.getElementById('productForm').reset();
+
+            // 重置参数容器
+            document.getElementById('parametersContainer').innerHTML = '';
+            loadDefaultParameters();
+
+            // 重置资料下载容器
+            document.getElementById('dataDownloadContainer').innerHTML = '';
+
+            // 重置相关产品列表
+            document.getElementById('relatedProductsList').innerHTML = '';
+
+            // 重置图库容器
+            document.getElementById('galleryContainer').innerHTML = `
+                <div class="col-md-3 mb-3">
+                    <div class="image-upload-area" onclick="addGalleryImage()">
+                        <div class="upload-placeholder">
+                            <i class="fas fa-plus fa-2x mb-2"></i>
+                            <p>添加图片</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // 重置富文本编辑器
+            if (applicationScenariosEditor) {
+                applicationScenariosEditor.setContents([]);
+            }
+            if (productDescriptionEditor) {
+                productDescriptionEditor.setContents([]);
+            }
+        }
+
+        function fillProductForm(product) {
+            document.getElementById('productTitle').value = product.title || '';
+            document.getElementById('productModel').value = product.model || '';
+            document.getElementById('productId').value = product.id || '';
+            document.getElementById('productSummary').value = product.summary || '';
+            document.getElementById('primaryCategory').value = product.primary_category || '';
+            document.getElementById('productSupplier').value = product.supplier || '';
+
+            // 更新二级分类和系列选项
+            updateSecondaryCategories();
+            updateProductSeries();
+
+            setTimeout(() => {
+                document.getElementById('secondaryCategory').value = product.secondary_category || '';
+                document.getElementById('productSeries').value = product.series || '';
+            }, 100);
+
+            // 填充参数
+            if (product.parameters && product.parameters.length > 0) {
+                const container = document.getElementById('parametersContainer');
+                container.innerHTML = '';
+                product.parameters.forEach(param => {
+                    addParameterRow(param.name, param.value);
+                });
+            }
+
+            // 填充富文本编辑器
+            if (applicationScenariosEditor && product.application_scenarios) {
+                applicationScenariosEditor.root.innerHTML = product.application_scenarios;
+            }
+            if (productDescriptionEditor && product.content) {
+                productDescriptionEditor.root.innerHTML = product.content;
+            }
+
+            // 填充资料下载
+            if (product.data_download && product.data_download.length > 0) {
+                const downloadContainer = document.getElementById('dataDownloadContainer');
+                downloadContainer.innerHTML = '';
+                product.data_download.forEach(download => {
+                    addDataDownloadRow(download.file_title, download.file_path);
+                });
+            }
+
+            // 填充相关产品
+            if (product.related_products && product.related_products.length > 0) {
+                const relatedList = document.getElementById('relatedProductsList');
+                relatedList.innerHTML = '';
+                product.related_products.forEach(relatedId => {
+                    const relatedProduct = allProducts.find(p => p.id === relatedId);
+                    if (relatedProduct) {
+                        addRelatedProductToList(relatedProduct);
+                    }
+                });
+            }
+        }
+
+        // 生成产品编号
+        function generateProductId() {
+            const randomId = Math.floor(100000 + Math.random() * 900000).toString();
+            document.getElementById('productId').value = randomId;
+        }
+
+        // 更新下拉选项
+        function updateCategoryOptions() {
+            const primarySelect = document.getElementById('primaryCategory');
+            if (primarySelect) {
+                primarySelect.innerHTML = '<option value="">请选择一级分类</option>';
+                productCategories.forEach(category => {
+                    primarySelect.innerHTML += `<option value="${category.title}">${category.title}</option>`;
+                });
+            }
+        }
+
+        function updateSecondaryCategories() {
+            const primaryCategory = document.getElementById('primaryCategory').value;
+            const secondarySelect = document.getElementById('secondaryCategory');
+
+            secondarySelect.innerHTML = '<option value="">请选择二级分类</option>';
+
+            if (primaryCategory) {
+                const category = productCategories.find(cat => cat.title === primaryCategory);
+                if (category && category.subcategories) {
+                    category.subcategories.forEach(subcat => {
+                        secondarySelect.innerHTML += `<option value="${subcat.title}">${subcat.title}</option>`;
+                    });
+                }
+            }
+        }
+
+        function updateSupplierOptions() {
+            const supplierSelect = document.getElementById('productSupplier');
+            if (supplierSelect) {
+                supplierSelect.innerHTML = '<option value="">请选择供应商</option>';
+                suppliers.forEach(supplier => {
+                    supplierSelect.innerHTML += `<option value="${supplier.title}">${supplier.title}</option>`;
+                });
+            }
+        }
+
+        function updateProductSeries() {
+            const supplierName = document.getElementById('productSupplier').value;
+            const seriesSelect = document.getElementById('productSeries');
+
+            seriesSelect.innerHTML = '<option value="">请选择产品系列</option>';
+
+            if (supplierName) {
+                const supplier = suppliers.find(s => s.title === supplierName);
+                if (supplier && supplier.series) {
+                    supplier.series.forEach(series => {
+                        seriesSelect.innerHTML += `<option value="${series}">${series}</option>`;
+                    });
+                }
+            }
+        }
+
+        function updateRelatedProductsOptions() {
+            const relatedSelect = document.getElementById('relatedProductsSelect');
+            if (relatedSelect) {
+                relatedSelect.innerHTML = '<option value="">请选择相关产品</option>';
+                allProducts.forEach(product => {
+                    relatedSelect.innerHTML += `<option value="${product.id}">${product.title}</option>`;
+                });
+            }
+        }
+
+        // 参数管理
+        function addParameter() {
+            addParameterRow('', '');
+        }
+
+        function addParameterRow(name = '', value = '') {
+            const container = document.getElementById('parametersContainer');
+            const row = document.createElement('div');
+            row.className = 'row parameter-row mb-2';
+            row.innerHTML = `
+                <div class="col-md-4">
+                    <input type="text" class="form-control" placeholder="参数名称" name="paramName[]" value="${name}">
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" placeholder="参数值" name="paramValue[]" value="${value}">
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeParameter(this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            container.appendChild(row);
+        }
+
+        function removeParameter(button) {
+            button.closest('.parameter-row').remove();
+        }
+
+        // 加载默认参数模板
+        function loadDefaultParameters() {
+            const container = document.getElementById('parametersContainer');
+            container.innerHTML = '';
+
+            const defaultParams = getDefaultEndoscopeParameters();
+            defaultParams.forEach(param => {
+                addParameterRow(param.name, param.value);
+            });
+
+            showNotification('已加载默认电子内窥镜参数模板', 'success');
+        }
+
+        // 清空所有参数
+        function clearAllParameters() {
+            if (confirm('确定要清空所有参数吗？')) {
+                document.getElementById('parametersContainer').innerHTML = '';
+                showNotification('已清空所有参数', 'info');
+            }
+        }
+
+        // 资料下载管理
+        function addDataDownload() {
+            addDataDownloadRow('', '');
+        }
+
+        function addDataDownloadRow(title = '', path = '') {
+            const container = document.getElementById('dataDownloadContainer');
+            const row = document.createElement('div');
+            row.className = 'row data-download-row mb-3 p-3 border rounded';
+            row.innerHTML = `
+                <div class="col-md-4">
+                    <label class="form-label">文件标题</label>
+                    <input type="text" class="form-control" placeholder="如：产品说明书" name="downloadTitle[]" value="${title}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">文件上传</label>
+                    <div class="input-group">
+                        <input type="file" class="form-control" accept=".pdf,.doc,.docx,.xls,.xlsx,.zip,.rar" onchange="handleFileUpload(this)">
+                        <input type="hidden" name="downloadPath[]" value="${path}">
+                    </div>
+                    <div class="form-text">支持 PDF、Word、Excel、压缩包等格式</div>
+                    ${path ? `<div class="mt-1"><small class="text-success">已上传：${path}</small></div>` : ''}
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeDataDownload(this)">
+                        <i class="fas fa-trash"></i> 删除
+                    </button>
+                </div>
+            `;
+            container.appendChild(row);
+        }
+
+        function removeDataDownload(button) {
+            button.closest('.data-download-row').remove();
+        }
+
+        // 处理文件上传
+        async function handleFileUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            // 显示上传中状态
+            const uploadingDiv = document.createElement('div');
+            uploadingDiv.className = 'mt-1 uploading-status';
+            uploadingDiv.innerHTML = `<small class="text-info"><i class="fas fa-spinner fa-spin me-1"></i>上传中...</small>`;
+            input.parentElement.parentElement.appendChild(uploadingDiv);
+
+            try {
+                // 实际文件上传到服务器
+                const uploadResult = await uploadFileToServer(file);
+
+                if (uploadResult.success) {
+                    // 更新隐藏的路径字段
+                    const hiddenInput = input.parentElement.querySelector('input[type="hidden"]');
+                    hiddenInput.value = uploadResult.filePath;
+
+                    // 移除上传中状态
+                    uploadingDiv.remove();
+
+                    // 显示上传成功信息
+                    const existingSuccess = input.parentElement.parentElement.querySelector('.text-success');
+                    if (existingSuccess) {
+                        existingSuccess.remove();
+                    }
+
+                    const successDiv = document.createElement('div');
+                    successDiv.className = 'mt-1';
+                    successDiv.innerHTML = `<small class="text-success"><i class="fas fa-check me-1"></i>已上传：${file.name}</small>`;
+                    input.parentElement.parentElement.appendChild(successDiv);
+
+                    showNotification(`文件 "${file.name}" 上传成功`, 'success');
+                } else {
+                    throw new Error(uploadResult.message || '上传失败');
+                }
+            } catch (error) {
+                // 移除上传中状态
+                uploadingDiv.remove();
+
+                // 显示错误信息
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'mt-1';
+                errorDiv.innerHTML = `<small class="text-danger"><i class="fas fa-exclamation-triangle me-1"></i>上传失败：${error.message}</small>`;
+                input.parentElement.parentElement.appendChild(errorDiv);
+
+                showNotification(`文件上传失败: ${error.message}`, 'danger');
+            }
+        }
+
+        // 上传文件到服务器
+        async function uploadFileToServer(file) {
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('type', 'product-data');
+
+                const response = await fetch('http://localhost:3001/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    return {
+                        success: true,
+                        filePath: result.filePath,
+                        fileName: result.fileName
+                    };
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('文件上传失败:', error);
+
+                // 如果服务器上传失败，使用本地模拟
+                const fileName = file.name;
+                const timestamp = Date.now();
+                const uploadPath = `/uploads/products/${timestamp}_${fileName}`;
+
+                // 模拟保存文件信息到localStorage
+                const uploadedFiles = JSON.parse(localStorage.getItem('visndt_uploaded_files') || '{}');
+                uploadedFiles[uploadPath] = {
+                    originalName: fileName,
+                    size: file.size,
+                    type: file.type,
+                    uploadTime: new Date().toISOString(),
+                    synced: false
+                };
+                localStorage.setItem('visndt_uploaded_files', JSON.stringify(uploadedFiles));
+
+                return {
+                    success: true,
+                    filePath: uploadPath,
+                    fileName: fileName,
+                    local: true
+                };
+            }
+        }
+
+        // 图片管理
+
+        function addGalleryImage() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        addGalleryImagePreview(e.target.result);
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            };
+            input.click();
+        }
+
+        function addGalleryImagePreview(src) {
+            const container = document.getElementById('galleryContainer');
+            const addButton = container.querySelector('.image-upload-area').parentElement;
+
+            const imageCol = document.createElement('div');
+            imageCol.className = 'col-md-3 mb-3';
+            imageCol.innerHTML = `
+                <div class="position-relative">
+                    <img src="${src}" class="img-fluid rounded" style="width: 100%; height: 150px; object-fit: cover;">
+                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1" onclick="removeGalleryImage(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+
+            container.insertBefore(imageCol, addButton);
+        }
+
+        function removeGalleryImage(button) {
+            button.closest('.col-md-3').remove();
+        }
+
+        // 相关产品管理
+        function addRelatedProduct() {
+            const select = document.getElementById('relatedProductsSelect');
+            const productId = select.value;
+
+            if (!productId) return;
+
+            const product = allProducts.find(p => p.id === productId);
+            if (!product) return;
+
+            // 检查是否已经添加
+            const existingItems = document.querySelectorAll('#relatedProductsList .related-product-item');
+            for (let item of existingItems) {
+                if (item.dataset.productId === productId) {
+                    showNotification('该产品已经添加到相关产品列表', 'warning');
+                    return;
+                }
+            }
+
+            addRelatedProductToList(product);
+            select.value = '';
+        }
+
+        function addRelatedProductToList(product) {
+            const container = document.getElementById('relatedProductsList');
+            const item = document.createElement('div');
+            item.className = 'related-product-item d-flex align-items-center justify-content-between p-2 border rounded mb-2';
+            item.dataset.productId = product.id;
+            item.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <img src="${product.thumbnail || 'https://picsum.photos/40/40'}"
+                         alt="${product.title}"
+                         style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; margin-right: 10px;">
+                    <div>
+                        <div class="fw-bold">${product.title}</div>
+                        <small class="text-muted">${product.model || ''}</small>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeRelatedProduct(this)">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            container.appendChild(item);
+        }
+
+        function removeRelatedProduct(button) {
+            button.closest('.related-product-item').remove();
+        }
+
+        // 保存产品
+        async function saveProduct() {
+            // 显示保存中状态
+            const saveBtn = document.querySelector('button[onclick="saveProduct()"]');
+            const originalText = saveBtn.innerHTML;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>保存中...';
+            saveBtn.disabled = true;
+
+            try {
+                // 验证表单
+                const form = document.getElementById('productForm');
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+
+                // 收集表单数据
+                const productData = {
+                    id: document.getElementById('productId').value,
+                    title: document.getElementById('productTitle').value,
+                    model: document.getElementById('productModel').value,
+                    summary: document.getElementById('productSummary').value,
+                    primary_category: document.getElementById('primaryCategory').value,
+                    secondary_category: document.getElementById('secondaryCategory').value,
+                    supplier: document.getElementById('productSupplier').value,
+                    series: document.getElementById('productSeries').value,
+                    status: 'published',
+                    statusName: '已发布',
+                    published: editingProduct ? editingProduct.published : new Date().toISOString(),
+                    thumbnail: getDefaultThumbnail(document.getElementById('productSeries').value || 'K系列'),
+                    parameters: [],
+                    gallery: [],
+                    application_scenarios: applicationScenariosEditor.getText() || applicationScenariosEditor.root.innerHTML,
+                    content: productDescriptionEditor.getText() || productDescriptionEditor.root.innerHTML,
+                    related_products: [],
+                    featured: false,
+                    tags: [],
+                    data_download: []
+                };
+
+            // 收集参数
+            const paramNames = document.querySelectorAll('input[name="paramName[]"]');
+            const paramValues = document.querySelectorAll('input[name="paramValue[]"]');
+            for (let i = 0; i < paramNames.length; i++) {
+                if (paramNames[i].value.trim() && paramValues[i].value.trim()) {
+                    productData.parameters.push({
+                        name: paramNames[i].value.trim(),
+                        value: paramValues[i].value.trim()
+                    });
+                }
+            }
+
+            // 收集图库 - 先添加主图
+            if (productData.thumbnail) {
+                productData.gallery.push({
+                    image: productData.thumbnail,
+                    alt: `${productData.title}主图`,
+                    is_main: true
+                });
+            }
+
+            // 收集副图
+            const galleryImages = document.querySelectorAll('#galleryContainer img');
+            galleryImages.forEach((img, index) => {
+                // 跳过添加图片的占位符
+                if (img.src && !img.src.includes('data:') && img.closest('.image-upload-area') === null) {
+                    productData.gallery.push({
+                        image: img.src,
+                        alt: `${productData.title}副图${index + 1}`,
+                        is_main: false
+                    });
+                }
+            });
+
+            // 如果没有副图，添加一些默认副图
+            if (productData.gallery.length === 1) {
+                for (let i = 2; i <= 5; i++) {
+                    productData.gallery.push({
+                        image: `https://picsum.photos/800/600?random=${Math.floor(Math.random() * 1000)}`,
+                        alt: `${productData.title}副图${i-1}`,
+                        is_main: false
+                    });
+                }
+            }
+
+            // 收集资料下载
+            const downloadTitles = document.querySelectorAll('input[name="downloadTitle[]"]');
+            const downloadPaths = document.querySelectorAll('input[name="downloadPath[]"]');
+            for (let i = 0; i < downloadTitles.length; i++) {
+                if (downloadTitles[i].value.trim() && downloadPaths[i].value.trim()) {
+                    productData.data_download.push({
+                        file_title: downloadTitles[i].value.trim(),
+                        file_path: downloadPaths[i].value.trim()
+                    });
+                }
+            }
+
+                // 收集相关产品
+                const relatedItems = document.querySelectorAll('.related-product-item');
+                relatedItems.forEach(item => {
+                    productData.related_products.push(item.dataset.productId);
+                });
+
+                // 生成产品标签
+                productData.tags = generateProductTags(productData.model, productData.series);
+
+                // 保存产品到文件系统
+                const result = await window.ProductAPI.saveProduct(productData);
+
+                if (result.success) {
+                    // 更新内存中的数据
+                    if (editingProduct) {
+                        // 更新现有产品
+                        const index = currentData.findIndex(p => p.id === editingProduct.id);
+                        if (index !== -1) {
+                            currentData[index] = { ...currentData[index], ...productData };
+                        }
+                        const allIndex = allProducts.findIndex(p => p.id === editingProduct.id);
+                        if (allIndex !== -1) {
+                            allProducts[allIndex] = { ...allProducts[allIndex], ...productData };
+                        }
+                        showNotification(result.message || '产品更新成功，已同步到前台', 'success');
+                    } else {
+                        // 添加新产品
+                        currentData.push(productData);
+                        allProducts.push(productData);
+                        showNotification(result.message || '产品添加成功，已同步到前台', 'success');
+                    }
+
+                    // 更新相关产品选项
+                    updateRelatedProductsOptions();
+
+                    // 重新应用筛选
+                    applyFilters();
+
+                    // 关闭弹窗
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
+                    modal.hide();
+                } else {
+                    showNotification(result.message || '产品保存失败，请检查网络连接', 'danger');
+                }
+
+            } catch (error) {
+                console.error('保存产品失败:', error);
+                showNotification('保存产品失败: ' + error.message, 'danger');
+            } finally {
+                // 恢复按钮状态
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+            }
+        }
+
+
+
+        // 其他管理功能
+        function showProductCategories() {
+            currentSection = 'categories';
+            document.getElementById('contentTitle').textContent = '产品分类管理';
+            document.getElementById('contentSubtitle').textContent = '管理产品分类体系，包括主分类和子分类';
+
+            const actionsHtml = `
+                <button class="btn btn-primary" onclick="addCategory()">
+                    <i class="fas fa-plus me-1"></i>添加分类
+                </button>
+                <button class="btn btn-success" onclick="syncCategoriesToFrontend()">
+                    <i class="fas fa-sync me-1"></i>同步到前台
+                </button>
+            `;
+            document.getElementById('contentActions').innerHTML = actionsHtml;
+
+            const contentHtml = `
+                <div class="row">
+                    ${productCategories.map(category => `
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <i class="${category.icon || 'fas fa-folder'} me-2 text-primary"></i>
+                                        <h6 class="mb-0">${category.title}</h6>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="editCategory('${category.id}')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteCategory('${category.id}')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-muted small mb-2">${category.description || ''}</p>
+                                    <h6>子分类 (${category.subcategories ? category.subcategories.length : 0})：</h6>
+                                    ${category.subcategories ? category.subcategories.map(sub => `
+                                        <div class="d-flex align-items-center mb-2 p-2 bg-light rounded">
+                                            <i class="${sub.icon || 'fas fa-circle'} me-2 text-primary" style="font-size: 12px;"></i>
+                                            <div class="flex-grow-1">
+                                                <span class="badge bg-secondary me-2">${sub.title}</span>
+                                                <small class="text-muted">${sub.description || ''}</small>
+                                            </div>
+                                        </div>
+                                    `).join('') : '<span class="text-muted">暂无子分类</span>'}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            document.getElementById('contentBody').innerHTML = contentHtml;
+
+            // 设置活动状态
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('.sidebar-item[onclick="showProductCategories()"]').classList.add('active');
+        }
+
+        function showSuppliers() {
+            currentSection = 'suppliers';
+            document.getElementById('contentTitle').textContent = '供应商管理';
+            document.getElementById('contentSubtitle').textContent = '管理供应商信息和产品系列关系';
+
+            const actionsHtml = `
+                <button class="btn btn-primary" onclick="addSupplier()">
+                    <i class="fas fa-plus me-1"></i>添加供应商
+                </button>
+            `;
+            document.getElementById('contentActions').innerHTML = actionsHtml;
+
+            const contentHtml = `
+                <div class="row">
+                    ${suppliers.map(supplier => `
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">${supplier.title}</h6>
+                                    <div>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="editSupplier('${supplier.id}')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteSupplier('${supplier.id}')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h6>产品系列：</h6>
+                                    ${supplier.series ? supplier.series.map(series => `
+                                        <span class="badge bg-primary me-1 mb-1">${series}</span>
+                                    `).join('') : '<span class="text-muted">暂无产品系列</span>'}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            document.getElementById('contentBody').innerHTML = contentHtml;
+
+            // 设置活动状态
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('.sidebar-item[onclick="showSuppliers()"]').classList.add('active');
+        }
+
+        // 导入导出功能
+        function showImportExport() {
+            currentSection = 'import-export';
+            document.getElementById('contentTitle').textContent = '导入导出管理';
+            document.getElementById('contentSubtitle').textContent = '批量导入导出产品、资讯、案例等数据';
+
+            document.getElementById('contentActions').innerHTML = '';
+
+            const contentHtml = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><i class="fas fa-file-import me-2"></i>数据导入</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="importType" class="form-label">导入类型</label>
+                                    <select class="form-select" id="importType">
+                                        <option value="products">产品数据</option>
+                                        <option value="news">资讯数据</option>
+                                        <option value="cases">案例数据</option>
+                                        <option value="suppliers">供应商数据</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="importFile" class="form-label">选择文件</label>
+                                    <input type="file" class="form-control" id="importFile" accept=".json,.csv,.xlsx">
+                                    <div class="form-text">支持 JSON、CSV、Excel 格式</div>
+                                </div>
+                                <button class="btn btn-primary" onclick="importData()">
+                                    <i class="fas fa-upload me-1"></i>开始导入
+                                </button>
+                                <button class="btn btn-outline-secondary ms-2" onclick="downloadTemplate()">
+                                    <i class="fas fa-download me-1"></i>下载模板
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><i class="fas fa-file-export me-2"></i>数据导出</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="exportType" class="form-label">导出类型</label>
+                                    <select class="form-select" id="exportType">
+                                        <option value="products">产品数据</option>
+                                        <option value="news">资讯数据</option>
+                                        <option value="cases">案例数据</option>
+                                        <option value="suppliers">供应商数据</option>
+                                        <option value="all">全部数据</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="exportFormat" class="form-label">导出格式</label>
+                                    <select class="form-select" id="exportFormat">
+                                        <option value="json">JSON 格式</option>
+                                        <option value="csv">CSV 格式</option>
+                                        <option value="xlsx">Excel 格式</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-success" onclick="exportData()">
+                                    <i class="fas fa-download me-1"></i>开始导出
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><i class="fas fa-history me-2"></i>操作历史</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>时间</th>
+                                                <th>操作类型</th>
+                                                <th>数据类型</th>
+                                                <th>状态</th>
+                                                <th>详情</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="operationHistory">
+                                            <tr>
+                                                <td colspan="5" class="text-center text-muted">暂无操作记录</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('contentBody').innerHTML = contentHtml;
+
+            // 设置活动状态
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('.sidebar-item[onclick="showImportExport()"]').classList.add('active');
+        }
+
+        function exportProducts() {
+            exportDataByType('products');
+        }
+
+        function exportDataByType(type) {
+            let data = [];
+            let filename = '';
+
+            switch (type) {
+                case 'products':
+                    data = currentData;
+                    filename = 'products_export';
+                    break;
+                case 'news':
+                    data = []; // 这里应该加载资讯数据
+                    filename = 'news_export';
+                    break;
+                case 'cases':
+                    data = []; // 这里应该加载案例数据
+                    filename = 'cases_export';
+                    break;
+                case 'suppliers':
+                    data = suppliers;
+                    filename = 'suppliers_export';
+                    break;
+                default:
+                    data = {
+                        products: currentData,
+                        suppliers: suppliers,
+                        categories: productCategories
+                    };
+                    filename = 'all_data_export';
+            }
+
+            // 导出为JSON格式
+            const jsonData = JSON.stringify(data, null, 2);
+            const blob = new Blob([jsonData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${filename}_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showNotification('数据导出成功', 'success');
+
+            // 记录操作历史
+            addOperationHistory('导出', type, '成功', `导出了 ${data.length || Object.keys(data).length} 条记录`);
+        }
+
+        function exportData() {
+            const type = document.getElementById('exportType').value;
+            const format = document.getElementById('exportFormat').value;
+
+            if (format === 'json') {
+                exportDataByType(type);
+            } else {
+                showNotification('暂不支持该格式导出，请选择JSON格式', 'warning');
+            }
+        }
+
+        function importData() {
+            const fileInput = document.getElementById('importFile');
+            const type = document.getElementById('importType').value;
+
+            if (!fileInput.files || !fileInput.files[0]) {
+                showNotification('请选择要导入的文件', 'warning');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+
+                    switch (type) {
+                        case 'products':
+                            importProducts(data);
+                            break;
+                        case 'suppliers':
+                            importSuppliers(data);
+                            break;
+                        default:
+                            showNotification('暂不支持该类型的导入', 'warning');
+                    }
+                } catch (error) {
+                    console.error('导入失败:', error);
+                    showNotification('文件格式错误，请检查文件内容', 'danger');
+                }
+            };
+
+            reader.readAsText(file);
+        }
+
+        function importProducts(data) {
+            if (!Array.isArray(data)) {
+                showNotification('产品数据格式错误，应为数组格式', 'danger');
+                return;
+            }
+
+            let importCount = 0;
+            data.forEach(product => {
+                if (product.id && product.title) {
+                    // 检查是否已存在
+                    const existingIndex = currentData.findIndex(p => p.id === product.id);
+                    if (existingIndex !== -1) {
+                        currentData[existingIndex] = { ...currentData[existingIndex], ...product };
+                    } else {
+                        currentData.push(product);
+                        allProducts.push(product);
+                    }
+                    importCount++;
+                }
+            });
+
+            // 更新显示
+            if (currentSection === 'products') {
+                applyFilters();
+            }
+            updateRelatedProductsOptions();
+
+            showNotification(`成功导入 ${importCount} 个产品`, 'success');
+            addOperationHistory('导入', 'products', '成功', `导入了 ${importCount} 个产品`);
+        }
+
+        function importSuppliers(data) {
+            if (!Array.isArray(data)) {
+                showNotification('供应商数据格式错误，应为数组格式', 'danger');
+                return;
+            }
+
+            let importCount = 0;
+            data.forEach(supplier => {
+                if (supplier.id && supplier.title) {
+                    const existingIndex = suppliers.findIndex(s => s.id === supplier.id);
+                    if (existingIndex !== -1) {
+                        suppliers[existingIndex] = { ...suppliers[existingIndex], ...supplier };
+                    } else {
+                        suppliers.push(supplier);
+                    }
+                    importCount++;
+                }
+            });
+
+            // 更新下拉选项
+            updateSupplierOptions();
+
+            showNotification(`成功导入 ${importCount} 个供应商`, 'success');
+            addOperationHistory('导入', 'suppliers', '成功', `导入了 ${importCount} 个供应商`);
+        }
+
+        function downloadTemplate() {
+            const type = document.getElementById('importType').value;
+            let template = {};
+
+            switch (type) {
+                case 'products':
+                    template = [{
+                        id: "000001",
+                        title: "示例产品",
+                        model: "EXAMPLE-001",
+                        summary: "这是一个示例产品",
+                        primary_category: "电子内窥镜",
+                        secondary_category: "工业视频内窥镜",
+                        supplier: "示例供应商",
+                        series: "示例系列",
+                        status: "published",
+                        parameters: [
+                            { name: "参数1", value: "值1" },
+                            { name: "参数2", value: "值2" }
+                        ],
+                        application_scenarios: "应用场景描述",
+                        content: "产品详细描述"
+                    }];
+                    break;
+                case 'suppliers':
+                    template = [{
+                        id: "supplier1",
+                        title: "示例供应商",
+                        series: ["系列1", "系列2"]
+                    }];
+                    break;
+                default:
+                    template = { message: "暂无该类型的模板" };
+            }
+
+            const jsonData = JSON.stringify(template, null, 2);
+            const blob = new Blob([jsonData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${type}_template.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showNotification('模板下载成功', 'success');
+        }
+
+        function addOperationHistory(operation, type, status, details) {
+            const tbody = document.getElementById('operationHistory');
+            if (tbody.querySelector('td[colspan="5"]')) {
+                tbody.innerHTML = '';
+            }
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${new Date().toLocaleString()}</td>
+                <td>${operation}</td>
+                <td>${type}</td>
+                <td><span class="badge ${status === '成功' ? 'bg-success' : 'bg-danger'}">${status}</span></td>
+                <td>${details}</td>
+            `;
+            tbody.insertBefore(row, tbody.firstChild);
+        }
+
+        // 其他管理功能的占位符
+        // 资讯管理功能
+        let allNews = [];
+        let filteredNews = [];
+        let editingNews = null;
+
+        async function showNewsList() {
+            currentSection = 'news';
+            document.getElementById('contentTitle').textContent = '资讯管理';
+            document.getElementById('contentSubtitle').textContent = '管理网站新闻资讯内容';
+
+            const actionsHtml = `
+                <button class="btn btn-primary" onclick="addNews()">
+                    <i class="fas fa-plus me-1"></i>添加资讯
+                </button>
+                <button class="btn btn-success" onclick="refreshNewsList()">
+                    <i class="fas fa-sync me-1"></i>刷新列表
+                </button>
+                <button class="btn btn-info" onclick="exportNews()">
+                    <i class="fas fa-download me-1"></i>导出数据
+                </button>
+                <button class="btn btn-warning" onclick="importNews()">
+                    <i class="fas fa-upload me-1"></i>导入数据
+                </button>
+            `;
+            document.getElementById('contentActions').innerHTML = actionsHtml;
+
+            try {
+                // 加载资讯数据
+                allNews = await loadAllNews();
+                filteredNews = [...allNews];
+                renderNewsList();
+            } catch (error) {
+                console.error('加载资讯列表失败:', error);
+                document.getElementById('contentBody').innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        加载资讯列表失败: ${error.message}
+                        <button class="btn btn-outline-warning btn-sm ms-2" onclick="showNewsList()">重试</button>
+                    </div>
+                `;
+            }
+
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('.sidebar-item[onclick="showNewsList()"]').classList.add('active');
+        }
+
+        // 加载所有资讯
+        async function loadAllNews() {
+            try {
+                // 模拟从API或文件系统加载资讯数据
+                return [
+                    {
+                        id: 'news-001',
+                        title: '工业内窥镜技术发展趋势',
+                        summary: '探讨工业内窥镜在现代制造业中的应用前景和技术发展方向',
+                        content: '随着工业4.0的发展，工业内窥镜技术正在经历前所未有的变革...',
+                        category: '技术资讯',
+                        tags: ['工业内窥镜', '技术发展', '制造业'],
+                        author: '技术部',
+                        publishDate: '2024-06-20',
+                        status: '已发布',
+                        views: 1250,
+                        featured: true,
+                        image: 'https://picsum.photos/400/250?random=1'
+                    },
+                    {
+                        id: 'news-002',
+                        title: '新产品发布：高清电子内窥镜系列',
+                        summary: '公司最新推出的高清电子内窥镜系列产品正式发布',
+                        content: '我们很高兴地宣布，经过两年的研发，新一代高清电子内窥镜系列产品正式发布...',
+                        category: '产品发布',
+                        tags: ['新产品', '电子内窥镜', '高清'],
+                        author: '市场部',
+                        publishDate: '2024-06-18',
+                        status: '已发布',
+                        views: 890,
+                        featured: false,
+                        image: 'https://picsum.photos/400/250?random=2'
+                    },
+                    {
+                        id: 'news-003',
+                        title: '参展2024工业检测设备展览会',
+                        summary: '公司将参加在上海举办的2024年工业检测设备展览会',
+                        content: '我们将于2024年7月在上海新国际博览中心参加工业检测设备展览会...',
+                        category: '公司动态',
+                        tags: ['展览会', '工业检测', '上海'],
+                        author: '市场部',
+                        publishDate: '2024-06-15',
+                        status: '草稿',
+                        views: 0,
+                        featured: false,
+                        image: 'https://picsum.photos/400/250?random=3'
+                    }
+                ];
+            } catch (error) {
+                console.error('加载资讯数据失败:', error);
+                return [];
+            }
+        }
+
+        // 渲染资讯列表
+        function renderNewsList() {
+            const contentBody = document.getElementById('contentBody');
+
+            const toolbarHtml = `
+                <div class="list-toolbar">
+                    <div class="toolbar-left">
+                        <select class="form-select form-select-sm" id="categoryFilter" onchange="filterNewsByCategory()">
+                            <option value="">所有分类</option>
+                            <option value="技术资讯">技术资讯</option>
+                            <option value="产品发布">产品发布</option>
+                            <option value="公司动态">公司动态</option>
+                            <option value="行业新闻">行业新闻</option>
+                        </select>
+                        <select class="form-select form-select-sm" id="statusFilter" onchange="filterNewsByStatus()">
+                            <option value="">所有状态</option>
+                            <option value="已发布">已发布</option>
+                            <option value="草稿">草稿</option>
+                            <option value="待审核">待审核</option>
+                        </select>
+                        <input type="text" class="form-control form-control-sm" id="searchInput" placeholder="搜索标题或内容..." onkeyup="searchNews()">
+                    </div>
+                    <div class="toolbar-right">
+                        <span class="text-muted">共 ${filteredNews.length} 条记录</span>
+                    </div>
+                </div>
+            `;
+
+            const tableHtml = `
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th width="50">
+                                <input type="checkbox" id="selectAll" onchange="toggleSelectAll('news')">
+                            </th>
+                            <th width="80">封面</th>
+                            <th>标题</th>
+                            <th width="100">分类</th>
+                            <th width="80">作者</th>
+                            <th width="100">发布日期</th>
+                            <th width="80">状态</th>
+                            <th width="80">浏览量</th>
+                            <th width="120">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${filteredNews.map(news => `
+                            <tr>
+                                <td>
+                                    <input type="checkbox" class="item-checkbox" value="${news.id}">
+                                </td>
+                                <td>
+                                    <img src="${news.image}" alt="${news.title}" class="table-image">
+                                </td>
+                                <td>
+                                    <div class="item-title">
+                                        ${news.featured ? '<i class="fas fa-star text-warning me-1" title="推荐"></i>' : ''}
+                                        ${news.title}
+                                    </div>
+                                    <div class="item-summary">${news.summary}</div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary">${news.category}</span>
+                                </td>
+                                <td>${news.author}</td>
+                                <td>${news.publishDate}</td>
+                                <td>
+                                    <span class="badge ${news.status === '已发布' ? 'bg-success' : news.status === '草稿' ? 'bg-warning' : 'bg-info'}">${news.status}</span>
+                                </td>
+                                <td>${news.views}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn view" onclick="viewNews('${news.id}')" title="查看">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn edit" onclick="editNews('${news.id}')" title="编辑">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn" onclick="copyNews('${news.id}')" title="复制">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                        <button class="action-btn delete" onclick="deleteNews('${news.id}')" title="删除">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            contentBody.innerHTML = toolbarHtml + tableHtml;
+
+            // 设置活动状态
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('.sidebar-item[onclick="showNewsList()"]').classList.add('active');
+        }
+
+        // 资讯筛选功能
+        function filterNewsByCategory() {
+            const category = document.getElementById('categoryFilter').value;
+            applyNewsFilters();
+        }
+
+        function filterNewsByStatus() {
+            const status = document.getElementById('statusFilter').value;
+            applyNewsFilters();
+        }
+
+        function searchNews() {
+            applyNewsFilters();
+        }
+
+        function applyNewsFilters() {
+            const category = document.getElementById('categoryFilter')?.value || '';
+            const status = document.getElementById('statusFilter')?.value || '';
+            const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
+
+            filteredNews = allNews.filter(news => {
+                const matchesCategory = !category || news.category === category;
+                const matchesStatus = !status || news.status === status;
+                const matchesSearch = !search ||
+                    news.title.toLowerCase().includes(search) ||
+                    news.summary.toLowerCase().includes(search) ||
+                    news.content.toLowerCase().includes(search);
+
+                return matchesCategory && matchesStatus && matchesSearch;
+            });
+
+            renderNewsList();
+        }
+
+        // 案例管理功能
+        let allCases = [];
+        let filteredCases = [];
+        let editingCase = null;
+
+        function showCasesList() {
+            currentSection = 'cases';
+            document.getElementById('contentTitle').textContent = '案例管理';
+            document.getElementById('contentSubtitle').textContent = '管理应用案例内容';
+
+            const actionsHtml = `
+                <button class="btn btn-primary" onclick="addCase()">
+                    <i class="fas fa-plus me-1"></i>添加案例
+                </button>
+                <button class="btn btn-success" onclick="refreshCasesList()">
+                    <i class="fas fa-sync me-1"></i>刷新列表
+                </button>
+                <button class="btn btn-info" onclick="exportCases()">
+                    <i class="fas fa-download me-1"></i>导出数据
+                </button>
+                <button class="btn btn-warning" onclick="importCases()">
+                    <i class="fas fa-upload me-1"></i>导入数据
+                </button>
+            `;
+            document.getElementById('contentActions').innerHTML = actionsHtml;
+
+            try {
+                // 加载案例数据
+                allCases = loadAllCases();
+                filteredCases = [...allCases];
+                renderCasesList();
+            } catch (error) {
+                console.error('加载案例列表失败:', error);
+                document.getElementById('contentBody').innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        加载案例列表失败: ${error.message}
+                        <button class="btn btn-outline-warning btn-sm ms-2" onclick="showCasesList()">重试</button>
+                    </div>
+                `;
+            }
+
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('.sidebar-item[onclick="showCasesList()"]').classList.add('active');
+        }
+
+        // 加载所有案例
+        function loadAllCases() {
+            return [
+                {
+                    id: 'case-001',
+                    title: '航空发动机叶片检测案例',
+                    summary: '使用工业内窥镜对航空发动机叶片进行无损检测，发现并修复了关键缺陷',
+                    content: '某航空公司在例行维护中，使用我们的高清工业内窥镜对发动机叶片进行检测...',
+                    industry: '航空航天',
+                    productCategory: '电子内窥镜',
+                    productModel: 'WS-K1210',
+                    applicationField: '发动机检测',
+                    client: '某航空公司',
+                    projectDate: '2024-05-15',
+                    status: '已发布',
+                    featured: true,
+                    tags: ['航空', '发动机', '叶片检测', '无损检测'],
+                    images: [
+                        'https://picsum.photos/600/400?random=10',
+                        'https://picsum.photos/600/400?random=11',
+                        'https://picsum.photos/600/400?random=12'
+                    ],
+                    results: '成功发现3处微小裂纹，避免了潜在的安全隐患',
+                    benefits: '提高了检测效率50%，降低了维护成本30%'
+                },
+                {
+                    id: 'case-002',
+                    title: '汽车制造焊缝质量检测',
+                    summary: '在汽车生产线上使用内窥镜检测焊缝质量，确保产品安全性',
+                    content: '某汽车制造商在生产过程中，采用我们的工业内窥镜对关键焊缝进行质量检测...',
+                    industry: '汽车制造',
+                    productCategory: '电子内窥镜',
+                    productModel: 'P1510',
+                    applicationField: '焊缝检测',
+                    client: '某汽车制造商',
+                    projectDate: '2024-04-20',
+                    status: '已发布',
+                    featured: false,
+                    tags: ['汽车', '焊缝', '质量检测', '生产线'],
+                    images: [
+                        'https://picsum.photos/600/400?random=13',
+                        'https://picsum.photos/600/400?random=14'
+                    ],
+                    results: '检测出98%的焊缝缺陷，大幅提升产品质量',
+                    benefits: '减少了返工率，提高了生产效率'
+                },
+                {
+                    id: 'case-003',
+                    title: '风电齿轮箱内部检测',
+                    summary: '对风力发电机齿轮箱进行内部检测，预防设备故障',
+                    content: '某风电场使用我们的柔性内窥镜对风力发电机齿轮箱进行定期检测...',
+                    industry: '新能源',
+                    productCategory: '光纤内窥镜',
+                    productModel: 'K1810',
+                    applicationField: '设备维护',
+                    client: '某风电场',
+                    projectDate: '2024-03-10',
+                    status: '草稿',
+                    featured: false,
+                    tags: ['风电', '齿轮箱', '设备维护', '预防性检测'],
+                    images: [
+                        'https://picsum.photos/600/400?random=15'
+                    ],
+                    results: '提前发现齿轮磨损，避免了设备停机',
+                    benefits: '延长了设备使用寿命，降低了维护成本'
+                }
+            ];
+        }
+
+        // 渲染案例列表
+        function renderCasesList() {
+            const contentBody = document.getElementById('contentBody');
+
+            const toolbarHtml = `
+                <div class="list-toolbar">
+                    <div class="toolbar-left">
+                        <select class="form-select form-select-sm" id="industryFilter" onchange="filterCasesByIndustry()">
+                            <option value="">所有行业</option>
+                            <option value="航空航天">航空航天</option>
+                            <option value="汽车制造">汽车制造</option>
+                            <option value="新能源">新能源</option>
+                            <option value="石油化工">石油化工</option>
+                            <option value="电力">电力</option>
+                        </select>
+                        <select class="form-select form-select-sm" id="caseStatusFilter" onchange="filterCasesByStatus()">
+                            <option value="">所有状态</option>
+                            <option value="已发布">已发布</option>
+                            <option value="草稿">草稿</option>
+                            <option value="待审核">待审核</option>
+                        </select>
+                        <input type="text" class="form-control form-control-sm" id="caseSearchInput" placeholder="搜索案例标题或内容..." onkeyup="searchCases()">
+                    </div>
+                    <div class="toolbar-right">
+                        <span class="text-muted">共 ${filteredCases.length} 条记录</span>
+                    </div>
+                </div>
+            `;
+
+            const tableHtml = `
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th width="50">
+                                <input type="checkbox" id="selectAllCases" onchange="toggleSelectAll('cases')">
+                            </th>
+                            <th width="80">封面</th>
+                            <th>案例标题</th>
+                            <th width="100">行业</th>
+                            <th width="100">产品型号</th>
+                            <th width="100">客户</th>
+                            <th width="100">项目日期</th>
+                            <th width="80">状态</th>
+                            <th width="120">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${filteredCases.map(caseItem => `
+                            <tr>
+                                <td>
+                                    <input type="checkbox" class="item-checkbox" value="${caseItem.id}">
+                                </td>
+                                <td>
+                                    <img src="${caseItem.images[0]}" alt="${caseItem.title}" class="table-image">
+                                </td>
+                                <td>
+                                    <div class="item-title">
+                                        ${caseItem.featured ? '<i class="fas fa-star text-warning me-1" title="推荐"></i>' : ''}
+                                        ${caseItem.title}
+                                    </div>
+                                    <div class="item-summary">${caseItem.summary}</div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">${caseItem.industry}</span>
+                                </td>
+                                <td>${caseItem.productModel}</td>
+                                <td>${caseItem.client}</td>
+                                <td>${caseItem.projectDate}</td>
+                                <td>
+                                    <span class="badge ${caseItem.status === '已发布' ? 'bg-success' : caseItem.status === '草稿' ? 'bg-warning' : 'bg-info'}">${caseItem.status}</span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn view" onclick="viewCase('${caseItem.id}')" title="查看">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn edit" onclick="editCase('${caseItem.id}')" title="编辑">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn" onclick="copyCase('${caseItem.id}')" title="复制">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                        <button class="action-btn delete" onclick="deleteCase('${caseItem.id}')" title="删除">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            contentBody.innerHTML = toolbarHtml + tableHtml;
+
+            // 设置活动状态
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('.sidebar-item[onclick="showCasesList()"]').classList.add('active');
+        }
+
+        // 案例筛选功能
+        function filterCasesByIndustry() {
+            applyCasesFilters();
+        }
+
+        function filterCasesByStatus() {
+            applyCasesFilters();
+        }
+
+        function searchCases() {
+            applyCasesFilters();
+        }
+
+        function applyCasesFilters() {
+            const industry = document.getElementById('industryFilter')?.value || '';
+            const status = document.getElementById('caseStatusFilter')?.value || '';
+            const search = document.getElementById('caseSearchInput')?.value.toLowerCase() || '';
+
+            filteredCases = allCases.filter(caseItem => {
+                const matchesIndustry = !industry || caseItem.industry === industry;
+                const matchesStatus = !status || caseItem.status === status;
+                const matchesSearch = !search ||
+                    caseItem.title.toLowerCase().includes(search) ||
+                    caseItem.summary.toLowerCase().includes(search) ||
+                    caseItem.content.toLowerCase().includes(search) ||
+                    caseItem.client.toLowerCase().includes(search);
+
+                return matchesIndustry && matchesStatus && matchesSearch;
+            });
+
+            renderCasesList();
+        }
+
+        // 应用领域管理功能
+        let allApplications = [];
+        let filteredApplications = [];
+        let editingApplication = null;
+
+        function showApplications() {
+            currentSection = 'applications';
+            document.getElementById('contentTitle').textContent = '应用领域管理';
+            document.getElementById('contentSubtitle').textContent = '管理应用领域内容';
+
+            const actionsHtml = `
+                <button class="btn btn-primary" onclick="addApplication()">
+                    <i class="fas fa-plus me-1"></i>添加应用领域
+                </button>
+                <button class="btn btn-success" onclick="refreshApplicationsList()">
+                    <i class="fas fa-sync me-1"></i>刷新列表
+                </button>
+                <button class="btn btn-info" onclick="exportApplications()">
+                    <i class="fas fa-download me-1"></i>导出数据
+                </button>
+                <button class="btn btn-warning" onclick="importApplications()">
+                    <i class="fas fa-upload me-1"></i>导入数据
+                </button>
+            `;
+            document.getElementById('contentActions').innerHTML = actionsHtml;
+
+            try {
+                // 加载应用领域数据
+                allApplications = loadAllApplications();
+                filteredApplications = [...allApplications];
+                renderApplicationsList();
+            } catch (error) {
+                console.error('加载应用领域列表失败:', error);
+                document.getElementById('contentBody').innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        加载应用领域列表失败: ${error.message}
+                        <button class="btn btn-outline-warning btn-sm ms-2" onclick="showApplications()">重试</button>
+                    </div>
+                `;
+            }
+
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('.sidebar-item[onclick="showApplications()"]').classList.add('active');
+        }
+
+        // 加载所有应用领域
+        function loadAllApplications() {
+            return [
+                {
+                    id: 'app-001',
+                    title: '航空航天检测',
+                    description: '航空发动机、机身结构、燃油系统等关键部件的无损检测',
+                    icon: 'fas fa-plane',
+                    category: '工业检测',
+                    products: ['WS-K1210', 'WS-K1510', 'P1810'],
+                    scenarios: [
+                        '发动机叶片检测',
+                        '燃油管路检测',
+                        '机身结构检测',
+                        '起落架检测'
+                    ],
+                    advantages: [
+                        '高精度检测',
+                        '无损检测',
+                        '实时成像',
+                        '操作简便'
+                    ],
+                    status: '已发布',
+                    featured: true,
+                    image: 'https://picsum.photos/400/250?random=20',
+                    content: '航空航天领域对安全性要求极高，我们的工业内窥镜产品能够...'
+                },
+                {
+                    id: 'app-002',
+                    title: '汽车制造检测',
+                    description: '汽车发动机、变速箱、制动系统等部件的质量检测',
+                    icon: 'fas fa-car',
+                    category: '制造业',
+                    products: ['P1510', 'P2010', 'K1810'],
+                    scenarios: [
+                        '发动机缸体检测',
+                        '变速箱检测',
+                        '焊缝质量检测',
+                        '管路检测'
+                    ],
+                    advantages: [
+                        '提高生产效率',
+                        '降低返工率',
+                        '确保产品质量',
+                        '减少人工成本'
+                    ],
+                    status: '已发布',
+                    featured: true,
+                    image: 'https://picsum.photos/400/250?random=21',
+                    content: '汽车制造过程中，质量控制是关键环节，我们的检测设备能够...'
+                },
+                {
+                    id: 'app-003',
+                    title: '石油化工检测',
+                    description: '管道、容器、设备内部的腐蚀、裂纹等缺陷检测',
+                    icon: 'fas fa-industry',
+                    category: '石化行业',
+                    products: ['K1210', 'P2410', 'DZ60'],
+                    scenarios: [
+                        '管道腐蚀检测',
+                        '容器内壁检测',
+                        '催化剂检测',
+                        '设备维护检测'
+                    ],
+                    advantages: [
+                        '防爆安全',
+                        '耐腐蚀',
+                        '高温适应',
+                        '远程操作'
+                    ],
+                    status: '已发布',
+                    featured: false,
+                    image: 'https://picsum.photos/400/250?random=22',
+                    content: '石油化工行业环境复杂，对检测设备要求严格，我们的产品具备...'
+                },
+                {
+                    id: 'app-004',
+                    title: '电力设备检测',
+                    description: '发电机、变压器、开关设备等电力设备的内部检测',
+                    icon: 'fas fa-bolt',
+                    category: '电力行业',
+                    products: ['K1510', 'P1810', 'P2210'],
+                    scenarios: [
+                        '发电机检测',
+                        '变压器检测',
+                        '开关柜检测',
+                        '电缆检测'
+                    ],
+                    advantages: [
+                        '绝缘安全',
+                        '高清成像',
+                        '便携操作',
+                        '快速诊断'
+                    ],
+                    status: '草稿',
+                    featured: false,
+                    image: 'https://picsum.photos/400/250?random=23',
+                    content: '电力设备的可靠性直接关系到供电安全，我们的检测方案...'
+                }
+            ];
+        }
+
+        // 渲染应用领域列表
+        function renderApplicationsList() {
+            const contentBody = document.getElementById('contentBody');
+
+            const toolbarHtml = `
+                <div class="list-toolbar">
+                    <div class="toolbar-left">
+                        <select class="form-select form-select-sm" id="appCategoryFilter" onchange="filterApplicationsByCategory()">
+                            <option value="">所有分类</option>
+                            <option value="工业检测">工业检测</option>
+                            <option value="制造业">制造业</option>
+                            <option value="石化行业">石化行业</option>
+                            <option value="电力行业">电力行业</option>
+                            <option value="建筑工程">建筑工程</option>
+                        </select>
+                        <select class="form-select form-select-sm" id="appStatusFilter" onchange="filterApplicationsByStatus()">
+                            <option value="">所有状态</option>
+                            <option value="已发布">已发布</option>
+                            <option value="草稿">草稿</option>
+                            <option value="待审核">待审核</option>
+                        </select>
+                        <input type="text" class="form-control form-control-sm" id="appSearchInput" placeholder="搜索应用领域..." onkeyup="searchApplications()">
+                    </div>
+                    <div class="toolbar-right">
+                        <span class="text-muted">共 ${filteredApplications.length} 条记录</span>
+                    </div>
+                </div>
+            `;
+
+            const tableHtml = `
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th width="50">
+                                <input type="checkbox" id="selectAllApps" onchange="toggleSelectAll('applications')">
+                            </th>
+                            <th width="80">图标</th>
+                            <th>应用领域</th>
+                            <th width="100">分类</th>
+                            <th width="120">适用产品</th>
+                            <th width="80">状态</th>
+                            <th width="120">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${filteredApplications.map(app => `
+                            <tr>
+                                <td>
+                                    <input type="checkbox" class="item-checkbox" value="${app.id}">
+                                </td>
+                                <td>
+                                    <div class="app-icon">
+                                        <i class="${app.icon} fa-2x text-primary"></i>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="item-title">
+                                        ${app.featured ? '<i class="fas fa-star text-warning me-1" title="推荐"></i>' : ''}
+                                        ${app.title}
+                                    </div>
+                                    <div class="item-summary">${app.description}</div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary">${app.category}</span>
+                                </td>
+                                <td>
+                                    <div class="product-tags">
+                                        ${app.products.slice(0, 2).map(product => `<span class="badge bg-secondary me-1">${product}</span>`).join('')}
+                                        ${app.products.length > 2 ? `<span class="text-muted">+${app.products.length - 2}</span>` : ''}
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge ${app.status === '已发布' ? 'bg-success' : app.status === '草稿' ? 'bg-warning' : 'bg-info'}">${app.status}</span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn view" onclick="viewApplication('${app.id}')" title="查看">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn edit" onclick="editApplication('${app.id}')" title="编辑">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn" onclick="copyApplication('${app.id}')" title="复制">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                        <button class="action-btn delete" onclick="deleteApplication('${app.id}')" title="删除">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            contentBody.innerHTML = toolbarHtml + tableHtml;
+
+            // 设置活动状态
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('.sidebar-item[onclick="showApplications()"]').classList.add('active');
+        }
+
+        // 应用领域筛选功能
+        function filterApplicationsByCategory() {
+            applyApplicationsFilters();
+        }
+
+        function filterApplicationsByStatus() {
+            applyApplicationsFilters();
+        }
+
+        function searchApplications() {
+            applyApplicationsFilters();
+        }
+
+        function applyApplicationsFilters() {
+            const category = document.getElementById('appCategoryFilter')?.value || '';
+            const status = document.getElementById('appStatusFilter')?.value || '';
+            const search = document.getElementById('appSearchInput')?.value.toLowerCase() || '';
+
+            filteredApplications = allApplications.filter(app => {
+                const matchesCategory = !category || app.category === category;
+                const matchesStatus = !status || app.status === status;
+                const matchesSearch = !search ||
+                    app.title.toLowerCase().includes(search) ||
+                    app.description.toLowerCase().includes(search) ||
+                    app.content.toLowerCase().includes(search);
+
+                return matchesCategory && matchesStatus && matchesSearch;
+            });
+
+            renderApplicationsList();
+        }
+
+        function showProductSeries() {
+            currentSection = 'series';
+            document.getElementById('contentTitle').textContent = '产品系列管理';
+            document.getElementById('contentSubtitle').textContent = '管理产品系列信息';
+            document.getElementById('contentActions').innerHTML = `
+                <button class="btn btn-primary" onclick="addSeries()">
+                    <i class="fas fa-plus me-1"></i>添加系列
+                </button>
+            `;
+            document.getElementById('contentBody').innerHTML = `
+                <div class="text-center py-5">
+                    <i class="fas fa-layer-group fa-4x text-muted mb-3"></i>
+                    <h4>产品系列管理功能</h4>
+                    <p class="text-muted">产品系列管理功能正在开发中...</p>
+                </div>
+            `;
+
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('.sidebar-item[onclick="showProductSeries()"]').classList.add('active');
+        }
+
+        function showMediaLibrary() {
+            currentSection = 'media';
+            document.getElementById('contentTitle').textContent = '媒体库管理';
+            document.getElementById('contentSubtitle').textContent = '管理图片、文档等媒体资源';
+            document.getElementById('contentActions').innerHTML = `
+                <button class="btn btn-primary" onclick="uploadMedia()">
+                    <i class="fas fa-upload me-1"></i>上传媒体
+                </button>
+            `;
+            document.getElementById('contentBody').innerHTML = `
+                <div class="text-center py-5">
+                    <i class="fas fa-images fa-4x text-muted mb-3"></i>
+                    <h4>媒体库管理功能</h4>
+                    <p class="text-muted">媒体库管理功能正在开发中...</p>
+                </div>
+            `;
+
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('.sidebar-item[onclick="showMediaLibrary()"]').classList.add('active');
+        }
+
+        function showSystemSettings() {
+            currentSection = 'settings';
+            document.getElementById('contentTitle').textContent = '系统设置';
+            document.getElementById('contentSubtitle').textContent = '管理系统配置和参数';
+            document.getElementById('contentActions').innerHTML = '';
+            document.getElementById('contentBody').innerHTML = `
+                <div class="text-center py-5">
+                    <i class="fas fa-sliders-h fa-4x text-muted mb-3"></i>
+                    <h4>系统设置功能</h4>
+                    <p class="text-muted">系统设置功能正在开发中...</p>
+                </div>
+            `;
+
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            document.querySelector('.sidebar-item[onclick="showSystemSettings()"]').classList.add('active');
+        }
+
+        // 服务器状态检查
+        async function checkServerStatus() {
+            const statusElement = document.getElementById('serverStatus');
+            const syncBtn = document.getElementById('syncBtn');
+
+            try {
+                const isOnline = await window.ProductAPI.checkServerStatus();
+
+                if (isOnline) {
+                    statusElement.innerHTML = '<i class="fas fa-circle text-success me-1"></i>服务器在线';
+                    statusElement.title = '产品管理服务器运行正常';
+
+                    // 检查是否有本地数据需要同步
+                    const localProducts = window.ProductAPI.getLocalProducts();
+                    const unsyncedCount = localProducts.filter(p => !p.synced).length;
+
+                    if (unsyncedCount > 0) {
+                        syncBtn.style.display = 'inline-block';
+                        syncBtn.innerHTML = `<i class="fas fa-sync me-1"></i>同步数据 (${unsyncedCount})`;
+                    } else {
+                        syncBtn.style.display = 'none';
+                    }
+                } else {
+                    statusElement.innerHTML = '<i class="fas fa-circle text-warning me-1"></i>离线模式';
+                    statusElement.title = '服务器不可用，数据将保存到本地';
+                    syncBtn.style.display = 'none';
+                }
+            } catch (error) {
+                statusElement.innerHTML = '<i class="fas fa-circle text-danger me-1"></i>连接失败';
+                statusElement.title = '无法连接到服务器';
+                syncBtn.style.display = 'none';
+            }
+        }
+
+        // 同步本地数据
+        async function syncLocalData() {
+            const syncBtn = document.getElementById('syncBtn');
+            const originalText = syncBtn.innerHTML;
+
+            syncBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>同步中...';
+            syncBtn.disabled = true;
+
+            try {
+                const result = await window.ProductAPI.syncLocalData();
+
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    await checkServerStatus(); // 重新检查状态
+                } else {
+                    showNotification(result.message, 'warning');
+                }
+            } catch (error) {
+                showNotification('同步失败: ' + error.message, 'danger');
+            } finally {
+                syncBtn.innerHTML = originalText;
+                syncBtn.disabled = false;
+            }
+        }
+
+        // 定期检查服务器状态
+        setInterval(checkServerStatus, 30000); // 每30秒检查一次
+
+        // 同步分类到前台
+        async function syncCategoriesToFrontend() {
+            const syncBtn = event.target;
+            const originalText = syncBtn.innerHTML;
+
+            syncBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>同步中...';
+            syncBtn.disabled = true;
+
+            try {
+                // 准备分类数据
+                const categoriesData = productCategories.map((category, index) => ({
+                    id: category.id,
+                    title: category.title,
+                    description: category.description || category.title + '产品分类',
+                    weight: (index + 1) * 10,
+                    subcategories: category.subcategories || [],
+                    icon: category.icon || getCategoryIcon(category.id)
+                }));
+
+                // 调用同步API
+                const response = await fetch('http://localhost:3001/api/categories/sync', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        categories: categoriesData
+                    })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    showNotification(result.message || '分类同步成功', 'success');
+
+                    // 提示用户重新加载Hugo
+                    setTimeout(() => {
+                        showNotification('请重新加载Hugo服务器以查看前台更新', 'info');
+                    }, 2000);
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+            } catch (error) {
+                console.error('同步分类失败:', error);
+                showNotification('同步分类失败: ' + error.message, 'danger');
+            } finally {
+                syncBtn.innerHTML = originalText;
+                syncBtn.disabled = false;
+            }
+        }
+
+        // 获取分类图标
+        function getCategoryIcon(categoryId) {
+            const iconMap = {
+                'electronic-endoscope': 'fas fa-video',
+                'fiber-endoscope': 'fas fa-eye',
+                'optical-endoscope': 'fas fa-search',
+                'industrial-video-endoscope': 'fas fa-camera',
+                'industrial-pipeline-endoscope': 'fas fa-pipe',
+                'crawler-robot': 'fas fa-robot',
+                'flexible-fiber': 'fas fa-wave-square',
+                'rigid-fiber': 'fas fa-minus',
+                'rigid-optical': 'fas fa-minus',
+                'flexible-optical': 'fas fa-wave-square'
+            };
+            return iconMap[categoryId] || 'fas fa-folder';
+        }
+
+        // 资讯操作功能
+        function addNews() {
+            editingNews = null;
+            showNewsModal('添加资讯');
+        }
+
+        function editNews(newsId) {
+            const news = allNews.find(n => n.id === newsId);
+            if (!news) {
+                showNotification('资讯不存在', 'danger');
+                return;
+            }
+            editingNews = news;
+            showNewsModal('编辑资讯', news);
+        }
+
+        function viewNews(newsId) {
+            const news = allNews.find(n => n.id === newsId);
+            if (!news) {
+                showNotification('资讯不存在', 'danger');
+                return;
+            }
+            showNewsModal('查看资讯', news, true);
+        }
+
+        function copyNews(newsId) {
+            const news = allNews.find(n => n.id === newsId);
+            if (!news) {
+                showNotification('资讯不存在', 'danger');
+                return;
+            }
+
+            const newNews = {
+                ...news,
+                id: 'news-' + Date.now(),
+                title: news.title + ' (副本)',
+                status: '草稿',
+                publishDate: new Date().toISOString().split('T')[0],
+                views: 0
+            };
+
+            allNews.unshift(newNews);
+            filteredNews = [...allNews];
+            renderNewsList();
+            showNotification('资讯复制成功', 'success');
+        }
+
+        async function deleteNews(newsId) {
+            const news = allNews.find(n => n.id === newsId);
+            if (!news) {
+                showNotification('资讯不存在', 'danger');
+                return;
+            }
+
+            if (confirm(`确定要删除资讯 "${news.title}" 吗？此操作不可恢复。`)) {
+                try {
+                    // 从数组中删除
+                    allNews = allNews.filter(n => n.id !== newsId);
+                    filteredNews = filteredNews.filter(n => n.id !== newsId);
+
+                    renderNewsList();
+                    showNotification('资讯删除成功', 'success');
+                } catch (error) {
+                    console.error('删除资讯失败:', error);
+                    showNotification('删除资讯失败: ' + error.message, 'danger');
+                }
+            }
+        }
+
+        function refreshNewsList() {
+            showNewsList();
+        }
+
+        function exportNews() {
+            try {
+                const dataStr = JSON.stringify(allNews, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `news_export_${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+                URL.revokeObjectURL(url);
+                showNotification('资讯数据导出成功', 'success');
+            } catch (error) {
+                showNotification('导出失败: ' + error.message, 'danger');
+            }
+        }
+
+        function importNews() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const importedNews = JSON.parse(e.target.result);
+                            if (Array.isArray(importedNews)) {
+                                allNews = [...allNews, ...importedNews];
+                                filteredNews = [...allNews];
+                                renderNewsList();
+                                showNotification(`成功导入 ${importedNews.length} 条资讯`, 'success');
+                            } else {
+                                showNotification('导入文件格式错误', 'danger');
+                            }
+                        } catch (error) {
+                            showNotification('导入失败: ' + error.message, 'danger');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        // 资讯模态框功能
+        let newsContentEditor = null;
+
+        function showNewsModal(title, news = null, readonly = false) {
+            document.getElementById('newsModalLabel').textContent = title;
+
+            // 初始化富文本编辑器（如果还没有初始化）
+            if (!newsContentEditor) {
+                newsContentEditor = new Quill('#newsContentEditor', {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: [
+                            ['bold', 'italic', 'underline'],
+                            ['link', 'image'],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                            [{ 'header': [1, 2, 3, false] }],
+                            ['clean']
+                        ]
+                    },
+                    readOnly: readonly
+                });
+            } else {
+                newsContentEditor.enable(!readonly);
+            }
+
+            if (news) {
+                // 填充表单数据
+                document.getElementById('newsTitle').value = news.title || '';
+                document.getElementById('newsSummary').value = news.summary || '';
+                document.getElementById('newsCategory').value = news.category || '';
+                document.getElementById('newsAuthor').value = news.author || '';
+                document.getElementById('newsPublishDate').value = news.publishDate || '';
+                document.getElementById('newsStatus').value = news.status || '草稿';
+                document.getElementById('newsFeatured').checked = news.featured || false;
+                document.getElementById('newsImage').value = news.image || '';
+                document.getElementById('newsTags').value = news.tags ? news.tags.join(', ') : '';
+
+                // 设置富文本编辑器内容
+                newsContentEditor.root.innerHTML = news.content || '';
+
+                // 显示图片预览
+                if (news.image) {
+                    const preview = document.getElementById('newsImagePreview');
+                    preview.src = news.image;
+                    preview.style.display = 'block';
+                }
+            } else {
+                // 重置表单
+                document.getElementById('newsForm').reset();
+                document.getElementById('newsPublishDate').value = new Date().toISOString().split('T')[0];
+                newsContentEditor.root.innerHTML = '';
+                document.getElementById('newsImagePreview').style.display = 'none';
+            }
+
+            // 设置表单只读状态
+            const formElements = document.querySelectorAll('#newsForm input, #newsForm select, #newsForm textarea');
+            formElements.forEach(element => {
+                element.disabled = readonly;
+            });
+
+            // 显示/隐藏保存按钮
+            const saveButton = document.querySelector('#newsModal .btn-primary');
+            saveButton.style.display = readonly ? 'none' : 'inline-block';
+
+            const modal = new bootstrap.Modal(document.getElementById('newsModal'));
+            modal.show();
+        }
+
+        function saveNews() {
+            const title = document.getElementById('newsTitle').value.trim();
+            const summary = document.getElementById('newsSummary').value.trim();
+            const content = newsContentEditor.root.innerHTML;
+            const category = document.getElementById('newsCategory').value;
+            const author = document.getElementById('newsAuthor').value.trim();
+            const publishDate = document.getElementById('newsPublishDate').value;
+            const status = document.getElementById('newsStatus').value;
+            const featured = document.getElementById('newsFeatured').checked;
+            const image = document.getElementById('newsImage').value.trim();
+            const tagsText = document.getElementById('newsTags').value.trim();
+
+            // 验证必填字段
+            if (!title || !summary || !content || !category) {
+                showNotification('请填写所有必填字段', 'warning');
+                return;
+            }
+
+            // 处理标签
+            const tags = tagsText ? tagsText.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
+
+            const newsData = {
+                id: editingNews ? editingNews.id : 'news-' + Date.now(),
+                title,
+                summary,
+                content,
+                category,
+                author: author || '管理员',
+                publishDate: publishDate || new Date().toISOString().split('T')[0],
+                status,
+                featured,
+                image: image || 'https://picsum.photos/400/250?random=' + Math.floor(Math.random() * 100),
+                tags,
+                views: editingNews ? editingNews.views : 0
+            };
+
+            try {
+                if (editingNews) {
+                    // 更新现有资讯
+                    const index = allNews.findIndex(n => n.id === editingNews.id);
+                    if (index !== -1) {
+                        allNews[index] = newsData;
+                        showNotification('资讯更新成功', 'success');
+                    }
+                } else {
+                    // 添加新资讯
+                    allNews.unshift(newsData);
+                    showNotification('资讯添加成功', 'success');
+                }
+
+                // 更新过滤后的数据并重新渲染
+                filteredNews = [...allNews];
+                renderNewsList();
+
+                // 关闭模态框
+                const modal = bootstrap.Modal.getInstance(document.getElementById('newsModal'));
+                modal.hide();
+
+            } catch (error) {
+                console.error('保存资讯失败:', error);
+                showNotification('保存资讯失败: ' + error.message, 'danger');
+            }
+        }
+
+        // 图片预览功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageInput = document.getElementById('newsImage');
+            if (imageInput) {
+                imageInput.addEventListener('input', function() {
+                    const url = this.value.trim();
+                    const preview = document.getElementById('newsImagePreview');
+                    if (url) {
+                        preview.src = url;
+                        preview.style.display = 'block';
+                        preview.onerror = function() {
+                            this.style.display = 'none';
+                        };
+                    } else {
+                        preview.style.display = 'none';
+                    }
+                });
+            }
+        });
+
+        // 占位符函数
+        function addCategory() { showNotification('添加分类功能正在开发中', 'info'); }
+        function editCategory(id) { showNotification('编辑分类功能正在开发中', 'info'); }
+        function deleteCategory(id) { showNotification('删除分类功能正在开发中', 'info'); }
+        function addSupplier() { showNotification('添加供应商功能正在开发中', 'info'); }
+        function editSupplier(id) { showNotification('编辑供应商功能正在开发中', 'info'); }
+        function deleteSupplier(id) { showNotification('删除供应商功能正在开发中', 'info'); }
+        // 案例操作功能
+        function addCase() {
+            editingCase = null;
+            showCaseModal('添加案例');
+        }
+
+        function editCase(caseId) {
+            const caseItem = allCases.find(c => c.id === caseId);
+            if (!caseItem) {
+                showNotification('案例不存在', 'danger');
+                return;
+            }
+            editingCase = caseItem;
+            showCaseModal('编辑案例', caseItem);
+        }
+
+        function viewCase(caseId) {
+            const caseItem = allCases.find(c => c.id === caseId);
+            if (!caseItem) {
+                showNotification('案例不存在', 'danger');
+                return;
+            }
+            showCaseModal('查看案例', caseItem, true);
+        }
+
+        function copyCase(caseId) {
+            const caseItem = allCases.find(c => c.id === caseId);
+            if (!caseItem) {
+                showNotification('案例不存在', 'danger');
+                return;
+            }
+
+            const newCase = {
+                ...caseItem,
+                id: 'case-' + Date.now(),
+                title: caseItem.title + ' (副本)',
+                status: '草稿',
+                projectDate: new Date().toISOString().split('T')[0]
+            };
+
+            allCases.unshift(newCase);
+            filteredCases = [...allCases];
+            renderCasesList();
+            showNotification('案例复制成功', 'success');
+        }
+
+        async function deleteCase(caseId) {
+            const caseItem = allCases.find(c => c.id === caseId);
+            if (!caseItem) {
+                showNotification('案例不存在', 'danger');
+                return;
+            }
+
+            if (confirm(`确定要删除案例 "${caseItem.title}" 吗？此操作不可恢复。`)) {
+                try {
+                    // 从数组中删除
+                    allCases = allCases.filter(c => c.id !== caseId);
+                    filteredCases = filteredCases.filter(c => c.id !== caseId);
+
+                    renderCasesList();
+                    showNotification('案例删除成功', 'success');
+                } catch (error) {
+                    console.error('删除案例失败:', error);
+                    showNotification('删除案例失败: ' + error.message, 'danger');
+                }
+            }
+        }
+
+        function refreshCasesList() {
+            showCasesList();
+        }
+
+        function exportCases() {
+            try {
+                const dataStr = JSON.stringify(allCases, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `cases_export_${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+                URL.revokeObjectURL(url);
+                showNotification('案例数据导出成功', 'success');
+            } catch (error) {
+                showNotification('导出失败: ' + error.message, 'danger');
+            }
+        }
+
+        function importCases() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const importedCases = JSON.parse(e.target.result);
+                            if (Array.isArray(importedCases)) {
+                                allCases = [...allCases, ...importedCases];
+                                filteredCases = [...allCases];
+                                renderCasesList();
+                                showNotification(`成功导入 ${importedCases.length} 条案例`, 'success');
+                            } else {
+                                showNotification('导入文件格式错误', 'danger');
+                            }
+                        } catch (error) {
+                            showNotification('导入失败: ' + error.message, 'danger');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        function showCaseModal(title, caseItem = null, readonly = false) {
+            // 这里需要添加案例模态框的HTML和相关功能
+            // 暂时显示提示信息
+            showNotification('案例编辑模态框功能正在完善中', 'info');
+        }
+        // 应用领域操作功能
+        function addApplication() {
+            editingApplication = null;
+            showApplicationModal('添加应用领域');
+        }
+
+        function editApplication(appId) {
+            const app = allApplications.find(a => a.id === appId);
+            if (!app) {
+                showNotification('应用领域不存在', 'danger');
+                return;
+            }
+            editingApplication = app;
+            showApplicationModal('编辑应用领域', app);
+        }
+
+        function viewApplication(appId) {
+            const app = allApplications.find(a => a.id === appId);
+            if (!app) {
+                showNotification('应用领域不存在', 'danger');
+                return;
+            }
+            showApplicationModal('查看应用领域', app, true);
+        }
+
+        function copyApplication(appId) {
+            const app = allApplications.find(a => a.id === appId);
+            if (!app) {
+                showNotification('应用领域不存在', 'danger');
+                return;
+            }
+
+            const newApp = {
+                ...app,
+                id: 'app-' + Date.now(),
+                title: app.title + ' (副本)',
+                status: '草稿'
+            };
+
+            allApplications.unshift(newApp);
+            filteredApplications = [...allApplications];
+            renderApplicationsList();
+            showNotification('应用领域复制成功', 'success');
+        }
+
+        async function deleteApplication(appId) {
+            const app = allApplications.find(a => a.id === appId);
+            if (!app) {
+                showNotification('应用领域不存在', 'danger');
+                return;
+            }
+
+            if (confirm(`确定要删除应用领域 "${app.title}" 吗？此操作不可恢复。`)) {
+                try {
+                    // 从数组中删除
+                    allApplications = allApplications.filter(a => a.id !== appId);
+                    filteredApplications = filteredApplications.filter(a => a.id !== appId);
+
+                    renderApplicationsList();
+                    showNotification('应用领域删除成功', 'success');
+                } catch (error) {
+                    console.error('删除应用领域失败:', error);
+                    showNotification('删除应用领域失败: ' + error.message, 'danger');
+                }
+            }
+        }
+
+        function refreshApplicationsList() {
+            showApplications();
+        }
+
+        function exportApplications() {
+            try {
+                const dataStr = JSON.stringify(allApplications, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `applications_export_${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+                URL.revokeObjectURL(url);
+                showNotification('应用领域数据导出成功', 'success');
+            } catch (error) {
+                showNotification('导出失败: ' + error.message, 'danger');
+            }
+        }
+
+        function importApplications() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const importedApps = JSON.parse(e.target.result);
+                            if (Array.isArray(importedApps)) {
+                                allApplications = [...allApplications, ...importedApps];
+                                filteredApplications = [...allApplications];
+                                renderApplicationsList();
+                                showNotification(`成功导入 ${importedApps.length} 条应用领域`, 'success');
+                            } else {
+                                showNotification('导入文件格式错误', 'danger');
+                            }
+                        } catch (error) {
+                            showNotification('导入失败: ' + error.message, 'danger');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        function showApplicationModal(title, app = null, readonly = false) {
+            // 这里需要添加应用领域模态框的HTML和相关功能
+            // 暂时显示提示信息
+            showNotification('应用领域编辑模态框功能正在完善中', 'info');
+        }
+        function addSeries() { showNotification('添加系列功能正在开发中', 'info'); }
+        function uploadMedia() { showNotification('上传媒体功能正在开发中', 'info'); }
+    </script>
+</body>
+</html>

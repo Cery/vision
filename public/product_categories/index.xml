@@ -36,6 +36,20 @@
       <description></description>
     </item>
     <item>
+      <title>柔性光学内窥镜</title>
+      <link>http://localhost:1313/product_categories/optical-endoscope/flexible-optical/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/product_categories/optical-endoscope/flexible-optical/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>柔性光纤内窥镜</title>
+      <link>http://localhost:1313/product_categories/fiber-endoscope/flexible-fiber/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/product_categories/fiber-endoscope/flexible-fiber/</guid>
+      <description></description>
+    </item>
+    <item>
       <title>爬行机器人</title>
       <link>http://localhost:1313/product_categories/electronic-endoscope/crawler-robot/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -47,6 +61,20 @@
       <link>http://localhost:1313/product_categories/electronic-endoscope/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/product_categories/electronic-endoscope/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>硬性光学内窥镜</title>
+      <link>http://localhost:1313/product_categories/optical-endoscope/rigid-optical/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/product_categories/optical-endoscope/rigid-optical/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>硬性光纤内窥镜</title>
+      <link>http://localhost:1313/product_categories/fiber-endoscope/rigid-fiber/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/product_categories/fiber-endoscope/rigid-fiber/</guid>
       <description></description>
     </item>
   </channel>

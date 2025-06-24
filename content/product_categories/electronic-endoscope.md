@@ -1,4 +1,6 @@
 ---
 title: "电子内窥镜"
 body: "各类电子内窥镜及相关设备"
+icon: "fas fa-video"
+weight: 1
 ---

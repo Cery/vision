@@ -1,12 +1,12 @@
-<section class="product-carousel-section py-4">
-    <div class="container">
-        <div class="row">
-            <!-- 左侧产品分类菜单 -->
+<section class="product-carousel-section py-5">
+    <div class="container-fluid px-4">
+        <div class="row g-4">
+            <!-- 左侧产品分类菜单 - 缩小区域 -->
             <div class="col-lg-3 col-md-4 mb-4 mb-md-0">
                 {{ partial "homepage/product_category_menu.html" . }}
             </div>
 
-            <!-- 右侧轮播图 -->
+            <!-- 右侧轮播图 - 扩大区域 -->
             <div class="col-lg-9 col-md-8">
                 <div id="homepageCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
                     <div class="carousel-indicators">
@@ -55,16 +55,24 @@
 <style>
 .product-carousel-section {
     margin: 2rem 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 15px;
+    padding: 2rem 0;
 }
 
+/* 轮播图容器 - 增加高度 */
 .carousel-item {
-    height: 400px;
+    height: 500px;
     position: relative;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
 .carousel-item .img-container {
     height: 100%;
     width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
 .carousel-item img {
@@ -72,52 +80,172 @@
     width: 100%;
     object-fit: cover;
     object-position: center;
+    transition: transform 0.3s ease;
 }
 
+.carousel-item:hover img {
+    transform: scale(1.02);
+}
+
+/* 轮播图标题优化 */
 .carousel-caption {
-    background: rgba(0, 0, 0, 0.5);
-    padding: 20px;
-    border-radius: 5px;
-    bottom: 20px;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%);
+    padding: 25px 30px;
+    border-radius: 12px;
+    bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    width: 90%;
-    max-width: 800px;
+    width: 85%;
+    max-width: 700px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .carousel-caption h3 {
-    font-size: 1.75rem;
-    margin-bottom: 10px;
+    font-size: 2rem;
+    margin-bottom: 12px;
+    font-weight: 600;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .carousel-caption p {
-    font-size: 1.1rem;
-    margin-bottom: 15px;
+    font-size: 1.2rem;
+    margin-bottom: 18px;
+    line-height: 1.5;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
+.carousel-caption .btn {
+    padding: 10px 25px;
+    font-weight: 500;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.carousel-caption .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* 轮播指示器优化 */
 .carousel-indicators {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .carousel-indicators button {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    margin: 0 5px;
+    margin: 0 6px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+}
+
+.carousel-indicators button.active {
+    background-color: #1976d2;
+    border-color: #1976d2;
+    transform: scale(1.2);
+}
+
+/* 轮播控制按钮优化 */
+.carousel-control-prev,
+.carousel-control-next {
+    width: 50px;
+    height: 50px;
+    background: rgba(25, 118, 210, 0.8);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: all 0.3s ease;
+}
+
+.carousel-control-prev {
+    left: 20px;
+}
+
+.carousel-control-next {
+    right: 20px;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    background: rgba(25, 118, 210, 1);
+    transform: translateY(-50%) scale(1.1);
 }
 
 /* 响应式调整 */
+@media (max-width: 992px) {
+    .carousel-item {
+        height: 450px;
+    }
+
+    .carousel-caption {
+        width: 90%;
+        padding: 20px 25px;
+    }
+
+    .carousel-caption h3 {
+        font-size: 1.8rem;
+    }
+
+    .carousel-caption p {
+        font-size: 1.1rem;
+    }
+}
+
 @media (max-width: 768px) {
     .carousel-item {
-        height: 300px;
+        height: 350px;
     }
-    
+
+    .carousel-caption {
+        width: 95%;
+        padding: 15px 20px;
+        bottom: 20px;
+    }
+
     .carousel-caption h3 {
         font-size: 1.5rem;
     }
-    
+
     .carousel-caption p {
         font-size: 1rem;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 40px;
+        height: 40px;
+    }
+
+    .carousel-control-prev {
+        left: 10px;
+    }
+
+    .carousel-control-next {
+        right: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .product-carousel-section {
+        padding: 1rem 0;
+        margin: 1rem 0;
+    }
+
+    .carousel-item {
+        height: 280px;
+    }
+
+    .carousel-caption h3 {
+        font-size: 1.3rem;
+    }
+
+    .carousel-caption p {
+        font-size: 0.9rem;
+        margin-bottom: 12px;
     }
 }
 </style>
