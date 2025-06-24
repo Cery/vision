@@ -1,0 +1,50 @@
+# 电子内窥镜 - 排在第一位
+- id: "electronic-endoscope"
+  title: "电子内窥镜"
+  description: "各类电子内窥镜及相关设备"
+  icon: "fas fa-video"
+  subcategories:
+    - title: "工业视频内窥镜"
+      mini_image: "https://picsum.photos/24/24?random=1"
+      mini_icon: "fas fa-camera"
+      product_count: 12
+    - title: "工业管道内窥镜"
+      mini_image: "https://picsum.photos/24/24?random=2"
+      mini_icon: "fas fa-pipe-section"
+      product_count: 8
+    - title: "爬行机器人"
+      mini_image: "https://picsum.photos/24/24?random=3"
+      mini_icon: "fas fa-robot"
+      product_count: 5
+
+# 光纤内窥镜
+- id: "fiber-endoscope"
+  title: "光纤内窥镜"
+  description: "高性能光纤内窥镜设备"
+  icon: "fas fa-eye"
+  subcategories:
+    - title: "柔性光纤内窥镜"
+      mini_image: "https://picsum.photos/24/24?random=4"
+      mini_icon: "fas fa-wave-square"
+      product_count: 6
+    - title: "硬性光纤内窥镜"
+      mini_image: "https://picsum.photos/24/24?random=5"
+      mini_icon: "fas fa-minus"
+      product_count: 4
+
+# 光学内窥镜
+- id: "optical-endoscope"
+  title: "光学内窥镜"
+  description: "专业光学内窥镜设备"
+  icon: "fas fa-search"
+  subcategories:
+    - title: "硬性光学内窥镜"
+      mini_image: "https://picsum.photos/24/24?random=6"
+      mini_icon: "fas fa-binoculars"
+      product_count: 7
+    - title: "柔性光学内窥镜"
+      mini_image: "https://picsum.photos/24/24?random=7"
+      mini_icon: "fas fa-eye-dropper"
+      product_count: 3
+
+

@@ -1,6 +1,6 @@
-<section class="product-carousel-section py-5">
+<section class="product-carousel-section">
     <div class="container-fluid px-4">
-        <div class="row g-4">
+        <div class="row g-3">
             <!-- 左侧产品分类菜单 - 缩小区域 -->
             <div class="col-lg-3 col-md-4 mb-4 mb-md-0">
                 {{ partial "homepage/product_category_menu.html" . }}
@@ -54,10 +54,8 @@
 
 <style>
 .product-carousel-section {
-    margin: 2rem 0;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border-radius: 15px;
-    padding: 2rem 0;
+    margin: 1rem 0;
+    padding: 0;
 }
 
 /* 轮播图容器 - 增加高度 */
@@ -89,35 +87,36 @@
 
 /* 轮播图标题优化 */
 .carousel-caption {
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%);
-    padding: 25px 30px;
-    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.3) 100%);
+    padding: 15px 20px;
+    border-radius: 8px;
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    width: 85%;
-    max-width: 700px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 70%;
+    max-width: 500px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .carousel-caption h3 {
-    font-size: 2rem;
-    margin-bottom: 12px;
+    font-size: 1.6rem;
+    margin-bottom: 8px;
     font-weight: 600;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
 }
 
 .carousel-caption p {
-    font-size: 1.2rem;
-    margin-bottom: 18px;
-    line-height: 1.5;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    font-size: 1rem;
+    margin-bottom: 12px;
+    line-height: 1.4;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
 .carousel-caption .btn {
-    padding: 10px 25px;
+    padding: 8px 20px;
     font-weight: 500;
+    font-size: 0.9rem;
     border-radius: 25px;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -182,16 +181,16 @@
     }
 
     .carousel-caption {
-        width: 90%;
-        padding: 20px 25px;
+        width: 80%;
+        padding: 12px 18px;
     }
 
     .carousel-caption h3 {
-        font-size: 1.8rem;
+        font-size: 1.4rem;
     }
 
     .carousel-caption p {
-        font-size: 1.1rem;
+        font-size: 0.95rem;
     }
 }
 
@@ -201,17 +200,19 @@
     }
 
     .carousel-caption {
-        width: 95%;
-        padding: 15px 20px;
+        width: 85%;
+        padding: 10px 15px;
         bottom: 20px;
     }
 
     .carousel-caption h3 {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
+        margin-bottom: 6px;
     }
 
     .carousel-caption p {
-        font-size: 1rem;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
     }
 
     .carousel-control-prev,
@@ -231,21 +232,33 @@
 
 @media (max-width: 576px) {
     .product-carousel-section {
-        padding: 1rem 0;
-        margin: 1rem 0;
+        padding: 0;
+        margin: 0.5rem 0;
     }
 
     .carousel-item {
         height: 280px;
     }
 
+    .carousel-caption {
+        width: 90%;
+        padding: 8px 12px;
+        bottom: 15px;
+    }
+
     .carousel-caption h3 {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
+        margin-bottom: 4px;
     }
 
     .carousel-caption p {
-        font-size: 0.9rem;
-        margin-bottom: 12px;
+        font-size: 0.8rem;
+        margin-bottom: 6px;
+    }
+
+    .carousel-caption .btn {
+        padding: 6px 15px;
+        font-size: 0.8rem;
     }
 }
 </style>
