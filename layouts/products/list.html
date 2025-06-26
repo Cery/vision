@@ -258,9 +258,15 @@
             <div class="card h-100 shadow-sm hover-shadow">
                 <!-- 产品图片 -->
                 {{ $mainImage := "" }}
-                {{ range .Params.gallery }}
-                    {{ if .is_main }}
-                        {{ $mainImage = .image }}
+                {{ if .Params.gallery }}
+                    {{ if reflect.IsSlice .Params.gallery }}
+                        {{ range .Params.gallery }}
+                            {{ if and (reflect.IsMap .) .is_main }}
+                                {{ $mainImage = .image }}
+                            {{ else if and (not (reflect.IsMap .)) (eq $mainImage "") }}
+                                {{ $mainImage = . }}
+                            {{ end }}
+                        {{ end }}
                     {{ end }}
                 {{ end }}
                 {{ if not $mainImage }}

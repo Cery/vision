@@ -7,8 +7,21 @@
                 <div class="card-body">
                     <!-- 主图容器 - 固定高度 -->
                     <div class="main-image-container">
-                        {{ with (index .Params.gallery 0) }}
-                        <img src="{{ .image | relURL }}" class="img-fluid rounded mb-3 main-product-image" alt="{{ .alt }}" id="main-product-image">
+                        {{ $mainImageSrc := "" }}
+                        {{ $mainImageAlt := "产品图片" }}
+                        {{ if .Params.gallery }}
+                            {{ if reflect.IsSlice .Params.gallery }}
+                                {{ $firstImage := index .Params.gallery 0 }}
+                                {{ if reflect.IsMap $firstImage }}
+                                    {{ $mainImageSrc = $firstImage.image }}
+                                    {{ $mainImageAlt = $firstImage.alt | default "产品图片" }}
+                                {{ else }}
+                                    {{ $mainImageSrc = $firstImage }}
+                                {{ end }}
+                            {{ end }}
+                        {{ end }}
+                        {{ if $mainImageSrc }}
+                        <img src="{{ $mainImageSrc | relURL }}" class="img-fluid rounded mb-3 main-product-image" alt="{{ $mainImageAlt }}" id="main-product-image">
                         {{ else }}
                         <img src="https://picsum.photos/800/600?random=1" class="img-fluid rounded mb-3 main-product-image" alt="主图占位图" id="main-product-image">
                         {{ end }}
@@ -16,16 +29,33 @@
 
                     <!-- 缩略图容器 - 固定高度 -->
                     <div class="row g-2 thumbnail-gallery">
-                        {{ range first 4 (after 1 .Params.gallery) }}
-                        <div class="col-3">
-                            <div class="thumbnail-container">
-                                <img src="{{ .image | relURL }}" 
-                                     class="img-fluid rounded object-fit-cover thumbnail-image" 
-                                     alt="{{ .alt }}" 
-                                     onclick="switchMainImage('{{ .image | relURL }}', '{{ .alt }}')"
-                                     data-full-image="{{ .image | relURL }}">
-                            </div>
-                        </div>
+                        {{ if .Params.gallery }}
+                            {{ if reflect.IsSlice .Params.gallery }}
+                                {{ $galleryItems := after 1 .Params.gallery }}
+                                {{ range first 4 $galleryItems }}
+                                    {{ if reflect.IsMap . }}
+                                    <div class="col-3">
+                                        <div class="thumbnail-container">
+                                            <img src="{{ .image | relURL }}"
+                                                 class="img-fluid rounded object-fit-cover thumbnail-image"
+                                                 alt="{{ .alt | default "产品图片" }}"
+                                                 onclick="switchMainImage('{{ .image | relURL }}', '{{ .alt | default "产品图片" }}')"
+                                                 data-full-image="{{ .image | relURL }}">
+                                        </div>
+                                    </div>
+                                    {{ else }}
+                                    <div class="col-3">
+                                        <div class="thumbnail-container">
+                                            <img src="{{ . | relURL }}"
+                                                 class="img-fluid rounded object-fit-cover thumbnail-image"
+                                                 alt="产品图片"
+                                                 onclick="switchMainImage('{{ . | relURL }}', '产品图片')"
+                                                 data-full-image="{{ . | relURL }}">
+                                        </div>
+                                    </div>
+                                    {{ end }}
+                                {{ end }}
+                            {{ end }}
                         {{ else }}
                         {{ range seq 2 5 }}
                         <div class="col-3">
@@ -125,7 +155,22 @@
                         <button class="btn btn-primary flex-grow-1" id="online-consult-btn">
                             <i class="bi bi-chat-dots-fill me-2"></i>在线咨询
                         </button>
-                        <button class="btn btn-outline-primary flex-grow-1" id="phone-contact-btn" data-bs-toggle="modal" data-bs-target="#phoneContactModal">
+                        <button class="btn btn-outline-primary flex-grow-1" id="phone-contact-btn" data-bs-toggle="modal" data-bs-target="#phoneContactModal"
+                                {{ with .Params.supplier }}
+                                {{ $supplierTitle := . }}
+                                {{ $foundSupplier := "" }}
+                                {{ range (where site.Pages "Section" "suppliers") }}
+                                    {{ if eq .Title $supplierTitle }}
+                                        {{ $foundSupplier = . }}
+                                    {{ end }}
+                                {{ end }}
+                                {{ if $foundSupplier }}
+                                data-supplier-title="{{ $foundSupplier.Title }}"
+                                data-supplier-contact-person="{{ $foundSupplier.Params.contact_person | default "客服" }}"
+                                data-supplier-position="{{ $foundSupplier.Params.position | default "销售顾问" }}"
+                                data-supplier-phone="{{ $foundSupplier.Params.phone | default "400-000-0000" }}"
+                                {{ end }}
+                                {{ end }}>
                             <i class="bi bi-telephone-fill me-2"></i>电话沟通
                         </button>
                     </div>
@@ -293,13 +338,17 @@
             </div>
             <div class="modal-body text-center">
                 <h4 class="mb-3">咨询电话</h4>
-                <p class="fs-5 mb-2">王工</p>
-                <p class="fs-4 mb-4 fw-bold">152 2218 9183</p>
+                <div class="mb-3">
+                    <p class="fs-6 mb-1 text-muted" id="supplier-company">公司名称</p>
+                    <p class="fs-5 mb-2" id="contact-person">联系人</p>
+                    <p class="fs-6 mb-2 text-muted" id="contact-position">职务</p>
+                </div>
+                <p class="fs-4 mb-4 fw-bold" id="contact-phone">电话号码</p>
                 <p class="text-muted">工作时间：周一至周五 08:00-18:00</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-                <a href="tel:13800138000" class="btn btn-primary" id="call-now-btn">立即拨打</a>
+                <a href="tel:" class="btn btn-primary" id="call-now-btn">立即拨打</a>
             </div>
         </div>
     </div>
@@ -834,4 +883,62 @@ document.addEventListener('DOMContentLoaded', function() {
     line-height: 1.5;
 }
 </style>
+
+<script>
+// 电话沟通弹窗动态内容处理
+document.addEventListener('DOMContentLoaded', function() {
+    const phoneContactBtn = document.getElementById('phone-contact-btn');
+    const phoneContactModal = document.getElementById('phoneContactModal');
+
+    if (phoneContactBtn && phoneContactModal) {
+        phoneContactBtn.addEventListener('click', function() {
+            // 获取供应商信息
+            const supplierTitle = this.getAttribute('data-supplier-title');
+            const contactPerson = this.getAttribute('data-supplier-contact-person');
+            const contactPosition = this.getAttribute('data-supplier-position');
+            const contactPhone = this.getAttribute('data-supplier-phone');
+
+            // 更新弹窗内容
+            const supplierCompanyElement = phoneContactModal.querySelector('#supplier-company');
+            const contactPersonElement = phoneContactModal.querySelector('#contact-person');
+            const contactPositionElement = phoneContactModal.querySelector('#contact-position');
+            const contactPhoneElement = phoneContactModal.querySelector('#contact-phone');
+            const callNowBtn = phoneContactModal.querySelector('#call-now-btn');
+
+            // 设置默认值
+            const defaultCompany = '维森视觉检测仪器';
+            const defaultContact = '客服';
+            const defaultPosition = '销售顾问';
+            const defaultPhone = '400-000-0000';
+
+            // 更新显示内容
+            if (supplierCompanyElement) {
+                supplierCompanyElement.textContent = supplierTitle || defaultCompany;
+            }
+
+            if (contactPersonElement) {
+                contactPersonElement.textContent = contactPerson || defaultContact;
+            }
+
+            if (contactPositionElement) {
+                contactPositionElement.textContent = contactPosition || defaultPosition;
+            }
+
+            if (contactPhoneElement) {
+                const displayPhone = contactPhone || defaultPhone;
+                contactPhoneElement.textContent = displayPhone;
+            }
+
+            // 更新拨打电话链接
+            if (callNowBtn) {
+                const phoneNumber = contactPhone || defaultPhone;
+                // 移除电话号码中的空格和特殊字符，只保留数字
+                const cleanPhone = phoneNumber.replace(/\s+/g, '').replace(/[^\d]/g, '');
+                callNowBtn.href = 'tel:' + cleanPhone;
+            }
+        });
+    }
+});
+</script>
+
 {{ end }}

@@ -6,14 +6,14 @@
     <description>Recent content in 产品中心 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 24 Jun 2025 00:56:17 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 15 Jun 2025 12:00:00 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/products/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>WS-K08510-a (副本)</title>
-      <link>http://localhost:1313/products/584889/</link>
-      <pubDate>Tue, 24 Jun 2025 00:56:17 +0000</pubDate>
-      <guid>http://localhost:1313/products/584889/</guid>
-      <description>测试简短描述文字：0.85mm超小直径，高清成像，适用于极小空间检测</description>
+      <title>测试后台产品</title>
+      <link>http://localhost:1313/products/test-backend-product/</link>
+      <pubDate>Thu, 26 Dec 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/products/test-backend-product/</guid>
+      <description>这是一个从后台管理系统生成的测试产品，用于验证产品管理功能</description>
     </item>
     <item>
       <title>WS-K1010工业内窥镜</title>
@@ -49,41 +49,6 @@
       <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
       <guid>http://localhost:1313/products/ws-k09510-a/</guid>
       <description>0.95mm直径探头，适用于精密部件检测</description>
-    </item>
-    <item>
-      <title>WS-K1210工业内窥镜</title>
-      <link>http://localhost:1313/products/ws-k1210-a-copy-6/</link>
-      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/ws-k1210-a-copy-6/</guid>
-      <description>1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务</description>
-    </item>
-    <item>
-      <title>WS-K1210工业内窥镜</title>
-      <link>http://localhost:1313/products/ws-k1210-a-copy-7/</link>
-      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/ws-k1210-a-copy-7/</guid>
-      <description>1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务</description>
-    </item>
-    <item>
-      <title>WS-K1210工业内窥镜</title>
-      <link>http://localhost:1313/products/ws-k1210-a-copy-8/</link>
-      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/ws-k1210-a-copy-8/</guid>
-      <description>1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务</description>
-    </item>
-    <item>
-      <title>WS-K1210工业内窥镜</title>
-      <link>http://localhost:1313/products/ws-k1210-a-copy-9/</link>
-      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/ws-k1210-a-copy-9/</guid>
-      <description>1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务</description>
-    </item>
-    <item>
-      <title>WS-K1210工业内窥镜</title>
-      <link>http://localhost:1313/products/ws-k1210-a-copy/</link>
-      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/ws-k1210-a-copy/</guid>
-      <description>1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务</description>
     </item>
     <item>
       <title>WS-K1210工业内窥镜</title>
@@ -146,13 +111,6 @@
       <link>http://localhost:1313/products/product-p1010-model/</link>
       <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
       <guid>http://localhost:1313/products/product-p1010-model/</guid>
-      <description>高清光纤照明360度旋转镜头内窥镜</description>
-    </item>
-    <item>
-      <title>WS-P1010高清工业视频内窥镜</title>
-      <link>http://localhost:1313/products/sample-product-3/</link>
-      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/sample-product-3/</guid>
       <description>高清光纤照明360度旋转镜头内窥镜</description>
     </item>
     <item>
@@ -219,11 +177,11 @@
       <description>百万像素、冷光源、360度旋转镜头内窥镜</description>
     </item>
     <item>
-      <title>测试产品001</title>
-      <link>http://localhost:1313/products/test-product-001/</link>
-      <pubDate>Thu, 14 Mar 2024 10:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/test-product-001/</guid>
-      <description>这是一个用于测试的产品</description>
+      <title>测试无供应商产品</title>
+      <link>http://localhost:1313/products/test-no-supplier/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/test-no-supplier/</guid>
+      <description>用于测试电话沟通弹窗默认值功能的产品</description>
     </item>
     <item>
       <title>WS-P8050高清工业视频内窥镜</title>
@@ -231,20 +189,6 @@
       <pubDate>Sun, 01 Jan 2023 12:00:00 +0800</pubDate>
       <guid>http://localhost:1313/products/product-p8020/</guid>
       <description>百万像素、冷光源、360度旋转镜头内窥镜</description>
-    </item>
-    <item>
-      <title>模拟产品2</title>
-      <link>http://localhost:1313/products/sample-product-2/</link>
-      <pubDate>Sun, 01 Jan 2023 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/sample-product-2/</guid>
-      <description>这是第二个模拟产品的简述。</description>
-    </item>
-    <item>
-      <title>超细弹簧管1mm电子内窥镜</title>
-      <link>http://localhost:1313/products/k1010-electronic-endoscope/</link>
-      <pubDate>Sun, 01 Jan 2023 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/k1010-electronic-endoscope/</guid>
-      <description>简述</description>
     </item>
   </channel>
 </rss>

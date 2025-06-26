@@ -1,41 +1,61 @@
 {{ define "main" }}
-<div class="container py-5">
-    {{ partial "breadcrumbs.html" . }}
+<!-- 页面头部 -->
+<div class="page-header bg-light py-4">
+    <div class="container">
+        {{ partial "breadcrumbs.html" . }}
+        <div class="text-center">
+            <h1 class="page-title">应用领域</h1>
+            <p class="page-subtitle text-muted">专业的无损检测解决方案，覆盖多个行业领域</p>
+        </div>
+    </div>
+</div>
 
-    <div class="row">
+<!-- 应用领域卡片 -->
+<div class="container py-5">
+    <div class="row g-4">
         {{ range .Pages }}
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100 shadow-sm application-card">
-                {{ with .Params.image }}
-                <img src="{{ . | relURL }}" class="card-img-top object-fit-cover" alt="{{ $.Title }}" style="height: 200px;">
-                {{ else }}
-                <img src="https://picsum.photos/400/200?random={{ .Title }}" class="card-img-top object-fit-cover" alt="{{ .Title }}" style="height: 200px;">
-                {{ end }}
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">{{ .Title }}</h5>
-                    {{ with .Params.summary }}
-                    <p class="card-text text-muted">{{ . }}</p>
-                    {{ else }}
-                    <p class="card-text text-muted">{{ .Summary }}</p>
-                    {{ end }}
-                    <div class="mt-auto">
-                        <a href="{{ .Permalink }}" class="btn btn-primary">了解更多</a>
+        <div class="col-lg-4 col-md-6">
+            <div class="application-card h-100">
+                <div class="card-image">
+                    {{ with .Params.icon }}
+                    <div class="card-icon">
+                        <i class="{{ . }}"></i>
                     </div>
+                    {{ end }}
+                    {{ with .Params.image }}
+                    <img src="{{ . | relURL }}" alt="{{ $.Title }}" class="img-fluid">
+                    {{ else }}
+                    <img src="https://picsum.photos/400/250?random={{ .Title }}" alt="{{ .Title }}" class="img-fluid">
+                    {{ end }}
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">{{ .Title }}</h3>
+                    {{ with .Params.summary }}
+                    <p class="card-summary">{{ . }}</p>
+                    {{ else }}
+                    <p class="card-summary">{{ .Summary }}</p>
+                    {{ end }}
+                    <a href="{{ .Permalink }}" class="btn btn-outline-primary">了解更多</a>
                 </div>
             </div>
         </div>
         {{ else }}
         <!-- 如果没有应用领域，显示占位内容 -->
-        {{ range seq 6 }}
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100 shadow-sm application-card">
-                <img src="https://picsum.photos/400/200?random={{ . }}" class="card-img-top object-fit-cover" alt="应用领域示例" style="height: 200px;">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">示例应用领域 {{ . }}</h5>
-                    <p class="card-text text-muted">这是一个示例应用领域描述，您可以在后台添加真实的应用领域内容。</p>
-                    <div class="mt-auto">
-                        <a href="#" class="btn btn-primary">了解更多</a>
+        {{ $applications := slice "航空航天" "能源电力" "汽车制造" "机械制造" "精密铸造" "科学研究" }}
+        {{ $icons := slice "fas fa-plane" "fas fa-bolt" "fas fa-car" "fas fa-cogs" "fas fa-industry" "fas fa-microscope" }}
+        {{ range $index, $app := $applications }}
+        <div class="col-lg-4 col-md-6">
+            <div class="application-card h-100">
+                <div class="card-image">
+                    <div class="card-icon">
+                        <i class="{{ index $icons $index }}"></i>
                     </div>
+                    <img src="https://picsum.photos/400/250?random={{ add $index 1 }}" alt="{{ $app }}" class="img-fluid">
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">{{ $app }}</h3>
+                    <p class="card-summary">为{{ $app }}领域提供专业的无损检测解决方案，确保产品质量和安全性。</p>
+                    <a href="#" class="btn btn-outline-primary">了解更多</a>
                 </div>
             </div>
         </div>
@@ -44,57 +64,272 @@
     </div>
 </div>
 
+<!-- 技术优势 -->
+<div class="tech-advantages-section py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">技术优势</h2>
+            <p class="section-subtitle text-muted">先进的检测技术，为各行业提供可靠的质量保障</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="advantage-card text-center">
+                    <div class="advantage-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h4 class="advantage-title">高精度检测</h4>
+                    <p class="advantage-description">微米级检测精度，发现细微缺陷</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="advantage-card text-center">
+                    <div class="advantage-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4 class="advantage-title">无损检测</h4>
+                    <p class="advantage-description">非破坏性检测，保护产品完整性</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="advantage-card text-center">
+                    <div class="advantage-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h4 class="advantage-title">实时检测</h4>
+                    <p class="advantage-description">快速响应，实时获取检测结果</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="advantage-card text-center">
+                    <div class="advantage-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h4 class="advantage-title">智能分析</h4>
+                    <p class="advantage-description">AI算法支持，自动识别缺陷</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 联系咨询 -->
+<div class="contact-section py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3 class="contact-title">需要专业的检测解决方案？</h3>
+                <p class="contact-description">我们的技术专家随时为您提供咨询服务，为您的行业应用定制最适合的检测方案。</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="/contact/" class="btn btn-primary btn-lg">
+                    <i class="fas fa-phone me-2"></i>联系我们
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
-.divider-custom {
-    margin: 1.25rem 0 1.5rem;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* 页面头部样式 */
+.page-header {
+    background: #fafafa !important;
+    border-bottom: 1px solid #e0e0e0;
 }
 
-.divider-custom .divider-custom-line {
-    width: 100%;
-    max-width: 7rem;
-    height: 0.25rem;
-    background-color: var(--bs-primary);
-    border-radius: 1rem;
-    border-color: var(--bs-primary);
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #212121;
+    margin-bottom: 1rem;
 }
 
-.divider-custom .divider-custom-icon {
-    color: var(--bs-primary);
-    font-size: 1.5rem;
-    margin: 0 1.5rem;
+.page-subtitle {
+    font-size: 1.1rem;
+    line-height: 1.6;
 }
 
+/* 应用领域卡片样式 */
 .application-card {
-    transition: all 0.3s ease;
-    border: none;
+    position: relative;
+    border-radius: 12px;
     overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+    background: white;
+    border: 1px solid #e0e0e0;
 }
 
 .application-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
-.application-card .card-img-top {
+.card-image {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     transition: transform 0.5s ease;
 }
 
-.application-card:hover .card-img-top {
+.application-card:hover .card-image img {
     transform: scale(1.05);
 }
 
-.application-card .card-title {
-    font-weight: 600;
-    margin-bottom: 1rem;
-    color: var(--bs-primary);
+.card-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #1976d2, #42a5f5);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.3rem;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
 }
 
-.application-card .btn {
+.card-content {
+    padding: 1.5rem;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #212121;
+    margin-bottom: 0.75rem;
+}
+
+.card-summary {
+    font-size: 0.95rem;
+    color: #616161;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+}
+
+.card-content .btn {
+    font-weight: 500;
+    border-radius: 6px;
     transition: all 0.3s ease;
+}
+
+/* 技术优势区域 */
+.tech-advantages-section {
+    background: #f8f9fa !important;
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #212121;
+    margin-bottom: 1rem;
+}
+
+.section-subtitle {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.advantage-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+    border: 1px solid #e0e0e0;
+    height: 100%;
+}
+
+.advantage-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.advantage-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #1976d2, #42a5f5);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    margin: 0 auto 1.5rem;
+}
+
+.advantage-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #212121;
+    margin-bottom: 0.75rem;
+}
+
+.advantage-description {
+    font-size: 0.9rem;
+    color: #616161;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* 联系咨询区域 */
+.contact-section {
+    background: white;
+}
+
+.contact-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #212121;
+    margin-bottom: 0.75rem;
+}
+
+.contact-description {
+    font-size: 1.1rem;
+    color: #616161;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 991.98px) {
+    .page-title {
+        font-size: 2rem;
+    }
+
+    .contact-section .text-lg-end {
+        text-align: center !important;
+        margin-top: 1.5rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .page-title {
+        font-size: 1.75rem;
+    }
+
+    .card-content {
+        padding: 1.25rem;
+    }
+
+    .advantage-card {
+        padding: 1.5rem 1.25rem;
+    }
+
+    .card-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
 }
 </style>
 {{ end }} 

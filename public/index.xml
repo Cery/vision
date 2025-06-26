@@ -6,8 +6,22 @@
     <description>Recent content in 首页 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 24 Jun 2025 00:56:17 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 15 Jun 2025 12:00:00 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>测试后台产品</title>
+      <link>http://localhost:1313/products/test-backend-product/</link>
+      <pubDate>Thu, 26 Dec 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/products/test-backend-product/</guid>
+      <description>这是一个从后台管理系统生成的测试产品，用于验证产品管理功能</description>
+    </item>
+    <item>
+      <title>航空航天</title>
+      <link>http://localhost:1313/applications/aerospace/</link>
+      <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/applications/aerospace/</guid>
+      <description>为航空航天领域提供高精度无损检测解决方案，确保飞行器安全性和可靠性</description>
+    </item>
     <item>
       <title>工业视频内窥镜</title>
       <link>http://localhost:1313/product_categories/electronic-endoscope/industrial-video-endoscope/</link>
@@ -42,6 +56,13 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/categories/industry-news/</guid>
       <description>&lt;hr&gt;&#xA;&lt;h2 id=&#34;weight-1&#34;&gt;title: &amp;ldquo;行业资讯&amp;rdquo;&#xA;description: &amp;ldquo;行业最新动态、市场趋势、政策解读等资讯内容&amp;rdquo;&#xA;color: &amp;ldquo;#0d6efd&amp;rdquo;&#xA;weight: 1&lt;/h2&gt;&#xA;&lt;p&gt;行业最新动态、市场趋势、政策解读等资讯内容。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>能源电力</title>
+      <link>http://localhost:1313/applications/energy/</link>
+      <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/applications/energy/</guid>
+      <description>助力能源电力设备安全运行监测，保障电力系统稳定可靠</description>
     </item>
     <item>
       <title>光纤内窥镜</title>
@@ -79,6 +100,13 @@
       <description></description>
     </item>
     <item>
+      <title>汽车制造</title>
+      <link>http://localhost:1313/applications/automotive/</link>
+      <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/applications/automotive/</guid>
+      <description>汽车制造质量控制全程监测方案，确保汽车产品质量和安全性</description>
+    </item>
+    <item>
       <title>光学内窥镜</title>
       <link>http://localhost:1313/product_categories/optical-endoscope/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -100,6 +128,13 @@
       <description></description>
     </item>
     <item>
+      <title>机械制造</title>
+      <link>http://localhost:1313/applications/machinery/</link>
+      <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/applications/machinery/</guid>
+      <description>机械制造质量检测与工艺优化，提升机械产品精度和可靠性</description>
+    </item>
+    <item>
       <title>公司新闻</title>
       <link>http://localhost:1313/categories/company-news/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -107,11 +142,18 @@
       <description>&lt;p&gt;公司动态、企业活动、发展成果等资讯内容。&lt;/p&gt;</description>
     </item>
     <item>
-      <title>WS-K08510-a (副本)</title>
-      <link>http://localhost:1313/products/584889/</link>
-      <pubDate>Tue, 24 Jun 2025 00:56:17 +0000</pubDate>
-      <guid>http://localhost:1313/products/584889/</guid>
-      <description>测试简短描述文字：0.85mm超小直径，高清成像，适用于极小空间检测</description>
+      <title>精密铸造</title>
+      <link>http://localhost:1313/applications/casting/</link>
+      <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/applications/casting/</guid>
+      <description>精密铸造工艺过程质量控制，确保铸件质量和工艺稳定性</description>
+    </item>
+    <item>
+      <title>科学研究</title>
+      <link>http://localhost:1313/applications/research/</link>
+      <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/applications/research/</guid>
+      <description>科研实验检测分析专业解决方案，支持科学研究和技术创新</description>
     </item>
     <item>
       <title>WS-K1010工业内窥镜</title>
@@ -154,41 +196,6 @@
       <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
       <guid>http://localhost:1313/products/ws-k09510-a/</guid>
       <description>0.95mm直径探头，适用于精密部件检测</description>
-    </item>
-    <item>
-      <title>WS-K1210工业内窥镜</title>
-      <link>http://localhost:1313/products/ws-k1210-a-copy-6/</link>
-      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/ws-k1210-a-copy-6/</guid>
-      <description>1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务</description>
-    </item>
-    <item>
-      <title>WS-K1210工业内窥镜</title>
-      <link>http://localhost:1313/products/ws-k1210-a-copy-7/</link>
-      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/ws-k1210-a-copy-7/</guid>
-      <description>1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务</description>
-    </item>
-    <item>
-      <title>WS-K1210工业内窥镜</title>
-      <link>http://localhost:1313/products/ws-k1210-a-copy-8/</link>
-      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/ws-k1210-a-copy-8/</guid>
-      <description>1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务</description>
-    </item>
-    <item>
-      <title>WS-K1210工业内窥镜</title>
-      <link>http://localhost:1313/products/ws-k1210-a-copy-9/</link>
-      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/ws-k1210-a-copy-9/</guid>
-      <description>1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务</description>
-    </item>
-    <item>
-      <title>WS-K1210工业内窥镜</title>
-      <link>http://localhost:1313/products/ws-k1210-a-copy/</link>
-      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/ws-k1210-a-copy/</guid>
-      <description>1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务</description>
     </item>
     <item>
       <title>WS-K1210工业内窥镜</title>
@@ -251,13 +258,6 @@
       <link>http://localhost:1313/products/product-p1010-model/</link>
       <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
       <guid>http://localhost:1313/products/product-p1010-model/</guid>
-      <description>高清光纤照明360度旋转镜头内窥镜</description>
-    </item>
-    <item>
-      <title>WS-P1010高清工业视频内窥镜</title>
-      <link>http://localhost:1313/products/sample-product-3/</link>
-      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/sample-product-3/</guid>
       <description>高清光纤照明360度旋转镜头内窥镜</description>
     </item>
     <item>
@@ -324,11 +324,32 @@
       <description>百万像素、冷光源、360度旋转镜头内窥镜</description>
     </item>
     <item>
+      <title>测试无供应商产品</title>
+      <link>http://localhost:1313/products/test-no-supplier/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/test-no-supplier/</guid>
+      <description>用于测试电话沟通弹窗默认值功能的产品</description>
+    </item>
+    <item>
+      <title>2024年巴西圣保罗工业技术博览会</title>
+      <link>http://localhost:1313/news/exhibition-news-12/</link>
+      <pubDate>Thu, 05 Dec 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/exhibition-news-12/</guid>
+      <description>南美地区最大的工业技术展览会，展示内窥镜技术在拉美市场的发展机遇</description>
+    </item>
+    <item>
       <title>2024杭州工业检测设备与技术展览会</title>
       <link>http://localhost:1313/news/exhibition-news-8/</link>
       <pubDate>Thu, 05 Dec 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/news/exhibition-news-8/</guid>
       <description>展会将在杭州国际博览中心举办</description>
+    </item>
+    <item>
+      <title>2024年印度新德里工业检测技术展览会</title>
+      <link>http://localhost:1313/news/exhibition-news-11/</link>
+      <pubDate>Tue, 12 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/exhibition-news-11/</guid>
+      <description>南亚地区重要的工业检测技术展览会，展示内窥镜技术在新兴市场的应用前景</description>
     </item>
     <item>
       <title>2024西安工业自动化及机器人展览会</title>
@@ -345,11 +366,39 @@
       <description>展会将在北京国际展览中心举办</description>
     </item>
     <item>
+      <title>2024年韩国首尔智能制造技术展览会</title>
+      <link>http://localhost:1313/news/exhibition-news-10/</link>
+      <pubDate>Tue, 15 Oct 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/exhibition-news-10/</guid>
+      <description>韩国最大的智能制造技术展览会，展示内窥镜技术在智能工厂中的应用</description>
+    </item>
+    <item>
+      <title>2024年英国伦敦工业检测技术展览会</title>
+      <link>http://localhost:1313/news/exhibition-news-9/</link>
+      <pubDate>Wed, 18 Sep 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/exhibition-news-9/</guid>
+      <description>欧洲地区重要的工业检测技术展览会，聚焦内窥镜技术在工业4.0中的应用</description>
+    </item>
+    <item>
+      <title>2024年日本东京精密检测技术博览会</title>
+      <link>http://localhost:1313/news/exhibition-news-5/</link>
+      <pubDate>Mon, 08 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/exhibition-news-5/</guid>
+      <description>亚洲地区领先的精密检测技术展览会，展示工业内窥镜在精密制造中的应用</description>
+    </item>
+    <item>
       <title>2024广州国际工业检测设备展览会</title>
       <link>http://localhost:1313/news/exhibition-news-2/</link>
       <pubDate>Thu, 20 Jun 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/news/exhibition-news-2/</guid>
       <description>展会将在广州国际会展中心举办，聚焦工业检测设备与技术创新</description>
+    </item>
+    <item>
+      <title>2024年美国芝加哥无损检测技术展览会</title>
+      <link>http://localhost:1313/news/exhibition-news-4/</link>
+      <pubDate>Mon, 10 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/exhibition-news-4/</guid>
+      <description>北美地区最大的无损检测技术展览会，聚焦内窥镜检测技术创新应用</description>
     </item>
     <item>
       <title>2024年第15届中国国际工业内窥镜技术展览会</title>
@@ -359,11 +408,32 @@
       <description>展会将于5月15-17日在上海新国际博览中心举行，汇聚全球工业内窥镜技术创新成果</description>
     </item>
     <item>
+      <title>2024年德国汉诺威工业博览会内窥镜专区</title>
+      <link>http://localhost:1313/news/exhibition-news-3/</link>
+      <pubDate>Mon, 22 Apr 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/exhibition-news-3/</guid>
+      <description>德国汉诺威工业博览会内窥镜技术专区，展示最新工业4.0检测解决方案</description>
+    </item>
+    <item>
+      <title>工业内窥镜图像处理算法优化技术研究</title>
+      <link>http://localhost:1313/news/tech-article-1/</link>
+      <pubDate>Fri, 22 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/tech-article-1/</guid>
+      <description>深入探讨工业内窥镜图像处理算法的优化方法，提升检测精度和效率</description>
+    </item>
+    <item>
       <title>内窥镜技术在工业检测中的创新应用</title>
       <link>http://localhost:1313/news/industry-news-1/</link>
       <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/news/industry-news-1/</guid>
       <description>探讨最新内窥镜技术在工业检测领域的创新应用，提高检测效率和精度</description>
+    </item>
+    <item>
+      <title>基于深度学习的内窥镜缺陷自动识别系统</title>
+      <link>http://localhost:1313/news/tech-article-2/</link>
+      <pubDate>Tue, 19 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/tech-article-2/</guid>
+      <description>介绍基于深度学习技术的内窥镜缺陷自动识别系统的设计与实现</description>
     </item>
     <item>
       <title>AI技术赋能工业内窥镜检测新突破</title>
@@ -373,18 +443,18 @@
       <description>人工智能技术与工业内窥镜的深度融合，实现智能缺陷识别和自动化检测</description>
     </item>
     <item>
+      <title>工业内窥镜光学系统设计与优化</title>
+      <link>http://localhost:1313/news/tech-article-3/</link>
+      <pubDate>Sat, 16 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/tech-article-3/</guid>
+      <description>探讨工业内窥镜光学系统的设计原理和优化方法，提升成像质量</description>
+    </item>
+    <item>
       <title>5G远程内窥镜检测系统解决方案发布</title>
       <link>http://localhost:1313/news/industry-news-3/</link>
       <pubDate>Fri, 15 Mar 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/news/industry-news-3/</guid>
       <description>基于5G技术的远程内窥镜检测系统，实现远程实时监控和专家指导</description>
-    </item>
-    <item>
-      <title>测试产品001</title>
-      <link>http://localhost:1313/products/test-product-001/</link>
-      <pubDate>Thu, 14 Mar 2024 10:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/test-product-001/</guid>
-      <description>这是一个用于测试的产品</description>
     </item>
     <item>
       <title>新一代工业内窥镜技术发展趋势</title>
@@ -394,11 +464,32 @@
       <description>探讨2024年工业内窥镜领域的最新技术发展趋势，包括AI图像识别、5G远程控制等创新应用</description>
     </item>
     <item>
+      <title>无线传输技术在内窥镜检测中的应用</title>
+      <link>http://localhost:1313/news/tech-article-4/</link>
+      <pubDate>Wed, 13 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/tech-article-4/</guid>
+      <description>分析无线传输技术在内窥镜检测系统中的应用优势和技术挑战</description>
+    </item>
+    <item>
       <title>新型管道爬行机器人技术取得重大突破</title>
       <link>http://localhost:1313/news/industry-news-4/</link>
       <pubDate>Tue, 12 Mar 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/news/industry-news-4/</guid>
       <description>创新型管道爬行机器人技术突破，提升复杂管道检测能力，为工业检测领域带来革命性进展</description>
+    </item>
+    <item>
+      <title>工业内窥镜探头微型化技术发展趋势</title>
+      <link>http://localhost:1313/news/tech-article-5/</link>
+      <pubDate>Sun, 10 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/tech-article-5/</guid>
+      <description>探讨工业内窥镜探头微型化技术的发展现状和未来趋势</description>
+    </item>
+    <item>
+      <title>绿色制造推动无损检测技术环保升级</title>
+      <link>http://localhost:1313/news/industry-news-5/</link>
+      <pubDate>Sun, 10 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/industry-news-5/</guid>
+      <description>绿色制造理念推动无损检测技术向环保化、节能化方向发展，内窥镜技术成为绿色检测的重要选择</description>
     </item>
     <item>
       <title>新能源汽车电池检测方案</title>
@@ -483,20 +574,6 @@
       <pubDate>Sun, 01 Jan 2023 12:00:00 +0800</pubDate>
       <guid>http://localhost:1313/products/product-p8020/</guid>
       <description>百万像素、冷光源、360度旋转镜头内窥镜</description>
-    </item>
-    <item>
-      <title>模拟产品2</title>
-      <link>http://localhost:1313/products/sample-product-2/</link>
-      <pubDate>Sun, 01 Jan 2023 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/sample-product-2/</guid>
-      <description>这是第二个模拟产品的简述。</description>
-    </item>
-    <item>
-      <title>超细弹簧管1mm电子内窥镜</title>
-      <link>http://localhost:1313/products/k1010-electronic-endoscope/</link>
-      <pubDate>Sun, 01 Jan 2023 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/k1010-electronic-endoscope/</guid>
-      <description>简述</description>
     </item>
     <item>
       <title></title>

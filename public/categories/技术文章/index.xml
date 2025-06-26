@@ -23,25 +23,25 @@
       <description>展会将在北京国际展览中心举办</description>
     </item>
     <item>
-      <title>内窥镜技术在工业检测中的创新应用</title>
-      <link>http://localhost:1313/news/industry-news-1/</link>
-      <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/news/industry-news-1/</guid>
-      <description>探讨最新内窥镜技术在工业检测领域的创新应用，提高检测效率和精度</description>
+      <title>工业内窥镜图像处理算法优化技术研究</title>
+      <link>http://localhost:1313/news/tech-article-1/</link>
+      <pubDate>Fri, 22 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/tech-article-1/</guid>
+      <description>深入探讨工业内窥镜图像处理算法的优化方法，提升检测精度和效率</description>
     </item>
     <item>
-      <title>AI技术赋能工业内窥镜检测新突破</title>
-      <link>http://localhost:1313/news/industry-news-2/</link>
-      <pubDate>Mon, 18 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/news/industry-news-2/</guid>
-      <description>人工智能技术与工业内窥镜的深度融合，实现智能缺陷识别和自动化检测</description>
+      <title>基于深度学习的内窥镜缺陷自动识别系统</title>
+      <link>http://localhost:1313/news/tech-article-2/</link>
+      <pubDate>Tue, 19 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/tech-article-2/</guid>
+      <description>介绍基于深度学习技术的内窥镜缺陷自动识别系统的设计与实现</description>
     </item>
     <item>
-      <title>5G远程内窥镜检测系统解决方案发布</title>
-      <link>http://localhost:1313/news/industry-news-3/</link>
-      <pubDate>Fri, 15 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/news/industry-news-3/</guid>
-      <description>基于5G技术的远程内窥镜检测系统，实现远程实时监控和专家指导</description>
+      <title>工业内窥镜光学系统设计与优化</title>
+      <link>http://localhost:1313/news/tech-article-3/</link>
+      <pubDate>Sat, 16 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/tech-article-3/</guid>
+      <description>探讨工业内窥镜光学系统的设计原理和优化方法，提升成像质量</description>
     </item>
     <item>
       <title>新一代工业内窥镜技术发展趋势</title>
@@ -51,11 +51,18 @@
       <description>探讨2024年工业内窥镜领域的最新技术发展趋势，包括AI图像识别、5G远程控制等创新应用</description>
     </item>
     <item>
-      <title>新型管道爬行机器人技术取得重大突破</title>
-      <link>http://localhost:1313/news/industry-news-4/</link>
-      <pubDate>Tue, 12 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/news/industry-news-4/</guid>
-      <description>创新型管道爬行机器人技术突破，提升复杂管道检测能力，为工业检测领域带来革命性进展</description>
+      <title>无线传输技术在内窥镜检测中的应用</title>
+      <link>http://localhost:1313/news/tech-article-4/</link>
+      <pubDate>Wed, 13 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/tech-article-4/</guid>
+      <description>分析无线传输技术在内窥镜检测系统中的应用优势和技术挑战</description>
+    </item>
+    <item>
+      <title>工业内窥镜探头微型化技术发展趋势</title>
+      <link>http://localhost:1313/news/tech-article-5/</link>
+      <pubDate>Sun, 10 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/news/tech-article-5/</guid>
+      <description>探讨工业内窥镜探头微型化技术的发展现状和未来趋势</description>
     </item>
     <item>
       <title>工业内窥镜技术发展趋势分析</title>

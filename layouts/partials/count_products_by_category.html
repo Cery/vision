@@ -1,0 +1,26 @@
+{{/* 
+  动态统计指定分类下的产品数量
+  参数：
+  - category: 要统计的分类名称
+  - site: Hugo站点对象
+*/}}
+
+{{- $category := .category -}}
+{{- $site := .site -}}
+{{- $count := 0 -}}
+
+{{/* 获取所有产品页面 */}}
+{{- range $site.RegularPages -}}
+  {{- if eq .Section "products" -}}
+    {{/* 检查一级分类 */}}
+    {{- if eq .Params.primary_category $category -}}
+      {{- $count = add $count 1 -}}
+    {{/* 检查二级分类 */}}
+    {{- else if eq .Params.secondary_category $category -}}
+      {{- $count = add $count 1 -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* 输出统计结果 */}}
+{{- $count -}}

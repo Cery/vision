@@ -10,13 +10,14 @@
             <!-- 行业资讯 -->
             <div class="col-lg-7 mb-4 mb-lg-0">
                 <div class="card border-0 shadow-sm h-100">
-                    <div class="card-header bg-white border-0">
-                        <h3 class="h5 mb-0">{{ .Params.industry_news_title | default "行业资讯" }}</h3>
+                    <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                        <h3 class="h5 mb-0">行业资讯</h3>
+                        <a href="/news/" class="text-primary text-decoration-none small">更多</a>
                     </div>
                     <div class="card-body">
                         {{ $industryNews := where (where .Site.RegularPages "Type" "news") ".Params.categories" "intersect" (slice "行业资讯") }}
                         {{ if gt (len $industryNews) 0 }}
-                        {{ range $index, $news := first 4 $industryNews }}
+                        {{ range $index, $news := first 5 $industryNews }}
                         <div class="news-item d-flex mb-4">
                             <div class="news-image me-3">
                                     {{ if .Params.thumbnail }}
@@ -34,7 +35,7 @@
                             {{ end }}
                         {{ else }}
                             <!-- 占位资讯 -->
-                            {{ range $index := (seq 1 4) }}
+                            {{ range $index := (seq 1 5) }}
                             <div class="news-item d-flex mb-4">
                                 <div class="news-image me-3">
                                     <img src="https://picsum.photos/120/80?random={{ $index }}" alt="示例资讯" style="width: 120px; height: 80px; object-fit: cover;" class="rounded">
@@ -51,30 +52,65 @@
                 </div>
             </div>
 
-            <!-- 展会资讯 -->
+            <!-- 右侧：展会资讯和技术文章 -->
             <div class="col-lg-5">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-header bg-white border-0">
-                        <h3 class="h5 mb-0">{{ .Params.exhibition_news_title | default "展会资讯" }}</h3>
-                    </div>
-                    <div class="card-body">
-                        {{ $exhibitionNews := where (where .Site.RegularPages "Type" "news") ".Params.categories" "intersect" (slice "展会资讯") }}
-                        {{ if gt (len $exhibitionNews) 0 }}
-                        {{ range first 8 $exhibitionNews }}
-                        <div class="exhibition-item d-flex justify-content-between align-items-center mb-3">
-                            <a href="{{ .Permalink }}" class="text-dark text-decoration-none hover-primary flex-grow-1">{{ .Title }}</a>
-                            <small class="text-muted ms-3">{{ .Date.Format "01-02" }}</small>
-                        </div>
-                            {{ end }}
-                        {{ else }}
-                            <!-- 占位展会资讯 -->
-                            {{ range $index := (seq 1 8) }}
-                            <div class="exhibition-item d-flex justify-content-between align-items-center mb-3">
-                                <a href="#" class="text-dark text-decoration-none hover-primary flex-grow-1">示例展会资讯标题 {{ $index }}</a>
-                                <small class="text-muted ms-3">{{ printf "%02d" (add 1 $index) }}-{{ printf "%02d" (add 10 $index) }}</small>
+                <div class="row h-100">
+                    <!-- 展会资讯（上半部分） -->
+                    <div class="col-12 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                                <h3 class="h5 mb-0">展会资讯</h3>
+                                <a href="/news/" class="text-primary text-decoration-none small">更多</a>
                             </div>
-                            {{ end }}
-                        {{ end }}
+                            <div class="card-body">
+                                {{ $exhibitionNews := where (where .Site.RegularPages "Type" "news") ".Params.categories" "intersect" (slice "展会资讯") }}
+                                {{ if gt (len $exhibitionNews) 0 }}
+                                {{ range first 5 $exhibitionNews }}
+                                <div class="exhibition-item d-flex justify-content-between align-items-center mb-3">
+                                    <a href="{{ .Permalink }}" class="text-dark text-decoration-none hover-primary flex-grow-1">{{ .Title }}</a>
+                                    <small class="text-muted ms-3">{{ .Date.Format "01-02" }}</small>
+                                </div>
+                                {{ end }}
+                                {{ else }}
+                                    <!-- 占位展会资讯 -->
+                                    {{ range $index := (seq 1 5) }}
+                                    <div class="exhibition-item d-flex justify-content-between align-items-center mb-3">
+                                        <a href="#" class="text-dark text-decoration-none hover-primary flex-grow-1">示例展会资讯标题 {{ $index }}</a>
+                                        <small class="text-muted ms-3">{{ printf "%02d" (add 1 $index) }}-{{ printf "%02d" (add 10 $index) }}</small>
+                                    </div>
+                                    {{ end }}
+                                {{ end }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 技术文章（下半部分） -->
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                                <h3 class="h5 mb-0">技术文章</h3>
+                                <a href="/news/" class="text-primary text-decoration-none small">更多</a>
+                            </div>
+                            <div class="card-body">
+                                {{ $techNews := where (where .Site.RegularPages "Type" "news") ".Params.categories" "intersect" (slice "技术文章") }}
+                                {{ if gt (len $techNews) 0 }}
+                                {{ range first 5 $techNews }}
+                                <div class="tech-item d-flex justify-content-between align-items-center mb-3">
+                                    <a href="{{ .Permalink }}" class="text-dark text-decoration-none hover-primary flex-grow-1">{{ .Title }}</a>
+                                    <small class="text-muted ms-3">{{ .Date.Format "01-02" }}</small>
+                                </div>
+                                {{ end }}
+                                {{ else }}
+                                    <!-- 占位技术文章 -->
+                                    {{ range $index := (seq 1 5) }}
+                                    <div class="tech-item d-flex justify-content-between align-items-center mb-3">
+                                        <a href="#" class="text-dark text-decoration-none hover-primary flex-grow-1">示例技术文章标题 {{ $index }}</a>
+                                        <small class="text-muted ms-3">{{ printf "%02d" (add 1 $index) }}-{{ printf "%02d" (add 10 $index) }}</small>
+                                    </div>
+                                    {{ end }}
+                                {{ end }}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -105,8 +141,30 @@
     margin-bottom: 0 !important;
 }
 
-.exhibition-item:last-child {
+.exhibition-item:last-child,
+.tech-item:last-child {
     margin-bottom: 0 !important;
+}
+
+/* 右侧区域高度协调 */
+.col-lg-5 .row.h-100 {
+    height: 100% !important;
+}
+
+.col-lg-5 .row.h-100 > .col-12:first-child {
+    height: 50%;
+}
+
+.col-lg-5 .row.h-100 > .col-12:last-child {
+    height: 50%;
+}
+
+.tech-item {
+    transition: all 0.2s ease;
+}
+
+.tech-item:hover {
+    background: #f8f9fa;
 }
 
 .card-header {

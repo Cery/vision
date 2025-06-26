@@ -135,6 +135,13 @@
                                     <textarea class="form-control" id="requirements" name="requirements" rows="3" placeholder="请详细描述您的具体定制需求和特殊要求" required></textarea>
                                     <div class="invalid-feedback">请描述您的定制需求</div>
                                 </div>
+
+                                <!-- 附件上传 -->
+                                <div class="mb-3">
+                                    <label for="attachments" class="form-label">上传附件</label>
+                                    <input type="file" class="form-control" id="attachments" name="attachments" multiple accept=".pdf,.doc,.docx,.dwg,.jpg,.png">
+                                    <div class="form-text">支持PDF、Word、CAD图纸、图片等格式，单个文件不超过10MB</div>
+                                </div>
                             </div>
                         </div>
 
@@ -175,13 +182,6 @@
                                     </div>
                                 </div>
 
-                                <!-- 附件上传 -->
-                                <div class="mb-3">
-                                    <label for="attachments" class="form-label">上传附件</label>
-                                    <input type="file" class="form-control" id="attachments" name="attachments" multiple accept=".pdf,.doc,.docx,.dwg,.jpg,.png">
-                                    <div class="form-text">支持PDF、Word、CAD图纸、图片等格式，单个文件不超过10MB</div>
-                                </div>
-
                                 <!-- 提交状态显示 -->
                                 <div id="submitStatus" class="alert" style="display: none;" role="alert">
                                     <div id="submitMessage"></div>
@@ -202,51 +202,41 @@
         <div class="col-lg-5">
             <div class="card shadow-sm">
                 <div class="card-body p-4">
-                    <h4 class="card-title mb-4">最新需求</h4>
-                    <div class="custom-requirements-list">
-                        {{ $paginator := .Paginate .Pages 10 }}
-                        {{ range $paginator.Pages }}
-                        <div class="requirement-item p-3 mb-3 bg-light rounded">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <h6 class="mb-2">{{ .Title }}</h6>
-                                <span class="badge bg-primary">{{ .Params.status }}</span>
-                            </div>
-                            <div class="text-muted small mb-2">
-                                <i class="bi bi-calendar3"></i> {{ .Date.Format "2006-01-02" }}
-                            </div>
-                            {{ with .Params.company }}
-                            <div class="text-muted small">
-                                <i class="bi bi-building"></i> {{ . }}
-                            </div>
-                            {{ end }}
-                        </div>
-                        {{ end }}
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="card-title mb-0">最新需求</h4>
+                        <button class="btn btn-outline-primary btn-sm" onclick="refreshRequirementsList()">
+                            <i class="fas fa-sync-alt me-1"></i>刷新
+                        </button>
                     </div>
 
-                    <!-- 分页 -->
-                    {{ if gt $paginator.TotalPages 1 }}
-                    <nav aria-label="Page navigation" class="mt-4">
-                        <ul class="pagination justify-content-center">
-                            {{ if $paginator.HasPrev }}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ $paginator.Prev.URL }}">&laquo;</a>
-                            </li>
-                            {{ end }}
-                            
-                            {{ range $paginator.Pagers }}
-                            <li class="page-item {{ if eq . $paginator }}active{{ end }}">
-                                <a class="page-link" href="{{ .URL }}">{{ .PageNumber }}</a>
-                            </li>
-                            {{ end }}
-                            
-                            {{ if $paginator.HasNext }}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ $paginator.Next.URL }}">&raquo;</a>
-                            </li>
-                            {{ end }}
-                        </ul>
-                    </nav>
-                    {{ end }}
+                    <!-- 加载状态 -->
+                    <div id="requirementsLoading" class="text-center py-4" style="display: none;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">加载中...</span>
+                        </div>
+                        <div class="mt-2 text-muted">加载需求列表...</div>
+                    </div>
+
+                    <!-- 需求列表容器 -->
+                    <div id="customRequirementsList" class="custom-requirements-list">
+                        <!-- 动态加载的需求列表 -->
+                    </div>
+
+                    <!-- 空状态 -->
+                    <div id="emptyRequirements" class="text-center py-5" style="display: none;">
+                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">暂无定制需求</h5>
+                        <p class="text-muted">提交第一个定制需求吧！</p>
+                    </div>
+
+                    <!-- 分页控制 -->
+                    <div id="requirementsPagination" class="mt-4" style="display: none;">
+                        <nav aria-label="需求列表分页">
+                            <ul class="pagination justify-content-center" id="paginationList">
+                                <!-- 动态生成分页 -->
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>
@@ -299,6 +289,10 @@
 </style>
 
 <script>
+// 定制需求管理
+let currentPage = 1;
+const itemsPerPage = 10;
+
 // 表单验证和提交处理
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('customForm');
@@ -308,8 +302,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitStatus = document.getElementById('submitStatus');
     const submitMessage = document.getElementById('submitMessage');
 
+    // 初始化页面
+    initializePage();
+
     // 表单提交处理
-    form.addEventListener('submit', function(event) {
+    form.addEventListener('submit', async function(event) {
         event.preventDefault();
 
         // 验证表单
@@ -323,34 +320,52 @@ document.addEventListener('DOMContentLoaded', function() {
         setSubmitState(true);
         hideStatus();
 
-        // 收集表单数据
-        const formData = new FormData(form);
+        try {
+            // 收集表单数据
+            const formData = new FormData(form);
 
-        // 提交到Netlify
-        fetch('/', {
-            method: 'POST',
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams(formData).toString()
-        })
-        .then(response => {
-            if (response.ok) {
+            // 构建需求数据对象
+            const requirementData = {
+                id: null, // 将由API生成
+                productType: formData.get('productType'),
+                screenSize: formData.get('screenSize'),
+                batteryLife: formData.get('batteryLife'),
+                probeDiameter: formData.get('probeDiameter'),
+                resolution: formData.get('resolution'),
+                viewingAngle: formData.get('viewingAngle'),
+                lightSource: formData.get('lightSource'),
+                guidance: formData.get('guidance'),
+                requirements: formData.get('requirements'),
+                companyName: formData.get('companyName'),
+                department: formData.get('department'),
+                contact: formData.get('contact'),
+                phone: formData.get('phone'),
+                email: formData.get('email'),
+                status: '待处理',
+                submitDate: new Date().toISOString(),
+                priority: 'normal'
+            };
+
+            // 提交到ContentAPI
+            const result = await window.ContentAPI.saveCustomRequirement(requirementData);
+
+            if (result.success) {
                 showStatus('✅ 定制需求提交成功！我们将在24小时内与您联系。', 'success');
                 form.reset();
                 form.classList.remove('was-validated');
 
-                // 添加到需求列表
-                addToRequirementsList(formData);
+                // 刷新需求列表
+                await loadRequirementsList();
             } else {
-                throw new Error('提交失败');
+                throw new Error(result.message || '提交失败');
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
+
+        } catch (error) {
+            console.error('提交定制需求失败:', error);
             showStatus('❌ 提交失败，请稍后重试或直接联系我们。', 'danger');
-        })
-        .finally(() => {
+        } finally {
             setSubmitState(false);
-        });
+        }
     });
 
     // 文件上传大小限制
@@ -403,34 +418,142 @@ document.addEventListener('DOMContentLoaded', function() {
         submitStatus.style.display = 'none';
     }
 
-    // 添加到需求列表（模拟）
-    function addToRequirementsList(formData) {
-        const requirementsList = document.querySelector('.custom-requirements-list');
-        if (requirementsList) {
-            const newItem = document.createElement('div');
-            newItem.className = 'requirement-item p-3 mb-3 bg-light rounded border-success';
-            newItem.innerHTML = `
-                <div class="d-flex justify-content-between align-items-start">
-                    <h6 class="mb-2">${formData.get('productType')} 定制需求</h6>
-                    <span class="badge bg-warning text-dark">待处理</span>
-                </div>
-                <div class="text-muted small mb-2">
-                    <i class="bi bi-calendar3"></i> ${new Date().toLocaleDateString('zh-CN')}
-                </div>
-                <div class="text-muted small">
-                    <i class="bi bi-building"></i> ${formData.get('companyName')}
+    // 初始化页面
+    async function initializePage() {
+        await loadRequirementsList();
+    }
+
+    // 加载需求列表
+    async function loadRequirementsList() {
+        const loadingEl = document.getElementById('requirementsLoading');
+        const listEl = document.getElementById('customRequirementsList');
+        const emptyEl = document.getElementById('emptyRequirements');
+        const paginationEl = document.getElementById('requirementsPagination');
+
+        try {
+            // 显示加载状态
+            loadingEl.style.display = 'block';
+            listEl.style.display = 'none';
+            emptyEl.style.display = 'none';
+            paginationEl.style.display = 'none';
+
+            // 获取需求列表
+            const requirements = await window.ContentAPI.getCustomRequirements();
+
+            if (requirements && requirements.length > 0) {
+                // 按提交时间排序（最新的在前）
+                requirements.sort((a, b) => new Date(b.submitDate) - new Date(a.submitDate));
+
+                // 分页处理
+                const totalPages = Math.ceil(requirements.length / itemsPerPage);
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                const pageRequirements = requirements.slice(startIndex, endIndex);
+
+                // 渲染需求列表
+                renderRequirementsList(pageRequirements);
+
+                // 渲染分页
+                if (totalPages > 1) {
+                    renderPagination(totalPages);
+                    paginationEl.style.display = 'block';
+                }
+
+                listEl.style.display = 'block';
+            } else {
+                emptyEl.style.display = 'block';
+            }
+
+        } catch (error) {
+            console.error('加载需求列表失败:', error);
+            emptyEl.style.display = 'block';
+        } finally {
+            loadingEl.style.display = 'none';
+        }
+    }
+
+    // 渲染需求列表
+    function renderRequirementsList(requirements) {
+        const listEl = document.getElementById('customRequirementsList');
+
+        listEl.innerHTML = requirements.map(req => {
+            const submitDate = new Date(req.submitDate);
+            const formattedDate = submitDate.toLocaleDateString('zh-CN');
+            const statusClass = getStatusClass(req.status);
+
+            return `
+                <div class="requirement-item p-3 mb-3 bg-light rounded" data-id="${req.id}">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h6 class="mb-0">${req.productType} 定制需求</h6>
+                        <span class="badge ${statusClass}">${req.status}</span>
+                    </div>
+                    <div class="requirement-details">
+                        <div class="text-muted small mb-1">
+                            <i class="fas fa-calendar-alt me-1"></i>${formattedDate}
+                        </div>
+                        <div class="text-muted small mb-1">
+                            <i class="fas fa-building me-1"></i>${req.companyName}
+                        </div>
+                        <div class="text-muted small mb-1">
+                            <i class="fas fa-user me-1"></i>${req.contact}
+                        </div>
+                        ${req.probeDiameter ? `<div class="text-muted small mb-1">
+                            <i class="fas fa-circle me-1"></i>探头直径: ${req.probeDiameter}
+                        </div>` : ''}
+                        ${req.requirements ? `<div class="text-muted small mt-2">
+                            <i class="fas fa-comment me-1"></i>${req.requirements.substring(0, 50)}${req.requirements.length > 50 ? '...' : ''}
+                        </div>` : ''}
+                    </div>
                 </div>
             `;
+        }).join('');
+    }
 
-            // 添加到列表顶部
-            requirementsList.insertBefore(newItem, requirementsList.firstChild);
-
-            // 高亮新添加的项目
-            setTimeout(() => {
-                newItem.classList.add('border-primary');
-                newItem.style.backgroundColor = '#e3f2fd';
-            }, 100);
+    // 获取状态样式类
+    function getStatusClass(status) {
+        switch (status) {
+            case '待处理': return 'bg-warning text-dark';
+            case '处理中': return 'bg-info text-white';
+            case '已完成': return 'bg-success text-white';
+            case '已取消': return 'bg-secondary text-white';
+            default: return 'bg-primary text-white';
         }
+    }
+
+    // 渲染分页
+    function renderPagination(totalPages) {
+        const paginationList = document.getElementById('paginationList');
+        let paginationHTML = '';
+
+        // 上一页
+        if (currentPage > 1) {
+            paginationHTML += `
+                <li class="page-item">
+                    <a class="page-link" href="#" onclick="changePage(${currentPage - 1})">&laquo;</a>
+                </li>
+            `;
+        }
+
+        // 页码
+        for (let i = 1; i <= totalPages; i++) {
+            const activeClass = i === currentPage ? 'active' : '';
+            paginationHTML += `
+                <li class="page-item ${activeClass}">
+                    <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
+                </li>
+            `;
+        }
+
+        // 下一页
+        if (currentPage < totalPages) {
+            paginationHTML += `
+                <li class="page-item">
+                    <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">&raquo;</a>
+                </li>
+            `;
+        }
+
+        paginationList.innerHTML = paginationHTML;
     }
 
     // 实时验证
@@ -454,5 +577,98 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// 全局函数
+// 切换页面
+async function changePage(page) {
+    currentPage = page;
+    await loadRequirementsList();
+}
+
+// 刷新需求列表
+async function refreshRequirementsList() {
+    currentPage = 1;
+    await loadRequirementsList();
+}
+
+// 确保ContentAPI可用
+window.ContentAPI = window.ContentAPI || {
+    // 保存定制需求
+    saveCustomRequirement: function(data) {
+        return new Promise((resolve) => {
+            try {
+                // 获取现有需求
+                const existingRequirements = JSON.parse(localStorage.getItem('customRequirements') || '[]');
+
+                // 生成ID
+                data.id = 'req-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+
+                // 添加到列表
+                existingRequirements.unshift(data);
+
+                // 保存到localStorage
+                localStorage.setItem('customRequirements', JSON.stringify(existingRequirements));
+
+                resolve({
+                    success: true,
+                    message: '定制需求提交成功',
+                    data: data
+                });
+            } catch (error) {
+                resolve({
+                    success: false,
+                    message: '保存失败: ' + error.message
+                });
+            }
+        });
+    },
+
+    // 获取定制需求列表
+    getCustomRequirements: function() {
+        return new Promise((resolve) => {
+            try {
+                const requirements = JSON.parse(localStorage.getItem('customRequirements') || '[]');
+                resolve(requirements);
+            } catch (error) {
+                console.error('获取定制需求失败:', error);
+                resolve([]);
+            }
+        });
+    },
+
+    // 更新定制需求状态
+    updateCustomRequirement: function(id, updates) {
+        return new Promise((resolve) => {
+            try {
+                const requirements = JSON.parse(localStorage.getItem('customRequirements') || '[]');
+                const index = requirements.findIndex(req => req.id === id);
+
+                if (index !== -1) {
+                    requirements[index] = { ...requirements[index], ...updates };
+                    localStorage.setItem('customRequirements', JSON.stringify(requirements));
+                    resolve({ success: true, message: '更新成功' });
+                } else {
+                    resolve({ success: false, message: '需求不存在' });
+                }
+            } catch (error) {
+                resolve({ success: false, message: '更新失败: ' + error.message });
+            }
+        });
+    },
+
+    // 删除定制需求
+    deleteCustomRequirement: function(id) {
+        return new Promise((resolve) => {
+            try {
+                const requirements = JSON.parse(localStorage.getItem('customRequirements') || '[]');
+                const filteredRequirements = requirements.filter(req => req.id !== id);
+                localStorage.setItem('customRequirements', JSON.stringify(filteredRequirements));
+                resolve({ success: true, message: '删除成功' });
+            } catch (error) {
+                resolve({ success: false, message: '删除失败: ' + error.message });
+            }
+        });
+    }
+};
 </script>
 {{ end }}

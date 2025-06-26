@@ -41,7 +41,7 @@
                     </div>
                     <div class="secondary-category-info">
                         <span class="secondary-category-title">{{ .title }}</span>
-                        <span class="product-count">({{ .product_count | default 0 }}款)</span>
+                        <span class="product-count">({{ partial "count_products_by_category.html" (dict "category" .title "site" $.Site) }}款)</span>
                     </div>
                 </div>
                 {{ end }}

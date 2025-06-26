@@ -22,11 +22,20 @@
 
     {{ if eq .Section "products" }}
     {{ with .Params.gallery }}
+    {{ if reflect.IsSlice . }}
     {{ range . }}
+    {{ if reflect.IsMap . }}
     <image:image>
       <image:loc>{{ .image | absURL }}</image:loc>
-      <image:title>{{ .alt }}</image:title>
+      <image:title>{{ .alt | default "产品图片" }}</image:title>
     </image:image>
+    {{ else }}
+    <image:image>
+      <image:loc>{{ . | absURL }}</image:loc>
+      <image:title>产品图片</image:title>
+    </image:image>
+    {{ end }}
+    {{ end }}
     {{ end }}
     {{ end }}
     {{ end }}

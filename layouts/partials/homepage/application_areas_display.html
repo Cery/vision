@@ -1,9 +1,9 @@
-<section class="application-areas-section py-4">
+<section class="application-areas-section py-5">
     <div class="container">
-        <div class="row mb-4">
-            <div class="col-12">
-                <h2 class="section-title text-center">应用领域</h2>
-                <p class="text-center text-muted">专业的无损检测解决方案</p>
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h2 class="section-title">应用领域</h2>
+                <p class="section-subtitle text-muted">专业的无损检测解决方案，覆盖多个行业领域</p>
             </div>
         </div>
 
@@ -13,13 +13,15 @@
             <div class="col-lg-4 col-md-6">
                 <div class="area-card h-100">
                     <div class="area-image">
-                        <i class="{{ .icon }} area-icon"></i>
+                        <div class="area-icon">
+                            <i class="{{ .icon }}"></i>
+                        </div>
                         <img src="{{ .image }}" alt="{{ .title }}" class="img-fluid">
                     </div>
                     <div class="area-content">
                         <h3 class="area-title">{{ .title }}</h3>
                         <p class="area-summary">{{ .summary }}</p>
-                        <a href="{{ .link }}" class="btn btn-outline-primary btn-sm">了解更多</a>
+                        <a href="{{ .link }}" class="btn btn-outline-primary">了解更多</a>
                     </div>
                 </div>
             </div>
@@ -30,20 +32,51 @@
 </section>
 
 <style>
+/* 应用领域版块样式 */
 .application-areas-section {
-    background-color: #f8f9fa;
+    background: white;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #212121;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: #1976d2;
+    border-radius: 2px;
+}
+
+.section-subtitle {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 .area-card {
     position: relative;
-    border-radius: 10px;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+    background: white;
+    border: 1px solid #e0e0e0;
 }
 
 .area-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .area-image {
@@ -56,47 +89,91 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.area-card:hover .area-image img {
+    transform: scale(1.05);
 }
 
 .area-icon {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 2rem;
+    top: 15px;
+    right: 15px;
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #1976d2, #42a5f5);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: white;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    z-index: 1;
+    font-size: 1.3rem;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
 }
 
 .area-content {
-    position: relative;
     padding: 1.5rem;
     background: white;
 }
 
 .area-title {
     font-size: 1.25rem;
+    font-weight: 700;
+    color: #212121;
     margin-bottom: 0.75rem;
-    color: var(--bs-primary);
 }
 
 .area-summary {
-    font-size: 0.9rem;
-    color: #6c757d;
-    margin-bottom: 1rem;
-    line-height: 1.5;
+    font-size: 0.95rem;
+    color: #616161;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+}
+
+.area-content .btn {
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    border-color: #1976d2;
+    color: #1976d2;
+}
+
+.area-content .btn:hover {
+    background: #1976d2;
+    border-color: #1976d2;
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* 响应式设计 */
+@media (max-width: 991.98px) {
+    .section-title {
+        font-size: 2rem;
+    }
 }
 
 @media (max-width: 767.98px) {
+    .section-title {
+        font-size: 1.75rem;
+    }
+
     .area-image {
         height: 160px;
     }
 
     .area-content {
-        padding: 1rem;
+        padding: 1.25rem;
     }
 
     .area-title {
+        font-size: 1.1rem;
+    }
+
+    .area-icon {
+        width: 40px;
+        height: 40px;
         font-size: 1.1rem;
     }
 }

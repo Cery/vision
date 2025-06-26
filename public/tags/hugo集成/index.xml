@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hugo集成 on 维森视觉检测仪器</title>
+    <link>http://localhost:1313/tags/hugo%E9%9B%86%E6%88%90/</link>
+    <description>Recent content in Hugo集成 on 维森视觉检测仪器</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 26 Dec 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/hugo%E9%9B%86%E6%88%90/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>测试后台产品</title>
+      <link>http://localhost:1313/products/test-backend-product/</link>
+      <pubDate>Thu, 26 Dec 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/products/test-backend-product/</guid>
+      <description>这是一个从后台管理系统生成的测试产品，用于验证产品管理功能</description>
+    </item>
+  </channel>
+</rss>
