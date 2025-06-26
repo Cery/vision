@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>样式优化测试 - VisNDT</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/unified-theme.css" rel="stylesheet">
+    <style>
+        .optimization-info {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 1px solid #dee2e6;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        }
+
+        .feature-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .optimization-showcase {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .demo-navbar {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .demo-nav-link {
+            font-size: 16px;
+            font-weight: 500;
+            color: #616161;
+            padding: 0.75rem 1.25rem;
+            margin: 0 0.25rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: inline-block;
+        }
+
+        .demo-nav-link:hover {
+            color: #1976d2;
+            background-color: rgba(25, 118, 210, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .demo-case-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .demo-case-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        }
+
+        .demo-case-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #212121;
+            margin-bottom: 0.5rem;
+        }
+
+        .demo-case-text {
+            font-size: 14px;
+            color: #757575;
+            line-height: 1.5;
+        }
+
+        .comparison-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .comparison-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #212121;
+        }
+
+        .before-style {
+            color: #dc3545;
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+
+        .after-style {
+            color: #28a745;
+            background-color: rgba(40, 167, 69, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <!-- 页面标题 -->
+        <div class="text-center mb-4">
+            <h1 class="display-5 fw-bold text-primary">样式优化测试页面</h1>
+            <p class="lead text-muted">案例版块与导航栏菜单项样式统一优化</p>
+        </div>
+
+        <!-- 优化概述 -->
+        <div class="optimization-info">
+            <h2>✨ 样式统一优化完成</h2>
+            <p class="mb-3">根据您的要求，已完成案例版块和导航栏菜单项的样式优化，实现与首页整体风格的完全统一。</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>🎯 案例版块优化</h5>
+                    <ul>
+                        <li>统一字体系列和字号</li>
+                        <li>调整颜色与首页一致</li>
+                        <li>优化间距和布局</li>
+                        <li>增强交互效果</li>
+                        <li>改进响应式设计</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>🎨 导航栏优化</h5>
+                    <ul>
+                        <li>增大字体提升可读性</li>
+                        <li>优化颜色和对比度</li>
+                        <li>增强悬停效果</li>
+                        <li>改进移动端体验</li>
+                        <li>统一视觉风格</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 功能特性 -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h5>视觉统一</h5>
+                    <p>字体、颜色、间距与首页完全一致</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h5>响应式优化</h5>
+                    <p>移动端和桌面端都有完美体验</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h5>交互增强</h5>
+                    <p>流畅的悬停和点击反馈效果</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 导航栏样式演示 -->
+        <div class="optimization-showcase">
+            <h3>🧭 导航栏样式演示</h3>
+            <div class="demo-navbar">
+                <div class="d-flex flex-wrap align-items-center">
+                    <a href="#" class="demo-nav-link">首页</a>
+                    <a href="#" class="demo-nav-link">产品中心</a>
+                    <a href="#" class="demo-nav-link">应用案例</a>
+                    <a href="#" class="demo-nav-link">资讯中心</a>
+                    <a href="#" class="demo-nav-link">定制中心</a>
+                    <a href="#" class="demo-nav-link">商务服务</a>
+                    <a href="#" class="demo-nav-link">关于我们</a>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <h6>字体规格</h6>
+                    <ul class="list-unstyled">
+                        <li>✅ 字体大小：16px</li>
+                        <li>✅ 字体粗细：500 (中等)</li>
+                        <li>✅ 字体系列：系统字体栈</li>
+                        <li>✅ 颜色：#616161</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6>交互效果</h6>
+                    <ul class="list-unstyled">
+                        <li>✅ 悬停颜色：#1976d2</li>
+                        <li>✅ 悬停背景：rgba(25, 118, 210, 0.08)</li>
+                        <li>✅ 悬停动画：向上移动1px</li>
+                        <li>✅ 过渡时间：0.2s</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 案例版块样式演示 -->
+        <div class="optimization-showcase">
+            <h3>📋 案例版块样式演示</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="demo-case-card">
+                        <div class="demo-case-title">航空发动机叶片检测案例</div>
+                        <div class="demo-case-text">采用WS-K08510超细工业电子内窥镜，成功检测航空发动机叶片内部缺陷，提高检测精度和效率。</div>
+                        <div class="mt-2">
+                            <span class="badge bg-primary me-1" style="font-size: 11px;">电子内窥镜</span>
+                            <span class="badge bg-secondary" style="font-size: 11px;">航空航天</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="demo-case-card">
+                        <div class="demo-case-title">汽车发动机缸体检测</div>
+                        <div class="demo-case-text">利用工业视频内窥镜对汽车发动机缸体进行无损检测，快速识别内部磨损和裂纹。</div>
+                        <div class="mt-2">
+                            <span class="badge bg-primary me-1" style="font-size: 11px;">视频内窥镜</span>
+                            <span class="badge bg-secondary" style="font-size: 11px;">汽车制造</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 样式对比表 -->
+        <div class="optimization-showcase">
+            <h3>📊 样式对比</h3>
+            <div class="table-responsive">
+                <table class="table comparison-table">
+                    <thead>
+                        <tr>
+                            <th>项目</th>
+                            <th>优化前</th>
+                            <th>优化后</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>导航栏字体大小</strong></td>
+                            <td class="before-style">var(--small-font-size)</td>
+                            <td class="after-style">16px</td>
+                        </tr>
+                        <tr>
+                            <td><strong>导航栏字体颜色</strong></td>
+                            <td class="before-style">var(--text-secondary)</td>
+                            <td class="after-style">#616161</td>
+                        </tr>
+                        <tr>
+                            <td><strong>案例标题字体</strong></td>
+                            <td class="before-style">var(--bs-primary)</td>
+                            <td class="after-style">#212121</td>
+                        </tr>
+                        <tr>
+                            <td><strong>案例文本颜色</strong></td>
+                            <td class="before-style">#6c757d</td>
+                            <td class="after-style">var(--text-muted)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>悬停效果</strong></td>
+                            <td class="before-style">基础变色</td>
+                            <td class="after-style">颜色+背景+动画</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 技术实现 -->
+        <div class="optimization-showcase">
+            <h3>🔧 技术实现细节</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>CSS变量统一</h6>
+                    <ul class="list-unstyled small">
+                        <li>• 使用统一的颜色变量</li>
+                        <li>• 标准化字体大小</li>
+                        <li>• 统一间距系统</li>
+                        <li>• 一致的过渡动画</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6>响应式设计</h6>
+                    <ul class="list-unstyled small">
+                        <li>• 移动端导航栏优化</li>
+                        <li>• 触摸友好的交互</li>
+                        <li>• 自适应布局调整</li>
+                        <li>• 跨设备一致体验</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 访问链接 -->
+        <div class="text-center mt-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <a href="/" class="btn btn-primary btn-lg">
+                        <i class="fas fa-home me-2"></i>查看首页效果
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="/cases/" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-folder-open me-2"></i>查看案例中心
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

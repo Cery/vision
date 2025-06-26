@@ -1,14 +1,14 @@
 <section class="application-cases py-4">
     <div class="container">
         <!-- 标题区域 -->
-        <div class="row mb-3">
+        <div class="row mb-4">
             <div class="col-12">
                 <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h2 class="mb-1">应用案例</h2>
-                        <p class="text-muted mb-0 small">精选行业应用案例展示</p>
+                    <div class="text-center flex-grow-1">
+                        <h2 class="section-title">应用案例</h2>
+                        <p class="section-subtitle">精选行业应用案例</p>
                     </div>
-                    <a href="/cases/" class="btn btn-outline-primary btn-sm">
+                    <a href="/cases/" class="btn btn-outline-primary btn-sm position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%);">
                         <i class="fas fa-plus me-1"></i>查看更多
                     </a>
                 </div>
@@ -27,7 +27,7 @@
                             {{ with .Params.featured_image }}
                             <img src="{{ . | relURL }}" class="img-fluid h-100 w-100" alt="{{ $.Title }}" style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
                             {{ else }}
-                            <img src="https://picsum.photos/600/300?random=featured" class="img-fluid h-100 w-100" alt="{{ .Title }}" style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
+                            <img src="/images/cases/case-1.webp" class="img-fluid h-100 w-100" alt="{{ .Title }}" style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
                             {{ end }}
                         </div>
                         <div class="col-md-6">
@@ -68,7 +68,8 @@
                                     {{ with .Params.featured_image }}
                                     <img src="{{ . | relURL }}" class="img-fluid h-100 w-100" alt="{{ $.Title }}" style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
                                     {{ else }}
-                                    <img src="https://picsum.photos/200/120?random={{ add $index 10 }}" class="img-fluid h-100 w-100" alt="{{ .Title }}" style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
+                                    {{ $images := slice "/images/cases/case-2.webp" "/images/cases/case-3.webp" "/images/cases/case-4.webp" "/images/cases/case-5.webp" }}
+                                    <img src="{{ index $images (mod $index 4) }}" class="img-fluid h-100 w-100" alt="{{ .Title }}" style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
                                     {{ end }}
                                 </div>
                                 <div class="col-8">
@@ -128,33 +129,65 @@
 </section>
 
 <style>
+/* 案例版块样式 - 与首页整体一致 */
 .application-cases {
-    background-color: #f8f9fa;
+    background-color: var(--bg-secondary);
     margin: 1.5rem 0;
+    padding: var(--spacing-xl) 0;
 }
 
-.application-cases h2 {
-    color: var(--bs-primary);
-    font-weight: 600;
-    font-size: 1.75rem;
+/* 统一标题样式 */
+.application-cases .section-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #212121;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    position: relative;
+    padding-bottom: 15px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.application-cases .section-title:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(to right, #1976d2, #42a5f5);
+    border-radius: 2px;
+}
+
+.application-cases .section-subtitle {
+    font-size: 16px;
+    color: #616161;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 400;
 }
 
 .application-cases .featured-case {
-    background-color: white;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    transition: all var(--transition-normal);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
 .application-cases .featured-case:hover {
     transform: translateY(-2px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
 .application-cases .featured-case .card-body {
     min-height: 200px;
+    padding: var(--spacing-lg);
 }
 
 .application-cases .case-list .case-item {
-    transition: transform 0.2s ease;
+    transition: all var(--transition-normal);
 }
 
 .application-cases .case-list .case-item:hover {
@@ -162,14 +195,17 @@
 }
 
 .application-cases .case-list .card {
-    background-color: white;
-    border: 1px solid #e9ecef;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
     height: 80px;
+    transition: all var(--transition-normal);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
 .application-cases .case-list .card:hover {
-    border-color: var(--bs-primary);
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
 .application-cases .case-list img {
@@ -179,44 +215,65 @@
 }
 
 .application-cases .case-stats {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border: 1px solid #dee2e6;
+    background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
 }
 
 .application-cases .stat-item h5 {
     font-weight: 700;
-    font-size: 1.25rem;
+    font-size: 20px;
+    color: var(--primary-color);
 }
 
 .application-cases .stat-item small {
-    font-size: 0.75rem;
+    font-size: 12px;
     font-weight: 500;
+    color: var(--text-muted);
 }
 
 .application-cases .badge {
     font-weight: 500;
-    font-size: 0.7rem;
+    font-size: 11px;
     padding: 0.25em 0.5em;
+    border-radius: 6px;
 }
 
 .application-cases .card-title {
-    color: var(--bs-primary);
+    color: #212121;
     font-weight: 600;
     line-height: 1.3;
+    font-size: 16px;
 }
 
 .application-cases .card-text {
-    color: #6c757d;
+    color: var(--text-muted);
     line-height: 1.5;
+    font-size: 14px;
 }
 
 .application-cases .btn-sm {
-    font-size: 0.8rem;
+    font-size: 12px;
     padding: 0.25rem 0.75rem;
+    font-weight: 500;
 }
 
 .application-cases .featured-case img {
     height: 200px;
+}
+
+/* 案例列表标题样式 */
+.application-cases .case-list .card-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #212121;
+    line-height: 1.3;
+}
+
+.application-cases .case-list .card-text {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.4;
 }
 
 /* 响应式优化 */

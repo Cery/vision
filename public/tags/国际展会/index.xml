@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>国际展会 on 维森视觉检测仪器</title>
-    <link>http://localhost:1314/tags/%E5%9B%BD%E9%99%85%E5%B1%95%E4%BC%9A/</link>
+    <link>http://localhost:1313/tags/%E5%9B%BD%E9%99%85%E5%B1%95%E4%BC%9A/</link>
     <description>Recent content in 国际展会 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Mon, 22 Apr 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1314/tags/%E5%9B%BD%E9%99%85%E5%B1%95%E4%BC%9A/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/%E5%9B%BD%E9%99%85%E5%B1%95%E4%BC%9A/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>2024年德国汉诺威工业博览会内窥镜专区</title>
-      <link>http://localhost:1314/news/exhibition-news-3/</link>
+      <link>http://localhost:1313/news/exhibition-news-3/</link>
       <pubDate>Mon, 22 Apr 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1314/news/exhibition-news-3/</guid>
+      <guid>http://localhost:1313/news/exhibition-news-3/</guid>
       <description>德国汉诺威工业博览会内窥镜技术专区，展示最新工业4.0检测解决方案</description>
     </item>
   </channel>

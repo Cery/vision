@@ -115,7 +115,8 @@
                             {{ with .Params.featured_image }}
                             <img src="{{ . | relURL }}" class="card-img-top object-fit-cover" alt="{{ $page.Title }}" style="height: 200px;">
                             {{ else }}
-                            <img src="https://picsum.photos/800/400?random={{ $index }}" class="card-img-top object-fit-cover" alt="{{ $page.Title }}" style="height: 200px;">
+                            {{ $newsImages := slice "/images/news/news-1.jpeg" "/images/news/news-2.jpeg" "/images/news/news-3.jpeg" "/images/news/news-4.jpeg" "/images/news/news-5.jpeg" "/images/news/news-6.jpeg" }}
+                            <img src="{{ index $newsImages (mod $index 6) }}" class="card-img-top object-fit-cover" alt="{{ $page.Title }}" style="height: 200px;">
                             {{ end }}
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">

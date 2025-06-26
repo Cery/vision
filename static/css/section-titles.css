@@ -1,0 +1,69 @@
+/* 全站统一标题样式 */
+
+/* 主标题样式 */
+.section-title {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    color: #212121 !important;
+    margin-bottom: 0.5rem !important;
+    text-align: center !important;
+    position: relative !important;
+    padding-bottom: 15px !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+}
+
+.section-title:after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 60px !important;
+    height: 3px !important;
+    background: linear-gradient(to right, #1976d2, #42a5f5) !important;
+    border-radius: 2px !important;
+}
+
+/* 副标题样式 */
+.section-subtitle {
+    font-size: 16px !important;
+    color: #616161 !important;
+    text-align: center !important;
+    margin-bottom: 2rem !important;
+    font-weight: 400 !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+}
+
+/* 响应式调整 */
+@media (max-width: 767.98px) {
+    .section-title {
+        font-size: 20px !important;
+        padding-bottom: 12px !important;
+    }
+    
+    .section-title:after {
+        width: 50px !important;
+        height: 2px !important;
+    }
+    
+    .section-subtitle {
+        font-size: 14px !important;
+        margin-bottom: 1.5rem !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .section-title {
+        font-size: 18px !important;
+        padding-bottom: 10px !important;
+    }
+    
+    .section-title:after {
+        width: 40px !important;
+    }
+    
+    .section-subtitle {
+        font-size: 13px !important;
+        margin-bottom: 1rem !important;
+    }
+}

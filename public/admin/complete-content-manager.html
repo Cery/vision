@@ -972,6 +972,75 @@
     <script src="data-loader.js"></script>
     <script src="product-api.js"></script>
     <script>
+        // 编码安全工具函数
+        const EncodingUtils = {
+            // 安全的JSON序列化
+            safeStringify: function(obj, space = 2) {
+                try {
+                    return JSON.stringify(obj, null, space);
+                } catch (error) {
+                    console.error('JSON序列化失败:', error);
+                    return '{}';
+                }
+            },
+
+            // 安全的JSON解析
+            safeParse: function(str, defaultValue = null) {
+                try {
+                    return JSON.parse(str);
+                } catch (error) {
+                    console.error('JSON解析失败:', error);
+                    return defaultValue;
+                }
+            },
+
+            // 字符串标准化
+            normalizeString: function(str) {
+                if (typeof str !== 'string') return str;
+                return str.normalize('NFC');
+            },
+
+            // 安全的URL编码
+            safeEncodeURI: function(str) {
+                try {
+                    return encodeURIComponent(this.normalizeString(str));
+                } catch (error) {
+                    console.error('URL编码失败:', error);
+                    return str;
+                }
+            },
+
+            // 安全的URL解码
+            safeDecodeURI: function(str) {
+                try {
+                    return decodeURIComponent(str);
+                } catch (error) {
+                    console.error('URL解码失败:', error);
+                    return str;
+                }
+            },
+
+            // 批量标准化对象中的字符串
+            normalizeObject: function(obj) {
+                if (typeof obj !== 'object' || obj === null) return obj;
+
+                const normalized = Array.isArray(obj) ? [] : {};
+
+                for (const [key, value] of Object.entries(obj)) {
+                    const normalizedKey = this.normalizeString(key);
+                    if (typeof value === 'string') {
+                        normalized[normalizedKey] = this.normalizeString(value);
+                    } else if (typeof value === 'object' && value !== null) {
+                        normalized[normalizedKey] = this.normalizeObject(value);
+                    } else {
+                        normalized[normalizedKey] = value;
+                    }
+                }
+
+                return normalized;
+            }
+        };
+
         // 全局变量
         let currentSection = 'dashboard';
         let currentData = [];
@@ -1488,7 +1557,7 @@
                 case 'K系列': return '/images/products/K-series/K-main.jpg';
                 case 'P系列': return '/images/products/P-series/P-main.jpg';
                 case 'DZ系列': return '/images/products/DZ-series/DZ-main.jpg';
-                default: return 'https://picsum.photos/300/200?random=1';
+                default: return '/images/products/default-product.jpg';
             }
         }
 
@@ -1653,7 +1722,7 @@
                                 <td>${product.id || '未设置'}</td>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <img src="${product.thumbnail || 'https://picsum.photos/40/40'}"
+                                        <img src="${product.thumbnail || '/images/products/default-product.jpg'}"
                                              alt="${product.title}"
                                              style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; margin-right: 10px;">
                                         <div>
@@ -2415,7 +2484,7 @@ ${JSON.stringify(currentData[0], null, 2)}
             item.dataset.productId = product.id;
             item.innerHTML = `
                 <div class="d-flex align-items-center">
-                    <img src="${product.thumbnail || 'https://picsum.photos/40/40'}"
+                    <img src="${product.thumbnail || '/images/products/default-product.jpg'}"
                          alt="${product.title}"
                          style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; margin-right: 10px;">
                     <div>
@@ -2512,7 +2581,7 @@ ${JSON.stringify(currentData[0], null, 2)}
             if (productData.gallery.length === 1) {
                 for (let i = 2; i <= 5; i++) {
                     productData.gallery.push({
-                        image: `https://picsum.photos/800/600?random=${Math.floor(Math.random() * 1000)}`,
+                        image: `/images/products/default-gallery-${i}.jpg`,
                         alt: `${productData.title}副图${i-1}`,
                         is_main: false
                     });
@@ -3132,7 +3201,7 @@ ${JSON.stringify(currentData[0], null, 2)}
                         status: '已发布',
                         views: 1250,
                         featured: true,
-                        image: 'https://picsum.photos/400/250?random=1'
+                        image: '/images/news/news-1.jpg'
                     },
                     {
                         id: 'news-002',
@@ -3146,7 +3215,7 @@ ${JSON.stringify(currentData[0], null, 2)}
                         status: '已发布',
                         views: 890,
                         featured: false,
-                        image: 'https://picsum.photos/400/250?random=2'
+                        image: '/images/news/news-2.jpg'
                     },
                     {
                         id: 'news-003',
@@ -3160,7 +3229,7 @@ ${JSON.stringify(currentData[0], null, 2)}
                         status: '草稿',
                         views: 0,
                         featured: false,
-                        image: 'https://picsum.photos/400/250?random=3'
+                        image: '/images/news/news-3.jpg'
                     }
                 ];
             } catch (error) {
@@ -3369,9 +3438,9 @@ ${JSON.stringify(currentData[0], null, 2)}
                     featured: true,
                     tags: ['航空', '发动机', '叶片检测', '无损检测'],
                     images: [
-                        'https://picsum.photos/600/400?random=10',
-                        'https://picsum.photos/600/400?random=11',
-                        'https://picsum.photos/600/400?random=12'
+                        '/images/cases/case-1.webp',
+                        '/images/cases/case-2.webp',
+                        '/images/cases/case-3.webp'
                     ],
                     results: '成功发现3处微小裂纹，避免了潜在的安全隐患',
                     benefits: '提高了检测效率50%，降低了维护成本30%'
@@ -3391,8 +3460,8 @@ ${JSON.stringify(currentData[0], null, 2)}
                     featured: false,
                     tags: ['汽车', '焊缝', '质量检测', '生产线'],
                     images: [
-                        'https://picsum.photos/600/400?random=13',
-                        'https://picsum.photos/600/400?random=14'
+                        '/images/cases/case-4.webp',
+                        '/images/cases/case-5.webp'
                     ],
                     results: '检测出98%的焊缝缺陷，大幅提升产品质量',
                     benefits: '减少了返工率，提高了生产效率'
@@ -3412,7 +3481,7 @@ ${JSON.stringify(currentData[0], null, 2)}
                     featured: false,
                     tags: ['风电', '齿轮箱', '设备维护', '预防性检测'],
                     images: [
-                        'https://picsum.photos/600/400?random=15'
+                        '/images/cases/case-6.webp'
                     ],
                     results: '提前发现齿轮磨损，避免了设备停机',
                     benefits: '延长了设备使用寿命，降低了维护成本'
@@ -3623,7 +3692,7 @@ ${JSON.stringify(currentData[0], null, 2)}
                     ],
                     status: '已发布',
                     featured: true,
-                    image: 'https://picsum.photos/400/250?random=20',
+                    image: '/images/application/aviation.jpg',
                     content: '航空航天领域对安全性要求极高，我们的工业内窥镜产品能够...'
                 },
                 {
@@ -3647,7 +3716,7 @@ ${JSON.stringify(currentData[0], null, 2)}
                     ],
                     status: '已发布',
                     featured: true,
-                    image: 'https://picsum.photos/400/250?random=21',
+                    image: '/images/application/automotive.jpg',
                     content: '汽车制造过程中，质量控制是关键环节，我们的检测设备能够...'
                 },
                 {
@@ -3671,7 +3740,7 @@ ${JSON.stringify(currentData[0], null, 2)}
                     ],
                     status: '已发布',
                     featured: false,
-                    image: 'https://picsum.photos/400/250?random=22',
+                    image: '/images/application/petrochemical.jpg',
                     content: '石油化工行业环境复杂，对检测设备要求严格，我们的产品具备...'
                 },
                 {
@@ -3695,7 +3764,7 @@ ${JSON.stringify(currentData[0], null, 2)}
                     ],
                     status: '草稿',
                     featured: false,
-                    image: 'https://picsum.photos/400/250?random=23',
+                    image: '/images/application/power.jpg',
                     content: '电力设备的可靠性直接关系到供电安全，我们的检测方案...'
                 }
             ];
@@ -4286,7 +4355,7 @@ ${JSON.stringify(currentData[0], null, 2)}
                     publishDate: publishDate || new Date().toISOString().split('T')[0],
                     status,
                     featured,
-                    featured_image: image || `https://picsum.photos/600/400?random=news-${Date.now()}`,
+                    featured_image: image || `/images/news/default-news.jpg`,
                     tags,
                     views: editingNews ? editingNews.views : 0
                 };
@@ -5139,7 +5208,7 @@ ${JSON.stringify(currentData[0], null, 2)}
                     detection_object: detectionObject,
                     equipment_used: equipmentUsed,
                     date: date || new Date().toISOString().split('T')[0],
-                    featured_image: featuredImage || `https://picsum.photos/600/400?random=case-${Date.now()}`
+                    featured_image: featuredImage || `/images/cases/default-case.jpg`
                 };
 
                 // 保存到文件系统

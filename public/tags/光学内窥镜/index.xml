@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>光学内窥镜 on 维森视觉检测仪器</title>
-    <link>http://localhost:1314/tags/%E5%85%89%E5%AD%A6%E5%86%85%E7%AA%A5%E9%95%9C/</link>
+    <link>http://localhost:1313/tags/%E5%85%89%E5%AD%A6%E5%86%85%E7%AA%A5%E9%95%9C/</link>
     <description>Recent content in 光学内窥镜 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Thu, 20 Jun 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1314/tags/%E5%85%89%E5%AD%A6%E5%86%85%E7%AA%A5%E9%95%9C/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/%E5%85%89%E5%AD%A6%E5%86%85%E7%AA%A5%E9%95%9C/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>2024广州国际工业检测设备展览会</title>
-      <link>http://localhost:1314/news/exhibition-news-2/</link>
+      <link>http://localhost:1313/news/exhibition-news-2/</link>
       <pubDate>Thu, 20 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1314/news/exhibition-news-2/</guid>
+      <guid>http://localhost:1313/news/exhibition-news-2/</guid>
       <description>展会将在广州国际会展中心举办，聚焦工业检测设备与技术创新</description>
     </item>
     <item>
       <title>2024年工业检测设备展览会即将开幕</title>
-      <link>http://localhost:1314/news/2024-01-16-exhibition-news/</link>
+      <link>http://localhost:1313/news/2024-01-16-exhibition-news/</link>
       <pubDate>Tue, 16 Jan 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1314/news/2024-01-16-exhibition-news/</guid>
+      <guid>http://localhost:1313/news/2024-01-16-exhibition-news/</guid>
       <description>第二十届中国国际工业检测设备展览会将于2024年3月在深圳会展中心隆重举行。本届展会将汇集全球500多家知名企业，展示最新的工业检测技术和产品</description>
     </item>
   </channel>

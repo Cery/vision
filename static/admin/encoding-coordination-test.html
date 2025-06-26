@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisNDT 编码协调机制测试</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .test-pass {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .test-fail {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .test-warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+        .code-display {
+            background-color: #f1f3f4;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            margin: 10px 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-center mb-4">
+                    <i class="fas fa-globe text-primary"></i>
+                    VisNDT 编码协调机制测试
+                </h1>
+                
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle"></i> 测试说明</h5>
+                    <p>此页面用于全面测试项目中各个环节的文字编码协调机制，确保中文字符在所有组件中正确处理。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 测试统计 -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stats-card text-center">
+                    <h3 id="total-tests">0</h3>
+                    <p>总测试项</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card text-center">
+                    <h3 id="passed-tests">0</h3>
+                    <p>通过测试</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card text-center">
+                    <h3 id="warning-tests">0</h3>
+                    <p>警告项</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card text-center">
+                    <h3 id="failed-tests">0</h3>
+                    <p>失败项</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 浏览器环境测试 -->
+        <div class="test-section">
+            <h3><i class="fas fa-browser"></i> 浏览器环境测试</h3>
+            <div id="browser-env-results"></div>
+            <button class="btn btn-primary" onclick="testBrowserEnvironment()">
+                <i class="fas fa-play"></i> 开始测试
+            </button>
+        </div>
+
+        <!-- 字符编码基础测试 -->
+        <div class="test-section">
+            <h3><i class="fas fa-font"></i> 字符编码基础测试</h3>
+            <div id="encoding-basic-results"></div>
+            <button class="btn btn-success" onclick="testBasicEncoding()">
+                <i class="fas fa-test-tube"></i> 测试基础编码
+            </button>
+        </div>
+
+        <!-- URL编码测试 -->
+        <div class="test-section">
+            <h3><i class="fas fa-link"></i> URL编码测试</h3>
+            <div id="url-encoding-results"></div>
+            <button class="btn btn-info" onclick="testUrlEncoding()">
+                <i class="fas fa-globe"></i> 测试URL编码
+            </button>
+        </div>
+
+        <!-- JSON数据处理测试 -->
+        <div class="test-section">
+            <h3><i class="fas fa-database"></i> JSON数据处理测试</h3>
+            <div id="json-processing-results"></div>
+            <button class="btn btn-warning" onclick="testJsonProcessing()">
+                <i class="fas fa-code"></i> 测试JSON处理
+            </button>
+        </div>
+
+        <!-- 表单数据测试 -->
+        <div class="test-section">
+            <h3><i class="fas fa-wpforms"></i> 表单数据测试</h3>
+            <div class="mb-3">
+                <label for="test-form-input" class="form-label">测试输入：</label>
+                <input type="text" class="form-control" id="test-form-input" 
+                       value="维森视觉检测仪器 - 专业的工业内窥镜解决方案">
+            </div>
+            <div id="form-data-results"></div>
+            <button class="btn btn-secondary" onclick="testFormData()">
+                <i class="fas fa-keyboard"></i> 测试表单数据
+            </button>
+        </div>
+
+        <!-- 本地存储测试 -->
+        <div class="test-section">
+            <h3><i class="fas fa-save"></i> 本地存储测试</h3>
+            <div id="storage-results"></div>
+            <button class="btn btn-dark" onclick="testLocalStorage()">
+                <i class="fas fa-hdd"></i> 测试本地存储
+            </button>
+        </div>
+
+        <!-- 网络请求测试 -->
+        <div class="test-section">
+            <h3><i class="fas fa-wifi"></i> 网络请求测试</h3>
+            <div id="network-results"></div>
+            <button class="btn btn-danger" onclick="testNetworkRequests()">
+                <i class="fas fa-cloud"></i> 测试网络请求
+            </button>
+        </div>
+
+        <!-- 综合报告 -->
+        <div class="test-section">
+            <h3><i class="fas fa-chart-bar"></i> 综合测试报告</h3>
+            <div id="comprehensive-report"></div>
+            <button class="btn btn-outline-primary" onclick="generateComprehensiveReport()">
+                <i class="fas fa-file-alt"></i> 生成综合报告
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 测试统计
+        let testStats = {
+            total: 0,
+            passed: 0,
+            warning: 0,
+            failed: 0
+        };
+
+        // 测试结果存储
+        let allTestResults = [];
+
+        // 更新统计显示
+        function updateStats() {
+            document.getElementById('total-tests').textContent = testStats.total;
+            document.getElementById('passed-tests').textContent = testStats.passed;
+            document.getElementById('warning-tests').textContent = testStats.warning;
+            document.getElementById('failed-tests').textContent = testStats.failed;
+        }
+
+        // 添加测试结果
+        function addTestResult(test, result, status, details = '') {
+            testStats.total++;
+            testStats[status]++;
+            
+            allTestResults.push({
+                test: test,
+                result: result,
+                status: status,
+                details: details,
+                timestamp: new Date().toISOString()
+            });
+            
+            updateStats();
+        }
+
+        // 渲染测试结果
+        function renderResults(results, containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            let html = '';
+            results.forEach(result => {
+                const statusClass = result.status === 'passed' ? 'test-pass' : 
+                                   result.status === 'warning' ? 'test-warning' : 'test-fail';
+                const statusIcon = result.status === 'passed' ? 'fa-check-circle' : 
+                                  result.status === 'warning' ? 'fa-exclamation-triangle' : 'fa-times-circle';
+                
+                html += `
+                    <div class="test-result ${statusClass}">
+                        <i class="fas ${statusIcon}"></i>
+                        <strong>${result.test}:</strong> ${result.result}
+                        ${result.details ? `<br><small>${result.details}</small>` : ''}
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // 测试浏览器环境
+        function testBrowserEnvironment() {
+            const results = [];
+            
+            // 检查文档编码
+            const docCharset = document.characterSet || document.charset;
+            const charsetTest = docCharset.toLowerCase() === 'utf-8';
+            results.push({
+                test: '文档字符集',
+                result: docCharset,
+                status: charsetTest ? 'passed' : 'failed'
+            });
+            addTestResult('文档字符集', docCharset, charsetTest ? 'passed' : 'failed');
+
+            // 检查语言设置
+            const docLang = document.documentElement.lang;
+            const langTest = docLang === 'zh-CN';
+            results.push({
+                test: '文档语言',
+                result: docLang,
+                status: langTest ? 'passed' : 'warning'
+            });
+            addTestResult('文档语言', docLang, langTest ? 'passed' : 'warning');
+
+            // 检查浏览器语言
+            const browserLang = navigator.language;
+            const browserLangTest = browserLang.includes('zh');
+            results.push({
+                test: '浏览器语言',
+                result: browserLang,
+                status: browserLangTest ? 'passed' : 'warning'
+            });
+            addTestResult('浏览器语言', browserLang, browserLangTest ? 'passed' : 'warning');
+
+            // 检查时区
+            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            const timezoneTest = timezone.includes('Asia');
+            results.push({
+                test: '时区设置',
+                result: timezone,
+                status: timezoneTest ? 'passed' : 'warning'
+            });
+            addTestResult('时区设置', timezone, timezoneTest ? 'passed' : 'warning');
+
+            renderResults(results, 'browser-env-results');
+        }
+
+        // 测试基础编码
+        function testBasicEncoding() {
+            const results = [];
+            const testString = "维森视觉检测仪器 - 专业的工业内窥镜解决方案";
+
+            try {
+                // 字符串长度测试
+                results.push({
+                    test: '字符串长度',
+                    result: `${testString.length} 字符`,
+                    status: 'passed'
+                });
+                addTestResult('字符串长度', `${testString.length} 字符`, 'passed');
+
+                // 字节长度测试
+                const byteLength = new Blob([testString]).size;
+                results.push({
+                    test: '字节长度',
+                    result: `${byteLength} 字节`,
+                    status: 'passed'
+                });
+                addTestResult('字节长度', `${byteLength} 字节`, 'passed');
+
+                // Unicode标准化测试
+                const normalized = testString.normalize('NFC');
+                const normalizeTest = testString === normalized;
+                results.push({
+                    test: 'Unicode标准化',
+                    result: normalizeTest ? '已标准化' : '需要标准化',
+                    status: normalizeTest ? 'passed' : 'warning'
+                });
+                addTestResult('Unicode标准化', normalizeTest ? '已标准化' : '需要标准化', normalizeTest ? 'passed' : 'warning');
+
+                // 中文字符检测
+                const hasChinese = /[\u4e00-\u9fff]/.test(testString);
+                results.push({
+                    test: '中文字符检测',
+                    result: hasChinese ? '检测到中文' : '未检测到中文',
+                    status: hasChinese ? 'passed' : 'failed'
+                });
+                addTestResult('中文字符检测', hasChinese ? '检测到中文' : '未检测到中文', hasChinese ? 'passed' : 'failed');
+
+            } catch (error) {
+                results.push({
+                    test: '基础编码测试',
+                    result: `错误: ${error.message}`,
+                    status: 'failed'
+                });
+                addTestResult('基础编码测试', `错误: ${error.message}`, 'failed');
+            }
+
+            renderResults(results, 'encoding-basic-results');
+        }
+
+        // 测试URL编码
+        function testUrlEncoding() {
+            const results = [];
+            const testUrls = [
+                "https://visndt.com/products/工业内窥镜",
+                "https://visndt.com/search?q=维森检测",
+                "https://visndt.com/cases/航空发动机叶片检测"
+            ];
+
+            testUrls.forEach((url, index) => {
+                try {
+                    const encoded = encodeURIComponent(url);
+                    const decoded = decodeURIComponent(encoded);
+                    const urlTest = url === decoded;
+                    
+                    results.push({
+                        test: `URL编码测试 ${index + 1}`,
+                        result: urlTest ? '编码正常' : '编码异常',
+                        status: urlTest ? 'passed' : 'failed',
+                        details: `原始: ${url}<br>编码: ${encoded}<br>解码: ${decoded}`
+                    });
+                    addTestResult(`URL编码测试 ${index + 1}`, urlTest ? '编码正常' : '编码异常', urlTest ? 'passed' : 'failed');
+
+                } catch (error) {
+                    results.push({
+                        test: `URL编码测试 ${index + 1}`,
+                        result: `错误: ${error.message}`,
+                        status: 'failed'
+                    });
+                    addTestResult(`URL编码测试 ${index + 1}`, `错误: ${error.message}`, 'failed');
+                }
+            });
+
+            renderResults(results, 'url-encoding-results');
+        }
+
+        // 测试JSON处理
+        function testJsonProcessing() {
+            const results = [];
+            const testData = {
+                title: "维森视觉检测仪器",
+                description: "专业的工业内窥镜解决方案",
+                categories: ["工业检测", "内窥镜", "质量控制"],
+                specs: {
+                    "分辨率": "1920x1080",
+                    "工作温度": "-20°C ~ +80°C",
+                    "防护等级": "IP67"
+                }
+            };
+
+            try {
+                // JSON序列化测试
+                const jsonString = JSON.stringify(testData);
+                results.push({
+                    test: 'JSON序列化',
+                    result: '成功',
+                    status: 'passed',
+                    details: `长度: ${jsonString.length} 字符`
+                });
+                addTestResult('JSON序列化', '成功', 'passed');
+
+                // JSON解析测试
+                const parsed = JSON.parse(jsonString);
+                const parseTest = parsed.title === testData.title;
+                results.push({
+                    test: 'JSON解析',
+                    result: parseTest ? '成功' : '失败',
+                    status: parseTest ? 'passed' : 'failed'
+                });
+                addTestResult('JSON解析', parseTest ? '成功' : '失败', parseTest ? 'passed' : 'failed');
+
+                // 深度比较测试
+                const deepEqual = JSON.stringify(parsed) === JSON.stringify(testData);
+                results.push({
+                    test: 'JSON深度比较',
+                    result: deepEqual ? '一致' : '不一致',
+                    status: deepEqual ? 'passed' : 'failed'
+                });
+                addTestResult('JSON深度比较', deepEqual ? '一致' : '不一致', deepEqual ? 'passed' : 'failed');
+
+            } catch (error) {
+                results.push({
+                    test: 'JSON处理',
+                    result: `错误: ${error.message}`,
+                    status: 'failed'
+                });
+                addTestResult('JSON处理', `错误: ${error.message}`, 'failed');
+            }
+
+            renderResults(results, 'json-processing-results');
+        }
+
+        // 测试表单数据
+        function testFormData() {
+            const results = [];
+            const input = document.getElementById('test-form-input');
+            const inputValue = input.value;
+
+            try {
+                // 表单值获取测试
+                results.push({
+                    test: '表单值获取',
+                    result: '成功',
+                    status: 'passed',
+                    details: `值: ${inputValue}`
+                });
+                addTestResult('表单值获取', '成功', 'passed');
+
+                // 表单数据编码测试
+                const formData = new FormData();
+                formData.append('title', inputValue);
+                
+                const formValue = formData.get('title');
+                const formTest = formValue === inputValue;
+                results.push({
+                    test: 'FormData编码',
+                    result: formTest ? '正常' : '异常',
+                    status: formTest ? 'passed' : 'failed'
+                });
+                addTestResult('FormData编码', formTest ? '正常' : '异常', formTest ? 'passed' : 'failed');
+
+                // URLSearchParams测试
+                const params = new URLSearchParams();
+                params.append('q', inputValue);
+                const paramValue = params.get('q');
+                const paramTest = paramValue === inputValue;
+                results.push({
+                    test: 'URLSearchParams编码',
+                    result: paramTest ? '正常' : '异常',
+                    status: paramTest ? 'passed' : 'failed'
+                });
+                addTestResult('URLSearchParams编码', paramTest ? '正常' : '异常', paramTest ? 'passed' : 'failed');
+
+            } catch (error) {
+                results.push({
+                    test: '表单数据测试',
+                    result: `错误: ${error.message}`,
+                    status: 'failed'
+                });
+                addTestResult('表单数据测试', `错误: ${error.message}`, 'failed');
+            }
+
+            renderResults(results, 'form-data-results');
+        }
+
+        // 测试本地存储
+        function testLocalStorage() {
+            const results = [];
+            const testKey = 'visndt_encoding_test';
+            const testData = {
+                title: "维森视觉检测仪器",
+                timestamp: new Date().toISOString(),
+                chinese: "中文字符测试"
+            };
+
+            try {
+                // localStorage存储测试
+                localStorage.setItem(testKey, JSON.stringify(testData));
+                results.push({
+                    test: 'localStorage存储',
+                    result: '成功',
+                    status: 'passed'
+                });
+                addTestResult('localStorage存储', '成功', 'passed');
+
+                // localStorage读取测试
+                const stored = localStorage.getItem(testKey);
+                const parsed = JSON.parse(stored);
+                const storageTest = parsed.title === testData.title;
+                results.push({
+                    test: 'localStorage读取',
+                    result: storageTest ? '成功' : '失败',
+                    status: storageTest ? 'passed' : 'failed'
+                });
+                addTestResult('localStorage读取', storageTest ? '成功' : '失败', storageTest ? 'passed' : 'failed');
+
+                // sessionStorage测试
+                sessionStorage.setItem(testKey, JSON.stringify(testData));
+                const sessionStored = sessionStorage.getItem(testKey);
+                const sessionParsed = JSON.parse(sessionStored);
+                const sessionTest = sessionParsed.title === testData.title;
+                results.push({
+                    test: 'sessionStorage测试',
+                    result: sessionTest ? '成功' : '失败',
+                    status: sessionTest ? 'passed' : 'failed'
+                });
+                addTestResult('sessionStorage测试', sessionTest ? '成功' : '失败', sessionTest ? 'passed' : 'failed');
+
+                // 清理测试数据
+                localStorage.removeItem(testKey);
+                sessionStorage.removeItem(testKey);
+
+            } catch (error) {
+                results.push({
+                    test: '本地存储测试',
+                    result: `错误: ${error.message}`,
+                    status: 'failed'
+                });
+                addTestResult('本地存储测试', `错误: ${error.message}`, 'failed');
+            }
+
+            renderResults(results, 'storage-results');
+        }
+
+        // 测试网络请求
+        function testNetworkRequests() {
+            const results = [];
+            
+            // 模拟网络请求测试
+            const testData = {
+                title: "维森视觉检测仪器",
+                description: "专业的工业内窥镜解决方案"
+            };
+
+            try {
+                // 测试请求头编码
+                const headers = new Headers();
+                headers.append('Content-Type', 'application/json; charset=utf-8');
+                headers.append('Accept', 'application/json');
+                
+                results.push({
+                    test: '请求头设置',
+                    result: '成功',
+                    status: 'passed',
+                    details: 'Content-Type: application/json; charset=utf-8'
+                });
+                addTestResult('请求头设置', '成功', 'passed');
+
+                // 测试请求体编码
+                const requestBody = JSON.stringify(testData);
+                const bodyTest = requestBody.includes(testData.title);
+                results.push({
+                    test: '请求体编码',
+                    result: bodyTest ? '正常' : '异常',
+                    status: bodyTest ? 'passed' : 'failed'
+                });
+                addTestResult('请求体编码', bodyTest ? '正常' : '异常', bodyTest ? 'passed' : 'failed');
+
+                // 测试Blob编码
+                const blob = new Blob([requestBody], { type: 'application/json; charset=utf-8' });
+                results.push({
+                    test: 'Blob编码',
+                    result: '成功',
+                    status: 'passed',
+                    details: `大小: ${blob.size} 字节`
+                });
+                addTestResult('Blob编码', '成功', 'passed');
+
+            } catch (error) {
+                results.push({
+                    test: '网络请求测试',
+                    result: `错误: ${error.message}`,
+                    status: 'failed'
+                });
+                addTestResult('网络请求测试', `错误: ${error.message}`, 'failed');
+            }
+
+            renderResults(results, 'network-results');
+        }
+
+        // 生成综合报告
+        function generateComprehensiveReport() {
+            const report = {
+                timestamp: new Date().toLocaleString('zh-CN'),
+                stats: testStats,
+                environment: {
+                    userAgent: navigator.userAgent,
+                    language: navigator.language,
+                    charset: document.characterSet,
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                },
+                results: allTestResults
+            };
+
+            const reportHtml = `
+                <div class="alert alert-primary">
+                    <h5>📊 综合测试报告</h5>
+                    <p><strong>生成时间:</strong> ${report.timestamp}</p>
+                    <p><strong>总测试项:</strong> ${report.stats.total}</p>
+                    <p><strong>通过:</strong> <span class="text-success">${report.stats.passed}</span></p>
+                    <p><strong>警告:</strong> <span class="text-warning">${report.stats.warning}</span></p>
+                    <p><strong>失败:</strong> <span class="text-danger">${report.stats.failed}</span></p>
+                    <p><strong>成功率:</strong> ${report.stats.total > 0 ? ((report.stats.passed / report.stats.total) * 100).toFixed(1) : 0}%</p>
+                </div>
+                <div class="code-display">
+                    ${JSON.stringify(report, null, 2)}
+                </div>
+                <button class="btn btn-outline-secondary mt-2" onclick="downloadReport()">
+                    <i class="fas fa-download"></i> 下载报告
+                </button>
+            `;
+
+            document.getElementById('comprehensive-report').innerHTML = reportHtml;
+            
+            // 存储报告数据供下载使用
+            window.encodingTestReport = report;
+        }
+
+        // 下载报告
+        function downloadReport() {
+            if (!window.encodingTestReport) {
+                alert('请先生成报告');
+                return;
+            }
+
+            const reportJson = JSON.stringify(window.encodingTestReport, null, 2);
+            const blob = new Blob([reportJson], { type: 'application/json; charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `visndt-encoding-test-report-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // 页面加载时自动运行基础测试
+        document.addEventListener('DOMContentLoaded', function() {
+            testBrowserEnvironment();
+            testBasicEncoding();
+        });
+    </script>
+</body>
+</html>

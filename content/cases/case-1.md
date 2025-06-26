@@ -3,7 +3,7 @@ title: "工业管道检测解决方案"
 primary_category: ["电子内窥镜"]
 application_field: ["工业检测", "石油化工"]
 application_scenario: ["工业管道"]
-featured_image: "https://picsum.photos/800/400?random=1"
+featured_image: "/images/cases/case-1.webp"
 summary: "针对大型工业管道内部检测的专业解决方案，采用高清电子内窥镜实现360度全方位检测，有效预防管道故障。"
 date: 2024-01-20
 client: "某大型石化企业"

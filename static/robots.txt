@@ -1,0 +1,56 @@
+User-agent: *
+Allow: /
+
+# 允许搜索引擎访问主要内容
+Allow: /products/
+Allow: /news/
+Allow: /applications/
+Allow: /cases/
+Allow: /cooperation/
+Allow: /customs/
+
+# 禁止访问管理和测试页面
+Disallow: /admin/
+Disallow: /test-*
+Disallow: /debug-*
+Disallow: /search-demo.html
+Disallow: /search-fix-*
+Disallow: /logo-showcase.html
+
+# 禁止访问临时文件和备份
+Disallow: /*.tmp
+Disallow: /*.bak
+Disallow: /*.old
+
+# 允许访问重要资源
+Allow: /css/
+Allow: /js/
+Allow: /images/
+Allow: /uploads/
+
+# 站点地图位置
+Sitemap: https://visndt.com/sitemap.xml
+
+# 爬取延迟（毫秒）
+Crawl-delay: 1
+
+# 针对特定搜索引擎的规则
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 2
+
+User-agent: 360Spider
+Allow: /
+Crawl-delay: 2
+
+User-agent: Sogou web spider
+Allow: /
+Crawl-delay: 2

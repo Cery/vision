@@ -2,31 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>工业检测 on 维森视觉检测仪器</title>
-    <link>http://localhost:1314/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/</link>
+    <link>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/</link>
     <description>Recent content in 工业检测 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Tue, 12 Nov 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1314/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>2024年印度新德里工业检测技术展览会</title>
-      <link>http://localhost:1314/news/exhibition-news-11/</link>
+      <link>http://localhost:1313/news/exhibition-news-11/</link>
       <pubDate>Tue, 12 Nov 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1314/news/exhibition-news-11/</guid>
+      <guid>http://localhost:1313/news/exhibition-news-11/</guid>
       <description>南亚地区重要的工业检测技术展览会，展示内窥镜技术在新兴市场的应用前景</description>
     </item>
     <item>
       <title>2024年英国伦敦工业检测技术展览会</title>
-      <link>http://localhost:1314/news/exhibition-news-9/</link>
+      <link>http://localhost:1313/news/exhibition-news-9/</link>
       <pubDate>Wed, 18 Sep 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1314/news/exhibition-news-9/</guid>
+      <guid>http://localhost:1313/news/exhibition-news-9/</guid>
       <description>欧洲地区重要的工业检测技术展览会，聚焦内窥镜技术在工业4.0中的应用</description>
     </item>
     <item>
       <title>内窥镜技术在工业检测中的创新应用</title>
-      <link>http://localhost:1314/news/industry-news-1/</link>
+      <link>http://localhost:1313/news/industry-news-1/</link>
       <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1314/news/industry-news-1/</guid>
+      <guid>http://localhost:1313/news/industry-news-1/</guid>
       <description>探讨最新内窥镜技术在工业检测领域的创新应用，提高检测效率和精度</description>
     </item>
   </channel>

@@ -1,7 +1,11 @@
 baseURL = 'https://visndt.com/'
 languageCode = 'zh-cn'
+defaultContentLanguage = 'zh-cn'
 title = '维森视觉检测仪器'
 theme = 'ananke'
+
+# 中文字符处理配置
+hasCJKLanguage = true
 
 # 启用分类功能
 [taxonomies]
@@ -42,10 +46,29 @@ paginate = 12
     url = "/cooperation"
     weight = 70
 
+# SEO配置
+enableRobotsTXT = true
+enableGitInfo = true
+
 # 主题参数
 [params]
   # 网站描述
-  description = "专业的视觉检测设备信息与资讯发布平台"
+  description = "专业的视觉检测设备信息与资讯发布平台，提供工业内窥镜、检测相机等产品信息，为制造业提供优质的检测解决方案"
+
+  # SEO参数
+  keywords = "工业内窥镜,视觉检测,检测设备,工业检测,内窥镜,检测仪器,维森,VisNDT"
+  author = "维森·视觉检测仪器"
+
+  # 社交媒体
+  [params.social]
+    # 可以添加社交媒体链接
+
+  # 分析工具
+  [params.analytics]
+    # Google Analytics
+    google = ""
+    # 百度统计
+    baidu = ""
   
   # 首页设置
   [params.home]
@@ -109,3 +132,22 @@ paginate = 12
 # 输出配置
 [outputs]
   home = ["HTML", "RSS", "SearchIndex"]
+
+# Markup配置 - 优化中文处理
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+      hardWraps = false
+    [markup.goldmark.parser]
+      autoHeadingID = true
+      autoHeadingIDType = "github"
+  [markup.highlight]
+    style = 'github'
+    lineNos = true
+    codeFences = true
+    guessSyntax = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 6
+    ordered = false

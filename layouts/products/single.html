@@ -23,7 +23,7 @@
                         {{ if $mainImageSrc }}
                         <img src="{{ $mainImageSrc | relURL }}" class="img-fluid rounded mb-3 main-product-image" alt="{{ $mainImageAlt }}" id="main-product-image">
                         {{ else }}
-                        <img src="https://picsum.photos/800/600?random=1" class="img-fluid rounded mb-3 main-product-image" alt="主图占位图" id="main-product-image">
+                        <img src="/images/products/default-product.jpg" class="img-fluid rounded mb-3 main-product-image" alt="主图占位图" id="main-product-image">
                         {{ end }}
                     </div>
 
@@ -60,11 +60,11 @@
                         {{ range seq 2 5 }}
                         <div class="col-3">
                             <div class="thumbnail-container">
-                                <img src="https://picsum.photos/150/100?random={{ . }}" 
-                                     class="img-fluid rounded object-fit-cover thumbnail-image" 
-                                     alt="副图占位图" 
-                                     onclick="switchMainImage('https://picsum.photos/800/600?random={{ . }}', '副图占位图')"
-                                     data-full-image="https://picsum.photos/800/600?random={{ . }}">
+                                <img src="/images/products/default-gallery-{{ . }}.jpg"
+                                     class="img-fluid rounded object-fit-cover thumbnail-image"
+                                     alt="副图占位图"
+                                     onclick="switchMainImage('/images/products/default-gallery-{{ . }}.jpg', '副图占位图')"
+                                     data-full-image="/images/products/default-gallery-{{ . }}.jpg">
                             </div>
                         </div>
                         {{ end }}

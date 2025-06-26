@@ -3,7 +3,7 @@ title: "汽车制造质量控制检测系统"
 primary_category: ["电子视频内窥镜", "光纤内窥镜"]
 application_field: ["汽车制造"]
 application_scenario: ["汽车制造", "汽车发动机"]
-featured_image: "https://picsum.photos/800/400?random=automotive1"
+featured_image: "/images/cases/case-3.webp"
 summary: "为汽车制造企业提供全方位的质量控制检测解决方案，涵盖发动机缸体、变速箱、制动系统等关键部件的检测。"
 date: 2024-01-22
 client: "某知名汽车制造商"

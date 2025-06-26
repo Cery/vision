@@ -35,7 +35,7 @@
                         {{ with .Params.featured_image }}
                         <img src="{{ . | relURL }}" class="img-fluid" alt="{{ $.Title }}">
                         {{ else }}
-                        <img src="https://picsum.photos/1200/600" class="img-fluid" alt="{{ .Title }}">
+                        <img src="/images/cases/case-1.webp" class="img-fluid" alt="{{ .Title }}">
                         {{ end }}
                     </div>
 
@@ -152,7 +152,8 @@
                                     {{ with .Params.featured_image }}
                                     <img src="{{ . | relURL }}" class="card-img-top" alt="{{ $.Title }}" style="height: 120px; object-fit: cover;">
                                     {{ else }}
-                                    <img src="https://picsum.photos/300/120?random={{ .Title | md5 }}" class="card-img-top" alt="{{ .Title }}" style="height: 120px; object-fit: cover;">
+                                    {{ $caseImages := slice "/images/cases/case-1.webp" "/images/cases/case-2.webp" "/images/cases/case-3.webp" "/images/cases/case-4.webp" "/images/cases/case-5.webp" "/images/cases/case-6.webp" "/images/cases/case-7.webp" "/images/cases/case-8.webp" }}
+                                    <img src="{{ index $caseImages (mod (.Title | len) 8) }}" class="card-img-top" alt="{{ .Title }}" style="height: 120px; object-fit: cover;">
                                     {{ end }}
                                     <div class="card-body p-3">
                                         <h6 class="card-title text-primary mb-2" style="font-size: 0.9rem;">{{ .Title }}</h6>

@@ -31,7 +31,7 @@
                 {{ with .Params.featured_image }}
                 <img src="{{ . | relURL }}" class="card-img-top" alt="{{ $.Title }}" style="height: 400px; object-fit: cover;">
                 {{ else }}
-                <img src="https://picsum.photos/1200/400?random={{ .File.UniqueID }}" class="card-img-top" alt="{{ .Title }}" style="height: 400px; object-fit: cover;">
+                <img src="/images/news/news-1.jpeg" class="card-img-top" alt="{{ .Title }}" style="height: 400px; object-fit: cover;">
                 {{ end }}
 
                 <!-- 文章内容 -->
@@ -95,7 +95,7 @@
                             {{ with .Params.featured_image }}
                             <img src="{{ . | relURL }}" class="me-3 rounded" alt="{{ $.Title }}" style="width: 80px; height: 60px; object-fit: cover;">
                             {{ else }}
-                            <img src="https://picsum.photos/160/120?random={{ .File.UniqueID }}" class="me-3 rounded" alt="{{ .Title }}" style="width: 80px; height: 60px; object-fit: cover;">
+                            <img src="/images/news/default-news.jpg" class="me-3 rounded" alt="{{ .Title }}" style="width: 80px; height: 60px; object-fit: cover;">
                             {{ end }}
                             <div>
                                 <h6 class="mb-1"><a href="{{ .Permalink }}" class="text-dark text-decoration-none hover-primary">{{ .Title }}</a></h6>

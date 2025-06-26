@@ -3,7 +3,7 @@ title: "燃气轮机高温部件检测解决方案"
 primary_category: ["电子视频内窥镜", "高温内窥镜"]
 application_field: ["电力发电", "石油化工"]
 application_scenario: ["燃气轮机"]
-featured_image: "https://picsum.photos/800/400?random=gasturbine1"
+featured_image: "/images/cases/case-1.webp"
 summary: "专为燃气轮机高温部件设计的检测解决方案，可在高温环境下进行叶片、燃烧室、导向器等关键部件的精密检测。"
 date: 2024-01-18
 client: "某大型发电集团"

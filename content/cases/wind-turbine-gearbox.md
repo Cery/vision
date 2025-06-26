@@ -3,7 +3,7 @@ title: "风电齿轮箱智能检测维护系统"
 primary_category: ["电子视频内窥镜", "光纤内窥镜"]
 application_field: ["新能源", "风力发电"]
 application_scenario: ["风电齿轮箱"]
-featured_image: "https://picsum.photos/800/400?random=windpower1"
+featured_image: "/images/cases/case-2.webp"
 summary: "为风力发电机组齿轮箱提供智能化检测维护解决方案，实现预防性维护，延长设备使用寿命，降低运维成本。"
 date: 2024-01-20
 client: "某大型风电运营商"

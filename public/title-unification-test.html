@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>标题统一测试 - VisNDT</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/unified-theme.css" rel="stylesheet">
+    <link href="/css/section-titles.css" rel="stylesheet">
+    <style>
+        .optimization-info {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 1px solid #dee2e6;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        }
+
+        .feature-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .demo-section {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .comparison-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .comparison-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #212121;
+        }
+
+        .before-style {
+            color: #dc3545;
+            background-color: rgba(220, 53, 69, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .after-style {
+            color: #28a745;
+            background-color: rgba(40, 167, 69, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .demo-title-container {
+            background: #f8f9fa;
+            border: 2px dashed #1976d2;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #495057;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            background: rgba(25, 118, 210, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            border-left: 3px solid #1976d2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <!-- 页面标题 -->
+        <div class="text-center mb-4">
+            <h1 class="display-5 fw-bold text-primary">标题统一测试页面</h1>
+            <p class="lead text-muted">首页各版块标题大小统一优化</p>
+        </div>
+
+        <!-- 优化概述 -->
+        <div class="optimization-info">
+            <h2>✨ 标题统一优化完成</h2>
+            <p class="mb-3">根据您的要求，已完成首页所有版块标题大小的统一，实现了一致的视觉效果。</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>🎯 统一的版块</h5>
+                    <ul>
+                        <li>新品推荐</li>
+                        <li>应用领域</li>
+                        <li>资讯中心</li>
+                        <li>应用案例</li>
+                        <li>应用企业</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>🎨 统一标准</h5>
+                    <ul>
+                        <li>字体大小：24px</li>
+                        <li>字体粗细：700</li>
+                        <li>颜色：#212121</li>
+                        <li>装饰线：60px × 3px</li>
+                        <li>蓝色渐变效果</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 功能特性 -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">📏</div>
+                    <h5>尺寸统一</h5>
+                    <p>所有版块标题采用统一的24px字体大小</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h5>样式一致</h5>
+                    <p>统一的颜色、字重和装饰线样式</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h5>响应式适配</h5>
+                    <p>移动端自动调整为合适的字体大小</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 标题效果演示 -->
+        <div class="demo-section">
+            <h3>🎯 统一标题效果演示</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="demo-title-container">
+                        <h2 class="section-title">新品推荐</h2>
+                        <p class="section-subtitle">最新上市的无损检测设备</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="demo-title-container">
+                        <h2 class="section-title">应用领域</h2>
+                        <p class="section-subtitle">专业的无损检测解决方案，覆盖多个行业领域</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="demo-title-container">
+                        <h2 class="section-title">资讯中心</h2>
+                        <p class="section-subtitle">了解最新行业动态与展会信息</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="demo-title-container">
+                        <h2 class="section-title">应用案例</h2>
+                        <p class="section-subtitle">精选行业应用案例</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="demo-title-container">
+                        <h2 class="section-title">应用企业</h2>
+                        <p class="section-subtitle">值得信赖的合作伙伴</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 技术实现 -->
+        <div class="demo-section">
+            <h3>🔧 技术实现</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>统一CSS样式</h6>
+                    <div class="code-block">
+<pre>.section-title {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    color: #212121 !important;
+    text-align: center !important;
+    position: relative !important;
+    padding-bottom: 15px !important;
+}
+
+.section-title:after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 60px !important;
+    height: 3px !important;
+    background: linear-gradient(to right, #1976d2, #42a5f5) !important;
+    border-radius: 2px !important;
+}</pre>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h6>响应式设计</h6>
+                    <div class="code-block">
+<pre>/* 平板端 */
+@media (max-width: 767.98px) {
+    .section-title {
+        font-size: 20px !important;
+        padding-bottom: 12px !important;
+    }
+    .section-title:after {
+        width: 50px !important;
+        height: 2px !important;
+    }
+}
+
+/* 手机端 */
+@media (max-width: 575.98px) {
+    .section-title {
+        font-size: 18px !important;
+        padding-bottom: 10px !important;
+    }
+    .section-title:after {
+        width: 40px !important;
+    }
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 优化对比表 -->
+        <div class="demo-section">
+            <h3>📊 优化对比</h3>
+            <div class="table-responsive">
+                <table class="table comparison-table">
+                    <thead>
+                        <tr>
+                            <th>版块名称</th>
+                            <th>优化前字体大小</th>
+                            <th>优化后字体大小</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>新品推荐</strong></td>
+                            <td><span class="after-style">24px</span></td>
+                            <td><span class="after-style">24px</span></td>
+                            <td><span class="badge bg-success">已统一</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>应用领域</strong></td>
+                            <td><span class="before-style">2.5rem (40px)</span></td>
+                            <td><span class="after-style">24px</span></td>
+                            <td><span class="badge bg-success">已修正</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>资讯中心</strong></td>
+                            <td><span class="after-style">24px</span></td>
+                            <td><span class="after-style">24px</span></td>
+                            <td><span class="badge bg-success">已统一</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>应用案例</strong></td>
+                            <td><span class="after-style">24px</span></td>
+                            <td><span class="after-style">24px</span></td>
+                            <td><span class="badge bg-success">已统一</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>应用企业</strong></td>
+                            <td><span class="before-style">未定义</span></td>
+                            <td><span class="after-style">24px</span></td>
+                            <td><span class="badge bg-success">已添加</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 实现细节 -->
+        <div class="demo-section">
+            <h3>📋 实现细节</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>文件结构</h6>
+                    <ul class="list-unstyled">
+                        <li class="highlight mb-2">
+                            <i class="fas fa-file-css me-2"></i>
+                            <strong>/css/section-titles.css</strong><br>
+                            <small>全站统一标题样式文件</small>
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-file-code me-2"></i>
+                            layouts/partials/head.html<br>
+                            <small>引入统一样式文件</small>
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-file-code me-2"></i>
+                            各版块模板文件<br>
+                            <small>使用统一的class名称</small>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6>优化策略</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            使用!important确保样式优先级
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            统一class名称(.section-title)
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            响应式断点适配
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            渐变装饰线统一效果
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 访问链接 -->
+        <div class="text-center mt-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <a href="/" class="btn btn-primary btn-lg">
+                        <i class="fas fa-home me-2"></i>查看首页效果
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="/css/section-titles.css" class="btn btn-outline-primary btn-lg" target="_blank">
+                        <i class="fas fa-code me-2"></i>查看CSS文件
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

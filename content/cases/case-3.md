@@ -3,7 +3,7 @@ title: "新能源汽车电池检测方案"
 primary_category: ["电子内窥镜"]
 application_field: ["汽车制造", "新能源"]
 application_scenario: ["汽车制造"]
-featured_image: "https://picsum.photos/800/400?random=3"
+featured_image: "/images/cases/case-3.webp"
 summary: "为新能源汽车电池生产线提供专业的质量检测方案，确保电池组装质量和安全性。"
 date: 2024-02-01
 client: "某新能源汽车制造商"

@@ -6,15 +6,42 @@
   HUGO_VERSION = "0.147.1"
   HUGO_ENV = "production"
   HUGO_ENABLEGITINFO = "true"
+  # 编码环境变量
+  LC_ALL = "zh_CN.UTF-8"
+  LANG = "zh_CN.UTF-8"
 
 [context.production.environment]
   HUGO_ENV = "production"
+  LC_ALL = "zh_CN.UTF-8"
+  LANG = "zh_CN.UTF-8"
 
 [dev]
   port = 8888
   targetPort = 1313
   publish = "public"
   autoLaunch = true
+
+# HTTP头部设置 - 确保正确的编码
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Type = "text/html; charset=utf-8"
+    X-Content-Type-Options = "nosniff"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Content-Type = "text/css; charset=utf-8"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Content-Type = "application/javascript; charset=utf-8"
+
+[[headers]]
+  for = "/*.json"
+  [headers.values]
+    Content-Type = "application/json; charset=utf-8"
 
 # Netlify Identity and Git Gateway Configuration
 [[headers]]

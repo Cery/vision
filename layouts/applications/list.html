@@ -25,7 +25,7 @@
                     {{ with .Params.image }}
                     <img src="{{ . | relURL }}" alt="{{ $.Title }}" class="img-fluid">
                     {{ else }}
-                    <img src="https://picsum.photos/400/250?random={{ .Title }}" alt="{{ .Title }}" class="img-fluid">
+                    <img src="/images/application/default-application.jpg" alt="{{ .Title }}" class="img-fluid">
                     {{ end }}
                 </div>
                 <div class="card-content">
@@ -43,6 +43,7 @@
         <!-- 如果没有应用领域，显示占位内容 -->
         {{ $applications := slice "航空航天" "能源电力" "汽车制造" "机械制造" "精密铸造" "科学研究" }}
         {{ $icons := slice "fas fa-plane" "fas fa-bolt" "fas fa-car" "fas fa-cogs" "fas fa-industry" "fas fa-microscope" }}
+        {{ $images := slice "/images/application/air-1.jpg" "/images/application/electric-1.jpg" "/images/application/pipe-1.jpg" "/images/application/air-2.jpg" "/images/application/electric-2.jpg" "/images/application/pipe-2.jpg" }}
         {{ range $index, $app := $applications }}
         <div class="col-lg-4 col-md-6">
             <div class="application-card h-100">
@@ -50,7 +51,7 @@
                     <div class="card-icon">
                         <i class="{{ index $icons $index }}"></i>
                     </div>
-                    <img src="https://picsum.photos/400/250?random={{ add $index 1 }}" alt="{{ $app }}" class="img-fluid">
+                    <img src="{{ index $images $index }}" alt="{{ $app }}" class="img-fluid">
                 </div>
                 <div class="card-content">
                     <h3 class="card-title">{{ $app }}</h3>

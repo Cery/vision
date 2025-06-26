@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 /* 统一样式配置 */
 :root {
     /* 字体大小系统 - 统一调整 */
@@ -383,10 +385,10 @@ a:focus {
 /* 导航栏样式 - 统一设计 */
 .navbar {
     background-color: var(--navbar-bg) !important;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
     border-bottom: 1px solid var(--border-light);
     transition: all var(--transition-normal);
-    padding: var(--spacing-sm) 0;
+    padding: 0.75rem 0;
 }
 
 .navbar-collapse {
@@ -395,30 +397,40 @@ a:focus {
 
 .navbar-nav {
     margin-left: 0 !important;
-    gap: var(--spacing-xs);
+    gap: 0.25rem;
+    align-items: center;
 }
 
 .nav-item {
-    margin-right: var(--spacing-sm);
+    margin-right: 0.5rem;
 }
 
 .nav-link {
-    font-size: var(--small-font-size) !important;
-    font-weight: var(--font-weight-medium) !important;
-    color: var(--text-secondary) !important;
-    padding: var(--spacing-sm) var(--spacing-md) !important;
-    transition: all var(--transition-fast) !important;
-    border-radius: var(--radius-md);
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    color: #616161 !important;
+    padding: 0.75rem 1.25rem !important;
+    transition: all 0.2s ease !important;
+    border-radius: 8px;
+    position: relative;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .nav-link:hover {
-    color: var(--primary-color) !important;
-    background-color: var(--bg-tertiary);
+    color: #1976d2 !important;
+    background-color: rgba(25, 118, 210, 0.08);
+    transform: translateY(-1px);
 }
 
 .nav-link:focus {
-    outline: 2px solid var(--primary-light);
+    outline: 2px solid rgba(25, 118, 210, 0.3);
     outline-offset: 2px;
+}
+
+.nav-link.active {
+    color: #1976d2 !important;
+    background-color: rgba(25, 118, 210, 0.12);
+    font-weight: 600 !important;
 }
 
 /* 社交图标样式 */
@@ -870,17 +882,22 @@ a:focus {
     overflow-y: auto;
 }
 
-/* 导航菜单统一样式 */
+/* 导航菜单增强样式 */
 .navbar-nav .nav-link {
-    font-size: var(--medium-font-size);
-    color: var(--secondary-color);
-    padding: 0.5rem 1rem;
-    transition: all var(--transition-speed) ease;
+    font-size: 16px;
+    color: #616161;
+    padding: 0.75rem 1.25rem;
+    transition: all 0.2s ease;
     position: relative;
+    border-radius: 8px;
+    font-weight: 500;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .navbar-nav .nav-link:hover {
-    color: var(--primary-color);
+    color: #1976d2;
+    background-color: rgba(25, 118, 210, 0.08);
+    transform: translateY(-1px);
 }
 
 .navbar-nav .nav-link::after {
@@ -890,13 +907,52 @@ a:focus {
     height: 2px;
     bottom: 0;
     left: 50%;
-    background-color: var(--primary-color);
-    transition: all var(--transition-speed) ease;
+    background-color: #1976d2;
+    transition: all 0.2s ease;
     transform: translateX(-50%);
 }
 
 .navbar-nav .nav-link:hover::after {
-    width: 100%;
+    width: 80%;
+}
+
+.navbar-nav .nav-link.active::after {
+    width: 80%;
+}
+
+/* 移动端导航栏优化 */
+@media (max-width: 991.98px) {
+    .navbar-nav .nav-link {
+        padding: 1rem 1.5rem;
+        margin: 0.25rem 0;
+        text-align: center;
+        border-radius: 12px;
+        font-size: 16px;
+    }
+
+    .navbar-nav .nav-link:hover {
+        transform: translateY(0);
+        background-color: rgba(25, 118, 210, 0.08);
+    }
+
+    .navbar-collapse {
+        background: var(--card-bg);
+        border-radius: 12px;
+        margin-top: 0.5rem;
+        padding: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+        border: 1px solid var(--border-color);
+    }
+
+    .navbar-toggler {
+        border: none;
+        padding: 0.5rem;
+        border-radius: 8px;
+    }
+
+    .navbar-toggler:focus {
+        box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.3);
+    }
 }
 
 /* 分类菜单统一样式 */
@@ -940,9 +996,9 @@ a:focus {
 
 
 
-/* 使用深色LOGO设计 */
+/* 使用新设计的LOGO - 大字母VisNDT + 小文字维森专注内窥镜 */
 .navbar-brand .logo-img {
-    content: url('/images/logo-dark.svg');
+    content: url('/images/logo-new.svg');
 }
 
 

@@ -140,7 +140,7 @@
         }
 
         handleKeyboardNavigation(e) {
-            const results = this.searchResults.querySelectorAll('.search-suggestion, .search-result');
+            const results = this.searchResults.querySelectorAll('.search-suggestion, .search-result-item');
 
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
@@ -270,21 +270,22 @@
                         搜索建议
                     </h6>
                 </div>
-                ${limitedSuggestions.map((suggestion, index) => `
-                    <a href="${suggestion.url}" class="search-suggestion" data-type="${suggestion.type}" data-index="${index}">
-                        <span class="icon">
-                            <i class="${this.getTypeIcon(suggestion.type)}"></i>
-                        </span>
-                        <div class="suggestion-content">
-                            <div class="suggestion-title">
-                                ${this.highlightText(escapeHTML(suggestion.title), query)}
+                <div class="search-results-content">
+                    ${limitedSuggestions.map((suggestion, index) => `
+                        <a href="${suggestion.url}" class="search-result-item search-suggestion" data-type="${suggestion.type}" data-index="${index}">
+                            <div class="search-result-content">
+                                <div class="search-result-icon">
+                                    <i class="${this.getTypeIcon(suggestion.type)}"></i>
+                                </div>
+                                <div class="search-result-text">
+                                    <span class="search-result-title">
+                                        ${this.highlightText(escapeHTML(suggestion.title), query)}
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                        <span class="suggestion-arrow">
-                            <i class="fas fa-arrow-right"></i>
-                        </span>
-                    </a>
-                `).join('')}
+                        </a>
+                    `).join('')}
+                </div>
             `;
 
             // 添加点击事件处理
@@ -351,7 +352,7 @@
                 item.addEventListener('click', (e) => {
                     e.preventDefault();
                     const url = item.getAttribute('href');
-                    const title = item.querySelector('.suggestion-title').textContent.trim();
+                    const title = item.querySelector('.search-result-title').textContent.trim();
 
                     console.log('点击搜索建议:', { url, title, item });
 
@@ -403,20 +404,15 @@
                         <div class="history-items">
                             ${history.map(query => `
                                 <div class="search-history-item" data-query="${escapeHTML(query)}">
-                                    <div class="d-flex align-items-center">
-                                        <span class="icon me-2">
-                                            <i class="fas fa-clock"></i>
-                                        </span>
-                                        <span class="history-text">${escapeHTML(query)}</span>
-                                        <button class="btn btn-sm btn-outline-danger ms-auto remove-history" data-query="${escapeHTML(query)}">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </div>
+                                    <span class="history-text">${escapeHTML(query)}</span>
+                                    <button class="remove-history" data-query="${escapeHTML(query)}">
+                                        <i class="fas fa-times"></i>
+                                    </button>
                                 </div>
                             `).join('')}
                         </div>
                         <div class="text-center mt-3">
-                            <button id="clearHistoryBtn" class="btn btn-sm btn-outline-secondary">
+                            <button id="clearHistoryBtn">
                                 <i class="fas fa-trash me-1"></i>清除所有历史
                             </button>
                         </div>
@@ -443,11 +439,6 @@
 
             this.searchResults.innerHTML = `
                 <div class="search-welcome">
-                    <div class="welcome-header text-center mb-4">
-                        <i class="fas fa-search fa-3x text-primary mb-2"></i>
-                        <h5>开始搜索</h5>
-                        <p class="text-muted">输入关键词搜索产品、资讯和案例</p>
-                    </div>
                     ${historySectionHtml}
                     ${hotKeywordsHtml}
                 </div>
@@ -623,7 +614,7 @@
                             ${info.label} (${results.length})
                         </span>
                     </div>
-                    <div class="result-group-content">
+                    <div class="search-results-content">
                         ${results.map((result, index) => this.renderSingleResult(result, query, index)).join('')}
                     </div>
                 </div>
@@ -665,21 +656,23 @@
             });
 
             return `
-                <a href="${cleanUrl}" class="search-result" data-index="${index}" data-url="${cleanUrl}">
-                    <div class="search-result-header">
-                        <span class="icon me-2">
+                <a href="${cleanUrl}" class="search-result-item" data-index="${index}" data-url="${cleanUrl}">
+                    <div class="search-result-content">
+                        <div class="search-result-icon">
                             <i class="${this.getTypeIcon(result.type)}"></i>
-                        </span>
-                        <h6 class="search-result-title">
-                            ${this.highlightText(escapeHTML(cleanTitle), query)}
-                        </h6>
+                        </div>
+                        <div class="search-result-text">
+                            <span class="search-result-title">
+                                ${this.highlightText(escapeHTML(cleanTitle), query)}
+                            </span>
+                        </div>
                     </div>
                 </a>
             `;
         }
 
         addResultEvents() {
-            this.searchResults.querySelectorAll('.search-result').forEach((item, index) => {
+            this.searchResults.querySelectorAll('.search-result-item').forEach((item, index) => {
                 item.addEventListener('click', (e) => {
                     e.preventDefault();
                     const url = item.getAttribute('href') || item.getAttribute('data-url');
@@ -706,7 +699,7 @@
 
                 item.addEventListener('mouseenter', () => {
                     this.selectedIndex = index;
-                    this.updateSelection(this.searchResults.querySelectorAll('.search-result'));
+                    this.updateSelection(this.searchResults.querySelectorAll('.search-result-item'));
                 });
             });
         }

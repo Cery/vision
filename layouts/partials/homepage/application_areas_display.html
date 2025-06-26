@@ -1,9 +1,9 @@
 <section class="application-areas-section py-5">
     <div class="container">
-        <div class="row mb-5">
+        <div class="row mb-4">
             <div class="col-12 text-center">
                 <h2 class="section-title">应用领域</h2>
-                <p class="section-subtitle text-muted">专业的无损检测解决方案，覆盖多个行业领域</p>
+                <p class="section-subtitle">专业的无损检测解决方案，覆盖多个行业领域</p>
             </div>
         </div>
 
@@ -37,31 +37,36 @@
     background: white;
 }
 
+/* 统一标题样式 */
 .section-title {
-    font-size: 2.5rem;
+    font-size: 24px;
     font-weight: 700;
     color: #212121;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
     position: relative;
+    padding-bottom: 15px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-.section-title::after {
+.section-title:after {
     content: '';
     position: absolute;
-    bottom: -10px;
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
     width: 60px;
     height: 3px;
-    background: #1976d2;
+    background: linear-gradient(to right, #1976d2, #42a5f5);
     border-radius: 2px;
 }
 
 .section-subtitle {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    max-width: 600px;
-    margin: 0 auto;
+    font-size: 16px;
+    color: #616161;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 400;
 }
 
 .area-card {

@@ -1,0 +1,231 @@
+name: 编码一致性检查
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  encoding-check:
+    runs-on: ubuntu-latest
+    
+    env:
+      LC_ALL: zh_CN.UTF-8
+      LANG: zh_CN.UTF-8
+      
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v3
+      
+    - name: 设置中文环境
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y locales
+        sudo locale-gen zh_CN.UTF-8
+        sudo update-locale LANG=zh_CN.UTF-8
+        
+    - name: 检查文件编码
+      run: |
+        echo "🔍 检查文件编码..."
+        
+        # 检查HTML文件
+        echo "检查HTML文件编码..."
+        find . -name "*.html" -not -path "./node_modules/*" -not -path "./public/*" | while read file; do
+          if ! file "$file" | grep -q "UTF-8"; then
+            echo "❌ 编码异常: $file"
+            exit 1
+          fi
+        done
+        
+        # 检查JavaScript文件
+        echo "检查JavaScript文件编码..."
+        find . -name "*.js" -not -path "./node_modules/*" -not -path "./public/*" | while read file; do
+          if ! file "$file" | grep -q "UTF-8"; then
+            echo "❌ 编码异常: $file"
+            exit 1
+          fi
+        done
+        
+        # 检查CSS文件
+        echo "检查CSS文件编码..."
+        find . -name "*.css" -not -path "./node_modules/*" -not -path "./public/*" | while read file; do
+          if ! file "$file" | grep -q "UTF-8"; then
+            echo "❌ 编码异常: $file"
+            exit 1
+          fi
+        done
+        
+        # 检查Markdown文件
+        echo "检查Markdown文件编码..."
+        find . -name "*.md" -not -path "./node_modules/*" -not -path "./public/*" | while read file; do
+          if ! file "$file" | grep -q "UTF-8"; then
+            echo "❌ 编码异常: $file"
+            exit 1
+          fi
+        done
+        
+        echo "✅ 所有文件编码检查通过"
+        
+    - name: 检查HTML meta标签
+      run: |
+        echo "🔍 检查HTML meta标签..."
+        
+        # 检查charset声明
+        if grep -r "charset" layouts/ static/ | grep -v "utf-8\|UTF-8"; then
+          echo "❌ 发现非UTF-8编码声明"
+          exit 1
+        fi
+        
+        # 检查是否缺少charset声明
+        find layouts/ -name "*.html" | while read file; do
+          if ! grep -q "charset.*utf-8\|charset.*UTF-8" "$file"; then
+            echo "⚠️  文件可能缺少charset声明: $file"
+          fi
+        done
+        
+        echo "✅ HTML meta标签检查完成"
+        
+    - name: 检查CSS编码声明
+      run: |
+        echo "🔍 检查CSS编码声明..."
+        
+        find static/css/ -name "*.css" | while read file; do
+          if ! head -1 "$file" | grep -q "@charset"; then
+            echo "⚠️  CSS文件缺少@charset声明: $file"
+          fi
+        done
+        
+        echo "✅ CSS编码声明检查完成"
+        
+    - name: 检查Hugo配置
+      run: |
+        echo "🔍 检查Hugo配置..."
+        
+        # 检查语言配置
+        if ! grep -q "languageCode.*zh" hugo.toml; then
+          echo "❌ Hugo配置缺少中文语言设置"
+          exit 1
+        fi
+        
+        # 检查CJK语言支持
+        if ! grep -q "hasCJKLanguage.*true" hugo.toml; then
+          echo "❌ Hugo配置缺少CJK语言支持"
+          exit 1
+        fi
+        
+        echo "✅ Hugo配置检查通过"
+        
+    - name: 检查中文字符处理
+      run: |
+        echo "🔍 检查中文字符处理..."
+        
+        # 创建测试脚本
+        cat > test_chinese.js << 'EOF'
+        const fs = require('fs');
+        
+        // 测试字符串
+        const testString = "维森视觉检测仪器 - 专业的工业内窥镜解决方案";
+        
+        // 测试编码/解码
+        try {
+          const encoded = encodeURIComponent(testString);
+          const decoded = decodeURIComponent(encoded);
+          
+          if (testString !== decoded) {
+            console.error("❌ 中文字符编码/解码测试失败");
+            process.exit(1);
+          }
+          
+          // 测试JSON序列化
+          const jsonString = JSON.stringify({ title: testString });
+          const parsed = JSON.parse(jsonString);
+          
+          if (parsed.title !== testString) {
+            console.error("❌ 中文字符JSON序列化测试失败");
+            process.exit(1);
+          }
+          
+          console.log("✅ 中文字符处理测试通过");
+          
+        } catch (error) {
+          console.error("❌ 中文字符处理测试失败:", error.message);
+          process.exit(1);
+        }
+        EOF
+        
+        node test_chinese.js
+        
+    - name: 生成编码检查报告
+      run: |
+        echo "📊 生成编码检查报告..."
+        
+        cat > encoding_report.md << 'EOF'
+        # 编码一致性检查报告
+        
+        ## 检查时间
+        $(date '+%Y-%m-%d %H:%M:%S')
+        
+        ## 检查项目
+        - [x] 文件编码检查 (HTML, JS, CSS, MD)
+        - [x] HTML meta标签检查
+        - [x] CSS编码声明检查
+        - [x] Hugo配置检查
+        - [x] 中文字符处理测试
+        
+        ## 检查结果
+        ✅ 所有编码检查项目通过
+        
+        ## 环境信息
+        - 操作系统: $(uname -a)
+        - 语言环境: $LANG
+        - 字符集: $LC_ALL
+        
+        ## 文件统计
+        - HTML文件: $(find . -name "*.html" -not -path "./node_modules/*" -not -path "./public/*" | wc -l)
+        - JavaScript文件: $(find . -name "*.js" -not -path "./node_modules/*" -not -path "./public/*" | wc -l)
+        - CSS文件: $(find . -name "*.css" -not -path "./node_modules/*" -not -path "./public/*" | wc -l)
+        - Markdown文件: $(find . -name "*.md" -not -path "./node_modules/*" -not -path "./public/*" | wc -l)
+        EOF
+        
+        echo "✅ 编码检查报告生成完成"
+        
+    - name: 上传检查报告
+      uses: actions/upload-artifact@v3
+      with:
+        name: encoding-check-report
+        path: encoding_report.md
+        
+  hugo-build-test:
+    runs-on: ubuntu-latest
+    needs: encoding-check
+    
+    env:
+      LC_ALL: zh_CN.UTF-8
+      LANG: zh_CN.UTF-8
+      
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v3
+      
+    - name: 设置Hugo
+      uses: peaceiris/actions-hugo@v2
+      with:
+        hugo-version: '0.147.1'
+        extended: true
+        
+    - name: 构建测试
+      run: |
+        echo "🏗️ 测试Hugo构建..."
+        hugo --minify --verbose
+        
+        # 检查生成的HTML文件编码
+        echo "🔍 检查生成文件编码..."
+        find public/ -name "*.html" | head -10 | while read file; do
+          if ! file "$file" | grep -q "UTF-8"; then
+            echo "❌ 生成文件编码异常: $file"
+            exit 1
+          fi
+        done
+        
+        echo "✅ Hugo构建测试通过"

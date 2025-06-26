@@ -3,7 +3,7 @@ title: "航空发动机叶片精密检测解决方案"
 primary_category: ["电子视频内窥镜"]
 application_field: ["航空航天"]
 application_scenario: ["航空叶片"]
-featured_image: "https://picsum.photos/800/400?random=aviation1"
+featured_image: "/images/cases/case-4.webp"
 summary: "采用高精度电子内窥镜对航空发动机涡轮叶片进行无损检测，确保飞行安全，检测精度达到0.1mm级别。"
 date: 2024-01-25
 client: "某国际航空公司"

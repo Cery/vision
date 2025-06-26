@@ -97,8 +97,8 @@ class ProductAPI {
         const currentSubImages = (productData.gallery ? productData.gallery.filter(img => !img.is_main).length : 0) + seriesImages.length;
         if (currentSubImages < 4) {
             for (let i = currentSubImages; i < 4; i++) {
-                const randomImage = `https://picsum.photos/800/600?random=${Math.floor(Math.random() * 1000)}`;
-                markdown += `  - image: ${escapeYamlString(randomImage)}\n`;
+                const defaultImage = `/images/products/default-gallery-${i + 1}.jpg`;
+                markdown += `  - image: ${escapeYamlString(defaultImage)}\n`;
                 markdown += `    alt: ${escapeYamlString('副图' + (i + 1))}\n`;
             }
         }

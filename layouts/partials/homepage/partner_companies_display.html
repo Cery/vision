@@ -2,8 +2,8 @@
     <div class="container">
         <div class="row mb-4">
             <div class="col-12">
-                <h2 class="section-title text-center">应用企业</h2>
-                <p class="text-center text-muted">值得信赖的合作伙伴</p>
+                <h2 class="section-title">应用企业</h2>
+                <p class="section-subtitle">值得信赖的合作伙伴</p>
             </div>
         </div>
 
@@ -46,6 +46,38 @@
 </section>
 
 <style>
+/* 统一标题样式 */
+.section-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #212121;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    position: relative;
+    padding-bottom: 15px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.section-title:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(to right, #1976d2, #42a5f5);
+    border-radius: 2px;
+}
+
+.section-subtitle {
+    font-size: 16px;
+    color: #616161;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 400;
+}
+
 .partner-companies-section {
     background-color: #fff;
 }

@@ -3,7 +3,7 @@ title: "航空发动机叶片检测应用"
 primary_category: ["光学内窥镜"]
 application_field: ["航空航天"]
 application_scenario: ["航空叶片"]
-featured_image: "https://picsum.photos/800/400?random=2"
+featured_image: "/images/cases/case-2.webp"
 summary: "为航空发动机制造商提供高精度叶片检测方案，实现微米级缺陷检测，保障飞行安全。"
 date: 2024-01-25
 client: "某航空发动机制造商"
