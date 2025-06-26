@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1314&amp;path=livereload" data-no-instant defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>发布定制需求 - 维森·视觉检测仪器</title>
@@ -745,7 +745,7 @@
             <div class="card shadow-sm">
                 <div class="card-body p-4">
                     <h4 class="card-title mb-4">发布定制需求</h4>
-                    <form id="customForm" class="needs-validation" name="custom-requirements" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
+                    <form id="customForm" class="needs-validation" name="custom-requirements" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/customs/success/" novalidate>
                         
                         <input type="hidden" name="form-name" value="custom-requirements">
                         <div style="display: none;">
@@ -1044,11 +1044,10 @@ document.addEventListener('DOMContentLoaded', function() {
     initializePage();
 
     
-    form.addEventListener('submit', async function(event) {
-        event.preventDefault();
-
+    form.addEventListener('submit', function(event) {
         
         if (!form.checkValidity()) {
+            event.preventDefault();
             form.classList.add('was-validated');
             showStatus('请填写所有必填项', 'danger');
             return;
@@ -1058,52 +1057,11 @@ document.addEventListener('DOMContentLoaded', function() {
         setSubmitState(true);
         hideStatus();
 
-        try {
-            
-            const formData = new FormData(form);
+        
+        showStatus('✅ 正在提交定制需求，请稍候...', 'info');
 
-            
-            const requirementData = {
-                id: null, 
-                productType: formData.get('productType'),
-                screenSize: formData.get('screenSize'),
-                batteryLife: formData.get('batteryLife'),
-                probeDiameter: formData.get('probeDiameter'),
-                resolution: formData.get('resolution'),
-                viewingAngle: formData.get('viewingAngle'),
-                lightSource: formData.get('lightSource'),
-                guidance: formData.get('guidance'),
-                requirements: formData.get('requirements'),
-                companyName: formData.get('companyName'),
-                department: formData.get('department'),
-                contact: formData.get('contact'),
-                phone: formData.get('phone'),
-                email: formData.get('email'),
-                status: '待处理',
-                submitDate: new Date().toISOString(),
-                priority: 'normal'
-            };
-
-            
-            const result = await window.ContentAPI.saveCustomRequirement(requirementData);
-
-            if (result.success) {
-                showStatus('✅ 定制需求提交成功！我们将在24小时内与您联系。', 'success');
-                form.reset();
-                form.classList.remove('was-validated');
-
-                
-                await loadRequirementsList();
-            } else {
-                throw new Error(result.message || '提交失败');
-            }
-
-        } catch (error) {
-            console.error('提交定制需求失败:', error);
-            showStatus('❌ 提交失败，请稍后重试或直接联系我们。', 'danger');
-        } finally {
-            setSubmitState(false);
-        }
+        
+        
     });
 
     
@@ -1157,142 +1115,53 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     
-    async function initializePage() {
-        await loadRequirementsList();
+    function initializePage() {
+        showNetlifyFormsInfo();
     }
 
     
-    async function loadRequirementsList() {
+    function showNetlifyFormsInfo() {
         const loadingEl = document.getElementById('requirementsLoading');
         const listEl = document.getElementById('customRequirementsList');
         const emptyEl = document.getElementById('emptyRequirements');
         const paginationEl = document.getElementById('requirementsPagination');
 
-        try {
-            
-            loadingEl.style.display = 'block';
-            listEl.style.display = 'none';
-            emptyEl.style.display = 'none';
-            paginationEl.style.display = 'none';
+        loadingEl.style.display = 'none';
+        listEl.style.display = 'none';
+        paginationEl.style.display = 'none';
+        emptyEl.style.display = 'block';
 
-            
-            const requirements = await window.ContentAPI.getCustomRequirements();
-
-            if (requirements && requirements.length > 0) {
-                
-                requirements.sort((a, b) => new Date(b.submitDate) - new Date(a.submitDate));
-
-                
-                const totalPages = Math.ceil(requirements.length / itemsPerPage);
-                const startIndex = (currentPage - 1) * itemsPerPage;
-                const endIndex = startIndex + itemsPerPage;
-                const pageRequirements = requirements.slice(startIndex, endIndex);
-
-                
-                renderRequirementsList(pageRequirements);
-
-                
-                if (totalPages > 1) {
-                    renderPagination(totalPages);
-                    paginationEl.style.display = 'block';
-                }
-
-                listEl.style.display = 'block';
-            } else {
-                emptyEl.style.display = 'block';
-            }
-
-        } catch (error) {
-            console.error('加载需求列表失败:', error);
-            emptyEl.style.display = 'block';
-        } finally {
-            loadingEl.style.display = 'none';
-        }
-    }
-
-    
-    function renderRequirementsList(requirements) {
-        const listEl = document.getElementById('customRequirementsList');
-
-        listEl.innerHTML = requirements.map(req => {
-            const submitDate = new Date(req.submitDate);
-            const formattedDate = submitDate.toLocaleDateString('zh-CN');
-            const statusClass = getStatusClass(req.status);
-
-            return `
-                <div class="requirement-item p-3 mb-3 bg-light rounded" data-id="${req.id}">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <h6 class="mb-0">${req.productType} 定制需求</h6>
-                        <span class="badge ${statusClass}">${req.status}</span>
-                    </div>
-                    <div class="requirement-details">
-                        <div class="text-muted small mb-1">
-                            <i class="fas fa-calendar-alt me-1"></i>${formattedDate}
-                        </div>
-                        <div class="text-muted small mb-1">
-                            <i class="fas fa-building me-1"></i>${req.companyName}
-                        </div>
-                        <div class="text-muted small mb-1">
-                            <i class="fas fa-user me-1"></i>${req.contact}
-                        </div>
-                        ${req.probeDiameter ? `<div class="text-muted small mb-1">
-                            <i class="fas fa-circle me-1"></i>探头直径: ${req.probeDiameter}
-                        </div>` : ''}
-                        ${req.requirements ? `<div class="text-muted small mt-2">
-                            <i class="fas fa-comment me-1"></i>${req.requirements.substring(0, 50)}${req.requirements.length > 50 ? '...' : ''}
-                        </div>` : ''}
+        
+        emptyEl.innerHTML = `
+            <div class="text-center py-5">
+                <i class="fas fa-paper-plane fa-3x text-primary mb-3"></i>
+                <h5 class="text-primary">使用Netlify表单管理</h5>
+                <p class="text-muted mb-3">定制需求将通过Netlify表单系统提交和管理</p>
+                <div class="alert alert-info text-start">
+                    <h6><i class="fas fa-info-circle me-2"></i>管理员查看提交的需求：</h6>
+                    <ol class="mb-2">
+                        <li>登录 <a href="https://app.netlify.com" target="_blank" class="text-decoration-none">Netlify控制台 <i class="fas fa-external-link-alt"></i></a></li>
+                        <li>选择您的网站项目</li>
+                        <li>进入 "Forms" 页面</li>
+                        <li>查看 "custom-requirements" 表单提交记录</li>
+                    </ol>
+                    <div class="mt-3">
+                        <strong>优势：</strong>
+                        <ul class="mb-0">
+                            <li>自动邮件通知</li>
+                            <li>数据安全可靠</li>
+                            <li>支持文件上传</li>
+                            <li>防垃圾邮件保护</li>
+                        </ul>
                     </div>
                 </div>
-            `;
-        }).join('');
+            </div>
+        `;
     }
 
-    
-    function getStatusClass(status) {
-        switch (status) {
-            case '待处理': return 'bg-warning text-dark';
-            case '处理中': return 'bg-info text-white';
-            case '已完成': return 'bg-success text-white';
-            case '已取消': return 'bg-secondary text-white';
-            default: return 'bg-primary text-white';
-        }
-    }
 
-    
-    function renderPagination(totalPages) {
-        const paginationList = document.getElementById('paginationList');
-        let paginationHTML = '';
 
-        
-        if (currentPage > 1) {
-            paginationHTML += `
-                <li class="page-item">
-                    <a class="page-link" href="#" onclick="changePage(${currentPage - 1})">&laquo;</a>
-                </li>
-            `;
-        }
 
-        
-        for (let i = 1; i <= totalPages; i++) {
-            const activeClass = i === currentPage ? 'active' : '';
-            paginationHTML += `
-                <li class="page-item ${activeClass}">
-                    <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
-                </li>
-            `;
-        }
-
-        
-        if (currentPage < totalPages) {
-            paginationHTML += `
-                <li class="page-item">
-                    <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">&raquo;</a>
-                </li>
-            `;
-        }
-
-        paginationList.innerHTML = paginationHTML;
-    }
 
     
     const requiredFields = form.querySelectorAll('[required]');
@@ -1318,96 +1187,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-async function changePage(page) {
-    currentPage = page;
-    await loadRequirementsList();
-}
-
-
-async function refreshRequirementsList() {
-    currentPage = 1;
-    await loadRequirementsList();
-}
-
-
-window.ContentAPI = window.ContentAPI || {
-    
-    saveCustomRequirement: function(data) {
-        return new Promise((resolve) => {
-            try {
-                
-                const existingRequirements = JSON.parse(localStorage.getItem('customRequirements') || '[]');
-
-                
-                data.id = 'req-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-
-                
-                existingRequirements.unshift(data);
-
-                
-                localStorage.setItem('customRequirements', JSON.stringify(existingRequirements));
-
-                resolve({
-                    success: true,
-                    message: '定制需求提交成功',
-                    data: data
-                });
-            } catch (error) {
-                resolve({
-                    success: false,
-                    message: '保存失败: ' + error.message
-                });
-            }
-        });
-    },
-
-    
-    getCustomRequirements: function() {
-        return new Promise((resolve) => {
-            try {
-                const requirements = JSON.parse(localStorage.getItem('customRequirements') || '[]');
-                resolve(requirements);
-            } catch (error) {
-                console.error('获取定制需求失败:', error);
-                resolve([]);
-            }
-        });
-    },
-
-    
-    updateCustomRequirement: function(id, updates) {
-        return new Promise((resolve) => {
-            try {
-                const requirements = JSON.parse(localStorage.getItem('customRequirements') || '[]');
-                const index = requirements.findIndex(req => req.id === id);
-
-                if (index !== -1) {
-                    requirements[index] = { ...requirements[index], ...updates };
-                    localStorage.setItem('customRequirements', JSON.stringify(requirements));
-                    resolve({ success: true, message: '更新成功' });
-                } else {
-                    resolve({ success: false, message: '需求不存在' });
-                }
-            } catch (error) {
-                resolve({ success: false, message: '更新失败: ' + error.message });
-            }
-        });
-    },
-
-    
-    deleteCustomRequirement: function(id) {
-        return new Promise((resolve) => {
-            try {
-                const requirements = JSON.parse(localStorage.getItem('customRequirements') || '[]');
-                const filteredRequirements = requirements.filter(req => req.id !== id);
-                localStorage.setItem('customRequirements', JSON.stringify(filteredRequirements));
-                resolve({ success: true, message: '删除成功' });
-            } catch (error) {
-                resolve({ success: false, message: '删除失败: ' + error.message });
-            }
-        });
-    }
-};
 </script>
 
     </main>

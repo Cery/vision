@@ -1,0 +1,166 @@
+{{ define "main" }}
+<div class="container py-5">
+    {{ partial "breadcrumbs.html" . }}
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center py-5">
+                <!-- 成功图标 -->
+                <div class="mb-4">
+                    <i class="fas fa-check-circle fa-5x text-success"></i>
+                </div>
+                
+                <!-- 成功标题 -->
+                <h1 class="display-4 text-success mb-4">提交成功！</h1>
+                
+                <!-- 成功消息 -->
+                <div class="alert alert-success" role="alert">
+                    <h4 class="alert-heading">
+                        <i class="fas fa-paper-plane me-2"></i>您的定制需求已成功提交
+                    </h4>
+                    <p class="mb-3">感谢您选择我们的定制服务！我们已收到您的需求，将在24小时内与您联系。</p>
+                    <hr>
+                    <p class="mb-0">
+                        <i class="fas fa-clock me-2"></i>提交时间：<span id="submitTime"></span>
+                    </p>
+                </div>
+                
+                <!-- 下一步说明 -->
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-route me-2 text-primary"></i>接下来会发生什么？
+                        </h5>
+                        <div class="row text-start">
+                            <div class="col-md-4 mb-3">
+                                <div class="d-flex align-items-start">
+                                    <div class="flex-shrink-0">
+                                        <span class="badge bg-primary rounded-pill">1</span>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6>需求评估</h6>
+                                        <p class="text-muted small mb-0">我们的技术团队将仔细评估您的定制需求</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="d-flex align-items-start">
+                                    <div class="flex-shrink-0">
+                                        <span class="badge bg-primary rounded-pill">2</span>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6>方案设计</h6>
+                                        <p class="text-muted small mb-0">为您量身定制最适合的解决方案</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="d-flex align-items-start">
+                                    <div class="flex-shrink-0">
+                                        <span class="badge bg-primary rounded-pill">3</span>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6>联系确认</h6>
+                                        <p class="text-muted small mb-0">专业顾问将与您联系确认详细方案</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 联系信息 -->
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-headset me-2 text-primary"></i>需要帮助？
+                        </h5>
+                        <p class="text-muted">如果您有任何疑问或需要紧急联系，请通过以下方式联系我们：</p>
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <i class="fas fa-phone text-primary me-2"></i>
+                                <strong>客服热线：</strong>400-000-0000
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <i class="fas fa-envelope text-primary me-2"></i>
+                                <strong>邮箱：</strong>service@visndt.com
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 操作按钮 -->
+                <div class="mt-5">
+                    <a href="/customs/" class="btn btn-outline-primary me-3">
+                        <i class="fas fa-plus me-2"></i>提交新需求
+                    </a>
+                    <a href="/products/" class="btn btn-primary me-3">
+                        <i class="fas fa-eye me-2"></i>浏览产品
+                    </a>
+                    <a href="/" class="btn btn-outline-secondary">
+                        <i class="fas fa-home me-2"></i>返回首页
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// 显示提交时间
+document.addEventListener('DOMContentLoaded', function() {
+    const submitTimeEl = document.getElementById('submitTime');
+    if (submitTimeEl) {
+        const now = new Date();
+        submitTimeEl.textContent = now.toLocaleString('zh-CN');
+    }
+    
+    // 5秒后自动滚动到操作按钮
+    setTimeout(function() {
+        const buttons = document.querySelector('.mt-5');
+        if (buttons) {
+            buttons.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, 5000);
+});
+</script>
+
+<style>
+.badge.rounded-pill {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.alert-success {
+    border-left: 4px solid #28a745;
+}
+
+.fa-check-circle {
+    animation: checkmark 0.6s ease-in-out;
+}
+
+@keyframes checkmark {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+</style>
+{{ end }}

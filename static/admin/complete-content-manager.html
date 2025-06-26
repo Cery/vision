@@ -482,7 +482,7 @@
                     <i class="sidebar-icon fas fa-cogs"></i>
                     <span>应用领域</span>
                 </div>
-                <div class="sidebar-item" onclick="showCustomRequests()">
+                <div class="sidebar-item" onclick="showNetlifyFormsInfo()">
                     <i class="sidebar-icon fas fa-clipboard-list"></i>
                     <span>定制需求管理</span>
                 </div>
@@ -5298,596 +5298,178 @@ ${JSON.stringify(currentData[0], null, 2)}
         function addSeries() { showNotification('添加系列功能正在开发中', 'info'); }
         function uploadMedia() { showNotification('上传媒体功能正在开发中', 'info'); }
 
-        // 定制需求管理功能
-        let allCustomRequests = [];
-        let filteredCustomRequests = [];
-        let editingCustomRequest = null;
-
-        function showCustomRequests() {
-            updateContentHeader('定制需求管理', '管理客户提交的定制需求');
+        // Netlify表单管理信息
+        function showNetlifyFormsInfo() {
+            updateContentHeader('定制需求管理', '通过Netlify Forms管理客户提交的定制需求');
             updateContentActions([
-                { text: '刷新列表', icon: 'fas fa-sync', action: 'refreshCustomRequests()' },
-                { text: '导出数据', icon: 'fas fa-download', action: 'exportCustomRequests()' },
-                { text: '清空数据', icon: 'fas fa-trash', action: 'clearCustomRequests()', class: 'btn-danger' }
+                { text: '打开Netlify控制台', icon: 'fas fa-external-link-alt', action: 'openNetlifyConsole()' },
+                { text: '查看表单文档', icon: 'fas fa-book', action: 'openNetlifyFormsDocs()' }
             ]);
 
-            loadCustomRequests();
-            renderCustomRequestsList();
+            renderNetlifyFormsInfo();
         }
 
-        async function loadCustomRequests() {
-            try {
-                // 从localStorage加载（与前台定制中心同步）
-                const stored = localStorage.getItem('customRequirements');
-                if (stored) {
-                    allCustomRequests = JSON.parse(stored);
-                    filteredCustomRequests = [...allCustomRequests];
-                } else {
-                    allCustomRequests = [];
-                    filteredCustomRequests = [];
-                }
-
-                // 按提交时间排序（最新的在前）
-                allCustomRequests.sort((a, b) => new Date(b.submitDate) - new Date(a.submitDate));
-                filteredCustomRequests.sort((a, b) => new Date(b.submitDate) - new Date(a.submitDate));
-
-            } catch (error) {
-                console.error('加载定制需求失败:', error);
-                allCustomRequests = [];
-                filteredCustomRequests = [];
-            }
-        }
-
-        function saveCustomRequests() {
-            try {
-                // 保存到与前台同步的localStorage键
-                localStorage.setItem('customRequirements', JSON.stringify(allCustomRequests));
-                // 保持向后兼容
-                localStorage.setItem('customRequests', JSON.stringify(allCustomRequests));
-            } catch (error) {
-                console.error('保存定制需求失败:', error);
-                showNotification('保存失败: ' + error.message, 'danger');
-            }
-        }
-
-        function renderCustomRequestsList() {
+        function renderNetlifyFormsInfo() {
             const contentBody = document.getElementById('contentBody');
 
-            const searchAndFilterHtml = `
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <div class="search-box">
-                            <input type="text" class="search-input" placeholder="搜索需求..."
-                                   onkeyup="searchCustomRequests(this.value)">
-                            <i class="fas fa-search search-icon"></i>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <select class="form-select" onchange="filterCustomRequestsByStatus(this.value)">
-                            <option value="">全部状态</option>
-                            <option value="待处理">待处理</option>
-                            <option value="处理中">处理中</option>
-                            <option value="已完成">已完成</option>
-                            <option value="已取消">已取消</option>
-                        </select>
-                    </div>
-                </div>
-            `;
+            const infoHtml = `
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                <div class="text-center mb-4">
+                                    <i class="fab fa-netlify fa-4x text-primary mb-3"></i>
+                                    <h3 class="text-primary">Netlify Forms 管理</h3>
+                                    <p class="text-muted">定制需求现在通过Netlify Forms系统进行管理，提供更专业和可靠的表单处理服务。</p>
+                                </div>
 
-            const tableHtml = `
-                <div class="table-responsive">
-                    <table class="content-table">
-                        <thead>
-                            <tr>
-                                <th>提交时间</th>
-                                <th>客户信息</th>
-                                <th>需求类型</th>
-                                <th>需求描述</th>
-                                <th>状态</th>
-                                <th>操作</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${filteredCustomRequests.map(request => `
-                                <tr>
-                                    <td>${new Date(request.submitDate).toLocaleString('zh-CN')}</td>
-                                    <td>
-                                        <div><strong>${request.contact}</strong></div>
-                                        <div class="text-muted small">${request.companyName || '个人客户'}</div>
-                                        <div class="text-muted small">${request.phone}</div>
-                                        <div class="text-muted small">${request.email}</div>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-info">${request.productType}</span>
-                                        ${request.probeDiameter ? `<br><small class="text-muted">探头: ${request.probeDiameter}</small>` : ''}
-                                    </td>
-                                    <td>
-                                        <div class="text-truncate" style="max-width: 200px;" title="${request.requirements}">
-                                            ${request.requirements}
-                                        </div>
-                                        ${request.department ? `<br><small class="text-muted">部门: ${request.department}</small>` : ''}
-                                    </td>
-                                    <td>
-                                        <span class="status-badge ${getCustomRequestStatusClass(request.status)}">${request.status}</span>
-                                        ${request.priority ? `<br><small class="badge bg-secondary">${request.priority}</small>` : ''}
-                                    </td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="action-btn view" onclick="viewCustomRequest('${request.id}')" title="查看详情">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="action-btn edit" onclick="editCustomRequest('${request.id}')" title="编辑状态">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="action-btn delete" onclick="deleteCustomRequest('${request.id}')" title="删除">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-
-            contentBody.innerHTML = searchAndFilterHtml + tableHtml;
-
-            if (filteredCustomRequests.length === 0) {
-                contentBody.innerHTML += `
-                    <div class="text-center py-5">
-                        <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
-                        <h5 class="text-muted">暂无定制需求</h5>
-                        <p class="text-muted">客户提交的定制需求将在这里显示</p>
-                    </div>
-                `;
-            }
-        }
-
-        function getStatusClass(status) {
-            switch (status) {
-                case '新提交': return 'status-draft';
-                case '处理中': return 'status-processing';
-                case '已完成': return 'status-published';
-                case '已取消': return 'status-cancelled';
-                default: return 'status-draft';
-            }
-        }
-
-        function getCustomRequestStatusClass(status) {
-            switch (status) {
-                case '待处理': return 'status-draft';
-                case '处理中': return 'status-processing';
-                case '已完成': return 'status-published';
-                case '已取消': return 'status-cancelled';
-                default: return 'status-draft';
-            }
-        }
-
-        function searchCustomRequests(query) {
-            if (!query.trim()) {
-                filteredCustomRequests = [...allCustomRequests];
-            } else {
-                const searchTerm = query.toLowerCase();
-                filteredCustomRequests = allCustomRequests.filter(request =>
-                    (request.contact && request.contact.toLowerCase().includes(searchTerm)) ||
-                    (request.companyName && request.companyName.toLowerCase().includes(searchTerm)) ||
-                    (request.requirements && request.requirements.toLowerCase().includes(searchTerm)) ||
-                    (request.productType && request.productType.toLowerCase().includes(searchTerm)) ||
-                    (request.phone && request.phone.includes(searchTerm)) ||
-                    (request.email && request.email.toLowerCase().includes(searchTerm))
-                );
-            }
-            renderCustomRequestsList();
-        }
-
-        function filterCustomRequestsByStatus(status) {
-            if (!status) {
-                filteredCustomRequests = [...allCustomRequests];
-            } else {
-                filteredCustomRequests = allCustomRequests.filter(request => request.status === status);
-            }
-            renderCustomRequestsList();
-        }
-
-        function viewCustomRequest(requestId) {
-            const request = allCustomRequests.find(r => r.id === requestId);
-            if (!request) {
-                showNotification('需求不存在', 'danger');
-                return;
-            }
-
-            const modalHtml = `
-                <div class="modal fade" id="customRequestModal" tabindex="-1">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">定制需求详情</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <h6>客户信息</h6>
-                                        <p><strong>联系人：</strong>${request.contact}</p>
-                                        <p><strong>公司：</strong>${request.companyName || '个人客户'}</p>
-                                        <p><strong>部门：</strong>${request.department || '未填写'}</p>
-                                        <p><strong>电话：</strong>${request.phone}</p>
-                                        <p><strong>邮箱：</strong>${request.email}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h6>产品需求</h6>
-                                        <p><strong>产品类型：</strong>${request.productType}</p>
-                                        <p><strong>屏幕尺寸：</strong>${request.screenSize || '未指定'}</p>
-                                        <p><strong>探头直径：</strong>${request.probeDiameter || '未指定'}</p>
-                                        <p><strong>像素：</strong>${request.resolution || '未指定'}</p>
-                                        <p><strong>视向：</strong>${request.viewingAngle || '未指定'}</p>
-                                        <p><strong>光源：</strong>${request.lightSource || '未指定'}</p>
-                                        <p><strong>导向：</strong>${request.guidance || '未指定'}</p>
-                                        <p><strong>待机时长：</strong>${request.batteryLife || '未指定'}</p>
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-6">
-                                        <h6>状态信息</h6>
-                                        <p><strong>当前状态：</strong><span class="status-badge ${getCustomRequestStatusClass(request.status)}">${request.status}</span></p>
-                                        <p><strong>优先级：</strong>${request.priority || 'normal'}</p>
-                                        <p><strong>提交时间：</strong>${new Date(request.submitDate).toLocaleString('zh-CN')}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h6>需求ID</h6>
-                                        <p><strong>ID：</strong><code>${request.id}</code></p>
-                                    </div>
-                                </div>
-                                <div class="mt-3">
-                                    <h6>详细需求</h6>
-                                    <div class="border p-3 bg-light rounded">
-                                        ${request.requirements.replace(/\n/g, '<br>')}
-                                    </div>
-                                </div>
-                                ${request.notes ? `
-                                    <div class="mt-3">
-                                        <h6>备注</h6>
-                                        <div class="border p-3 bg-light rounded">
-                                            ${request.notes.replace(/\n/g, '<br>')}
+                                        <div class="card bg-light border-0 h-100">
+                                            <div class="card-body">
+                                                <h5 class="card-title">
+                                                    <i class="fas fa-cog text-primary me-2"></i>如何查看提交的需求
+                                                </h5>
+                                                <ol class="mb-3">
+                                                    <li>登录 <a href="https://app.netlify.com" target="_blank" class="text-decoration-none">Netlify控制台 <i class="fas fa-external-link-alt"></i></a></li>
+                                                    <li>选择您的网站项目</li>
+                                                    <li>在左侧菜单中点击 "Forms"</li>
+                                                    <li>查看 "custom-requirements" 表单</li>
+                                                    <li>点击表单名称查看所有提交记录</li>
+                                                </ol>
+                                                <div class="alert alert-info">
+                                                    <small><i class="fas fa-lightbulb me-1"></i> 您可以在表单设置中配置邮件通知，每次有新提交时自动发送邮件。</small>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                ` : ''}
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-                                <button type="button" class="btn btn-primary" onclick="editCustomRequest('${request.id}')">编辑状态</button>
+
+                                    <div class="col-md-6">
+                                        <div class="card bg-light border-0 h-100">
+                                            <div class="card-body">
+                                                <h5 class="card-title">
+                                                    <i class="fas fa-star text-warning me-2"></i>Netlify Forms 优势
+                                                </h5>
+                                                <ul class="mb-3">
+                                                    <li><strong>自动邮件通知</strong> - 新提交时自动发送邮件</li>
+                                                    <li><strong>数据安全可靠</strong> - 云端存储，不会丢失</li>
+                                                    <li><strong>防垃圾邮件</strong> - 内置反垃圾邮件保护</li>
+                                                    <li><strong>文件上传支持</strong> - 支持附件上传</li>
+                                                    <li><strong>导出功能</strong> - 可导出CSV格式数据</li>
+                                                    <li><strong>API集成</strong> - 支持第三方系统集成</li>
+                                                </ul>
+                                                <div class="alert alert-success">
+                                                    <small><i class="fas fa-check me-1"></i> 免费计划每月支持100次表单提交。</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <div class="card border-primary">
+                                            <div class="card-header bg-primary text-white">
+                                                <h6 class="mb-0">
+                                                    <i class="fas fa-envelope me-2"></i>邮件通知设置
+                                                </h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="mb-3">要接收新提交的邮件通知，请按以下步骤设置：</p>
+                                                <ol>
+                                                    <li>在Netlify控制台的Forms页面中，点击 "custom-requirements" 表单</li>
+                                                    <li>点击 "Settings" 选项卡</li>
+                                                    <li>在 "Form notifications" 部分点击 "Add notification"</li>
+                                                    <li>选择 "Email notification"</li>
+                                                    <li>输入接收通知的邮箱地址</li>
+                                                    <li>保存设置</li>
+                                                </ol>
+                                                <div class="alert alert-warning">
+                                                    <small><i class="fas fa-exclamation-triangle me-1"></i> 建议设置多个邮箱地址以确保及时收到通知。</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-4">
+                                    <div class="col-md-6">
+                                        <div class="card border-info">
+                                            <div class="card-header bg-info text-white">
+                                                <h6 class="mb-0">
+                                                    <i class="fas fa-download me-2"></i>数据导出
+                                                </h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <p>在Netlify Forms中，您可以：</p>
+                                                <ul>
+                                                    <li>导出CSV格式的数据</li>
+                                                    <li>查看详细的提交信息</li>
+                                                    <li>按时间范围筛选数据</li>
+                                                    <li>删除垃圾邮件提交</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="card border-success">
+                                            <div class="card-header bg-success text-white">
+                                                <h6 class="mb-0">
+                                                    <i class="fas fa-shield-alt me-2"></i>安全特性
+                                                </h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <p>Netlify Forms提供：</p>
+                                                <ul>
+                                                    <li>Honeypot反垃圾邮件保护</li>
+                                                    <li>reCAPTCHA集成支持</li>
+                                                    <li>IP地址记录</li>
+                                                    <li>提交时间戳</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="text-center mt-4">
+                                    <button class="btn btn-primary btn-lg me-3" onclick="openNetlifyConsole()">
+                                        <i class="fas fa-external-link-alt me-2"></i>打开Netlify控制台
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-lg" onclick="openNetlifyFormsDocs()">
+                                        <i class="fas fa-book me-2"></i>查看表单文档
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             `;
 
-            // 移除已存在的模态框
-            const existingModal = document.getElementById('customRequestModal');
-            if (existingModal) {
-                existingModal.remove();
-            }
-
-            // 添加新模态框
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-            const modal = new bootstrap.Modal(document.getElementById('customRequestModal'));
-            modal.show();
+            contentBody.innerHTML = infoHtml;
         }
 
-        function editCustomRequest(requestId) {
-            const request = allCustomRequests.find(r => r.id === requestId);
-            if (!request) {
-                showNotification('需求不存在', 'danger');
-                return;
-            }
-
-            const modalHtml = `
-                <div class="modal fade" id="editCustomRequestModal" tabindex="-1">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">编辑需求状态</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="editCustomRequestForm">
-                                    <div class="mb-3">
-                                        <label class="form-label">客户：${request.name}</label>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="requestStatus" class="form-label">状态</label>
-                                        <select class="form-select" id="requestStatus" required>
-                                            <option value="新提交" ${request.status === '新提交' ? 'selected' : ''}>新提交</option>
-                                            <option value="处理中" ${request.status === '处理中' ? 'selected' : ''}>处理中</option>
-                                            <option value="已完成" ${request.status === '已完成' ? 'selected' : ''}>已完成</option>
-                                            <option value="已取消" ${request.status === '已取消' ? 'selected' : ''}>已取消</option>
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="requestNotes" class="form-label">备注</label>
-                                        <textarea class="form-control" id="requestNotes" rows="3" placeholder="添加处理备注...">${request.notes || ''}</textarea>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                                <button type="button" class="btn btn-primary" onclick="saveCustomRequestEdit('${request.id}')">保存</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // 移除已存在的模态框
-            const existingModal = document.getElementById('editCustomRequestModal');
-            if (existingModal) {
-                existingModal.remove();
-            }
-
-            // 添加新模态框
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-            const modal = new bootstrap.Modal(document.getElementById('editCustomRequestModal'));
-            modal.show();
+        function openNetlifyConsole() {
+            window.open('https://app.netlify.com', '_blank');
         }
 
-        function saveCustomRequestEdit(requestId) {
-            const status = document.getElementById('requestStatus').value;
-            const notes = document.getElementById('requestNotes').value;
-
-            const requestIndex = allCustomRequests.findIndex(r => r.id === requestId);
-            if (requestIndex === -1) {
-                showNotification('需求不存在', 'danger');
-                return;
-            }
-
-            allCustomRequests[requestIndex].status = status;
-            allCustomRequests[requestIndex].notes = notes;
-            allCustomRequests[requestIndex].lastUpdated = new Date().toISOString();
-
-            saveCustomRequests();
-            renderCustomRequestsList();
-
-            // 关闭模态框
-            const modal = bootstrap.Modal.getInstance(document.getElementById('editCustomRequestModal'));
-            modal.hide();
-
-            showNotification('需求状态更新成功', 'success');
+        function openNetlifyFormsDocs() {
+            window.open('https://docs.netlify.com/forms/setup/', '_blank');
         }
 
-        function deleteCustomRequest(requestId) {
-            const request = allCustomRequests.find(r => r.id === requestId);
-            if (!request) {
-                showNotification('需求不存在', 'danger');
-                return;
-            }
+        // 旧的localStorage管理函数已移除，现在使用Netlify Forms
 
-            if (confirm(`确定要删除 "${request.name}" 的定制需求吗？此操作不可恢复。`)) {
-                allCustomRequests = allCustomRequests.filter(r => r.id !== requestId);
-                filteredCustomRequests = filteredCustomRequests.filter(r => r.id !== requestId);
 
-                saveCustomRequests();
-                renderCustomRequestsList();
-                showNotification('需求删除成功', 'success');
-            }
-        }
 
-        function refreshCustomRequests() {
-            loadCustomRequests();
-            renderCustomRequestsList();
-            showNotification('列表已刷新', 'success');
-        }
 
-        function exportCustomRequests() {
-            try {
-                const dataStr = JSON.stringify(allCustomRequests, null, 2);
-                const dataBlob = new Blob([dataStr], {type: 'application/json'});
-                const url = URL.createObjectURL(dataBlob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `custom_requests_export_${new Date().toISOString().split('T')[0]}.json`;
-                link.click();
-                URL.revokeObjectURL(url);
-                showNotification('定制需求数据导出成功', 'success');
-            } catch (error) {
-                showNotification('导出失败: ' + error.message, 'danger');
-            }
-        }
 
-        function clearCustomRequests() {
-            if (confirm('确定要清空所有定制需求数据吗？此操作不可恢复。')) {
-                allCustomRequests = [];
-                filteredCustomRequests = [];
-                saveCustomRequests();
-                renderCustomRequestsList();
-                showNotification('定制需求数据已清空', 'success');
-            }
-        }
 
-        // 显示统计报告
-        function showCustomRequestsStats() {
-            const total = allCustomRequests.length;
-            if (total === 0) {
-                showNotification('暂无数据可统计', 'info');
-                return;
-            }
 
-            // 统计各种数据
-            const statusStats = {};
-            const productTypeStats = {};
-            const companyStats = {};
-            const monthlyStats = {};
 
-            allCustomRequests.forEach(req => {
-                // 状态统计
-                statusStats[req.status] = (statusStats[req.status] || 0) + 1;
 
-                // 产品类型统计
-                productTypeStats[req.productType] = (productTypeStats[req.productType] || 0) + 1;
 
-                // 公司统计
-                if (req.companyName) {
-                    companyStats[req.companyName] = (companyStats[req.companyName] || 0) + 1;
-                }
 
-                // 月度统计
-                const month = new Date(req.submitDate).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long' });
-                monthlyStats[month] = (monthlyStats[month] || 0) + 1;
-            });
-
-            const statsHtml = `
-                <div class="modal fade" id="statsModal" tabindex="-1">
-                    <div class="modal-dialog modal-xl">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">定制需求统计报告</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h6>状态分布</h6>
-                                            </div>
-                                            <div class="card-body">
-                                                ${Object.entries(statusStats).map(([status, count]) => `
-                                                    <div class="d-flex justify-content-between mb-2">
-                                                        <span>${status}</span>
-                                                        <span class="badge bg-primary">${count}</span>
-                                                    </div>
-                                                `).join('')}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h6>产品类型分布</h6>
-                                            </div>
-                                            <div class="card-body">
-                                                ${Object.entries(productTypeStats).map(([type, count]) => `
-                                                    <div class="d-flex justify-content-between mb-2">
-                                                        <span>${type}</span>
-                                                        <span class="badge bg-info">${count}</span>
-                                                    </div>
-                                                `).join('')}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-6">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h6>月度提交趋势</h6>
-                                            </div>
-                                            <div class="card-body">
-                                                ${Object.entries(monthlyStats).map(([month, count]) => `
-                                                    <div class="d-flex justify-content-between mb-2">
-                                                        <span>${month}</span>
-                                                        <span class="badge bg-success">${count}</span>
-                                                    </div>
-                                                `).join('')}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h6>总体概况</h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="d-flex justify-content-between mb-2">
-                                                    <span>总需求数</span>
-                                                    <span class="badge bg-primary">${total}</span>
-                                                </div>
-                                                <div class="d-flex justify-content-between mb-2">
-                                                    <span>涉及公司</span>
-                                                    <span class="badge bg-info">${Object.keys(companyStats).length}</span>
-                                                </div>
-                                                <div class="d-flex justify-content-between mb-2">
-                                                    <span>产品类型</span>
-                                                    <span class="badge bg-success">${Object.keys(productTypeStats).length}</span>
-                                                </div>
-                                                <div class="d-flex justify-content-between mb-2">
-                                                    <span>平均月需求</span>
-                                                    <span class="badge bg-warning">${Math.round(total / Math.max(Object.keys(monthlyStats).length, 1))}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-                                <button type="button" class="btn btn-primary" onclick="exportStatsReport()">导出报告</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // 移除已存在的模态框
-            const existingModal = document.getElementById('statsModal');
-            if (existingModal) {
-                existingModal.remove();
-            }
-
-            // 添加新模态框
-            document.body.insertAdjacentHTML('beforeend', statsHtml);
-            const modal = new bootstrap.Modal(document.getElementById('statsModal'));
-            modal.show();
-        }
-
-        // 导出统计报告
-        function exportStatsReport() {
-            const total = allCustomRequests.length;
-            const statusStats = {};
-            const productTypeStats = {};
-
-            allCustomRequests.forEach(req => {
-                statusStats[req.status] = (statusStats[req.status] || 0) + 1;
-                productTypeStats[req.productType] = (productTypeStats[req.productType] || 0) + 1;
-            });
-
-            const report = {
-                生成时间: new Date().toLocaleString('zh-CN'),
-                总需求数: total,
-                状态分布: statusStats,
-                产品类型分布: productTypeStats,
-                详细数据: allCustomRequests
-            };
-
-            try {
-                const dataStr = JSON.stringify(report, null, 2);
-                const dataBlob = new Blob([dataStr], {type: 'application/json'});
-                const url = URL.createObjectURL(dataBlob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `custom_requests_stats_${new Date().toISOString().split('T')[0]}.json`;
-                link.click();
-                URL.revokeObjectURL(url);
-                showNotification('统计报告导出成功', 'success');
-            } catch (error) {
-                showNotification('导出失败: ' + error.message, 'danger');
-            }
-        }
-
-        // 添加CSS样式
-        const customRequestStyles = `
-            <style>
-                .status-processing {
-                    background: #fff3cd;
-                    color: #856404;
-                }
-                .status-cancelled {
-                    background: #f8d7da;
-                    color: #721c24;
-                }
-            </style>
-        `;
-        document.head.insertAdjacentHTML('beforeend', customRequestStyles);
+        // 定制需求管理已迁移到Netlify Forms
 
         // ContentAPI 实现 - 统一的内容管理API
         window.ContentAPI = {
