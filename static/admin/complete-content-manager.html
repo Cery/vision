@@ -486,6 +486,10 @@
                     <i class="sidebar-icon fas fa-clipboard-list"></i>
                     <span>定制需求管理</span>
                 </div>
+                <div class="sidebar-item" onclick="showCustomProductsManager()">
+                    <i class="sidebar-icon fas fa-tools"></i>
+                    <span>定制产品状态</span>
+                </div>
             </div>
         </div>
 
@@ -5457,7 +5461,375 @@ ${JSON.stringify(currentData[0], null, 2)}
             window.open('https://docs.netlify.com/forms/setup/', '_blank');
         }
 
-        // 旧的localStorage管理函数已移除，现在使用Netlify Forms
+        // 定制产品状态管理
+        let customProducts = [
+            {
+                id: 'ep001',
+                title: '电子内窥镜定制',
+                date: '2024-12-26',
+                status: 'available',
+                specs: {
+                    '探头直径': '1.2mm - 6.0mm',
+                    '屏幕尺寸': '5" - 15.6"',
+                    '像素': '16万 - 100万',
+                    '视向': '0°-90°可选'
+                }
+            },
+            {
+                id: 'op001',
+                title: '光学内窥镜定制',
+                date: '2024-12-25',
+                status: 'available',
+                specs: {
+                    '探头直径': '0.85mm - 2.8mm',
+                    '光源': 'LED/光纤',
+                    '导向': '手动/自动',
+                    '视向': '直视/侧视'
+                }
+            },
+            {
+                id: 'pp001',
+                title: '管道内窥镜定制',
+                date: '2024-12-24',
+                status: 'busy',
+                specs: {
+                    '探头直径': '6.0mm - 39mm',
+                    '检测长度': '1m - 100m',
+                    '防护等级': 'IP67/IP68',
+                    '记录功能': '视频/图片'
+                }
+            },
+            {
+                id: 'cr001',
+                title: '爬行机器人定制',
+                date: '2024-12-23',
+                status: 'available',
+                specs: {
+                    '适用管径': '100mm - 2000mm',
+                    '爬行距离': '最大500m',
+                    '控制方式': '有线/无线',
+                    '特殊功能': '360°旋转'
+                }
+            },
+            {
+                id: 'fp001',
+                title: '光纤内窥镜定制',
+                date: '2024-12-22',
+                status: 'unavailable',
+                specs: {
+                    '探头直径': '0.35mm - 1.0mm',
+                    '光纤数量': '3000 - 30000根',
+                    '弯曲半径': '最小5mm',
+                    '工作温度': '-20°C ~ 80°C'
+                }
+            }
+        ];
+
+        function showCustomProductsManager() {
+            updateContentHeader('定制产品状态管理', '管理定制中心页面展示的产品状态');
+            updateContentActions([
+                { text: '添加产品', icon: 'fas fa-plus', action: 'addNewCustomProduct()' },
+                { text: '保存更改', icon: 'fas fa-save', action: 'saveCustomProducts()' },
+                { text: '重置数据', icon: 'fas fa-undo', action: 'resetCustomProducts()' }
+            ]);
+
+            renderCustomProductsManager();
+        }
+
+        function renderCustomProductsManager() {
+            const contentBody = document.getElementById('contentBody');
+
+            const managerHtml = `
+                <div class="row">
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <h6><i class="fas fa-info-circle me-2"></i>产品状态说明</h6>
+                            <ul class="mb-0">
+                                <li><strong>可对接</strong> - 当前可以接受新的定制需求</li>
+                                <li><strong>对接中</strong> - 正在处理现有定制需求，暂时繁忙</li>
+                                <li><strong>暂停对接</strong> - 暂时不接受新的定制需求</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    ${customProducts.map((product, index) => `
+                        <div class="col-lg-6 mb-4">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-light">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0">${product.title}</h6>
+                                        <small class="text-muted">${product.date}</small>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label class="form-label">对接状态</label>
+                                        <select class="form-select" onchange="updateProductStatus('${product.id}', this.value)">
+                                            <option value="available" ${product.status === 'available' ? 'selected' : ''}>可对接</option>
+                                            <option value="busy" ${product.status === 'busy' ? 'selected' : ''}>对接中</option>
+                                            <option value="unavailable" ${product.status === 'unavailable' ? 'selected' : ''}>暂停对接</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">产品规格</label>
+                                        <div class="specs-list">
+                                            ${Object.entries(product.specs).map(([key, value]) => `
+                                                <div class="d-flex justify-content-between py-1 border-bottom">
+                                                    <span class="text-muted">${key}:</span>
+                                                    <span class="fw-bold">${value}</span>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-outline-primary btn-sm" onclick="editCustomProduct('${product.id}')">
+                                            <i class="fas fa-edit me-1"></i>编辑
+                                        </button>
+                                        <button class="btn btn-outline-danger btn-sm" onclick="deleteCustomProduct('${product.id}')">
+                                            <i class="fas fa-trash me-1"></i>删除
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            contentBody.innerHTML = managerHtml;
+        }
+
+        function updateProductStatus(productId, status) {
+            const product = customProducts.find(p => p.id === productId);
+            if (product) {
+                product.status = status;
+                saveCustomProducts();
+                showNotification(`产品状态已更新为: ${getStatusText(status)}`, 'success');
+            }
+        }
+
+        function getStatusText(status) {
+            switch (status) {
+                case 'available': return '可对接';
+                case 'busy': return '对接中';
+                case 'unavailable': return '暂停对接';
+                default: return '未知状态';
+            }
+        }
+
+        function editCustomProduct(productId) {
+            const product = customProducts.find(p => p.id === productId);
+            if (!product) return;
+
+            const modalHtml = `
+                <div class="modal fade" id="editProductModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">编辑定制产品</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="editProductForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">产品标题</label>
+                                        <input type="text" class="form-control" id="productTitle" value="${product.title}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">日期</label>
+                                        <input type="date" class="form-control" id="productDate" value="${product.date}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">状态</label>
+                                        <select class="form-select" id="productStatus" required>
+                                            <option value="available" ${product.status === 'available' ? 'selected' : ''}>可对接</option>
+                                            <option value="busy" ${product.status === 'busy' ? 'selected' : ''}>对接中</option>
+                                            <option value="unavailable" ${product.status === 'unavailable' ? 'selected' : ''}>暂停对接</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">产品规格 (JSON格式)</label>
+                                        <textarea class="form-control" id="productSpecs" rows="6" required>${JSON.stringify(product.specs, null, 2)}</textarea>
+                                        <div class="form-text">请使用有效的JSON格式，例如: {"参数名": "参数值"}</div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                <button type="button" class="btn btn-primary" onclick="saveProductEdit('${productId}')">保存</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            const modal = new bootstrap.Modal(document.getElementById('editProductModal'));
+            modal.show();
+        }
+
+        function saveProductEdit(productId) {
+            const title = document.getElementById('productTitle').value;
+            const date = document.getElementById('productDate').value;
+            const status = document.getElementById('productStatus').value;
+            const specsText = document.getElementById('productSpecs').value;
+
+            try {
+                const specs = JSON.parse(specsText);
+                const product = customProducts.find(p => p.id === productId);
+
+                if (product) {
+                    product.title = title;
+                    product.date = date;
+                    product.status = status;
+                    product.specs = specs;
+
+                    saveCustomProducts();
+                    renderCustomProductsManager();
+
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('editProductModal'));
+                    modal.hide();
+
+                    showNotification('产品信息更新成功', 'success');
+                }
+            } catch (error) {
+                showNotification('规格JSON格式错误，请检查格式', 'danger');
+            }
+        }
+
+        function deleteCustomProduct(productId) {
+            const product = customProducts.find(p => p.id === productId);
+            if (!product) return;
+
+            if (confirm(`确定要删除 "${product.title}" 吗？此操作不可恢复。`)) {
+                customProducts = customProducts.filter(p => p.id !== productId);
+                saveCustomProducts();
+                renderCustomProductsManager();
+                showNotification('产品删除成功', 'success');
+            }
+        }
+
+        function addNewCustomProduct() {
+            const modalHtml = `
+                <div class="modal fade" id="addProductModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">添加定制产品</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="addProductForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">产品ID</label>
+                                        <input type="text" class="form-control" id="newProductId" placeholder="例如: ep002" required>
+                                        <div class="form-text">请使用唯一的产品ID</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">产品标题</label>
+                                        <input type="text" class="form-control" id="newProductTitle" placeholder="例如: 工业内窥镜定制" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">日期</label>
+                                        <input type="date" class="form-control" id="newProductDate" value="${new Date().toISOString().split('T')[0]}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">状态</label>
+                                        <select class="form-select" id="newProductStatus" required>
+                                            <option value="available">可对接</option>
+                                            <option value="busy">对接中</option>
+                                            <option value="unavailable">暂停对接</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">产品规格 (JSON格式)</label>
+                                        <textarea class="form-control" id="newProductSpecs" rows="6" required>{\n  "参数1": "值1",\n  "参数2": "值2",\n  "参数3": "值3"\n}</textarea>
+                                        <div class="form-text">请使用有效的JSON格式</div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                <button type="button" class="btn btn-primary" onclick="saveNewProduct()">添加</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            const modal = new bootstrap.Modal(document.getElementById('addProductModal'));
+            modal.show();
+        }
+
+        function saveNewProduct() {
+            const id = document.getElementById('newProductId').value;
+            const title = document.getElementById('newProductTitle').value;
+            const date = document.getElementById('newProductDate').value;
+            const status = document.getElementById('newProductStatus').value;
+            const specsText = document.getElementById('newProductSpecs').value;
+
+            // 检查ID是否已存在
+            if (customProducts.find(p => p.id === id)) {
+                showNotification('产品ID已存在，请使用其他ID', 'danger');
+                return;
+            }
+
+            try {
+                const specs = JSON.parse(specsText);
+                const newProduct = {
+                    id: id,
+                    title: title,
+                    date: date,
+                    status: status,
+                    specs: specs
+                };
+
+                customProducts.push(newProduct);
+                saveCustomProducts();
+                renderCustomProductsManager();
+
+                const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
+                modal.hide();
+
+                showNotification('新产品添加成功', 'success');
+            } catch (error) {
+                showNotification('规格JSON格式错误，请检查格式', 'danger');
+            }
+        }
+
+        function saveCustomProducts() {
+            try {
+                localStorage.setItem('customProducts', JSON.stringify(customProducts));
+            } catch (error) {
+                console.error('保存定制产品失败:', error);
+            }
+        }
+
+        function loadCustomProducts() {
+            try {
+                const stored = localStorage.getItem('customProducts');
+                if (stored) {
+                    customProducts = JSON.parse(stored);
+                }
+            } catch (error) {
+                console.error('加载定制产品失败:', error);
+            }
+        }
+
+        function resetCustomProducts() {
+            if (confirm('确定要重置所有定制产品数据吗？此操作不可恢复。')) {
+                localStorage.removeItem('customProducts');
+                location.reload();
+            }
+        }
+
+        // 页面加载时加载定制产品数据
+        loadCustomProducts();
 
 
 

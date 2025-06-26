@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1314&amp;path=livereload" data-no-instant defer></script>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>发布定制需求 - 维森·视觉检测仪器</title>
@@ -941,39 +941,174 @@
             <div class="card shadow-sm">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h4 class="card-title mb-0">最新需求</h4>
-                        <button class="btn btn-outline-primary btn-sm" onclick="refreshRequirementsList()">
-                            <i class="fas fa-sync-alt me-1"></i>刷新
-                        </button>
+                        <h4 class="card-title mb-0">
+                            <i class="fas fa-cogs text-primary me-2"></i>定制产品展示
+                        </h4>
+                        <span class="badge bg-primary">实时更新</span>
                     </div>
 
                     
-                    <div id="requirementsLoading" class="text-center py-4" style="display: none;">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">加载中...</span>
-                        </div>
-                        <div class="mt-2 text-muted">加载需求列表...</div>
-                    </div>
-
-                    
-                    <div id="customRequirementsList" class="custom-requirements-list">
+                    <div id="customProductsList" class="custom-products-list">
                         
+                        <div class="custom-product-item">
+                            <div class="product-header">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h6 class="product-title">电子内窥镜定制</h6>
+                                    <span class="status-badge status-available">可对接</span>
+                                </div>
+                                <div class="product-date">
+                                    <i class="fas fa-calendar-alt me-1"></i>2024-12-26
+                                </div>
+                            </div>
+                            <div class="product-specs">
+                                <div class="spec-item">
+                                    <span class="spec-label">探头直径:</span>
+                                    <span class="spec-value">1.2mm - 6.0mm</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">屏幕尺寸:</span>
+                                    <span class="spec-value">5" - 15.6"</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">像素:</span>
+                                    <span class="spec-value">16万 - 100万</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">视向:</span>
+                                    <span class="spec-value">0°-90°可选</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="custom-product-item">
+                            <div class="product-header">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h6 class="product-title">光学内窥镜定制</h6>
+                                    <span class="status-badge status-available">可对接</span>
+                                </div>
+                                <div class="product-date">
+                                    <i class="fas fa-calendar-alt me-1"></i>2024-12-25
+                                </div>
+                            </div>
+                            <div class="product-specs">
+                                <div class="spec-item">
+                                    <span class="spec-label">探头直径:</span>
+                                    <span class="spec-value">0.85mm - 2.8mm</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">光源:</span>
+                                    <span class="spec-value">LED/光纤</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">导向:</span>
+                                    <span class="spec-value">手动/自动</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">视向:</span>
+                                    <span class="spec-value">直视/侧视</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="custom-product-item">
+                            <div class="product-header">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h6 class="product-title">管道内窥镜定制</h6>
+                                    <span class="status-badge status-busy">对接中</span>
+                                </div>
+                                <div class="product-date">
+                                    <i class="fas fa-calendar-alt me-1"></i>2024-12-24
+                                </div>
+                            </div>
+                            <div class="product-specs">
+                                <div class="spec-item">
+                                    <span class="spec-label">探头直径:</span>
+                                    <span class="spec-value">6.0mm - 39mm</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">检测长度:</span>
+                                    <span class="spec-value">1m - 100m</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">防护等级:</span>
+                                    <span class="spec-value">IP67/IP68</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">记录功能:</span>
+                                    <span class="spec-value">视频/图片</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="custom-product-item">
+                            <div class="product-header">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h6 class="product-title">爬行机器人定制</h6>
+                                    <span class="status-badge status-available">可对接</span>
+                                </div>
+                                <div class="product-date">
+                                    <i class="fas fa-calendar-alt me-1"></i>2024-12-23
+                                </div>
+                            </div>
+                            <div class="product-specs">
+                                <div class="spec-item">
+                                    <span class="spec-label">适用管径:</span>
+                                    <span class="spec-value">100mm - 2000mm</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">爬行距离:</span>
+                                    <span class="spec-value">最大500m</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">控制方式:</span>
+                                    <span class="spec-value">有线/无线</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">特殊功能:</span>
+                                    <span class="spec-value">360°旋转</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="custom-product-item">
+                            <div class="product-header">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h6 class="product-title">光纤内窥镜定制</h6>
+                                    <span class="status-badge status-unavailable">暂停对接</span>
+                                </div>
+                                <div class="product-date">
+                                    <i class="fas fa-calendar-alt me-1"></i>2024-12-22
+                                </div>
+                            </div>
+                            <div class="product-specs">
+                                <div class="spec-item">
+                                    <span class="spec-label">探头直径:</span>
+                                    <span class="spec-value">0.35mm - 1.0mm</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">光纤数量:</span>
+                                    <span class="spec-value">3000 - 30000根</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">弯曲半径:</span>
+                                    <span class="spec-value">最小5mm</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">工作温度:</span>
+                                    <span class="spec-value">-20°C ~ 80°C</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     
-                    <div id="emptyRequirements" class="text-center py-5" style="display: none;">
-                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
-                        <h5 class="text-muted">暂无定制需求</h5>
-                        <p class="text-muted">提交第一个定制需求吧！</p>
-                    </div>
-
-                    
-                    <div id="requirementsPagination" class="mt-4" style="display: none;">
-                        <nav aria-label="需求列表分页">
-                            <ul class="pagination justify-content-center" id="paginationList">
-                                
-                            </ul>
-                        </nav>
+                    <div class="mt-4 text-center">
+                        <div class="alert alert-info">
+                            <small>
+                                <i class="fas fa-info-circle me-1"></i>
+                                以上为定制产品参考规格，具体参数可根据需求调整
+                            </small>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -987,19 +1122,140 @@
     color: red;
 }
 
-.custom-requirements-list {
+ 
+.custom-products-list {
     max-height: 600px;
     overflow-y: auto;
+    padding-right: 8px;
 }
 
-.requirement-item {
+.custom-products-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-products-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.custom-products-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.custom-products-list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+.custom-product-item {
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    background: #fff;
     transition: all 0.3s ease;
-    border: 1px solid rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
 }
 
-.requirement-item:hover {
-    transform: translateX(5px);
-    border-color: var(--bs-primary);
+.custom-product-item:hover {
+    border-color: #007bff;
+    box-shadow: 0 4px 12px rgba(0,123,255,0.15);
+    transform: translateY(-2px);
+}
+
+.custom-product-item:last-child {
+    margin-bottom: 0;
+}
+
+.product-header {
+    margin-bottom: 12px;
+}
+
+.product-title {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+.product-date {
+    color: #6c757d;
+    font-size: 12px;
+}
+
+.status-badge {
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-available {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.status-busy {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.status-unavailable {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.product-specs {
+    display: grid;
+    gap: 6px;
+}
+
+.spec-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    border-bottom: 1px solid #f8f9fa;
+    font-size: 12px;
+}
+
+.spec-item:last-child {
+    border-bottom: none;
+}
+
+.spec-label {
+    color: #6c757d;
+    font-weight: 500;
+    min-width: 70px;
+}
+
+.spec-value {
+    color: #495057;
+    font-weight: 600;
+    text-align: right;
+    flex: 1;
+}
+
+ 
+.custom-product-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #007bff, transparent);
+    transition: left 0.5s ease;
+}
+
+.custom-product-item:hover::before {
+    left: 100%;
 }
 
 .form-control:focus,
@@ -1023,6 +1279,30 @@
     background-color: var(--bs-primary);
     border-color: var(--bs-primary);
     color: white;
+}
+
+ 
+@media (max-width: 768px) {
+    .custom-products-list {
+        max-height: 400px;
+    }
+
+    .custom-product-item {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+
+    .product-title {
+        font-size: 13px;
+    }
+
+    .spec-item {
+        font-size: 11px;
+    }
+
+    .spec-label {
+        min-width: 60px;
+    }
 }
 </style>
 
@@ -1116,47 +1396,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
     function initializePage() {
-        showNetlifyFormsInfo();
-    }
-
-    
-    function showNetlifyFormsInfo() {
-        const loadingEl = document.getElementById('requirementsLoading');
-        const listEl = document.getElementById('customRequirementsList');
-        const emptyEl = document.getElementById('emptyRequirements');
-        const paginationEl = document.getElementById('requirementsPagination');
-
-        loadingEl.style.display = 'none';
-        listEl.style.display = 'none';
-        paginationEl.style.display = 'none';
-        emptyEl.style.display = 'block';
-
         
-        emptyEl.innerHTML = `
-            <div class="text-center py-5">
-                <i class="fas fa-paper-plane fa-3x text-primary mb-3"></i>
-                <h5 class="text-primary">使用Netlify表单管理</h5>
-                <p class="text-muted mb-3">定制需求将通过Netlify表单系统提交和管理</p>
-                <div class="alert alert-info text-start">
-                    <h6><i class="fas fa-info-circle me-2"></i>管理员查看提交的需求：</h6>
-                    <ol class="mb-2">
-                        <li>登录 <a href="https://app.netlify.com" target="_blank" class="text-decoration-none">Netlify控制台 <i class="fas fa-external-link-alt"></i></a></li>
-                        <li>选择您的网站项目</li>
-                        <li>进入 "Forms" 页面</li>
-                        <li>查看 "custom-requirements" 表单提交记录</li>
-                    </ol>
-                    <div class="mt-3">
-                        <strong>优势：</strong>
-                        <ul class="mb-0">
-                            <li>自动邮件通知</li>
-                            <li>数据安全可靠</li>
-                            <li>支持文件上传</li>
-                            <li>防垃圾邮件保护</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        `;
+        console.log('定制中心页面初始化完成');
     }
 
 
@@ -1187,6 +1428,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+
+
+function updateProductStatus(productId, status) {
+    
+    console.log(`更新产品 ${productId} 状态为: ${status}`);
+}
+
+
+function addCustomProduct(productData) {
+    
+    console.log('添加新定制产品:', productData);
+}
 </script>
 
     </main>
