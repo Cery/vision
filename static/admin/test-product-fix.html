@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品管理修复测试</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mb-4">产品管理修复测试</h1>
+                
+                <div class="alert alert-info">
+                    <h5><i class="fas fa-info-circle me-2"></i>修复内容</h5>
+                    <ul class="mb-0">
+                        <li><strong>文件保存路径</strong>: 修复为正确的content/products/路径</li>
+                        <li><strong>图片字段</strong>: 修复gallery字段显示为Object的问题</li>
+                        <li><strong>字段匹配</strong>: 移除weight、tags等不必要字段</li>
+                        <li><strong>图片上传</strong>: 支持本地上传和媒体库选择</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5>测试产品表单</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="testProductForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="testProductCode" class="form-label">产品编号</label>
+                                        <input type="text" class="form-control" id="testProductCode" value="ZB-K3920" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="testProductTitle" class="form-label">产品名称</label>
+                                        <input type="text" class="form-control" id="testProductTitle" value="ZB-K3920工业内窥镜" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="testProductModel" class="form-label">产品型号</label>
+                                        <input type="text" class="form-control" id="testProductModel" value="ZB-K3920" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="testProductSummary" class="form-label">产品简述</label>
+                                        <textarea class="form-control" id="testProductSummary" rows="3">专业工业内窥镜设备，适用于各种检测场景</textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="testProductCategory" class="form-label">产品分类</label>
+                                        <select class="form-select" id="testProductCategory">
+                                            <option value="电子内窥镜">电子内窥镜</option>
+                                            <option value="光纤内窥镜">光纤内窥镜</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">产品图库</label>
+                                <div id="testGalleryUploader">
+                                    <!-- 图片上传组件将在这里初始化 -->
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">技术参数</label>
+                                <div id="testParameters">
+                                    <div class="row mb-2">
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" name="paramName[]" placeholder="参数名称" value="探头直径">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" name="paramValue[]" placeholder="参数值" value="3.9mm">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="this.closest('.row').remove()">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" name="paramName[]" placeholder="参数名称" value="插入长度">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" name="paramValue[]" placeholder="参数值" value="2000mm">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="this.closest('.row').remove()">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-outline-success btn-sm" onclick="addParameter()">
+                                    <i class="fas fa-plus me-1"></i>添加参数
+                                </button>
+                            </div>
+
+                            <div class="text-end">
+                                <button type="button" class="btn btn-primary" onclick="testSaveProduct()">
+                                    <i class="fas fa-save me-1"></i>测试保存产品
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>测试结果</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="testResults">
+                                <p class="text-muted">点击"测试保存产品"按钮查看结果</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="fix-product-management.js"></script>
+    <script>
+        // 添加参数
+        function addParameter() {
+            const container = document.getElementById('testParameters');
+            const paramHtml = `
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" name="paramName[]" placeholder="参数名称">
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" name="paramValue[]" placeholder="参数值">
+                    </div>
+                    <div class="col-md-4">
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="this.closest('.row').remove()">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', paramHtml);
+        }
+
+        // 测试保存产品
+        async function testSaveProduct() {
+            try {
+                // 收集表单数据
+                const productData = {
+                    product_code: document.getElementById('testProductCode').value,
+                    title: document.getElementById('testProductTitle').value,
+                    model: document.getElementById('testProductModel').value,
+                    summary: document.getElementById('testProductSummary').value,
+                    primary_category: document.getElementById('testProductCategory').value,
+                    secondary_category: '',
+                    supplier: '深圳市微视光电科技有限公司',
+                    series: 'K系列',
+                    parameters: [],
+                    gallery: [],
+                    application_scenarios: '适用于工业检测、设备维护等场景',
+                    content: '这是一款专业的工业内窥镜设备，具有高清成像、操作简便等特点。',
+                    data_download: []
+                };
+
+                // 收集参数
+                const paramNames = document.querySelectorAll('input[name="paramName[]"]');
+                const paramValues = document.querySelectorAll('input[name="paramValue[]"]');
+                for (let i = 0; i < paramNames.length; i++) {
+                    if (paramNames[i].value.trim() && paramValues[i].value.trim()) {
+                        productData.parameters.push({
+                            name: paramNames[i].value.trim(),
+                            value: paramValues[i].value.trim()
+                        });
+                    }
+                }
+
+                // 收集图片
+                const galleryImages = document.querySelectorAll('input[name="gallery_images[]"]');
+                galleryImages.forEach((input, index) => {
+                    if (input.value) {
+                        productData.gallery.push({
+                            image: input.value,
+                            alt: `${productData.title}图片${index + 1}`,
+                            is_main: index === 0
+                        });
+                    }
+                });
+
+                // 使用修复后的API保存
+                const result = await window.FixedContentAPI.saveProduct(productData);
+
+                // 显示结果
+                const resultsDiv = document.getElementById('testResults');
+                if (result.success) {
+                    resultsDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            <h6><i class="fas fa-check-circle me-2"></i>保存成功</h6>
+                            <p class="mb-2">${result.message}</p>
+                            <p class="mb-0"><strong>文件名:</strong> ${productData.product_code}.md</p>
+                        </div>
+                        <div class="mt-3">
+                            <h6>生成的产品数据:</h6>
+                            <pre class="bg-light p-3 rounded"><code>${JSON.stringify(result.data, null, 2)}</code></pre>
+                        </div>
+                    `;
+                } else {
+                    resultsDiv.innerHTML = `
+                        <div class="alert alert-danger">
+                            <h6><i class="fas fa-exclamation-circle me-2"></i>保存失败</h6>
+                            <p class="mb-0">${result.message}</p>
+                        </div>
+                    `;
+                }
+
+            } catch (error) {
+                console.error('测试失败:', error);
+                document.getElementById('testResults').innerHTML = `
+                    <div class="alert alert-danger">
+                        <h6><i class="fas fa-exclamation-circle me-2"></i>测试失败</h6>
+                        <p class="mb-0">${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化图片上传组件
+            setTimeout(() => {
+                if (window.FixedImageUploader) {
+                    window.FixedImageUploader.createImageUploader('testGalleryUploader');
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>
