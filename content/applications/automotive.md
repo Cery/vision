@@ -3,7 +3,7 @@ title: "汽车制造"
 date: 2024-03-20
 summary: "汽车制造质量控制全程监测方案，确保汽车产品质量和安全性"
 icon: "fas fa-car"
-image: "https://picsum.photos/800/400?random=automotive"
+image: "/images/banners/category/application_general_pipe-1_original_v1.jpg"
 weight: 3
 
 # 应用特点

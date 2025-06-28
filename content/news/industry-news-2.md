@@ -10,6 +10,7 @@ tags:
 - 技术创新
 author: 技术部
 views: 178
+featured_image: "/images/news/news-1.jpeg"
 ---
 
 # AI技术赋能工业内窥镜检测新突破

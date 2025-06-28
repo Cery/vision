@@ -3,12 +3,11 @@
         <!-- 标题区域 -->
         <div class="row mb-4">
             <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="text-center flex-grow-1">
-                        <h2 class="section-title">应用案例</h2>
-                        <p class="section-subtitle">精选行业应用案例</p>
-                    </div>
-                    <a href="/cases/" class="btn btn-outline-primary btn-sm position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%);">
+                <div class="position-relative text-center">
+                    <h2 class="section-title">应用案例</h2>
+                    <p class="section-subtitle">精选行业应用案例</p>
+                    <!-- 查看更多按钮 -->
+                    <a href="/cases/" class="btn btn-outline-primary btn-sm cases-more-btn">
                         <i class="fas fa-plus me-1"></i>查看更多
                     </a>
                 </div>
@@ -20,28 +19,53 @@
             {{ $cases := where .Site.RegularPages "Type" "cases" }}
             {{ $featuredCase := index $cases 0 }}
             {{ with $featuredCase }}
-            <div class="col-lg-8 mb-3">
+            <div class="col-lg-7 mb-3">
                 <div class="card border-0 shadow-sm h-100 featured-case">
                     <div class="row g-0 h-100">
                         <div class="col-md-6">
                             {{ with .Params.featured_image }}
                             <img src="{{ . | relURL }}" class="img-fluid h-100 w-100" alt="{{ $.Title }}" style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
                             {{ else }}
-                            <img src="/images/cases/case-1.webp" class="img-fluid h-100 w-100" alt="{{ .Title }}" style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
+                            <img src="/images/content/cases/covers/case-1.webp" class="img-fluid h-100 w-100" alt="{{ .Title }}" style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
                             {{ end }}
                         </div>
                         <div class="col-md-6">
                             <div class="card-body h-100 d-flex flex-column p-3">
-                                <div class="mb-2">
-                                    {{ range first 2 .Params.primary_category }}
-                                    <span class="badge bg-primary me-1 small">{{ . }}</span>
+                                <!-- 标签区域 -->
+                                <div class="case-tags mb-3">
+                                    <!-- 产品分类标签 -->
+                                    {{ if .Params.primary_category }}
+                                    <div class="tag-group mb-2">
+                                        <span class="tag-label">产品分类:</span>
+                                        {{ range first 3 .Params.primary_category }}
+                                        <span class="tag tag-product">{{ . }}</span>
+                                        {{ end }}
+                                    </div>
                                     {{ end }}
-                                    {{ range first 1 .Params.application_field }}
-                                    <span class="badge bg-secondary me-1 small">{{ . }}</span>
+
+                                    <!-- 应用行业标签 -->
+                                    {{ if .Params.application_field }}
+                                    <div class="tag-group mb-2">
+                                        <span class="tag-label">应用行业:</span>
+                                        {{ range first 2 .Params.application_field }}
+                                        <span class="tag tag-industry">{{ . }}</span>
+                                        {{ end }}
+                                    </div>
+                                    {{ end }}
+
+                                    <!-- 技术特点标签 -->
+                                    {{ if .Params.technology_tags }}
+                                    <div class="tag-group">
+                                        <span class="tag-label">技术特点:</span>
+                                        {{ range first 2 .Params.technology_tags }}
+                                        <span class="tag tag-tech">{{ . }}</span>
+                                        {{ end }}
+                                    </div>
                                     {{ end }}
                                 </div>
+
                                 <h4 class="card-title h5 mb-2">{{ .Title }}</h4>
-                                <p class="card-text flex-grow-1 small text-muted">{{ .Params.summary | truncate 120 }}</p>
+                                <p class="card-text flex-grow-1 small text-muted">{{ .Params.summary | truncate 100 }}</p>
                                 <div class="mt-auto">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <small class="text-muted">
@@ -58,35 +82,105 @@
             {{ end }}
 
             <!-- 案例列表 -->
-            <div class="col-lg-4">
-                <div class="case-list">
+            <div class="col-lg-5">
+                <div class="case-list-compact">
                     {{ range $index, $case := after 1 (first 4 $cases) }}
-                    <div class="case-item mb-2">
-                        <div class="card border-0 shadow-sm">
-                            <div class="row g-0">
-                                <div class="col-4">
+                    <div class="case-item-compact mb-2">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="row g-0 align-items-center">
+                                <div class="col-3">
                                     {{ with .Params.featured_image }}
-                                    <img src="{{ . | relURL }}" class="img-fluid h-100 w-100" alt="{{ $.Title }}" style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
+                                    {{ partial "smart-image.html" (dict
+                                        "image" .
+                                        "alt" $.Title
+                                        "class" "case-thumb"
+                                        "category" "cases"
+                                        "type" "covers"
+                                        "loading" "lazy"
+                                    ) }}
                                     {{ else }}
-                                    {{ $images := slice "/images/cases/case-2.webp" "/images/cases/case-3.webp" "/images/cases/case-4.webp" "/images/cases/case-5.webp" }}
-                                    <img src="{{ index $images (mod $index 4) }}" class="img-fluid h-100 w-100" alt="{{ .Title }}" style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
+                                    {{ $images := slice "case-2.webp" "case-3.webp" "case-4.webp" "case-5.webp" }}
+                                    {{ partial "smart-image.html" (dict
+                                        "image" (index $images (mod $index 4))
+                                        "alt" .Title
+                                        "class" "case-thumb"
+                                        "category" "cases"
+                                        "type" "covers"
+                                        "loading" "lazy"
+                                    ) }}
                                     {{ end }}
                                 </div>
-                                <div class="col-8">
+                                <div class="col-9">
                                     <div class="card-body p-2">
-                                        <h6 class="card-title mb-1 small">{{ .Title | truncate 40 }}</h6>
-                                        <p class="card-text mb-1 small text-muted">{{ .Params.summary | truncate 60 }}</p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <small class="text-muted">
-                                                {{ range first 1 .Params.primary_category }}{{ . }}{{ end }}
-                                            </small>
-                                            <a href="{{ .Permalink }}" class="btn btn-outline-primary btn-sm py-0 px-2" style="font-size: 0.75rem;">详情</a>
+                                        <div class="case-content">
+                                            <h6 class="case-title mb-1">{{ .Title | truncate 20 }}</h6>
+
+                                            <!-- 紧凑标签展示 -->
+                                            <div class="case-tags-compact mb-1">
+                                                {{ if .Params.primary_category }}
+                                                {{ range first 1 .Params.primary_category }}
+                                                <span class="tag-compact tag-product-compact">{{ . | truncate 6 }}</span>
+                                                {{ end }}
+                                                {{ end }}
+
+                                                {{ if .Params.application_field }}
+                                                {{ range first 1 .Params.application_field }}
+                                                <span class="tag-compact tag-industry-compact">{{ . | truncate 6 }}</span>
+                                                {{ end }}
+                                                {{ end }}
+                                            </div>
+
+                                            <p class="case-summary mb-1">{{ .Params.summary | default "专业解决方案" | truncate 15 }}</p>
+                                            <div class="case-meta d-flex justify-content-between align-items-center">
+                                                <small class="text-muted">
+                                                    {{ with .Params.industry }}{{ . | truncate 8 }}{{ end }}
+                                                </small>
+                                                <a href="{{ .Permalink }}" class="case-link">
+                                                    <i class="fas fa-arrow-right"></i>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    {{ end }}
+
+                    <!-- 如果没有足够的案例，显示占位内容 -->
+                    {{ if lt (len $cases) 4 }}
+                    {{ range $i := seq (sub 4 (len $cases)) }}
+                    <div class="case-item-compact mb-2">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="row g-0 align-items-center">
+                                <div class="col-3">
+                                    {{ partial "smart-image.html" (dict
+                                        "image" (printf "case-%d.webp" (add $i 2))
+                                        "alt" "案例展示"
+                                        "class" "case-thumb"
+                                        "category" "cases"
+                                        "type" "covers"
+                                        "loading" "lazy"
+                                    ) }}
+                                </div>
+                                <div class="col-9">
+                                    <div class="card-body p-2">
+                                        <div class="case-content">
+                                            <h6 class="case-title mb-1">{{ index (slice "航空检测案例" "汽车制造案例" "石化行业案例") (sub $i 1) | truncate 15 }}</h6>
+                                            <p class="case-summary mb-1">{{ index (slice "精密检测" "质量控制" "安全监测") (sub $i 1) | truncate 12 }}</p>
+                                            <div class="case-meta d-flex justify-content-between align-items-center">
+                                                <span class="case-category">{{ index (slice "航空" "汽车" "石化") (sub $i 1) }}</span>
+                                                <a href="/cases/" class="case-link">
+                                                    <i class="fas fa-arrow-right"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{ end }}
                     {{ end }}
                 </div>
             </div>
@@ -164,8 +258,44 @@
     font-size: 16px;
     color: #616161;
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     font-weight: 400;
+}
+
+/* 查看更多按钮样式 */
+.application-cases .cases-more-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 8px;
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    border: 1px solid #0d6efd;
+    background: transparent;
+    color: #0d6efd;
+}
+
+.application-cases .cases-more-btn:hover {
+    background: #0d6efd;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
+}
+
+.application-cases .cases-more-btn i {
+    font-size: 11px;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .application-cases .cases-more-btn {
+        position: static;
+        margin: 1rem auto 0;
+        display: block;
+        width: fit-content;
+    }
 }
 
 .application-cases .featured-case {
@@ -186,12 +316,257 @@
     padding: var(--spacing-lg);
 }
 
-.application-cases .case-list .case-item {
-    transition: all var(--transition-normal);
+/* 标签样式 */
+.case-tags {
+    margin-bottom: 1rem;
 }
 
-.application-cases .case-list .case-item:hover {
+.tag-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.tag-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6c757d;
+    margin-right: 6px;
+    white-space: nowrap;
+}
+
+.tag {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 500;
+    border-radius: 12px;
+    white-space: nowrap;
+    margin-right: 4px;
+    margin-bottom: 2px;
+}
+
+.tag-product {
+    background-color: #e3f2fd;
+    color: #1976d2;
+    border: 1px solid #bbdefb;
+}
+
+.tag-industry {
+    background-color: #f3e5f5;
+    color: #7b1fa2;
+    border: 1px solid #e1bee7;
+}
+
+.tag-tech {
+    background-color: #e8f5e8;
+    color: #388e3c;
+    border: 1px solid #c8e6c9;
+}
+
+/* 紧凑标签样式 */
+.case-tags-compact {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.tag-compact {
+    display: inline-block;
+    padding: 1px 6px;
+    font-size: 9px;
+    font-weight: 500;
+    border-radius: 8px;
+    white-space: nowrap;
+}
+
+.tag-product-compact {
+    background-color: #e3f2fd;
+    color: #1976d2;
+    border: 1px solid #bbdefb;
+}
+
+.tag-industry-compact {
+    background-color: #f3e5f5;
+    color: #7b1fa2;
+    border: 1px solid #e1bee7;
+}
+
+/* PC端高度对称控制 */
+@media (min-width: 992px) {
+    /* 左侧主要案例高度 */
+    .application-cases .col-lg-7 .card {
+        min-height: 480px;
+        max-height: 480px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .application-cases .col-lg-7 .featured-case .card-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 240px;
+        padding: var(--spacing-lg);
+    }
+
+    /* 右侧案例列表高度匹配 */
+    .application-cases .col-lg-5 {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .application-cases .case-list-compact {
+        min-height: 480px;
+        max-height: 480px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 8px 0;
+    }
+
+    /* 确保案例项目均匀分布 */
+    .case-item-compact {
+        flex: 0 0 auto;
+        margin-bottom: 12px;
+    }
+
+    .case-item-compact:last-child {
+        margin-bottom: 0;
+    }
+
+    /* 右侧案例列表滚动条样式 */
+    .application-cases .case-list-compact::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .application-cases .case-list-compact::-webkit-scrollbar-track {
+        background: #f8f9fa;
+        border-radius: 2px;
+    }
+
+    .application-cases .case-list-compact::-webkit-scrollbar-thumb {
+        background: #dee2e6;
+        border-radius: 2px;
+    }
+
+    .application-cases .case-list-compact::-webkit-scrollbar-thumb:hover {
+        background: #adb5bd;
+    }
+}
+
+/* 移动端紧凑案例列表样式 */
+.case-list-compact {
+    overflow: hidden;
+}
+
+.case-item-compact {
+    transition: all 0.2s ease;
+    border-radius: 8px;
+}
+
+.case-item-compact:hover {
     transform: translateX(3px);
+}
+
+.case-item-compact .card {
+    border-radius: 8px;
+    min-height: 90px;
+    max-height: 90px;
+    overflow: hidden;
+}
+
+.case-item-compact .case-thumb {
+    width: 100%;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.case-item-compact .case-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.case-item-compact .case-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #212529;
+    line-height: 1.2;
+    margin-bottom: 4px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.case-item-compact .case-summary {
+    font-size: 11px;
+    color: #6c757d;
+    line-height: 1.2;
+    margin-bottom: 4px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.case-item-compact .case-meta {
+    align-items: center;
+}
+
+.case-item-compact .case-category {
+    font-size: 10px;
+    color: #495057;
+    background: #e9ecef;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 60px;
+}
+
+.case-item-compact .case-link {
+    color: #0d6efd;
+    text-decoration: none;
+    font-size: 12px;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+}
+
+.case-item-compact .case-link:hover {
+    background: #0d6efd;
+    color: white;
+    transform: scale(1.1);
+}
+
+/* 响应式调整 */
+@media (max-width: 991.98px) {
+    .case-list-compact {
+        max-height: none;
+        overflow: visible;
+    }
+
+    .case-item-compact .card {
+        min-height: 90px;
+        max-height: 90px;
+    }
+
+    .case-item-compact .case-thumb {
+        height: 70px;
+    }
 }
 
 .application-cases .case-list .card {

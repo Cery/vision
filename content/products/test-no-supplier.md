@@ -7,10 +7,10 @@ model: "WS-TEST-002"
 series: "测试系列"
 published: 2025-01-01T12:00:00+08:00
 gallery:
-  - image: "https://picsum.photos/800/600?random=test002"
+  - image: "/images/placeholders/general/product-main-800x600.svg"
     alt: "主图"
     is_main: true
-  - image: "https://picsum.photos/800/600?random=test002-1"
+  - image: "/images/placeholders/general/product-main-800x600.svg-1"
     alt: "副图1"
 parameters:
   - name: "探头直径"

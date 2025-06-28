@@ -10,6 +10,7 @@ tags:
 - 工业展会
 author: 市场部
 views: 156
+featured_image: "/images/news/展会.webp"
 ---
 
 # 2024年第15届中国国际工业内窥镜技术展览会

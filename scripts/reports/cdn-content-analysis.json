@@ -1,0 +1,125 @@
+{
+  "timestamp": "2025-06-28T07:39:02.137Z",
+  "cdn": {
+    "externalDependencies": [
+      {
+        "domain": "https://cdn.jsdelivr.net",
+        "usage": "CSP策略中允许",
+        "risk": "medium"
+      },
+      {
+        "domain": "https://cdnjs.cloudflare.com",
+        "usage": "CSP策略中允许",
+        "risk": "medium"
+      },
+      {
+        "domain": "https://unpkg.com",
+        "usage": "CSP策略中允许",
+        "risk": "medium"
+      },
+      {
+        "domain": "https://identity.netlify.com",
+        "usage": "CSP策略中允许",
+        "risk": "medium"
+      },
+      {
+        "domain": "cdn.jsdelivr.net",
+        "usage": "Bootstrap CSS",
+        "risk": "medium",
+        "fallback": "none"
+      },
+      {
+        "domain": "cdnjs.cloudflare.com",
+        "usage": "Font Awesome",
+        "risk": "medium",
+        "fallback": "none"
+      }
+    ],
+    "potentialRisks": [
+      {
+        "type": "CSP允许外部图片域名",
+        "file": "netlify.toml",
+        "description": "CSP策略允许picsum.photos，但项目已不使用外部图片",
+        "severity": "low",
+        "recommendation": "移除不必要的外部图片域名"
+      }
+    ],
+    "recommendations": []
+  },
+  "content": {
+    "inconsistencies": [
+      {
+        "type": "页面使用外部图片",
+        "location": "aerospace.md",
+        "image": "https://picsum.photos/800/400?random=aerospace",
+        "severity": "high"
+      },
+      {
+        "type": "页面使用外部图片",
+        "location": "automotive.md",
+        "image": "https://picsum.photos/800/400?random=automotive",
+        "severity": "high"
+      },
+      {
+        "type": "页面使用外部图片",
+        "location": "casting.md",
+        "image": "https://picsum.photos/800/400?random=casting",
+        "severity": "high"
+      },
+      {
+        "type": "页面使用外部图片",
+        "location": "energy.md",
+        "image": "https://picsum.photos/800/400?random=energy",
+        "severity": "high"
+      },
+      {
+        "type": "页面使用外部图片",
+        "location": "machinery.md",
+        "image": "https://picsum.photos/800/400?random=machinery",
+        "severity": "high"
+      },
+      {
+        "type": "页面使用外部图片",
+        "location": "research.md",
+        "image": "https://picsum.photos/800/400?random=research",
+        "severity": "high"
+      }
+    ],
+    "recommendations": []
+  },
+  "recommendations": [
+    {
+      "category": "CDN优化",
+      "priority": "medium",
+      "title": "考虑本地化外部资源",
+      "description": "将Bootstrap和Font Awesome下载到本地，减少外部依赖",
+      "benefits": [
+        "提高加载速度",
+        "减少网络依赖",
+        "提升稳定性"
+      ]
+    },
+    {
+      "category": "内容同步",
+      "priority": "high",
+      "title": "统一应用领域内容管理",
+      "description": "让首页应用领域动态读取实际页面内容，而不是硬编码",
+      "benefits": [
+        "内容一致性",
+        "维护简化",
+        "数据同步"
+      ]
+    },
+    {
+      "category": "图片管理",
+      "priority": "high",
+      "title": "替换外部图片为本地图片",
+      "description": "将所有外部图片替换为本地图片资源",
+      "benefits": [
+        "加载稳定",
+        "无外部依赖",
+        "更好的缓存控制"
+      ]
+    }
+  ]
+}

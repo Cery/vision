@@ -10,10 +10,10 @@ secondary_category:
 product_code: "TEST001"
 price: 15000
 stock: 10
-featured_image: "https://picsum.photos/800/600?random=test001"
+featured_image: "/images/placeholders/general/product-main-800x600.svg"
 gallery:
-  - "https://picsum.photos/800/600?random=test001-1"
-  - "https://picsum.photos/800/600?random=test001-2"
+  - "/images/placeholders/general/product-main-800x600.svg-1"
+  - "/images/placeholders/general/product-main-800x600.svg-2"
 summary: "这是一个从后台管理系统生成的测试产品，用于验证产品管理功能"
 date: 2024-12-26
 weight: 1

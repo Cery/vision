@@ -3,7 +3,7 @@ title: "机械制造"
 date: 2024-03-20
 summary: "机械制造质量检测与工艺优化，提升机械产品精度和可靠性"
 icon: "fas fa-cogs"
-image: "https://picsum.photos/800/400?random=machinery"
+image: "/images/banners/category/application_general_air-2_original_v1.jpg"
 weight: 4
 
 # 应用特点

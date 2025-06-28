@@ -1,25 +1,33 @@
+{{/*
+  增强的图片组件 - 支持新旧路径自动切换和响应式处理
+  向后兼容原有功能，同时支持新的图片管理系统
+*/}}
+
 {{ $image := .image }}
-{{ $alt := .alt }}
-{{ $class := .class }}
+{{ $alt := .alt | default "图片" }}
+{{ $class := .class | default "img-responsive" }}
 {{ $sizes := .sizes | default "(min-width: 1200px) 1200px, 100vw" }}
+{{ $category := .category | default "" }}
+{{ $type := .type | default "covers" }}
 
 {{ with $image }}
-    {{ $small := $.Page.Resources.GetMatch . }}
-    {{ if $small }}
-        {{ $small = $small.Resize "600x" }}
-        {{ $medium := $.Page.Resources.GetMatch . }}
-        {{ $medium = $medium.Resize "1200x" }}
-        {{ $large := $.Page.Resources.GetMatch . }}
-        {{ $large = $large.Resize "1800x" }}
-        
+    {{/* 尝试使用Hugo的资源处理 */}}
+    {{ $resource := $.Page.Resources.GetMatch . }}
+
+    {{ if $resource }}
+        {{/* 如果找到页面资源，使用Hugo的响应式处理 */}}
+        {{ $small := $resource.Resize "600x" }}
+        {{ $medium := $resource.Resize "1200x" }}
+        {{ $large := $resource.Resize "1800x" }}
+
         <picture class="{{ $class }}">
-            <source 
+            <source
                 srcset="{{ $large.RelPermalink }} 1800w,
                         {{ $medium.RelPermalink }} 1200w,
                         {{ $small.RelPermalink }} 600w"
                 sizes="{{ $sizes }}">
-            <img 
-                src="{{ $small.RelPermalink }}" 
+            <img
+                src="{{ $small.RelPermalink }}"
                 alt="{{ $alt }}"
                 loading="lazy"
                 width="{{ $small.Width }}"
@@ -27,10 +35,14 @@
                 class="{{ $class }}">
         </picture>
     {{ else }}
-        <img 
-            src="{{ . }}" 
-            alt="{{ $alt }}"
-            loading="lazy"
-            class="{{ $class }}">
+        {{/* 回退到智能路径处理 */}}
+        {{ partial "smart-image.html" (dict
+            "image" $image
+            "alt" $alt
+            "class" $class
+            "sizes" $sizes
+            "category" $category
+            "type" $type
+        ) }}
     {{ end }}
-{{ end }} 
+{{ end }}

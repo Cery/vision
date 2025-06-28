@@ -1,0 +1,82 @@
+<svg width="220" height="50" viewBox="0 0 220 50" xmlns="http://www.w3.org/2000/svg">
+  <!-- 深色背景，与footer底色一致 -->
+  <rect width="220" height="50" fill="#424242"/>
+  
+  <defs>
+    <!-- 主要渐变 - 亮蓝色系，适合深色背景 -->
+    <linearGradient id="primaryGradientLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#42a5f5;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2196f3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1976d2;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- 次要渐变 - 浅灰色系 -->
+    <linearGradient id="secondaryGradientLight" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#e0e0e0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#bdbdbd;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- 强调色渐变 - 亮橙色系 -->
+    <linearGradient id="accentGradientLight" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ffb74d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff9800;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- 文字阴影滤镜 -->
+    <filter id="textShadowLight" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="1" dy="1" stdDeviation="1" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+
+    <!-- 图标阴影 -->
+    <filter id="iconShadowLight" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="1" dy="1" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+
+  <!-- 左侧图标 - 简化的内窥镜设计 -->
+  <g transform="translate(5, 10)" filter="url(#iconShadowLight)">
+    <!-- 内窥镜主体 -->
+    <rect x="2" y="12" width="20" height="6" rx="3" fill="url(#primaryGradientLight)"/>
+    
+    <!-- 探头 -->
+    <circle cx="24" cy="15" r="4" fill="url(#secondaryGradientLight)"/>
+    <circle cx="24" cy="15" r="2.5" fill="url(#primaryGradientLight)"/>
+    <circle cx="24" cy="15" r="1" fill="url(#accentGradientLight)"/>
+    
+    <!-- 连接线 -->
+    <rect x="4" y="14" width="16" height="2" rx="1" fill="url(#secondaryGradientLight)"/>
+    
+    <!-- 检测波纹 -->
+    <circle cx="24" cy="15" r="6" fill="none" stroke="url(#accentGradientLight)" stroke-width="0.8" opacity="0.6"/>
+    <circle cx="24" cy="15" r="8" fill="none" stroke="url(#accentGradientLight)" stroke-width="0.5" opacity="0.4"/>
+  </g>
+
+  <!-- 主标题 VisNDT - 大字母 -->
+  <text x="40" y="32"
+        font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif"
+        font-size="28"
+        font-weight="800"
+        filter="url(#textShadowLight)"
+        letter-spacing="1px">
+    <tspan fill="url(#primaryGradientLight)">Vis</tspan><tspan fill="url(#secondaryGradientLight)">NDT</tspan>
+  </text>
+
+  <!-- 副标题 - 小文字 -->
+  <text x="42" y="44"
+        font-family="'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif"
+        font-size="11"
+        font-weight="500"
+        fill="url(#secondaryGradientLight)"
+        letter-spacing="0.8px">维森 专注内窥镜</text>
+
+  <!-- 装饰线条 -->
+  <rect x="42" y="35" width="100" height="0.8" rx="0.4" fill="url(#accentGradientLight)" opacity="0.8"/>
+
+  <!-- 右侧装饰元素 -->
+  <g transform="translate(190, 20)" opacity="0.7">
+    <circle cx="0" cy="0" r="1.2" fill="url(#primaryGradientLight)"/>
+    <circle cx="5" cy="3" r="0.8" fill="url(#accentGradientLight)"/>
+    <circle cx="2" cy="6" r="0.6" fill="url(#secondaryGradientLight)"/>
+    <rect x="7" y="-1" width="1.5" height="8" rx="0.75" fill="url(#primaryGradientLight)" opacity="0.5"/>
+  </g>
+</svg>

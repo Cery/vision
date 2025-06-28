@@ -10,6 +10,7 @@ tags:
 summary: 本文深入分析了工业内窥镜技术的最新发展趋势，包括高清成像、智能识别、远程操控等方面的创新突破，探讨了这些技术进步对工业检测领域带来的深远影响
 author: 技术部
 views: 128
+featured_image: "/images/news/新闻.webp"
 ---
 # 引言
 

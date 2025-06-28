@@ -1,0 +1,1802 @@
+{
+  "timestamp": "2025-06-27T16:22:40.535Z",
+  "summary": {
+    "total_files": 427,
+    "changed_files": 182,
+    "total_replacements": 220,
+    "failed_files": 0
+  },
+  "changes": [
+    {
+      "file": "content\\products\\test-backend-product.md",
+      "changes": [
+        {
+          "from": "https://picsum.photos/800/600?random=test001",
+          "to": "/images/placeholders/general/product-main-800x600.svg"
+        },
+        {
+          "from": "https://picsum.photos/800/600?random=test001-1",
+          "to": "/images/placeholders/general/product-main-800x600.svg"
+        },
+        {
+          "from": "https://picsum.photos/800/600?random=test001-2",
+          "to": "/images/placeholders/general/product-main-800x600.svg"
+        }
+      ]
+    },
+    {
+      "file": "content\\products\\test-no-supplier.md",
+      "changes": [
+        {
+          "from": "https://picsum.photos/800/600?random=test002",
+          "to": "/images/placeholders/general/product-main-800x600.svg"
+        },
+        {
+          "from": "https://picsum.photos/800/600?random=test002-1",
+          "to": "/images/placeholders/general/product-main-800x600.svg"
+        }
+      ]
+    },
+    {
+      "file": "static\\admin\\admin-functions.js",
+      "changes": [
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "static\\admin\\content-manager.html",
+      "changes": [
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "static\\admin\\data-loader.js",
+      "changes": [
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "static\\admin\\debug-products.js",
+      "changes": [
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "static\\admin\\emergency-debug.html",
+      "changes": [
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "static\\admin\\FINAL_FIX_SUMMARY.md",
+      "changes": [
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "static\\admin\\test-product-data.html",
+      "changes": [
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "static\\admin\\test-products.html",
+      "changes": [
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\12\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\404.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\admin\\admin-functions.js",
+      "changes": [
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\admin\\content-manager.html",
+      "changes": [
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\admin\\data-loader.js",
+      "changes": [
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\admin\\debug-products.js",
+      "changes": [
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\admin\\emergency-debug.html",
+      "changes": [
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\admin\\FINAL_FIX_SUMMARY.md",
+      "changes": [
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\admin\\test-product-data.html",
+      "changes": [
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\admin\\test-products.html",
+      "changes": [
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\applications\\aerospace\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\applications\\automotive\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\applications\\casting\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\applications\\energy\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\applications\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\applications\\machinery\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\applications\\research\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\cases\\automotive-manufacturing\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\cases\\aviation-blade-inspection\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\cases\\case-1\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\cases\\case-2\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\cases\\case-3\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\cases\\gas-turbine-inspection\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\cases\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\cases\\industrial-pipeline\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\cases\\wind-turbine-gearbox\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\categories\\company-news\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\categories\\exhibition-news\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\categories\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\categories\\industry-news\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\categories\\tech-news\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\categories\\企业新闻\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\categories\\光学内窥镜\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\categories\\光纤内窥镜\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\categories\\内窥镜\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\categories\\展会资讯\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\categories\\技术文章\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\categories\\爬行机器人\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\categories\\电子内窥镜\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\categories\\管道内窥镜\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\categories\\行业资讯\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\cooperation\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\customs\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\customs\\success\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\js\\image-handler.js",
+      "changes": [
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\js\\supplier-modal.js",
+      "changes": [
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\new-products\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\new-products\\ultrasonic-ndt-2024\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\2024-01-15-industry-news-example\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\2024-01-16-exhibition-news\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\2024-01-20-product-launch\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\2024-03-14-tech-trends\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\exhibition-news-1\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\exhibition-news-10\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\exhibition-news-11\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\exhibition-news-12\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\exhibition-news-2\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\exhibition-news-3\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\exhibition-news-4\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\exhibition-news-5\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\exhibition-news-6\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\exhibition-news-7\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\exhibition-news-8\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\exhibition-news-9\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\industry-news-1\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\industry-news-2\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\industry-news-3\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\industry-news-4\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\industry-news-5\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\tech-article-1\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\tech-article-2\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\tech-article-3\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\tech-article-4\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\news\\tech-article-5\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/800/600?random=test001",
+          "to": "/images/placeholders/general/product-main-800x600.svg"
+        },
+        {
+          "from": "https://picsum.photos/800/600?random=test001-1",
+          "to": "/images/placeholders/general/product-main-800x600.svg"
+        },
+        {
+          "from": "https://picsum.photos/800/600?random=test002",
+          "to": "/images/placeholders/general/product-main-800x600.svg"
+        },
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\product-dz60\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\product-p08510\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\product-p09510\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\product-p1010-model\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\product-p1210\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\product-p1510\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\product-p1810\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\product-p2010\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\product-p2210\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\product-p2410\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\product-p2810\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\product-p3910\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\product-p6010\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\product-p8020\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\test-backend-product\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/800/600?random=test001",
+          "to": "/images/placeholders/general/product-main-800x600.svg"
+        },
+        {
+          "from": "https://picsum.photos/800/600?random=test001-1",
+          "to": "/images/placeholders/general/product-main-800x600.svg"
+        },
+        {
+          "from": "https://picsum.photos/800/600?random=test001-2",
+          "to": "/images/placeholders/general/product-main-800x600.svg"
+        },
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\test-no-supplier\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/800/600?random=test002",
+          "to": "/images/placeholders/general/product-main-800x600.svg"
+        },
+        {
+          "from": "https://picsum.photos/800/600?random=test002-1",
+          "to": "/images/placeholders/general/product-main-800x600.svg"
+        },
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\ws-k08510-a\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\ws-k08510-b\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\ws-k09510-a\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\ws-k1010-a\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\ws-k1210-a\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\ws-k1210-b\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\ws-k1510-a\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\ws-k1510-b\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\ws-k1510-c\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\products\\ws-k1810-a\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\product_categories\\electronic-endoscope\\crawler-robot\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\product_categories\\electronic-endoscope\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\product_categories\\electronic-endoscope\\industrial-pipeline-endoscope\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\product_categories\\electronic-endoscope\\industrial-video-endoscope\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\product_categories\\fiber-endoscope\\flexible-fiber\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\product_categories\\fiber-endoscope\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\product_categories\\fiber-endoscope\\rigid-fiber\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\product_categories\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\product_categories\\optical-endoscope\\flexible-optical\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\product_categories\\optical-endoscope\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\product_categories\\optical-endoscope\\rigid-optical\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\product_types\\desktop_type\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\product_types\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\product_types\\portable_type\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\product_types\\robot-arm\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\search\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\suppliers\\hs-supplier\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        },
+        {
+          "from": "/images/placeholder.jpg",
+          "to": "/images/placeholder.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\suppliers\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\suppliers\\vis\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\suppliers\\vsndt-supplier\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\5g技术\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\hugo集成\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\亚洲展会\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\光学内窥镜\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\光学设计\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\光纤内窥镜\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\内窥镜技术\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\北美展会\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\印度展会\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\可持续发展\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\后台管理\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\国际展会\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\图像处理\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\工业4.0\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\工业内窥镜\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\工业展会\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\工业技术\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\工业检测\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\巴西展会\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\微型化技术\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\成像系统\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\技术优化\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\技术创新\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\技术发展\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\拉美市场\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\探头设计\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\新兴市场\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\新品发布\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\无损检测\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\无线传输\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\智能制造\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\智能识别\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\检测设备\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\欧洲展会\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\测试产品\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\深度学习\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\环保技术\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\电子视频内窥镜\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\算法优化\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\管道检测\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\精密检测\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\系统集成\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\绿色制造\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\缺陷识别\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\自动化检测\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\远程检测\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\通信技术\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    },
+    {
+      "file": "public\\tags\\韩国展会\\index.html",
+      "changes": [
+        {
+          "from": "https://picsum.photos/100/100?random=8",
+          "to": "/images/placeholders/general/qr-code-100x100.svg"
+        }
+      ]
+    }
+  ],
+  "failures": []
+}

@@ -1,0 +1,253 @@
+{
+  "timestamp": "2025-06-28T03:49:24.830Z",
+  "summary": {
+    "total_articles": 26,
+    "processed_articles": 26,
+    "failed_articles": 0,
+    "articles_with_external_images": 1,
+    "total_image_replacements": 2,
+    "backed_up_articles": 26
+  },
+  "image_usage": {
+    "/images/news/news-3.jpeg": 7,
+    "/images/news/news-4.jpeg": 7,
+    "/images/news/news-5.jpeg": 6,
+    "/images/news/news-6.jpeg": 6
+  },
+  "details": [
+    {
+      "file": "2024-01-15-industry-news-example.md",
+      "success": true,
+      "selected_image": "/images/news/news-3.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "2024-01-16-exhibition-news.md",
+      "success": true,
+      "selected_image": "/images/news/news-4.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "2024-01-20-product-launch.md",
+      "success": true,
+      "selected_image": "/images/news/news-5.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "2024-03-14-tech-trends.md",
+      "success": true,
+      "selected_image": "/images/news/news-6.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "exhibition-news-1.md",
+      "success": true,
+      "selected_image": "/images/news/news-3.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "exhibition-news-10.md",
+      "success": true,
+      "selected_image": "/images/news/news-4.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "exhibition-news-11.md",
+      "success": true,
+      "selected_image": "/images/news/news-5.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "exhibition-news-12.md",
+      "success": true,
+      "selected_image": "/images/news/news-6.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "exhibition-news-2.md",
+      "success": true,
+      "selected_image": "/images/news/news-3.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "exhibition-news-3.md",
+      "success": true,
+      "selected_image": "/images/news/news-4.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "exhibition-news-4.md",
+      "success": true,
+      "selected_image": "/images/news/news-5.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "exhibition-news-5.md",
+      "success": true,
+      "selected_image": "/images/news/news-6.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "exhibition-news-6.md",
+      "success": true,
+      "selected_image": "/images/news/news-3.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "exhibition-news-7.md",
+      "success": true,
+      "selected_image": "/images/news/news-4.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "exhibition-news-8.md",
+      "success": true,
+      "selected_image": "/images/news/news-5.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "exhibition-news-9.md",
+      "success": true,
+      "selected_image": "/images/news/news-6.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "industry-news-1.md",
+      "success": true,
+      "selected_image": "/images/news/news-3.jpeg",
+      "replacement_count": 2,
+      "had_external_images": true,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "industry-news-2.md",
+      "success": true,
+      "selected_image": "/images/news/news-4.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "industry-news-3.md",
+      "success": true,
+      "selected_image": "/images/news/news-5.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "industry-news-4.md",
+      "success": true,
+      "selected_image": "/images/news/news-6.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "industry-news-5.md",
+      "success": true,
+      "selected_image": "/images/news/news-3.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "tech-article-1.md",
+      "success": true,
+      "selected_image": "/images/news/news-4.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "tech-article-2.md",
+      "success": true,
+      "selected_image": "/images/news/news-5.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "tech-article-3.md",
+      "success": true,
+      "selected_image": "/images/news/news-6.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "tech-article-4.md",
+      "success": true,
+      "selected_image": "/images/news/news-3.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    },
+    {
+      "file": "tech-article-5.md",
+      "success": true,
+      "selected_image": "/images/news/news-4.jpeg",
+      "replacement_count": 0,
+      "had_external_images": false,
+      "backed_up": true,
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{{/*
+  简单图片组件 - 直接路径映射
+  
+  参数:
+  - .image: 图片文件名
+  - .alt: 替代文本
+  - .class: CSS类名
+  - .category: 图片分类
+  - .type: 图片类型
+*/}}
+
+{{ $image := .image }}
+{{ $alt := .alt | default "图片" }}
+{{ $class := .class | default "img-responsive" }}
+{{ $category := .category | default "" }}
+{{ $type := .type | default "covers" }}
+
+{{/* 图片路径映射 */}}
+{{ $imagePath := "/images/placeholder.svg" }}
+
+{{ if and $category $type }}
+  {{ if eq $category "news" }}
+    {{ if eq $image "news-1.jpeg" }}
+      {{ $imagePath = "/images/content/news/covers/news_covers_news-1_original_v1.jpeg" }}
+    {{ else if eq $image "news-2.jpeg" }}
+      {{ $imagePath = "/images/content/news/covers/news_covers_news-2_original_v1.jpeg" }}
+    {{ else if eq $image "news-3.jpeg" }}
+      {{ $imagePath = "/images/content/news/covers/news_covers_news-3_original_v1.jpeg" }}
+    {{ else if eq $image "news-4.jpeg" }}
+      {{ $imagePath = "/images/content/news/covers/news_covers_news-4_original_v1.jpeg" }}
+    {{ else if eq $image "news-5.jpeg" }}
+      {{ $imagePath = "/images/content/news/covers/news_covers_news-5_original_v1.jpeg" }}
+    {{ else if eq $image "news-6.jpeg" }}
+      {{ $imagePath = "/images/content/news/covers/news_covers_news-6_original_v1.jpeg" }}
+    {{ else }}
+      {{ $imagePath = "/images/content/news/covers/news_covers_news-1_original_v1.jpeg" }}
+    {{ end }}
+  {{ else if eq $category "application" }}
+    {{ if eq $image "air-1.jpg" }}
+      {{ $imagePath = "/images/banners/category/application_general_air-1_original_v1.jpg" }}
+    {{ else if eq $image "air-2.jpg" }}
+      {{ $imagePath = "/images/banners/category/application_general_air-2_original_v1.jpg" }}
+    {{ else if eq $image "electric-1.jpg" }}
+      {{ $imagePath = "/images/banners/category/application_general_electric-1_original_v1.jpg" }}
+    {{ else if eq $image "electric-2.jpg" }}
+      {{ $imagePath = "/images/banners/category/application_general_electric-2_original_v1.jpg" }}
+    {{ else if eq $image "pipe-1.jpg" }}
+      {{ $imagePath = "/images/banners/category/application_general_pipe-1_original_v1.jpg" }}
+    {{ else if eq $image "pipe-2.jpg" }}
+      {{ $imagePath = "/images/banners/category/application_general_pipe-2_original_v1.jpg" }}
+    {{ else }}
+      {{ $imagePath = "/images/banners/category/application_general_air-1_original_v1.jpg" }}
+    {{ end }}
+  {{ else }}
+    {{ $imagePath = printf "/images/%s/%s" $category $image }}
+  {{ end }}
+{{ else }}
+  {{ $imagePath = printf "/images/%s" $image }}
+{{ end }}
+
+{{/* 生成图片HTML */}}
+<img 
+  src="{{ $imagePath }}"
+  alt="{{ $alt }}"
+  loading="lazy"
+  class="{{ $class }}"
+  onerror="this.src='/images/placeholder.svg'; this.onerror=null;"
+>

@@ -1,0 +1,52 @@
+{
+  "timestamp": "2025-06-28T04:43:55.214Z",
+  "summary": {
+    "total_files": 5,
+    "successful_files": 5,
+    "failed_files": 0,
+    "total_changes": 34,
+    "partner_updates": 17
+  },
+  "files": [
+    {
+      "success": true,
+      "file": "_index.md",
+      "changes": 6,
+      "changeLog": [
+        "/images/application/ → /images/banners/category/ (6次)"
+      ]
+    },
+    {
+      "success": true,
+      "file": "partner_companies_display.html",
+      "changes": 0,
+      "changeLog": []
+    },
+    {
+      "success": true,
+      "file": "news_center.html",
+      "changes": 6,
+      "changeLog": [
+        "/images/news/ → /images/content/news/covers/ (6次)"
+      ]
+    },
+    {
+      "success": true,
+      "file": "application_cases_display.html",
+      "changes": 5,
+      "changeLog": [
+        "/images/cases/ → /images/content/cases/covers/ (5次)"
+      ]
+    },
+    {
+      "success": true,
+      "file": "product_category_carousel.html",
+      "changes": 0,
+      "changeLog": []
+    }
+  ],
+  "partner_update": {
+    "success": true,
+    "changes": 17
+  }
+}

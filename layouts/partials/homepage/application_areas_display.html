@@ -8,24 +8,29 @@
         </div>
 
         <div class="row g-4">
-            {{ if .Params.application_areas_display.enable }}
-            {{ range .Params.application_areas_display.areas }}
+            {{/* 动态读取应用领域页面 */}}
+            {{ $applications := where .Site.RegularPages "Section" "applications" }}
+            {{ $applications = $applications | first 6 }}
+            {{ range $applications }}
             <div class="col-lg-4 col-md-6">
                 <div class="area-card h-100">
                     <div class="area-image">
                         <div class="area-icon">
-                            <i class="{{ .icon }}"></i>
+                            <i class="{{ .Params.icon | default "fas fa-cogs" }}"></i>
                         </div>
-                        <img src="{{ .image }}" alt="{{ .title }}" class="img-fluid">
+                        {{ if .Params.image }}
+                        <img src="{{ .Params.image }}" alt="{{ .Title }}" class="img-fluid area-bg-image">
+                        {{ else }}
+                        <img src="/images/banners/category/application_general_air-1_original_v1.jpg" alt="{{ .Title }}" class="img-fluid area-bg-image">
+                        {{ end }}
                     </div>
                     <div class="area-content">
-                        <h3 class="area-title">{{ .title }}</h3>
-                        <p class="area-summary">{{ .summary }}</p>
-                        <a href="{{ .link }}" class="btn btn-outline-primary">了解更多</a>
+                        <h3 class="area-title">{{ .Title }}</h3>
+                        <p class="area-summary">{{ .Params.summary | default .Summary | truncate 60 }}</p>
+                        <a href="{{ .Permalink }}" class="btn btn-outline-primary">了解更多</a>
                     </div>
                 </div>
             </div>
-            {{ end }}
             {{ end }}
         </div>
     </div>

@@ -1,0 +1,322 @@
+{
+  "timestamp": "2025-06-28T05:02:36.825Z",
+  "summary": {
+    "total_images": 34,
+    "local_images": 34,
+    "external_images": 0,
+    "missing_images": 0,
+    "new_path_images": 0,
+    "old_path_images": 34,
+    "total_issues": 0
+  },
+  "sections": {
+    "carousel": {
+      "imageCount": 0,
+      "images": [],
+      "hasExternalImages": false
+    },
+    "partners": {
+      "imageCount": 0,
+      "images": [],
+      "hasExternalImages": false
+    },
+    "cases": {
+      "imageCount": 0,
+      "images": [],
+      "hasExternalImages": false
+    },
+    "news": {
+      "imageCount": 0,
+      "images": [],
+      "hasExternalImages": false
+    },
+    "footer": {
+      "imageCount": 0,
+      "images": [],
+      "hasExternalImages": false
+    }
+  },
+  "issues": [],
+  "suggestions": [
+    {
+      "priority": "medium",
+      "issue": "发现 34 个使用旧路径的图片",
+      "solution": "更新为新的路径结构",
+      "action": "使用智能图片组件自动处理路径"
+    }
+  ],
+  "detailed_analysis": [
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    },
+    {
+      "path": "/images/placeholder.svg",
+      "type": "old-path",
+      "exists": true,
+      "isExternal": false,
+      "isNewPath": false,
+      "issues": []
+    }
+  ]
+}

@@ -18,14 +18,14 @@
     
     
     <image:image>
-      <image:loc>https://picsum.photos/800/600?random=test001-1</image:loc>
+      <image:loc>http://localhost:1313/images/placeholders/general/product-main-800x600.svg-1</image:loc>
       <image:title>产品图片</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://picsum.photos/800/600?random=test001-2</image:loc>
+      <image:loc>http://localhost:1313/images/placeholders/general/product-main-800x600.svg-2</image:loc>
       <image:title>产品图片</image:title>
     </image:image>
     
@@ -311,6 +311,75 @@
   
   
   <url>
+    <loc>http://localhost:1313/products/</loc>
+    <lastmod>2025-06-28T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/zb-k3920/</loc>
+    <lastmod>2025-06-28T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
+      <image:title>ZB-K3920工业视频内窥镜主图</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
+      <image:title>3.9mm光纤探头细节</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
+      <image:title>高清显示屏</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/KX-1.jpg</image:loc>
+      <image:title>配件套装</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/KX-2.jpg</image:loc>
+      <image:title>应用场景展示</image:title>
+    </image:image>
+    
+    
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
     <loc>http://localhost:1313/products/ws-k1010-a/</loc>
     <lastmod>2025-06-15T12:00:00&#43;08:00</lastmod>
     
@@ -357,21 +426,6 @@
     </image:image>
     
     
-    
-    
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/products/</loc>
-    <lastmod>2025-06-15T12:00:00&#43;08:00</lastmod>
-    
-    
-    
-    
-
     
     
     
@@ -1593,14 +1647,14 @@
     
     
     <image:image>
-      <image:loc>https://picsum.photos/800/600?random=test002</image:loc>
+      <image:loc>http://localhost:1313/images/placeholders/general/product-main-800x600.svg</image:loc>
       <image:title>主图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://picsum.photos/800/600?random=test002-1</image:loc>
+      <image:loc>http://localhost:1313/images/placeholders/general/product-main-800x600.svg-1</image:loc>
       <image:title>副图1</image:title>
     </image:image>
     

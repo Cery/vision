@@ -119,7 +119,7 @@ function createTestData() {
             status: 'published',
             statusName: '已发布',
             published: new Date().toISOString(),
-            thumbnail: '/images/placeholder.jpg',
+            thumbnail: '/images/placeholder.svg',
             featured: false
         },
         {
@@ -134,7 +134,7 @@ function createTestData() {
             status: 'draft',
             statusName: '草稿',
             published: new Date().toISOString(),
-            thumbnail: '/images/placeholder.jpg',
+            thumbnail: '/images/placeholder.svg',
             featured: true
         }
     ];
@@ -176,7 +176,7 @@ function manualRenderProducts(products) {
                 <input type="checkbox" class="form-check-input product-checkbox" value="${product.id}">
             </td>
             <td>
-                <img src="${product.thumbnail}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;" alt="${product.title}" onerror="this.src='/images/placeholder.jpg'">
+                <img src="${product.thumbnail}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;" alt="${product.title}" onerror="this.src='/images/placeholder.svg'">
             </td>
             <td>
                 <div>

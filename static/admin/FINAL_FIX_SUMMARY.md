@@ -145,7 +145,7 @@ case 'products':
         <tr>
             <td>
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <img src="${item.thumbnail || '/images/placeholder.jpg'}" style="width: 40px; height: 30px; object-fit: cover; border-radius: 4px;" alt="">
+                    <img src="${item.thumbnail || '/images/placeholder.svg'}" style="width: 40px; height: 30px; object-fit: cover; border-radius: 4px;" alt="">
                     <div>
                         <div style="font-weight: 500;">${item.title || '未命名产品'}</div>
                         <div style="font-size: 0.8rem; color: #6c757d;">${item.primary_category || item.category || '未分类'}</div>

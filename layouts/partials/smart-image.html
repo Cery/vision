@@ -1,0 +1,89 @@
+{{/*
+  智能图片组件 - 支持新旧路径自动切换、响应式、懒加载
+  
+  参数:
+  - .image: 图片路径或文件名
+  - .alt: 替代文本
+  - .class: CSS类名
+  - .sizes: 响应式sizes属性
+  - .loading: 加载方式 (lazy/eager)
+  - .category: 图片分类 (products/news/cases/partners等)
+  - .type: 图片类型 (covers/galleries/thumbnails等)
+  - .fallback: 回退图片路径
+*/}}
+
+{{ $image := .image }}
+{{ $alt := .alt | default "图片" }}
+{{ $class := .class | default "img-responsive" }}
+{{ $sizes := .sizes | default "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" }}
+{{ $loading := .loading | default "lazy" }}
+{{ $category := .category | default "" }}
+{{ $type := .type | default "covers" }}
+{{ $fallback := .fallback | default "/images/placeholder.svg" }}
+
+{{/* 路径映射配置 */}}
+{{ $pathMapping := site.Data.path_mapping | default dict }}
+
+{{/* 构建图片路径 */}}
+{{ $finalImagePath := $fallback }}
+
+{{/* 1. 如果提供了完整路径，直接使用 */}}
+{{ if hasPrefix $image "/" }}
+  {{ $finalImagePath = $image }}
+{{ else }}
+  {{/* 2. 构建新路径 */}}
+  {{ if and $category $type }}
+    {{ $newPath := printf "/images/content/%s/%s/%s_%s_%s_original_v1" $category $type $category $type (path.BaseName $image) }}
+    {{ $ext := path.Ext $image }}
+    {{ $newPathWithExt := printf "%s%s" $newPath $ext }}
+    {{ $resourcePath := printf "static%s" $newPathWithExt }}
+    {{ if fileExists $resourcePath }}
+      {{ $finalImagePath = $newPathWithExt }}
+    {{ else }}
+      {{/* 3. 尝试旧路径 */}}
+      {{ $oldPath := printf "/images/%s/%s" $category $image }}
+      {{ $oldResourcePath := printf "static%s" $oldPath }}
+      {{ if fileExists $oldResourcePath }}
+        {{ $finalImagePath = $oldPath }}
+      {{ else }}
+        {{/* 4. 尝试通用路径 */}}
+        {{ $genericPath := printf "/images/%s" $image }}
+        {{ $genericResourcePath := printf "static%s" $genericPath }}
+        {{ if fileExists $genericResourcePath }}
+          {{ $finalImagePath = $genericPath }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  {{ else }}
+    {{/* 直接使用图片名称构建路径 */}}
+    {{ $directPath := printf "/images/%s" $image }}
+    {{ $directResourcePath := printf "static%s" $directPath }}
+    {{ if fileExists $directResourcePath }}
+      {{ $finalImagePath = $directPath }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{/* 生成图片HTML */}}
+<img 
+  src="{{ $finalImagePath }}"
+  alt="{{ $alt }}"
+  loading="{{ $loading }}"
+  class="{{ $class }}"
+  {{ with $sizes }}sizes="{{ . }}"{{ end }}
+  onerror="this.src='{{ $fallback }}'; this.onerror=null;"
+  data-original-src="{{ $image }}"
+  data-category="{{ $category }}"
+  data-type="{{ $type }}"
+>
+
+{{/* 调试信息 (仅在开发模式下显示) */}}
+{{ if site.Params.debug }}
+<!--
+Smart Image Debug:
+- Original: {{ $image }}
+- Category: {{ $category }}
+- Type: {{ $type }}
+- Final Path: {{ $finalImagePath }}
+-->
+{{ end }}

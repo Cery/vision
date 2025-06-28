@@ -3,7 +3,7 @@ title: "科学研究"
 date: 2024-03-20
 summary: "科研实验检测分析专业解决方案，支持科学研究和技术创新"
 icon: "fas fa-microscope"
-image: "https://picsum.photos/800/400?random=research"
+image: "/images/banners/category/application_general_pipe-2_original_v1.jpg"
 weight: 6
 
 # 应用特点

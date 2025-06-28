@@ -3,7 +3,7 @@ title: "能源电力"
 date: 2024-03-20
 summary: "助力能源电力设备安全运行监测，保障电力系统稳定可靠"
 icon: "fas fa-bolt"
-image: "https://picsum.photos/800/400?random=energy"
+image: "/images/banners/category/application_general_electric-1_original_v1.jpg"
 weight: 2
 
 # 应用特点

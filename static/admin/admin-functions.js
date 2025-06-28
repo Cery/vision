@@ -1723,7 +1723,7 @@ function createProductOld() {
                                    placeholder="请输入图片URL">
                         </div>
                         <div class="text-center">
-                            <img src="/images/placeholder.jpg"
+                            <img src="/images/placeholder.svg"
                                  class="img-fluid rounded" style="max-height: 200px;" alt="产品图片预览" id="newProductImagePreview">
                         </div>
                         <button class="btn btn-outline-primary btn-sm mt-2 w-100" onclick="uploadNewProductImage()">
@@ -1759,7 +1759,7 @@ function createProductOld() {
         if (this.value) {
             imagePreview.src = this.value;
         } else {
-            imagePreview.src = '/images/placeholder.jpg';
+            imagePreview.src = '/images/placeholder.svg';
         }
     });
 }
@@ -5823,7 +5823,7 @@ function showNewsEditForm(news, isNew = false) {
                             <input type="text" class="form-control" id="newsThumbnail" value="${news.thumbnail || ''}">
                         </div>
                         <div class="text-center">
-                            <img src="${news.thumbnail || '/images/placeholder.jpg'}"
+                            <img src="${news.thumbnail || '/images/placeholder.svg'}"
                                  class="img-fluid rounded" style="max-height: 200px;" alt="资讯图片">
                         </div>
                     </div>
@@ -6046,7 +6046,7 @@ async function loadProductsList() {
                 status: product.status || 'published',
                 statusName: product.status === 'published' ? '已发布' : product.status === 'draft' ? '草稿' : '已归档',
                 published: product.published || new Date().toISOString(),
-                thumbnail: product.thumbnail || '/images/placeholder.jpg',
+                thumbnail: product.thumbnail || '/images/placeholder.svg',
                 supplier: product.supplier || '深圳市微视光电科技有限公司',
                 featured: product.featured || false
             }));
@@ -6174,7 +6174,7 @@ function renderProductsPage() {
                 <input type="checkbox" class="form-check-input product-checkbox" value="${product.id}">
             </td>
             <td>
-                <img src="${product.thumbnail}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;" alt="${product.title}" onerror="this.src='/images/placeholder.jpg'">
+                <img src="${product.thumbnail}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;" alt="${product.title}" onerror="this.src='/images/placeholder.svg'">
             </td>
             <td>
                 <div>
@@ -6444,7 +6444,7 @@ function updateProductTable(productData) {
                 <input type="checkbox" class="form-check-input product-checkbox" value="${product.id}">
             </td>
             <td>
-                <img src="${product.thumbnail}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;" alt="${product.title}" onerror="this.src='/images/placeholder.jpg'">
+                <img src="${product.thumbnail}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;" alt="${product.title}" onerror="this.src='/images/placeholder.svg'">
             </td>
             <td>
                 <div>
@@ -7017,7 +7017,7 @@ function showProductEditForm(product, isNew = false) {
                             <input type="text" class="form-control" id="productThumbnail" value="${product.thumbnail || ''}">
                         </div>
                         <div class="text-center">
-                            <img src="${product.thumbnail || '/images/placeholder.jpg'}"
+                            <img src="${product.thumbnail || '/images/placeholder.svg'}"
                                  class="img-fluid rounded" style="max-height: 200px;" alt="产品图片">
                         </div>
                         <button class="btn btn-outline-primary btn-sm mt-2 w-100" onclick="uploadProductImage()">
@@ -7085,7 +7085,7 @@ function showProductPreviewModal(product) {
                     <div class="row">
                         <div class="col-md-6">
                             <div class="product-image mb-3">
-                                <img src="${product.thumbnail}" class="img-fluid rounded" alt="${product.title}" style="width: 100%; height: 300px; object-fit: cover;" onerror="this.src='/images/placeholder.jpg'">
+                                <img src="${product.thumbnail}" class="img-fluid rounded" alt="${product.title}" style="width: 100%; height: 300px; object-fit: cover;" onerror="this.src='/images/placeholder.svg'">
                             </div>
                             ${product.gallery && product.gallery.length > 0 ? `
                                 <div class="product-gallery">
@@ -7290,7 +7290,7 @@ function saveNewProduct() {
         supplier: document.getElementById('newProductSupplier').value,
         status: document.getElementById('newProductStatus').value,
         published: document.getElementById('newProductPublished').value,
-        thumbnail: document.getElementById('newProductThumbnail').value || '/images/placeholder.jpg',
+        thumbnail: document.getElementById('newProductThumbnail').value || '/images/placeholder.svg',
         parameters: getNewProductParameters()
     };
 
@@ -8448,7 +8448,7 @@ function showCaseEditForm(caseData, isNew = false) {
                             <input type="text" class="form-control" id="caseThumbnail" value="${caseData.thumbnail || ''}">
                         </div>
                         <div class="text-center">
-                            <img src="${caseData.thumbnail || '/images/placeholder.jpg'}"
+                            <img src="${caseData.thumbnail || '/images/placeholder.svg'}"
                                  class="img-fluid rounded" style="max-height: 200px;" alt="案例图片">
                         </div>
                     </div>

@@ -1,0 +1,143 @@
+{{/*
+  响应式图片组件 - 支持多格式、多尺寸、懒加载
+  
+  参数:
+  - .image: 图片路径或文件名
+  - .alt: 替代文本
+  - .class: CSS类名
+  - .sizes: 响应式sizes属性
+  - .loading: 加载方式 (lazy/eager)
+  - .category: 图片分类
+  - .type: 图片类型
+  - .aspectRatio: 宽高比 (16:9, 4:3, 1:1等)
+  - .quality: 图片质量 (high/medium/low)
+*/}}
+
+{{ $image := .image }}
+{{ $alt := .alt | default "图片" }}
+{{ $class := .class | default "responsive-image" }}
+{{ $sizes := .sizes | default "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" }}
+{{ $loading := .loading | default "lazy" }}
+{{ $category := .category | default "" }}
+{{ $type := .type | default "covers" }}
+{{ $aspectRatio := .aspectRatio | default "" }}
+{{ $quality := .quality | default "medium" }}
+
+{{/* 获取基础图片信息 */}}
+{{ $baseName := path.BaseName $image }}
+{{ $ext := path.Ext $image }}
+
+{{/* 构建基础路径 */}}
+{{ $basePath := "" }}
+{{ if and $category $type }}
+  {{ $basePath = printf "/images/content/%s/%s" $category $type }}
+{{ else if $category }}
+  {{ $basePath = printf "/images/%s" $category }}
+{{ else }}
+  {{ $basePath = "/images" }}
+{{ end }}
+
+{{/* 响应式尺寸配置 */}}
+{{ $responsiveSizes := dict 
+  "small" "320w"
+  "medium" "768w" 
+  "large" "1200w"
+  "xlarge" "1920w"
+}}
+
+{{/* 构建图片路径 */}}
+{{ $originalPath := printf "%s/%s" $basePath $image }}
+{{ $webpPath := printf "%s/%s.webp" $basePath $baseName }}
+{{ $avifPath := printf "%s/%s.avif" $basePath $baseName }}
+
+{{/* 检查文件是否存在 */}}
+{{ $hasOriginal := fileExists (printf "static%s" $originalPath) }}
+{{ $hasWebP := fileExists (printf "static%s" $webpPath) }}
+{{ $hasAVIF := fileExists (printf "static%s" $avifPath) }}
+
+{{/* 回退到旧路径 */}}
+{{ if not $hasOriginal }}
+  {{ $oldPath := printf "/images/%s/%s" $category $image }}
+  {{ if fileExists (printf "static%s" $oldPath) }}
+    {{ $originalPath = $oldPath }}
+    {{ $hasOriginal = true }}
+  {{ end }}
+{{ end }}
+
+{{/* 最终回退 */}}
+{{ if not $hasOriginal }}
+  {{ $originalPath = "/images/placeholder.svg" }}
+{{ end }}
+
+{{/* 生成srcset */}}
+{{ $srcsetWebP := slice }}
+{{ $srcsetOriginal := slice }}
+
+{{ range $size, $descriptor := $responsiveSizes }}
+  {{ $responsivePath := printf "%s/%s_%s%s" $basePath $baseName $size $ext }}
+  {{ $responsiveWebP := printf "%s/%s_%s.webp" $basePath $baseName $size }}
+  
+  {{ if fileExists (printf "static%s" $responsivePath) }}
+    {{ $srcsetOriginal = $srcsetOriginal | append (printf "%s %s" $responsivePath $descriptor) }}
+  {{ end }}
+  
+  {{ if fileExists (printf "static%s" $responsiveWebP) }}
+    {{ $srcsetWebP = $srcsetWebP | append (printf "%s %s" $responsiveWebP $descriptor) }}
+  {{ end }}
+{{ end }}
+
+{{/* 如果没有响应式版本，使用原图 */}}
+{{ if eq (len $srcsetOriginal) 0 }}
+  {{ $srcsetOriginal = $srcsetOriginal | append (printf "%s 1x" $originalPath) }}
+{{ end }}
+
+{{/* 生成HTML */}}
+<picture class="{{ $class }}-container"{{ with $aspectRatio }} data-aspect-ratio="{{ . }}"{{ end }}>
+  {{/* AVIF格式 - 最新浏览器 */}}
+  {{ if $hasAVIF }}
+  <source 
+    srcset="{{ $avifPath }}"
+    type="image/avif">
+  {{ end }}
+  
+  {{/* WebP格式 - 现代浏览器 */}}
+  {{ if or $hasWebP (gt (len $srcsetWebP) 0) }}
+  <source 
+    {{ if gt (len $srcsetWebP) 0 }}
+    srcset="{{ delimit $srcsetWebP ", " }}"
+    {{ else }}
+    srcset="{{ $webpPath }}"
+    {{ end }}
+    sizes="{{ $sizes }}"
+    type="image/webp">
+  {{ end }}
+  
+  {{/* 原始格式 - 兼容性回退 */}}
+  <img 
+    src="{{ $originalPath }}"
+    {{ if gt (len $srcsetOriginal) 0 }}
+    srcset="{{ delimit $srcsetOriginal ", " }}"
+    sizes="{{ $sizes }}"
+    {{ end }}
+    alt="{{ $alt }}"
+    loading="{{ $loading }}"
+    class="{{ $class }}"
+    {{ with $aspectRatio }}style="aspect-ratio: {{ . }};"{{ end }}
+    onerror="this.src='/images/placeholder.svg'; this.onerror=null;"
+    data-category="{{ $category }}"
+    data-type="{{ $type }}"
+    data-quality="{{ $quality }}">
+</picture>
+
+{{/* 调试信息 */}}
+{{ if site.Params.debug }}
+<!-- 
+Responsive Image Debug:
+- Original: {{ $image }}
+- Base Path: {{ $basePath }}
+- Final Path: {{ $originalPath }}
+- Has WebP: {{ $hasWebP }}
+- Has AVIF: {{ $hasAVIF }}
+- Responsive Sizes: {{ len $srcsetOriginal }}
+-->
+{{ end }}

@@ -1,0 +1,121 @@
+{
+  "timestamp": "2025-06-27T16:42:28.835Z",
+  "summary": {
+    "total_partners": 17,
+    "image_formats": {
+      ".png": 10,
+      ".jpg": 7
+    },
+    "categories": {
+      "aerospace": 7,
+      "automotive": 4,
+      "energy": 2,
+      "manufacturing": 3,
+      "other": 1
+    }
+  },
+  "partners": [
+    {
+      "name": "中国航天",
+      "file": "中国航天.png",
+      "path": "/images/partner/中国航天.png",
+      "priority": 1
+    },
+    {
+      "name": "中国航发",
+      "file": "中国航发.jpg",
+      "path": "/images/partner/中国航发.jpg",
+      "priority": 2
+    },
+    {
+      "name": "中航工业",
+      "file": "中航工业.png",
+      "path": "/images/partner/中航工业.png",
+      "priority": 3
+    },
+    {
+      "name": "中航光电",
+      "file": "中航光电.png",
+      "path": "/images/partner/中航光电.png",
+      "priority": 4
+    },
+    {
+      "name": "中国商飞",
+      "file": "中国商飞.png",
+      "path": "/images/partner/中国商飞.png",
+      "priority": 5
+    },
+    {
+      "name": "航天科工",
+      "file": "航天科工.jpg",
+      "path": "/images/partner/航天科工.jpg",
+      "priority": 6
+    },
+    {
+      "name": "兵器工业",
+      "file": "兵器工业.jpg",
+      "path": "/images/partner/兵器工业.jpg",
+      "priority": 7
+    },
+    {
+      "name": "中国华能",
+      "file": "中国华能.png",
+      "path": "/images/partner/中国华能.png",
+      "priority": 8
+    },
+    {
+      "name": "国家能源集团",
+      "file": "国家能源集团.png",
+      "path": "/images/partner/国家能源集团.png",
+      "priority": 9
+    },
+    {
+      "name": "中国一汽",
+      "file": "中国一汽.jpg",
+      "path": "/images/partner/中国一汽.jpg",
+      "priority": 10
+    },
+    {
+      "name": "比亚迪汽车",
+      "file": "比亚迪汽车.png",
+      "path": "/images/partner/比亚迪汽车.png",
+      "priority": 11
+    },
+    {
+      "name": "理想汽车",
+      "file": "理想汽车.jpg",
+      "path": "/images/partner/理想汽车.jpg",
+      "priority": 12
+    },
+    {
+      "name": "潍柴动力",
+      "file": "潍柴动力.png",
+      "path": "/images/partner/潍柴动力.png",
+      "priority": 13
+    },
+    {
+      "name": "中国中车",
+      "file": "中国中车.jpg",
+      "path": "/images/partner/中国中车.jpg",
+      "priority": 14
+    },
+    {
+      "name": "三一重工",
+      "file": "三一重工.png",
+      "path": "/images/partner/三一重工.png",
+      "priority": 15
+    },
+    {
+      "name": "东方航空",
+      "file": "东方航空.jpg",
+      "path": "/images/partner/东方航空.jpg",
+      "priority": 16
+    },
+    {
+      "name": "南方航空",
+      "file": "南方航空.png",
+      "path": "/images/partner/南方航空.png",
+      "priority": 17
+    }
+  ]
+}

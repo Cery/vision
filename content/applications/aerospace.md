@@ -3,7 +3,7 @@ title: "航空航天"
 date: 2024-03-20
 summary: "为航空航天领域提供高精度无损检测解决方案，确保飞行器安全性和可靠性"
 icon: "fas fa-plane"
-image: "https://picsum.photos/800/400?random=aerospace"
+image: "/images/banners/category/application_general_air-1_original_v1.jpg"
 weight: 1
 
 # 应用特点

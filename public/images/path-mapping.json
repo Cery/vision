@@ -1,0 +1,70 @@
+{
+  "version": "1.0.0",
+  "created": "2025-06-28T04:35:58.462Z",
+  "description": "新旧图片路径映射关系",
+  "mappings": {
+    "products": {},
+    "news": {
+      "/images/news/news-1.jpeg": "/images/content/news/covers/news_covers_news-1_original_v1.jpeg",
+      "/images/news/news-2.jpeg": "/images/content/news/covers/news_covers_news-2_original_v1.jpeg",
+      "/images/news/news-3.jpeg": "/images/content/news/covers/news_covers_news-3_original_v1.jpeg",
+      "/images/news/news-4.jpeg": "/images/content/news/covers/news_covers_news-4_original_v1.jpeg",
+      "/images/news/news-5.jpeg": "/images/content/news/covers/news_covers_news-5_original_v1.jpeg",
+      "/images/news/news-6.jpeg": "/images/content/news/covers/news_covers_news-6_original_v1.jpeg",
+      "/images/news/展会.webp": "/images/content/news/covers/news_covers_展会_original_v1.webp",
+      "/images/news/新闻.webp": "/images/content/news/covers/news_covers_新闻_original_v1.webp",
+      "/images/news/行业资讯.png": "/images/content/news/covers/news_covers_行业资讯_original_v1.png"
+    },
+    "cases": {
+      "/images/cases/case-1.webp": "/images/content/cases/covers/cases_covers_case-1_original_v1.webp",
+      "/images/cases/case-2.webp": "/images/content/cases/covers/cases_covers_case-2_original_v1.webp",
+      "/images/cases/case-3.webp": "/images/content/cases/covers/cases_covers_case-3_original_v1.webp",
+      "/images/cases/case-4.webp": "/images/content/cases/covers/cases_covers_case-4_original_v1.webp",
+      "/images/cases/case-5.webp": "/images/content/cases/covers/cases_covers_case-5_original_v1.webp",
+      "/images/cases/case-6.webp": "/images/content/cases/covers/cases_covers_case-6_original_v1.webp",
+      "/images/cases/case-7.webp": "/images/content/cases/covers/cases_covers_case-7_original_v1.webp",
+      "/images/cases/case-8.webp": "/images/content/cases/covers/cases_covers_case-8_original_v1.webp"
+    },
+    "partners": {
+      "/images/partner/三一重工.png": "/images/content/partners/logos/partners_logos_三一重工_original_v1.png",
+      "/images/partner/东方航空.jpg": "/images/content/partners/logos/partners_logos_东方航空_original_v1.jpg",
+      "/images/partner/中国一汽.jpg": "/images/content/partners/logos/partners_logos_中国一汽_original_v1.jpg",
+      "/images/partner/中国中车.jpg": "/images/content/partners/logos/partners_logos_中国中车_original_v1.jpg",
+      "/images/partner/中国华能.png": "/images/content/partners/logos/partners_logos_中国华能_original_v1.png",
+      "/images/partner/中国商飞.png": "/images/content/partners/logos/partners_logos_中国商飞_original_v1.png",
+      "/images/partner/中国航发.jpg": "/images/content/partners/logos/partners_logos_中国航发_original_v1.jpg",
+      "/images/partner/中国航天.png": "/images/content/partners/logos/partners_logos_中国航天_original_v1.png",
+      "/images/partner/中航光电.png": "/images/content/partners/logos/partners_logos_中航光电_original_v1.png",
+      "/images/partner/中航工业.png": "/images/content/partners/logos/partners_logos_中航工业_original_v1.png",
+      "/images/partner/兵器工业.jpg": "/images/content/partners/logos/partners_logos_兵器工业_original_v1.jpg",
+      "/images/partner/南方航空.png": "/images/content/partners/logos/partners_logos_南方航空_original_v1.png",
+      "/images/partner/国家能源集团.png": "/images/content/partners/logos/partners_logos_国家能源集团_original_v1.png",
+      "/images/partner/比亚迪汽车.png": "/images/content/partners/logos/partners_logos_比亚迪汽车_original_v1.png",
+      "/images/partner/潍柴动力.png": "/images/content/partners/logos/partners_logos_潍柴动力_original_v1.png",
+      "/images/partner/理想汽车.jpg": "/images/content/partners/logos/partners_logos_理想汽车_original_v1.jpg",
+      "/images/partner/航天科工.jpg": "/images/content/partners/logos/partners_logos_航天科工_original_v1.jpg"
+    },
+    "carousel": {
+      "/images/carousel/carousel-1.jpg": "/images/banners/home/carousel_general_carousel-1_original_v1.jpg",
+      "/images/carousel/carousel-2.jpg": "/images/banners/home/carousel_general_carousel-2_original_v1.jpg",
+      "/images/carousel/carousel-3.webp": "/images/banners/home/carousel_general_carousel-3_original_v1.webp"
+    },
+    "application": {
+      "/images/application/air-1.jpg": "/images/banners/category/application_general_air-1_original_v1.jpg",
+      "/images/application/air-2.jpg": "/images/banners/category/application_general_air-2_original_v1.jpg",
+      "/images/application/electric-1.jpg": "/images/banners/category/application_general_electric-1_original_v1.jpg",
+      "/images/application/electric-2.jpg": "/images/banners/category/application_general_electric-2_original_v1.jpg",
+      "/images/application/pipe-1.jpg": "/images/banners/category/application_general_pipe-1_original_v1.jpg",
+      "/images/application/pipe-2.jpg": "/images/banners/category/application_general_pipe-2_original_v1.jpg"
+    },
+    "brand": {
+      "/images/favicon.svg": "/images/assets/brand/icons/brand_icons_favicon_original_v1.svg",
+      "/images/logo-dark.svg": "/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg",
+      "/images/logo-footer.svg": "/images/assets/brand/logos/brand_logos_logo-footer_original_v1.svg",
+      "/images/logo-new.svg": "/images/assets/brand/logos/brand_logos_logo-new_original_v1.svg",
+      "/images/logo.svg": "/images/assets/brand/logos/brand_logos_logo_original_v1.svg",
+      "/images/placeholder.svg": "/images/assets/brand/brand_general_placeholder_original_v1.svg"
+    },
+    "placeholders": {}
+  }
+}

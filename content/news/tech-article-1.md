@@ -10,6 +10,7 @@ tags:
 - 工业内窥镜
 author: 技术研发部
 views: 245
+featured_image: "/images/news/新闻.webp"
 ---
 
 # 工业内窥镜图像处理算法优化技术研究

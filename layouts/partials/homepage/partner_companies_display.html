@@ -16,7 +16,15 @@
                     <div class="partner-item">
                         <div class="partner-card">
                             {{ with .logo }}
-                            <img src="{{ . }}" alt="{{ $company.company_name }}" class="partner-logo">
+                            {{ partial "smart-image.html" (dict
+                                "image" .
+                                "alt" $company.company_name
+                                "class" "partner-logo"
+                                "category" "partners"
+                                "type" "logos"
+                                "loading" "lazy"
+                                "sizes" "120px"
+                            ) }}
                             {{ end }}
                             <p class="partner-name">{{ .company_name }}</p>
                         </div>
@@ -32,7 +40,15 @@
                     <div class="partner-item">
                         <div class="partner-card">
                             {{ with .logo }}
-                            <img src="{{ . }}" alt="{{ $company.company_name }}" class="partner-logo">
+                            {{ partial "smart-image.html" (dict
+                                "image" .
+                                "alt" $company.company_name
+                                "class" "partner-logo"
+                                "category" "partners"
+                                "type" "logos"
+                                "loading" "lazy"
+                                "sizes" "120px"
+                            ) }}
                             {{ end }}
                             <p class="partner-name">{{ .company_name }}</p>
                         </div>

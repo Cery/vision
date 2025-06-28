@@ -20,11 +20,7 @@
                         {{ range $index, $news := first 5 $industryNews }}
                         <div class="news-item d-flex mb-2">
                             <div class="news-image me-3 flex-shrink-0">
-                                {{ if .Params.thumbnail }}
-                                <img src="{{ .Params.thumbnail | relURL }}" alt="{{ .Title }}" class="news-thumbnail">
-                                {{ else }}
-                                <img src="/images/news/news-1.jpeg" alt="{{ .Title }}" class="news-thumbnail">
-                                {{ end }}
+                                <img src="/images/content/news/covers/news_covers_news-1_original_v1.jpeg" alt="{{ .Title }}" class="news-thumbnail">
                             </div>
                             <div class="news-content flex-grow-1">
                                 <h4 class="news-title mb-1"><a href="{{ .Permalink }}" class="text-dark text-decoration-none hover-primary">{{ .Title }}</a></h4>
@@ -37,7 +33,14 @@
                             <!-- 占位资讯 -->
                             <div class="news-item d-flex mb-2">
                                 <div class="news-image me-3 flex-shrink-0">
-                                    <img src="/images/news/news-1.jpeg" alt="示例资讯" class="news-thumbnail">
+                                    {{ partial "simple-image.html" (dict
+                                        "image" "news-1.jpeg"
+                                        "alt" "示例资讯"
+                                        "class" "news-thumbnail"
+                                        "category" "news"
+                                        "type" "covers"
+                                        "loading" "lazy"
+                                    ) }}
                                 </div>
                                 <div class="news-content flex-grow-1">
                                     <h4 class="news-title mb-1"><a href="#" class="text-dark text-decoration-none hover-primary">2024年工业内窥镜技术发展趋势分析</a></h4>
@@ -47,7 +50,14 @@
                             </div>
                             <div class="news-item d-flex mb-2">
                                 <div class="news-image me-3 flex-shrink-0">
-                                    <img src="/images/news/news-2.jpeg" alt="示例资讯" class="news-thumbnail">
+                                    {{ partial "simple-image.html" (dict
+                                        "image" "news-2.jpeg"
+                                        "alt" "示例资讯"
+                                        "class" "news-thumbnail"
+                                        "category" "news"
+                                        "type" "covers"
+                                        "loading" "lazy"
+                                    ) }}
                                 </div>
                                 <div class="news-content flex-grow-1">
                                     <h4 class="news-title mb-1"><a href="#" class="text-dark text-decoration-none hover-primary">内窥镜技术在工业检测中的创新应用</a></h4>
@@ -57,7 +67,14 @@
                             </div>
                             <div class="news-item d-flex mb-2">
                                 <div class="news-image me-3 flex-shrink-0">
-                                    <img src="/images/news/news-3.jpeg" alt="示例资讯" class="news-thumbnail">
+                                    {{ partial "simple-image.html" (dict
+                                        "image" "news-3.jpeg"
+                                        "alt" "示例资讯"
+                                        "class" "news-thumbnail"
+                                        "category" "news"
+                                        "type" "covers"
+                                        "loading" "lazy"
+                                    ) }}
                                 </div>
                                 <div class="news-content flex-grow-1">
                                     <h4 class="news-title mb-1"><a href="#" class="text-dark text-decoration-none hover-primary">AI技术赋能工业内窥镜智能检测发展</a></h4>
@@ -67,7 +84,14 @@
                             </div>
                             <div class="news-item d-flex mb-2">
                                 <div class="news-image me-3 flex-shrink-0">
-                                    <img src="/images/news/news-4.jpeg" alt="示例资讯" class="news-thumbnail">
+                                    {{ partial "simple-image.html" (dict
+                                        "image" "news-4.jpeg"
+                                        "alt" "示例资讯"
+                                        "class" "news-thumbnail"
+                                        "category" "news"
+                                        "type" "covers"
+                                        "loading" "lazy"
+                                    ) }}
                                 </div>
                                 <div class="news-content flex-grow-1">
                                     <h4 class="news-title mb-1"><a href="#" class="text-dark text-decoration-none hover-primary">5G技术推动内窥镜远程检测新发展</a></h4>
@@ -77,7 +101,14 @@
                             </div>
                             <div class="news-item d-flex mb-0">
                                 <div class="news-image me-3 flex-shrink-0">
-                                    <img src="/images/news/news-5.jpeg" alt="示例资讯" class="news-thumbnail">
+                                    {{ partial "simple-image.html" (dict
+                                        "image" "news-5.jpeg"
+                                        "alt" "示例资讯"
+                                        "class" "news-thumbnail"
+                                        "category" "news"
+                                        "type" "covers"
+                                        "loading" "lazy"
+                                    ) }}
                                 </div>
                                 <div class="news-content flex-grow-1">
                                     <h4 class="news-title mb-1"><a href="#" class="text-dark text-decoration-none hover-primary">新一代工业内窥镜产品发布会成功举办</a></h4>
@@ -92,91 +123,141 @@
 
             <!-- 右侧：展会资讯和技术文章 -->
             <div class="col-lg-5">
-                <div class="row h-100">
-                    <!-- 展会资讯（上半部分） -->
-                    <div class="col-12 mb-3">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
-                                <h3 class="h5 mb-0">展会资讯</h3>
-                                <a href="/news/" class="text-primary text-decoration-none small">更多</a>
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-0">
+                        <!-- 展会资讯区域 -->
+                        <div class="news-section border-bottom">
+                            <div class="section-header bg-light px-3 py-2 d-flex justify-content-between align-items-center">
+                                <h3 class="h6 mb-0 text-primary fw-bold">
+                                    <i class="fas fa-calendar-alt me-2"></i>展会资讯
+                                </h3>
+                                <a href="/news/" class="text-primary text-decoration-none small fw-medium">更多 →</a>
                             </div>
-                            <div class="card-body">
+                            <div class="section-content px-3 py-2">
                                 {{ $exhibitionNews := where (where .Site.RegularPages "Type" "news") ".Params.categories" "intersect" (slice "展会资讯") }}
                                 {{ if gt (len $exhibitionNews) 0 }}
-                                {{ range first 6 $exhibitionNews }}
-                                <div class="exhibition-item d-flex justify-content-between align-items-center mb-2">
-                                    <a href="{{ .Permalink }}" class="exhibition-link text-dark text-decoration-none hover-primary flex-grow-1">{{ .Title }}</a>
-                                    <small class="exhibition-date text-muted ms-3">{{ .Date.Format "01-02" }}</small>
+                                {{ range first 5 $exhibitionNews }}
+                                <div class="news-item-compact d-flex justify-content-between align-items-start py-2 border-bottom border-light">
+                                    <div class="item-content flex-grow-1 pe-2">
+                                        <a href="{{ .Permalink }}" class="item-title text-dark text-decoration-none hover-primary d-block fw-medium">{{ .Title | truncate 28 }}</a>
+                                        <small class="item-summary text-muted d-block mt-1">{{ .Params.summary | default "了解最新展会动态" | truncate 35 }}</small>
+                                    </div>
+                                    <div class="item-meta text-end flex-shrink-0">
+                                        <small class="item-date text-muted d-block">{{ .Date.Format "01-02" }}</small>
+                                        <span class="badge bg-primary bg-opacity-10 text-primary mt-1">展会</span>
+                                    </div>
                                 </div>
                                 {{ end }}
                                 {{ else }}
                                     <!-- 占位展会资讯 -->
-                                    <div class="exhibition-item d-flex justify-content-between align-items-center mb-2">
-                                        <a href="#" class="exhibition-link text-dark text-decoration-none hover-primary flex-grow-1">2024年中国国际工业博览会</a>
-                                        <small class="exhibition-date text-muted ms-3">12-05</small>
+                                    <div class="news-item-compact d-flex justify-content-between align-items-start py-2 border-bottom border-light">
+                                        <div class="item-content flex-grow-1 pe-2">
+                                            <a href="#" class="item-title text-dark text-decoration-none hover-primary d-block fw-medium">2024年中国国际工业博览会</a>
+                                            <small class="item-summary text-muted d-block mt-1">聚焦智能制造与工业4.0技术</small>
+                                        </div>
+                                        <div class="item-meta text-end flex-shrink-0">
+                                            <small class="item-date text-muted d-block">12-05</small>
+                                            <span class="badge bg-primary bg-opacity-10 text-primary mt-1">展会</span>
+                                        </div>
                                     </div>
-                                    <div class="exhibition-item d-flex justify-content-between align-items-center mb-2">
-                                        <a href="#" class="exhibition-link text-dark text-decoration-none hover-primary flex-grow-1">2024年北京国际机器视觉展会</a>
-                                        <small class="exhibition-date text-muted ms-3">11-10</small>
+                                    <div class="news-item-compact d-flex justify-content-between align-items-start py-2 border-bottom border-light">
+                                        <div class="item-content flex-grow-1 pe-2">
+                                            <a href="#" class="item-title text-dark text-decoration-none hover-primary d-block fw-medium">北京国际机器视觉展会</a>
+                                            <small class="item-summary text-muted d-block mt-1">机器视觉技术创新与应用</small>
+                                        </div>
+                                        <div class="item-meta text-end flex-shrink-0">
+                                            <small class="item-date text-muted d-block">11-10</small>
+                                            <span class="badge bg-primary bg-opacity-10 text-primary mt-1">展会</span>
+                                        </div>
                                     </div>
-                                    <div class="exhibition-item d-flex justify-content-between align-items-center mb-2">
-                                        <a href="#" class="exhibition-link text-dark text-decoration-none hover-primary flex-grow-1">2024年深圳国际智能制造展览会</a>
-                                        <small class="exhibition-date text-muted ms-3">10-15</small>
+                                    <div class="news-item-compact d-flex justify-content-between align-items-start py-2 border-bottom border-light">
+                                        <div class="item-content flex-grow-1 pe-2">
+                                            <a href="#" class="item-title text-dark text-decoration-none hover-primary d-block fw-medium">深圳国际智能制造展览会</a>
+                                            <small class="item-summary text-muted d-block mt-1">智能制造解决方案展示</small>
+                                        </div>
+                                        <div class="item-meta text-end flex-shrink-0">
+                                            <small class="item-date text-muted d-block">10-15</small>
+                                            <span class="badge bg-primary bg-opacity-10 text-primary mt-1">展会</span>
+                                        </div>
                                     </div>
-                                    <div class="exhibition-item d-flex justify-content-between align-items-center mb-2">
-                                        <a href="#" class="exhibition-link text-dark text-decoration-none hover-primary flex-grow-1">2024年上海国际检测技术展</a>
-                                        <small class="exhibition-date text-muted ms-3">09-18</small>
+                                    <div class="news-item-compact d-flex justify-content-between align-items-start py-2 border-bottom border-light">
+                                        <div class="item-content flex-grow-1 pe-2">
+                                            <a href="#" class="item-title text-dark text-decoration-none hover-primary d-block fw-medium">上海国际检测技术展</a>
+                                            <small class="item-summary text-muted d-block mt-1">无损检测技术与设备</small>
+                                        </div>
+                                        <div class="item-meta text-end flex-shrink-0">
+                                            <small class="item-date text-muted d-block">09-18</small>
+                                            <span class="badge bg-primary bg-opacity-10 text-primary mt-1">展会</span>
+                                        </div>
                                     </div>
-                                    <div class="exhibition-item d-flex justify-content-between align-items-center mb-2">
-                                        <a href="#" class="exhibition-link text-dark text-decoration-none hover-primary flex-grow-1">2024年广州国际工业自动化展</a>
-                                        <small class="exhibition-date text-muted ms-3">07-09</small>
-                                    </div>
-                                    <div class="exhibition-item d-flex justify-content-between align-items-center mb-0">
-                                        <a href="#" class="exhibition-link text-dark text-decoration-none hover-primary flex-grow-1">2024年成都国际内窥镜技术展</a>
-                                        <small class="exhibition-date text-muted ms-3">06-22</small>
+                                    <div class="news-item-compact d-flex justify-content-between align-items-start py-2">
+                                        <div class="item-content flex-grow-1 pe-2">
+                                            <a href="#" class="item-title text-dark text-decoration-none hover-primary d-block fw-medium">广州国际工业自动化展</a>
+                                            <small class="item-summary text-muted d-block mt-1">工业4.0与智能制造</small>
+                                        </div>
+                                        <div class="item-meta text-end flex-shrink-0">
+                                            <small class="item-date text-muted d-block">07-09</small>
+                                            <span class="badge bg-primary bg-opacity-10 text-primary mt-1">展会</span>
+                                        </div>
                                     </div>
                                 {{ end }}
                             </div>
                         </div>
-                    </div>
 
-                    <!-- 技术文章（下半部分） -->
-                    <div class="col-12">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
-                                <h3 class="h5 mb-0">技术文章</h3>
-                                <a href="/news/" class="text-primary text-decoration-none small">更多</a>
+                        <!-- 技术文章区域 -->
+                        <div class="news-section">
+                            <div class="section-header bg-light px-3 py-2 d-flex justify-content-between align-items-center">
+                                <h3 class="h6 mb-0 text-success fw-bold">
+                                    <i class="fas fa-cogs me-2"></i>技术文章
+                                </h3>
+                                <a href="/news/" class="text-success text-decoration-none small fw-medium">更多 →</a>
                             </div>
-                            <div class="card-body">
+                            <div class="section-content px-3 py-2">
                                 {{ $techNews := where (where .Site.RegularPages "Type" "news") ".Params.categories" "intersect" (slice "技术文章") }}
                                 {{ if gt (len $techNews) 0 }}
-                                {{ range first 5 $techNews }}
-                                <div class="tech-item d-flex justify-content-between align-items-center mb-2">
-                                    <a href="{{ .Permalink }}" class="tech-link text-dark text-decoration-none hover-primary flex-grow-1">{{ .Title }}</a>
-                                    <small class="tech-date text-muted ms-3">{{ .Date.Format "01-02" }}</small>
+                                {{ range first 3 $techNews }}
+                                <div class="news-item-compact d-flex justify-content-between align-items-start py-2 border-bottom border-light">
+                                    <div class="item-content flex-grow-1 pe-2">
+                                        <a href="{{ .Permalink }}" class="item-title text-dark text-decoration-none hover-success d-block fw-medium">{{ .Title | truncate 28 }}</a>
+                                        <small class="item-summary text-muted d-block mt-1">{{ .Params.summary | default "技术深度解析" | truncate 35 }}</small>
+                                    </div>
+                                    <div class="item-meta text-end flex-shrink-0">
+                                        <small class="item-date text-muted d-block">{{ .Date.Format "01-02" }}</small>
+                                        <span class="badge bg-success bg-opacity-10 text-success mt-1">技术</span>
+                                    </div>
                                 </div>
                                 {{ end }}
                                 {{ else }}
                                     <!-- 占位技术文章 -->
-                                    <div class="tech-item d-flex justify-content-between align-items-center mb-2">
-                                        <a href="#" class="tech-link text-dark text-decoration-none hover-primary flex-grow-1">工业内窥镜图像处理技术研究</a>
-                                        <small class="tech-date text-muted ms-3">12-09</small>
+                                    <div class="news-item-compact d-flex justify-content-between align-items-start py-2 border-bottom border-light">
+                                        <div class="item-content flex-grow-1 pe-2">
+                                            <a href="#" class="item-title text-dark text-decoration-none hover-success d-block fw-medium">工业内窥镜图像处理技术</a>
+                                            <small class="item-summary text-muted d-block mt-1">深度学习在图像识别中的应用</small>
+                                        </div>
+                                        <div class="item-meta text-end flex-shrink-0">
+                                            <small class="item-date text-muted d-block">12-09</small>
+                                            <span class="badge bg-success bg-opacity-10 text-success mt-1">技术</span>
+                                        </div>
                                     </div>
-                                    <div class="tech-item d-flex justify-content-between align-items-center mb-2">
-                                        <a href="#" class="tech-link text-dark text-decoration-none hover-primary flex-grow-1">基于AI的缺陷检测算法优化</a>
-                                        <small class="tech-date text-muted ms-3">10-15</small>
+                                    <div class="news-item-compact d-flex justify-content-between align-items-start py-2 border-bottom border-light">
+                                        <div class="item-content flex-grow-1 pe-2">
+                                            <a href="#" class="item-title text-dark text-decoration-none hover-success d-block fw-medium">基于AI的缺陷检测算法</a>
+                                            <small class="item-summary text-muted d-block mt-1">人工智能优化检测精度</small>
+                                        </div>
+                                        <div class="item-meta text-end flex-shrink-0">
+                                            <small class="item-date text-muted d-block">10-15</small>
+                                            <span class="badge bg-success bg-opacity-10 text-success mt-1">技术</span>
+                                        </div>
                                     </div>
-                                    <div class="tech-item d-flex justify-content-between align-items-center mb-2">
-                                        <a href="#" class="tech-link text-dark text-decoration-none hover-primary flex-grow-1">内窥镜光源系统设计与应用</a>
-                                        <small class="tech-date text-muted ms-3">09-22</small>
-                                    </div>
-                                    <div class="tech-item d-flex justify-content-between align-items-center mb-2">
-                                        <a href="#" class="tech-link text-dark text-decoration-none hover-primary flex-grow-1">数字化内窥镜检测标准制定</a>
-                                        <small class="tech-date text-muted ms-3">08-18</small>
-                                    </div>
-                                    <div class="tech-item d-flex justify-content-between align-items-center mb-0">
-                                        <a href="#" class="tech-link text-dark text-decoration-none hover-primary flex-grow-1">工业内窥镜在航空领域的应用</a>
-                                        <small class="tech-date text-muted ms-3">07-09</small>
+                                    <div class="news-item-compact d-flex justify-content-between align-items-start py-2">
+                                        <div class="item-content flex-grow-1 pe-2">
+                                            <a href="#" class="item-title text-dark text-decoration-none hover-success d-block fw-medium">内窥镜光源系统设计</a>
+                                            <small class="item-summary text-muted d-block mt-1">LED光源技术创新应用</small>
+                                        </div>
+                                        <div class="item-meta text-end flex-shrink-0">
+                                            <small class="item-date text-muted d-block">09-22</small>
+                                            <span class="badge bg-success bg-opacity-10 text-success mt-1">技术</span>
+                                        </div>
                                     </div>
                                 {{ end }}
                             </div>
@@ -227,14 +308,200 @@
     transition: color 0.15s ease-in-out;
 }
 
-/* PC端技术文章区域高度控制 */
+/* 新闻区域紧凑布局样式 */
+.news-section {
+    position: relative;
+}
+
+.news-section .section-header {
+    border-bottom: 1px solid #e9ecef;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.news-section .section-header h3 {
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+.news-section .section-header i {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.news-item-compact {
+    transition: all 0.2s ease;
+    border-radius: 4px;
+    margin: 0 -8px;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+}
+
+.news-item-compact:hover {
+    background-color: #f8f9fa;
+    transform: translateX(2px);
+}
+
+.news-item-compact .item-title {
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.news-item-compact .item-summary {
+    font-size: 11px;
+    line-height: 1.3;
+    color: #6c757d !important;
+}
+
+.news-item-compact .item-date {
+    font-size: 10px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.news-item-compact .badge {
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+.hover-primary:hover {
+    color: #0d6efd !important;
+}
+
+.hover-success:hover {
+    color: #198754 !important;
+}
+
+/* PC端高度对称控制 */
 @media (min-width: 992px) {
-    .news-center .col-lg-5 .col-12:last-child .card {
-        height: 290px !important;
+    /* 左侧行业资讯高度 */
+    .news-center .col-lg-7 .card {
+        min-height: 560px;
+        max-height: 560px;
+        display: flex;
+        flex-direction: column;
     }
 
-    .news-center .col-lg-5 .col-12:first-child .card {
-        height: 226px !important;
+    .news-center .col-lg-7 .card .card-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .news-center .col-lg-7 .news-list {
+        flex: 1;
+        overflow-y: auto;
+        padding-right: 8px;
+    }
+
+    /* 右侧区域高度匹配 */
+    .news-center .col-lg-5 .card {
+        min-height: 560px;
+        max-height: 560px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .news-center .col-lg-5 .card .card-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+    }
+
+    /* 展会资讯区域 - 占据60%空间 */
+    .news-section:first-child {
+        flex: 3;
+        border-bottom: 1px solid #dee2e6;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .news-section:first-child .section-content {
+        flex: 1;
+        max-height: 300px;
+        overflow-y: auto;
+        padding-bottom: 8px;
+    }
+
+    /* 技术文章区域 - 占据40%空间 */
+    .news-section:last-child {
+        flex: 2;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .news-section:last-child .section-content {
+        flex: 1;
+        max-height: 200px;
+        overflow-y: auto;
+        padding-bottom: 8px;
+    }
+
+    /* 滚动条样式 */
+    .news-section .section-content::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    .news-section .section-content::-webkit-scrollbar-track {
+        background: #f8f9fa;
+        border-radius: 2px;
+    }
+
+    .news-section .section-content::-webkit-scrollbar-thumb {
+        background: #dee2e6;
+        border-radius: 2px;
+    }
+
+    .news-section .section-content::-webkit-scrollbar-thumb:hover {
+        background: #adb5bd;
+    }
+
+    /* 确保内容不会溢出 */
+    .news-item-compact {
+        min-height: 48px;
+        max-height: 48px;
+    }
+
+    .news-item-compact .item-content {
+        overflow: hidden;
+    }
+
+    .news-item-compact .item-title {
+        max-height: 16px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .news-item-compact .item-summary {
+        max-height: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* 左侧新闻列表滚动条样式 */
+    .news-center .col-lg-7 .news-list::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .news-center .col-lg-7 .news-list::-webkit-scrollbar-track {
+        background: #f8f9fa;
+        border-radius: 2px;
+    }
+
+    .news-center .col-lg-7 .news-list::-webkit-scrollbar-thumb {
+        background: #dee2e6;
+        border-radius: 2px;
+    }
+
+    .news-center .col-lg-7 .news-list::-webkit-scrollbar-thumb:hover {
+        background: #adb5bd;
     }
 }
 

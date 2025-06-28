@@ -3,7 +3,7 @@ title: "精密铸造"
 date: 2024-03-20
 summary: "精密铸造工艺过程质量控制，确保铸件质量和工艺稳定性"
 icon: "fas fa-industry"
-image: "https://picsum.photos/800/400?random=casting"
+image: "/images/banners/category/application_general_electric-2_original_v1.jpg"
 weight: 5
 
 # 应用特点

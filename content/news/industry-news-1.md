@@ -9,6 +9,7 @@ tags:
 - 工业检测
 author: 技术部
 views: 203
+featured_image: "/images/news/行业资讯.png"
 ---
 
 # 内窥镜技术在工业检测中的创新应用
@@ -17,7 +18,7 @@ views: 203
 
 内窥镜技术作为工业检测的重要工具，在近年来有了显著的技术突破和创新应用。随着制造业对产品质量要求的不断提高，内窥镜检测技术正在成为保障产品质量和设备安全的关键技术手段。
 
-![工业内窥镜检测应用](https://picsum.photos/600/400?random=industrial-endoscope)
+![工业内窥镜检测应用](/images/news/news-3.jpeg)
 
 ## 技术发展现状
 
@@ -35,7 +36,7 @@ views: 203
 - **缺陷分类**：自动对缺陷类型进行分类
 - **趋势分析**：预测设备维护需求
 
-![AI智能检测技术](https://picsum.photos/600/400?random=ai-detection)
+![AI智能检测技术](/images/news/news-2.jpeg)
 
 ## 行业应用案例
 

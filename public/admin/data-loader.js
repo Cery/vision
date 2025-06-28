@@ -535,7 +535,7 @@ class ContentDataLoader {
                 status: 'published',
                 statusName: '已发布',
                 published: this.extractPublishedDate(doc) || new Date().toISOString(),
-                thumbnail: this.extractThumbnail(doc) || '/images/placeholder.jpg',
+                thumbnail: this.extractThumbnail(doc) || '/images/placeholder.svg',
                 parameters: parameters,
                 gallery: gallery,
                 applications: applications,
@@ -581,7 +581,7 @@ class ContentDataLoader {
             const productData = this.parseFrontMatter(frontMatter);
 
             // 提取主图
-            let thumbnail = '/images/placeholder.jpg';
+            let thumbnail = '/images/placeholder.svg';
             if (productData.gallery && productData.gallery.length > 0) {
                 const mainImage = productData.gallery.find(img => img.is_main);
                 thumbnail = mainImage ? mainImage.image : productData.gallery[0].image;
