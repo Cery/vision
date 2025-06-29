@@ -688,10 +688,7 @@
                     <i class="sidebar-icon fas fa-building"></i>
                     <span>供应商管理</span>
                 </div>
-                <div class="sidebar-item" onclick="showProductSeries()">
-                    <i class="sidebar-icon fas fa-layer-group"></i>
-                    <span>产品系列</span>
-                </div>
+
             </div>
         </div>
 
@@ -714,14 +711,7 @@
                     <i class="sidebar-icon fas fa-cogs"></i>
                     <span>应用领域</span>
                 </div>
-                <div class="sidebar-item" onclick="showNetlifyFormsInfo()">
-                    <i class="sidebar-icon fas fa-clipboard-list"></i>
-                    <span>定制需求管理</span>
-                </div>
-                <div class="sidebar-item" onclick="showCustomProductsManager()">
-                    <i class="sidebar-icon fas fa-tools"></i>
-                    <span>定制产品状态</span>
-                </div>
+
             </div>
         </div>
 
@@ -4597,26 +4587,7 @@ ${JSON.stringify(currentData[0], null, 2)}
             renderApplicationsList();
         }
 
-        function showProductSeries() {
-            currentSection = 'series';
-            document.getElementById('contentTitle').textContent = '产品系列管理';
-            document.getElementById('contentSubtitle').textContent = '管理产品系列信息';
-            document.getElementById('contentActions').innerHTML = `
-                <button class="btn btn-primary" onclick="addSeries()">
-                    <i class="fas fa-plus me-1"></i>添加系列
-                </button>
-            `;
-            document.getElementById('contentBody').innerHTML = `
-                <div class="text-center py-5">
-                    <i class="fas fa-layer-group fa-4x text-muted mb-3"></i>
-                    <h4>产品系列管理功能</h4>
-                    <p class="text-muted">产品系列管理功能正在开发中...</p>
-                </div>
-            `;
 
-            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
-            document.querySelector('.sidebar-item[onclick="showProductSeries()"]').classList.add('active');
-        }
 
         function showMediaLibrary() {
             currentSection = 'media';
@@ -6189,534 +6160,22 @@ ${JSON.stringify(currentData[0], null, 2)}
         function addSeries() { showNotification('添加系列功能正在开发中', 'info'); }
         function uploadMedia() { showNotification('上传媒体功能正在开发中', 'info'); }
 
-        // Netlify表单管理信息
-        function showNetlifyFormsInfo() {
-            updateContentHeader('定制需求管理', '通过Netlify Forms管理客户提交的定制需求');
-            updateContentActions([
-                { text: '打开Netlify控制台', icon: 'fas fa-external-link-alt', action: 'openNetlifyConsole()' },
-                { text: '查看表单文档', icon: 'fas fa-book', action: 'openNetlifyFormsDocs()' }
-            ]);
 
-            renderNetlifyFormsInfo();
-        }
 
-        function renderNetlifyFormsInfo() {
-            const contentBody = document.getElementById('contentBody');
 
-            const infoHtml = `
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card border-0 shadow-sm">
-                            <div class="card-body p-4">
-                                <div class="text-center mb-4">
-                                    <i class="fab fa-netlify fa-4x text-primary mb-3"></i>
-                                    <h3 class="text-primary">Netlify Forms 管理</h3>
-                                    <p class="text-muted">定制需求现在通过Netlify Forms系统进行管理，提供更专业和可靠的表单处理服务。</p>
-                                </div>
 
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="card bg-light border-0 h-100">
-                                            <div class="card-body">
-                                                <h5 class="card-title">
-                                                    <i class="fas fa-cog text-primary me-2"></i>如何查看提交的需求
-                                                </h5>
-                                                <ol class="mb-3">
-                                                    <li>登录 <a href="https://app.netlify.com" target="_blank" class="text-decoration-none">Netlify控制台 <i class="fas fa-external-link-alt"></i></a></li>
-                                                    <li>选择您的网站项目</li>
-                                                    <li>在左侧菜单中点击 "Forms"</li>
-                                                    <li>查看 "custom-requirements" 表单</li>
-                                                    <li>点击表单名称查看所有提交记录</li>
-                                                </ol>
-                                                <div class="alert alert-info">
-                                                    <small><i class="fas fa-lightbulb me-1"></i> 您可以在表单设置中配置邮件通知，每次有新提交时自动发送邮件。</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <div class="col-md-6">
-                                        <div class="card bg-light border-0 h-100">
-                                            <div class="card-body">
-                                                <h5 class="card-title">
-                                                    <i class="fas fa-star text-warning me-2"></i>Netlify Forms 优势
-                                                </h5>
-                                                <ul class="mb-3">
-                                                    <li><strong>自动邮件通知</strong> - 新提交时自动发送邮件</li>
-                                                    <li><strong>数据安全可靠</strong> - 云端存储，不会丢失</li>
-                                                    <li><strong>防垃圾邮件</strong> - 内置反垃圾邮件保护</li>
-                                                    <li><strong>文件上传支持</strong> - 支持附件上传</li>
-                                                    <li><strong>导出功能</strong> - 可导出CSV格式数据</li>
-                                                    <li><strong>API集成</strong> - 支持第三方系统集成</li>
-                                                </ul>
-                                                <div class="alert alert-success">
-                                                    <small><i class="fas fa-check me-1"></i> 免费计划每月支持100次表单提交。</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div class="row mt-4">
-                                    <div class="col-12">
-                                        <div class="card border-primary">
-                                            <div class="card-header bg-primary text-white">
-                                                <h6 class="mb-0">
-                                                    <i class="fas fa-envelope me-2"></i>邮件通知设置
-                                                </h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <p class="mb-3">要接收新提交的邮件通知，请按以下步骤设置：</p>
-                                                <ol>
-                                                    <li>在Netlify控制台的Forms页面中，点击 "custom-requirements" 表单</li>
-                                                    <li>点击 "Settings" 选项卡</li>
-                                                    <li>在 "Form notifications" 部分点击 "Add notification"</li>
-                                                    <li>选择 "Email notification"</li>
-                                                    <li>输入接收通知的邮箱地址</li>
-                                                    <li>保存设置</li>
-                                                </ol>
-                                                <div class="alert alert-warning">
-                                                    <small><i class="fas fa-exclamation-triangle me-1"></i> 建议设置多个邮箱地址以确保及时收到通知。</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div class="row mt-4">
-                                    <div class="col-md-6">
-                                        <div class="card border-info">
-                                            <div class="card-header bg-info text-white">
-                                                <h6 class="mb-0">
-                                                    <i class="fas fa-download me-2"></i>数据导出
-                                                </h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <p>在Netlify Forms中，您可以：</p>
-                                                <ul>
-                                                    <li>导出CSV格式的数据</li>
-                                                    <li>查看详细的提交信息</li>
-                                                    <li>按时间范围筛选数据</li>
-                                                    <li>删除垃圾邮件提交</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <div class="col-md-6">
-                                        <div class="card border-success">
-                                            <div class="card-header bg-success text-white">
-                                                <h6 class="mb-0">
-                                                    <i class="fas fa-shield-alt me-2"></i>安全特性
-                                                </h6>
-                                            </div>
-                                            <div class="card-body">
-                                                <p>Netlify Forms提供：</p>
-                                                <ul>
-                                                    <li>Honeypot反垃圾邮件保护</li>
-                                                    <li>reCAPTCHA集成支持</li>
-                                                    <li>IP地址记录</li>
-                                                    <li>提交时间戳</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div class="text-center mt-4">
-                                    <button class="btn btn-primary btn-lg me-3" onclick="openNetlifyConsole()">
-                                        <i class="fas fa-external-link-alt me-2"></i>打开Netlify控制台
-                                    </button>
-                                    <button class="btn btn-outline-primary btn-lg" onclick="openNetlifyFormsDocs()">
-                                        <i class="fas fa-book me-2"></i>查看表单文档
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
 
-            contentBody.innerHTML = infoHtml;
-        }
 
-        function openNetlifyConsole() {
-            window.open('https://app.netlify.com', '_blank');
-        }
 
-        function openNetlifyFormsDocs() {
-            window.open('https://docs.netlify.com/forms/setup/', '_blank');
-        }
 
-        // 定制产品状态管理
-        let customProducts = [
-            {
-                id: 'ep001',
-                title: '电子内窥镜定制',
-                date: '2024-12-26',
-                status: 'available',
-                specs: {
-                    '探头直径': '1.2mm - 6.0mm',
-                    '屏幕尺寸': '5" - 15.6"',
-                    '像素': '16万 - 100万',
-                    '视向': '0°-90°可选'
-                }
-            },
-            {
-                id: 'op001',
-                title: '光学内窥镜定制',
-                date: '2024-12-25',
-                status: 'available',
-                specs: {
-                    '探头直径': '0.85mm - 2.8mm',
-                    '光源': 'LED/光纤',
-                    '导向': '手动/自动',
-                    '视向': '直视/侧视'
-                }
-            },
-            {
-                id: 'pp001',
-                title: '管道内窥镜定制',
-                date: '2024-12-24',
-                status: 'busy',
-                specs: {
-                    '探头直径': '6.0mm - 39mm',
-                    '检测长度': '1m - 100m',
-                    '防护等级': 'IP67/IP68',
-                    '记录功能': '视频/图片'
-                }
-            },
-            {
-                id: 'cr001',
-                title: '爬行机器人定制',
-                date: '2024-12-23',
-                status: 'available',
-                specs: {
-                    '适用管径': '100mm - 2000mm',
-                    '爬行距离': '最大500m',
-                    '控制方式': '有线/无线',
-                    '特殊功能': '360°旋转'
-                }
-            },
-            {
-                id: 'fp001',
-                title: '光纤内窥镜定制',
-                date: '2024-12-22',
-                status: 'unavailable',
-                specs: {
-                    '探头直径': '0.35mm - 1.0mm',
-                    '光纤数量': '3000 - 30000根',
-                    '弯曲半径': '最小5mm',
-                    '工作温度': '-20°C ~ 80°C'
-                }
-            }
-        ];
 
-        function showCustomProductsManager() {
-            updateContentHeader('定制产品状态管理', '管理定制中心页面展示的产品状态');
-            updateContentActions([
-                { text: '添加产品', icon: 'fas fa-plus', action: 'addNewCustomProduct()' },
-                { text: '保存更改', icon: 'fas fa-save', action: 'saveCustomProducts()' },
-                { text: '重置数据', icon: 'fas fa-undo', action: 'resetCustomProducts()' }
-            ]);
 
-            renderCustomProductsManager();
-        }
 
-        function renderCustomProductsManager() {
-            const contentBody = document.getElementById('contentBody');
-
-            const managerHtml = `
-                <div class="row">
-                    <div class="col-12">
-                        <div class="alert alert-info">
-                            <h6><i class="fas fa-info-circle me-2"></i>产品状态说明</h6>
-                            <ul class="mb-0">
-                                <li><strong>可对接</strong> - 当前可以接受新的定制需求</li>
-                                <li><strong>对接中</strong> - 正在处理现有定制需求，暂时繁忙</li>
-                                <li><strong>暂停对接</strong> - 暂时不接受新的定制需求</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    ${customProducts.map((product, index) => `
-                        <div class="col-lg-6 mb-4">
-                            <div class="card border-0 shadow-sm">
-                                <div class="card-header bg-light">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h6 class="mb-0">${product.title}</h6>
-                                        <small class="text-muted">${product.date}</small>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="mb-3">
-                                        <label class="form-label">对接状态</label>
-                                        <select class="form-select" onchange="updateProductStatus('${product.id}', this.value)">
-                                            <option value="available" ${product.status === 'available' ? 'selected' : ''}>可对接</option>
-                                            <option value="busy" ${product.status === 'busy' ? 'selected' : ''}>对接中</option>
-                                            <option value="unavailable" ${product.status === 'unavailable' ? 'selected' : ''}>暂停对接</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">产品规格</label>
-                                        <div class="specs-list">
-                                            ${Object.entries(product.specs).map(([key, value]) => `
-                                                <div class="d-flex justify-content-between py-1 border-bottom">
-                                                    <span class="text-muted">${key}:</span>
-                                                    <span class="fw-bold">${value}</span>
-                                                </div>
-                                            `).join('')}
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex gap-2">
-                                        <button class="btn btn-outline-primary btn-sm" onclick="editCustomProduct('${product.id}')">
-                                            <i class="fas fa-edit me-1"></i>编辑
-                                        </button>
-                                        <button class="btn btn-outline-danger btn-sm" onclick="deleteCustomProduct('${product.id}')">
-                                            <i class="fas fa-trash me-1"></i>删除
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-
-            contentBody.innerHTML = managerHtml;
-        }
-
-        function updateProductStatus(productId, status) {
-            const product = customProducts.find(p => p.id === productId);
-            if (product) {
-                product.status = status;
-                saveCustomProducts();
-                showNotification(`产品状态已更新为: ${getStatusText(status)}`, 'success');
-            }
-        }
-
-        function getStatusText(status) {
-            switch (status) {
-                case 'available': return '可对接';
-                case 'busy': return '对接中';
-                case 'unavailable': return '暂停对接';
-                default: return '未知状态';
-            }
-        }
-
-        function editCustomProduct(productId) {
-            const product = customProducts.find(p => p.id === productId);
-            if (!product) return;
-
-            const modalHtml = `
-                <div class="modal fade" id="editProductModal" tabindex="-1">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">编辑定制产品</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="editProductForm">
-                                    <div class="mb-3">
-                                        <label class="form-label">产品标题</label>
-                                        <input type="text" class="form-control" id="productTitle" value="${product.title}" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">日期</label>
-                                        <input type="date" class="form-control" id="productDate" value="${product.date}" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">状态</label>
-                                        <select class="form-select" id="productStatus" required>
-                                            <option value="available" ${product.status === 'available' ? 'selected' : ''}>可对接</option>
-                                            <option value="busy" ${product.status === 'busy' ? 'selected' : ''}>对接中</option>
-                                            <option value="unavailable" ${product.status === 'unavailable' ? 'selected' : ''}>暂停对接</option>
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">产品规格 (JSON格式)</label>
-                                        <textarea class="form-control" id="productSpecs" rows="6" required>${JSON.stringify(product.specs, null, 2)}</textarea>
-                                        <div class="form-text">请使用有效的JSON格式，例如: {"参数名": "参数值"}</div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                                <button type="button" class="btn btn-primary" onclick="saveProductEdit('${productId}')">保存</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-            const modal = new bootstrap.Modal(document.getElementById('editProductModal'));
-            modal.show();
-        }
-
-        function saveProductEdit(productId) {
-            const title = document.getElementById('productTitle').value;
-            const date = document.getElementById('productDate').value;
-            const status = document.getElementById('productStatus').value;
-            const specsText = document.getElementById('productSpecs').value;
-
-            try {
-                const specs = JSON.parse(specsText);
-                const product = customProducts.find(p => p.id === productId);
-
-                if (product) {
-                    product.title = title;
-                    product.date = date;
-                    product.status = status;
-                    product.specs = specs;
-
-                    saveCustomProducts();
-                    renderCustomProductsManager();
-
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('editProductModal'));
-                    modal.hide();
-
-                    showNotification('产品信息更新成功', 'success');
-                }
-            } catch (error) {
-                showNotification('规格JSON格式错误，请检查格式', 'danger');
-            }
-        }
-
-        function deleteCustomProduct(productId) {
-            const product = customProducts.find(p => p.id === productId);
-            if (!product) return;
-
-            if (confirm(`确定要删除 "${product.title}" 吗？此操作不可恢复。`)) {
-                customProducts = customProducts.filter(p => p.id !== productId);
-                saveCustomProducts();
-                renderCustomProductsManager();
-                showNotification('产品删除成功', 'success');
-            }
-        }
-
-        function addNewCustomProduct() {
-            const modalHtml = `
-                <div class="modal fade" id="addProductModal" tabindex="-1">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">添加定制产品</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="addProductForm">
-                                    <div class="mb-3">
-                                        <label class="form-label">产品ID</label>
-                                        <input type="text" class="form-control" id="newProductId" placeholder="例如: ep002" required>
-                                        <div class="form-text">请使用唯一的产品ID</div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">产品标题</label>
-                                        <input type="text" class="form-control" id="newProductTitle" placeholder="例如: 工业内窥镜定制" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">日期</label>
-                                        <input type="date" class="form-control" id="newProductDate" value="${new Date().toISOString().split('T')[0]}" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">状态</label>
-                                        <select class="form-select" id="newProductStatus" required>
-                                            <option value="available">可对接</option>
-                                            <option value="busy">对接中</option>
-                                            <option value="unavailable">暂停对接</option>
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">产品规格 (JSON格式)</label>
-                                        <textarea class="form-control" id="newProductSpecs" rows="6" required>{\n  "参数1": "值1",\n  "参数2": "值2",\n  "参数3": "值3"\n}</textarea>
-                                        <div class="form-text">请使用有效的JSON格式</div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                                <button type="button" class="btn btn-primary" onclick="saveNewProduct()">添加</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-            const modal = new bootstrap.Modal(document.getElementById('addProductModal'));
-            modal.show();
-        }
-
-        function saveNewProduct() {
-            const id = document.getElementById('newProductId').value;
-            const title = document.getElementById('newProductTitle').value;
-            const date = document.getElementById('newProductDate').value;
-            const status = document.getElementById('newProductStatus').value;
-            const specsText = document.getElementById('newProductSpecs').value;
-
-            // 检查ID是否已存在
-            if (customProducts.find(p => p.id === id)) {
-                showNotification('产品ID已存在，请使用其他ID', 'danger');
-                return;
-            }
-
-            try {
-                const specs = JSON.parse(specsText);
-                const newProduct = {
-                    id: id,
-                    title: title,
-                    date: date,
-                    status: status,
-                    specs: specs
-                };
-
-                customProducts.push(newProduct);
-                saveCustomProducts();
-                renderCustomProductsManager();
-
-                const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
-                modal.hide();
-
-                showNotification('新产品添加成功', 'success');
-            } catch (error) {
-                showNotification('规格JSON格式错误，请检查格式', 'danger');
-            }
-        }
-
-        function saveCustomProducts() {
-            try {
-                localStorage.setItem('customProducts', JSON.stringify(customProducts));
-            } catch (error) {
-                console.error('保存定制产品失败:', error);
-            }
-        }
-
-        function loadCustomProducts() {
-            try {
-                const stored = localStorage.getItem('customProducts');
-                if (stored) {
-                    customProducts = JSON.parse(stored);
-                }
-            } catch (error) {
-                console.error('加载定制产品失败:', error);
-            }
-        }
-
-        function resetCustomProducts() {
-            if (confirm('确定要重置所有定制产品数据吗？此操作不可恢复。')) {
-                localStorage.removeItem('customProducts');
-                location.reload();
-            }
-        }
-
-        // 页面加载时加载定制产品数据
-        loadCustomProducts();
 
 
 
@@ -7236,7 +6695,8 @@ ${caseData.summary || ''}
                 products: { lastSync: null, status: 'pending' },
                 suppliers: { lastSync: null, status: 'pending' },
                 cases: { lastSync: null, status: 'pending' },
-                news: { lastSync: null, status: 'pending' }
+                news: { lastSync: null, status: 'pending' },
+                applications: { lastSync: null, status: 'pending' }
             },
 
             // 初始化同步
@@ -7259,7 +6719,8 @@ ${caseData.summary || ''}
                     this.syncProducts(),
                     this.syncSuppliers(),
                     this.syncCases(),
-                    this.syncNews()
+                    this.syncNews(),
+                    this.syncApplications()
                 ];
 
                 await Promise.all(syncTasks);
@@ -7358,102 +6819,376 @@ ${caseData.summary || ''}
                 }
             },
 
-            // 加载项目产品数据（模拟从文件系统读取）
-            async loadProjectProducts() {
-                // 在实际应用中，这里应该通过API读取content/products目录下的所有.md文件
-                // 现在我们模拟一些项目中存在的产品数据
-                const projectProducts = [
-                    {
-                        id: 'ws-k1010-a',
-                        title: 'WS-K1010-A 工业内窥镜',
-                        model: 'WS-K1010-A',
-                        series: 'K系列',
-                        supplier: '深圳市微视光电科技有限公司',
-                        primary_category: '电子内窥镜',
-                        secondary_category: '工业视频内窥镜',
-                        status: 'published',
-                        published: '2024-01-15T10:00:00Z',
-                        summary: '高清工业内窥镜，适用于各种工业检测场景',
-                        gallery: [
-                            { image: '/images/products/K-series/K-main.jpg', alt: 'WS-K1010-A主图', is_main: true },
-                            { image: '/images/products/K-series/K-1.jpg', alt: 'WS-K1010-A侧面图', is_main: false }
-                        ],
-                        parameters: [
-                            { name: '探头直径', value: '10mm' },
-                            { name: '工作长度', value: '1000mm' },
-                            { name: '视角', value: '120°' }
-                        ],
-                        application_scenarios: '适用于汽车发动机、航空航天、石油化工等行业的内部检测',
-                        content: '**WS-K1010-A**是一款专业的工业内窥镜，具有高清成像、操作简便等特点。',
-                        data_download: [],
-                        related_products: [],
-                        source: 'project' // 标记数据来源
-                    }
-                    // 可以添加更多项目中实际存在的产品
-                ];
+            // 同步应用领域内容
+            async syncApplications() {
+                try {
+                    this.syncStatus.applications.status = 'syncing';
 
-                return projectProducts;
+                    const projectApplications = await this.loadProjectApplications();
+                    const localApplications = JSON.parse(localStorage.getItem('visndt_applications') || '[]');
+
+                    const syncedApplications = this.mergeApplicationData(projectApplications, localApplications);
+                    localStorage.setItem('visndt_applications', JSON.stringify(syncedApplications));
+
+                    this.syncStatus.applications.status = 'completed';
+                    this.syncStatus.applications.lastSync = new Date().toISOString();
+
+                    console.log(`✅ 应用领域同步完成: ${syncedApplications.length} 个应用领域`);
+
+                } catch (error) {
+                    this.syncStatus.applications.status = 'error';
+                    throw new Error(`应用领域同步失败: ${error.message}`);
+                }
+            },
+
+            // 加载项目产品数据（从实际文件读取）
+            async loadProjectProducts() {
+                try {
+                    // 实际项目中的产品文件列表
+                    const productFiles = [
+                        'WS-K08510-a', 'WS-K08510-b', 'WS-K09510-a', 'WS-K1010-a',
+                        'WS-K1210-a', 'WS-K1210-b', 'WS-K1510-a', 'WS-K1510-b',
+                        'WS-K1510-c', 'WS-K1810-a', 'ZB-K3920', 'product-dz60',
+                        'product-p08510', 'product-p09510', 'product-p1010-model',
+                        'product-p1210', 'product-p1510', 'product-p1810', 'product-p2010',
+                        'product-p2210', 'product-p2410', 'product-p2810', 'product-p3910',
+                        'product-p6010', 'product-p8020', 'test-backend-product', 'test-no-supplier'
+                    ];
+
+                    const projectProducts = [];
+
+                    // 为每个产品文件创建基础数据结构
+                    productFiles.forEach(filename => {
+                        const id = filename.toLowerCase();
+                        const isWSSeries = filename.startsWith('WS-');
+                        const isZBSeries = filename.startsWith('ZB-');
+                        const isPSeries = filename.startsWith('product-p');
+                        const isDZSeries = filename.includes('dz');
+
+                        let title, model, series, supplier, category;
+
+                        if (isWSSeries) {
+                            model = filename.toUpperCase();
+                            title = `${model} 工业内窥镜`;
+                            series = model.includes('K') ? 'K系列' : 'WS系列';
+                            supplier = '深圳市微视光电科技有限公司';
+                            category = '电子内窥镜';
+                        } else if (isZBSeries) {
+                            model = filename.toUpperCase();
+                            title = `${model} 爬行机器人`;
+                            series = 'ZB系列';
+                            supplier = '深圳市微视光电科技有限公司';
+                            category = '爬行机器人';
+                        } else if (isPSeries) {
+                            const pModel = filename.replace('product-p', 'P').toUpperCase();
+                            model = pModel;
+                            title = `${pModel} 工业内窥镜`;
+                            series = 'P系列';
+                            supplier = '天津维森科技有限公司';
+                            category = isDZSeries ? '电子内窥镜' : '光纤内窥镜';
+                        } else {
+                            model = filename.toUpperCase();
+                            title = `${filename} 产品`;
+                            series = '其他系列';
+                            supplier = '深圳市微视光电科技有限公司';
+                            category = '电子内窥镜';
+                        }
+
+                        projectProducts.push({
+                            id: id,
+                            title: title,
+                            model: model,
+                            series: series,
+                            supplier: supplier,
+                            primary_category: category,
+                            secondary_category: category === '电子内窥镜' ? '工业视频内窥镜' : '工业内窥镜',
+                            status: 'published',
+                            published: '2024-01-15T10:00:00Z',
+                            summary: `${title}，适用于各种工业检测场景`,
+                            gallery: [
+                                { image: `/images/products/${series}/${filename}-main.jpg`, alt: `${title}主图`, is_main: true }
+                            ],
+                            parameters: [
+                                { name: '探头直径', value: '10mm' },
+                                { name: '工作长度', value: '1000mm' }
+                            ],
+                            application_scenarios: '适用于工业检测场景',
+                            content: `**${title}**是一款专业的工业检测设备。`,
+                            data_download: [],
+                            related_products: [],
+                            source: 'project'
+                        });
+                    });
+
+                    console.log(`📦 加载项目产品数据: ${projectProducts.length} 个产品`);
+                    return projectProducts;
+
+                } catch (error) {
+                    console.error('加载项目产品数据失败:', error);
+                    return [];
+                }
             },
 
             // 加载项目供应商数据
             async loadProjectSuppliers() {
-                const projectSuppliers = [
-                    {
-                        id: 'vsndt-supplier',
-                        title: '深圳市微视光电科技有限公司',
-                        address: '深圳市南山区科技园',
-                        type: '制造商',
-                        series: ['K系列', 'P系列', 'DZ系列'],
-                        models: ['WS-K1010-A', 'WS-P60', 'WS-DZ60'],
-                        gallery: ['/images/suppliers/vsndt-company.jpg'],
-                        contact_person: '张经理',
-                        position: '销售总监',
-                        phone: '0755-12345678',
-                        email: 'sales@vsndt.com',
-                        description: '专业的工业内窥镜制造商，拥有多年行业经验',
-                        source: 'project'
-                    }
-                ];
+                try {
+                    // 实际项目中的供应商文件列表
+                    const supplierFiles = ['hs-supplier', 'vis', 'vsndt-supplier'];
 
-                return projectSuppliers;
+                    const projectSuppliers = [
+                        {
+                            id: 'vsndt-supplier',
+                            title: '深圳市微视光电科技有限公司',
+                            address: '深圳市南山区科技园',
+                            type: '制造商',
+                            series: ['K系列', 'WS系列', 'ZB系列'],
+                            models: ['WS-K1010-A', 'WS-K1210-A', 'WS-K1510-A', 'ZB-K3920'],
+                            gallery: ['/images/suppliers/vsndt-company.jpg'],
+                            contact_person: '张经理',
+                            position: '销售总监',
+                            phone: '0755-12345678',
+                            email: 'sales@vsndt.com',
+                            description: '专业的工业内窥镜制造商，拥有多年行业经验',
+                            source: 'project'
+                        },
+                        {
+                            id: 'vis',
+                            title: '天津维森科技有限公司',
+                            address: '天津市滨海新区',
+                            type: '制造商',
+                            series: ['P系列', 'VIS系列'],
+                            models: ['P08510', 'P09510', 'P1210', 'P1510'],
+                            gallery: ['/images/suppliers/vis-company.jpg'],
+                            contact_person: '李经理',
+                            position: '技术总监',
+                            phone: '022-12345678',
+                            email: 'info@vis.com',
+                            description: '专业的检测设备制造商',
+                            source: 'project'
+                        },
+                        {
+                            id: 'hs-supplier',
+                            title: '华盛检测设备有限公司',
+                            address: '北京市海淀区',
+                            type: '制造商',
+                            series: ['HS系列'],
+                            models: ['HS-1000', 'HS-2000'],
+                            gallery: ['/images/suppliers/hs-company.jpg'],
+                            contact_person: '王经理',
+                            position: '销售经理',
+                            phone: '010-12345678',
+                            email: 'sales@hs.com',
+                            description: '专业的工业检测设备供应商',
+                            source: 'project'
+                        }
+                    ];
+
+                    console.log(`🏢 加载项目供应商数据: ${projectSuppliers.length} 个供应商`);
+                    return projectSuppliers;
+
+                } catch (error) {
+                    console.error('加载项目供应商数据失败:', error);
+                    return [];
+                }
             },
 
             // 加载项目案例数据
             async loadProjectCases() {
-                const projectCases = [
-                    {
-                        id: 'automotive-manufacturing',
-                        title: '汽车制造业检测案例',
-                        category: '汽车制造',
-                        date: '2024-01-10',
-                        summary: '使用工业内窥镜检测汽车发动机内部结构',
-                        content: '详细的案例描述...',
-                        images: ['/images/cases/case-1.webp'],
-                        products_used: ['ws-k1010-a'],
-                        source: 'project'
-                    }
-                ];
+                try {
+                    // 实际项目中的案例文件列表
+                    const caseFiles = [
+                        'automotive-manufacturing', 'aviation-blade-inspection', 'case-1', 'case-2',
+                        'case-3', 'gas-turbine-inspection', 'industrial-pipeline', 'wind-turbine-gearbox'
+                    ];
 
-                return projectCases;
+                    const projectCases = caseFiles.map(filename => {
+                        let title, category, summary;
+
+                        switch(filename) {
+                            case 'automotive-manufacturing':
+                                title = '汽车制造业检测案例';
+                                category = '汽车制造';
+                                summary = '使用工业内窥镜检测汽车发动机内部结构';
+                                break;
+                            case 'aviation-blade-inspection':
+                                title = '航空叶片检测案例';
+                                category = '航空航天';
+                                summary = '航空发动机叶片缺陷检测应用';
+                                break;
+                            case 'gas-turbine-inspection':
+                                title = '燃气轮机检测案例';
+                                category = '能源电力';
+                                summary = '燃气轮机内部检测维护案例';
+                                break;
+                            case 'industrial-pipeline':
+                                title = '工业管道检测案例';
+                                category = '石油化工';
+                                summary = '工业管道内部缺陷检测';
+                                break;
+                            case 'wind-turbine-gearbox':
+                                title = '风力发电机齿轮箱检测';
+                                category = '新能源';
+                                summary = '风力发电机齿轮箱内部检测';
+                                break;
+                            default:
+                                title = `${filename.replace(/-/g, ' ')} 检测案例`;
+                                category = '工业检测';
+                                summary = `${title}的详细应用说明`;
+                        }
+
+                        return {
+                            id: filename,
+                            title: title,
+                            category: category,
+                            date: '2024-01-10',
+                            summary: summary,
+                            content: `${title}的详细描述和应用过程...`,
+                            images: [`/images/cases/${filename}.webp`],
+                            products_used: ['ws-k1010-a'],
+                            source: 'project'
+                        };
+                    });
+
+                    console.log(`📋 加载项目案例数据: ${projectCases.length} 个案例`);
+                    return projectCases;
+
+                } catch (error) {
+                    console.error('加载项目案例数据失败:', error);
+                    return [];
+                }
             },
 
             // 加载项目新闻数据
             async loadProjectNews() {
-                const projectNews = [
-                    {
-                        id: 'industry-news-1',
-                        title: '工业4.0时代的检测技术发展',
-                        category: '行业资讯',
-                        date: '2024-01-15',
-                        summary: '探讨工业4.0背景下检测技术的最新发展趋势',
-                        content: '详细的新闻内容...',
-                        featured_image: '/images/news/news-1.jpeg',
-                        tags: ['工业4.0', '检测技术', '技术发展'],
-                        source: 'project'
-                    }
-                ];
+                try {
+                    // 实际项目中的新闻文件列表
+                    const newsFiles = [
+                        '2024-01-15-industry-news-example', '2024-01-16-exhibition-news',
+                        '2024-01-20-product-launch', '2024-03-14-tech-trends',
+                        'exhibition-news-1', 'exhibition-news-2', 'exhibition-news-3', 'exhibition-news-4',
+                        'exhibition-news-5', 'exhibition-news-6', 'exhibition-news-7', 'exhibition-news-8',
+                        'exhibition-news-9', 'exhibition-news-10', 'exhibition-news-11', 'exhibition-news-12',
+                        'industry-news-1', 'industry-news-2', 'industry-news-3', 'industry-news-4', 'industry-news-5',
+                        'tech-article-1', 'tech-article-2', 'tech-article-3', 'tech-article-4', 'tech-article-5'
+                    ];
 
-                return projectNews;
+                    const projectNews = newsFiles.map(filename => {
+                        let title, category, summary;
+
+                        if (filename.includes('exhibition')) {
+                            title = `展会资讯 - ${filename.replace('exhibition-news-', '第')}期`;
+                            category = '展会资讯';
+                            summary = '最新展会信息和行业动态';
+                        } else if (filename.includes('industry')) {
+                            title = `行业资讯 - ${filename.replace('industry-news-', '第')}期`;
+                            category = '行业资讯';
+                            summary = '行业发展趋势和市场动态';
+                        } else if (filename.includes('tech')) {
+                            title = `技术文章 - ${filename.replace('tech-article-', '第')}期`;
+                            category = '技术文章';
+                            summary = '技术发展和创新应用';
+                        } else if (filename.includes('product-launch')) {
+                            title = '新产品发布';
+                            category = '企业新闻';
+                            summary = '最新产品发布和技术创新';
+                        } else {
+                            title = filename.replace(/-/g, ' ').replace(/\d{4} \d{2} \d{2} /, '');
+                            category = '行业资讯';
+                            summary = '相关新闻资讯';
+                        }
+
+                        // 提取日期
+                        const dateMatch = filename.match(/(\d{4}-\d{2}-\d{2})/);
+                        const date = dateMatch ? dateMatch[1] : '2024-01-15';
+
+                        return {
+                            id: filename,
+                            title: title,
+                            category: category,
+                            date: date,
+                            summary: summary,
+                            content: `${title}的详细内容...`,
+                            featured_image: `/images/news/${filename}.jpeg`,
+                            tags: [category, '工业检测'],
+                            source: 'project'
+                        };
+                    });
+
+                    console.log(`📰 加载项目新闻数据: ${projectNews.length} 条新闻`);
+                    return projectNews;
+
+                } catch (error) {
+                    console.error('加载项目新闻数据失败:', error);
+                    return [];
+                }
+            },
+
+            // 加载项目应用领域数据
+            async loadProjectApplications() {
+                try {
+                    // 实际项目中的应用领域文件列表
+                    const applicationFiles = ['aerospace', 'automotive', 'casting', 'energy', 'machinery', 'research'];
+
+                    const projectApplications = applicationFiles.map(filename => {
+                        let title, description, icon;
+
+                        switch(filename) {
+                            case 'aerospace':
+                                title = '航空航天';
+                                description = '航空发动机、飞机部件检测';
+                                icon = 'fas fa-plane';
+                                break;
+                            case 'automotive':
+                                title = '汽车制造';
+                                description = '发动机、变速箱、制动系统检测';
+                                icon = 'fas fa-car';
+                                break;
+                            case 'casting':
+                                title = '铸造行业';
+                                description = '铸件内部缺陷检测';
+                                icon = 'fas fa-industry';
+                                break;
+                            case 'energy':
+                                title = '能源电力';
+                                description = '发电设备、管道检测';
+                                icon = 'fas fa-bolt';
+                                break;
+                            case 'machinery':
+                                title = '机械制造';
+                                description = '机械设备内部检测';
+                                icon = 'fas fa-cogs';
+                                break;
+                            case 'research':
+                                title = '科研院所';
+                                description = '科研设备和实验检测';
+                                icon = 'fas fa-microscope';
+                                break;
+                            default:
+                                title = filename;
+                                description = `${filename}应用领域`;
+                                icon = 'fas fa-industry';
+                        }
+
+                        return {
+                            id: filename,
+                            title: title,
+                            description: description,
+                            icon: icon,
+                            image: `/images/applications/${filename}.jpg`,
+                            content: `${title}领域的详细应用介绍...`,
+                            products: ['ws-k1010-a', 'ws-k1210-a'],
+                            cases: ['case-1', 'case-2'],
+                            source: 'project'
+                        };
+                    });
+
+                    console.log(`🏭 加载项目应用领域数据: ${projectApplications.length} 个应用领域`);
+                    return projectApplications;
+
+                } catch (error) {
+                    console.error('加载项目应用领域数据失败:', error);
+                    return [];
+                }
             },
 
             // 合并产品数据
@@ -7509,6 +7244,19 @@ ${caseData.summary || ''}
                 return merged;
             },
 
+            // 合并应用领域数据
+            mergeApplicationData(projectApplications, localApplications) {
+                const merged = [...projectApplications];
+
+                localApplications.forEach(localApplication => {
+                    if (!projectApplications.find(a => a.id === localApplication.id)) {
+                        merged.push({ ...localApplication, source: 'local' });
+                    }
+                });
+
+                return merged;
+            },
+
             // 更新同步状态显示
             updateSyncStatus() {
                 const statusContainer = document.getElementById('syncStatusContainer');
@@ -7536,6 +7284,8 @@ ${caseData.summary || ''}
                     showCases();
                 } else if (currentSection === 'news') {
                     showNews();
+                } else if (currentSection === 'applications') {
+                    showApplications();
                 }
             }
         };
