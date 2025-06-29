@@ -1,173 +1,267 @@
 {{ define "main" }}
-<div class="container py-5">
-    {{ partial "breadcrumbs.html" . }}
-    <div class="row justify-content-center mb-5">
-        <div class="col-lg-10 text-center">
-            <h1 class="display-4 mb-3">{{ .Title }}</h1>
-            <p class="lead text-muted">专业的视觉检测设备信息与资讯发布平台</p>
-            <div class="divider-custom">
-                <div class="divider-custom-line"></div>
-                <div class="divider-custom-icon"><i class="fas fa-bullhorn"></i></div>
-                <div class="divider-custom-line"></div>
+<div class="business-service-page">
+    <div class="container py-5">
+        {{ partial "breadcrumbs.html" . }}
+
+        <!-- 页面头部 -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-10 text-center">
+                <h1 class="page-title mb-4">{{ .Title }}</h1>
+                <p class="page-subtitle mb-4">专业的视觉检测设备信息与资讯发布平台</p>
+                <div class="divider-custom">
+                    <div class="divider-custom-line"></div>
+                    <div class="divider-custom-icon"><i class="fas fa-handshake"></i></div>
+                    <div class="divider-custom-line"></div>
+                </div>
             </div>
         </div>
-    </div>
     
-    <div class="row">
-        <!-- 左侧内容 -->
-        <div class="col-lg-8 mb-4">
-            <!-- 平台信息发布 -->
-            <section class="mb-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-header bg-primary text-white">
-                        <h2 class="h4 mb-0">信息发布服务</h2>
-                    </div>
-                    <div class="card-body">
-                        {{ with .Params.info_publishing }}
-                        {{ . | markdownify }}
-                        {{ else }}
-                        <p>维森视觉检测仪器网为行业提供全面、专业的信息发布服务，助力企业展示技术实力和产品优势。</p>
-                        <div class="row">
-                            <div class="col-md-6 mb-4">
-                                <div class="info-item">
-                                    <div class="info-icon">
-                                        <i class="fas fa-newspaper"></i>
+        <div class="row">
+            <!-- 左侧内容 -->
+            <div class="col-lg-8 mb-4">
+                <!-- 平台信息发布 -->
+                <section class="service-section mb-5">
+                    <div class="service-card">
+                        <div class="service-header">
+                            <div class="service-icon">
+                                <i class="fas fa-broadcast-tower"></i>
+                            </div>
+                            <div class="service-title">
+                                <h2 class="section-title">信息发布服务</h2>
+                                <p class="section-subtitle">专业、高效、精准的行业信息发布平台</p>
+                            </div>
+                        </div>
+                        <div class="service-content">
+                            {{ with .Params.info_publishing }}
+                            {{ . | markdownify }}
+                            {{ else }}
+                            <div class="service-intro">
+                                <p class="intro-text">维森视觉检测仪器网为行业提供全面、专业的信息发布服务，助力企业展示技术实力和产品优势，精准触达目标客户群体。</p>
+                            </div>
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="feature-item">
+                                        <div class="feature-icon">
+                                            <i class="fas fa-newspaper"></i>
+                                        </div>
+                                        <div class="feature-content">
+                                            <h3 class="feature-title">产品资讯</h3>
+                                            <p class="feature-desc">发布最新视觉检测设备、内窥镜技术和行业动态，为用户提供及时、准确的技术信息。</p>
+                                        </div>
                                     </div>
-                                    <h3 class="h5">产品资讯</h3>
-                                    <p>发布最新视觉检测设备、内窥镜技术和行业动态，为用户提供及时、准确的技术信息。</p>
                                 </div>
-                            </div>
-                            <div class="col-md-6 mb-4">
-                                <div class="info-item">
-                                    <div class="info-icon">
-                                        <i class="fas fa-chart-line"></i>
+                                <div class="col-md-6">
+                                    <div class="feature-item">
+                                        <div class="feature-icon">
+                                            <i class="fas fa-chart-line"></i>
+                                        </div>
+                                        <div class="feature-content">
+                                            <h3 class="feature-title">技术趋势</h3>
+                                            <p class="feature-desc">深入分析视觉检测领域的技术发展趋势，提供前沿洞察和专业解读。</p>
+                                        </div>
                                     </div>
-                                    <h3 class="h5">技术趋势</h3>
-                                    <p>深入分析视觉检测领域的技术发展趋势，提供前沿洞察和专业解读。</p>
                                 </div>
-                            </div>
-                            <div class="col-md-6 mb-4">
-                                <div class="info-item">
-                                    <div class="info-icon">
-                                        <i class="fas fa-industry"></i>
+                                <div class="col-md-6">
+                                    <div class="feature-item">
+                                        <div class="feature-icon">
+                                            <i class="fas fa-industry"></i>
+                                        </div>
+                                        <div class="feature-content">
+                                            <h3 class="feature-title">行业应用</h3>
+                                            <p class="feature-desc">展示视觉检测技术在不同行业的创新应用案例和解决方案。</p>
+                                        </div>
                                     </div>
-                                    <h3 class="h5">行业应用</h3>
-                                    <p>展示视觉检测技术在不同行业的创新应用案例和解决方案。</p>
                                 </div>
-                            </div>
-                            <div class="col-md-6 mb-4">
-                                <div class="info-item">
-                                    <div class="info-icon">
-                                        <i class="fas fa-users"></i>
+                                <div class="col-md-6">
+                                    <div class="feature-item">
+                                        <div class="feature-icon">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                        <div class="feature-content">
+                                            <h3 class="feature-title">企业展示</h3>
+                                            <p class="feature-desc">为企业提供专业的产品展示和品牌推广渠道，扩大行业影响力。</p>
+                                        </div>
                                     </div>
-                                    <h3 class="h5">企业展示</h3>
-                                    <p>为企业提供专业的产品展示和品牌推广渠道，扩大行业影响力。</p>
                                 </div>
                             </div>
+                            {{ end }}
                         </div>
-                        {{ end }}
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- 产品信息发布 -->
-            <section class="mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h2 class="h4 mb-0">产品信息发布</h2>
-                    </div>
-                    <div class="card-body">
-                        {{ with .Params.product_publishing }}
-                        {{ . | markdownify }}
-                        {{ else }}
-                        <p>我们为视觉检测设备制造商和供应商提供专业、高效的产品信息发布平台，助力产品展示和市场推广。</p>
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <div class="product-publish-item">
-                                    <h3 class="h6">📸 设备详细信息</h3>
-                                    <p>支持发布设备技术规格、功能特点、应用场景等全面信息。</p>
-                                </div>
+                <!-- 产品信息发布 -->
+                <section class="service-section mb-5">
+                    <div class="service-card">
+                        <div class="service-header">
+                            <div class="service-icon">
+                                <i class="fas fa-box-open"></i>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <div class="product-publish-item">
-                                    <h3 class="h6">🔬 技术参数展示</h3>
-                                    <p>提供专业、标准化的技术参数展示模板，便于用户快速比较。</p>
-                                </div>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <div class="product-publish-item">
-                                    <h3 class="h6">🌐 广泛传播</h3>
-                                    <p>依托专业平台，扩大产品在行业内的知名度和影响力。</p>
-                                </div>
+                            <div class="service-title">
+                                <h2 class="section-title">产品信息发布</h2>
+                                <p class="section-subtitle">专业的产品展示与推广服务平台</p>
                             </div>
                         </div>
-                        <div class="alert alert-info mt-3" role="alert">
-                            <strong>发布流程：</strong>
-                            提交 → 审核 → 发布 → 推广
+                        <div class="service-content">
+                            {{ with .Params.product_publishing }}
+                            {{ . | markdownify }}
+                            {{ else }}
+                            <div class="service-intro">
+                                <p class="intro-text">我们为视觉检测设备制造商和供应商提供专业、高效的产品信息发布平台，助力产品展示和市场推广，让您的产品在行业中脱颖而出。</p>
+                            </div>
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <div class="publish-feature">
+                                        <div class="publish-icon">
+                                            <i class="fas fa-camera"></i>
+                                        </div>
+                                        <h3 class="publish-title">设备详细信息</h3>
+                                        <p class="publish-desc">支持发布设备技术规格、功能特点、应用场景等全面信息，多角度展示产品优势。</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="publish-feature">
+                                        <div class="publish-icon">
+                                            <i class="fas fa-microscope"></i>
+                                        </div>
+                                        <h3 class="publish-title">技术参数展示</h3>
+                                        <p class="publish-desc">提供专业、标准化的技术参数展示模板，便于用户快速比较和选择。</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="publish-feature">
+                                        <div class="publish-icon">
+                                            <i class="fas fa-globe"></i>
+                                        </div>
+                                        <h3 class="publish-title">广泛传播</h3>
+                                        <p class="publish-desc">依托专业平台，扩大产品在行业内的知名度和影响力，触达精准客户。</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="process-flow">
+                                <h4 class="process-title">发布流程</h4>
+                                <div class="process-steps">
+                                    <div class="process-step">
+                                        <div class="step-number">1</div>
+                                        <div class="step-text">提交</div>
+                                    </div>
+                                    <div class="process-arrow">→</div>
+                                    <div class="process-step">
+                                        <div class="step-number">2</div>
+                                        <div class="step-text">审核</div>
+                                    </div>
+                                    <div class="process-arrow">→</div>
+                                    <div class="process-step">
+                                        <div class="step-number">3</div>
+                                        <div class="step-text">发布</div>
+                                    </div>
+                                    <div class="process-arrow">→</div>
+                                    <div class="process-step">
+                                        <div class="step-number">4</div>
+                                        <div class="step-text">推广</div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{ end }}
                         </div>
-                        {{ end }}
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- 主要内容 -->
-            {{ if .Content }}
-            <section class="mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h2 class="h4 mb-0">更多信息</h2>
+                <!-- 主要内容 -->
+                {{ if .Content }}
+                <section class="service-section mb-5">
+                    <div class="service-card">
+                        <div class="service-header">
+                            <div class="service-icon">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="service-title">
+                                <h2 class="section-title">详细信息</h2>
+                                <p class="section-subtitle">了解更多商务合作详情</p>
+                            </div>
+                        </div>
+                        <div class="service-content">
+                            <div class="content-wrapper">
+                                {{ .Content }}
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        {{ .Content }}
-                    </div>
-                </div>
-            </section>
-            {{ end }}
-        </div>
+                </section>
+                {{ end }}
+            </div>
 
-        <!-- 右侧联系表单 -->
-        <div class="col-lg-4">
-            <div class="card shadow-sm sticky-top" style="top: 20px; z-index: 100;">
-                <div class="card-header bg-primary text-white">
-                    <h2 class="h4 mb-0">信息发布咨询</h2>
-                </div>
-                <div class="card-body">
-                    <form id="infoPublishForm" class="needs-validation" novalidate>
-                        <div class="mb-3">
-                            <label for="contact_name" class="form-label">联系人</label>
-                            <input type="text" class="form-control" id="contact_name" name="contact_name">
+            <!-- 右侧联系表单 -->
+            <div class="col-lg-4">
+                <div class="contact-sidebar">
+                    <div class="contact-card">
+                        <div class="contact-header">
+                            <div class="contact-icon">
+                                <i class="fas fa-comments"></i>
+                            </div>
+                            <h2 class="contact-title">商务咨询</h2>
+                            <p class="contact-subtitle">专业团队为您提供一对一服务</p>
                         </div>
-                        <div class="mb-3">
-                            <label for="contact_company" class="form-label">公司名称</label>
-                            <input type="text" class="form-control" id="contact_company" name="contact_company">
-                        </div>
-                        <div class="mb-3">
-                            <label for="publish_type" class="form-label">发布类型</label>
-                            <select class="form-select" id="publish_type" name="publish_type">
-                                <option value="" selected disabled>请选择发布类型</option>
-                                <option value="产品资讯">产品资讯</option>
-                                <option value="技术趋势">技术趋势</option>
-                                <option value="行业应用">行业应用</option>
-                                <option value="企业展示">企业展示</option>
-                                <option value="其他">其他</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="message" class="form-label">发布内容简介</label>
-                            <textarea class="form-control" id="message" name="message" rows="4"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">提交发布申请</button>
-                    </form>
 
-                    <hr class="my-4">
+                        <div class="contact-form">
+                            <form id="infoPublishForm" class="business-form">
+                                <div class="form-group">
+                                    <label for="contact_name" class="form-label">联系人</label>
+                                    <input type="text" class="form-control" id="contact_name" name="contact_name" placeholder="请输入您的姓名">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact_company" class="form-label">公司名称</label>
+                                    <input type="text" class="form-control" id="contact_company" name="contact_company" placeholder="请输入公司名称">
+                                </div>
+                                <div class="form-group">
+                                    <label for="publish_type" class="form-label">合作类型</label>
+                                    <select class="form-select" id="publish_type" name="publish_type">
+                                        <option value="" selected disabled>请选择合作类型</option>
+                                        <option value="产品推广">产品推广</option>
+                                        <option value="内容营销">内容营销</option>
+                                        <option value="品牌合作">品牌合作</option>
+                                        <option value="技术交流">技术交流</option>
+                                        <option value="其他合作">其他合作</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="message" class="form-label">合作需求</label>
+                                    <textarea class="form-control" id="message" name="message" rows="4" placeholder="请详细描述您的合作需求..."></textarea>
+                                </div>
+                                <button type="submit" class="btn-submit">
+                                    <i class="fas fa-paper-plane me-2"></i>提交咨询
+                                </button>
+                            </form>
+                        </div>
 
-                    <div class="contact-info text-center">
-                        <h3 class="h5 mb-3">联系邮箱</h3>
-                        <p>
-                            <i class="fas fa-envelope me-2"></i> 
-                            <strong>publish@visndt.com</strong>
-                        </p>
-                        <small class="text-muted">我们将在1-2个工作日内回复您的发布申请</small>
+                        <div class="contact-divider"></div>
+
+                        <div class="contact-info">
+                            <h3 class="info-title">联系方式</h3>
+                            <div class="info-item">
+                                <i class="fas fa-envelope"></i>
+                                <div class="info-content">
+                                    <span class="info-label">商务邮箱</span>
+                                    <span class="info-value">business@visndt.com</span>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-phone"></i>
+                                <div class="info-content">
+                                    <span class="info-label">咨询热线</span>
+                                    <span class="info-value">400-888-9999</span>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fab fa-weixin"></i>
+                                <div class="info-content">
+                                    <span class="info-label">微信客服</span>
+                                    <span class="info-value">visndt_business</span>
+                                </div>
+                            </div>
+                            <div class="response-time">
+                                <i class="fas fa-clock me-2"></i>
+                                <span>我们将在1-2个工作日内回复您的咨询</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -176,8 +270,33 @@
 </div>
 
 <style>
+/* 商务服务页面样式 */
+.business-service-page {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-height: 100vh;
+}
+
+/* 页面头部样式 */
+.page-title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.page-subtitle {
+    font-size: 1.25rem;
+    color: #6c757d;
+    font-weight: 400;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* 分割线样式 */
 .divider-custom {
-    margin: 1.25rem 0 1.5rem;
+    margin: 2rem 0;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -186,41 +305,490 @@
 
 .divider-custom .divider-custom-line {
     width: 100%;
-    max-width: 7rem;
-    height: 0.25rem;
-    background-color: var(--bs-primary);
-    border-radius: 1rem;
+    max-width: 8rem;
+    height: 3px;
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    border-radius: 2px;
 }
 
 .divider-custom .divider-custom-icon {
-    color: var(--bs-primary);
-    font-size: 1.5rem;
-    margin: 0 1.5rem;
+    color: #007bff;
+    font-size: 1.8rem;
+    margin: 0 2rem;
+    background: white;
+    padding: 0.5rem;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.2);
 }
 
-.info-item, .product-publish-item {
-    padding: 1rem;
-    border-radius: 0.5rem;
+/* 服务卡片样式 */
+.service-section {
+    margin-bottom: 3rem;
+}
+
+.service-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 48px rgba(0,0,0,0.15);
+}
+
+.service-header {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.service-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+}
+
+.section-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.section-subtitle {
+    font-size: 1rem;
+    margin: 0.5rem 0 0 0;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+.service-content {
+    padding: 2.5rem;
+}
+
+.service-intro {
+    margin-bottom: 2rem;
+}
+
+.intro-text {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #495057;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* 功能特性样式 */
+.feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-radius: 12px;
     transition: all 0.3s ease;
     height: 100%;
+    border: 1px solid #e9ecef;
 }
 
-.info-item:hover, .product-publish-item:hover {
-    background-color: #f8f9fa;
-    transform: translateY(-5px);
+.feature-item:hover {
+    background: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
 }
 
-.info-icon, .product-publish-icon {
-    width: 50px;
-    height: 50px;
-    background-color: var(--bs-primary);
+.feature-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.feature-content {
+    flex: 1;
+}
+
+.feature-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #212529;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.3;
+}
+
+.feature-desc {
+    font-size: 0.95rem;
+    color: #6c757d;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* 产品发布特性样式 */
+.publish-feature {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    height: 100%;
+    border: 1px solid #e9ecef;
+}
+
+.publish-feature:hover {
+    background: #f8f9fa;
+    transform: translateY(-4px);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+}
+
+.publish-icon {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin: 0 auto 1.5rem auto;
+}
+
+.publish-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #212529;
+    margin: 0 0 1rem 0;
+    line-height: 1.3;
+}
+
+.publish-desc {
+    font-size: 0.95rem;
+    color: #6c757d;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* 流程步骤样式 */
+.process-flow {
+    margin-top: 2.5rem;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+}
+
+.process-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #212529;
+    text-align: center;
+    margin: 0 0 2rem 0;
+}
+
+.process-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.process-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #007bff, #0056b3);
     color: white;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.step-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #495057;
+}
+
+.process-arrow {
+    color: #007bff;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* 联系侧边栏样式 */
+.contact-sidebar {
+    position: sticky;
+    top: 20px;
+    z-index: 100;
+}
+
+.contact-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.contact-header {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+.contact-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin: 0 auto 1rem auto;
+}
+
+.contact-title {
     font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+}
+
+.contact-subtitle {
+    font-size: 0.95rem;
+    opacity: 0.9;
+    margin: 0;
+}
+
+/* 表单样式 */
+.contact-form {
+    padding: 2rem;
+}
+
+.business-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.business-form .form-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.business-form .form-control,
+.business-form .form-select {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.business-form .form-control:focus,
+.business-form .form-select:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    outline: none;
+}
+
+.business-form .form-control::placeholder {
+    color: #adb5bd;
+    font-size: 0.9rem;
+}
+
+.btn-submit {
+    width: 100%;
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-submit:hover {
+    background: linear-gradient(135deg, #218838, #1e7e34);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(40, 167, 69, 0.3);
+}
+
+/* 分割线 */
+.contact-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e9ecef, transparent);
+    margin: 0 2rem;
+}
+
+/* 联系信息样式 */
+.contact-info {
+    padding: 2rem;
+}
+
+.info-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #212529;
+    margin: 0 0 1.5rem 0;
+    text-align: center;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
     margin-bottom: 1rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.info-item:hover {
+    background: #f8f9fa;
+}
+
+.info-item i {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #28a745;
+    font-size: 1.1rem;
+}
+
+.info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.info-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.info-value {
+    font-size: 0.95rem;
+    color: #212529;
+    font-weight: 600;
+}
+
+.response-time {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: #6c757d;
+    text-align: center;
+    border-left: 3px solid #28a745;
+}
+
+/* 内容包装器 */
+.content-wrapper {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #495057;
+}
+
+.content-wrapper h1,
+.content-wrapper h2,
+.content-wrapper h3,
+.content-wrapper h4,
+.content-wrapper h5,
+.content-wrapper h6 {
+    color: #212529;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.content-wrapper p {
+    margin-bottom: 1rem;
+}
+
+.content-wrapper ul,
+.content-wrapper ol {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+}
+
+.content-wrapper li {
+    margin-bottom: 0.5rem;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 2.5rem;
+    }
+
+    .page-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .service-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .service-content {
+        padding: 1.5rem;
+    }
+
+    .contact-form,
+    .contact-info {
+        padding: 1.5rem;
+    }
+
+    .process-steps {
+        flex-direction: column;
+    }
+
+    .process-arrow {
+        transform: rotate(90deg);
+    }
+
+    .feature-item {
+        flex-direction: column;
+        text-align: center;
+    }
 }
 </style>
 
