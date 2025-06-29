@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600">
+  <rect width="1200" height="600" fill="#f8f9fa"/>
+  <rect x="100" y="100" width="1000" height="400" fill="#e9ecef" stroke="#dee2e6" stroke-width="3"/>
+  <circle cx="600" cy="250" r="60" fill="#6c757d"/>
+  <rect x="450" y="350" width="300" height="60" fill="#6c757d" rx="10"/>
+  <text x="600" y="450" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="24">轮播图片</text>
+  <text x="600" y="480" text-anchor="middle" fill="#adb5bd" font-family="Arial, sans-serif" font-size="16">1200 × 600</text>
+</svg>

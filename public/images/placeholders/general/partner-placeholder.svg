@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="100" viewBox="0 0 200 100">
+  <rect width="200" height="100" fill="#f8f9fa"/>
+  <rect x="20" y="20" width="160" height="60" fill="#e9ecef" stroke="#dee2e6" stroke-width="1"/>
+  <rect x="40" y="35" width="120" height="8" fill="#6c757d" rx="4"/>
+  <rect x="60" y="50" width="80" height="6" fill="#adb5bd" rx="3"/>
+  <text x="100" y="75" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="10">合作伙伴</text>
+</svg>

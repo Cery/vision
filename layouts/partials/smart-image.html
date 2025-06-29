@@ -19,7 +19,20 @@
 {{ $loading := .loading | default "lazy" }}
 {{ $category := .category | default "" }}
 {{ $type := .type | default "covers" }}
-{{ $fallback := .fallback | default "/images/placeholder.svg" }}
+{{ $fallback := .fallback }}
+{{ if not $fallback }}
+  {{ if eq $category "products" }}
+    {{ $fallback = "/images/placeholders/general/product-placeholder.svg" }}
+  {{ else if eq $category "news" }}
+    {{ $fallback = "/images/placeholders/general/news-placeholder.svg" }}
+  {{ else if eq $category "partners" }}
+    {{ $fallback = "/images/placeholders/general/partner-placeholder.svg" }}
+  {{ else if in $image "carousel" }}
+    {{ $fallback = "/images/placeholders/general/carousel-placeholder.svg" }}
+  {{ else }}
+    {{ $fallback = "/images/placeholder.svg" }}
+  {{ end }}
+{{ end }}
 
 {{/* 路径映射配置 */}}
 {{ $pathMapping := site.Data.path_mapping | default dict }}
@@ -65,16 +78,17 @@
 {{ end }}
 
 {{/* 生成图片HTML */}}
-<img 
+<img
   src="{{ $finalImagePath }}"
   alt="{{ $alt }}"
   loading="{{ $loading }}"
   class="{{ $class }}"
   {{ with $sizes }}sizes="{{ . }}"{{ end }}
-  onerror="this.src='{{ $fallback }}'; this.onerror=null;"
   data-original-src="{{ $image }}"
   data-category="{{ $category }}"
   data-type="{{ $type }}"
+  data-fallback="{{ $fallback }}"
+  decoding="async"
 >
 
 {{/* 调试信息 (仅在开发模式下显示) */}}
