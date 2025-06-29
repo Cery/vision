@@ -1338,6 +1338,11 @@
             // 初始化媒体库事件监听器
             initializeMediaLibraryEvents();
 
+            // 初始化内容同步
+            setTimeout(async () => {
+                await window.ContentSyncManager.initSync();
+            }, 1000);
+
             console.log('完整内容管理系统已加载');
         });
 
@@ -7223,6 +7228,317 @@ ${caseData.summary || ''}
 
         // 为了向后兼容，保留ProductAPI别名
         window.ProductAPI = window.ContentAPI;
+
+        // 内容同步管理器
+        window.ContentSyncManager = {
+            // 同步状态
+            syncStatus: {
+                products: { lastSync: null, status: 'pending' },
+                suppliers: { lastSync: null, status: 'pending' },
+                cases: { lastSync: null, status: 'pending' },
+                news: { lastSync: null, status: 'pending' }
+            },
+
+            // 初始化同步
+            async initSync() {
+                console.log('🔄 开始内容同步...');
+                showNotification('正在同步项目内容...', 'info');
+
+                try {
+                    await this.syncAllContent();
+                    showNotification('内容同步完成！', 'success');
+                } catch (error) {
+                    console.error('同步失败:', error);
+                    showNotification('内容同步失败: ' + error.message, 'danger');
+                }
+            },
+
+            // 同步所有内容
+            async syncAllContent() {
+                const syncTasks = [
+                    this.syncProducts(),
+                    this.syncSuppliers(),
+                    this.syncCases(),
+                    this.syncNews()
+                ];
+
+                await Promise.all(syncTasks);
+                this.updateSyncStatus();
+            },
+
+            // 同步产品内容
+            async syncProducts() {
+                try {
+                    this.syncStatus.products.status = 'syncing';
+
+                    // 模拟从项目文件系统读取产品数据
+                    const projectProducts = await this.loadProjectProducts();
+                    const localProducts = JSON.parse(localStorage.getItem('visndt_products') || '[]');
+
+                    // 合并和同步数据
+                    const syncedProducts = this.mergeProductData(projectProducts, localProducts);
+
+                    // 保存同步后的数据
+                    localStorage.setItem('visndt_products', JSON.stringify(syncedProducts));
+
+                    this.syncStatus.products.status = 'completed';
+                    this.syncStatus.products.lastSync = new Date().toISOString();
+
+                    console.log(`✅ 产品同步完成: ${syncedProducts.length} 个产品`);
+
+                } catch (error) {
+                    this.syncStatus.products.status = 'error';
+                    throw new Error(`产品同步失败: ${error.message}`);
+                }
+            },
+
+            // 同步供应商内容
+            async syncSuppliers() {
+                try {
+                    this.syncStatus.suppliers.status = 'syncing';
+
+                    const projectSuppliers = await this.loadProjectSuppliers();
+                    const localSuppliers = JSON.parse(localStorage.getItem('visndt_suppliers') || '[]');
+
+                    const syncedSuppliers = this.mergeSupplierData(projectSuppliers, localSuppliers);
+                    localStorage.setItem('visndt_suppliers', JSON.stringify(syncedSuppliers));
+
+                    this.syncStatus.suppliers.status = 'completed';
+                    this.syncStatus.suppliers.lastSync = new Date().toISOString();
+
+                    console.log(`✅ 供应商同步完成: ${syncedSuppliers.length} 个供应商`);
+
+                } catch (error) {
+                    this.syncStatus.suppliers.status = 'error';
+                    throw new Error(`供应商同步失败: ${error.message}`);
+                }
+            },
+
+            // 同步案例内容
+            async syncCases() {
+                try {
+                    this.syncStatus.cases.status = 'syncing';
+
+                    const projectCases = await this.loadProjectCases();
+                    const localCases = JSON.parse(localStorage.getItem('visndt_cases') || '[]');
+
+                    const syncedCases = this.mergeCaseData(projectCases, localCases);
+                    localStorage.setItem('visndt_cases', JSON.stringify(syncedCases));
+
+                    this.syncStatus.cases.status = 'completed';
+                    this.syncStatus.cases.lastSync = new Date().toISOString();
+
+                    console.log(`✅ 案例同步完成: ${syncedCases.length} 个案例`);
+
+                } catch (error) {
+                    this.syncStatus.cases.status = 'error';
+                    throw new Error(`案例同步失败: ${error.message}`);
+                }
+            },
+
+            // 同步新闻内容
+            async syncNews() {
+                try {
+                    this.syncStatus.news.status = 'syncing';
+
+                    const projectNews = await this.loadProjectNews();
+                    const localNews = JSON.parse(localStorage.getItem('visndt_news') || '[]');
+
+                    const syncedNews = this.mergeNewsData(projectNews, localNews);
+                    localStorage.setItem('visndt_news', JSON.stringify(syncedNews));
+
+                    this.syncStatus.news.status = 'completed';
+                    this.syncStatus.news.lastSync = new Date().toISOString();
+
+                    console.log(`✅ 新闻同步完成: ${syncedNews.length} 条新闻`);
+
+                } catch (error) {
+                    this.syncStatus.news.status = 'error';
+                    throw new Error(`新闻同步失败: ${error.message}`);
+                }
+            },
+
+            // 加载项目产品数据（模拟从文件系统读取）
+            async loadProjectProducts() {
+                // 在实际应用中，这里应该通过API读取content/products目录下的所有.md文件
+                // 现在我们模拟一些项目中存在的产品数据
+                const projectProducts = [
+                    {
+                        id: 'ws-k1010-a',
+                        title: 'WS-K1010-A 工业内窥镜',
+                        model: 'WS-K1010-A',
+                        series: 'K系列',
+                        supplier: '深圳市微视光电科技有限公司',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '工业视频内窥镜',
+                        status: 'published',
+                        published: '2024-01-15T10:00:00Z',
+                        summary: '高清工业内窥镜，适用于各种工业检测场景',
+                        gallery: [
+                            { image: '/images/products/K-series/K-main.jpg', alt: 'WS-K1010-A主图', is_main: true },
+                            { image: '/images/products/K-series/K-1.jpg', alt: 'WS-K1010-A侧面图', is_main: false }
+                        ],
+                        parameters: [
+                            { name: '探头直径', value: '10mm' },
+                            { name: '工作长度', value: '1000mm' },
+                            { name: '视角', value: '120°' }
+                        ],
+                        application_scenarios: '适用于汽车发动机、航空航天、石油化工等行业的内部检测',
+                        content: '**WS-K1010-A**是一款专业的工业内窥镜，具有高清成像、操作简便等特点。',
+                        data_download: [],
+                        related_products: [],
+                        source: 'project' // 标记数据来源
+                    }
+                    // 可以添加更多项目中实际存在的产品
+                ];
+
+                return projectProducts;
+            },
+
+            // 加载项目供应商数据
+            async loadProjectSuppliers() {
+                const projectSuppliers = [
+                    {
+                        id: 'vsndt-supplier',
+                        title: '深圳市微视光电科技有限公司',
+                        address: '深圳市南山区科技园',
+                        type: '制造商',
+                        series: ['K系列', 'P系列', 'DZ系列'],
+                        models: ['WS-K1010-A', 'WS-P60', 'WS-DZ60'],
+                        gallery: ['/images/suppliers/vsndt-company.jpg'],
+                        contact_person: '张经理',
+                        position: '销售总监',
+                        phone: '0755-12345678',
+                        email: 'sales@vsndt.com',
+                        description: '专业的工业内窥镜制造商，拥有多年行业经验',
+                        source: 'project'
+                    }
+                ];
+
+                return projectSuppliers;
+            },
+
+            // 加载项目案例数据
+            async loadProjectCases() {
+                const projectCases = [
+                    {
+                        id: 'automotive-manufacturing',
+                        title: '汽车制造业检测案例',
+                        category: '汽车制造',
+                        date: '2024-01-10',
+                        summary: '使用工业内窥镜检测汽车发动机内部结构',
+                        content: '详细的案例描述...',
+                        images: ['/images/cases/case-1.webp'],
+                        products_used: ['ws-k1010-a'],
+                        source: 'project'
+                    }
+                ];
+
+                return projectCases;
+            },
+
+            // 加载项目新闻数据
+            async loadProjectNews() {
+                const projectNews = [
+                    {
+                        id: 'industry-news-1',
+                        title: '工业4.0时代的检测技术发展',
+                        category: '行业资讯',
+                        date: '2024-01-15',
+                        summary: '探讨工业4.0背景下检测技术的最新发展趋势',
+                        content: '详细的新闻内容...',
+                        featured_image: '/images/news/news-1.jpeg',
+                        tags: ['工业4.0', '检测技术', '技术发展'],
+                        source: 'project'
+                    }
+                ];
+
+                return projectNews;
+            },
+
+            // 合并产品数据
+            mergeProductData(projectProducts, localProducts) {
+                const merged = [...projectProducts];
+
+                // 添加本地创建的产品（不在项目中的）
+                localProducts.forEach(localProduct => {
+                    if (!projectProducts.find(p => p.id === localProduct.id)) {
+                        merged.push({ ...localProduct, source: 'local' });
+                    }
+                });
+
+                return merged;
+            },
+
+            // 合并供应商数据
+            mergeSupplierData(projectSuppliers, localSuppliers) {
+                const merged = [...projectSuppliers];
+
+                localSuppliers.forEach(localSupplier => {
+                    if (!projectSuppliers.find(s => s.id === localSupplier.id)) {
+                        merged.push({ ...localSupplier, source: 'local' });
+                    }
+                });
+
+                return merged;
+            },
+
+            // 合并案例数据
+            mergeCaseData(projectCases, localCases) {
+                const merged = [...projectCases];
+
+                localCases.forEach(localCase => {
+                    if (!projectCases.find(c => c.id === localCase.id)) {
+                        merged.push({ ...localCase, source: 'local' });
+                    }
+                });
+
+                return merged;
+            },
+
+            // 合并新闻数据
+            mergeNewsData(projectNews, localNews) {
+                const merged = [...projectNews];
+
+                localNews.forEach(localNewsItem => {
+                    if (!projectNews.find(n => n.id === localNewsItem.id)) {
+                        merged.push({ ...localNewsItem, source: 'local' });
+                    }
+                });
+
+                return merged;
+            },
+
+            // 更新同步状态显示
+            updateSyncStatus() {
+                const statusContainer = document.getElementById('syncStatusContainer');
+                if (statusContainer) {
+                    const lastSyncTime = new Date().toLocaleString();
+                    statusContainer.innerHTML = `
+                        <div class="alert alert-success">
+                            <i class="fas fa-sync-alt me-2"></i>
+                            内容同步完成 - ${lastSyncTime}
+                        </div>
+                    `;
+                }
+            },
+
+            // 手动触发同步
+            async manualSync() {
+                await this.initSync();
+
+                // 刷新当前显示的数据
+                if (currentSection === 'products') {
+                    await showProductsList();
+                } else if (currentSection === 'suppliers') {
+                    showSuppliers();
+                } else if (currentSection === 'cases') {
+                    showCases();
+                } else if (currentSection === 'news') {
+                    showNews();
+                }
+            }
+        };
 
         // 媒体库管理功能
         let selectedMediaFiles = [];

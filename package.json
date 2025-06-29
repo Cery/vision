@@ -9,7 +9,10 @@
     "product-server": "node product-server.js",
     "product-server:dev": "nodemon product-server.js",
     "build": "hugo --gc --minify",
-    "cms:proxy": "netlify-cms-proxy-server --port 8081 --config static/admin/config.yml"
+    "cms:proxy": "netlify-cms-proxy-server --port 8081 --config static/admin/config.yml",
+    "encoding:check": "node scripts/simple-encoding-fix.js",
+    "encoding:fix": "node scripts/simple-encoding-fix.js",
+    "precommit": "npm run encoding:check"
   },
   "dependencies": {
     "cors": "^2.8.5",

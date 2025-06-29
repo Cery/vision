@@ -38,19 +38,42 @@ check_encoding() {
     
     # 检查BOM
     if [ -f "$file" ]; then
-        bom=$(head -c 3 "$file" | od -t x1 -A n | tr -d ' ')
-        if [ "$bom" = "efbbbf" ]; then
-            echo "❌ 文件包含BOM: $file"
-            echo "   请运行: node scripts/fix-encoding.js"
-            return 1
+        # 检查UTF-8 BOM (EF BB BF)
+        if command -v xxd > /dev/null; then
+            bom=$(xxd -l 3 -p "$file" 2>/dev/null | tr '[:lower:]' '[:upper:]')
+            if [ "$bom" = "EFBBBF" ]; then
+                echo "❌ 文件包含UTF-8 BOM: $file"
+                echo "   请运行: node scripts/simple-encoding-fix.js"
+                return 1
+            fi
+        else
+            # 备用方法
+            bom=$(head -c 3 "$file" | od -t x1 -A n | tr -d ' ' | tr '[:lower:]' '[:upper:]')
+            if [ "$bom" = "EFBBBF" ]; then
+                echo "❌ 文件包含UTF-8 BOM: $file"
+                echo "   请运行: node scripts/simple-encoding-fix.js"
+                return 1
+            fi
         fi
     fi
     
     # 检查是否为有效的UTF-8
-    if ! iconv -f utf-8 -t utf-8 "$file" > /dev/null 2>&1; then
-        echo "❌ 文件不是有效的UTF-8编码: $file"
-        echo "   请运行: node scripts/fix-encoding.js"
-        return 1
+    if command -v iconv > /dev/null; then
+        if ! iconv -f utf-8 -t utf-8 "$file" > /dev/null 2>&1; then
+            echo "❌ 文件不是有效的UTF-8编码: $file"
+            echo "   请运行: node scripts/simple-encoding-fix.js"
+            return 1
+        fi
+    else
+        # Windows环境下的备用检查
+        if command -v file > /dev/null; then
+            encoding=$(file -b --mime-encoding "$file" 2>/dev/null)
+            if [ "$encoding" != "utf-8" ] && [ "$encoding" != "us-ascii" ]; then
+                echo "❌ 文件编码可能有问题: $file (检测到: $encoding)"
+                echo "   请运行: node scripts/simple-encoding-fix.js"
+                return 1
+            fi
+        fi
     fi
     
     return 0
