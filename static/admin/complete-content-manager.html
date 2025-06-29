@@ -339,6 +339,220 @@
             color: var(--success-color);
         }
 
+        /* 分页样式 */
+        .pagination-container {
+            margin-top: 20px;
+            padding: 15px 0;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .pagination .page-link {
+            color: var(--primary-color);
+            border: 1px solid #dee2e6;
+            padding: 8px 12px;
+            margin: 0 2px;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .pagination .page-link:hover {
+            background-color: #e9ecef;
+            border-color: #adb5bd;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            color: #6c757d;
+            background-color: #fff;
+            border-color: #dee2e6;
+            cursor: not-allowed;
+        }
+
+        .pagination-info {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        /* 媒体库样式 */
+        .media-file-item {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            background: white;
+        }
+
+        .media-file-item:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 8px rgba(0,123,255,0.15);
+        }
+
+        .media-file-item.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(0,123,255,0.05);
+        }
+
+        .media-preview {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .media-preview img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .file-icon {
+            color: #dc3545;
+        }
+
+        .media-info {
+            text-align: center;
+        }
+
+        .selection-indicator {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .media-file-item.selected .selection-indicator {
+            display: flex;
+        }
+
+        /* 图库样式 */
+        .gallery-image-item {
+            position: relative;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 8px;
+            background: white;
+            transition: all 0.2s ease;
+        }
+
+        .gallery-image-item:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 8px rgba(0,123,255,0.15);
+        }
+
+        .gallery-image-item.main-image {
+            border-color: #ffc107;
+            background-color: rgba(255,193,7,0.05);
+        }
+
+        .gallery-image-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .image-controls {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .gallery-image-item:hover .image-controls {
+            opacity: 1;
+        }
+
+        .image-info {
+            margin-top: 8px;
+        }
+
+        .image-upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #f8f9fa;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-upload-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(0,123,255,0.05);
+        }
+
+        .upload-placeholder {
+            color: #6c757d;
+        }
+
+        /* 供应商图片管理样式 */
+        .supplier-image-item {
+            position: relative;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 8px;
+            background: white;
+            transition: all 0.2s ease;
+        }
+
+        .supplier-image-item:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 8px rgba(0,123,255,0.15);
+        }
+
+        .supplier-image-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .supplier-image-upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #f8f9fa;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .supplier-image-upload-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(0,123,255,0.05);
+        }
+
         /* 富文本编辑器样式 */
         .ql-editor {
             min-height: 200px;
@@ -606,6 +820,20 @@
                                     <label for="productSummary" class="form-label">产品简述</label>
                                     <textarea class="form-control" id="productSummary" rows="3"></textarea>
                                 </div>
+
+                                <div class="mb-3">
+                                    <label for="publishStatus" class="form-label">发布状态 *</label>
+                                    <select class="form-select" id="publishStatus" required>
+                                        <option value="published">已发布</option>
+                                        <option value="draft">草稿</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="publishDate" class="form-label">发布时间</label>
+                                    <input type="datetime-local" class="form-control" id="publishDate">
+                                    <div class="form-text">留空则使用当前时间</div>
+                                </div>
                             </div>
 
                             <!-- 分类和供应商 -->
@@ -649,13 +877,28 @@
 
                                 <div class="alert alert-info">
                                     <i class="fas fa-info-circle me-2"></i>
-                                    产品图片将根据产品系列自动设置默认图片，您也可以在产品图库中添加更多图片。
+                                    产品图片将根据产品系列自动设置默认图片，您也可以上传新图片或从媒体库中选择现有图片。
                                 </div>
 
                                 <div class="mb-3">
                                     <label class="form-label">产品图库</label>
-                                    <div id="productGalleryUploader">
-                                        <!-- 图片上传组件将在这里初始化 -->
+                                    <div class="d-flex gap-2 mb-3">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="addGalleryImage()">
+                                            <i class="fas fa-upload me-1"></i>上传图片
+                                        </button>
+                                        <button type="button" class="btn btn-outline-success btn-sm" onclick="selectFromMediaLibrary()">
+                                            <i class="fas fa-folder-open me-1"></i>从媒体库选择
+                                        </button>
+                                    </div>
+                                    <div id="galleryContainer" class="row">
+                                        <div class="col-md-3 mb-3">
+                                            <div class="image-upload-area" onclick="addGalleryImage()">
+                                                <div class="upload-placeholder">
+                                                    <i class="fas fa-plus fa-2x mb-2"></i>
+                                                    <p>添加图片</p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1046,6 +1289,10 @@
         let suppliers = [];
         let allProducts = [];
 
+        // 分页配置
+        const ITEMS_PER_PAGE = 10;
+        let currentPage = 1;
+
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', async function() {
             // 检查登录状态
@@ -1063,8 +1310,32 @@
             // 检查服务器状态
             await checkServerStatus();
 
+            // 初始化图片上传组件
+            setTimeout(() => {
+                if (window.FixedImageUploader) {
+                    window.FixedImageUploader.createImageUploader('productGalleryUploader');
+                }
+            }, 1000);
+
+            // 初始化媒体库事件监听器
+            initializeMediaLibraryEvents();
+
             console.log('完整内容管理系统已加载');
         });
+
+        // 初始化媒体库事件监听器
+        function initializeMediaLibraryEvents() {
+            // 文件夹切换事件
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('#mediaFolderList .list-group-item')) {
+                    const button = e.target.closest('.list-group-item');
+                    const folder = button.dataset.folder;
+                    if (folder) {
+                        loadMediaFolder(folder);
+                    }
+                }
+            });
+        }
 
         // 检查登录状态
         function checkAuth() {
@@ -1647,6 +1918,7 @@
             try {
                 currentData = await loadAllProducts();
                 filteredData = [...currentData];
+                currentPage = 1; // 重置到第一页
                 renderProductsList();
             } catch (error) {
                 console.error('加载产品列表失败:', error);
@@ -1695,6 +1967,9 @@
                 </div>
             `;
 
+            // 获取当前页数据
+            const currentPageData = getCurrentPageData();
+
             const tableHtml = `
                 <table class="content-table">
                     <thead>
@@ -1711,7 +1986,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        ${filteredData.map(product => `
+                        ${currentPageData.map(product => `
                             <tr>
                                 <td>${product.id || '未设置'}</td>
                                 <td>
@@ -1760,7 +2035,10 @@
                 </table>
             `;
 
-            contentBody.innerHTML = toolbarHtml + tableHtml;
+            // 生成分页控件
+            const paginationHtml = renderPagination();
+
+            contentBody.innerHTML = toolbarHtml + tableHtml + paginationHtml;
 
             // 设置活动状态
             document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
@@ -1864,6 +2142,7 @@ ${JSON.stringify(currentData[0], null, 2)}
             // 如果没有任何筛选条件，显示所有数据
             if (!supplierFilter && !categoryFilter && !statusFilter && !searchTerm) {
                 filteredData = [...currentData];
+                currentPage = 1; // 重置到第一页
                 renderProductsList();
                 return;
             }
@@ -1899,6 +2178,7 @@ ${JSON.stringify(currentData[0], null, 2)}
                 return matchesSupplier && matchesCategory && matchesStatus && matchesSearch;
             });
 
+            currentPage = 1; // 重置到第一页
             renderProductsList();
         }
 
@@ -1977,6 +2257,104 @@ ${JSON.stringify(currentData[0], null, 2)}
             return categories.sort();
         }
 
+        // 分页功能
+        function getCurrentPageData() {
+            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+            return filteredData.slice(startIndex, endIndex);
+        }
+
+        function getTotalPages() {
+            return Math.ceil(filteredData.length / ITEMS_PER_PAGE);
+        }
+
+        function goToPage(page) {
+            const totalPages = getTotalPages();
+            if (page < 1 || page > totalPages) return;
+
+            currentPage = page;
+            renderProductsList();
+        }
+
+        function goToPreviousPage() {
+            if (currentPage > 1) {
+                goToPage(currentPage - 1);
+            }
+        }
+
+        function goToNextPage() {
+            const totalPages = getTotalPages();
+            if (currentPage < totalPages) {
+                goToPage(currentPage + 1);
+            }
+        }
+
+        function renderPagination() {
+            const totalPages = getTotalPages();
+            if (totalPages <= 1) {
+                return '';
+            }
+
+            let paginationHtml = `
+                <div class="pagination-container mt-3">
+                    <nav aria-label="产品列表分页">
+                        <ul class="pagination justify-content-center">
+            `;
+
+            // 上一页按钮
+            if (currentPage > 1) {
+                paginationHtml += `
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="goToPreviousPage()" aria-label="上一页">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                `;
+            }
+
+            // 页码按钮
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                paginationHtml += `
+                    <li class="page-item ${i === currentPage ? 'active' : ''}">
+                        <a class="page-link" href="#" onclick="goToPage(${i})">${i}</a>
+                    </li>
+                `;
+            }
+
+            // 下一页按钮
+            if (currentPage < totalPages) {
+                paginationHtml += `
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="goToNextPage()" aria-label="下一页">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                `;
+            }
+
+            paginationHtml += `
+                        </ul>
+                    </nav>
+                    <div class="pagination-info text-center mt-2">
+                        <small class="text-muted">
+                            显示第 ${(currentPage - 1) * ITEMS_PER_PAGE + 1}-${Math.min(currentPage * ITEMS_PER_PAGE, filteredData.length)} 条，
+                            共 ${filteredData.length} 条记录，第 ${currentPage} 页，共 ${totalPages} 页
+                        </small>
+                    </div>
+                </div>
+            `;
+
+            return paginationHtml;
+        }
+
         // 产品操作功能
         function addProduct() {
             editingProduct = null;
@@ -2022,9 +2400,20 @@ ${JSON.stringify(currentData[0], null, 2)}
 
             editingProduct = null;
             document.getElementById('productModalLabel').textContent = '复制产品';
-            fillProductForm(product);
+
+            // 创建产品副本并处理文件复制
+            const newProductData = {
+                ...product,
+                id: '', // 将生成新ID
+                title: product.title + ' (副本)'
+            };
+
+            // 处理文件复制
+            const processedProduct = copyProductFiles(product, newProductData);
+
+            fillProductForm(processedProduct);
             generateProductId(); // 生成新的产品编号
-            document.getElementById('productTitle').value = product.title + ' (副本)';
+            document.getElementById('productTitle').value = processedProduct.title;
             const modal = new bootstrap.Modal(document.getElementById('productModal'));
             modal.show();
         }
@@ -2050,6 +2439,11 @@ ${JSON.stringify(currentData[0], null, 2)}
                         renderProductsList();
                         updateRelatedProductsOptions();
                         showNotification(result.message || '产品删除成功', 'success');
+
+                        // 显示删除指导
+                        if (result.deleteInstructions && result.deleteInstructions.length > 0) {
+                            showDeleteInstructions(result.deleteInstructions);
+                        }
                     } else {
                         showNotification(result.message || '产品删除失败', 'danger');
                     }
@@ -2058,6 +2452,116 @@ ${JSON.stringify(currentData[0], null, 2)}
                     showNotification('删除产品失败: ' + error.message, 'danger');
                 }
             }
+        }
+
+        // 显示删除指导
+        function showDeleteInstructions(instructions) {
+            const modalHtml = `
+                <div class="modal fade" id="deleteInstructionsModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    <i class="fas fa-info-circle text-warning me-2"></i>
+                                    删除指导
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    产品已从系统中删除，但相关文件需要手动删除：
+                                </div>
+                                <div class="delete-instructions">
+                                    ${instructions.map(instruction => `<div class="mb-1">${instruction}</div>`).join('')}
+                                </div>
+                                <div class="mt-3">
+                                    <small class="text-muted">
+                                        <i class="fas fa-lightbulb me-1"></i>
+                                        提示：请在项目目录中手动删除上述文件，以保持项目整洁。
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">我知道了</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // 移除已存在的模态框
+            const existingModal = document.getElementById('deleteInstructionsModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+
+            // 添加新模态框
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+            // 显示模态框
+            const modal = new bootstrap.Modal(document.getElementById('deleteInstructionsModal'));
+            modal.show();
+
+            // 模态框关闭后移除DOM
+            document.getElementById('deleteInstructionsModal').addEventListener('hidden.bs.modal', function() {
+                this.remove();
+            });
+        }
+
+        // 显示文件保存指导
+        function showFileInstructions(title, instructions) {
+            const modalHtml = `
+                <div class="modal fade" id="fileInstructionsModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    <i class="fas fa-info-circle text-info me-2"></i>
+                                    ${title}
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-info">
+                                    <i class="fas fa-lightbulb me-2"></i>
+                                    请按照以下步骤保存文件：
+                                </div>
+                                <div class="file-instructions">
+                                    ${instructions.map(instruction => `<div class="mb-2">${instruction}</div>`).join('')}
+                                </div>
+                                <div class="mt-3">
+                                    <small class="text-muted">
+                                        <i class="fas fa-exclamation-triangle me-1"></i>
+                                        注意：请确保文件路径和文件名完全正确，以保证网站正常显示。
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">我知道了</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // 移除已存在的模态框
+            const existingModal = document.getElementById('fileInstructionsModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+
+            // 添加新模态框
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+            // 显示模态框
+            const modal = new bootstrap.Modal(document.getElementById('fileInstructionsModal'));
+            modal.show();
+
+            // 模态框关闭后移除DOM
+            document.getElementById('fileInstructionsModal').addEventListener('hidden.bs.modal', function() {
+                this.remove();
+            });
         }
 
         // 表单操作
@@ -2286,12 +2790,17 @@ ${JSON.stringify(currentData[0], null, 2)}
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">文件上传</label>
-                    <div class="input-group">
-                        <input type="file" class="form-control" accept=".pdf,.doc,.docx,.xls,.xlsx,.zip,.rar" onchange="handleFileUpload(this)">
-                        <input type="hidden" name="downloadPath[]" value="${path}">
+                    <div class="d-flex gap-2 mb-2">
+                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="uploadDataFile(this)">
+                            <i class="fas fa-upload me-1"></i>上传文件
+                        </button>
+                        <button type="button" class="btn btn-outline-success btn-sm" onclick="selectDataFileFromLibrary(this)">
+                            <i class="fas fa-folder-open me-1"></i>从媒体库选择
+                        </button>
                     </div>
+                    <input type="hidden" name="downloadPath[]" value="${path}">
                     <div class="form-text">支持 PDF、Word、Excel、压缩包等格式</div>
-                    ${path ? `<div class="mt-1"><small class="text-success">已上传：${path}</small></div>` : ''}
+                    ${path ? `<div class="mt-1"><small class="text-success">已选择：${path}</small></div>` : ''}
                 </div>
                 <div class="col-md-2 d-flex align-items-end">
                     <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeDataDownload(this)">
@@ -2304,6 +2813,79 @@ ${JSON.stringify(currentData[0], null, 2)}
 
         function removeDataDownload(button) {
             button.closest('.data-download-row').remove();
+        }
+
+        // 上传资料文件
+        function uploadDataFile(button) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.pdf,.doc,.docx,.xls,.xlsx,.zip,.rar';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    handleDataFileUpload(file, button);
+                }
+            };
+            input.click();
+        }
+
+        // 从媒体库选择资料文件
+        function selectDataFileFromLibrary(button) {
+            selectFromMediaLibrary((selectedFiles) => {
+                if (selectedFiles.length > 0) {
+                    const file = selectedFiles[0];
+                    if (file.type === 'file') {
+                        updateDataFileSelection(file.path, file.name, button);
+                    }
+                }
+            });
+        }
+
+        // 处理资料文件上传
+        async function handleDataFileUpload(file, button) {
+            const row = button.closest('.data-download-row');
+            const hiddenInput = row.querySelector('input[name="downloadPath[]"]');
+
+            // 显示上传中状态
+            const statusDiv = row.querySelector('.file-status') || document.createElement('div');
+            statusDiv.className = 'mt-1 file-status';
+            statusDiv.innerHTML = `<small class="text-info"><i class="fas fa-spinner fa-spin me-1"></i>上传中...</small>`;
+            if (!row.querySelector('.file-status')) {
+                button.parentElement.parentElement.appendChild(statusDiv);
+            }
+
+            try {
+                // 模拟文件上传 - 在实际应用中这里应该调用真实的上传API
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                const fileName = `${Date.now()}_${file.name}`;
+                const filePath = `/uploads/products/${fileName}`;
+
+                updateDataFileSelection(filePath, file.name, button);
+
+            } catch (error) {
+                statusDiv.innerHTML = `<small class="text-danger"><i class="fas fa-exclamation-triangle me-1"></i>上传失败</small>`;
+                console.error('文件上传失败:', error);
+            }
+        }
+
+        // 更新资料文件选择
+        function updateDataFileSelection(filePath, fileName, button) {
+            const row = button.closest('.data-download-row');
+            const hiddenInput = row.querySelector('input[name="downloadPath[]"]');
+
+            hiddenInput.value = filePath;
+
+            // 更新显示状态
+            const existingStatus = row.querySelector('.file-status');
+            if (existingStatus) {
+                existingStatus.remove();
+            }
+
+            const statusDiv = document.createElement('div');
+            statusDiv.className = 'mt-1 file-status';
+            statusDiv.innerHTML = `<small class="text-success"><i class="fas fa-check me-1"></i>已选择：${fileName}</small>`;
+            button.parentElement.parentElement.appendChild(statusDiv);
         }
 
         // 处理文件上传
@@ -2515,7 +3097,7 @@ ${JSON.stringify(currentData[0], null, 2)}
 
                 // 收集表单数据
                 const productData = {
-                    product_code: document.getElementById('productId').value,
+                    id: document.getElementById('productId').value,
                     title: document.getElementById('productTitle').value,
                     model: document.getElementById('productModel').value,
                     summary: document.getElementById('productSummary').value,
@@ -2523,11 +3105,17 @@ ${JSON.stringify(currentData[0], null, 2)}
                     secondary_category: document.getElementById('secondaryCategory').value,
                     supplier: document.getElementById('productSupplier').value,
                     series: document.getElementById('productSeries').value,
+                    published: document.getElementById('publishStatus').value === 'published' ?
+                        (document.getElementById('publishDate').value || new Date().toISOString()) : false,
+                    status: document.getElementById('publishStatus').value,
                     parameters: [],
-                    gallery: [],
-                    application_scenarios: applicationScenariosEditor.getText() || applicationScenariosEditor.root.innerHTML,
-                    content: productDescriptionEditor.getText() || productDescriptionEditor.root.innerHTML,
-                    data_download: []
+                    gallery: getGalleryData(),
+                    application_scenarios: applicationScenariosEditor ?
+                        (applicationScenariosEditor.root.innerHTML || '') : '',
+                    content: productDescriptionEditor ?
+                        (productDescriptionEditor.root.innerHTML || '') : '',
+                    data_download: [],
+                    related_products: []
                 };
 
             // 收集参数
@@ -2541,18 +3129,6 @@ ${JSON.stringify(currentData[0], null, 2)}
                     });
                 }
             }
-
-            // 收集图库
-            const galleryImages = document.querySelectorAll('input[name="gallery_images[]"]');
-            galleryImages.forEach((input, index) => {
-                if (input.value) {
-                    productData.gallery.push({
-                        image: input.value,
-                        alt: `${productData.title}图片${index + 1}`,
-                        is_main: index === 0
-                    });
-                }
-            });
 
             // 如果没有图片，添加默认图片
             if (productData.gallery.length === 0) {
@@ -2583,6 +3159,9 @@ ${JSON.stringify(currentData[0], null, 2)}
 
                 // 生成产品标签
                 productData.tags = generateProductTags(productData.model, productData.series);
+
+                // 处理文件上传和路径
+                productData = processProductFiles(productData);
 
                 // 保存产品到文件系统
                 const result = await window.ProductAPI.saveProduct(productData);
@@ -4549,14 +5128,24 @@ ${JSON.stringify(currentData[0], null, 2)}
                                             <h6 class="text-primary mb-3">企业相册</h6>
                                             <div class="mb-3">
                                                 <label for="supplierGallery" class="form-label">相册图片</label>
-                                                <div class="input-group">
-                                                    <input type="url" class="form-control" id="supplierGalleryInput" placeholder="输入图片URL">
-                                                    <button type="button" class="btn btn-outline-secondary" onclick="addSupplierGalleryImage()">
-                                                        <i class="fas fa-plus"></i>
+                                                <div class="d-flex gap-2 mb-3">
+                                                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="uploadSupplierImage()">
+                                                        <i class="fas fa-upload me-1"></i>上传图片
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-success btn-sm" onclick="selectSupplierImageFromLibrary()">
+                                                        <i class="fas fa-folder-open me-1"></i>从媒体库选择
                                                     </button>
                                                 </div>
-                                                <div class="form-text">输入图片URL地址</div>
-                                                <div id="supplierGalleryList" class="mt-2"></div>
+                                                <div id="supplierGalleryContainer" class="row">
+                                                    <div class="col-md-4 mb-3">
+                                                        <div class="supplier-image-upload-area" onclick="uploadSupplierImage()">
+                                                            <div class="upload-placeholder">
+                                                                <i class="fas fa-plus fa-2x mb-2"></i>
+                                                                <p>添加图片</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -4610,12 +5199,8 @@ ${JSON.stringify(currentData[0], null, 2)}
                 }
             });
 
-            document.getElementById('supplierGalleryInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    addSupplierGalleryImage();
-                }
-            });
+            // 初始化供应商图库
+            initializeSupplierGallery();
 
             // 显示模态框
             const modal = new bootstrap.Modal(document.getElementById('supplierModal'));
@@ -4677,33 +5262,95 @@ ${JSON.stringify(currentData[0], null, 2)}
             `).join('');
         }
 
-        function addSupplierGalleryImage() {
-            const input = document.getElementById('supplierGalleryInput');
-            const value = input.value.trim();
-            if (value && !supplierGallery.includes(value)) {
-                supplierGallery.push(value);
-                input.value = '';
-                updateSupplierGalleryList();
-            }
+        // 供应商图库管理功能
+        function initializeSupplierGallery() {
+            supplierGallery = [];
+            updateSupplierGalleryDisplay();
         }
 
-        function removeSupplierGalleryImage(index) {
-            supplierGallery.splice(index, 1);
-            updateSupplierGalleryList();
+        function uploadSupplierImage() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.multiple = true;
+            input.onchange = function(e) {
+                const files = Array.from(e.target.files);
+                files.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        addSupplierImageToGallery(e.target.result, file.name, true);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            };
+            input.click();
         }
 
-        function updateSupplierGalleryList() {
-            const container = document.getElementById('supplierGalleryList');
-            container.innerHTML = supplierGallery.map((image, index) => `
-                <div class="d-inline-block me-2 mb-2 position-relative">
-                    <img src="${image}" class="img-thumbnail" style="width: 80px; height: 60px; object-fit: cover;">
-                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0"
-                            onclick="removeSupplierGalleryImage(${index})"
-                            style="transform: translate(50%, -50%); padding: 2px 6px; font-size: 0.7em;">
-                        <i class="fas fa-times"></i>
-                    </button>
+        function selectSupplierImageFromLibrary() {
+            selectFromMediaLibrary((selectedFiles) => {
+                selectedFiles.forEach(file => {
+                    if (file.type === 'image') {
+                        addSupplierImageToGallery(file.path, file.name, false);
+                    }
+                });
+            });
+        }
+
+        function addSupplierImageToGallery(src, alt, isNewUpload = false) {
+            const container = document.getElementById('supplierGalleryContainer');
+            const addButton = container.querySelector('.supplier-image-upload-area').parentElement;
+
+            const col = document.createElement('div');
+            col.className = 'col-md-4 mb-3';
+            col.innerHTML = `
+                <div class="supplier-image-item">
+                    <img src="${src}" alt="${alt}" class="img-fluid">
+                    <div class="image-controls">
+                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeSupplierImage(this)" title="删除">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="image-info mt-2">
+                        <input type="text" class="form-control form-control-sm" value="${alt}" placeholder="图片描述">
+                        <input type="hidden" value="${src}" class="supplier-image-path">
+                        <input type="hidden" value="${isNewUpload}" class="supplier-image-new">
+                    </div>
                 </div>
-            `).join('');
+            `;
+
+            container.insertBefore(col, addButton);
+        }
+
+        function removeSupplierImage(button) {
+            const col = button.closest('.col-md-4');
+            col.remove();
+        }
+
+        function updateSupplierGalleryDisplay() {
+            const container = document.getElementById('supplierGalleryContainer');
+            // 清除除了添加按钮之外的所有图片
+            const addButton = container.querySelector('.supplier-image-upload-area').parentElement;
+            container.innerHTML = '';
+            container.appendChild(addButton);
+
+            // 重新添加图片
+            supplierGallery.forEach(imagePath => {
+                addSupplierImageToGallery(imagePath, '供应商图片', false);
+            });
+        }
+
+        function getSupplierGalleryData() {
+            const imageItems = document.querySelectorAll('.supplier-image-item');
+            const gallery = [];
+
+            imageItems.forEach(item => {
+                const pathInput = item.querySelector('.supplier-image-path');
+                if (pathInput) {
+                    gallery.push(pathInput.value);
+                }
+            });
+
+            return gallery;
         }
 
         function fillSupplierForm(supplier) {
@@ -4724,7 +5371,7 @@ ${JSON.stringify(currentData[0], null, 2)}
             // 更新显示
             updateSupplierSeriesList();
             updateSupplierModelsList();
-            updateSupplierGalleryList();
+            updateSupplierGalleryDisplay();
         }
 
         function saveSupplier() {
@@ -4746,7 +5393,7 @@ ${JSON.stringify(currentData[0], null, 2)}
                 description: document.getElementById('supplierDescription').value.trim(),
                 series: [...supplierSeries],
                 models: [...supplierModels],
-                gallery: [...supplierGallery]
+                gallery: getSupplierGalleryData()
             };
 
             if (editingSupplier) {
@@ -4791,11 +5438,14 @@ ${JSON.stringify(currentData[0], null, 2)}
         // 保存供应商到本地文件
         function saveSupplierToFile(supplierData) {
             try {
+                // 处理供应商文件
+                const processedData = processSupplierFiles(supplierData);
+
                 // 生成文件名（基于企业名称）
-                const filename = generateSupplierFilename(supplierData.title);
+                const filename = generateSupplierFilename(processedData.title);
 
                 // 生成Hugo Markdown内容
-                const markdownContent = generateSupplierMarkdown(supplierData);
+                const markdownContent = generateSupplierMarkdown(processedData);
 
                 // 创建下载链接
                 const blob = new Blob([markdownContent], { type: 'text/markdown' });
@@ -4809,12 +5459,56 @@ ${JSON.stringify(currentData[0], null, 2)}
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
 
-                showNotification(`供应商文件已生成: ${filename}`, 'info');
+                showNotification(`供应商文件已生成: ${filename}，请保存到 content/suppliers/ 目录`, 'info');
+
+                // 显示文件保存指导
+                showSupplierSaveInstructions(filename, processedData);
 
             } catch (error) {
                 console.error('保存供应商文件失败:', error);
                 showNotification('保存供应商文件失败: ' + error.message, 'danger');
             }
+        }
+
+        // 处理供应商文件
+        function processSupplierFiles(supplierData) {
+            const processedData = { ...supplierData };
+
+            // 处理图库中的新上传文件
+            if (processedData.gallery) {
+                processedData.gallery = processedData.gallery.map((imagePath, index) => {
+                    if (imagePath.startsWith('data:')) {
+                        // 这是一个新上传的base64图片，需要保存到指定目录
+                        const fileName = `${generateSupplierFilename(supplierData.title).replace('.md', '')}-${index + 1}.jpg`;
+                        const targetPath = `/images/suppliers/${fileName}`;
+
+                        console.log(`供应商图片将保存到: ${targetPath}`);
+                        return targetPath;
+                    }
+                    return imagePath;
+                });
+            }
+
+            return processedData;
+        }
+
+        // 显示供应商文件保存指导
+        function showSupplierSaveInstructions(filename, supplierData) {
+            const instructions = [];
+            instructions.push(`1. 将下载的 ${filename} 文件保存到项目的 content/suppliers/ 目录`);
+
+            if (supplierData.gallery && supplierData.gallery.length > 0) {
+                instructions.push(`2. 保存供应商图片到以下位置:`);
+                supplierData.gallery.forEach((imagePath, index) => {
+                    if (imagePath.startsWith('/images/suppliers/')) {
+                        instructions.push(`   - ${imagePath}`);
+                    }
+                });
+            }
+
+            instructions.push(`3. 确保所有图片文件都已正确保存到 static/images/suppliers/ 目录`);
+
+            showFileInstructions('供应商文件保存指导', instructions);
         }
 
         function generateSupplierFilename(title) {
@@ -4840,30 +5534,16 @@ ${JSON.stringify(currentData[0], null, 2)}
         }
 
         function generateSupplierMarkdown(supplierData) {
-            const frontMatter = {
-                title: supplierData.title,
-                address: supplierData.address || '',
-                type: supplierData.type || '',
-                series: supplierData.series || [],
-                models: supplierData.models || [],
-                gallery: supplierData.gallery || [],
-                contact_person: supplierData.contact_person || '',
-                position: supplierData.position || '',
-                phone: supplierData.phone || '',
-                email: supplierData.email || '',
-                description: supplierData.description || ''
-            };
-
-            // 生成YAML前置数据
+            // 生成YAML前置数据，完全符合vsndt-supplier.md格式
             let yaml = '---\n';
-            yaml += `title: "${frontMatter.title}"\n`;
-            yaml += `address: "${frontMatter.address}"\n`;
-            yaml += `type: "${frontMatter.type}"\n`;
+            yaml += `title: "${supplierData.title}"\n`;
+            yaml += `address: "${supplierData.address || ''}"\n`;
+            yaml += `type: "${supplierData.type || ''}"\n`;
 
             // 产品系列
-            if (frontMatter.series.length > 0) {
+            if (supplierData.series && supplierData.series.length > 0) {
                 yaml += 'series:\n';
-                frontMatter.series.forEach(series => {
+                supplierData.series.forEach(series => {
                     yaml += `  - "${series}"\n`;
                 });
             } else {
@@ -4871,9 +5551,9 @@ ${JSON.stringify(currentData[0], null, 2)}
             }
 
             // 产品型号
-            if (frontMatter.models.length > 0) {
+            if (supplierData.models && supplierData.models.length > 0) {
                 yaml += 'models:\n';
-                frontMatter.models.forEach(model => {
+                supplierData.models.forEach(model => {
                     yaml += `  - "${model}"\n`;
                 });
             } else {
@@ -4881,25 +5561,50 @@ ${JSON.stringify(currentData[0], null, 2)}
             }
 
             // 企业相册
-            if (frontMatter.gallery.length > 0) {
+            if (supplierData.gallery && supplierData.gallery.length > 0) {
                 yaml += 'gallery:\n';
-                frontMatter.gallery.forEach(image => {
+                supplierData.gallery.forEach(image => {
                     yaml += `  - "${image}"\n`;
                 });
             } else {
                 yaml += 'gallery: []\n';
             }
 
-            yaml += `contact_person: "${frontMatter.contact_person}"\n`;
-            yaml += `position: "${frontMatter.position}"\n`;
-            yaml += `phone: "${frontMatter.phone}"\n`;
-            yaml += `email: "${frontMatter.email}"\n`;
-            yaml += `description: "${frontMatter.description}"\n`;
+            yaml += `contact_person: "${supplierData.contact_person || ''}"\n`;
+            yaml += `position: "${supplierData.position || ''}"\n`;
+            yaml += `phone: "${supplierData.phone || ''}"\n`;
+            yaml += `email: "${supplierData.email || ''}"\n`;
+            yaml += `description: "${supplierData.description || ''}"\n`;
             yaml += '---\n\n';
 
-            // 添加内容（如果有公司简介）
-            if (frontMatter.description) {
-                yaml += frontMatter.description + '\n';
+            // 添加企业简介内容
+            if (supplierData.description) {
+                yaml += `## 企业简介\n\n${supplierData.description}\n\n`;
+            }
+
+            // 添加联系信息
+            yaml += `## 联系信息\n\n`;
+            yaml += `**联系人：** ${supplierData.contact_person || '待补充'}\n\n`;
+            yaml += `**职位：** ${supplierData.position || '待补充'}\n\n`;
+            yaml += `**电话：** ${supplierData.phone || '待补充'}\n\n`;
+            yaml += `**邮箱：** ${supplierData.email || '待补充'}\n\n`;
+            yaml += `**地址：** ${supplierData.address || '待补充'}\n\n`;
+
+            // 添加产品信息
+            if (supplierData.series && supplierData.series.length > 0) {
+                yaml += `## 产品系列\n\n`;
+                supplierData.series.forEach(series => {
+                    yaml += `- ${series}\n`;
+                });
+                yaml += '\n';
+            }
+
+            if (supplierData.models && supplierData.models.length > 0) {
+                yaml += `## 主要产品型号\n\n`;
+                supplierData.models.forEach(model => {
+                    yaml += `- ${model}\n`;
+                });
+                yaml += '\n';
             }
 
             return yaml;
@@ -5938,78 +6643,103 @@ ${JSON.stringify(currentData[0], null, 2)}
 
             // 生成Hugo markdown文件内容
             generateHugoMarkdown(product) {
-                const frontMatter = {
-                    title: product.title || product.model,
-                    model: product.model,
-                    series: product.series,
-                    supplier: product.supplier,
-                    primary_category: product.primary_category || [],
-                    secondary_category: product.secondary_category || [],
-                    product_code: product.product_code,
-                    price: product.price || 0,
-                    stock: product.stock || 0,
-                    featured_image: product.featured_image || '',
-                    gallery: product.gallery || [],
-                    summary: product.summary || '',
-                    date: new Date().toISOString().split('T')[0],
-                    weight: product.weight || 1,
-                    tags: product.tags || [],
-                    specifications: product.specifications || {},
-                    related_products: product.related_products || []
-                };
-
                 // 生成YAML front matter
                 let yaml = '---\n';
-                for (const [key, value] of Object.entries(frontMatter)) {
-                    if (Array.isArray(value)) {
-                        if (value.length > 0) {
-                            yaml += `${key}:\n`;
-                            value.forEach(item => {
-                                yaml += `  - "${item}"\n`;
-                            });
-                        } else {
-                            yaml += `${key}: []\n`;
-                        }
-                    } else if (typeof value === 'object' && value !== null) {
-                        yaml += `${key}:\n`;
-                        for (const [subKey, subValue] of Object.entries(value)) {
-                            yaml += `  ${subKey}: "${subValue}"\n`;
-                        }
-                    } else {
-                        yaml += `${key}: "${value}"\n`;
-                    }
+                yaml += `title: "${product.title}"\n`;
+                yaml += `summary: ${product.summary || ''}\n`;
+                yaml += `primary_category: "${product.primary_category}"\n`;
+                if (product.secondary_category) {
+                    yaml += `secondary_category: "${product.secondary_category}"\n`;
                 }
+                yaml += `model: "${product.model}"\n`;
+                yaml += `series: "${product.series}"\n`;
+                yaml += `supplier: "${product.supplier}"\n`;
+
+                // 发布时间
+                if (product.published && product.published !== false) {
+                    const publishDate = typeof product.published === 'string' ?
+                        product.published : new Date().toISOString();
+                    yaml += `published: ${publishDate}\n`;
+                }
+
+                // 图库
+                if (product.gallery && product.gallery.length > 0) {
+                    yaml += `gallery:\n`;
+                    product.gallery.forEach(img => {
+                        yaml += `  - image: "${img.image}"\n`;
+                        yaml += `    alt: "${img.alt}"\n`;
+                        if (img.is_main) {
+                            yaml += `    is_main: true\n`;
+                        }
+                    });
+                }
+
+                // 参数
+                if (product.parameters && product.parameters.length > 0) {
+                    yaml += `parameters:\n`;
+                    product.parameters.forEach(param => {
+                        yaml += `  - name: "${param.name}"\n`;
+                        yaml += `    value: "${param.value}"\n`;
+                    });
+                }
+
+                // 应用场景
+                if (product.application_scenarios) {
+                    yaml += `application_scenarios: |\n`;
+                    const scenarios = product.application_scenarios.replace(/\n/g, '\n  ');
+                    yaml += `  ${scenarios}\n`;
+                }
+
+                // 资料下载
+                if (product.data_download && product.data_download.length > 0) {
+                    yaml += `data_download:\n`;
+                    product.data_download.forEach(download => {
+                        yaml += `  - file_title: "${download.file_title}"\n`;
+                        yaml += `    file_path: "${download.file_path}"\n`;
+                    });
+                }
+
+                // 相关产品
+                if (product.related_products && product.related_products.length > 0) {
+                    yaml += `related_products:\n`;
+                    product.related_products.forEach(relatedId => {
+                        yaml += `  - "${relatedId}"\n`;
+                    });
+                }
+
                 yaml += '---\n\n';
 
                 // 添加产品描述内容
-                const content = product.description || `# ${product.title || product.model}
+                let content = '';
+                if (product.content) {
+                    // 清理HTML标签，保留基本格式
+                    content = product.content
+                        .replace(/<p>/g, '')
+                        .replace(/<\/p>/g, '\n\n')
+                        .replace(/<br>/g, '\n')
+                        .replace(/<strong>/g, '**')
+                        .replace(/<\/strong>/g, '**')
+                        .replace(/<em>/g, '*')
+                        .replace(/<\/em>/g, '*')
+                        .replace(/<[^>]*>/g, '')
+                        .trim();
+                } else {
+                    content = `**${product.title}是一款专业的工业检测设备，具有优异的性能和可靠性。**\n\n`;
 
-## 产品概述
-
-${product.summary || '这是一款专业的工业检测设备。'}
-
-## 技术规格
-
-${Object.entries(product.specifications || {}).map(([key, value]) => `- **${key}**: ${value}`).join('\n')}
-
-## 产品特点
-
-- 高精度检测
-- 操作简便
-- 稳定可靠
-- 维护方便
-
-## 应用领域
-
-适用于各种工业检测场景，为用户提供专业的检测解决方案。
-`;
+                    // 如果有图库，添加图片展示
+                    if (product.gallery && product.gallery.length > 1) {
+                        content += product.gallery.slice(1).map(img =>
+                            `- ![${img.alt}](${img.image})`
+                        ).join('\n') + '\n';
+                    }
+                }
 
                 return yaml + content;
             },
 
             // 下载markdown文件
             downloadMarkdownFile(product, content) {
-                const filename = `${product.product_code || product.model || 'product'}.md`;
+                const filename = `${product.model || product.id || 'product'}.md`;
                 const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
                 const url = URL.createObjectURL(blob);
 
@@ -6042,9 +6772,13 @@ ${Object.entries(product.specifications || {}).map(([key, value]) => `- **${key}
                     savedProducts.splice(productIndex, 1);
                     localStorage.setItem('visndt_products', JSON.stringify(savedProducts));
 
+                    // 生成删除指导信息
+                    const deleteInstructions = this.generateDeleteInstructions(product);
+
                     return {
                         success: true,
-                        message: `产品 "${product.title || product.model}" 删除成功！请手动删除对应的markdown文件`
+                        message: `产品 "${product.title || product.model}" 删除成功！`,
+                        deleteInstructions: deleteInstructions
                     };
 
                 } catch (error) {
@@ -6053,6 +6787,37 @@ ${Object.entries(product.specifications || {}).map(([key, value]) => `- **${key}
                         message: '删除失败: ' + error.message
                     };
                 }
+            },
+
+            // 生成删除指导信息
+            generateDeleteInstructions(product) {
+                const instructions = [];
+
+                // MD文件删除指导
+                const mdFileName = `${product.model || product.id}.md`;
+                instructions.push(`1. 删除markdown文件: content/products/${mdFileName}`);
+
+                // 图片文件删除指导
+                if (product.gallery && product.gallery.length > 0) {
+                    instructions.push(`2. 删除产品图片:`);
+                    product.gallery.forEach((img, index) => {
+                        if (img.image && !img.image.startsWith('http') && !img.image.includes('picsum')) {
+                            instructions.push(`   - ${img.image}`);
+                        }
+                    });
+                }
+
+                // 资料文件删除指导
+                if (product.data_download && product.data_download.length > 0) {
+                    instructions.push(`3. 删除资料文件:`);
+                    product.data_download.forEach(download => {
+                        if (download.file_path && !download.file_path.startsWith('http')) {
+                            instructions.push(`   - ${download.file_path}`);
+                        }
+                    });
+                }
+
+                return instructions;
             },
 
             // 获取本地产品
@@ -6326,6 +7091,377 @@ ${caseData.summary || ''}
         // 为了向后兼容，保留ProductAPI别名
         window.ProductAPI = window.ContentAPI;
 
+        // 媒体库管理功能
+        let selectedMediaFiles = [];
+        let currentMediaCallback = null;
+
+        // 打开媒体库选择器
+        function selectFromMediaLibrary(callback) {
+            currentMediaCallback = callback;
+            selectedMediaFiles = [];
+            loadMediaFolder('images/products');
+            const modal = new bootstrap.Modal(document.getElementById('mediaLibraryModal'));
+            modal.show();
+        }
+
+        // 加载媒体文件夹
+        async function loadMediaFolder(folderPath) {
+            try {
+                // 模拟媒体文件数据 - 在实际应用中这里应该从服务器获取
+                const mediaFiles = await getMediaFiles(folderPath);
+                renderMediaGrid(mediaFiles);
+
+                // 更新活动文件夹
+                document.querySelectorAll('#mediaFolderList .list-group-item').forEach(item => {
+                    item.classList.remove('active');
+                    if (item.dataset.folder === folderPath) {
+                        item.classList.add('active');
+                    }
+                });
+            } catch (error) {
+                console.error('加载媒体文件失败:', error);
+                showNotification('加载媒体文件失败', 'danger');
+            }
+        }
+
+        // 获取媒体文件列表（模拟数据）
+        async function getMediaFiles(folderPath) {
+            // 这里应该是实际的API调用，现在返回模拟数据
+            const mockFiles = {
+                'images/products': [
+                    { name: 'K-main.jpg', path: '/images/products/K-series/K-main.jpg', type: 'image' },
+                    { name: 'K-1.jpg', path: '/images/products/K-series/K-1.jpg', type: 'image' },
+                    { name: 'K-2.jpg', path: '/images/products/K-series/K-2.jpg', type: 'image' },
+                    { name: 'P60-main.jpg', path: '/images/products/P60/P60-main.jpg', type: 'image' },
+                    { name: 'DZ-main.jpg', path: '/images/products/DZ/DZ-main.jpg', type: 'image' }
+                ],
+                'images/cases': [
+                    { name: 'case-1.webp', path: '/images/cases/case-1.webp', type: 'image' },
+                    { name: 'case-2.webp', path: '/images/cases/case-2.webp', type: 'image' }
+                ],
+                'images/news': [
+                    { name: 'news-1.jpeg', path: '/images/news/news-1.jpeg', type: 'image' },
+                    { name: 'news-2.jpeg', path: '/images/news/news-2.jpeg', type: 'image' }
+                ],
+                'uploads': [
+                    { name: 'WS-K1010-spec.pdf', path: '/uploads/WS-K1010-spec.pdf', type: 'file' },
+                    { name: 'product-manual.pdf', path: '/uploads/product-manual.pdf', type: 'file' }
+                ]
+            };
+
+            return mockFiles[folderPath] || [];
+        }
+
+        // 渲染媒体文件网格
+        function renderMediaGrid(files) {
+            const grid = document.getElementById('mediaFileGrid');
+            grid.innerHTML = '';
+
+            files.forEach(file => {
+                const col = document.createElement('div');
+                col.className = 'col-md-3 mb-3';
+
+                const isImage = file.type === 'image';
+                const isSelected = selectedMediaFiles.some(f => f.path === file.path);
+
+                col.innerHTML = `
+                    <div class="media-file-item ${isSelected ? 'selected' : ''}" onclick="toggleMediaSelection('${file.path}', '${file.name}', '${file.type}')">
+                        <div class="media-preview">
+                            ${isImage ?
+                                `<img src="${file.path}" alt="${file.name}" class="img-fluid">` :
+                                `<div class="file-icon"><i class="fas fa-file-pdf fa-3x"></i></div>`
+                            }
+                        </div>
+                        <div class="media-info">
+                            <small class="text-truncate d-block">${file.name}</small>
+                        </div>
+                        <div class="selection-indicator">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                `;
+
+                grid.appendChild(col);
+            });
+        }
+
+        // 切换媒体文件选择状态
+        function toggleMediaSelection(path, name, type) {
+            const existingIndex = selectedMediaFiles.findIndex(f => f.path === path);
+
+            if (existingIndex > -1) {
+                selectedMediaFiles.splice(existingIndex, 1);
+            } else {
+                selectedMediaFiles.push({ path, name, type });
+            }
+
+            // 更新UI
+            const item = document.querySelector(`[onclick*="${path}"]`);
+            if (item) {
+                item.classList.toggle('selected');
+            }
+
+            // 更新选择按钮状态
+            const selectBtn = document.getElementById('selectMediaBtn');
+            selectBtn.disabled = selectedMediaFiles.length === 0;
+            selectBtn.textContent = selectedMediaFiles.length > 0 ?
+                `选择文件 (${selectedMediaFiles.length})` : '选择文件';
+        }
+
+        // 确认媒体选择
+        function confirmMediaSelection() {
+            if (selectedMediaFiles.length > 0 && currentMediaCallback) {
+                currentMediaCallback(selectedMediaFiles);
+            }
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById('mediaLibraryModal'));
+            modal.hide();
+
+            selectedMediaFiles = [];
+            currentMediaCallback = null;
+        }
+
+        // 图库管理功能
+        function addGalleryImage() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.multiple = true;
+            input.onchange = function(e) {
+                const files = Array.from(e.target.files);
+                files.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        addImageToGallery(e.target.result, file.name, true);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            };
+            input.click();
+        }
+
+        // 从媒体库选择图片
+        function selectFromMediaLibrary() {
+            selectFromMediaLibrary((selectedFiles) => {
+                selectedFiles.forEach(file => {
+                    if (file.type === 'image') {
+                        addImageToGallery(file.path, file.name, false);
+                    }
+                });
+            });
+        }
+
+        // 添加图片到图库
+        function addImageToGallery(src, alt, isNewUpload = false) {
+            const container = document.getElementById('galleryContainer');
+            const addButton = container.querySelector('.image-upload-area').parentElement;
+
+            const col = document.createElement('div');
+            col.className = 'col-md-3 mb-3';
+            col.innerHTML = `
+                <div class="gallery-image-item">
+                    <img src="${src}" alt="${alt}" class="img-fluid">
+                    <div class="image-controls">
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="setAsMainImage(this)" title="设为主图">
+                            <i class="fas fa-star"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeGalleryImage(this)" title="删除">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="image-info">
+                        <input type="text" class="form-control form-control-sm" value="${alt}" placeholder="图片描述" onchange="updateImageAlt(this)">
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="checkbox" ${isNewUpload ? '' : ''} onchange="markAsNewUpload(this)">
+                            <label class="form-check-label">
+                                <small>新上传</small>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            container.insertBefore(col, addButton);
+        }
+
+        // 设置为主图
+        function setAsMainImage(button) {
+            // 移除其他主图标记
+            document.querySelectorAll('.gallery-image-item').forEach(item => {
+                item.classList.remove('main-image');
+                const starBtn = item.querySelector('.btn-outline-primary');
+                starBtn.innerHTML = '<i class="fas fa-star"></i>';
+                starBtn.classList.remove('btn-primary');
+                starBtn.classList.add('btn-outline-primary');
+            });
+
+            // 设置当前为主图
+            const imageItem = button.closest('.gallery-image-item');
+            imageItem.classList.add('main-image');
+            button.innerHTML = '<i class="fas fa-star"></i>';
+            button.classList.remove('btn-outline-primary');
+            button.classList.add('btn-primary');
+        }
+
+        // 删除图库图片
+        function removeGalleryImage(button) {
+            const col = button.closest('.col-md-3');
+            col.remove();
+        }
+
+        // 更新图片描述
+        function updateImageAlt(input) {
+            const img = input.closest('.gallery-image-item').querySelector('img');
+            img.alt = input.value;
+        }
+
+        // 标记为新上传
+        function markAsNewUpload(checkbox) {
+            const imageItem = checkbox.closest('.gallery-image-item');
+            imageItem.dataset.newUpload = checkbox.checked;
+        }
+
+        // 获取图库数据
+        function getGalleryData() {
+            const galleryItems = document.querySelectorAll('.gallery-image-item');
+            const gallery = [];
+
+            galleryItems.forEach((item, index) => {
+                const img = item.querySelector('img');
+                const altInput = item.querySelector('input[type="text"]');
+                const isMain = item.classList.contains('main-image');
+                const isNewUpload = item.dataset.newUpload === 'true';
+
+                gallery.push({
+                    image: img.src,
+                    alt: altInput.value || `产品图片${index + 1}`,
+                    is_main: isMain,
+                    is_new_upload: isNewUpload
+                });
+            });
+
+            return gallery;
+        }
+
+        // 文件管理功能
+        function processProductFiles(productData) {
+            // 处理图库中的新上传文件
+            if (productData.gallery) {
+                productData.gallery.forEach((img, index) => {
+                    if (img.is_new_upload && img.image.startsWith('data:')) {
+                        // 这是一个新上传的base64图片，需要保存到指定目录
+                        const fileName = `${productData.model || productData.id}-${index + 1}.jpg`;
+                        const targetPath = `/images/products/${productData.series || 'general'}/${fileName}`;
+
+                        // 在实际应用中，这里应该调用API保存文件
+                        // 现在我们只是更新路径
+                        img.image = targetPath;
+                        img.is_new_upload = false;
+
+                        console.log(`图片将保存到: ${targetPath}`);
+                    }
+                });
+            }
+
+            // 处理资料下载中的新上传文件
+            if (productData.data_download) {
+                productData.data_download.forEach((download, index) => {
+                    if (download.is_new_upload && download.file_path.startsWith('data:')) {
+                        // 这是一个新上传的文件
+                        const fileName = `${productData.model || productData.id}-${download.file_title}.pdf`;
+                        const targetPath = `/uploads/products/${fileName}`;
+
+                        // 在实际应用中，这里应该调用API保存文件
+                        download.file_path = targetPath;
+                        download.is_new_upload = false;
+
+                        console.log(`文件将保存到: ${targetPath}`);
+                    }
+                });
+            }
+
+            return productData;
+        }
+
+        // 复制产品时的文件处理
+        function copyProductFiles(originalProduct, newProduct) {
+            // 复制图库文件
+            if (originalProduct.gallery) {
+                newProduct.gallery = originalProduct.gallery.map((img, index) => {
+                    const newFileName = img.image.replace(
+                        originalProduct.model || originalProduct.id,
+                        newProduct.model || newProduct.id
+                    );
+
+                    return {
+                        ...img,
+                        image: newFileName,
+                        is_new_upload: true // 标记为需要复制的文件
+                    };
+                });
+            }
+
+            // 复制资料下载文件
+            if (originalProduct.data_download) {
+                newProduct.data_download = originalProduct.data_download.map(download => {
+                    const newFileName = download.file_path.replace(
+                        originalProduct.model || originalProduct.id,
+                        newProduct.model || newProduct.id
+                    );
+
+                    return {
+                        ...download,
+                        file_path: newFileName,
+                        is_new_upload: true // 标记为需要复制的文件
+                    };
+                });
+            }
+
+            return newProduct;
+        }
+
     </script>
+
+    <!-- 媒体库选择模态框 -->
+    <div class="modal fade" id="mediaLibraryModal" tabindex="-1" aria-labelledby="mediaLibraryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mediaLibraryModalLabel">选择媒体文件</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="list-group" id="mediaFolderList">
+                                <button type="button" class="list-group-item list-group-item-action active" data-folder="images/products">
+                                    <i class="fas fa-folder me-2"></i>产品图片
+                                </button>
+                                <button type="button" class="list-group-item list-group-item-action" data-folder="images/cases">
+                                    <i class="fas fa-folder me-2"></i>案例图片
+                                </button>
+                                <button type="button" class="list-group-item list-group-item-action" data-folder="images/news">
+                                    <i class="fas fa-folder me-2"></i>资讯图片
+                                </button>
+                                <button type="button" class="list-group-item list-group-item-action" data-folder="uploads">
+                                    <i class="fas fa-file me-2"></i>上传文件
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div id="mediaFileGrid" class="row">
+                                <!-- 媒体文件网格将在这里显示 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="selectMediaBtn" onclick="confirmMediaSelection()">选择文件</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
