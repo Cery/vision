@@ -21,19 +21,19 @@ new_product_recommendations:
 product_category_carousel:
   enable: true
   carousel_images:
-    - image: "/images/carousel/carousel-1.jpg"
+    - image: "/images/banners/home/carousel_general_carousel-1_original_v1.jpg"
       title: "工业内窥镜解决方案"
       description: "高清成像，精准检测"
       link: "/products/endoscopes"
-    - image: "/images/carousel/carousel-2.jpg"
+    - image: "/images/banners/home/carousel_general_carousel-2_original_v1.jpg"
       title: "X射线无损检测设备"
       description: "安全可靠，全面检测"
       link: "/products/xray"
-    - image: "/images/carousel/carousel-3.webp"
+    - image: "/images/banners/home/carousel_general_carousel-3_original_v1.webp"
       title: "超声波检测系统"
       description: "深度洞察，精确分析"
       link: "/products/ultrasonic"
-    - image: "/images/carousel/carousel-1.jpg"
+    - image: "/images/banners/home/carousel_general_carousel-1_original_v1.jpg"
       title: "涡流检测设备"
       description: "快速扫描，实时监测"
       link: "/products/eddy-current"

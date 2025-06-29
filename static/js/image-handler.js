@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // 默认占位图片配置
     const placeholderImages = {
-        default: '/images/placeholder.svg',
+        default: '/images/assets/brand/brand_general_placeholder_original_v1.svg',
         product: '/images/placeholders/general/product-placeholder.svg',
         news: '/images/placeholders/general/news-placeholder.svg',
         partner: '/images/placeholders/general/partner-placeholder.svg',
@@ -81,10 +81,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // 图片预加载功能
     function preloadCriticalImages() {
         const criticalImages = [
-            '/images/logo.svg',
-            '/images/carousel/carousel-1.jpg',
-            '/images/carousel/carousel-2.jpg',
-            '/images/carousel/carousel-3.webp'
+            '/images/assets/brand/logos/brand_logos_logo_original_v1.svg',
+            '/images/banners/home/carousel_general_carousel-1_original_v1.jpg',
+            '/images/banners/home/carousel_general_carousel-2_original_v1.jpg',
+            '/images/banners/home/carousel_general_carousel-3_original_v1.webp'
         ];
 
         criticalImages.forEach(src => {
