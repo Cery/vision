@@ -1483,30 +1483,49 @@
 
         // 加载供应商
         async function loadSuppliers() {
-            // 模拟从API或文件加载供应商
-            return [
-                {
-                    id: 'vis',
-                    title: '天津维森科技有限公司',
-                    series: ['VIS-P系列', 'VIS-T系列']
-                },
-                {
-                    id: 'vsndt',
-                    title: '深圳市微视光电科技有限公司',
-                    series: ['K系列', 'P系列', 'DZ系列']
-                },
-                {
-                    id: 'hs',
-                    title: '深圳华视内窥镜有限公司',
-                    series: ['HS-A系列', 'HS-B系列']
+            try {
+                // 优先使用ContentSyncManager同步后的数据
+                const syncedSuppliers = JSON.parse(localStorage.getItem('visndt_suppliers') || '[]');
+                if (syncedSuppliers.length > 0) {
+                    console.log(`✅ 加载同步后的供应商数据: ${syncedSuppliers.length} 个供应商`);
+                    return syncedSuppliers;
                 }
-            ];
+
+                // 如果没有同步数据，返回默认数据
+                return [
+                    {
+                        id: 'vis',
+                        title: '天津维森科技有限公司',
+                        series: ['VIS-P系列', 'VIS-T系列']
+                    },
+                    {
+                        id: 'vsndt',
+                        title: '深圳市微视光电科技有限公司',
+                        series: ['K系列', 'P系列', 'DZ系列']
+                    },
+                    {
+                        id: 'hs',
+                        title: '深圳华视内窥镜有限公司',
+                        series: ['HS-A系列', 'HS-B系列']
+                    }
+                ];
+            } catch (error) {
+                console.error('加载供应商数据失败:', error);
+                return [];
+            }
         }
 
         // 加载所有产品
         async function loadAllProducts() {
             try {
-                // 使用ContentDataLoader加载所有产品
+                // 优先使用ContentSyncManager同步后的数据
+                const syncedProducts = JSON.parse(localStorage.getItem('visndt_products') || '[]');
+                if (syncedProducts.length > 0) {
+                    console.log(`✅ 加载同步后的产品数据: ${syncedProducts.length} 个产品`);
+                    return syncedProducts;
+                }
+
+                // 如果没有同步数据，使用ContentDataLoader
                 if (typeof ContentDataLoader !== 'undefined') {
                     const dataLoader = new ContentDataLoader();
                     await dataLoader.loadAllData();
@@ -3869,7 +3888,14 @@ ${JSON.stringify(currentData[0], null, 2)}
         // 加载所有资讯
         async function loadAllNews() {
             try {
-                // 模拟从API或文件系统加载资讯数据
+                // 优先使用ContentSyncManager同步后的数据
+                const syncedNews = JSON.parse(localStorage.getItem('visndt_news') || '[]');
+                if (syncedNews.length > 0) {
+                    console.log(`✅ 加载同步后的新闻数据: ${syncedNews.length} 条新闻`);
+                    return syncedNews;
+                }
+
+                // 如果没有同步数据，返回默认数据
                 return [
                     {
                         id: 'news-001',
@@ -4104,7 +4130,16 @@ ${JSON.stringify(currentData[0], null, 2)}
 
         // 加载所有案例
         function loadAllCases() {
-            return [
+            try {
+                // 优先使用ContentSyncManager同步后的数据
+                const syncedCases = JSON.parse(localStorage.getItem('visndt_cases') || '[]');
+                if (syncedCases.length > 0) {
+                    console.log(`✅ 加载同步后的案例数据: ${syncedCases.length} 个案例`);
+                    return syncedCases;
+                }
+
+                // 如果没有同步数据，返回默认数据
+                return [
                 {
                     id: 'case-001',
                     title: '航空发动机叶片检测案例',
@@ -4352,7 +4387,16 @@ ${JSON.stringify(currentData[0], null, 2)}
 
         // 加载所有应用领域
         function loadAllApplications() {
-            return [
+            try {
+                // 优先使用ContentSyncManager同步后的数据
+                const syncedApplications = JSON.parse(localStorage.getItem('visndt_applications') || '[]');
+                if (syncedApplications.length > 0) {
+                    console.log(`✅ 加载同步后的应用领域数据: ${syncedApplications.length} 个应用领域`);
+                    return syncedApplications;
+                }
+
+                // 如果没有同步数据，返回默认数据
+                return [
                 {
                     id: 'app-001',
                     title: '航空航天检测',
