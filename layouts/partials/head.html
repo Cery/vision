@@ -24,7 +24,7 @@
 <meta property="og:url" content="{{ .Permalink }}">
 <meta property="og:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} - {{ .Site.Title }}{{ end }}">
 <meta property="og:description" content="{{ .Params.description | default .Summary | default .Site.Params.description | truncate 160 }}">
-<meta property="og:image" content="{{ if .Params.featured_image }}{{ .Params.featured_image | absURL }}{{ else }}{{ "/images/logo-dark.svg" | absURL }}{{ end }}">
+<meta property="og:image" content="{{ if .Params.featured_image }}{{ .Params.featured_image | absURL }}{{ else }}{{ "/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg" | absURL }}{{ end }}">
 <meta property="og:site_name" content="{{ .Site.Title }}">
 <meta property="og:locale" content="zh_CN">
 
@@ -33,7 +33,7 @@
 <meta name="twitter:url" content="{{ .Permalink }}">
 <meta name="twitter:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} - {{ .Site.Title }}{{ end }}">
 <meta name="twitter:description" content="{{ .Params.description | default .Summary | default .Site.Params.description | truncate 160 }}">
-<meta name="twitter:image" content="{{ if .Params.featured_image }}{{ .Params.featured_image | absURL }}{{ else }}{{ "/images/logo-dark.svg" | absURL }}{{ end }}">
+<meta name="twitter:image" content="{{ if .Params.featured_image }}{{ .Params.featured_image | absURL }}{{ else }}{{ "/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg" | absURL }}{{ end }}">
 
 <!-- 结构化数据 -->
 {{ if .IsHome }}
@@ -43,7 +43,7 @@
   "@type": "Organization",
   "name": "{{ .Site.Title }}",
   "url": "{{ .Site.BaseURL }}",
-  "logo": "{{ "/images/logo-dark.svg" | absURL }}",
+  "logo": "{{ "/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg" | absURL }}",
   "description": "{{ .Site.Params.description }}",
   "contactPoint": {
     "@type": "ContactPoint",
@@ -60,7 +60,7 @@
   "@type": "Product",
   "name": "{{ .Title }}",
   "description": "{{ .Params.description | default .Summary | default .Title }}",
-  "image": "{{ if .Params.featured_image }}{{ .Params.featured_image | absURL }}{{ else }}{{ "/images/logo-dark.svg" | absURL }}{{ end }}",
+  "image": "{{ if .Params.featured_image }}{{ .Params.featured_image | absURL }}{{ else }}{{ "/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg" | absURL }}{{ end }}",
   "brand": {
     "@type": "Brand",
     "name": "{{ .Site.Title }}"
@@ -78,7 +78,7 @@
   "@type": "Article",
   "headline": "{{ .Title }}",
   "description": "{{ .Params.description | default .Summary | default .Title }}",
-  "image": "{{ if .Params.featured_image }}{{ .Params.featured_image | absURL }}{{ else }}{{ "/images/logo-dark.svg" | absURL }}{{ end }}",
+  "image": "{{ if .Params.featured_image }}{{ .Params.featured_image | absURL }}{{ else }}{{ "/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg" | absURL }}{{ end }}",
   "author": {
     "@type": "Organization",
     "name": "{{ .Site.Title }}"
@@ -88,7 +88,7 @@
     "name": "{{ .Site.Title }}",
     "logo": {
       "@type": "ImageObject",
-      "url": "{{ "/images/logo-dark.svg" | absURL }}"
+      "url": "{{ "/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg" | absURL }}"
     }
   },
   "datePublished": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}",
@@ -101,10 +101,10 @@
 <link rel="canonical" href="{{ .Permalink }}">
 
 <!-- Favicon -->
-<link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
-<link rel="alternate icon" href="/images/favicon.svg">
-<link rel="mask-icon" href="/images/favicon.svg" color="#1976d2">
-<link rel="apple-touch-icon" href="/images/favicon.svg">
+<link rel="icon" type="image/svg+xml" href="/images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
+<link rel="alternate icon" href="/images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
+<link rel="mask-icon" href="/images/assets/brand/icons/brand_icons_favicon_original_v1.svg" color="#1976d2">
+<link rel="apple-touch-icon" href="/images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
 
 <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">

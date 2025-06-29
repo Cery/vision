@@ -17,6 +17,7 @@
 {{ $class := .class | default "img-responsive" }}
 {{ $sizes := .sizes | default "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" }}
 {{ $loading := .loading | default "lazy" }}
+{{ $style := .style | default "" }}
 {{ $category := .category | default "" }}
 {{ $type := .type | default "covers" }}
 {{ $fallback := .fallback }}
@@ -40,9 +41,9 @@
 {{/* 构建图片路径 */}}
 {{ $finalImagePath := $fallback }}
 
-{{/* 1. 如果提供了完整路径，直接使用 */}}
+{{/* 1. 如果提供了完整路径，先尝试映射 */}}
 {{ if hasPrefix $image "/" }}
-  {{ $finalImagePath = $image }}
+  {{ $finalImagePath = partial "image-path-mapper.html" (dict "path" $image "category" $category "type" $type) }}
 {{ else }}
   {{/* 2. 构建新路径 */}}
   {{ if and $category $type }}
@@ -84,6 +85,7 @@
   loading="{{ $loading }}"
   class="{{ $class }}"
   {{ with $sizes }}sizes="{{ . }}"{{ end }}
+  {{ with $style }}style="{{ . }}"{{ end }}
   data-original-src="{{ $image }}"
   data-category="{{ $category }}"
   data-type="{{ $type }}"

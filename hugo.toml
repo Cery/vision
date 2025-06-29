@@ -102,21 +102,21 @@ enableGitInfo = true
     description = "为工业检测提供高品质、高效率的内窥镜设备"
     link = "/products"
     alt = "工业内窥镜解决方案"
-    image = "/images/carousel/carousel-1.jpg"
+    image = "/images/banners/home/carousel_general_carousel-1_original_v1.jpg"
 
   [[params.carousel_images]]
     title = "全方位的应用领域支持"
     description = "覆盖航空航天、能源电力、机械制造等多个领域"
     link = "/applications"
     alt = "应用领域展示"
-    image = "/images/carousel/carousel-2.jpg"
+    image = "/images/banners/home/carousel_general_carousel-2_original_v1.jpg"
 
   [[params.carousel_images]]
     title = "创新的检测技术"
     description = "持续创新，为客户提供更好的检测体验"
     link = "/cases"
     alt = "检测技术展示"
-    image = "/images/carousel/carousel-3.webp"
+    image = "/images/banners/home/carousel_general_carousel-3_original_v1.webp"
 
 # 媒体类型配置
 [mediaTypes]
