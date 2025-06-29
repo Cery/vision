@@ -23,11 +23,13 @@
                 <div class="card border-0 shadow-sm h-100 featured-case">
                     <div class="row g-0 h-100">
                         <div class="col-md-6">
-                            {{ with .Params.featured_image }}
-                            <img src="{{ . | relURL }}" class="img-fluid h-100 w-100" alt="{{ $.Title }}" style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
-                            {{ else }}
-                            <img src="/images/content/cases/covers/case-1.webp" class="img-fluid h-100 w-100" alt="{{ .Title }}" style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
-                            {{ end }}
+                            <a href="{{ .Permalink }}" class="d-block h-100">
+                                {{ with .Params.featured_image }}
+                                <img src="{{ . | relURL }}" class="img-fluid h-100 w-100" alt="{{ $.Title }}" style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
+                                {{ else }}
+                                <img src="/images/cases/case-1.webp" class="img-fluid h-100 w-100" alt="{{ .Title }}" style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
+                                {{ end }}
+                            </a>
                         </div>
                         <div class="col-md-6">
                             <div class="card-body h-100 d-flex flex-column p-3">
@@ -64,7 +66,9 @@
                                     {{ end }}
                                 </div>
 
-                                <h4 class="card-title h5 mb-2">{{ .Title }}</h4>
+                                <h4 class="card-title h5 mb-2">
+                                    <a href="{{ .Permalink }}" class="text-decoration-none text-dark">{{ .Title }}</a>
+                                </h4>
                                 <p class="card-text flex-grow-1 small text-muted">{{ .Params.summary | truncate 100 }}</p>
                                 <div class="mt-auto">
                                     <div class="d-flex justify-content-between align-items-center">
@@ -89,31 +93,21 @@
                         <div class="card border-0 shadow-sm h-100">
                             <div class="row g-0 align-items-center">
                                 <div class="col-3">
-                                    {{ with .Params.featured_image }}
-                                    {{ partial "smart-image.html" (dict
-                                        "image" .
-                                        "alt" $.Title
-                                        "class" "case-thumb"
-                                        "category" "cases"
-                                        "type" "covers"
-                                        "loading" "lazy"
-                                    ) }}
-                                    {{ else }}
-                                    {{ $images := slice "case-2.webp" "case-3.webp" "case-4.webp" "case-5.webp" }}
-                                    {{ partial "smart-image.html" (dict
-                                        "image" (index $images (mod $index 4))
-                                        "alt" .Title
-                                        "class" "case-thumb"
-                                        "category" "cases"
-                                        "type" "covers"
-                                        "loading" "lazy"
-                                    ) }}
-                                    {{ end }}
+                                    <a href="{{ .Permalink }}" class="d-block">
+                                        {{ with .Params.featured_image }}
+                                        <img src="{{ . | relURL }}" class="case-thumb" alt="{{ $.Title }}" loading="lazy">
+                                        {{ else }}
+                                        {{ $images := slice "case-2.webp" "case-3.webp" "case-4.webp" "case-5.webp" }}
+                                        <img src="/images/cases/{{ index $images (mod $index 4) }}" class="case-thumb" alt="{{ .Title }}" loading="lazy">
+                                        {{ end }}
+                                    </a>
                                 </div>
                                 <div class="col-9">
                                     <div class="card-body p-2">
                                         <div class="case-content">
-                                            <h6 class="case-title mb-1">{{ .Title | truncate 20 }}</h6>
+                                            <h6 class="case-title mb-1">
+                                                <a href="{{ .Permalink }}" class="text-decoration-none text-dark">{{ .Title | truncate 20 }}</a>
+                                            </h6>
 
                                             <!-- 紧凑标签展示 -->
                                             <div class="case-tags-compact mb-1">
@@ -154,19 +148,16 @@
                         <div class="card border-0 shadow-sm h-100">
                             <div class="row g-0 align-items-center">
                                 <div class="col-3">
-                                    {{ partial "smart-image.html" (dict
-                                        "image" (printf "case-%d.webp" (add $i 2))
-                                        "alt" "案例展示"
-                                        "class" "case-thumb"
-                                        "category" "cases"
-                                        "type" "covers"
-                                        "loading" "lazy"
-                                    ) }}
+                                    <a href="/cases/" class="d-block">
+                                        <img src="/images/cases/case-{{ add $i 5 }}.webp" class="case-thumb" alt="案例展示" loading="lazy">
+                                    </a>
                                 </div>
                                 <div class="col-9">
                                     <div class="card-body p-2">
                                         <div class="case-content">
-                                            <h6 class="case-title mb-1">{{ index (slice "航空检测案例" "汽车制造案例" "石化行业案例") (sub $i 1) | truncate 15 }}</h6>
+                                            <h6 class="case-title mb-1">
+                                                <a href="/cases/" class="text-decoration-none text-dark">{{ index (slice "航空检测案例" "汽车制造案例" "石化行业案例") (sub $i 1) | truncate 15 }}</a>
+                                            </h6>
                                             <p class="case-summary mb-1">{{ index (slice "精密检测" "质量控制" "安全监测") (sub $i 1) | truncate 12 }}</p>
                                             <div class="case-meta d-flex justify-content-between align-items-center">
                                                 <span class="case-category">{{ index (slice "航空" "汽车" "石化") (sub $i 1) }}</span>
@@ -398,8 +389,8 @@
 @media (min-width: 992px) {
     /* 左侧主要案例高度 */
     .application-cases .col-lg-7 .card {
-        min-height: 480px;
-        max-height: 480px;
+        min-height: 420px;
+        max-height: 420px;
         display: flex;
         flex-direction: column;
     }
@@ -409,8 +400,13 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        min-height: 240px;
+        min-height: 210px;
         padding: var(--spacing-lg);
+    }
+
+    .application-cases .col-lg-7 .featured-case img {
+        height: 210px;
+        object-fit: cover;
     }
 
     /* 右侧案例列表高度匹配 */
@@ -420,19 +416,21 @@
     }
 
     .application-cases .case-list-compact {
-        min-height: 480px;
-        max-height: 480px;
+        min-height: 420px;
+        max-height: 420px;
         overflow-y: auto;
         display: flex;
         flex-direction: column;
-        justify-content: flex-start;
-        padding: 8px 0;
+        justify-content: space-between;
+        padding: 0;
     }
 
     /* 确保案例项目均匀分布 */
     .case-item-compact {
-        flex: 0 0 auto;
-        margin-bottom: 12px;
+        flex: 1;
+        margin-bottom: 8px;
+        min-height: 95px;
+        max-height: 95px;
     }
 
     .case-item-compact:last-child {
@@ -475,16 +473,27 @@
 
 .case-item-compact .card {
     border-radius: 8px;
-    min-height: 90px;
-    max-height: 90px;
+    min-height: 95px;
+    max-height: 95px;
     overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.case-item-compact .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .case-item-compact .case-thumb {
     width: 100%;
-    height: 70px;
+    height: 75px;
     object-fit: cover;
     border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.case-item-compact .case-thumb:hover {
+    transform: scale(1.05);
 }
 
 .case-item-compact .case-content {
@@ -557,6 +566,11 @@
     .case-list-compact {
         max-height: none;
         overflow: visible;
+        margin-top: 1rem;
+    }
+
+    .case-item-compact {
+        margin-bottom: 12px;
     }
 
     .case-item-compact .card {
@@ -566,6 +580,11 @@
 
     .case-item-compact .case-thumb {
         height: 70px;
+    }
+
+    .application-cases .col-lg-7,
+    .application-cases .col-lg-5 {
+        margin-bottom: 1rem;
     }
 }
 
@@ -619,6 +638,31 @@
     font-weight: 600;
     line-height: 1.3;
     font-size: 16px;
+}
+
+.application-cases .card-title a {
+    transition: color 0.3s ease;
+}
+
+.application-cases .card-title a:hover {
+    color: var(--primary-color) !important;
+}
+
+/* 案例图片链接样式 */
+.application-cases .featured-case a {
+    transition: all 0.3s ease;
+    display: block;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 0.375rem 0 0 0.375rem;
+}
+
+.application-cases .featured-case a:hover img {
+    transform: scale(1.05);
+}
+
+.application-cases .featured-case img {
+    transition: transform 0.3s ease;
 }
 
 .application-cases .card-text {
