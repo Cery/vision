@@ -512,6 +512,24 @@
             color: #6c757d;
         }
 
+        /* 图片地址显示样式 */
+        .image-address {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 4px 8px;
+            word-break: break-all;
+        }
+
+        .image-placeholder {
+            transition: all 0.2s ease;
+        }
+
+        .image-placeholder:hover {
+            background: #e9ecef !important;
+            border-color: var(--primary-color) !important;
+        }
+
         /* 供应商图片管理样式 */
         .supplier-image-item {
             position: relative;
@@ -2652,6 +2670,121 @@ ${JSON.stringify(currentData[0], null, 2)}
                         addRelatedProductToList(relatedProduct);
                     }
                 });
+            }
+
+            // 填充发布状态和时间
+            if (product.status) {
+                document.getElementById('publishStatus').value = product.status;
+            }
+            if (product.published) {
+                const publishDate = new Date(product.published);
+                if (!isNaN(publishDate.getTime())) {
+                    // 转换为本地时间格式 YYYY-MM-DDTHH:MM
+                    const localDateTime = new Date(publishDate.getTime() - publishDate.getTimezoneOffset() * 60000)
+                        .toISOString().slice(0, 16);
+                    document.getElementById('publishDate').value = localDateTime;
+                }
+            }
+
+            // 填充图片库
+            loadProductGallery(product);
+        }
+
+        // 加载产品图片库
+        function loadProductGallery(product) {
+            const container = document.getElementById('galleryContainer');
+            const addButton = container.querySelector('.image-upload-area').parentElement;
+
+            // 清除现有图片（保留添加按钮）
+            const existingImages = container.querySelectorAll('.col-md-3:not(:has(.image-upload-area))');
+            existingImages.forEach(img => img.remove());
+
+            // 加载产品图片
+            if (product.gallery && product.gallery.length > 0) {
+                product.gallery.forEach((imageData, index) => {
+                    let imageSrc, imageAlt, isMain = false;
+
+                    // 处理不同的图片数据格式
+                    if (typeof imageData === 'string') {
+                        imageSrc = imageData;
+                        imageAlt = `${product.title || product.model}图片${index + 1}`;
+                    } else if (typeof imageData === 'object') {
+                        imageSrc = imageData.image || imageData.src || imageData.url;
+                        imageAlt = imageData.alt || `${product.title || product.model}图片${index + 1}`;
+                        isMain = imageData.is_main || false;
+                    }
+
+                    if (imageSrc) {
+                        addImageToGalleryForEdit(imageSrc, imageAlt, isMain, index === 0);
+                    }
+                });
+            }
+        }
+
+        // 为编辑模式添加图片到图库（包含地址显示选项）
+        function addImageToGalleryForEdit(src, alt, isMain = false, isFirstImage = false) {
+            const container = document.getElementById('galleryContainer');
+            const addButton = container.querySelector('.image-upload-area').parentElement;
+
+            const col = document.createElement('div');
+            col.className = 'col-md-3 mb-3';
+
+            // 检查图片是否可以正常加载
+            const img = new Image();
+            let imageLoadError = false;
+
+            img.onerror = function() {
+                imageLoadError = true;
+                updateImageDisplay();
+            };
+
+            img.onload = function() {
+                updateImageDisplay();
+            };
+
+            img.src = src;
+
+            function updateImageDisplay() {
+                col.innerHTML = `
+                    <div class="gallery-image-item ${isMain || isFirstImage ? 'main-image' : ''}">
+                        ${!imageLoadError ?
+                            `<img src="${src}" alt="${alt}" class="img-fluid" style="cursor: pointer;" onclick="toggleImageDisplay(this)">` :
+                            `<div class="image-placeholder" style="height: 120px; background: #f8f9fa; border: 2px dashed #dee2e6; display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="toggleImageDisplay(this)">
+                                <div class="text-center">
+                                    <i class="fas fa-image fa-2x text-muted mb-2"></i>
+                                    <div><small class="text-muted">图片加载失败</small></div>
+                                    <div><small class="text-muted">点击查看地址</small></div>
+                                </div>
+                            </div>`
+                        }
+                        <div class="image-controls">
+                            <button type="button" class="btn btn-sm ${isMain || isFirstImage ? 'btn-warning' : 'btn-outline-primary'}" onclick="setAsMainImage(this)" title="设为主图">
+                                <i class="fas fa-star"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-info" onclick="showImageAddress(this)" title="查看地址">
+                                <i class="fas fa-link"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeGalleryImage(this)" title="删除">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="image-info">
+                            <input type="text" class="form-control form-control-sm" value="${alt}" placeholder="图片描述" onchange="updateImageAlt(this)">
+                            <input type="hidden" value="${src}" class="image-src">
+                            <div class="form-check mt-1">
+                                <input class="form-check-input" type="checkbox" onchange="markAsNewUpload(this)">
+                                <label class="form-check-label">
+                                    <small>新上传</small>
+                                </label>
+                            </div>
+                            <div class="image-address mt-1" style="display: none;">
+                                <small class="text-muted">地址: ${src}</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                container.insertBefore(col, addButton);
             }
         }
 
@@ -7289,18 +7422,20 @@ ${caseData.summary || ''}
             // 移除其他主图标记
             document.querySelectorAll('.gallery-image-item').forEach(item => {
                 item.classList.remove('main-image');
-                const starBtn = item.querySelector('.btn-outline-primary');
-                starBtn.innerHTML = '<i class="fas fa-star"></i>';
-                starBtn.classList.remove('btn-primary');
-                starBtn.classList.add('btn-outline-primary');
+                const starBtn = item.querySelector('.btn-outline-primary, .btn-primary, .btn-warning, .btn-outline-warning');
+                if (starBtn && starBtn.querySelector('.fa-star')) {
+                    starBtn.innerHTML = '<i class="fas fa-star"></i>';
+                    starBtn.classList.remove('btn-primary', 'btn-warning');
+                    starBtn.classList.add('btn-outline-primary');
+                }
             });
 
             // 设置当前为主图
             const imageItem = button.closest('.gallery-image-item');
             imageItem.classList.add('main-image');
             button.innerHTML = '<i class="fas fa-star"></i>';
-            button.classList.remove('btn-outline-primary');
-            button.classList.add('btn-primary');
+            button.classList.remove('btn-outline-primary', 'btn-primary', 'btn-outline-warning');
+            button.classList.add('btn-warning');
         }
 
         // 删除图库图片
@@ -7321,6 +7456,37 @@ ${caseData.summary || ''}
             imageItem.dataset.newUpload = checkbox.checked;
         }
 
+        // 显示图片地址
+        function showImageAddress(button) {
+            const imageItem = button.closest('.gallery-image-item');
+            const addressDiv = imageItem.querySelector('.image-address');
+            const srcInput = imageItem.querySelector('.image-src');
+
+            if (addressDiv.style.display === 'none') {
+                addressDiv.style.display = 'block';
+                button.classList.remove('btn-outline-info');
+                button.classList.add('btn-info');
+                button.title = '隐藏地址';
+            } else {
+                addressDiv.style.display = 'none';
+                button.classList.remove('btn-info');
+                button.classList.add('btn-outline-info');
+                button.title = '查看地址';
+            }
+        }
+
+        // 切换图片显示模式（图片/地址）
+        function toggleImageDisplay(element) {
+            const imageItem = element.closest('.gallery-image-item');
+            const addressDiv = imageItem.querySelector('.image-address');
+
+            if (addressDiv.style.display === 'none') {
+                showImageAddress(imageItem.querySelector('.btn-outline-info, .btn-info'));
+            } else {
+                showImageAddress(imageItem.querySelector('.btn-outline-info, .btn-info'));
+            }
+        }
+
         // 获取图库数据
         function getGalleryData() {
             const galleryItems = document.querySelectorAll('.gallery-image-item');
@@ -7328,16 +7494,22 @@ ${caseData.summary || ''}
 
             galleryItems.forEach((item, index) => {
                 const img = item.querySelector('img');
+                const srcInput = item.querySelector('.image-src');
                 const altInput = item.querySelector('input[type="text"]');
                 const isMain = item.classList.contains('main-image');
-                const isNewUpload = item.dataset.newUpload === 'true';
+                const isNewUpload = item.querySelector('input[type="checkbox"]').checked;
 
-                gallery.push({
-                    image: img.src,
-                    alt: altInput.value || `产品图片${index + 1}`,
-                    is_main: isMain,
-                    is_new_upload: isNewUpload
-                });
+                // 优先使用隐藏输入框中的地址，其次使用img的src
+                const imageSrc = srcInput ? srcInput.value : (img ? img.src : '');
+
+                if (imageSrc) {
+                    gallery.push({
+                        image: imageSrc,
+                        alt: altInput.value || `产品图片${index + 1}`,
+                        is_main: isMain,
+                        is_new_upload: isNewUpload
+                    });
+                }
             });
 
             return gallery;

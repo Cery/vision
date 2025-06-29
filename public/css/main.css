@@ -998,7 +998,7 @@ a:focus {
 
 /* 使用新设计的LOGO - 大字母VisNDT + 小文字维森专注内窥镜 */
 .navbar-brand .logo-img {
-    content: url('/images/logo-new.svg');
+    content: url('/images/assets/brand/logos/brand_logos_logo-new_original_v1.svg');
 }
 
 

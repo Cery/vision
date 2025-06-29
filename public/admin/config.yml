@@ -8,7 +8,7 @@ media_folder: "static/images"
 public_folder: "/images"
 
 site_url: https://visndt.com/
-logo_url: https://visndt.com/logo.png
+logo_url: https://visndt.com/images/assets/brand/logos/brand_logos_logo_original_v1.svg
 
 # 编辑器配置
 editor:
