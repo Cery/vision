@@ -2,52 +2,52 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>行业资讯 on 维森视觉检测仪器</title>
-    <link>http://localhost:1313/categories/%E8%A1%8C%E4%B8%9A%E8%B5%84%E8%AE%AF/</link>
+    <link>http://localhost:1314/categories/%E8%A1%8C%E4%B8%9A%E8%B5%84%E8%AE%AF/</link>
     <description>Recent content in 行业资讯 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Sun, 10 Nov 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/categories/%E8%A1%8C%E4%B8%9A%E8%B5%84%E8%AE%AF/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1314/categories/%E8%A1%8C%E4%B8%9A%E8%B5%84%E8%AE%AF/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>2024西安工业自动化及机器人展览会</title>
-      <link>http://localhost:1313/news/exhibition-news-7/</link>
+      <link>http://localhost:1314/news/exhibition-news-7/</link>
       <pubDate>Sun, 10 Nov 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/news/exhibition-news-7/</guid>
+      <guid>http://localhost:1314/news/exhibition-news-7/</guid>
       <description>展会将在西安曲江国际会展中心举办</description>
     </item>
     <item>
       <title>内窥镜技术在工业检测中的创新应用</title>
-      <link>http://localhost:1313/news/industry-news-1/</link>
+      <link>http://localhost:1314/news/industry-news-1/</link>
       <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/news/industry-news-1/</guid>
+      <guid>http://localhost:1314/news/industry-news-1/</guid>
       <description>探讨最新内窥镜技术在工业检测领域的创新应用，提高检测效率和精度</description>
     </item>
     <item>
       <title>AI技术赋能工业内窥镜检测新突破</title>
-      <link>http://localhost:1313/news/industry-news-2/</link>
+      <link>http://localhost:1314/news/industry-news-2/</link>
       <pubDate>Mon, 18 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/news/industry-news-2/</guid>
+      <guid>http://localhost:1314/news/industry-news-2/</guid>
       <description>人工智能技术与工业内窥镜的深度融合，实现智能缺陷识别和自动化检测</description>
     </item>
     <item>
       <title>5G远程内窥镜检测系统解决方案发布</title>
-      <link>http://localhost:1313/news/industry-news-3/</link>
+      <link>http://localhost:1314/news/industry-news-3/</link>
       <pubDate>Fri, 15 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/news/industry-news-3/</guid>
+      <guid>http://localhost:1314/news/industry-news-3/</guid>
       <description>基于5G技术的远程内窥镜检测系统，实现远程实时监控和专家指导</description>
     </item>
     <item>
       <title>新型管道爬行机器人技术取得重大突破</title>
-      <link>http://localhost:1313/news/industry-news-4/</link>
+      <link>http://localhost:1314/news/industry-news-4/</link>
       <pubDate>Tue, 12 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/news/industry-news-4/</guid>
+      <guid>http://localhost:1314/news/industry-news-4/</guid>
       <description>创新型管道爬行机器人技术突破，提升复杂管道检测能力，为工业检测领域带来革命性进展</description>
     </item>
     <item>
       <title>绿色制造推动无损检测技术环保升级</title>
-      <link>http://localhost:1313/news/industry-news-5/</link>
+      <link>http://localhost:1314/news/industry-news-5/</link>
       <pubDate>Sun, 10 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/news/industry-news-5/</guid>
+      <guid>http://localhost:1314/news/industry-news-5/</guid>
       <description>绿色制造理念推动无损检测技术向环保化、节能化方向发展，内窥镜技术成为绿色检测的重要选择</description>
     </item>
   </channel>

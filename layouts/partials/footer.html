@@ -90,8 +90,100 @@
       
 
     <!-- 返回顶部按钮 -->
-<button id="backToTopBtn" type="button" class="btn btn-primary rounded-circle shadow" 
+<button id="backToTopBtn" type="button" class="btn btn-primary rounded-circle shadow"
 style="position: fixed; right: 32px; bottom: 48px; z-index: 999; display: none; width:48px; height:48px;">
 <i class="fas fa-arrow-up"></i>
 </button>
+
+<style>
+/* Footer响应式设计 */
+@media (max-width: 768px) {
+  .footer {
+    padding: 2rem 0 !important;
+  }
+
+  .footer .col-md-4 {
+    text-align: center !important;
+    margin-bottom: 2rem;
+  }
+
+  .footer h5 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+
+  .social-hover {
+    margin: 0 1rem 1rem 1rem !important;
+  }
+
+  .social-icon {
+    font-size: 1.5rem !important;
+  }
+
+  .friend-links a {
+    display: inline-block;
+    margin: 0.25rem 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .qr-code-float {
+    top: -100px;
+    width: 80px;
+    padding: 5px;
+  }
+
+  .qr-code-float img {
+    width: 70px;
+    height: 70px;
+  }
+}
+
+@media (max-width: 576px) {
+  .footer {
+    padding: 1.5rem 0 !important;
+  }
+
+  .footer-logo-img {
+    height: 30px !important;
+  }
+
+  .working-hours {
+    font-size: 0.8rem;
+  }
+
+  .footer h5 {
+    font-size: 1rem;
+  }
+
+  .footer ul li {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .social-hover {
+    margin: 0 0.5rem 0.5rem 0.5rem !important;
+  }
+
+  .social-icon {
+    font-size: 1.3rem !important;
+  }
+
+  .friend-links a {
+    display: block;
+    margin: 0.5rem 0;
+    font-size: 0.85rem;
+  }
+
+  #backToTopBtn {
+    right: 16px !important;
+    bottom: 24px !important;
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  #backToTopBtn i {
+    font-size: 0.9rem;
+  }
+}
+</style>
   </footer>
