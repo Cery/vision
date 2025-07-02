@@ -1,0 +1,16 @@
+{{- $pages := where .Site.RegularPages "Type" "in" (slice "products" "news" "cases" "applications" "suppliers") -}}
+[
+{{- range $index, $page := $pages -}}
+{{- if gt $index 0 }},{{ end }}
+{
+  "uri": {{ $page.RelPermalink | jsonify }},
+  "title": {{ $page.Title | jsonify }},
+  "content": {{ $page.Plain | jsonify }},
+  "summary": {{ $page.Summary | jsonify }},
+  "type": {{ $page.Type | jsonify }},
+  "section": {{ $page.Section | jsonify }},
+  "date": {{ $page.Date.Format "2006-01-02" | jsonify }},
+  "params": {{ $page.Params | jsonify }}
+}
+{{- end -}}
+]

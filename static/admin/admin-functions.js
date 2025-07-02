@@ -9691,14 +9691,14 @@ function showGitHubConfig() {
                             </div>
                             <div class="col-6">
                                 <input type="text" class="form-control" id="githubRepo"
-                                       value="VisNDT" placeholder="仓库名">
+                                       value="vision" placeholder="仓库名">
                             </div>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">分支</label>
                         <input type="text" class="form-control" id="githubBranch"
-                               value="master" placeholder="分支名">
+                               value="main" placeholder="分支名">
                     </div>
                     <div class="alert alert-info">
                         <i class="fas fa-info-circle me-2"></i>
@@ -9799,8 +9799,8 @@ function initGitHubConfig() {
         const data = JSON.parse(config);
         window.fileOperations.githubConfig = {
             owner: data.owner || 'Cery',
-            repo: data.repo || 'VisNDT',
-            branch: data.branch || 'master',
+            repo: data.repo || 'vision',
+            branch: data.branch || 'main',
             token: data.token || null
         };
     }

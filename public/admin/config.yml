@@ -1,6 +1,7 @@
 backend:
   name: git-gateway
-  branch: master # 使用 master 分支
+  branch: main # 使用 main 分支
+  repo: Cery/vision # 指向正确的仓库
 
 local_backend: true # 本地开发环境启用
 

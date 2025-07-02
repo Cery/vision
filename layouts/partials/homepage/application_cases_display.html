@@ -27,7 +27,7 @@
                                 {{ with .Params.featured_image }}
                                 <img src="{{ . | relURL }}" class="img-fluid h-100 w-100" alt="{{ $.Title }}" style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
                                 {{ else }}
-                                <img src="/images/cases/case-1.webp" class="img-fluid h-100 w-100" alt="{{ .Title }}" style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
+                                <img src="/images/cases/case-2.jpg" class="img-fluid h-100 w-100" alt="{{ .Title }}" style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
                                 {{ end }}
                             </a>
                         </div>
@@ -97,7 +97,7 @@
                                         {{ with .Params.featured_image }}
                                         <img src="{{ . | relURL }}" class="case-thumb" alt="{{ $.Title }}" loading="lazy">
                                         {{ else }}
-                                        {{ $images := slice "case-2.webp" "case-3.webp" "case-4.webp" "case-5.webp" }}
+                                        {{ $images := slice "case-2.jpg" "case-3.jpg" "case-2.jpg" "case-3.jpg" }}
                                         <img src="/images/cases/{{ index $images (mod $index 4) }}" class="case-thumb" alt="{{ .Title }}" loading="lazy">
                                         {{ end }}
                                     </a>
@@ -149,7 +149,8 @@
                             <div class="row g-0 align-items-center">
                                 <div class="col-3">
                                     <a href="/cases/" class="d-block">
-                                        <img src="/images/cases/case-{{ add $i 5 }}.webp" class="case-thumb" alt="案例展示" loading="lazy">
+                                        {{ $placeholderImages := slice "case-2.jpg" "case-3.jpg" }}
+                                        <img src="/images/cases/{{ index $placeholderImages (mod $i 2) }}" class="case-thumb" alt="案例展示" loading="lazy">
                                     </a>
                                 </div>
                                 <div class="col-9">

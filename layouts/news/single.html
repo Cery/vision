@@ -291,24 +291,8 @@ function initLeanCloudViews() {
         return;
     }
 
-    // 检查是否在访问间隔内
-    const lastVisitTime = localStorage.getItem('last_visit_' + currentPath);
-    const now = new Date().getTime();
-    if (lastVisitTime && (now - parseInt(lastVisitTime)) < 3600000) { // 1小时内不重复计数
-        console.log('访问间隔太短，不增加计数');
-        // 仍然显示当前浏览次数
-        fetchCurrentViews();
-        return;
-    }
-
-    // 检查是否已访问过
-    const visitedPages = JSON.parse(localStorage.getItem('visited_pages') || '[]');
-    if (visitedPages.includes(currentPath)) {
-        console.log('页面已访问过，不增加计数');
-        // 仍然显示当前浏览次数
-        fetchCurrentViews();
-        return;
-    }
+    // 移除本地存储的重复访问检查，只统计网络访问次数
+    // 每次访问都会增加计数，确保统计的是真实的网络访问量
     
     const queryUrl = url + '?where=' + encodeURIComponent(JSON.stringify({url: currentPath}));
     
@@ -331,16 +315,11 @@ function initLeanCloudViews() {
         if (data.results && data.results.length > 0) {
             const record = data.results[0];
             const currentViews = record.time || 0;
-            
+
             // 显示当前访问次数
             pageViewsElement.textContent = currentViews.toString();
-            
-            // 更新访问记录
-            localStorage.setItem('last_visit_' + currentPath, now.toString());
-            visitedPages.push(currentPath);
-            localStorage.setItem('visited_pages', JSON.stringify(visitedPages));
-            
-            // 增加访问次数
+
+            // 直接增加访问次数，不进行本地存储检查
             const newViews = currentViews + 1;
             updateCounter(record.objectId, newViews);
         } else {

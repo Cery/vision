@@ -1,17 +1,15 @@
-{{ $searchIndex := slice }}
-{{ range (where .Site.RegularPages "Type" "in" (slice "products" "articles" "news" "cases" "applications" "suppliers")) }}
-  {{ if (and .Permalink (ne .Permalink "/")) }}
-    {{ $pageURL := printf "/%s/%s/" (.Type | urlize) (.File.BaseFileName | urlize) }}
-    {{ $searchItem := dict
-      "id" .File.UniqueID
-      "title" .Title
-      "summary" .Summary
-      "content" .Plain
-      "type" .Type
-      "url" $pageURL
-      "tags" (.Params.tags | default (slice))
-    }}
-    {{ $searchIndex = $searchIndex | append $searchItem }}
-  {{ end }}
-{{ end }}
-{{ $searchIndex | jsonify }}
+[
+{{- range $index, $page := (where .Site.RegularPages "Type" "in" (slice "products" "news" "cases" "applications" "suppliers")) -}}
+{{- if gt $index 0 }},{{ end }}
+{
+  "uri": {{ $page.RelPermalink | jsonify }},
+  "title": {{ $page.Title | jsonify }},
+  "content": {{ $page.Plain | jsonify }},
+  "summary": {{ $page.Summary | jsonify }},
+  "type": {{ $page.Type | jsonify }},
+  "section": {{ $page.Section | jsonify }},
+  "date": {{ $page.Date.Format "2006-01-02" | jsonify }},
+  "params": {{ $page.Params | jsonify }}
+}
+{{- end -}}
+]
