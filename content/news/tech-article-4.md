@@ -10,6 +10,7 @@ tags:
 - 系统集成
 author: 通信技术部
 views: 156
+featured_image: "/images/news/新闻.webp"
 ---
 
 # 无线传输技术在内窥镜检测中的应用

@@ -10,6 +10,7 @@ tags:
 - 检测设备
 author: 市场部
 views: 98
+featured_image: "/images/news/展会.webp"
 ---
 
 # 2024广州国际工业检测设备展览会

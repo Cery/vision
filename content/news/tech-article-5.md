@@ -10,6 +10,7 @@ tags:
 - 技术发展
 author: 机械设计部
 views: 189
+featured_image: "/images/news/行业资讯.png"
 ---
 
 # 工业内窥镜探头微型化技术发展趋势

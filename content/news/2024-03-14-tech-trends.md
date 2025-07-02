@@ -9,6 +9,7 @@ tags:
 summary: 探讨2024年工业内窥镜领域的最新技术发展趋势，包括AI图像识别、5G远程控制等创新应用
 author: 技术部
 views: 85
+featured_image: "/images/news/行业资讯.png"
 ---
 # 工业内窥镜技术的新发展
 

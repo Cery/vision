@@ -10,6 +10,7 @@ tags:
 - 技术优化
 author: 光学工程部
 views: 167
+featured_image: "/images/news/展会.webp"
 ---
 
 # 工业内窥镜光学系统设计与优化

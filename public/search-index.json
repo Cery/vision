@@ -1,15 +1,5 @@
 [
 {
-  "uri": "/products/test-backend-product/",
-  "title": "测试后台产品",
-  "content": "测试后台产品 产品概述 这是一个从后台管理系统生成的测试产品，用于验证产品管理功能的完整性。该产品展示了从管理后台到前台显示的完整流程。\n技术规格 探头直径: 6.0mm 工作长度: 1000mm 视角: 90° 照明: LED白光 显示屏: 5英寸高清LCD 电池续航: 4小时 防护等级: IP67 工作温度: -10°C ~ +60°C 产品特点 高精度检测 操作简便 稳定可靠 维护方便 后台管理集成 应用领域 适用于各种工业检测场景，为用户提供专业的检测解决方案。特别适合：\n管道检测 设备维护 质量控制 故障诊断 使用说明 连接设备电源 插入探头到检测位置 调整显示参数 开始检测工作 保存检测结果 技术支持 如需技术支持，请联系我们的专业团队。\n",
-  "summary": "这是一个从后台管理系统生成的测试产品，用于验证产品管理功能",
-  "type": "products",
-  "section": "products",
-  "date": "2024-12-26",
-  "params": {"date":"2024-12-26T00:00:00Z","draft":false,"featured_image":"/images/placeholders/general/product-main-800x600.svg","gallery":["/images/placeholders/general/product-main-800x600.svg-1","/images/placeholders/general/product-main-800x600.svg-2"],"iscjklanguage":true,"lastmod":"2024-12-26T00:00:00Z","model":"WS-TEST-001","price":15000,"primary_category":["电子视频内窥镜"],"product_code":"TEST001","publishdate":"2024-12-26T00:00:00Z","related_products":[],"secondary_category":["便携式内窥镜"],"series":"测试系列","specifications":{"工作温度":"-10°C ~ +60°C","工作长度":"1000mm","探头直径":"6.0mm","显示屏":"5英寸高清LCD","照明":"LED白光","电池续航":"4小时","视角":"90°","防护等级":"IP67"},"stock":10,"summary":"这是一个从后台管理系统生成的测试产品，用于验证产品管理功能","supplier":"维森科技","tags":["测试产品","后台管理","Hugo集成"],"title":"测试后台产品","weight":1}
-},
-{
   "uri": "/applications/aerospace/",
   "title": "航空航天",
   "content": "航空航天应用领域 领域概述 航空航天工业对产品质量和安全性要求极高，任何微小的缺陷都可能导致严重后果。工业内窥镜技术在航空航天领域发挥着至关重要的作用，为发动机、机身结构、航电设备等关键部件提供精确、可靠的无损检测解决方案。\n我们的检测技术严格遵循航空工业标准，确保每一次检测都能达到最高的精度要求，为飞行器的安全运行提供坚实保障。\n主要应用场景 发动机检测 航空发动机是飞行器的心脏，其内部结构复杂，工作环境恶劣。通过工业内窥镜技术，可以对涡轮叶片、燃烧室、压气机等关键部件进行深入检测，及时发现裂纹、腐蚀、异物等缺陷，确保发动机的安全可靠运行。\n机身结构检测 机身结构的完整性直接关系到飞行安全。我们的检测技术能够深入机身内部，对蒙皮、框架、连接件等结构进行全面检测，识别疲劳裂纹、腐蚀损伤等潜在风险，为结构维护提供科学依据。\n起落架系统检测 起落架承担着飞机起降的重要任务，其液压系统和机械结构的可靠性至关重要。通过内窥镜检测，可以对起落架内部管路、密封件、机械连接等进行详细检查，确保系统正常运行。\n航电设备检测 现代飞机的航电设备日益复杂，内部线路和元器件的完整性检测变得越来越重要。我们的微型内窥镜技术能够深入狭小空间，对电路板、连接器、线束等进行精密检测。\n技术优势 高精度成像 采用最新的高分辨率成像技术，能够清晰显示微米级的缺陷细节，满足航空工业的严格检测要求。\n智能缺陷识别 集成人工智能算法，能够自动识别和分类各种类型的缺陷，提高检测效率和准确性，减少人为误判。\n3D重建技术 通过先进的3D重建技术，能够生成被检测部件的三维模型，为缺陷定位和评估提供更直观的视觉支持。\n实时检测分析 支持实时检测和分析，能够在检测过程中即时发现问题，大大提高检测效率。\n服务保障 我们为航空航天客户提供全方位的服务保障：\n专业团队：拥有丰富航空检测经验的专业技术团队 标准认证：严格遵循AS9100、NADCAP等航空质量标准 技术支持：7×24小时技术支持服务 培训服务：提供专业的操作培训和技术指导 定制方案：根据客户需求提供定制化检测解决方案 成功案例 我们已为多家知名航空企业提供专业检测服务，包括商用飞机制造商、军用飞机制造商、发动机制造商等，获得了客户的一致好评和信赖。\n通过我们的专业检测服务，客户能够：\n提高产品质量和安全性 降低维护成本 延长设备使用寿命 确保符合行业标准和法规要求 ",
@@ -120,16 +110,6 @@
   "params": {"application_scenarios":"## 微型空间检测首选方案\n\n### 精密仪器维修\nWS-K08510超细工业电子内窥镜适用于各种微型仪器内部检查：\n- 医疗器械微型通道观察\n- 精密模具裂纹检测\n- 高密度装配电路板视觉检查\n\n![精密检测](https://picsum.photos/1200/600?random=1)\n\n### 航空航天精密检测\n极小直径探头适用于狭小空间复杂组件检测：\n- 涡轮叶片内部观察\n- 飞控部件组装质量评估\n- 材料结构细节排查\n\n![航空精密检测](https://picsum.photos/1200/600?random=2)\n\n### 高端制造领域应用\n满足最苛刻制造业现场需求：\n- 仪器仪表缝隙探查\n- 激光切割机头检测\n- 精密焊接质量检查\n\n![制造领域检测](https://picsum.photos/1200/600?random=3)\n\n### 核心优势\n- 超细直径0.85mm，深入极限空间\n- 光纤照明，暗部成像清晰\n- 坚固防护，适应工业环境\n- 长续航设计，保障高效作业\n","data_download":[{"file_path":"/uploads/规格书.pdf","file_title":"规格书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/K-series/K-main.jpg","is_main":true},{"alt":"超细内窥镜副图1","image":"/images/products/K-series/K-1.jpg"},{"alt":"超细内窥镜副图2","image":"/images/products/K-series/K-2.jpg"},{"alt":"超细内窥镜副图3","image":"/images/products/K-series/K-3.jpg"},{"alt":"副图4","image":"https://picsum.photos/800/600?random=5"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-K08510","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"0.85mm"},{"name":"像素","value":"16万"},{"name":"景深","value":"3mm~70mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"无导向"},{"name":"管线材质","value":"合金弹簧软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"K系列","summary":"0.85mm超小直径，高清成像，适用于极小空间检测","supplier":"深圳市微视光电科技有限公司","title":"WS-K08510超细工业电子内窥镜"}
 },
 {
-  "uri": "/products/ws-k08510-b/",
-  "title": "WS-K08510超细工业电子内窥镜",
-  "content": "WS-K08510超细工业电子内窥镜专为精密制造、维修与检修行业设计，凭借0.85mm探头直径、高清成像系统及工业级耐用结构，为高端用户提供极致清晰的微观空间可视化检测体验。\n",
-  "summary": "极细0.85mm探头，工业级高清检测设备",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"application_scenarios":"## 适用于最苛刻的狭小空间检测\n\n### 汽车制造与维修\nWS-K08510的超细探头适用于汽车内部系统隐蔽部位检测，能精准评估：\n- 发动机缸体内部积碳\n- 汽车管道通畅性\n- 喷油嘴或燃烧室细节问题\n\n![汽车检测场景](https://picsum.photos/1200/600?random=8)\n\n### 航空航天制造工艺检测\n适用于高精尖结构件的检测场景：\n- 航空发动机通道裂纹观察\n- 航空紧固件与密封性评估\n- 航材安装后的空腔结构检查\n\n![航空航天结构检测](https://picsum.photos/1200/600?random=9)\n\n### 微型装配行业与精密模具\n用于电子与光学装配制造环节：\n- 微型塑料模具裂纹检测\n- 光学元件细节检查\n- 微电机内部故障排查\n\n![模具与微组装场景](https://picsum.photos/1200/600?random=10)\n\n### 产品亮点小结\n- 探头极细，仅0.85mm，突破空间限制\n- 高清图像采集，细节无死角\n- 光纤照明无发热，适合热敏环境\n- 高耐用性设计，适配各类工业现场\n","data_download":[{"file_path":"/uploads/规格书.pdf","file_title":"规格书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/K-series/K-main.jpg","is_main":true},{"alt":"超细内窥镜副图1","image":"/images/products/K-series/K-1.jpg"},{"alt":"超细内窥镜副图2","image":"/images/products/K-series/K-2.jpg"},{"alt":"超细内窥镜副图3","image":"/images/products/K-series/K-3.jpg"},{"alt":"副图4","image":"https://picsum.photos/800/600?random=7"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-K08510","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"0.85mm"},{"name":"像素","value":"16万"},{"name":"景深","value":"3mm~70mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"无导向"},{"name":"管线材质","value":"合金弹簧软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"K系列","summary":"极细0.85mm探头，工业级高清检测设备","supplier":"深圳市微视光电科技有限公司","title":"WS-K08510超细工业电子内窥镜"}
-},
-{
   "uri": "/products/ws-k09510-a/",
   "title": "WS-K09510工业级内窥镜高清检测系统",
   "content": "WS-K09510工业级内窥镜凭借0.95mm的极细探头直径与稳定的工业图像系统，为精密制造、科研检测等场景提供了极具穿透力与清晰度的微空间视觉解决方案。适合用于高难度内部结构检测，如发动机部件、航空空腔、医疗设备等应用环境。\n",
@@ -140,37 +120,7 @@
   "params": {"application_scenarios":"## 微型工业部件检测的理想方案\n\n### 汽车制造与精密检测\nWS-K09510适用于以下精密检测场景：\n- 发动机喷油嘴内部可视检查\n- 涡轮增压系统微部件检测\n- 细管道结构腐蚀/堵塞排查\n\n![汽车检测应用](https://picsum.photos/1200/600?random=12)\n\n### 航空元件装配质量评估\n在高密度精密部件中进行可视化检测：\n- 飞机液压管线完整性分析\n- 航空扣件与密封件安装验证\n- 航空发动机微裂纹检查\n\n![航空检测场景](https://picsum.photos/1200/600?random=13)\n\n### 智能制造及仪器维修\n面向智能生产线与实验设备运维：\n- 微型传感器组装缺陷分析\n- 医疗设备微腔检查\n- PCB或光学腔体可视检修\n\n![智能制造应用](https://picsum.photos/1200/600?random=14)\n\n### 产品优势要点\n- 超细0.95mm探头，深入狭小空间\n- 高清图像采集，适配各类工业微观结构\n- 光纤照明稳定高亮，适合复杂照明环境\n- 工业防护标准，提升使用寿命\n","data_download":[{"file_path":"/uploads/WS-K09510-规格书.pdf","file_title":"产品规格说明书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/K-series/K-main.jpg","is_main":true},{"alt":"内窥镜展示图1","image":"/images/products/K-series/K-1.jpg"},{"alt":"内窥镜展示图2","image":"/images/products/K-series/K-2.jpg"},{"alt":"内窥镜展示图3","image":"/images/products/K-series/K-3.jpg"},{"alt":"内窥镜展示图4","image":"https://picsum.photos/800/600?random=11"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-K09510","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"0.95mm"},{"name":"像素","value":"16万"},{"name":"景深","value":"3mm~70mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"无导向"},{"name":"管线材质","value":"合金弹簧软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-4"],"secondary_category":"工业视频内窥镜","series":"K系列","summary":"0.95mm直径探头，适用于精密部件检测","supplier":"深圳市微视光电科技有限公司","title":"WS-K09510工业级内窥镜高清检测系统"}
 },
 {
-  "uri": "/products/ws-k1210-b/",
-  "title": "WS-K1210工业级视频内窥镜",
-  "content": "WS-K1210工业视频内窥镜凭借超细探头结构与工业成像技术，广泛应用于对细微结构和闭合空间要求极高的工业检测任务，是智能制造与实验研发领域的理想选择。\n",
-  "summary": "专为精细空间结构检测设计的1.2mm工业视频内窥镜，适配多行业复杂工况",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"application_scenarios":"## 适配多场景的高精度检测工具\n\n### 汽车零部件质量控制\n- 检查微型通孔堵塞\n- 活塞腔体结构检测\n- 连接件密封性验证\n\n![汽车应用](https://picsum.photos/1200/600?random=4)\n\n### 仪器仪表制造工艺验证\n- 内腔残留物识别\n- 高密集组装区视觉辅助\n- 通道腐蚀与断裂检测\n\n![仪表结构检测](https://picsum.photos/1200/600?random=5)\n\n### 科研与高端实验室检测\n- 精密零部件研发分析\n- 封闭组件非破坏验证\n- 微观环境可视化记录\n\n![实验检测](https://picsum.photos/1200/600?random=6)\n\n### 核心优势\n- 极细1.2mm直径适配复杂工艺环境\n- 高清工业光学系统，确保图像清晰\n- 优化柔性软管设计，利于深度探查\n- 兼容工业标准防护等级，适用性强\n","data_download":[{"file_path":"/uploads/说明书-WS-K1210.pdf","file_title":"技术资料"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/K-series/K-main.jpg","is_main":true},{"alt":"工业内窥镜副图1","image":"/images/products/K-series/K-1.jpg"},{"alt":"工业内窥镜副图2","image":"/images/products/K-series/K-2.jpg"},{"alt":"工业内窥镜副图3","image":"/images/products/K-series/K-3.jpg"},{"alt":"副图4","image":"https://picsum.photos/800/600?random=6"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-K1210","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"1.2mm"},{"name":"像素","value":"16万"},{"name":"景深","value":"5mm~80mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"无导向"},{"name":"管线材质","value":"合金弹簧软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2840","product-93430电子内窥镜-2820","sample-product-2"],"secondary_category":"工业视频内窥镜","series":"K系列","summary":"专为精细空间结构检测设计的1.2mm工业视频内窥镜，适配多行业复杂工况","supplier":"深圳市微视光电科技有限公司","title":"WS-K1210工业级视频内窥镜"}
-},
-{
   "uri": "/products/ws-k1210-a/",
-  "title": "WS-K1210工业内窥镜",
-  "content": "WS-K1210工业内窥镜融合1.2mm直径微型探头与光纤照明系统，具备强大工业图像能力，是面向中小空间复杂结构检测应用的高性价比解决方案，广泛应用于制造、能源、科研等多个行业。\n",
-  "summary": "1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"application_scenarios":"## 微型空间与复杂结构检测利器\n\n### 精密制造设备检修\n- 小型仪器组件裂纹与磨损可视化\n- 检测模具通道与微型齿轮组\n- 适配高密度结构的清晰图像获取\n\n![精密制造检测](https://picsum.photos/1200/600?random=1)\n\n### 航空与电力维护领域\n- 航空接插件与电缆布线检查\n- 动力系统内部结构查看\n- 发电机及开关设备探测\n\n![航空检测](https://picsum.photos/1200/600?random=2)\n\n### 医疗研发与非破坏性检测\n- 医疗器械原型结构查看\n- 实验设备封闭腔体观察\n- 精细结构的无损排查\n\n![医疗设备检测](https://picsum.photos/1200/600?random=3)\n\n### 核心优势\n- 小直径1.2mm，突破常规检测盲区\n- 高清成像系统，图像细节丰富\n- 工业级抗干扰结构，适应多种环境\n- 结构紧凑，操控灵活\n","data_download":[{"file_path":"/uploads/规格书-WS-K1210.pdf","file_title":"规格书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/K-series/K-main.jpg","is_main":true},{"alt":"工业内窥镜副图1","image":"/images/products/K-series/K-1.jpg"},{"alt":"工业内窥镜副图2","image":"/images/products/K-series/K-2.jpg"},{"alt":"工业内窥镜副图3","image":"/images/products/K-series/K-3.jpg"},{"alt":"副图4","image":"https://picsum.photos/800/600?random=5"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-K1210","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"1.2mm"},{"name":"像素","value":"16万"},{"name":"景深","value":"5mm~80mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"无导向"},{"name":"管线材质","value":"合金弹簧软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"K系列","summary":"1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务","supplier":"深圳市微视光电科技有限公司","title":"WS-K1210工业内窥镜"}
-},
-{
-  "uri": "/products/ws-k1510-b/",
-  "title": "WS-K1210工业内窥镜",
-  "content": "WS-K1210工业内窥镜融合1.2mm直径微型探头与光纤照明系统，具备强大工业图像能力，是面向中小空间复杂结构检测应用的高性价比解决方案，广泛应用于制造、能源、科研等多个行业。\n",
-  "summary": "1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"application_scenarios":"## 微型空间与复杂结构检测利器\n\n### 精密制造设备检修\n- 小型仪器组件裂纹与磨损可视化\n- 检测模具通道与微型齿轮组\n- 适配高密度结构的清晰图像获取\n\n![精密制造检测](https://picsum.photos/1200/600?random=1)\n\n### 航空与电力维护领域\n- 航空接插件与电缆布线检查\n- 动力系统内部结构查看\n- 发电机及开关设备探测\n\n![航空检测](https://picsum.photos/1200/600?random=2)\n\n### 医疗研发与非破坏性检测\n- 医疗器械原型结构查看\n- 实验设备封闭腔体观察\n- 精细结构的无损排查\n\n![医疗设备检测](https://picsum.photos/1200/600?random=3)\n\n### 核心优势\n- 小直径1.2mm，突破常规检测盲区\n- 高清成像系统，图像细节丰富\n- 工业级抗干扰结构，适应多种环境\n- 结构紧凑，操控灵活\n","data_download":[{"file_path":"/uploads/规格书-WS-K1210.pdf","file_title":"规格书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/K-series/K-main.jpg","is_main":true},{"alt":"工业内窥镜副图1","image":"/images/products/K-series/K-1.jpg"},{"alt":"工业内窥镜副图2","image":"/images/products/K-series/K-2.jpg"},{"alt":"工业内窥镜副图3","image":"/images/products/K-series/K-3.jpg"},{"alt":"副图4","image":"https://picsum.photos/800/600?random=5"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-K1210","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"1.2mm"},{"name":"像素","value":"16万"},{"name":"景深","value":"5mm~80mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"无导向"},{"name":"管线材质","value":"合金弹簧软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"K系列","summary":"1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务","supplier":"深圳市微视光电科技有限公司","title":"WS-K1210工业内窥镜"}
-},
-{
-  "uri": "/products/ws-k1510-c/",
   "title": "WS-K1210工业内窥镜",
   "content": "WS-K1210工业内窥镜融合1.2mm直径微型探头与光纤照明系统，具备强大工业图像能力，是面向中小空间复杂结构检测应用的高性价比解决方案，广泛应用于制造、能源、科研等多个行业。\n",
   "summary": "1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务",
@@ -320,16 +270,6 @@
   "params": {"application_scenarios":"这里是P6010工业内窥镜的应用场景详细介绍：\n\n- 汽车检测\n- 航空航天\n- 工业设备维修\n","data_download":[{"file_path":"/uploads/规格书.pdf","file_title":"规格书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/P60/P-MAIN.jpg","is_main":true},{"alt":"工业内窥镜","image":"/images/products/P60/P-1.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-2.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-3.jpg"},{"alt":"副图4","image":"https://picsum.photos/800/600?random=5"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-P6010","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"6mm"},{"name":"像素","value":"100万"},{"name":"景深","value":"12mm~200mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"360°手动导向"},{"name":"管线材质","value":"钨丝编织软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"P系列","summary":"百万像素、冷光源、360度旋转镜头内窥镜","supplier":"深圳市微视光电科技有限公司","title":"WS-P6010高清工业视频内窥镜"}
 },
 {
-  "uri": "/products/test-no-supplier/",
-  "title": "测试无供应商产品",
-  "content": "这是一个用于测试电话沟通弹窗默认值功能的产品。\n产品特点 测试功能1 测试功能2 测试功能3 应用场景 适用于各种测试场景。\n",
-  "summary": "用于测试电话沟通弹窗默认值功能的产品",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/placeholders/general/product-main-800x600.svg","is_main":true},{"alt":"副图1","image":"/images/placeholders/general/product-main-800x600.svg-1"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-TEST-002","parameters":[{"name":"探头直径","value":"测试mm"},{"name":"工作长度","value":"测试m"},{"name":"视角","value":"测试°"},{"name":"景深","value":"测试mm"},{"name":"分辨率","value":"测试像素"},{"name":"显示屏","value":"测试寸"},{"name":"电池续航","value":"测试小时"},{"name":"工作温度","value":"测试℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","secondary_category":"工业视频内窥镜","series":"测试系列","summary":"用于测试电话沟通弹窗默认值功能的产品","title":"测试无供应商产品"}
-},
-{
   "uri": "/news/exhibition-news-8/",
   "title": "2024杭州工业检测设备与技术展览会",
   "content": "展会将全面展示工业检测设备与技术的创新成果\u0026hellip;\n",
@@ -417,7 +357,7 @@
   "type": "news",
   "section": "news",
   "date": "2024-06-20",
-  "params": {"author":"市场部","categories":["展会资讯"],"date":"2024-06-20T00:00:00Z","draft":false,"iscjklanguage":true,"lastmod":"2024-06-20T00:00:00Z","publishdate":"2024-06-20T00:00:00Z","summary":"展会将在广州国际会展中心举办，聚焦工业检测设备与技术创新","tags":["工业展会","光学内窥镜","检测设备"],"title":"2024广州国际工业检测设备展览会","views":98}
+  "params": {"author":"市场部","categories":["展会资讯"],"date":"2024-06-20T00:00:00Z","draft":false,"featured_image":"/images/news/展会.webp","iscjklanguage":true,"lastmod":"2024-06-20T00:00:00Z","publishdate":"2024-06-20T00:00:00Z","summary":"展会将在广州国际会展中心举办，聚焦工业检测设备与技术创新","tags":["工业展会","光学内窥镜","检测设备"],"title":"2024广州国际工业检测设备展览会","views":98}
 },
 {
   "uri": "/news/exhibition-news-4/",
@@ -477,7 +417,7 @@
   "type": "news",
   "section": "news",
   "date": "2024-03-19",
-  "params": {"author":"AI算法团队","categories":["技术文章"],"date":"2024-03-19T00:00:00Z","draft":false,"iscjklanguage":true,"lastmod":"2024-03-19T00:00:00Z","publishdate":"2024-03-19T00:00:00Z","summary":"介绍基于深度学习技术的内窥镜缺陷自动识别系统的设计与实现","tags":["深度学习","缺陷识别","自动化检测"],"title":"基于深度学习的内窥镜缺陷自动识别系统","views":198}
+  "params": {"author":"AI算法团队","categories":["技术文章"],"date":"2024-03-19T00:00:00Z","draft":false,"featured_image":"/images/news/news-1.jpeg","iscjklanguage":true,"lastmod":"2024-03-19T00:00:00Z","publishdate":"2024-03-19T00:00:00Z","summary":"介绍基于深度学习技术的内窥镜缺陷自动识别系统的设计与实现","tags":["深度学习","缺陷识别","自动化检测"],"title":"基于深度学习的内窥镜缺陷自动识别系统","views":198}
 },
 {
   "uri": "/news/industry-news-2/",
@@ -497,7 +437,7 @@
   "type": "news",
   "section": "news",
   "date": "2024-03-16",
-  "params": {"author":"光学工程部","categories":["技术文章"],"date":"2024-03-16T00:00:00Z","draft":false,"iscjklanguage":true,"lastmod":"2024-03-16T00:00:00Z","publishdate":"2024-03-16T00:00:00Z","summary":"探讨工业内窥镜光学系统的设计原理和优化方法，提升成像质量","tags":["光学设计","成像系统","技术优化"],"title":"工业内窥镜光学系统设计与优化","views":167}
+  "params": {"author":"光学工程部","categories":["技术文章"],"date":"2024-03-16T00:00:00Z","draft":false,"featured_image":"/images/news/展会.webp","iscjklanguage":true,"lastmod":"2024-03-16T00:00:00Z","publishdate":"2024-03-16T00:00:00Z","summary":"探讨工业内窥镜光学系统的设计原理和优化方法，提升成像质量","tags":["光学设计","成像系统","技术优化"],"title":"工业内窥镜光学系统设计与优化","views":167}
 },
 {
   "uri": "/news/industry-news-3/",
@@ -517,7 +457,7 @@
   "type": "news",
   "section": "news",
   "date": "2024-03-14",
-  "params": {"author":"技术部","categories":["技术文章"],"date":"2024-03-14T00:00:00Z","draft":false,"iscjklanguage":true,"lastmod":"2024-03-14T00:00:00Z","publishdate":"2024-03-14T00:00:00Z","summary":"探讨2024年工业内窥镜领域的最新技术发展趋势，包括AI图像识别、5G远程控制等创新应用","tags":["智能识别","技术创新"],"title":"新一代工业内窥镜技术发展趋势","views":85}
+  "params": {"author":"技术部","categories":["技术文章"],"date":"2024-03-14T00:00:00Z","draft":false,"featured_image":"/images/news/行业资讯.png","iscjklanguage":true,"lastmod":"2024-03-14T00:00:00Z","publishdate":"2024-03-14T00:00:00Z","summary":"探讨2024年工业内窥镜领域的最新技术发展趋势，包括AI图像识别、5G远程控制等创新应用","tags":["智能识别","技术创新"],"title":"新一代工业内窥镜技术发展趋势","views":85}
 },
 {
   "uri": "/news/tech-article-4/",
@@ -527,7 +467,7 @@
   "type": "news",
   "section": "news",
   "date": "2024-03-13",
-  "params": {"author":"通信技术部","categories":["技术文章"],"date":"2024-03-13T00:00:00Z","draft":false,"iscjklanguage":true,"lastmod":"2024-03-13T00:00:00Z","publishdate":"2024-03-13T00:00:00Z","summary":"分析无线传输技术在内窥镜检测系统中的应用优势和技术挑战","tags":["无线传输","通信技术","系统集成"],"title":"无线传输技术在内窥镜检测中的应用","views":156}
+  "params": {"author":"通信技术部","categories":["技术文章"],"date":"2024-03-13T00:00:00Z","draft":false,"featured_image":"/images/news/新闻.webp","iscjklanguage":true,"lastmod":"2024-03-13T00:00:00Z","publishdate":"2024-03-13T00:00:00Z","summary":"分析无线传输技术在内窥镜检测系统中的应用优势和技术挑战","tags":["无线传输","通信技术","系统集成"],"title":"无线传输技术在内窥镜检测中的应用","views":156}
 },
 {
   "uri": "/news/industry-news-4/",
@@ -547,7 +487,7 @@
   "type": "news",
   "section": "news",
   "date": "2024-03-10",
-  "params": {"author":"机械设计部","categories":["技术文章"],"date":"2024-03-10T00:00:00Z","draft":false,"iscjklanguage":true,"lastmod":"2024-03-10T00:00:00Z","publishdate":"2024-03-10T00:00:00Z","summary":"探讨工业内窥镜探头微型化技术的发展现状和未来趋势","tags":["微型化技术","探头设计","技术发展"],"title":"工业内窥镜探头微型化技术发展趋势","views":189}
+  "params": {"author":"机械设计部","categories":["技术文章"],"date":"2024-03-10T00:00:00Z","draft":false,"featured_image":"/images/news/行业资讯.png","iscjklanguage":true,"lastmod":"2024-03-10T00:00:00Z","publishdate":"2024-03-10T00:00:00Z","summary":"探讨工业内窥镜探头微型化技术的发展现状和未来趋势","tags":["微型化技术","探头设计","技术发展"],"title":"工业内窥镜探头微型化技术发展趋势","views":189}
 },
 {
   "uri": "/news/industry-news-5/",
@@ -627,7 +567,7 @@
   "type": "news",
   "section": "news",
   "date": "2024-01-20",
-  "params": {"author":"产品部","categories":["企业新闻"],"date":"2024-01-20T00:00:00Z","draft":false,"iscjklanguage":true,"lastmod":"2024-01-20T00:00:00Z","publishdate":"2024-01-20T00:00:00Z","summary":"深圳市微视光电科技有限公司正式发布新一代K09520电子内窥镜，该产品采用创新的图像处理技术，配备7英寸IPS触摸屏，具有超高清成像、长续航等特点","tags":["新品发布","电子视频内窥镜","技术创新"],"title":"微视光电发布新一代K09520电子内窥镜","views":124}
+  "params": {"author":"产品部","categories":["企业新闻"],"date":"2024-01-20T00:00:00Z","draft":false,"featured_image":"/images/news/news-1.jpeg","iscjklanguage":true,"lastmod":"2024-01-20T00:00:00Z","publishdate":"2024-01-20T00:00:00Z","summary":"深圳市微视光电科技有限公司正式发布新一代K09520电子内窥镜，该产品采用创新的图像处理技术，配备7英寸IPS触摸屏，具有超高清成像、长续航等特点","tags":["新品发布","电子视频内窥镜","技术创新"],"title":"微视光电发布新一代K09520电子内窥镜","views":124}
 },
 {
   "uri": "/cases/gas-turbine-inspection/",
@@ -647,7 +587,7 @@
   "type": "news",
   "section": "news",
   "date": "2024-01-16",
-  "params": {"author":"市场部","categories":["展会资讯"],"date":"2024-01-16T00:00:00Z","draft":false,"iscjklanguage":true,"lastmod":"2024-01-16T00:00:00Z","publishdate":"2024-01-16T00:00:00Z","summary":"第二十届中国国际工业检测设备展览会将于2024年3月在深圳会展中心隆重举行。本届展会将汇集全球500多家知名企业，展示最新的工业检测技术和产品","tags":["光学内窥镜","智能识别","工业展会"],"title":"2024年工业检测设备展览会即将开幕","views":86}
+  "params": {"author":"市场部","categories":["展会资讯"],"date":"2024-01-16T00:00:00Z","draft":false,"featured_image":"/images/news/展会.webp","iscjklanguage":true,"lastmod":"2024-01-16T00:00:00Z","publishdate":"2024-01-16T00:00:00Z","summary":"第二十届中国国际工业检测设备展览会将于2024年3月在深圳会展中心隆重举行。本届展会将汇集全球500多家知名企业，展示最新的工业检测技术和产品","tags":["光学内窥镜","智能识别","工业展会"],"title":"2024年工业检测设备展览会即将开幕","views":86}
 },
 {
   "uri": "/cases/industrial-pipeline/",

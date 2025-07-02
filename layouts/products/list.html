@@ -350,19 +350,8 @@
         {{ end }}
     </div>
 
-    <!-- 分页 -->
-    <nav aria-label="Page navigation" class="mt-5" id="pagination" style="display: none;">
-        <ul class="pagination justify-content-center" id="paginationList">
-            <!-- 分页按钮将由JavaScript生成 -->
-        </ul>
-
-        <!-- 分页信息 -->
-        <div class="text-center mt-3">
-            <small class="text-muted" id="paginationInfo">
-                <!-- 分页信息将由JavaScript生成 -->
-            </small>
-        </div>
-    </nav>
+    <!-- 增强版分页 -->
+    {{ partial "enhanced-pagination.html" (dict "context" . "containerId" "productsList" "itemsPerPage" 12 "itemType" "产品") }}
 
     <!-- 当没有产品时显示的信息 -->
     {{ if eq (len $filteredProducts) 0 }}
@@ -726,11 +715,100 @@ body {
     padding: 0.1rem 0.25rem;
     font-weight: 500;
 }
+
+/* 响应式设计优化 */
+@media (max-width: 1200px) {
+    .category-filter-section {
+        padding: 1rem;
+    }
+
+    .category-primary, .category-secondary {
+        padding: 0.75rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .category-filter-section {
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .category-primary, .category-secondary {
+        padding: 0.5rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+
+    .category-primary .btn, .category-secondary .btn {
+        font-size: 0.75rem !important;
+        padding: 0.25rem 0.5rem !important;
+        margin-bottom: 0.25rem !important;
+        margin-right: 0.25rem !important;
+    }
+
+    .category-secondary-container {
+        margin-left: 0;
+        margin-top: 0.5rem;
+    }
+
+    .category-connector {
+        display: none;
+    }
+
+    .product-item {
+        margin-bottom: 1rem;
+    }
+
+    .product-item .card {
+        height: auto;
+    }
+
+    .product-item .product-image {
+        height: 200px;
+    }
+}
+
+@media (max-width: 576px) {
+    .category-filter-section {
+        padding: 0.5rem;
+    }
+
+    .category-primary h5, .category-secondary h6 {
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .category-primary .btn, .category-secondary .btn {
+        font-size: 0.7rem !important;
+        padding: 0.2rem 0.4rem !important;
+    }
+
+    .product-item .product-image {
+        height: 180px;
+    }
+
+    .product-item .card-body {
+        padding: 0.75rem;
+    }
+
+    .product-item .product-title {
+        font-size: 0.9rem;
+        line-height: 1.3;
+    }
+
+    .product-item .product-model {
+        font-size: 0.75rem;
+    }
+
+    .product-item .btn {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+}
 </style>
 
 <script>
 // 分页配置
-const ITEMS_PER_PAGE = 12;
+let ITEMS_PER_PAGE = 12;
 let currentPage = 1;
 let filteredProducts = [];
 
@@ -805,7 +883,7 @@ function applyAllFilters() {
 
     // 显示产品和更新分页
     displayProducts();
-    updatePagination();
+    updateEnhancedPagination('productsList', filteredProducts, currentPage);
 
     // 更新分类按钮状态
     updateCategoryButtons(currentPrimaryCategory, currentSecondaryCategory);
@@ -992,6 +1070,18 @@ function handleNoProducts() {
 
 // 页面加载完成后初始化筛选器
 document.addEventListener('DOMContentLoaded', function() {
+    // 初始化增强分页
+    initEnhancedPagination('productsList', ITEMS_PER_PAGE, '产品');
+
+    // 监听分页变化事件
+    document.addEventListener('enhancedPaginationChange', function(event) {
+        if (event.detail.containerId === 'productsList') {
+            currentPage = event.detail.currentPage;
+            ITEMS_PER_PAGE = event.detail.itemsPerPage;
+            displayProducts();
+        }
+    });
+
     // 为分类按钮添加事件监听器
     document.querySelectorAll('.primary-btn, .secondary-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {

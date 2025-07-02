@@ -10,6 +10,7 @@ tags:
 summary: 深圳市微视光电科技有限公司正式发布新一代K09520电子内窥镜，该产品采用创新的图像处理技术，配备7英寸IPS触摸屏，具有超高清成像、长续航等特点
 author: 产品部
 views: 124
+featured_image: "/images/news/news-1.jpeg"
 ---
 # 突破性创新，引领检测新未来
 

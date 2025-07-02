@@ -10,6 +10,7 @@ tags:
 summary: 第二十届中国国际工业检测设备展览会将于2024年3月在深圳会展中心隆重举行。本届展会将汇集全球500多家知名企业，展示最新的工业检测技术和产品
 author: 市场部
 views: 86
+featured_image: "/images/news/展会.webp"
 ---
 # 展会概况
 

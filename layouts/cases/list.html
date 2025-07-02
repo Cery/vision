@@ -159,17 +159,8 @@
                 </div>
             </div>
 
-            <!-- 分页 -->
-            <nav aria-label="案例分页" class="mt-5" id="pagination-container">
-                <ul class="pagination justify-content-center" id="pagination-list">
-                    <!-- 分页按钮将由JavaScript生成 -->
-                </ul>
-                <div class="text-center mt-3">
-                    <small class="text-muted" id="pagination-info">
-                        <!-- 分页信息将由JavaScript生成 -->
-                    </small>
-                </div>
-            </nav>
+            <!-- 增强版分页 -->
+            {{ partial "enhanced-pagination.html" (dict "context" . "containerId" "casesList" "itemsPerPage" 6 "itemType" "案例") }}
         </div>
     </div>
 
@@ -177,7 +168,7 @@
 
 <script>
 // 案例筛选功能
-const CASES_PER_PAGE = 6;
+let CASES_PER_PAGE = 6;
 let currentPage = 1;
 let filteredCases = [];
 let allCases = [];
@@ -189,6 +180,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // 获取所有案例元素
     allCases = Array.from(document.querySelectorAll('.case-item'));
     filteredCases = [...allCases];
+
+    // 初始化增强分页
+    initEnhancedPagination('casesList', CASES_PER_PAGE, '案例');
+
+    // 监听分页变化事件
+    document.addEventListener('enhancedPaginationChange', function(event) {
+        if (event.detail.containerId === 'casesList') {
+            currentPage = event.detail.currentPage;
+            CASES_PER_PAGE = event.detail.itemsPerPage;
+            updateCaseDisplay();
+        }
+    });
 
     // 初始化筛选器事件
     initializeFilters();
@@ -334,7 +337,7 @@ function applyFiltersAndSort() {
 
     // 更新显示
     updateCaseDisplay();
-    updatePagination();
+    updateEnhancedPagination('casesList', filteredCases, 1);
     updateCaseCount();
 }
 
@@ -392,73 +395,7 @@ function updateCaseDisplay() {
     }
 }
 
-function updatePagination() {
-    const totalPages = Math.ceil(filteredCases.length / CASES_PER_PAGE);
-    const paginationList = document.getElementById('pagination-list');
-    const paginationInfo = document.getElementById('pagination-info');
-    const paginationContainer = document.getElementById('pagination-container');
-
-    // 更新分页信息
-    if (filteredCases.length > 0) {
-        const startItem = (currentPage - 1) * CASES_PER_PAGE + 1;
-        const endItem = Math.min(currentPage * CASES_PER_PAGE, filteredCases.length);
-        paginationInfo.innerHTML = `显示第 ${currentPage} 页，共 ${totalPages} 页 (总计 ${filteredCases.length} 个案例，当前显示 ${startItem}-${endItem})`;
-    } else {
-        paginationInfo.innerHTML = '总计 0 个案例';
-    }
-
-    // 如果只有一页或没有结果，隐藏分页按钮
-    if (totalPages <= 1) {
-        paginationList.style.display = 'none';
-        return;
-    } else {
-        paginationList.style.display = 'flex';
-    }
-
-    // 生成分页按钮
-    let paginationHTML = '';
-
-    // 上一页按钮
-    if (currentPage > 1) {
-        paginationHTML += `<li class="page-item">
-            <a class="page-link" href="javascript:void(0)" onclick="goToPage(${currentPage - 1})" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        </li>`;
-    } else {
-        paginationHTML += `<li class="page-item disabled">
-            <span class="page-link" aria-hidden="true">&laquo;</span>
-        </li>`;
-    }
-
-    // 页码按钮
-    for (let i = 1; i <= totalPages; i++) {
-        if (i === currentPage) {
-            paginationHTML += `<li class="page-item active">
-                <span class="page-link">${i}</span>
-            </li>`;
-        } else {
-            paginationHTML += `<li class="page-item">
-                <a class="page-link" href="javascript:void(0)" onclick="goToPage(${i})">${i}</a>
-            </li>`;
-        }
-    }
-
-    // 下一页按钮
-    if (currentPage < totalPages) {
-        paginationHTML += `<li class="page-item">
-            <a class="page-link" href="javascript:void(0)" onclick="goToPage(${currentPage + 1})" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>`;
-    } else {
-        paginationHTML += `<li class="page-item disabled">
-            <span class="page-link" aria-hidden="true">&raquo;</span>
-        </li>`;
-    }
-
-    paginationList.innerHTML = paginationHTML;
-}
+// 旧的分页函数已被增强版分页替代
 
 function updateCaseCount() {
     const countInfo = document.getElementById('case-count-info');
@@ -469,17 +406,7 @@ function updateCaseCount() {
     }
 }
 
-function goToPage(page) {
-    currentPage = page;
-    updateCaseDisplay();
-    updatePagination();
-
-    // 滚动到案例列表顶部
-    document.getElementById('cases-container').scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-    });
-}
+// goToPage函数已被增强版分页的goToEnhancedPage替代
 </script>
 
 <style>

@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分类管理系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .category-tree {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .category-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #007bff;
+            transition: all 0.3s ease;
+        }
+        .category-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        .category-item.parent {
+            border-left-color: #28a745;
+            background: #f0f8f0;
+        }
+        .category-item.child {
+            margin-left: 30px;
+            border-left-color: #ffc107;
+            background: #fffbf0;
+        }
+        .category-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+        .category-info {
+            flex: 1;
+        }
+        .category-actions {
+            display: flex;
+            gap: 5px;
+        }
+        .category-form {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .form-section {
+            margin-bottom: 20px;
+        }
+        .section-title {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3498db;
+        }
+        .stats-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .icon-picker {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            gap: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .icon-option {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .icon-option:hover, .icon-option.selected {
+            border-color: #007bff;
+            background: #e3f2fd;
+            color: #007bff;
+        }
+        .category-preview {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1><i class="fas fa-sitemap me-2"></i>分类管理系统</h1>
+                    <div class="btn-group">
+                        <button class="btn btn-success" onclick="showAddCategoryForm()">
+                            <i class="fas fa-plus me-1"></i>添加分类
+                        </button>
+                        <button class="btn btn-primary" onclick="syncCategories()">
+                            <i class="fas fa-sync me-1"></i>同步分类
+                        </button>
+                        <button class="btn btn-info" onclick="exportCategories()">
+                            <i class="fas fa-download me-1"></i>导出配置
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 统计信息 -->
+                <div class="stats-card">
+                    <div class="row text-center">
+                        <div class="col-3">
+                            <div class="h4 mb-1" id="totalCategories">0</div>
+                            <div class="small">总分类数</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="h4 mb-1" id="parentCategories">0</div>
+                            <div class="small">主分类</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="h4 mb-1" id="childCategories">0</div>
+                            <div class="small">子分类</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="h4 mb-1" id="totalProducts">0</div>
+                            <div class="small">关联产品</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- 分类表单 -->
+                    <div class="col-md-5">
+                        <div class="category-form" id="categoryForm">
+                            <h3 class="section-title">分类信息</h3>
+                            
+                            <div class="form-section">
+                                <label class="form-label">分类名称 *</label>
+                                <input type="text" class="form-control" id="categoryTitle" placeholder="输入分类名称">
+                            </div>
+
+                            <div class="form-section">
+                                <label class="form-label">分类类型</label>
+                                <select class="form-select" id="categoryType" onchange="updateParentOptions()">
+                                    <option value="parent">主分类</option>
+                                    <option value="child">子分类</option>
+                                </select>
+                            </div>
+
+                            <div class="form-section" id="parentCategorySection" style="display: none;">
+                                <label class="form-label">父分类</label>
+                                <select class="form-select" id="parentCategory">
+                                    <option value="">选择父分类</option>
+                                </select>
+                            </div>
+
+                            <div class="form-section">
+                                <label class="form-label">分类描述</label>
+                                <textarea class="form-control" id="categoryDescription" rows="3" placeholder="描述分类的用途和特点"></textarea>
+                            </div>
+
+                            <div class="form-section">
+                                <label class="form-label">分类图标</label>
+                                <input type="text" class="form-control mb-2" id="categoryIcon" placeholder="如：fas fa-video" readonly>
+                                <div class="icon-picker" id="iconPicker">
+                                    <!-- 图标选择器 -->
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-section">
+                                        <label class="form-label">排序权重</label>
+                                        <input type="number" class="form-control" id="categoryWeight" value="100" min="1" max="999">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-section">
+                                        <label class="form-label">状态</label>
+                                        <select class="form-select" id="categoryStatus">
+                                            <option value="active">启用</option>
+                                            <option value="inactive">禁用</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="showInHome" checked>
+                                    <label class="form-check-label" for="showInHome">
+                                        在首页显示
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="showInMenu" checked>
+                                    <label class="form-check-label" for="showInMenu">
+                                        在菜单显示
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- SEO设置 -->
+                            <div class="form-section">
+                                <h6 class="text-muted">SEO设置</h6>
+                                <div class="mb-2">
+                                    <label class="form-label">SEO标题</label>
+                                    <input type="text" class="form-control" id="seoTitle" placeholder="搜索引擎显示的标题">
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">SEO描述</label>
+                                    <textarea class="form-control" id="seoDescription" rows="2" placeholder="搜索引擎显示的描述"></textarea>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">关键词</label>
+                                    <input type="text" class="form-control" id="seoKeywords" placeholder="用逗号分隔关键词">
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-primary" onclick="saveCategory()">
+                                    <i class="fas fa-save me-1"></i>保存分类
+                                </button>
+                                <button class="btn btn-secondary" onclick="clearForm()">
+                                    <i class="fas fa-times me-1"></i>清空表单
+                                </button>
+                                <button class="btn btn-info" onclick="previewCategory()">
+                                    <i class="fas fa-eye me-1"></i>预览
+                                </button>
+                            </div>
+
+                            <!-- 预览区域 -->
+                            <div class="category-preview" id="categoryPreview" style="display: none;">
+                                <h6>分类预览</h6>
+                                <div id="previewContent"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 分类树 -->
+                    <div class="col-md-7">
+                        <div class="category-tree">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h3 class="section-title mb-0">分类结构</h3>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-secondary" onclick="expandAll()">
+                                        <i class="fas fa-expand-arrows-alt me-1"></i>展开全部
+                                    </button>
+                                    <button class="btn btn-outline-secondary" onclick="collapseAll()">
+                                        <i class="fas fa-compress-arrows-alt me-1"></i>收起全部
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="categoryTree">
+                                <!-- 分类树将动态生成 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 全局变量
+        let categories = [];
+        let currentEditingId = null;
+        let iconList = [
+            'fas fa-video', 'fas fa-camera', 'fas fa-robot', 'fas fa-cog', 'fas fa-tools',
+            'fas fa-microscope', 'fas fa-search', 'fas fa-eye', 'fas fa-lightbulb',
+            'fas fa-bolt', 'fas fa-wifi', 'fas fa-bluetooth', 'fas fa-usb', 'fas fa-plug',
+            'fas fa-battery-full', 'fas fa-memory', 'fas fa-microchip', 'fas fa-desktop',
+            'fas fa-mobile-alt', 'fas fa-tablet-alt', 'fas fa-laptop', 'fas fa-server',
+            'fas fa-database', 'fas fa-cloud', 'fas fa-shield-alt', 'fas fa-lock'
+        ];
+
+        // 页面初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCategoryManager();
+            loadCategories();
+            initializeIconPicker();
+        });
+
+        // 初始化分类管理器
+        function initializeCategoryManager() {
+            console.log('🚀 分类管理系统初始化');
+            updateStats();
+        }
+
+        // 初始化图标选择器
+        function initializeIconPicker() {
+            const iconPicker = document.getElementById('iconPicker');
+            iconPicker.innerHTML = iconList.map(icon => `
+                <div class="icon-option" onclick="selectIcon('${icon}')" title="${icon}">
+                    <i class="${icon}"></i>
+                </div>
+            `).join('');
+        }
+
+        // 选择图标
+        function selectIcon(iconClass) {
+            document.getElementById('categoryIcon').value = iconClass;
+
+            // 更新选中状态
+            document.querySelectorAll('.icon-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.target.closest('.icon-option').classList.add('selected');
+        }
+
+        // 加载分类数据（模拟）
+        function loadCategories() {
+            // 模拟分类数据
+            categories = [
+                {
+                    id: 1,
+                    title: '电子内窥镜',
+                    type: 'parent',
+                    description: '各类电子内窥镜及相关设备',
+                    icon: 'fas fa-video',
+                    weight: 100,
+                    status: 'active',
+                    showInHome: true,
+                    showInMenu: true,
+                    productCount: 25,
+                    children: [
+                        {
+                            id: 2,
+                            title: '工业视频内窥镜',
+                            type: 'child',
+                            parentId: 1,
+                            description: '用于工业检测的视频内窥镜',
+                            icon: 'fas fa-camera',
+                            weight: 110,
+                            status: 'active',
+                            productCount: 12
+                        },
+                        {
+                            id: 3,
+                            title: '工业管道内窥镜',
+                            type: 'child',
+                            parentId: 1,
+                            description: '专用于管道检测的内窥镜',
+                            icon: 'fas fa-search',
+                            weight: 120,
+                            status: 'active',
+                            productCount: 8
+                        }
+                    ]
+                },
+                {
+                    id: 4,
+                    title: '光纤内窥镜',
+                    type: 'parent',
+                    description: '光纤传输的内窥镜设备',
+                    icon: 'fas fa-lightbulb',
+                    weight: 200,
+                    status: 'active',
+                    showInHome: true,
+                    showInMenu: true,
+                    productCount: 15,
+                    children: [
+                        {
+                            id: 5,
+                            title: '医疗光纤内窥镜',
+                            type: 'child',
+                            parentId: 4,
+                            description: '医疗级光纤内窥镜',
+                            icon: 'fas fa-microscope',
+                            weight: 210,
+                            status: 'active',
+                            productCount: 10
+                        }
+                    ]
+                }
+            ];
+
+            renderCategoryTree();
+            updateStats();
+            updateParentOptions();
+        }
+
+        // 渲染分类树
+        function renderCategoryTree() {
+            const treeContainer = document.getElementById('categoryTree');
+
+            if (categories.length === 0) {
+                treeContainer.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fas fa-sitemap fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">暂无分类</h5>
+                        <p class="text-muted">点击"添加分类"创建第一个分类</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const parentCategories = categories.filter(cat => cat.type === 'parent');
+
+            treeContainer.innerHTML = parentCategories.map(parent => {
+                const children = categories.filter(cat => cat.type === 'child' && cat.parentId === parent.id);
+
+                return `
+                    <div class="category-item parent" data-category-id="${parent.id}">
+                        <div class="category-header">
+                            <div class="category-info">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="${parent.icon} me-2"></i>
+                                    <strong>${parent.title}</strong>
+                                    <span class="badge bg-primary ms-2">${parent.productCount || 0}</span>
+                                    <span class="badge bg-${parent.status === 'active' ? 'success' : 'secondary'} ms-1">
+                                        ${parent.status === 'active' ? '启用' : '禁用'}
+                                    </span>
+                                </div>
+                                <div class="text-muted small">${parent.description}</div>
+                            </div>
+                            <div class="category-actions">
+                                <button class="btn btn-sm btn-outline-primary" onclick="editCategory(${parent.id})" title="编辑">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-success" onclick="addChildCategory(${parent.id})" title="添加子分类">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteCategory(${parent.id})" title="删除">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        ${children.length > 0 ? `
+                            <div class="mt-3">
+                                ${children.map(child => `
+                                    <div class="category-item child" data-category-id="${child.id}">
+                                        <div class="category-header">
+                                            <div class="category-info">
+                                                <div class="d-flex align-items-center mb-1">
+                                                    <i class="${child.icon} me-2"></i>
+                                                    ${child.title}
+                                                    <span class="badge bg-info ms-2">${child.productCount || 0}</span>
+                                                    <span class="badge bg-${child.status === 'active' ? 'success' : 'secondary'} ms-1">
+                                                        ${child.status === 'active' ? '启用' : '禁用'}
+                                                    </span>
+                                                </div>
+                                                <div class="text-muted small">${child.description}</div>
+                                            </div>
+                                            <div class="category-actions">
+                                                <button class="btn btn-sm btn-outline-primary" onclick="editCategory(${child.id})" title="编辑">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger" onclick="deleteCategory(${child.id})" title="删除">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 更新统计信息
+        function updateStats() {
+            const totalCategories = categories.length;
+            const parentCategories = categories.filter(cat => cat.type === 'parent').length;
+            const childCategories = categories.filter(cat => cat.type === 'child').length;
+            const totalProducts = categories.reduce((sum, cat) => sum + (cat.productCount || 0), 0);
+
+            document.getElementById('totalCategories').textContent = totalCategories;
+            document.getElementById('parentCategories').textContent = parentCategories;
+            document.getElementById('childCategories').textContent = childCategories;
+            document.getElementById('totalProducts').textContent = totalProducts;
+        }
+
+        // 更新父分类选项
+        function updateParentOptions() {
+            const parentSelect = document.getElementById('parentCategory');
+            const parentCategories = categories.filter(cat => cat.type === 'parent');
+
+            parentSelect.innerHTML = '<option value="">选择父分类</option>' +
+                parentCategories.map(cat => `<option value="${cat.id}">${cat.title}</option>`).join('');
+        }
+
+        // 更新分类类型选择
+        function updateParentOptions() {
+            const categoryType = document.getElementById('categoryType').value;
+            const parentSection = document.getElementById('parentCategorySection');
+
+            if (categoryType === 'child') {
+                parentSection.style.display = 'block';
+                updateParentCategoryOptions();
+            } else {
+                parentSection.style.display = 'none';
+            }
+        }
+
+        // 更新父分类选项
+        function updateParentCategoryOptions() {
+            const parentSelect = document.getElementById('parentCategory');
+            const parentCategories = categories.filter(cat => cat.type === 'parent');
+
+            parentSelect.innerHTML = '<option value="">选择父分类</option>' +
+                parentCategories.map(cat => `<option value="${cat.id}">${cat.title}</option>`).join('');
+        }
+
+        // 显示添加分类表单
+        function showAddCategoryForm() {
+            clearForm();
+            currentEditingId = null;
+            document.querySelector('.section-title').textContent = '添加分类';
+        }
+
+        // 添加子分类
+        function addChildCategory(parentId) {
+            clearForm();
+            currentEditingId = null;
+            document.getElementById('categoryType').value = 'child';
+            document.getElementById('parentCategory').value = parentId;
+            updateParentOptions();
+            document.querySelector('.section-title').textContent = '添加子分类';
+        }
+
+        // 编辑分类
+        function editCategory(categoryId) {
+            const category = findCategoryById(categoryId);
+            if (!category) return;
+
+            currentEditingId = categoryId;
+
+            // 填充表单
+            document.getElementById('categoryTitle').value = category.title;
+            document.getElementById('categoryType').value = category.type;
+            document.getElementById('categoryDescription').value = category.description || '';
+            document.getElementById('categoryIcon').value = category.icon || '';
+            document.getElementById('categoryWeight').value = category.weight || 100;
+            document.getElementById('categoryStatus').value = category.status || 'active';
+            document.getElementById('showInHome').checked = category.showInHome !== false;
+            document.getElementById('showInMenu').checked = category.showInMenu !== false;
+
+            if (category.type === 'child' && category.parentId) {
+                document.getElementById('parentCategory').value = category.parentId;
+            }
+
+            // 填充SEO信息
+            document.getElementById('seoTitle').value = category.seoTitle || '';
+            document.getElementById('seoDescription').value = category.seoDescription || '';
+            document.getElementById('seoKeywords').value = category.seoKeywords || '';
+
+            // 更新图标选择
+            if (category.icon) {
+                document.querySelectorAll('.icon-option').forEach(option => {
+                    option.classList.remove('selected');
+                    if (option.querySelector('i').className === category.icon) {
+                        option.classList.add('selected');
+                    }
+                });
+            }
+
+            updateParentOptions();
+            document.querySelector('.section-title').textContent = '编辑分类';
+        }
+
+        // 查找分类
+        function findCategoryById(id) {
+            return categories.find(cat => cat.id === id);
+        }
+
+        // 保存分类
+        function saveCategory() {
+            const categoryData = collectFormData();
+
+            if (!validateCategoryData(categoryData)) {
+                return;
+            }
+
+            if (currentEditingId) {
+                // 更新现有分类
+                const index = categories.findIndex(cat => cat.id === currentEditingId);
+                if (index !== -1) {
+                    categories[index] = { ...categories[index], ...categoryData, id: currentEditingId };
+                }
+            } else {
+                // 添加新分类
+                const newId = Math.max(...categories.map(cat => cat.id), 0) + 1;
+                categories.push({ ...categoryData, id: newId, productCount: 0 });
+            }
+
+            renderCategoryTree();
+            updateStats();
+            updateParentOptions();
+            clearForm();
+
+            showNotification(currentEditingId ? '分类更新成功！' : '分类添加成功！', 'success');
+            currentEditingId = null;
+        }
+
+        // 收集表单数据
+        function collectFormData() {
+            return {
+                title: document.getElementById('categoryTitle').value,
+                type: document.getElementById('categoryType').value,
+                parentId: document.getElementById('categoryType').value === 'child' ?
+                    parseInt(document.getElementById('parentCategory').value) || null : null,
+                description: document.getElementById('categoryDescription').value,
+                icon: document.getElementById('categoryIcon').value,
+                weight: parseInt(document.getElementById('categoryWeight').value) || 100,
+                status: document.getElementById('categoryStatus').value,
+                showInHome: document.getElementById('showInHome').checked,
+                showInMenu: document.getElementById('showInMenu').checked,
+                seoTitle: document.getElementById('seoTitle').value,
+                seoDescription: document.getElementById('seoDescription').value,
+                seoKeywords: document.getElementById('seoKeywords').value
+            };
+        }
+
+        // 验证分类数据
+        function validateCategoryData(data) {
+            const errors = [];
+
+            if (!data.title.trim()) {
+                errors.push('分类名称不能为空');
+            }
+
+            if (data.type === 'child' && !data.parentId) {
+                errors.push('子分类必须选择父分类');
+            }
+
+            // 检查名称重复
+            const existingCategory = categories.find(cat =>
+                cat.title === data.title && cat.id !== currentEditingId
+            );
+            if (existingCategory) {
+                errors.push('分类名称已存在');
+            }
+
+            if (errors.length > 0) {
+                alert('请修正以下错误：\n\n' + errors.join('\n'));
+                return false;
+            }
+
+            return true;
+        }
+
+        // 删除分类
+        function deleteCategory(categoryId) {
+            const category = findCategoryById(categoryId);
+            if (!category) return;
+
+            // 检查是否有子分类
+            const hasChildren = categories.some(cat => cat.parentId === categoryId);
+            if (hasChildren) {
+                alert('该分类下还有子分类，请先删除子分类！');
+                return;
+            }
+
+            // 检查是否有关联产品
+            if (category.productCount > 0) {
+                if (!confirm(`该分类下有 ${category.productCount} 个产品，删除后这些产品将失去分类关联。确定要删除吗？`)) {
+                    return;
+                }
+            }
+
+            if (confirm(`确定要删除分类"${category.title}"吗？此操作不可撤销！`)) {
+                categories = categories.filter(cat => cat.id !== categoryId);
+                renderCategoryTree();
+                updateStats();
+                updateParentOptions();
+                showNotification('分类删除成功！', 'success');
+            }
+        }
+
+        // 清空表单
+        function clearForm() {
+            document.getElementById('categoryTitle').value = '';
+            document.getElementById('categoryType').value = 'parent';
+            document.getElementById('categoryDescription').value = '';
+            document.getElementById('categoryIcon').value = '';
+            document.getElementById('categoryWeight').value = '100';
+            document.getElementById('categoryStatus').value = 'active';
+            document.getElementById('showInHome').checked = true;
+            document.getElementById('showInMenu').checked = true;
+            document.getElementById('seoTitle').value = '';
+            document.getElementById('seoDescription').value = '';
+            document.getElementById('seoKeywords').value = '';
+
+            // 清除图标选择
+            document.querySelectorAll('.icon-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+
+            // 隐藏父分类选择
+            document.getElementById('parentCategorySection').style.display = 'none';
+
+            // 隐藏预览
+            document.getElementById('categoryPreview').style.display = 'none';
+
+            currentEditingId = null;
+        }
+
+        // 预览分类
+        function previewCategory() {
+            const data = collectFormData();
+            const previewContainer = document.getElementById('categoryPreview');
+            const previewContent = document.getElementById('previewContent');
+
+            if (!data.title.trim()) {
+                alert('请先输入分类名称');
+                return;
+            }
+
+            let previewHTML = `
+                <div class="d-flex align-items-center mb-3">
+                    ${data.icon ? `<i class="${data.icon} me-2"></i>` : ''}
+                    <strong>${data.title}</strong>
+                    <span class="badge bg-${data.status === 'active' ? 'success' : 'secondary'} ms-2">
+                        ${data.status === 'active' ? '启用' : '禁用'}
+                    </span>
+                </div>
+
+                <div class="mb-2">
+                    <strong>类型:</strong> ${data.type === 'parent' ? '主分类' : '子分类'}
+                </div>
+
+                ${data.description ? `
+                    <div class="mb-2">
+                        <strong>描述:</strong> ${data.description}
+                    </div>
+                ` : ''}
+
+                <div class="mb-2">
+                    <strong>权重:</strong> ${data.weight}
+                </div>
+
+                <div class="mb-2">
+                    <strong>显示设置:</strong>
+                    ${data.showInHome ? '<span class="badge bg-info me-1">首页显示</span>' : ''}
+                    ${data.showInMenu ? '<span class="badge bg-info">菜单显示</span>' : ''}
+                </div>
+
+                ${data.seoTitle ? `
+                    <div class="mt-3">
+                        <h6>SEO信息</h6>
+                        <div><strong>SEO标题:</strong> ${data.seoTitle}</div>
+                        ${data.seoDescription ? `<div><strong>SEO描述:</strong> ${data.seoDescription}</div>` : ''}
+                        ${data.seoKeywords ? `<div><strong>关键词:</strong> ${data.seoKeywords}</div>` : ''}
+                    </div>
+                ` : ''}
+            `;
+
+            previewContent.innerHTML = previewHTML;
+            previewContainer.style.display = 'block';
+        }
+
+        // 展开全部
+        function expandAll() {
+            // 这里可以添加展开逻辑
+            showNotification('全部展开', 'info');
+        }
+
+        // 收起全部
+        function collapseAll() {
+            // 这里可以添加收起逻辑
+            showNotification('全部收起', 'info');
+        }
+
+        // 同步分类到前台
+        function syncCategories() {
+            if (categories.length === 0) {
+                alert('没有分类数据可同步');
+                return;
+            }
+
+            // 生成分类配置
+            const categoryConfig = generateCategoryConfig();
+
+            console.log('同步分类配置:', categoryConfig);
+
+            // 模拟同步过程
+            showNotification('正在同步分类...', 'info');
+
+            setTimeout(() => {
+                showNotification('分类同步成功！', 'success');
+            }, 2000);
+        }
+
+        // 生成分类配置
+        function generateCategoryConfig() {
+            const parentCategories = categories.filter(cat => cat.type === 'parent');
+
+            return parentCategories.map(parent => {
+                const children = categories.filter(cat => cat.type === 'child' && cat.parentId === parent.id);
+
+                return {
+                    id: parent.title.toLowerCase().replace(/\s+/g, '-'),
+                    title: parent.title,
+                    description: parent.description,
+                    icon: parent.icon,
+                    weight: parent.weight,
+                    status: parent.status,
+                    showInHome: parent.showInHome,
+                    showInMenu: parent.showInMenu,
+                    productCount: parent.productCount,
+                    subcategories: children.map(child => ({
+                        title: child.title,
+                        description: child.description,
+                        icon: child.icon,
+                        weight: child.weight,
+                        status: child.status,
+                        productCount: child.productCount
+                    }))
+                };
+            });
+        }
+
+        // 导出分类配置
+        function exportCategories() {
+            if (categories.length === 0) {
+                alert('没有分类数据可导出');
+                return;
+            }
+
+            const config = generateCategoryConfig();
+            const yamlContent = generateYAMLConfig(config);
+
+            // 创建下载链接
+            const blob = new Blob([yamlContent], { type: 'text/yaml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `product_categories_${new Date().toISOString().split('T')[0]}.yml`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            showNotification('分类配置导出成功！', 'success');
+        }
+
+        // 生成YAML配置
+        function generateYAMLConfig(config) {
+            let yaml = '# 产品分类配置\n# 自动生成于 ' + new Date().toISOString() + '\n\n';
+
+            config.forEach(category => {
+                yaml += `- id: "${category.id}"\n`;
+                yaml += `  title: "${category.title}"\n`;
+                yaml += `  description: "${category.description || ''}"\n`;
+                yaml += `  icon: "${category.icon || ''}"\n`;
+                yaml += `  weight: ${category.weight}\n`;
+                yaml += `  status: "${category.status}"\n`;
+                yaml += `  show_in_home: ${category.showInHome}\n`;
+                yaml += `  show_in_menu: ${category.showInMenu}\n`;
+                yaml += `  product_count: ${category.productCount}\n`;
+
+                if (category.subcategories.length > 0) {
+                    yaml += `  subcategories:\n`;
+                    category.subcategories.forEach(sub => {
+                        yaml += `    - title: "${sub.title}"\n`;
+                        yaml += `      description: "${sub.description || ''}"\n`;
+                        yaml += `      icon: "${sub.icon || ''}"\n`;
+                        yaml += `      weight: ${sub.weight}\n`;
+                        yaml += `      status: "${sub.status}"\n`;
+                        yaml += `      product_count: ${sub.productCount}\n`;
+                    });
+                }
+                yaml += '\n';
+            });
+
+            return yaml;
+        }
+
+        // 显示通知
+        function showNotification(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 1060; min-width: 300px;';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+
+            document.body.appendChild(alertDiv);
+
+            // 3秒后自动移除
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

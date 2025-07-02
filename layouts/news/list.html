@@ -167,17 +167,8 @@
                 </div>
             </div>
 
-            <!-- 分页 -->
-            <nav aria-label="资讯分页" class="mt-5" id="pagination-container">
-                <ul class="pagination justify-content-center" id="pagination-list">
-                    <!-- 分页按钮将由JavaScript生成 -->
-                </ul>
-                <div class="text-center mt-3">
-                    <small class="text-muted" id="pagination-info">
-                        <!-- 分页信息将由JavaScript生成 -->
-                    </small>
-                </div>
-            </nav>
+            <!-- 增强版分页 -->
+            {{ partial "enhanced-pagination.html" (dict "context" . "containerId" "newsList" "itemsPerPage" 6 "itemType" "资讯") }}
         </div>
     </div>
 
@@ -546,6 +537,12 @@ small.text-muted i {
 }
 
 /* 响应式设计 */
+@media (max-width: 992px) {
+    .news-sidebar {
+        margin-top: 2rem;
+    }
+}
+
 @media (max-width: 768px) {
     .filter-section-title {
         font-size: 14px;
@@ -581,6 +578,69 @@ small.text-muted i {
 
     .selected-filters-label {
         font-size: 13px;
+    }
+
+    .news-item {
+        margin-bottom: 1rem;
+    }
+
+    .news-item .card {
+        border-radius: 8px;
+    }
+
+    .news-item .card-img-top {
+        height: 180px;
+    }
+}
+
+@media (max-width: 576px) {
+    .news-sidebar {
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+
+    .filter-section-title {
+        font-size: 13px;
+        margin-bottom: 0.75rem;
+    }
+
+    .card-title {
+        font-size: 13px;
+        line-height: 1.3;
+    }
+
+    .card-text {
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    .news-item .card-img-top {
+        height: 160px;
+    }
+
+    .news-item .card-body {
+        padding: 0.75rem;
+    }
+
+    .btn-outline-primary,
+    .btn-outline-secondary {
+        font-size: 12px;
+        padding: 0.3rem 0.6rem;
+    }
+
+    .badge {
+        font-size: 10px;
+        padding: 0.15rem 0.3rem;
+    }
+
+    .selected-filters {
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+
+    .selected-filter-item {
+        font-size: 11px;
+        padding: 0.2rem 0.4rem;
     }
 }
 
@@ -619,7 +679,7 @@ const LC_APP_ID = 'pUEgNUJ66pc7S4FqVpqxkTkx-MdYXbMMI';
 const LC_APP_KEY = 'K9OXRf3L6Zp0s6TEzJElWQ5r';
 
 // 分页配置
-const NEWS_ITEMS_PER_PAGE = 6;
+let NEWS_ITEMS_PER_PAGE = 6;
 let currentPage = 1;
 let filteredNews = [];
 let allNews = [];
@@ -631,6 +691,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // 获取所有新闻元素
     allNews = Array.from(document.querySelectorAll('.news-item'));
     filteredNews = [...allNews];
+
+    // 初始化增强分页
+    initEnhancedPagination('newsList', NEWS_ITEMS_PER_PAGE, '资讯');
+
+    // 监听分页变化事件
+    document.addEventListener('enhancedPaginationChange', function(event) {
+        if (event.detail.containerId === 'newsList') {
+            currentPage = event.detail.currentPage;
+            NEWS_ITEMS_PER_PAGE = event.detail.itemsPerPage;
+            updateNewsDisplay();
+        }
+    });
 
     // 初始化筛选器事件
     initializeFilters();

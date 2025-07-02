@@ -107,9 +107,184 @@
             border-radius: 8px;
             margin: 20px 0;
         }
+
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 250px;
+            }
+
+            .main-content {
+                margin-left: 250px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                transition: left 0.3s ease;
+                z-index: 1050;
+                height: 100vh;
+                overflow-y: auto;
+            }
+
+            .sidebar.show {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .mobile-menu-toggle {
+                display: block !important;
+            }
+
+            .table-responsive {
+                font-size: 0.875rem;
+            }
+
+            .btn-action {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.75rem;
+            }
+
+            .card-body {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-stats .col-md-3 {
+                margin-bottom: 1rem;
+            }
+
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .stat-card h3 {
+                font-size: 1.5rem;
+            }
+
+            .table th, .table td {
+                padding: 0.5rem 0.25rem;
+                font-size: 0.8rem;
+            }
+
+            .btn-group .btn {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.75rem;
+            }
+
+            .modal-dialog {
+                margin: 0.5rem;
+            }
+
+            .modal-xl {
+                max-width: calc(100vw - 1rem);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 0.5rem;
+            }
+
+            .card {
+                margin-bottom: 1rem;
+            }
+
+            .card-header {
+                padding: 0.75rem;
+            }
+
+            .card-body {
+                padding: 0.75rem;
+            }
+
+            .btn {
+                font-size: 0.8rem;
+                padding: 0.375rem 0.75rem;
+            }
+
+            .table-responsive {
+                border: none;
+            }
+
+            .table th, .table td {
+                padding: 0.5rem 0.25rem;
+                font-size: 0.75rem;
+                white-space: nowrap;
+            }
+
+            .btn-action {
+                padding: 0.2rem 0.4rem;
+                font-size: 0.7rem;
+            }
+
+            .form-control, .form-select {
+                font-size: 0.875rem;
+            }
+
+            .modal-body {
+                padding: 1rem;
+            }
+
+            .modal-footer {
+                padding: 0.75rem;
+            }
+
+            .modal-footer .btn {
+                font-size: 0.75rem;
+                padding: 0.25rem 0.5rem;
+                margin: 0.125rem;
+            }
+        }
+
+        /* 移动端菜单切换按钮 */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1060;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 0.375rem;
+            padding: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* 遮罩层 */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1040;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
+    <!-- 移动端菜单切换按钮 -->
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- 遮罩层 -->
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
     <div class="container-fluid">
         <div class="row">
             <!-- 侧边栏 -->
@@ -278,9 +453,42 @@
                                     <i class="fas fa-box me-2"></i>产品列表
                                 </h5>
                                 <div class="d-flex gap-2">
-                                    <input type="text" class="form-control search-box" placeholder="搜索产品..." id="productSearch" onkeyup="filterProducts()">
                                     <button class="btn btn-success" onclick="addProduct()">
                                         <i class="fas fa-plus me-1"></i>添加产品
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- 高级过滤器 -->
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control search-box" placeholder="搜索产品名称、型号..." id="productSearch" onkeyup="filterProducts()">
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-select" id="supplierFilter" onchange="filterProducts()">
+                                        <option value="">所有供应商</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-select" id="categoryFilter" onchange="filterProducts()">
+                                        <option value="">所有分类</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-select" id="seriesFilter" onchange="filterProducts()">
+                                        <option value="">所有系列</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-select" id="statusFilter" onchange="filterProducts()">
+                                        <option value="">所有状态</option>
+                                        <option value="published">已发布</option>
+                                        <option value="draft">草稿</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-1">
+                                    <button class="btn btn-outline-secondary" onclick="clearFilters()" title="清除筛选">
+                                        <i class="fas fa-times"></i>
                                     </button>
                                 </div>
                             </div>
@@ -304,8 +512,652 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <!-- 产品分页 -->
+                            <nav aria-label="产品分页" class="mt-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted" id="productPaginationInfo">显示 0 个产品</small>
+                                    <ul class="pagination pagination-sm mb-0" id="productPagination">
+                                        <!-- 分页按钮将由JavaScript生成 -->
+                                    </ul>
+                                </div>
+                            </nav>
                         </div>
                     </div>
+
+                    <!-- 供应商管理 -->
+                    <div id="suppliers" class="content-section">
+                        <div class="table-container">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5>
+                                    <i class="fas fa-truck me-2"></i>供应商列表
+                                </h5>
+                                <div class="d-flex gap-2">
+                                    <input type="text" class="form-control search-box" placeholder="搜索供应商..." id="supplierSearch" onkeyup="filterSuppliers()">
+                                    <button class="btn btn-success" onclick="addSupplier()">
+                                        <i class="fas fa-plus me-1"></i>添加供应商
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>供应商名称</th>
+                                            <th>类型</th>
+                                            <th>产品数量</th>
+                                            <th>状态</th>
+                                            <th>创建日期</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="supplierList">
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted">正在加载数据...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- 供应商分页 -->
+                            <nav aria-label="供应商分页" class="mt-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted" id="supplierPaginationInfo">显示 0 个供应商</small>
+                                    <ul class="pagination pagination-sm mb-0" id="supplierPagination">
+                                        <!-- 分页按钮将由JavaScript生成 -->
+                                    </ul>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <!-- 产品分类管理 -->
+                    <div id="categories" class="content-section">
+                        <div class="table-container">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5>
+                                    <i class="fas fa-tags me-2"></i>产品分类
+                                </h5>
+                                <div class="d-flex gap-2">
+                                    <input type="text" class="form-control search-box" placeholder="搜索分类..." id="categorySearch" onkeyup="filterCategories()">
+                                    <button class="btn btn-success" onclick="addCategory()">
+                                        <i class="fas fa-plus me-1"></i>添加分类
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>分类名称</th>
+                                            <th>产品数量</th>
+                                            <th>状态</th>
+                                            <th>创建日期</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="categoryList">
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted">正在加载数据...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- 分类分页 -->
+                            <nav aria-label="分类分页" class="mt-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted" id="categoryPaginationInfo">显示 0 个分类</small>
+                                    <ul class="pagination pagination-sm mb-0" id="categoryPagination">
+                                        <!-- 分页按钮将由JavaScript生成 -->
+                                    </ul>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <!-- 资讯管理 -->
+                    <div id="news" class="content-section">
+                        <div class="table-container">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5>
+                                    <i class="fas fa-newspaper me-2"></i>资讯列表
+                                </h5>
+                                <div class="d-flex gap-2">
+                                    <input type="text" class="form-control search-box" placeholder="搜索资讯..." id="newsSearch" onkeyup="filterNews()">
+                                    <button class="btn btn-success" onclick="addNews()">
+                                        <i class="fas fa-plus me-1"></i>添加资讯
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>标题</th>
+                                            <th>分类</th>
+                                            <th>作者</th>
+                                            <th>浏览量</th>
+                                            <th>状态</th>
+                                            <th>发布日期</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="newsList">
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted">正在加载数据...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- 资讯分页 -->
+                            <nav aria-label="资讯分页" class="mt-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted" id="newsPaginationInfo">显示 0 篇资讯</small>
+                                    <ul class="pagination pagination-sm mb-0" id="newsPagination">
+                                        <!-- 分页按钮将由JavaScript生成 -->
+                                    </ul>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <!-- 案例管理 -->
+                    <div id="cases" class="content-section">
+                        <div class="table-container">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5>
+                                    <i class="fas fa-briefcase me-2"></i>案例列表
+                                </h5>
+                                <div class="d-flex gap-2">
+                                    <input type="text" class="form-control search-box" placeholder="搜索案例..." id="caseSearch" onkeyup="filterCases()">
+                                    <button class="btn btn-success" onclick="addCase()">
+                                        <i class="fas fa-plus me-1"></i>添加案例
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>案例标题</th>
+                                            <th>分类</th>
+                                            <th>行业</th>
+                                            <th>状态</th>
+                                            <th>创建日期</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="caseList">
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted">正在加载数据...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- 案例分页 -->
+                            <nav aria-label="案例分页" class="mt-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted" id="casePaginationInfo">显示 0 个案例</small>
+                                    <ul class="pagination pagination-sm mb-0" id="casePagination">
+                                        <!-- 分页按钮将由JavaScript生成 -->
+                                    </ul>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <!-- 应用领域管理 -->
+                    <div id="applications" class="content-section">
+                        <div class="table-container">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5>
+                                    <i class="fas fa-puzzle-piece me-2"></i>应用领域
+                                </h5>
+                                <div class="d-flex gap-2">
+                                    <input type="text" class="form-control search-box" placeholder="搜索应用领域..." id="applicationSearch" onkeyup="filterApplications()">
+                                    <button class="btn btn-success" onclick="addApplication()">
+                                        <i class="fas fa-plus me-1"></i>添加应用领域
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>应用领域</th>
+                                            <th>分类</th>
+                                            <th>状态</th>
+                                            <th>创建日期</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="applicationList">
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted">正在加载数据...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- 应用领域分页 -->
+                            <nav aria-label="应用领域分页" class="mt-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted" id="applicationPaginationInfo">显示 0 个应用领域</small>
+                                    <ul class="pagination pagination-sm mb-0" id="applicationPagination">
+                                        <!-- 分页按钮将由JavaScript生成 -->
+                                    </ul>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <!-- 媒体库管理 -->
+                    <div id="media" class="content-section">
+                        <div class="table-container">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5>
+                                    <i class="fas fa-images me-2"></i>媒体库
+                                </h5>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-primary" onclick="uploadMedia()">
+                                        <i class="fas fa-upload me-1"></i>上传文件
+                                    </button>
+                                    <button class="btn btn-outline-secondary" onclick="createFolder()">
+                                        <i class="fas fa-folder-plus me-1"></i>新建文件夹
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- 媒体库工具栏 -->
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <select class="form-select" id="mediaFolderFilter" onchange="filterMedia()">
+                                        <option value="">所有文件夹</option>
+                                        <option value="products">产品图片</option>
+                                        <option value="news">资讯图片</option>
+                                        <option value="cases">案例图片</option>
+                                        <option value="documents">文档资料</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="mediaTypeFilter" onchange="filterMedia()">
+                                        <option value="">所有类型</option>
+                                        <option value="image">图片</option>
+                                        <option value="document">文档</option>
+                                        <option value="video">视频</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control search-box" placeholder="搜索文件名..." id="mediaSearch" onkeyup="filterMedia()">
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-outline-secondary active" onclick="setMediaView('grid')" title="网格视图">
+                                            <i class="fas fa-th"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary" onclick="setMediaView('list')" title="列表视图">
+                                            <i class="fas fa-list"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 媒体文件网格 -->
+                            <div id="mediaGrid" class="row">
+                                <div class="col-12 text-center text-muted py-5">
+                                    <i class="fas fa-images fa-3x mb-3"></i>
+                                    <p>暂无媒体文件</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 系统设置 -->
+                    <div id="settings" class="content-section">
+                        <div class="table-container">
+                            <h5>
+                                <i class="fas fa-cog me-2"></i>系统设置
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">数据管理</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <button class="btn btn-primary mb-2 w-100" onclick="exportData()">
+                                                <i class="fas fa-download me-1"></i>导出数据
+                                            </button>
+                                            <button class="btn btn-warning mb-2 w-100" onclick="importData()">
+                                                <i class="fas fa-upload me-1"></i>导入数据
+                                            </button>
+                                            <button class="btn btn-info w-100" onclick="refreshData()">
+                                                <i class="fas fa-sync-alt me-1"></i>刷新缓存
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h6 class="mb-0">系统信息</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <p><strong>版本:</strong> v1.0.0</p>
+                                            <p><strong>最后更新:</strong> <span id="lastUpdate">-</span></p>
+                                            <p><strong>数据状态:</strong> <span id="dataStatus" class="badge bg-success">正常</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 资讯编辑模态框 -->
+    <div class="modal fade" id="newsModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newsModalTitle">添加资讯</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="newsForm">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label class="form-label">资讯标题 *</label>
+                                    <input type="text" class="form-control" id="newsTitle" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">资讯摘要 *</label>
+                                    <textarea class="form-control" id="newsSummary" rows="3" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">资讯内容 *</label>
+                                    <textarea class="form-control" id="newsContent" rows="15" required></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">分类</label>
+                                    <select class="form-select" id="newsCategory">
+                                        <option value="行业动态">行业动态</option>
+                                        <option value="技术资讯">技术资讯</option>
+                                        <option value="产品发布">产品发布</option>
+                                        <option value="展会信息">展会信息</option>
+                                        <option value="其他">其他</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">作者</label>
+                                    <input type="text" class="form-control" id="newsAuthor" value="编辑部">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">发布日期</label>
+                                    <input type="date" class="form-control" id="newsDate">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">状态</label>
+                                    <select class="form-select" id="newsStatus">
+                                        <option value="draft">草稿</option>
+                                        <option value="published">已发布</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">标签</label>
+                                    <input type="text" class="form-control" id="newsTags" placeholder="用逗号分隔多个标签">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">特色图片URL</label>
+                                    <input type="url" class="form-control" id="newsFeaturedImage" placeholder="图片链接">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-info" onclick="previewNews()">预览</button>
+                    <button type="button" class="btn btn-warning" onclick="exportNewsMarkdown()">导出MD</button>
+                    <button type="button" class="btn btn-primary" onclick="saveNews()">保存资讯</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 案例编辑模态框 -->
+    <div class="modal fade" id="caseModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="caseModalTitle">添加案例</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="caseForm">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label class="form-label">案例标题 *</label>
+                                    <input type="text" class="form-control" id="caseTitle" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">案例摘要 *</label>
+                                    <textarea class="form-control" id="caseSummary" rows="3" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">案例内容 *</label>
+                                    <textarea class="form-control" id="caseContent" rows="15" required></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">主要分类</label>
+                                    <input type="text" class="form-control" id="casePrimaryCategory" placeholder="如：电子视频内窥镜">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">应用领域</label>
+                                    <input type="text" class="form-control" id="caseApplicationField" placeholder="如：汽车制造">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">应用场景</label>
+                                    <input type="text" class="form-control" id="caseApplicationScenario" placeholder="如：发动机检测">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">客户</label>
+                                    <input type="text" class="form-control" id="caseClient" placeholder="客户名称">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">行业</label>
+                                    <input type="text" class="form-control" id="caseIndustry" placeholder="所属行业">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">检测对象</label>
+                                    <input type="text" class="form-control" id="caseDetectionObject" placeholder="检测的具体对象">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">使用设备</label>
+                                    <input type="text" class="form-control" id="caseEquipmentUsed" placeholder="使用的设备型号">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">特色图片URL</label>
+                                    <input type="url" class="form-control" id="caseFeaturedImage" placeholder="图片链接">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">状态</label>
+                                    <select class="form-select" id="caseStatus">
+                                        <option value="draft">草稿</option>
+                                        <option value="published">已发布</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-info" onclick="previewCase()">预览</button>
+                    <button type="button" class="btn btn-warning" onclick="exportCaseMarkdown()">导出MD</button>
+                    <button type="button" class="btn btn-primary" onclick="saveCase()">保存案例</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 应用领域编辑模态框 -->
+    <div class="modal fade" id="applicationModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="applicationModalTitle">添加应用领域</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="applicationForm">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label class="form-label">应用领域标题 *</label>
+                                    <input type="text" class="form-control" id="applicationTitle" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">应用摘要 *</label>
+                                    <textarea class="form-control" id="applicationSummary" rows="3" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">应用内容 *</label>
+                                    <textarea class="form-control" id="applicationContent" rows="15" required></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">图标</label>
+                                    <input type="text" class="form-control" id="applicationIcon" placeholder="如：fas fa-plane">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">应用特点</label>
+                                    <textarea class="form-control" id="applicationFeatures" rows="4" placeholder="每行一个特点"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">关键技术</label>
+                                    <textarea class="form-control" id="applicationKeyTechnologies" rows="4" placeholder="每行一个技术"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">权重</label>
+                                    <input type="number" class="form-control" id="applicationWeight" value="1" min="1">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">应用图片URL</label>
+                                    <input type="url" class="form-control" id="applicationImage" placeholder="图片链接">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">状态</label>
+                                    <select class="form-select" id="applicationStatus">
+                                        <option value="draft">草稿</option>
+                                        <option value="published">已发布</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-info" onclick="previewApplication()">预览</button>
+                    <button type="button" class="btn btn-warning" onclick="exportApplicationMarkdown()">导出MD</button>
+                    <button type="button" class="btn btn-primary" onclick="saveApplication()">保存应用领域</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 产品编辑模态框 -->
+    <div class="modal fade" id="productModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalTitle">添加产品</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="productForm">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label class="form-label">产品标题 *</label>
+                                    <input type="text" class="form-control" id="productTitle" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">产品型号 *</label>
+                                    <input type="text" class="form-control" id="productModel" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">产品摘要 *</label>
+                                    <textarea class="form-control" id="productSummary" rows="3" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">产品详情 *</label>
+                                    <textarea class="form-control" id="productContent" rows="12" required></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">主要分类</label>
+                                    <select class="form-select" id="productPrimaryCategory">
+                                        <option value="电子视频内窥镜">电子视频内窥镜</option>
+                                        <option value="光纤内窥镜">光纤内窥镜</option>
+                                        <option value="硬管内窥镜">硬管内窥镜</option>
+                                        <option value="软管内窥镜">软管内窥镜</option>
+                                        <option value="内窥镜配件">内窥镜配件</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">次要分类</label>
+                                    <input type="text" class="form-control" id="productSecondaryCategory" placeholder="如：便携式、台式等">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">供应商</label>
+                                    <select class="form-select" id="productSupplier">
+                                        <option value="维森视觉">维森视觉</option>
+                                        <option value="奥林巴斯">奥林巴斯</option>
+                                        <option value="卡尔蔡司">卡尔蔡司</option>
+                                        <option value="其他">其他</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">产品系列</label>
+                                    <input type="text" class="form-control" id="productSeries" placeholder="如：K系列、P系列">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">价格</label>
+                                    <input type="number" class="form-control" id="productPrice" placeholder="产品价格">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">产品图片URL</label>
+                                    <input type="url" class="form-control" id="productImage" placeholder="产品主图链接">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">状态</label>
+                                    <select class="form-select" id="productStatus">
+                                        <option value="draft">草稿</option>
+                                        <option value="published">已发布</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">权重</label>
+                                    <input type="number" class="form-control" id="productWeight" value="1" min="1">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-info" onclick="previewProduct()">预览</button>
+                    <button type="button" class="btn btn-warning" onclick="exportProductMarkdown()">导出MD</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProduct()">保存产品</button>
                 </div>
             </div>
         </div>
@@ -323,10 +1175,184 @@
             categories: []
         };
 
+        // 分页配置
+        const ITEMS_PER_PAGE = 10;
+        let currentPages = {
+            products: 1,
+            suppliers: 1,
+            categories: 1,
+            news: 1,
+            cases: 1,
+            applications: 1
+        }
+
+        // 通用分页函数
+        function createPagination(type, totalItems, currentPage) {
+            const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+            const paginationContainer = document.getElementById(`${type}Pagination`);
+            const paginationInfo = document.getElementById(`${type}PaginationInfo`);
+
+            // 更新分页信息
+            const startItem = totalItems > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0;
+            const endItem = Math.min(currentPage * ITEMS_PER_PAGE, totalItems);
+            const typeNames = {
+                'products': '个产品',
+                'suppliers': '个供应商',
+                'categories': '个分类',
+                'news': '篇资讯',
+                'cases': '个案例',
+                'applications': '个应用领域'
+            };
+            paginationInfo.textContent = `显示第 ${startItem}-${endItem} 项，共 ${totalItems} ${typeNames[type]}`;
+
+            // 如果只有一页或没有数据，隐藏分页
+            if (totalPages <= 1) {
+                paginationContainer.style.display = 'none';
+                return;
+            } else {
+                paginationContainer.style.display = 'flex';
+            }
+
+            // 生成分页按钮
+            let paginationHTML = '';
+
+            // 上一页
+            if (currentPage > 1) {
+                paginationHTML += `<li class="page-item">
+                    <a class="page-link" href="javascript:void(0)" onclick="goToPage('${type}', ${currentPage - 1})">上一页</a>
+                </li>`;
+            } else {
+                paginationHTML += `<li class="page-item disabled">
+                    <span class="page-link">上一页</span>
+                </li>`;
+            }
+
+            // 页码按钮（最多显示5页）
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+            // 调整起始页
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+
+            // 第一页
+            if (startPage > 1) {
+                paginationHTML += `<li class="page-item">
+                    <a class="page-link" href="javascript:void(0)" onclick="goToPage('${type}', 1)">1</a>
+                </li>`;
+                if (startPage > 2) {
+                    paginationHTML += `<li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>`;
+                }
+            }
+
+            // 页码
+            for (let i = startPage; i <= endPage; i++) {
+                if (i === currentPage) {
+                    paginationHTML += `<li class="page-item active">
+                        <span class="page-link">${i}</span>
+                    </li>`;
+                } else {
+                    paginationHTML += `<li class="page-item">
+                        <a class="page-link" href="javascript:void(0)" onclick="goToPage('${type}', ${i})">${i}</a>
+                    </li>`;
+                }
+            }
+
+            // 最后一页
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    paginationHTML += `<li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>`;
+                }
+                paginationHTML += `<li class="page-item">
+                    <a class="page-link" href="javascript:void(0)" onclick="goToPage('${type}', ${totalPages})">${totalPages}</a>
+                </li>`;
+            }
+
+            // 下一页
+            if (currentPage < totalPages) {
+                paginationHTML += `<li class="page-item">
+                    <a class="page-link" href="javascript:void(0)" onclick="goToPage('${type}', ${currentPage + 1})">下一页</a>
+                </li>`;
+            } else {
+                paginationHTML += `<li class="page-item disabled">
+                    <span class="page-link">下一页</span>
+                </li>`;
+            }
+
+            paginationContainer.innerHTML = paginationHTML;
+        }
+
+        // 跳转到指定页面
+        function goToPage(type, page) {
+            currentPages[type] = page;
+
+            // 根据类型调用相应的更新函数
+            switch(type) {
+                case 'products':
+                    updateProductList();
+                    break;
+                case 'suppliers':
+                    updateSupplierList();
+                    break;
+                case 'categories':
+                    updateCategoryList();
+                    break;
+                case 'news':
+                    updateNewsList();
+                    break;
+                case 'cases':
+                    updateCaseList();
+                    break;
+                case 'applications':
+                    updateApplicationList();
+                    break;
+            }
+        }
+
+        // 获取分页数据
+        function getPaginatedData(data, page) {
+            const startIndex = (page - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+            return data.slice(startIndex, endIndex);
+        };
+
+        // 移动端菜单切换
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+
+            sidebar.classList.toggle('show');
+            overlay.classList.toggle('show');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+
+            sidebar.classList.remove('show');
+            overlay.classList.remove('show');
+        }
+
         // 页面初始化
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 内容管理中心初始化...');
             loadProjectData();
+
+            // 初始化媒体库
+            updateMediaList();
+
+            // 监听窗口大小变化
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 992) {
+                    closeSidebar();
+                }
+            });
         });
 
         // 显示加载状态
@@ -618,11 +1644,15 @@
 
             if (projectData.products.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">暂无产品数据</td></tr>';
+                createPagination('products', 0, 1);
                 return;
             }
 
-            tbody.innerHTML = projectData.products.map(product => `
-                <tr>
+            // 获取当前页的数据
+            const paginatedProducts = getPaginatedData(projectData.products, currentPages.products);
+
+            tbody.innerHTML = paginatedProducts.map(product => `
+                <tr data-product-id="${product.id}">
                     <td>
                         <strong>${product.title}</strong>
                         <br><small class="text-muted">${product.summary}</small>
@@ -645,6 +1675,33 @@
                     </td>
                 </tr>
             `).join('');
+
+            // 创建分页
+            createPagination('products', projectData.products.length, currentPages.products);
+
+            // 更新过滤器选项
+            updateFilterOptions();
+        }
+
+        // 更新过滤器选项
+        function updateFilterOptions() {
+            // 更新供应商过滤器
+            const supplierFilter = document.getElementById('supplierFilter');
+            const suppliers = [...new Set(projectData.products.map(p => p.supplier))];
+            supplierFilter.innerHTML = '<option value="">所有供应商</option>' +
+                suppliers.map(supplier => `<option value="${supplier}">${supplier}</option>`).join('');
+
+            // 更新分类过滤器
+            const categoryFilter = document.getElementById('categoryFilter');
+            const categories = [...new Set(projectData.products.map(p => p.category))];
+            categoryFilter.innerHTML = '<option value="">所有分类</option>' +
+                categories.map(category => `<option value="${category}">${category}</option>`).join('');
+
+            // 更新系列过滤器
+            const seriesFilter = document.getElementById('seriesFilter');
+            const series = [...new Set(projectData.products.map(p => p.series || '未分类').filter(s => s))];
+            seriesFilter.innerHTML = '<option value="">所有系列</option>' +
+                series.map(s => `<option value="${s}">${s}</option>`).join('');
         }
 
         // 页面切换
@@ -712,27 +1769,118 @@
             loadProjectData();
         }
 
-        // 产品搜索过滤
+        // 产品高级过滤
         function filterProducts() {
             const searchTerm = document.getElementById('productSearch').value.toLowerCase();
-            const rows = document.querySelectorAll('#productList tr');
+            const supplierFilter = document.getElementById('supplierFilter').value;
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const seriesFilter = document.getElementById('seriesFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            const rows = document.querySelectorAll('#productList tr[data-product-id]');
+            let visibleCount = 0;
 
             rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(searchTerm) ? '' : 'none';
+                const productId = row.getAttribute('data-product-id');
+                const product = projectData.products.find(p => p.id === productId);
+
+                if (!product) {
+                    row.style.display = 'none';
+                    return;
+                }
+
+                let visible = true;
+
+                // 文本搜索
+                if (searchTerm) {
+                    const searchText = `${product.title} ${product.model} ${product.summary}`.toLowerCase();
+                    if (!searchText.includes(searchTerm)) {
+                        visible = false;
+                    }
+                }
+
+                // 供应商过滤
+                if (supplierFilter && product.supplier !== supplierFilter) {
+                    visible = false;
+                }
+
+                // 分类过滤
+                if (categoryFilter && product.category !== categoryFilter) {
+                    visible = false;
+                }
+
+                // 系列过滤
+                if (seriesFilter && (product.series || '未分类') !== seriesFilter) {
+                    visible = false;
+                }
+
+                // 状态过滤
+                if (statusFilter && product.status !== statusFilter) {
+                    visible = false;
+                }
+
+                row.style.display = visible ? '' : 'none';
+                if (visible) visibleCount++;
             });
+
+            // 更新结果计数
+            updateFilterResultCount('products', visibleCount, projectData.products.length);
+        }
+
+        // 清除所有过滤器
+        function clearFilters() {
+            document.getElementById('productSearch').value = '';
+            document.getElementById('supplierFilter').value = '';
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('seriesFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+            filterProducts();
+        }
+
+        // 更新过滤结果计数
+        function updateFilterResultCount(type, visible, total) {
+            // 可以在这里添加结果计数显示
+            console.log(`${type}: 显示 ${visible}/${total} 项`);
         }
 
         // 产品管理功能
+        // 全局变量存储当前编辑的产品ID
+        let currentEditingProductId = null;
+
         function addProduct() {
-            showSuccess('添加产品功能开发中...');
+            currentEditingProductId = null;
+            clearProductForm();
+            document.getElementById('productModalTitle').textContent = '添加产品';
+            const modal = new bootstrap.Modal(document.getElementById('productModal'));
+            modal.show();
         }
 
         function editProduct(id) {
             const product = projectData.products.find(p => p.id === id);
-            if (product) {
-                showSuccess(`编辑产品: ${product.title}`);
+            if (!product) {
+                showError('产品不存在');
+                return;
             }
+
+            currentEditingProductId = id;
+            document.getElementById('productModalTitle').textContent = '编辑产品';
+
+            // 填充表单
+            document.getElementById('productTitle').value = product.title;
+            document.getElementById('productModel').value = product.model;
+            document.getElementById('productSummary').value = product.summary;
+            document.getElementById('productContent').value = product.content || '';
+            document.getElementById('productPrimaryCategory').value = product.primary_category || '电子视频内窥镜';
+            document.getElementById('productSecondaryCategory').value = product.secondary_category || '';
+            document.getElementById('productSupplier').value = product.supplier || '维森视觉';
+            document.getElementById('productSeries').value = product.series || '';
+            document.getElementById('productPrice').value = product.price || '';
+            document.getElementById('productImage').value = product.image || '';
+            document.getElementById('productStatus').value = product.status || 'draft';
+            document.getElementById('productWeight').value = product.weight || 1;
+
+            const modal = new bootstrap.Modal(document.getElementById('productModal'));
+            modal.show();
         }
 
         function viewProduct(id) {
@@ -743,9 +1891,84 @@
         }
 
         function deleteProduct(id) {
-            if (confirm('确定要删除这个产品吗？')) {
-                showSuccess('删除产品功能开发中...');
+            const product = projectData.products.find(p => p.id === id);
+            if (!product) {
+                showError('产品不存在');
+                return;
             }
+
+            if (confirm(`确定要删除产品"${product.title}"吗？此操作不可撤销！`)) {
+                projectData.products = projectData.products.filter(p => p.id !== id);
+                updateProductList();
+                updateDashboard();
+                showSuccess('产品删除成功！');
+            }
+        }
+
+        // 保存产品
+        function saveProduct() {
+            const title = document.getElementById('productTitle').value.trim();
+            const model = document.getElementById('productModel').value.trim();
+            const summary = document.getElementById('productSummary').value.trim();
+
+            if (!title || !model || !summary) {
+                showError('请填写所有必填字段');
+                return;
+            }
+
+            const productData = {
+                title: title,
+                model: model,
+                summary: summary,
+                content: document.getElementById('productContent').value.trim(),
+                primary_category: document.getElementById('productPrimaryCategory').value,
+                secondary_category: document.getElementById('productSecondaryCategory').value,
+                supplier: document.getElementById('productSupplier').value,
+                series: document.getElementById('productSeries').value,
+                price: document.getElementById('productPrice').value,
+                image: document.getElementById('productImage').value,
+                status: document.getElementById('productStatus').value,
+                weight: parseInt(document.getElementById('productWeight').value) || 1,
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            if (currentEditingProductId) {
+                // 更新现有产品
+                const index = projectData.products.findIndex(p => p.id === currentEditingProductId);
+                if (index !== -1) {
+                    projectData.products[index] = { ...projectData.products[index], ...productData };
+                    showSuccess('产品更新成功！');
+                }
+            } else {
+                // 添加新产品
+                const newId = 'product-' + Date.now();
+                projectData.products.push({
+                    id: newId,
+                    uri: `/products/${newId}/`,
+                    ...productData
+                });
+                showSuccess('产品添加成功！');
+            }
+
+            updateProductList();
+            updateDashboard();
+            bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
+        }
+
+        // 清空产品表单
+        function clearProductForm() {
+            document.getElementById('productTitle').value = '';
+            document.getElementById('productModel').value = '';
+            document.getElementById('productSummary').value = '';
+            document.getElementById('productContent').value = '';
+            document.getElementById('productPrimaryCategory').value = '电子视频内窥镜';
+            document.getElementById('productSecondaryCategory').value = '';
+            document.getElementById('productSupplier').value = '维森视觉';
+            document.getElementById('productSeries').value = '';
+            document.getElementById('productPrice').value = '';
+            document.getElementById('productImage').value = '';
+            document.getElementById('productStatus').value = 'draft';
+            document.getElementById('productWeight').value = '1';
         }
 
         // 通用编辑和删除功能
@@ -764,25 +1987,1320 @@
             showSuccess('添加内容功能开发中...');
         }
 
-        // 占位符函数 - 待实现
+        // 其他过滤函数
+        function filterSuppliers() {
+            const searchTerm = document.getElementById('supplierSearch').value.toLowerCase();
+            const rows = document.querySelectorAll('#supplierList tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        function filterCategories() {
+            const searchTerm = document.getElementById('categorySearch').value.toLowerCase();
+            const rows = document.querySelectorAll('#categoryList tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        function filterNews() {
+            const searchTerm = document.getElementById('newsSearch').value.toLowerCase();
+            const rows = document.querySelectorAll('#newsList tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        function filterCases() {
+            const searchTerm = document.getElementById('caseSearch').value.toLowerCase();
+            const rows = document.querySelectorAll('#caseList tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        function filterApplications() {
+            const searchTerm = document.getElementById('applicationSearch').value.toLowerCase();
+            const rows = document.querySelectorAll('#applicationList tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        // 媒体库相关函数
+        function filterMedia() {
+            console.log('过滤媒体文件');
+        }
+
+        function setMediaView(viewType) {
+            const buttons = document.querySelectorAll('.btn-group button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            console.log('设置媒体视图:', viewType);
+        }
+
+        // 媒体库数据
+        let mediaLibrary = [
+            {
+                id: 'media-1',
+                name: 'news-1.jpeg',
+                type: 'image',
+                category: '资讯图片',
+                size: '245KB',
+                url: '/images/news/news-1.jpeg',
+                uploadDate: '2024-01-15'
+            },
+            {
+                id: 'media-2',
+                name: '展会.webp',
+                type: 'image',
+                category: '资讯图片',
+                size: '189KB',
+                url: '/images/news/展会.webp',
+                uploadDate: '2024-01-14'
+            },
+            {
+                id: 'media-3',
+                name: 'case-2.jpg',
+                type: 'image',
+                category: '案例图片',
+                size: '312KB',
+                url: '/images/cases/case-2.jpg',
+                uploadDate: '2024-01-13'
+            }
+        ];
+
+        function uploadMedia() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*,video/*,audio/*,.pdf,.doc,.docx';
+            input.multiple = true;
+            input.onchange = function(e) {
+                const files = Array.from(e.target.files);
+                if (files.length === 0) return;
+
+                files.forEach(file => {
+                    // 模拟上传过程
+                    const newMedia = {
+                        id: 'media-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9),
+                        name: file.name,
+                        type: file.type.startsWith('image/') ? 'image' :
+                              file.type.startsWith('video/') ? 'video' :
+                              file.type.startsWith('audio/') ? 'audio' : 'document',
+                        category: '未分类',
+                        size: formatFileSize(file.size),
+                        url: URL.createObjectURL(file), // 实际项目中应该是服务器返回的URL
+                        uploadDate: new Date().toISOString().split('T')[0]
+                    };
+
+                    mediaLibrary.push(newMedia);
+                });
+
+                updateMediaList();
+                showSuccess(`成功上传 ${files.length} 个文件！`);
+            };
+            input.click();
+        }
+
+        function createFolder() {
+            const folderName = prompt('请输入文件夹名称:');
+            if (folderName && folderName.trim()) {
+                showSuccess(`文件夹"${folderName}"创建成功！`);
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function getFileIcon(type) {
+            switch(type) {
+                case 'image': return 'image';
+                case 'video': return 'video';
+                case 'audio': return 'music';
+                case 'document': return 'file-alt';
+                default: return 'file';
+            }
+        }
+
+        function updateMediaList() {
+            const tbody = document.getElementById('mediaList');
+
+            if (mediaLibrary.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">暂无媒体文件</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = mediaLibrary.map(media => `
+                <tr>
+                    <td>
+                        ${media.type === 'image' ?
+                            `<img src="${media.url}" alt="${media.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">` :
+                            `<i class="fas fa-${getFileIcon(media.type)} fa-2x text-muted"></i>`
+                        }
+                    </td>
+                    <td>
+                        <strong>${media.name}</strong>
+                        <br><small class="text-muted">${media.type}</small>
+                    </td>
+                    <td><span class="badge bg-info">${media.category}</span></td>
+                    <td>${media.size}</td>
+                    <td>${media.uploadDate}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary btn-action" onclick="copyMediaUrl('${media.url}')" title="复制链接">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-success btn-action" onclick="previewMedia('${media.id}')" title="预览">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger btn-action" onclick="deleteMedia('${media.id}')" title="删除">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function copyMediaUrl(url) {
+            navigator.clipboard.writeText(url).then(() => {
+                showSuccess('链接已复制到剪贴板！');
+            }).catch(() => {
+                showError('复制失败，请手动复制');
+            });
+        }
+
+        function previewMedia(id) {
+            const media = mediaLibrary.find(m => m.id === id);
+            if (!media) {
+                showError('媒体文件不存在');
+                return;
+            }
+
+            const previewWindow = window.open('', '_blank');
+            previewWindow.document.write(`
+                <html>
+                <head>
+                    <title>媒体预览 - ${media.name}</title>
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+                </head>
+                <body>
+                    <div class="container py-4">
+                        <h3>${media.name}</h3>
+                        <div class="mb-3">
+                            <span class="badge bg-info me-2">${media.category}</span>
+                            <span class="badge bg-secondary me-2">${media.type}</span>
+                            <span class="badge bg-success">${media.size}</span>
+                        </div>
+                        ${media.type === 'image' ?
+                            `<img src="${media.url}" class="img-fluid" alt="${media.name}">` :
+                            media.type === 'video' ?
+                            `<video controls class="w-100"><source src="${media.url}" type="video/mp4"></video>` :
+                            media.type === 'audio' ?
+                            `<audio controls class="w-100"><source src="${media.url}" type="audio/mpeg"></audio>` :
+                            `<p>无法预览此类型的文件</p>`
+                        }
+                        <div class="mt-3">
+                            <p><strong>文件链接:</strong> <code>${media.url}</code></p>
+                            <p><strong>上传日期:</strong> ${media.uploadDate}</p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `);
+        }
+
+        function deleteMedia(id) {
+            const media = mediaLibrary.find(m => m.id === id);
+            if (!media) {
+                showError('媒体文件不存在');
+                return;
+            }
+
+            if (confirm(`确定要删除媒体文件"${media.name}"吗？此操作不可撤销！`)) {
+                mediaLibrary = mediaLibrary.filter(m => m.id !== id);
+                updateMediaList();
+                showSuccess('媒体文件删除成功！');
+            }
+        }
+
+        // 添加功能
+        function addSupplier() {
+            showSuccess('添加供应商功能开发中...');
+        }
+
+        function addCategory() {
+            showSuccess('添加分类功能开发中...');
+        }
+
+        // 全局变量存储当前编辑的项目ID
+        let currentEditingNewsId = null;
+        let currentEditingCaseId = null;
+        let currentEditingApplicationId = null;
+
+        function addNews() {
+            currentEditingNewsId = null;
+            clearNewsForm();
+            document.getElementById('newsModalTitle').textContent = '添加资讯';
+            document.getElementById('newsDate').value = new Date().toISOString().split('T')[0];
+            const modal = new bootstrap.Modal(document.getElementById('newsModal'));
+            modal.show();
+        }
+
+        function addCase() {
+            currentEditingCaseId = null;
+            clearCaseForm();
+            document.getElementById('caseModalTitle').textContent = '添加案例';
+            const modal = new bootstrap.Modal(document.getElementById('caseModal'));
+            modal.show();
+        }
+
+        function addApplication() {
+            currentEditingApplicationId = null;
+            clearApplicationForm();
+            document.getElementById('applicationModalTitle').textContent = '添加应用领域';
+            const modal = new bootstrap.Modal(document.getElementById('applicationModal'));
+            modal.show();
+        }
+
+        // 编辑功能
+        function editSupplier(id) {
+            showSuccess(`编辑供应商: ${id}`);
+        }
+
+        function editCategory(id) {
+            showSuccess(`编辑分类: ${id}`);
+        }
+
+        function editNews(id) {
+            const news = projectData.news.find(n => n.id === id);
+            if (!news) {
+                showError('资讯不存在');
+                return;
+            }
+
+            currentEditingNewsId = id;
+            document.getElementById('newsModalTitle').textContent = '编辑资讯';
+
+            // 填充表单
+            document.getElementById('newsTitle').value = news.title;
+            document.getElementById('newsSummary').value = news.summary;
+            document.getElementById('newsContent').value = news.content;
+            document.getElementById('newsCategory').value = news.category || '行业动态';
+            document.getElementById('newsAuthor').value = news.author || '编辑部';
+            document.getElementById('newsDate').value = news.date;
+            document.getElementById('newsStatus').value = news.status || 'draft';
+            document.getElementById('newsTags').value = news.tags ? news.tags.join(', ') : '';
+            document.getElementById('newsFeaturedImage').value = news.featured_image || '';
+
+            const modal = new bootstrap.Modal(document.getElementById('newsModal'));
+            modal.show();
+        }
+
+        function editCase(id) {
+            const caseItem = projectData.cases.find(c => c.id === id);
+            if (!caseItem) {
+                showError('案例不存在');
+                return;
+            }
+
+            currentEditingCaseId = id;
+            document.getElementById('caseModalTitle').textContent = '编辑案例';
+
+            // 填充表单
+            document.getElementById('caseTitle').value = caseItem.title;
+            document.getElementById('caseSummary').value = caseItem.summary;
+            document.getElementById('caseContent').value = caseItem.content;
+            document.getElementById('casePrimaryCategory').value = caseItem.primary_category || '';
+            document.getElementById('caseApplicationField').value = caseItem.application_field || '';
+            document.getElementById('caseApplicationScenario').value = caseItem.application_scenario || '';
+            document.getElementById('caseClient').value = caseItem.client || '';
+            document.getElementById('caseIndustry').value = caseItem.industry || '';
+            document.getElementById('caseDetectionObject').value = caseItem.detection_object || '';
+            document.getElementById('caseEquipmentUsed').value = caseItem.equipment_used || '';
+            document.getElementById('caseFeaturedImage').value = caseItem.featured_image || '';
+            document.getElementById('caseStatus').value = caseItem.status || 'draft';
+
+            const modal = new bootstrap.Modal(document.getElementById('caseModal'));
+            modal.show();
+        }
+
+        function editApplication(id) {
+            const app = projectData.applications.find(a => a.id === id);
+            if (!app) {
+                showError('应用领域不存在');
+                return;
+            }
+
+            currentEditingApplicationId = id;
+            document.getElementById('applicationModalTitle').textContent = '编辑应用领域';
+
+            // 填充表单
+            document.getElementById('applicationTitle').value = app.title;
+            document.getElementById('applicationSummary').value = app.summary;
+            document.getElementById('applicationContent').value = app.content;
+            document.getElementById('applicationIcon').value = app.icon || '';
+            document.getElementById('applicationFeatures').value = app.features ? app.features.join('\n') : '';
+            document.getElementById('applicationKeyTechnologies').value = app.key_technologies ? app.key_technologies.join('\n') : '';
+            document.getElementById('applicationWeight').value = app.weight || 1;
+            document.getElementById('applicationImage').value = app.image || '';
+            document.getElementById('applicationStatus').value = app.status || 'draft';
+
+            const modal = new bootstrap.Modal(document.getElementById('applicationModal'));
+            modal.show();
+        }
+
+        // 查看功能
+        function viewSupplierProducts(supplierName) {
+            // 切换到产品页面并过滤该供应商的产品
+            showSection('products');
+            document.getElementById('supplierFilter').value = supplierName;
+            filterProducts();
+            showSuccess(`显示供应商"${supplierName}"的产品`);
+        }
+
+        function viewCategoryProducts(categoryName) {
+            // 切换到产品页面并过滤该分类的产品
+            showSection('products');
+            document.getElementById('categoryFilter').value = categoryName;
+            filterProducts();
+            showSuccess(`显示分类"${categoryName}"的产品`);
+        }
+
+        function viewNews(id) {
+            const news = projectData.news.find(n => n.id === id);
+            if (news) {
+                window.open(news.uri, '_blank');
+            }
+        }
+
+        function viewCase(id) {
+            const caseItem = projectData.cases.find(c => c.id === id);
+            if (caseItem) {
+                window.open(caseItem.uri, '_blank');
+            }
+        }
+
+        function viewApplication(id) {
+            const app = projectData.applications.find(a => a.id === id);
+            if (app) {
+                window.open(app.uri, '_blank');
+            }
+        }
+
+        // 删除功能
+        function deleteSupplier(id) {
+            if (confirm('确定要删除这个供应商吗？')) {
+                showSuccess('删除供应商功能开发中...');
+            }
+        }
+
+        function deleteCategory(id) {
+            if (confirm('确定要删除这个分类吗？')) {
+                showSuccess('删除分类功能开发中...');
+            }
+        }
+
+        function deleteNews(id) {
+            const news = projectData.news.find(n => n.id === id);
+            if (!news) {
+                showError('资讯不存在');
+                return;
+            }
+
+            if (confirm(`确定要删除资讯"${news.title}"吗？此操作不可撤销！`)) {
+                projectData.news = projectData.news.filter(n => n.id !== id);
+                updateNewsList();
+                updateDashboard();
+                showSuccess('资讯删除成功！');
+            }
+        }
+
+        function deleteCase(id) {
+            const caseItem = projectData.cases.find(c => c.id === id);
+            if (!caseItem) {
+                showError('案例不存在');
+                return;
+            }
+
+            if (confirm(`确定要删除案例"${caseItem.title}"吗？此操作不可撤销！`)) {
+                projectData.cases = projectData.cases.filter(c => c.id !== id);
+                updateCaseList();
+                updateDashboard();
+                showSuccess('案例删除成功！');
+            }
+        }
+
+        function deleteApplication(id) {
+            const app = projectData.applications.find(a => a.id === id);
+            if (!app) {
+                showError('应用领域不存在');
+                return;
+            }
+
+            if (confirm(`确定要删除应用领域"${app.title}"吗？此操作不可撤销！`)) {
+                projectData.applications = projectData.applications.filter(a => a.id !== id);
+                updateApplicationList();
+                updateDashboard();
+                showSuccess('应用领域删除成功！');
+            }
+        }
+
+        // 系统设置功能
+        function exportData() {
+            const data = {
+                products: projectData.products,
+                suppliers: projectData.suppliers,
+                news: projectData.news,
+                cases: projectData.cases,
+                applications: projectData.applications,
+                categories: projectData.categories,
+                exportTime: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `content-data-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            showSuccess('数据导出完成！');
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const data = JSON.parse(e.target.result);
+                            // 这里可以添加数据验证和导入逻辑
+                            showSuccess('数据导入功能开发中...');
+                        } catch (error) {
+                            showError('数据格式错误: ' + error.message);
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        // 保存资讯
+        function saveNews() {
+            const title = document.getElementById('newsTitle').value.trim();
+            const summary = document.getElementById('newsSummary').value.trim();
+            const content = document.getElementById('newsContent').value.trim();
+
+            if (!title || !summary || !content) {
+                showError('请填写所有必填字段');
+                return;
+            }
+
+            const newsData = {
+                title: title,
+                summary: summary,
+                content: content,
+                category: document.getElementById('newsCategory').value,
+                author: document.getElementById('newsAuthor').value,
+                date: document.getElementById('newsDate').value,
+                status: document.getElementById('newsStatus').value,
+                tags: document.getElementById('newsTags').value.split(',').map(tag => tag.trim()).filter(tag => tag),
+                featured_image: document.getElementById('newsFeaturedImage').value,
+                views: Math.floor(Math.random() * 200) + 50
+            };
+
+            if (currentEditingNewsId) {
+                // 更新现有资讯
+                const index = projectData.news.findIndex(n => n.id === currentEditingNewsId);
+                if (index !== -1) {
+                    projectData.news[index] = { ...projectData.news[index], ...newsData };
+                    showSuccess('资讯更新成功！');
+                }
+            } else {
+                // 添加新资讯
+                const newId = 'news-' + Date.now();
+                projectData.news.push({
+                    id: newId,
+                    uri: `/news/${newId}/`,
+                    ...newsData
+                });
+                showSuccess('资讯添加成功！');
+            }
+
+            updateNewsList();
+            updateDashboard();
+            bootstrap.Modal.getInstance(document.getElementById('newsModal')).hide();
+        }
+
+        // 保存案例
+        function saveCase() {
+            const title = document.getElementById('caseTitle').value.trim();
+            const summary = document.getElementById('caseSummary').value.trim();
+            const content = document.getElementById('caseContent').value.trim();
+
+            if (!title || !summary || !content) {
+                showError('请填写所有必填字段');
+                return;
+            }
+
+            const caseData = {
+                title: title,
+                summary: summary,
+                content: content,
+                primary_category: document.getElementById('casePrimaryCategory').value,
+                application_field: document.getElementById('caseApplicationField').value,
+                application_scenario: document.getElementById('caseApplicationScenario').value,
+                client: document.getElementById('caseClient').value,
+                industry: document.getElementById('caseIndustry').value,
+                detection_object: document.getElementById('caseDetectionObject').value,
+                equipment_used: document.getElementById('caseEquipmentUsed').value,
+                featured_image: document.getElementById('caseFeaturedImage').value,
+                status: document.getElementById('caseStatus').value,
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            if (currentEditingCaseId) {
+                // 更新现有案例
+                const index = projectData.cases.findIndex(c => c.id === currentEditingCaseId);
+                if (index !== -1) {
+                    projectData.cases[index] = { ...projectData.cases[index], ...caseData };
+                    showSuccess('案例更新成功！');
+                }
+            } else {
+                // 添加新案例
+                const newId = 'case-' + Date.now();
+                projectData.cases.push({
+                    id: newId,
+                    uri: `/cases/${newId}/`,
+                    ...caseData
+                });
+                showSuccess('案例添加成功！');
+            }
+
+            updateCaseList();
+            updateDashboard();
+            bootstrap.Modal.getInstance(document.getElementById('caseModal')).hide();
+        }
+
+        // 保存应用领域
+        function saveApplication() {
+            const title = document.getElementById('applicationTitle').value.trim();
+            const summary = document.getElementById('applicationSummary').value.trim();
+            const content = document.getElementById('applicationContent').value.trim();
+
+            if (!title || !summary || !content) {
+                showError('请填写所有必填字段');
+                return;
+            }
+
+            const appData = {
+                title: title,
+                summary: summary,
+                content: content,
+                icon: document.getElementById('applicationIcon').value,
+                features: document.getElementById('applicationFeatures').value.split('\n').map(f => f.trim()).filter(f => f),
+                key_technologies: document.getElementById('applicationKeyTechnologies').value.split('\n').map(t => t.trim()).filter(t => t),
+                weight: parseInt(document.getElementById('applicationWeight').value) || 1,
+                image: document.getElementById('applicationImage').value,
+                status: document.getElementById('applicationStatus').value,
+                date: new Date().toISOString().split('T')[0],
+                category: '应用领域'
+            };
+
+            if (currentEditingApplicationId) {
+                // 更新现有应用领域
+                const index = projectData.applications.findIndex(a => a.id === currentEditingApplicationId);
+                if (index !== -1) {
+                    projectData.applications[index] = { ...projectData.applications[index], ...appData };
+                    showSuccess('应用领域更新成功！');
+                }
+            } else {
+                // 添加新应用领域
+                const newId = 'app-' + Date.now();
+                projectData.applications.push({
+                    id: newId,
+                    uri: `/applications/${newId}/`,
+                    ...appData
+                });
+                showSuccess('应用领域添加成功！');
+            }
+
+            updateApplicationList();
+            updateDashboard();
+            bootstrap.Modal.getInstance(document.getElementById('applicationModal')).hide();
+        }
+
+        // 清空表单函数
+        function clearNewsForm() {
+            document.getElementById('newsTitle').value = '';
+            document.getElementById('newsSummary').value = '';
+            document.getElementById('newsContent').value = '';
+            document.getElementById('newsCategory').value = '行业动态';
+            document.getElementById('newsAuthor').value = '编辑部';
+            document.getElementById('newsDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('newsStatus').value = 'draft';
+            document.getElementById('newsTags').value = '';
+            document.getElementById('newsFeaturedImage').value = '';
+        }
+
+        function clearCaseForm() {
+            document.getElementById('caseTitle').value = '';
+            document.getElementById('caseSummary').value = '';
+            document.getElementById('caseContent').value = '';
+            document.getElementById('casePrimaryCategory').value = '';
+            document.getElementById('caseApplicationField').value = '';
+            document.getElementById('caseApplicationScenario').value = '';
+            document.getElementById('caseClient').value = '';
+            document.getElementById('caseIndustry').value = '';
+            document.getElementById('caseDetectionObject').value = '';
+            document.getElementById('caseEquipmentUsed').value = '';
+            document.getElementById('caseFeaturedImage').value = '';
+            document.getElementById('caseStatus').value = 'draft';
+        }
+
+        function clearApplicationForm() {
+            document.getElementById('applicationTitle').value = '';
+            document.getElementById('applicationSummary').value = '';
+            document.getElementById('applicationContent').value = '';
+            document.getElementById('applicationIcon').value = '';
+            document.getElementById('applicationFeatures').value = '';
+            document.getElementById('applicationKeyTechnologies').value = '';
+            document.getElementById('applicationWeight').value = '1';
+            document.getElementById('applicationImage').value = '';
+            document.getElementById('applicationStatus').value = 'draft';
+        }
+
+        // 生成Markdown内容的函数
+        function generateNewsMarkdown(newsData) {
+            const tags = newsData.tags && newsData.tags.length > 0 ?
+                newsData.tags.map(tag => `- ${tag}`).join('\n') : '';
+
+            return `---
+title: ${newsData.title}
+date: ${newsData.date}
+summary: ${newsData.summary}
+categories:
+- ${newsData.category}
+${tags ? `tags:\n${tags}` : ''}
+author: ${newsData.author}
+views: ${newsData.views || 0}
+${newsData.featured_image ? `featured_image: "${newsData.featured_image}"` : ''}
+---
+
+${newsData.content}
+`;
+        }
+
+        function generateCaseMarkdown(caseData) {
+            return `---
+title: "${caseData.title}"
+${caseData.primary_category ? `primary_category: ["${caseData.primary_category}"]` : ''}
+${caseData.application_field ? `application_field: ["${caseData.application_field}"]` : ''}
+${caseData.application_scenario ? `application_scenario: ["${caseData.application_scenario}"]` : ''}
+${caseData.featured_image ? `featured_image: "${caseData.featured_image}"` : ''}
+summary: "${caseData.summary}"
+date: ${caseData.date}
+${caseData.client ? `client: "${caseData.client}"` : ''}
+${caseData.industry ? `industry: "${caseData.industry}"` : ''}
+${caseData.detection_object ? `detection_object: "${caseData.detection_object}"` : ''}
+${caseData.equipment_used ? `equipment_used: "${caseData.equipment_used}"` : ''}
+---
+
+${caseData.content}
+`;
+        }
+
+        function generateApplicationMarkdown(appData) {
+            const features = appData.features && appData.features.length > 0 ?
+                appData.features.map(f => `  - "${f}"`).join('\n') : '';
+            const keyTech = appData.key_technologies && appData.key_technologies.length > 0 ?
+                appData.key_technologies.map(t => `  - "${t}"`).join('\n') : '';
+
+            return `---
+title: "${appData.title}"
+date: ${appData.date}
+summary: "${appData.summary}"
+${appData.icon ? `icon: "${appData.icon}"` : ''}
+${appData.image ? `image: "${appData.image}"` : ''}
+weight: ${appData.weight}
+
+${features ? `# 应用特点\nfeatures:\n${features}\n` : ''}
+${keyTech ? `# 关键技术\nkey_technologies:\n${keyTech}\n` : ''}
+---
+
+${appData.content}
+`;
+        }
+
+        // 预览功能
+        function previewNews() {
+            const title = document.getElementById('newsTitle').value.trim();
+            if (!title) {
+                showError('请先输入资讯标题');
+                return;
+            }
+
+            const newsData = {
+                title: title,
+                summary: document.getElementById('newsSummary').value.trim(),
+                content: document.getElementById('newsContent').value.trim(),
+                category: document.getElementById('newsCategory').value,
+                author: document.getElementById('newsAuthor').value,
+                date: document.getElementById('newsDate').value,
+                status: document.getElementById('newsStatus').value,
+                tags: document.getElementById('newsTags').value.split(',').map(tag => tag.trim()).filter(tag => tag),
+                featured_image: document.getElementById('newsFeaturedImage').value
+            };
+
+            const previewWindow = window.open('', '_blank');
+            previewWindow.document.write(`
+                <html>
+                <head>
+                    <title>资讯预览 - ${newsData.title}</title>
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+                </head>
+                <body>
+                    <div class="container py-4">
+                        <h1>${newsData.title}</h1>
+                        <div class="text-muted mb-3">
+                            <span class="badge bg-info">${newsData.category}</span>
+                            <span class="ms-2">作者: ${newsData.author}</span>
+                            <span class="ms-2">日期: ${newsData.date}</span>
+                            <span class="ms-2">状态: ${newsData.status === 'published' ? '已发布' : '草稿'}</span>
+                        </div>
+                        ${newsData.featured_image ? `<img src="${newsData.featured_image}" class="img-fluid mb-3" alt="特色图片">` : ''}
+                        <div class="lead">${newsData.summary}</div>
+                        <hr>
+                        <div style="white-space: pre-wrap;">${newsData.content}</div>
+                        ${newsData.tags.length > 0 ? `
+                            <hr>
+                            <div>
+                                <strong>标签: </strong>
+                                ${newsData.tags.map(tag => `<span class="badge bg-secondary me-1">${tag}</span>`).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                </body>
+                </html>
+            `);
+        }
+
+        function previewCase() {
+            const title = document.getElementById('caseTitle').value.trim();
+            if (!title) {
+                showError('请先输入案例标题');
+                return;
+            }
+
+            const caseData = {
+                title: title,
+                summary: document.getElementById('caseSummary').value.trim(),
+                content: document.getElementById('caseContent').value.trim(),
+                primary_category: document.getElementById('casePrimaryCategory').value,
+                application_field: document.getElementById('caseApplicationField').value,
+                application_scenario: document.getElementById('caseApplicationScenario').value,
+                client: document.getElementById('caseClient').value,
+                industry: document.getElementById('caseIndustry').value,
+                detection_object: document.getElementById('caseDetectionObject').value,
+                equipment_used: document.getElementById('caseEquipmentUsed').value,
+                featured_image: document.getElementById('caseFeaturedImage').value
+            };
+
+            const previewWindow = window.open('', '_blank');
+            previewWindow.document.write(`
+                <html>
+                <head>
+                    <title>案例预览 - ${caseData.title}</title>
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+                </head>
+                <body>
+                    <div class="container py-4">
+                        <h1>${caseData.title}</h1>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                ${caseData.primary_category ? `<p><strong>主要分类:</strong> ${caseData.primary_category}</p>` : ''}
+                                ${caseData.application_field ? `<p><strong>应用领域:</strong> ${caseData.application_field}</p>` : ''}
+                                ${caseData.application_scenario ? `<p><strong>应用场景:</strong> ${caseData.application_scenario}</p>` : ''}
+                                ${caseData.client ? `<p><strong>客户:</strong> ${caseData.client}</p>` : ''}
+                            </div>
+                            <div class="col-md-6">
+                                ${caseData.industry ? `<p><strong>行业:</strong> ${caseData.industry}</p>` : ''}
+                                ${caseData.detection_object ? `<p><strong>检测对象:</strong> ${caseData.detection_object}</p>` : ''}
+                                ${caseData.equipment_used ? `<p><strong>使用设备:</strong> ${caseData.equipment_used}</p>` : ''}
+                            </div>
+                        </div>
+                        ${caseData.featured_image ? `<img src="${caseData.featured_image}" class="img-fluid mb-3" alt="案例图片">` : ''}
+                        <div class="lead">${caseData.summary}</div>
+                        <hr>
+                        <div style="white-space: pre-wrap;">${caseData.content}</div>
+                    </div>
+                </body>
+                </html>
+            `);
+        }
+
+        function previewApplication() {
+            const title = document.getElementById('applicationTitle').value.trim();
+            if (!title) {
+                showError('请先输入应用领域标题');
+                return;
+            }
+
+            const appData = {
+                title: title,
+                summary: document.getElementById('applicationSummary').value.trim(),
+                content: document.getElementById('applicationContent').value.trim(),
+                icon: document.getElementById('applicationIcon').value,
+                features: document.getElementById('applicationFeatures').value.split('\n').map(f => f.trim()).filter(f => f),
+                key_technologies: document.getElementById('applicationKeyTechnologies').value.split('\n').map(t => t.trim()).filter(t => t),
+                weight: document.getElementById('applicationWeight').value,
+                image: document.getElementById('applicationImage').value
+            };
+
+            const previewWindow = window.open('', '_blank');
+            previewWindow.document.write(`
+                <html>
+                <head>
+                    <title>应用领域预览 - ${appData.title}</title>
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+                    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+                </head>
+                <body>
+                    <div class="container py-4">
+                        <h1>
+                            ${appData.icon ? `<i class="${appData.icon} me-2"></i>` : ''}
+                            ${appData.title}
+                        </h1>
+                        <p><strong>权重:</strong> ${appData.weight}</p>
+                        ${appData.image ? `<img src="${appData.image}" class="img-fluid mb-3" alt="应用领域图片">` : ''}
+                        <div class="lead">${appData.summary}</div>
+                        <hr>
+                        ${appData.features.length > 0 ? `
+                            <h3>应用特点</h3>
+                            <ul>
+                                ${appData.features.map(f => `<li>${f}</li>`).join('')}
+                            </ul>
+                        ` : ''}
+                        ${appData.key_technologies.length > 0 ? `
+                            <h3>关键技术</h3>
+                            <ul>
+                                ${appData.key_technologies.map(t => `<li>${t}</li>`).join('')}
+                            </ul>
+                        ` : ''}
+                        <hr>
+                        <div style="white-space: pre-wrap;">${appData.content}</div>
+                    </div>
+                </body>
+                </html>
+            `);
+        }
+
+        // 导出Markdown功能
+        function exportNewsMarkdown() {
+            const title = document.getElementById('newsTitle').value.trim();
+            if (!title) {
+                showError('请先输入资讯标题');
+                return;
+            }
+
+            const newsData = {
+                title: title,
+                summary: document.getElementById('newsSummary').value.trim(),
+                content: document.getElementById('newsContent').value.trim(),
+                category: document.getElementById('newsCategory').value,
+                author: document.getElementById('newsAuthor').value,
+                date: document.getElementById('newsDate').value,
+                status: document.getElementById('newsStatus').value,
+                tags: document.getElementById('newsTags').value.split(',').map(tag => tag.trim()).filter(tag => tag),
+                featured_image: document.getElementById('newsFeaturedImage').value,
+                views: Math.floor(Math.random() * 200) + 50
+            };
+
+            const markdown = generateNewsMarkdown(newsData);
+            downloadMarkdown(markdown, `${title.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-')}.md`);
+        }
+
+        function exportCaseMarkdown() {
+            const title = document.getElementById('caseTitle').value.trim();
+            if (!title) {
+                showError('请先输入案例标题');
+                return;
+            }
+
+            const caseData = {
+                title: title,
+                summary: document.getElementById('caseSummary').value.trim(),
+                content: document.getElementById('caseContent').value.trim(),
+                primary_category: document.getElementById('casePrimaryCategory').value,
+                application_field: document.getElementById('caseApplicationField').value,
+                application_scenario: document.getElementById('caseApplicationScenario').value,
+                client: document.getElementById('caseClient').value,
+                industry: document.getElementById('caseIndustry').value,
+                detection_object: document.getElementById('caseDetectionObject').value,
+                equipment_used: document.getElementById('caseEquipmentUsed').value,
+                featured_image: document.getElementById('caseFeaturedImage').value,
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            const markdown = generateCaseMarkdown(caseData);
+            downloadMarkdown(markdown, `${title.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-')}.md`);
+        }
+
+        function exportApplicationMarkdown() {
+            const title = document.getElementById('applicationTitle').value.trim();
+            if (!title) {
+                showError('请先输入应用领域标题');
+                return;
+            }
+
+            const appData = {
+                title: title,
+                summary: document.getElementById('applicationSummary').value.trim(),
+                content: document.getElementById('applicationContent').value.trim(),
+                icon: document.getElementById('applicationIcon').value,
+                features: document.getElementById('applicationFeatures').value.split('\n').map(f => f.trim()).filter(f => f),
+                key_technologies: document.getElementById('applicationKeyTechnologies').value.split('\n').map(t => t.trim()).filter(t => t),
+                weight: parseInt(document.getElementById('applicationWeight').value) || 1,
+                image: document.getElementById('applicationImage').value,
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            const markdown = generateApplicationMarkdown(appData);
+            downloadMarkdown(markdown, `${title.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-')}.md`);
+        }
+
+        function downloadMarkdown(content, filename) {
+            const blob = new Blob([content], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+            showSuccess('Markdown文件导出成功！');
+        }
+
+        // 产品预览功能
+        function previewProduct() {
+            const title = document.getElementById('productTitle').value.trim();
+            if (!title) {
+                showError('请先输入产品标题');
+                return;
+            }
+
+            const productData = {
+                title: title,
+                model: document.getElementById('productModel').value.trim(),
+                summary: document.getElementById('productSummary').value.trim(),
+                content: document.getElementById('productContent').value.trim(),
+                primary_category: document.getElementById('productPrimaryCategory').value,
+                secondary_category: document.getElementById('productSecondaryCategory').value,
+                supplier: document.getElementById('productSupplier').value,
+                series: document.getElementById('productSeries').value,
+                price: document.getElementById('productPrice').value,
+                image: document.getElementById('productImage').value
+            };
+
+            const previewWindow = window.open('', '_blank');
+            previewWindow.document.write(`
+                <html>
+                <head>
+                    <title>产品预览 - ${productData.title}</title>
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+                </head>
+                <body>
+                    <div class="container py-4">
+                        <h1>${productData.title}</h1>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <p><strong>产品型号:</strong> ${productData.model}</p>
+                                <p><strong>主要分类:</strong> ${productData.primary_category}</p>
+                                ${productData.secondary_category ? `<p><strong>次要分类:</strong> ${productData.secondary_category}</p>` : ''}
+                                <p><strong>供应商:</strong> ${productData.supplier}</p>
+                            </div>
+                            <div class="col-md-6">
+                                ${productData.series ? `<p><strong>产品系列:</strong> ${productData.series}</p>` : ''}
+                                ${productData.price ? `<p><strong>价格:</strong> ¥${productData.price}</p>` : ''}
+                            </div>
+                        </div>
+                        ${productData.image ? `<img src="${productData.image}" class="img-fluid mb-3" alt="产品图片">` : ''}
+                        <div class="lead">${productData.summary}</div>
+                        <hr>
+                        <div style="white-space: pre-wrap;">${productData.content}</div>
+                    </div>
+                </body>
+                </html>
+            `);
+        }
+
+        // 产品导出Markdown功能
+        function exportProductMarkdown() {
+            const title = document.getElementById('productTitle').value.trim();
+            if (!title) {
+                showError('请先输入产品标题');
+                return;
+            }
+
+            const productData = {
+                title: title,
+                model: document.getElementById('productModel').value.trim(),
+                summary: document.getElementById('productSummary').value.trim(),
+                content: document.getElementById('productContent').value.trim(),
+                primary_category: document.getElementById('productPrimaryCategory').value,
+                secondary_category: document.getElementById('productSecondaryCategory').value,
+                supplier: document.getElementById('productSupplier').value,
+                series: document.getElementById('productSeries').value,
+                price: document.getElementById('productPrice').value,
+                image: document.getElementById('productImage').value,
+                weight: parseInt(document.getElementById('productWeight').value) || 1,
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            const markdown = generateProductMarkdown(productData);
+            downloadMarkdown(markdown, `${title.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '-')}.md`);
+        }
+
+        // 生成产品Markdown内容
+        function generateProductMarkdown(productData) {
+            return `---
+title: "${productData.title}"
+model: "${productData.model}"
+date: ${productData.date}
+summary: "${productData.summary}"
+primary_category: ["${productData.primary_category}"]
+${productData.secondary_category ? `secondary_category: ["${productData.secondary_category}"]` : ''}
+supplier: "${productData.supplier}"
+${productData.series ? `series: "${productData.series}"` : ''}
+${productData.price ? `price: ${productData.price}` : ''}
+${productData.image ? `image: "${productData.image}"` : ''}
+weight: ${productData.weight}
+---
+
+${productData.content}
+`;
+        }
+
+        // 更新供应商列表
         function updateSupplierList() {
-            console.log('更新供应商列表');
+            const tbody = document.getElementById('supplierList');
+
+            if (projectData.suppliers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">暂无供应商数据</td></tr>';
+                createPagination('suppliers', 0, 1);
+                return;
+            }
+
+            // 获取当前页的数据
+            const paginatedSuppliers = getPaginatedData(projectData.suppliers, currentPages.suppliers);
+
+            tbody.innerHTML = paginatedSuppliers.map(supplier => `
+                <tr>
+                    <td>
+                        <strong>${supplier.name}</strong>
+                    </td>
+                    <td><span class="badge bg-secondary">${supplier.type}</span></td>
+                    <td><span class="badge bg-primary">${supplier.products}</span></td>
+                    <td><span class="status-badge status-${supplier.status}">${supplier.status === 'active' ? '活跃' : '停用'}</span></td>
+                    <td>${supplier.date}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary btn-action" onclick="editSupplier('${supplier.id}')" title="编辑">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-info btn-action" onclick="viewSupplierProducts('${supplier.name}')" title="查看产品">
+                            <i class="fas fa-box"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger btn-action" onclick="deleteSupplier('${supplier.id}')" title="删除">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // 创建分页
+            createPagination('suppliers', projectData.suppliers.length, currentPages.suppliers);
         }
 
+        // 更新分类列表
         function updateCategoryList() {
-            console.log('更新分类列表');
+            const tbody = document.getElementById('categoryList');
+
+            if (projectData.categories.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">暂无分类数据</td></tr>';
+                createPagination('categories', 0, 1);
+                return;
+            }
+
+            // 获取当前页的数据
+            const paginatedCategories = getPaginatedData(projectData.categories, currentPages.categories);
+
+            tbody.innerHTML = paginatedCategories.map(category => `
+                <tr>
+                    <td>
+                        <strong>${category.name}</strong>
+                    </td>
+                    <td><span class="badge bg-primary">${category.products}</span></td>
+                    <td><span class="status-badge status-${category.status}">${category.status === 'active' ? '启用' : '禁用'}</span></td>
+                    <td>${category.date}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary btn-action" onclick="editCategory('${category.id}')" title="编辑">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-info btn-action" onclick="viewCategoryProducts('${category.name}')" title="查看产品">
+                            <i class="fas fa-box"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger btn-action" onclick="deleteCategory('${category.id}')" title="删除">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // 创建分页
+            createPagination('categories', projectData.categories.length, currentPages.categories);
         }
 
+        // 更新资讯列表
         function updateNewsList() {
-            console.log('更新资讯列表');
+            const tbody = document.getElementById('newsList');
+
+            if (projectData.news.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">暂无资讯数据</td></tr>';
+                createPagination('news', 0, 1);
+                return;
+            }
+
+            // 获取当前页的数据
+            const paginatedNews = getPaginatedData(projectData.news, currentPages.news);
+
+            tbody.innerHTML = paginatedNews.map(news => `
+                <tr>
+                    <td>
+                        <strong>${news.title}</strong>
+                        <br><small class="text-muted">${news.summary}</small>
+                    </td>
+                    <td><span class="badge bg-info">${news.category}</span></td>
+                    <td>${news.author}</td>
+                    <td><span class="badge bg-success">${news.views || 0}</span></td>
+                    <td><span class="status-badge status-${news.status}">${news.status === 'published' ? '已发布' : '草稿'}</span></td>
+                    <td>${news.date}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary btn-action" onclick="editNews('${news.id}')" title="编辑">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-success btn-action" onclick="viewNews('${news.id}')" title="查看">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger btn-action" onclick="deleteNews('${news.id}')" title="删除">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // 创建分页
+            createPagination('news', projectData.news.length, currentPages.news);
         }
 
+        // 更新案例列表
         function updateCaseList() {
-            console.log('更新案例列表');
+            const tbody = document.getElementById('caseList');
+
+            if (projectData.cases.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">暂无案例数据</td></tr>';
+                createPagination('cases', 0, 1);
+                return;
+            }
+
+            // 获取当前页的数据
+            const paginatedCases = getPaginatedData(projectData.cases, currentPages.cases);
+
+            tbody.innerHTML = paginatedCases.map(caseItem => `
+                <tr>
+                    <td>
+                        <strong>${caseItem.title}</strong>
+                        <br><small class="text-muted">${caseItem.summary}</small>
+                    </td>
+                    <td><span class="badge bg-info">${caseItem.category}</span></td>
+                    <td><span class="badge bg-secondary">${caseItem.industry}</span></td>
+                    <td><span class="status-badge status-${caseItem.status}">${caseItem.status === 'published' ? '已发布' : '草稿'}</span></td>
+                    <td>${caseItem.date}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary btn-action" onclick="editCase('${caseItem.id}')" title="编辑">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-success btn-action" onclick="viewCase('${caseItem.id}')" title="查看">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger btn-action" onclick="deleteCase('${caseItem.id}')" title="删除">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // 创建分页
+            createPagination('cases', projectData.cases.length, currentPages.cases);
         }
 
+        // 更新应用领域列表
         function updateApplicationList() {
-            console.log('更新应用列表');
+            const tbody = document.getElementById('applicationList');
+
+            if (projectData.applications.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">暂无应用领域数据</td></tr>';
+                createPagination('applications', 0, 1);
+                return;
+            }
+
+            // 获取当前页的数据
+            const paginatedApplications = getPaginatedData(projectData.applications, currentPages.applications);
+
+            tbody.innerHTML = paginatedApplications.map(app => `
+                <tr>
+                    <td>
+                        <strong>${app.title}</strong>
+                        <br><small class="text-muted">${app.summary}</small>
+                    </td>
+                    <td><span class="badge bg-info">${app.category}</span></td>
+                    <td><span class="status-badge status-${app.status}">${app.status === 'published' ? '已发布' : '草稿'}</span></td>
+                    <td>${app.date}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary btn-action" onclick="editApplication('${app.id}')" title="编辑">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-success btn-action" onclick="viewApplication('${app.id}')" title="查看">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger btn-action" onclick="deleteApplication('${app.id}')" title="删除">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // 创建分页
+            createPagination('applications', projectData.applications.length, currentPages.applications);
         }
     </script>
 </body>

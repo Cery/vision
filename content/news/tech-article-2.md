@@ -10,6 +10,7 @@ tags:
 - 自动化检测
 author: AI算法团队
 views: 198
+featured_image: "/images/news/news-1.jpeg"
 ---
 
 # 基于深度学习的内窥镜缺陷自动识别系统
