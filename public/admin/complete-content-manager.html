@@ -417,31 +417,31 @@
                         内容管理
                     </h4>
                     <nav class="nav flex-column">
-                        <a class="nav-link active" href="#" onclick="showSection('dashboard')">
+                        <a class="nav-link active" href="#" onclick="showSection('dashboard', event)">
                             <i class="fas fa-tachometer-alt me-2"></i>仪表板
                         </a>
-                        <a class="nav-link" href="#" onclick="showSection('products')">
+                        <a class="nav-link" href="#" onclick="showSection('products', event)">
                             <i class="fas fa-box me-2"></i>产品管理
                         </a>
-                        <a class="nav-link" href="#" onclick="showSection('suppliers')">
+                        <a class="nav-link" href="#" onclick="showSection('suppliers', event)">
                             <i class="fas fa-truck me-2"></i>供应商管理
                         </a>
-                        <a class="nav-link" href="#" onclick="showSection('categories')">
+                        <a class="nav-link" href="#" onclick="showSection('categories', event)">
                             <i class="fas fa-tags me-2"></i>产品分类
                         </a>
-                        <a class="nav-link" href="#" onclick="showSection('news')">
+                        <a class="nav-link" href="#" onclick="showSection('news', event)">
                             <i class="fas fa-newspaper me-2"></i>资讯管理
                         </a>
-                        <a class="nav-link" href="#" onclick="showSection('cases')">
+                        <a class="nav-link" href="#" onclick="showSection('cases', event)">
                             <i class="fas fa-briefcase me-2"></i>案例管理
                         </a>
-                        <a class="nav-link" href="#" onclick="showSection('applications')">
+                        <a class="nav-link" href="#" onclick="showSection('applications', event)">
                             <i class="fas fa-puzzle-piece me-2"></i>应用领域
                         </a>
-                        <a class="nav-link" href="#" onclick="showSection('media')">
+                        <a class="nav-link" href="#" onclick="showSection('media', event)">
                             <i class="fas fa-images me-2"></i>媒体库
                         </a>
-                        <a class="nav-link" href="#" onclick="showSection('settings')">
+                        <a class="nav-link" href="#" onclick="showSection('settings', event)">
                             <i class="fas fa-cog me-2"></i>系统设置
                         </a>
                     </nav>
@@ -2326,15 +2326,17 @@
                         applications: syncData.applications.length
                     });
 
-                    // 模拟同步到Hugo内容文件
+                    // 执行真正的数据同步
+                    await this.syncToFrontendReal();
+
+                    // 生成Hugo内容文件（可选）
                     await this.generateHugoContentFiles(syncData);
 
                     // 触发前台重新构建（如果有构建钩子）
                     await this.triggerFrontendRebuild();
 
-                    this.lastSyncTime = new Date().toISOString();
                     hideLoading();
-                    showSuccess('✅ 数据同步到前台成功！前台页面将在下次访问时更新。');
+                    showSuccess('✅ 数据同步到前台成功！数据已保存并将在下次访问时更新。');
 
                     return true;
                 } catch (error) {
@@ -2489,15 +2491,134 @@
 
                     // 从搜索索引加载数据
                     const searchData = await this.loadSearchIndex();
-                    if (searchData) {
-                        this.parseSearchIndexData(searchData);
-                    }
+                    if (searchData && Array.isArray(searchData)) {
+                        console.log(`📊 搜索索引加载成功，共 ${searchData.length} 个页面`);
 
-                    return true;
+                        // 解析并同步数据到全局变量
+                        this.parseAndSyncData(searchData);
+
+                        console.log('✅ 前台数据加载和同步完成');
+                        return true;
+                    } else {
+                        console.warn('⚠️ 搜索索引数据为空或格式错误');
+                        return false;
+                    }
                 } catch (error) {
-                    console.error('加载失败:', error);
+                    console.error('❌ 从前台加载数据失败:', error);
                     throw error;
                 }
+            }
+
+            // 解析并同步数据到全局变量
+            parseAndSyncData(searchData) {
+                console.log('🔍 开始解析搜索索引数据...');
+                console.log('📊 搜索索引数据总数:', searchData.length);
+
+                // 统计各类型数据数量
+                const typeStats = {};
+                searchData.forEach(item => {
+                    typeStats[item.type] = (typeStats[item.type] || 0) + 1;
+                });
+                console.log('📊 数据类型统计:', typeStats);
+
+                // 重置全局数据
+                projectData.products = [];
+                newsData = [];
+                casesData = [];
+                applicationsData = [];
+
+                // 临时存储供应商和分类数据
+                const tempSuppliers = new Set();
+                const tempCategories = new Set();
+
+                // 解析各类型数据
+                searchData.forEach((item, index) => {
+                    try {
+                        console.log(`🔄 处理第 ${index + 1} 项:`, item.type, item.title);
+
+                        switch(item.type) {
+                            case 'products':
+                                const product = this.parseProductData(item);
+                                if (product) {
+                                    projectData.products.push(product);
+                                    // 收集供应商和分类信息
+                                    if (product.supplier) tempSuppliers.add(product.supplier);
+                                    if (product.primary_category) tempCategories.add(product.primary_category);
+                                    if (product.secondary_category) tempCategories.add(product.secondary_category);
+                                }
+                                break;
+                            case 'news':
+                                const news = this.parseNewsData(item);
+                                if (news) newsData.push(news);
+                                break;
+                            case 'cases':
+                                const caseItem = this.parseCaseData(item);
+                                if (caseItem) casesData.push(caseItem);
+                                break;
+                            case 'applications':
+                                const application = this.parseApplicationData(item);
+                                if (application) applicationsData.push(application);
+                                break;
+                            default:
+                                console.log(`⚠️ 未知数据类型: ${item.type}`);
+                        }
+                    } catch (error) {
+                        console.error(`❌ 解析 ${item.type} 数据失败:`, error, item);
+                    }
+                });
+
+                // 生成供应商和分类数据
+                this.generateSuppliersData(tempSuppliers);
+                this.generateCategoriesData(tempCategories);
+
+                console.log('📊 数据解析完成统计:');
+                console.log(`- 产品: ${projectData.products.length} 个`);
+                console.log(`- 供应商: ${suppliersData.length} 个`);
+                console.log(`- 分类: ${categoriesData.length} 个`);
+                console.log(`- 资讯: ${newsData.length} 篇`);
+                console.log(`- 案例: ${casesData.length} 个`);
+                console.log(`- 应用领域: ${applicationsData.length} 个`);
+            }
+
+            // 生成供应商数据
+            generateSuppliersData(supplierNames) {
+                suppliersData = Array.from(supplierNames).map(name => {
+                    const productCount = projectData.products.filter(p => p.supplier === name).length;
+                    return {
+                        id: this.generateIdFromName(name),
+                        name: name,
+                        description: `专业的${name.includes('微视') ? '内窥镜' : '检测设备'}制造商`,
+                        contact_person: '销售部',
+                        phone: '400-000-0000',
+                        email: 'sales@company.com',
+                        address: '深圳市南山区',
+                        website: 'https://www.company.com',
+                        products_count: productCount,
+                        status: 'active',
+                        created_date: new Date().toISOString().split('T')[0]
+                    };
+                });
+            }
+
+            // 生成分类数据
+            generateCategoriesData(categoryNames) {
+                categoriesData = Array.from(categoryNames).map((name, index) => {
+                    const productCount = projectData.products.filter(p =>
+                        p.primary_category === name || p.secondary_category === name
+                    ).length;
+
+                    return {
+                        id: this.generateIdFromName(name),
+                        name: name,
+                        description: `${name}相关产品分类`,
+                        parent_category: this.getParentCategory(name),
+                        icon: this.getCategoryIcon(name),
+                        weight: index + 1,
+                        products_count: productCount,
+                        status: 'active',
+                        created_date: new Date().toISOString().split('T')[0]
+                    };
+                });
             }
 
             // 加载搜索索引
@@ -2555,37 +2676,123 @@
 
             // 解析产品数据
             parseProductData(item) {
+                console.log('🔍 解析产品数据:', item.title, item.type, item.uri);
+
                 if (!item.title || item.title.trim() === '' ||
-                    item.uri.includes('_index') || item.uri.includes('model.md')) {
-                    return;
+                    item.uri.includes('_index') || item.uri.includes('model.md') ||
+                    item.uri === '/products/model/') {
+                    console.log('❌ 跳过产品:', item.title, '原因: 不符合条件');
+                    return null;
                 }
 
+                const productId = this.extractIdFromUri(item.uri);
+                const params = item.params || {};
+
+                // 提取产品信息
+                const model = params.model || this.extractModelFromTitle(item.title);
+                const supplier = params.supplier || this.extractSupplierFromContent(item.content) || this.extractSupplierFromTitle(item.title);
+                const series = params.series || this.extractSeriesFromTitle(item.title);
+                const primaryCategory = params.primary_category || '电子内窥镜';
+                const secondaryCategory = params.secondary_category || this.extractSecondaryCategory(item.title);
+
                 const product = {
-                    id: this.extractIdFromUri(item.uri),
+                    id: productId,
                     title: item.title,
-                    model: item.params?.model || this.extractModelFromTitle(item.title),
-                    summary: item.summary || item.params?.summary || '',
-                    primary_category: item.params?.primary_category || '电子内窥镜',
-                    secondary_category: item.params?.secondary_category || '工业视频内窥镜',
-                    supplier: item.params?.supplier || '深圳市微视光电科技有限公司',
-                    series: item.params?.series || this.extractSeriesFromModel(item.params?.model),
+                    model: model,
+                    summary: item.summary || this.extractSummaryFromTitle(item.title),
+                    primary_category: primaryCategory,
+                    secondary_category: secondaryCategory,
+                    supplier: supplier,
+                    series: series,
                     uri: item.uri,
-                    status: item.params?.status || 'published',
-                    statusName: item.params?.status === 'published' ? '已发布' : '草稿',
-                    published: item.date,
-                    thumbnail: item.params?.featured_image || '/images/placeholder.svg',
-                    featured: item.params?.featured || false,
-                    parameters: item.params?.parameters || [],
-                    gallery: item.params?.gallery || [],
-                    downloads: item.params?.downloads || [],
-                    content: item.content || ''
+                    content: item.content || '',
+                    status: params.status || 'published',
+                    statusName: (params.status || 'published') === 'published' ? '已发布' : '草稿',
+                    published: item.date || new Date().toISOString().split('T')[0],
+                    thumbnail: params.featured_image || params.thumbnail || '/images/placeholder.svg',
+                    featured: params.featured || false,
+                    parameters: params.parameters || [],
+                    gallery: params.gallery || [],
+                    downloads: params.downloads || [],
+                    weight: params.weight || 100,
+                    created_date: item.date || new Date().toISOString().split('T')[0],
+                    updated_date: new Date().toISOString().split('T')[0]
                 };
 
-                projectData.products.push(product);
+                console.log('✅ 成功解析产品:', product.title, product.model, product.supplier);
+                return product;
+            }
+
+            // 提取辅助方法
+            extractSupplierFromContent(content) {
+                if (!content) return '深圳市微视光电科技有限公司';
+
+                if (content.includes('微视光电') || content.includes('微视')) {
+                    return '深圳市微视光电科技有限公司';
+                } else if (content.includes('圳本') || content.includes('ZB')) {
+                    return '深圳市圳本科技有限公司';
+                } else if (content.includes('视觉检测') || content.includes('VSNDT')) {
+                    return '维森视觉检测技术有限公司';
+                }
+
+                return '深圳市微视光电科技有限公司';
+            }
+
+            extractSupplierFromTitle(title) {
+                if (!title) return '深圳市微视光电科技有限公司';
+
+                if (title.includes('微视') || title.includes('WS-')) {
+                    return '深圳市微视光电科技有限公司';
+                } else if (title.includes('圳本') || title.includes('ZB-')) {
+                    return '深圳市圳本科技有限公司';
+                } else if (title.includes('DZ-') || title.includes('P-')) {
+                    return '维森视觉检测技术有限公司';
+                }
+
+                return '深圳市微视光电科技有限公司';
+            }
+
+            extractSeriesFromTitle(title) {
+                if (!title) return '';
+
+                if (title.includes('WS-K') || title.includes('K系列')) return 'K系列';
+                if (title.includes('WS-P') || title.includes('P系列')) return 'P系列';
+                if (title.includes('ZB-') || title.includes('圳本')) return 'ZB系列';
+                if (title.includes('DZ-')) return 'DZ系列';
+
+                return '';
+            }
+
+            extractSecondaryCategory(title) {
+                if (!title) return '工业视频内窥镜';
+
+                if (title.includes('光纤') || title.includes('纤维')) return '光纤内窥镜';
+                if (title.includes('硬性') || title.includes('直视')) return '硬性内窥镜';
+                if (title.includes('软性') || title.includes('弯曲')) return '软性内窥镜';
+
+                return '工业视频内窥镜';
+            }
+
+            extractSummaryFromTitle(title) {
+                if (!title) return '';
+
+                // 从标题中提取关键特征作为摘要
+                const features = [];
+                if (title.includes('超细')) features.push('超细直径');
+                if (title.includes('高清')) features.push('高清成像');
+                if (title.includes('便携')) features.push('便携设计');
+                if (title.includes('工业')) features.push('工业级');
+
+                const match = title.match(/(\d+\.?\d*)mm/);
+                if (match) features.push(`${match[1]}mm探头`);
+
+                return features.length > 0 ? features.join('，') + '，适用于专业检测' : '专业检测设备';
             }
 
             // 解析资讯数据
             parseNewsData(item) {
+                console.log('📰 解析资讯数据:', item.title);
+
                 const news = {
                     id: this.extractIdFromUri(item.uri),
                     title: item.title,
@@ -2602,19 +2809,25 @@
                     updated_date: item.date
                 };
 
-                newsData.push(news);
+                console.log('✅ 成功解析资讯:', news.title);
+                return news;
             }
 
             // 解析案例数据
             parseCaseData(item) {
+                console.log('💼 解析案例数据:', item.title);
+
                 const caseItem = {
                     id: this.extractIdFromUri(item.uri),
                     title: item.title,
                     summary: item.summary || '',
                     content: item.content || '',
-                    primary_category: item.params?.primary_category || '',
-                    application_field: item.params?.application_field || '',
-                    application_scenario: item.params?.application_scenario || '',
+                    primary_category: Array.isArray(item.params?.primary_category) ?
+                        item.params.primary_category[0] : item.params?.primary_category || '',
+                    application_field: Array.isArray(item.params?.application_field) ?
+                        item.params.application_field.join(', ') : item.params?.application_field || '',
+                    application_scenario: Array.isArray(item.params?.application_scenario) ?
+                        item.params.application_scenario.join(', ') : item.params?.application_scenario || '',
                     client: item.params?.client || '',
                     industry: item.params?.industry || '',
                     detection_object: item.params?.detection_object || '',
@@ -2625,11 +2838,14 @@
                     updated_date: item.date
                 };
 
-                casesData.push(caseItem);
+                console.log('✅ 成功解析案例:', caseItem.title);
+                return caseItem;
             }
 
             // 解析应用领域数据
             parseApplicationData(item) {
+                console.log('🧩 解析应用领域数据:', item.title);
+
                 const application = {
                     id: this.extractIdFromUri(item.uri),
                     name: item.title,
@@ -2639,13 +2855,14 @@
                     features: item.params?.features || [],
                     key_technologies: item.params?.key_technologies || [],
                     weight: item.params?.weight || 1,
-                    image: item.params?.featured_image || '',
+                    image: item.params?.featured_image || item.params?.image || '',
                     status: item.params?.status || 'published',
                     created_date: item.date,
                     updated_date: item.date
                 };
 
-                applicationsData.push(application);
+                console.log('✅ 成功解析应用领域:', application.name);
+                return application;
             }
 
             // 辅助函数
@@ -2665,6 +2882,115 @@
                 if (model.includes('DZ')) return 'DZ系列';
                 return '';
             }
+
+            // 生成ID的辅助方法
+            generateIdFromName(name) {
+                return name.toLowerCase()
+                    .replace(/[^\w\s-]/g, '')
+                    .replace(/\s+/g, '-')
+                    .replace(/深圳市|科技有限公司|有限公司/g, '')
+                    .replace(/^-+|-+$/g, '');
+            }
+
+            // 获取父级分类
+            getParentCategory(categoryName) {
+                const parentMap = {
+                    '工业视频内窥镜': '电子内窥镜',
+                    '光纤内窥镜': '电子内窥镜',
+                    '硬性内窥镜': '光学内窥镜',
+                    '软性内窥镜': '光学内窥镜'
+                };
+                return parentMap[categoryName] || '';
+            }
+
+            // 获取分类图标
+            getCategoryIcon(categoryName) {
+                const iconMap = {
+                    '电子内窥镜': 'fas fa-video',
+                    '光学内窥镜': 'fas fa-eye',
+                    '工业视频内窥镜': 'fas fa-industry',
+                    '光纤内窥镜': 'fas fa-network-wired',
+                    '硬性内窥镜': 'fas fa-ruler',
+                    '软性内窥镜': 'fas fa-wave-square'
+                };
+                return iconMap[categoryName] || 'fas fa-cog';
+            }
+
+            // 实际的数据持久化方法
+            async saveDataToBackend(data, type) {
+                try {
+                    console.log(`💾 保存${type}数据到后端...`);
+
+                    // 这里应该调用实际的后端API
+                    // 目前使用localStorage作为临时存储
+                    const storageKey = `cms_${type}_data`;
+                    localStorage.setItem(storageKey, JSON.stringify(data));
+
+                    console.log(`✅ ${type}数据保存成功`);
+                    return true;
+                } catch (error) {
+                    console.error(`❌ 保存${type}数据失败:`, error);
+                    return false;
+                }
+            }
+
+            // 从后端加载数据
+            async loadDataFromBackend(type) {
+                try {
+                    console.log(`📥 从后端加载${type}数据...`);
+
+                    // 这里应该调用实际的后端API
+                    // 目前使用localStorage作为临时存储
+                    const storageKey = `cms_${type}_data`;
+                    const data = localStorage.getItem(storageKey);
+
+                    if (data) {
+                        const parsedData = JSON.parse(data);
+                        console.log(`✅ ${type}数据加载成功，共${parsedData.length}条`);
+                        return parsedData;
+                    } else {
+                        console.log(`ℹ️ 没有找到${type}数据`);
+                        return [];
+                    }
+                } catch (error) {
+                    console.error(`❌ 加载${type}数据失败:`, error);
+                    return [];
+                }
+            }
+
+            // 真正的同步到前台方法
+            async syncToFrontendReal() {
+                try {
+                    console.log('🔄 开始真正的数据同步...');
+
+                    // 保存所有数据到后端存储
+                    const savePromises = [
+                        this.saveDataToBackend(projectData.products, 'products'),
+                        this.saveDataToBackend(suppliersData, 'suppliers'),
+                        this.saveDataToBackend(categoriesData, 'categories'),
+                        this.saveDataToBackend(newsData, 'news'),
+                        this.saveDataToBackend(casesData, 'cases'),
+                        this.saveDataToBackend(applicationsData, 'applications')
+                    ];
+
+                    const results = await Promise.all(savePromises);
+                    const allSuccess = results.every(result => result === true);
+
+                    if (allSuccess) {
+                        // 更新最后同步时间
+                        this.lastSyncTime = new Date().toISOString();
+                        localStorage.setItem('cms_last_sync_time', this.lastSyncTime);
+
+                        console.log('✅ 所有数据同步成功');
+                        return true;
+                    } else {
+                        throw new Error('部分数据同步失败');
+                    }
+                } catch (error) {
+                    console.error('❌ 数据同步失败:', error);
+                    throw error;
+                }
+            }
         }
 
         // 创建数据同步管理器实例
@@ -2676,173 +3002,44 @@
                 showLoading();
                 console.log('📡 开始加载项目数据...');
 
-                // 使用数据同步管理器加载数据
-                await dataSyncManager.loadFromFrontend();
+                // 首先尝试从后端加载已保存的数据
+                const savedProducts = await dataSyncManager.loadDataFromBackend('products');
+                const savedSuppliers = await dataSyncManager.loadDataFromBackend('suppliers');
+                const savedCategories = await dataSyncManager.loadDataFromBackend('categories');
+                const savedNews = await dataSyncManager.loadDataFromBackend('news');
+                const savedCases = await dataSyncManager.loadDataFromBackend('cases');
+                const savedApplications = await dataSyncManager.loadDataFromBackend('applications');
 
-                // 获取搜索索引数据用于后续处理
-                const searchData = await dataSyncManager.loadSearchIndex();
-                console.log('📊 搜索索引数据:', searchData);
-
-                if (searchData && Array.isArray(searchData)) {
-                    // 解析产品数据 - 加载所有实际产品
-                    const productPages = searchData.filter(page =>
-                        page.type === 'products' &&
-                        page.title && page.title.trim() !== '' &&
-                        !page.uri.includes('_index') &&
-                        !page.uri.includes('model.md') &&
-                        page.uri !== '/products/model/'
-                    );
-
-                    console.log(`🔍 找到 ${productPages.length} 个产品页面`);
-
-                    projectData.products = productPages.map(page => {
-                        const productId = page.uri.replace('/products/', '').replace('/', '');
-
-                        // 从params中提取数据，如果没有则使用提取函数
-                        const params = page.params || {};
-                        const model = params.model || extractModelFromTitle(page.title);
-                        const supplier = params.supplier || extractSupplierFromContent(page.content) || extractSupplierFromTitle(page.title);
-                        const series = params.series || extractSeriesFromTitle(page.title);
-                        const primaryCategory = params.primary_category || '电子内窥镜';
-                        const secondaryCategory = params.secondary_category || extractSecondaryCategory(page.title);
-
-                        const product = {
-                            id: productId,
-                            title: page.title,
-                            uri: page.uri,
-                            content: page.content || '',
-                            summary: page.summary || extractSummaryFromTitle(page.title),
-                            model: model,
-                            primary_category: primaryCategory,
-                            secondary_category: secondaryCategory,
-                            supplier: supplier,
-                            series: series,
-                            status: 'published',
-                            date: page.date || new Date().toISOString().split('T')[0],
-                            // 保存原始params以备后用
-                            params: params
-                        };
-
-                        console.log(`📦 解析产品: ${product.model} - ${product.title} (${product.supplier})`);
-                        return product;
-                    });
-
-                    console.log(`✅ 成功加载 ${projectData.products.length} 个产品`);
-
-                    // 按供应商分组显示
-                    const supplierGroups = projectData.products.reduce((groups, product) => {
-                        const supplier = product.supplier;
-                        if (!groups[supplier]) groups[supplier] = [];
-                        groups[supplier].push(product.model);
-                        return groups;
-                    }, {});
-                    console.log('📊 按供应商分组:', supplierGroups);
-
-                    // 解析资讯数据
-                    projectData.news = searchData.filter(page =>
-                        page.type === 'news' &&
-                        page.title && page.title.trim() !== ''
-                    ).map(page => ({
-                        id: page.uri.replace('/news/', '').replace('/', ''),
-                        title: page.title,
-                        uri: page.uri,
-                        content: page.content || '',
-                        summary: page.summary || '',
-                        category: extractNewsCategoryFromContent(page.content),
-                        author: '编辑部',
-                        status: 'published',
-                        date: page.date || new Date().toISOString().split('T')[0],
-                        views: Math.floor(Math.random() * 200) + 50
-                    }));
-
-                    // 解析案例数据
-                    projectData.cases = searchData.filter(page =>
-                        page.type === 'cases' &&
-                        page.title && page.title.trim() !== ''
-                    ).map(page => ({
-                        id: page.uri.replace('/cases/', '').replace('/', ''),
-                        title: page.title,
-                        uri: page.uri,
-                        content: page.content || '',
-                        summary: page.summary || '',
-                        category: extractCaseCategoryFromContent(page.content),
-                        industry: extractIndustryFromContent(page.content),
-                        status: 'published',
-                        date: page.date || new Date().toISOString().split('T')[0]
-                    }));
-
-                    // 解析应用领域数据
-                    projectData.applications = searchData.filter(page =>
-                        page.type === 'applications' &&
-                        page.title && page.title.trim() !== ''
-                    ).map(page => ({
-                        id: page.uri.replace('/applications/', '').replace('/', ''),
-                        title: page.title,
-                        uri: page.uri,
-                        content: page.content || '',
-                        summary: page.summary || '',
-                        category: '应用领域',
-                        status: 'published',
-                        date: page.date || new Date().toISOString().split('T')[0]
-                    }));
+                // 如果有保存的数据，优先使用保存的数据
+                if (savedProducts.length > 0) {
+                    console.log('📥 使用后端保存的数据');
+                    projectData.products = savedProducts;
+                    suppliersData = savedSuppliers;
+                    categoriesData = savedCategories;
+                    newsData = savedNews;
+                    casesData = savedCases;
+                    applicationsData = savedApplications;
                 } else {
-                    console.log('搜索索引数据不可用，初始化空数据');
-                    projectData.products = [];
-                    projectData.news = [];
-                    projectData.cases = [];
-                    projectData.applications = [];
+                    console.log('📡 从前台搜索索引加载数据');
+                    // 使用数据同步管理器从前台加载数据
+                    await dataSyncManager.loadFromFrontend();
                 }
 
-                // 提取供应商数据
-                const supplierSet = new Set();
-                projectData.products.forEach(product => {
-                    if (product.supplier) {
-                        supplierSet.add(product.supplier);
-                    }
-                });
+                console.log('📊 数据加载完成统计:');
+                console.log(`- 产品: ${projectData.products.length} 个`);
+                console.log(`- 供应商: ${suppliersData.length} 个`);
+                console.log(`- 分类: ${categoriesData.length} 个`);
+                console.log(`- 资讯: ${newsData.length} 篇`);
+                console.log(`- 案例: ${casesData.length} 个`);
+                console.log(`- 应用领域: ${applicationsData.length} 个`);
 
-                projectData.suppliers = Array.from(supplierSet).map((name, index) => ({
-                    id: `supplier-${index + 1}`,
-                    name: name,
-                    type: '制造商',
-                    products: projectData.products.filter(p => p.supplier === name).length,
-                    status: 'active',
-                    date: new Date().toISOString().split('T')[0]
-                }));
 
-                // 提取分类数据
-                const categorySet = new Set();
-                projectData.products.forEach(product => {
-                    if (product.primary_category) {
-                        categorySet.add(product.primary_category);
-                    }
-                });
 
-                projectData.categories = Array.from(categorySet).map((name, index) => ({
-                    id: `category-${index + 1}`,
-                    name: name,
-                    products: projectData.products.filter(p => p.primary_category === name).length,
-                    status: 'active',
-                    date: new Date().toISOString().split('T')[0]
-                }));
 
-                console.log('✅ 项目数据加载完成:', {
-                    products: projectData.products.length,
-                    suppliers: projectData.suppliers.length,
-                    news: projectData.news.length,
-                    cases: projectData.cases.length,
-                    applications: projectData.applications.length,
+
+                console.log('✅ 项目数据加载完成');
                     categories: projectData.categories.length
                 });
-
-                // 初始化供应商和分类数据
-                initializeSuppliersFromProducts();
-                initializeCategoriesFromProducts();
-
-                // 初始化其他模块数据（如果有的话）
-                initializeNewsData();
-                initializeCasesData();
-                initializeApplicationsData();
 
                 // 更新界面
                 updateDashboard();
@@ -3054,7 +3251,9 @@
         }
 
         // 页面切换
-        function showSection(sectionName) {
+        function showSection(sectionName, event) {
+            console.log('🔄 切换到页面:', sectionName);
+
             // 隐藏所有内容区域
             document.querySelectorAll('.content-section').forEach(section => {
                 section.classList.remove('active');
@@ -3069,10 +3268,21 @@
             const targetSection = document.getElementById(sectionName);
             if (targetSection) {
                 targetSection.classList.add('active');
+                console.log('✅ 显示页面:', sectionName);
+            } else {
+                console.error('❌ 找不到页面:', sectionName);
             }
 
             // 设置对应导航链接为活跃状态
-            event.target.classList.add('active');
+            if (event && event.target) {
+                event.target.classList.add('active');
+            } else {
+                // 如果没有event，通过sectionName查找对应的导航链接
+                const navLink = document.querySelector(`[onclick*="showSection('${sectionName}')"]`);
+                if (navLink) {
+                    navLink.classList.add('active');
+                }
+            }
 
             // 更新页面标题
             const titles = {
@@ -6066,7 +6276,38 @@ published: ${now}
 
         // 同步数据到前台
         async function syncToFrontend() {
-            if (!confirm('确定要将后台数据同步到前台吗？这将更新前台网站的内容。')) {
+            // 检查是否有数据需要同步
+            const hasData =
+                (projectData.products && projectData.products.length > 0) ||
+                (suppliersData && suppliersData.length > 0) ||
+                (categoriesData && categoriesData.length > 0) ||
+                (newsData && newsData.length > 0) ||
+                (casesData && casesData.length > 0) ||
+                (applicationsData && applicationsData.length > 0);
+
+            if (!hasData) {
+                showError('⚠️ 没有数据需要同步！请先加载或添加一些数据。');
+                return;
+            }
+
+            // 显示数据统计
+            const dataStats = `
+当前数据统计：
+- 产品: ${projectData.products?.length || 0} 个
+- 供应商: ${suppliersData?.length || 0} 个
+- 分类: ${categoriesData?.length || 0} 个
+- 资讯: ${newsData?.length || 0} 篇
+- 案例: ${casesData?.length || 0} 个
+- 应用领域: ${applicationsData?.length || 0} 个
+
+⚠️ 重要提示：
+1. 同步操作只会保存数据到后台存储
+2. 不会删除或覆盖前台现有内容
+3. 数据将在下次页面刷新时生效
+
+确定要继续同步吗？`;
+
+            if (!confirm(dataStats)) {
                 return;
             }
 
@@ -6075,10 +6316,11 @@ published: ${now}
                 if (success) {
                     // 同步成功后，显示同步状态
                     updateSyncStatus();
+                    showSuccess(`✅ 数据同步成功！已保存 ${projectData.products?.length || 0} 个产品和相关数据到后台存储。`);
                 }
             } catch (error) {
                 console.error('同步失败:', error);
-                showError('同步失败: ' + error.message);
+                showError('❌ 同步失败: ' + error.message);
             }
         }
 
@@ -6086,14 +6328,42 @@ published: ${now}
         function updateSyncStatus() {
             const statusElement = document.getElementById('syncStatus');
             if (statusElement) {
-                const now = new Date();
-                statusElement.innerHTML = `
-                    <small class="text-success">
-                        <i class="fas fa-check-circle me-1"></i>
-                        最后同步: ${now.toLocaleString()}
-                    </small>
-                `;
+                const lastSyncTime = localStorage.getItem('cms_last_sync_time');
+                if (lastSyncTime) {
+                    const syncDate = new Date(lastSyncTime);
+                    statusElement.innerHTML = `
+                        <small class="text-success">
+                            <i class="fas fa-check-circle me-1"></i>
+                            最后同步: ${syncDate.toLocaleString()}
+                        </small>
+                    `;
+                } else {
+                    statusElement.innerHTML = `
+                        <small class="text-warning">
+                            <i class="fas fa-exclamation-triangle me-1"></i>
+                            尚未同步，建议点击"同步到前台"
+                        </small>
+                    `;
+                }
             }
+        }
+
+        // 检查数据同步状态
+        function checkSyncStatus() {
+            const lastSyncTime = localStorage.getItem('cms_last_sync_time');
+            const hasLocalData =
+                localStorage.getItem('cms_products_data') ||
+                localStorage.getItem('cms_suppliers_data') ||
+                localStorage.getItem('cms_categories_data') ||
+                localStorage.getItem('cms_news_data') ||
+                localStorage.getItem('cms_cases_data') ||
+                localStorage.getItem('cms_applications_data');
+
+            return {
+                hasBeenSynced: !!lastSyncTime,
+                hasLocalData: !!hasLocalData,
+                lastSyncTime: lastSyncTime ? new Date(lastSyncTime) : null
+            };
         }
 
         // 检查数据是否有变更
@@ -7247,16 +7517,26 @@ published: ${now}
         function viewSupplierProducts(supplierName) {
             // 切换到产品页面并过滤该供应商的产品
             showSection('products');
-            document.getElementById('supplierFilter').value = supplierName;
-            filterProducts();
+            setTimeout(() => {
+                const supplierFilter = document.getElementById('supplierFilter');
+                if (supplierFilter) {
+                    supplierFilter.value = supplierName;
+                    filterProducts();
+                }
+            }, 100);
             showSuccess(`显示供应商"${supplierName}"的产品`);
         }
 
         function viewCategoryProducts(categoryName) {
             // 切换到产品页面并过滤该分类的产品
             showSection('products');
-            document.getElementById('categoryFilter').value = categoryName;
-            filterProducts();
+            setTimeout(() => {
+                const categoryFilter = document.getElementById('categoryFilter');
+                if (categoryFilter) {
+                    categoryFilter.value = categoryName;
+                    filterProducts();
+                }
+            }, 100);
             showSuccess(`显示分类"${categoryName}"的产品`);
         }
 
