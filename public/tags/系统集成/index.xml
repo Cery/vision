@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>系统集成 on 维森视觉检测仪器</title>
-    <link>http://localhost:1314/tags/%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/</link>
+    <link>http://localhost:1317/tags/%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/</link>
     <description>Recent content in 系统集成 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Wed, 13 Mar 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1314/tags/%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1317/tags/%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>无线传输技术在内窥镜检测中的应用</title>
-      <link>http://localhost:1314/news/tech-article-4/</link>
+      <link>http://localhost:1317/news/tech-article-4/</link>
       <pubDate>Wed, 13 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1314/news/tech-article-4/</guid>
+      <guid>http://localhost:1317/news/tech-article-4/</guid>
       <description>分析无线传输技术在内窥镜检测系统中的应用优势和技术挑战</description>
     </item>
   </channel>

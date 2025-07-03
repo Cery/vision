@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1314&amp;path=livereload" data-no-instant defer></script>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1317&amp;path=livereload" data-no-instant defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>资讯中心 - 维森·视觉检测仪器</title>
@@ -26,19 +26,19 @@
 
 
 <meta property="og:type" content="article">
-<meta property="og:url" content="http://localhost:1314/news/">
+<meta property="og:url" content="http://localhost:1317/news/">
 <meta property="og:title" content="资讯中心 - 维森视觉检测仪器">
 <meta property="og:description" content="专业的视觉检测设备信息与资讯发布平台，提供工业内窥镜、检测相机等产品信息，为制造业提供优质的检测解决方案">
-<meta property="og:image" content="http://localhost:1314/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta property="og:image" content="http://localhost:1317/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 <meta property="og:site_name" content="维森视觉检测仪器">
 <meta property="og:locale" content="zh_CN">
 
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="http://localhost:1314/news/">
+<meta name="twitter:url" content="http://localhost:1317/news/">
 <meta name="twitter:title" content="资讯中心 - 维森视觉检测仪器">
 <meta name="twitter:description" content="专业的视觉检测设备信息与资讯发布平台，提供工业内窥镜、检测相机等产品信息，为制造业提供优质的检测解决方案">
-<meta name="twitter:image" content="http://localhost:1314/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta name="twitter:image" content="http://localhost:1317/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 
 
 
@@ -48,7 +48,7 @@
   "@type": "Article",
   "headline": "资讯中心",
   "description": "资讯中心",
-  "image": "http:\/\/localhost:1314\/images\/assets\/brand\/logos\/brand_logos_logo-dark_original_v1.svg",
+  "image": "http:\/\/localhost:1317\/images\/assets\/brand\/logos\/brand_logos_logo-dark_original_v1.svg",
   "author": {
     "@type": "Organization",
     "name": "维森视觉检测仪器"
@@ -58,7 +58,7 @@
     "name": "维森视觉检测仪器",
     "logo": {
       "@type": "ImageObject",
-      "url": "http:\/\/localhost:1314\/images\/assets\/brand\/logos\/brand_logos_logo-dark_original_v1.svg"
+      "url": "http:\/\/localhost:1317\/images\/assets\/brand\/logos\/brand_logos_logo-dark_original_v1.svg"
     }
   },
   "datePublished": "2024-12-05T00:00:00Z",
@@ -68,7 +68,7 @@
 
 
 
-<link rel="canonical" href="http://localhost:1314/news/">
+<link rel="canonical" href="http://localhost:1317/news/">
 
 
 <link rel="icon" type="image/svg+xml" href="/images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
@@ -1106,16 +1106,27 @@
         <a class="navbar-brand" href="/">
             <img src="/images/assets/brand/logos/brand_logos_logo-new_original_v1.svg" alt="维森视觉检测仪器" height="50" class="logo-img">
         </a>
-        
-        <button class="btn btn-primary d-lg-none me-2" style="position:relative;z-index:1051;"
-                data-bs-toggle="modal" data-bs-target="#searchModal">
-            <i class="fas fa-search fa-lg"></i>
-        </button>
-
 
         
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
-                data-bs-target="#navbarNav" aria-controls="navbarNav" 
+        <div class="d-lg-none d-flex align-items-center">
+            
+            <button class="btn btn-primary me-2 mobile-search-btn"
+                    data-bs-toggle="modal" data-bs-target="#searchModal"
+                    aria-label="搜索">
+                <i class="fas fa-search"></i>
+            </button>
+
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav" aria-controls="navbarNav"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+
+        
+        <button class="navbar-toggler d-none" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav" aria-controls="navbarNav"
                 aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -1208,6 +1219,58 @@
 }
 
  
+.mobile-search-btn {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 2px solid transparent;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    box-shadow: 0 3px 10px rgba(0, 123, 255, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.mobile-search-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mobile-search-btn:hover::before {
+    opacity: 1;
+}
+
+.mobile-search-btn:hover {
+    background: linear-gradient(135deg, #0056b3, #004085);
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+}
+
+.mobile-search-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
+}
+
+.mobile-search-btn i {
+    font-size: 18px;
+    z-index: 1;
+    position: relative;
+}
+
+ 
 @media (max-width: 768px) {
     .navbar-brand .logo-img {
         height: 40px;
@@ -1217,6 +1280,79 @@
         text-align: center;
         margin-top: 1rem;
     }
+
+     
+    .mobile-search-btn {
+        width: 44px;
+        height: 44px;
+    }
+
+    .mobile-search-btn i {
+        font-size: 16px;
+    }
+
+    .navbar-toggler {
+        width: 44px !important;
+        height: 44px !important;
+    }
+
+     
+    .d-lg-none.d-flex {
+        align-items: center;
+        gap: 0.75rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-brand .logo-img {
+        height: 35px;
+    }
+
+     
+    .mobile-search-btn {
+        width: 40px;
+        height: 40px;
+        margin-right: 0.5rem !important;
+    }
+
+    .mobile-search-btn i {
+        font-size: 15px;
+    }
+
+    .navbar-toggler {
+        padding: 0.5rem;
+        border: 2px solid #dee2e6;
+        border-radius: 50%;
+        width: 46px;
+        height: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fa;
+        transition: all 0.3s ease;
+    }
+
+    .navbar-toggler:hover {
+        background-color: #e9ecef;
+        border-color: #adb5bd;
+        transform: scale(1.05);
+    }
+
+    .navbar-toggler:focus {
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        border-color: #007bff;
+    }
+
+    .navbar-toggler:active {
+        transform: scale(0.95);
+    }
+
+    .navbar-toggler-icon {
+        width: 20px;
+        height: 20px;
+        background-size: 20px 20px;
+    }
+}
 
     .nav-item {
         margin: 0.25rem 0;
@@ -1786,7 +1922,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/exhibition-news-8/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/exhibition-news-8/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -1800,7 +1936,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/exhibition-news-8/" class="text-decoration-none text-dark hover-primary">2024杭州工业检测设备与技术展览会</a>
+                                <a href="http://localhost:1317/news/exhibition-news-8/" class="text-decoration-none text-dark hover-primary">2024杭州工业检测设备与技术展览会</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">展会将在杭州国际博览中心举办</p>
@@ -1835,7 +1971,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/exhibition-news-12/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/exhibition-news-12/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -1853,7 +1989,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/exhibition-news-12/" class="text-decoration-none text-dark hover-primary">2024年巴西圣保罗工业技术博览会</a>
+                                <a href="http://localhost:1317/news/exhibition-news-12/" class="text-decoration-none text-dark hover-primary">2024年巴西圣保罗工业技术博览会</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">南美地区最大的工业技术展览会，展示内窥镜技术在拉美市场的发展机遇</p>
@@ -1890,7 +2026,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/exhibition-news-11/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/exhibition-news-11/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -1908,7 +2044,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/exhibition-news-11/" class="text-decoration-none text-dark hover-primary">2024年印度新德里工业检测技术展览会</a>
+                                <a href="http://localhost:1317/news/exhibition-news-11/" class="text-decoration-none text-dark hover-primary">2024年印度新德里工业检测技术展览会</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">南亚地区重要的工业检测技术展览会，展示内窥镜技术在新兴市场的应用前景</p>
@@ -1945,7 +2081,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/exhibition-news-7/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/exhibition-news-7/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -1961,7 +2097,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/exhibition-news-7/" class="text-decoration-none text-dark hover-primary">2024西安工业自动化及机器人展览会</a>
+                                <a href="http://localhost:1317/news/exhibition-news-7/" class="text-decoration-none text-dark hover-primary">2024西安工业自动化及机器人展览会</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">展会将在西安曲江国际会展中心举办</p>
@@ -1996,7 +2132,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/exhibition-news-6/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/exhibition-news-6/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -2012,7 +2148,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/exhibition-news-6/" class="text-decoration-none text-dark hover-primary">2024北京国际工业智能装备展览会</a>
+                                <a href="http://localhost:1317/news/exhibition-news-6/" class="text-decoration-none text-dark hover-primary">2024北京国际工业智能装备展览会</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">展会将在北京国际展览中心举办</p>
@@ -2047,7 +2183,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/exhibition-news-10/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/exhibition-news-10/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -2065,7 +2201,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/exhibition-news-10/" class="text-decoration-none text-dark hover-primary">2024年韩国首尔智能制造技术展览会</a>
+                                <a href="http://localhost:1317/news/exhibition-news-10/" class="text-decoration-none text-dark hover-primary">2024年韩国首尔智能制造技术展览会</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">韩国最大的智能制造技术展览会，展示内窥镜技术在智能工厂中的应用</p>
@@ -2102,7 +2238,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/exhibition-news-9/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/exhibition-news-9/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -2120,7 +2256,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/exhibition-news-9/" class="text-decoration-none text-dark hover-primary">2024年英国伦敦工业检测技术展览会</a>
+                                <a href="http://localhost:1317/news/exhibition-news-9/" class="text-decoration-none text-dark hover-primary">2024年英国伦敦工业检测技术展览会</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">欧洲地区重要的工业检测技术展览会，聚焦内窥镜技术在工业4.0中的应用</p>
@@ -2157,7 +2293,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/exhibition-news-5/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/exhibition-news-5/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -2175,7 +2311,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/exhibition-news-5/" class="text-decoration-none text-dark hover-primary">2024年日本东京精密检测技术博览会</a>
+                                <a href="http://localhost:1317/news/exhibition-news-5/" class="text-decoration-none text-dark hover-primary">2024年日本东京精密检测技术博览会</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">亚洲地区领先的精密检测技术展览会，展示工业内窥镜在精密制造中的应用</p>
@@ -2211,7 +2347,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/exhibition-news-2/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/exhibition-news-2/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -2229,7 +2365,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/exhibition-news-2/" class="text-decoration-none text-dark hover-primary">2024广州国际工业检测设备展览会</a>
+                                <a href="http://localhost:1317/news/exhibition-news-2/" class="text-decoration-none text-dark hover-primary">2024广州国际工业检测设备展览会</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">展会将在广州国际会展中心举办，聚焦工业检测设备与技术创新</p>
@@ -2266,7 +2402,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/exhibition-news-4/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/exhibition-news-4/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -2284,7 +2420,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/exhibition-news-4/" class="text-decoration-none text-dark hover-primary">2024年美国芝加哥无损检测技术展览会</a>
+                                <a href="http://localhost:1317/news/exhibition-news-4/" class="text-decoration-none text-dark hover-primary">2024年美国芝加哥无损检测技术展览会</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">北美地区最大的无损检测技术展览会，聚焦内窥镜检测技术创新应用</p>
@@ -2320,7 +2456,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/exhibition-news-1/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/exhibition-news-1/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -2338,7 +2474,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/exhibition-news-1/" class="text-decoration-none text-dark hover-primary">2024年第15届中国国际工业内窥镜技术展览会</a>
+                                <a href="http://localhost:1317/news/exhibition-news-1/" class="text-decoration-none text-dark hover-primary">2024年第15届中国国际工业内窥镜技术展览会</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">展会将于5月15-17日在上海新国际博览中心举行，汇聚全球工业内窥镜技术创新成果</p>
@@ -2375,7 +2511,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/exhibition-news-3/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/exhibition-news-3/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -2393,7 +2529,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/exhibition-news-3/" class="text-decoration-none text-dark hover-primary">2024年德国汉诺威工业博览会内窥镜专区</a>
+                                <a href="http://localhost:1317/news/exhibition-news-3/" class="text-decoration-none text-dark hover-primary">2024年德国汉诺威工业博览会内窥镜专区</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">德国汉诺威工业博览会内窥镜技术专区，展示最新工业4.0检测解决方案</p>
@@ -2429,7 +2565,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/tech-article-1/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/tech-article-1/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -2447,7 +2583,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/tech-article-1/" class="text-decoration-none text-dark hover-primary">工业内窥镜图像处理算法优化技术研究</a>
+                                <a href="http://localhost:1317/news/tech-article-1/" class="text-decoration-none text-dark hover-primary">工业内窥镜图像处理算法优化技术研究</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">深入探讨工业内窥镜图像处理算法的优化方法，提升检测精度和效率</p>
@@ -2483,7 +2619,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/industry-news-1/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/industry-news-1/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -2499,7 +2635,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/industry-news-1/" class="text-decoration-none text-dark hover-primary">内窥镜技术在工业检测中的创新应用</a>
+                                <a href="http://localhost:1317/news/industry-news-1/" class="text-decoration-none text-dark hover-primary">内窥镜技术在工业检测中的创新应用</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">探讨最新内窥镜技术在工业检测领域的创新应用，提高检测效率和精度</p>
@@ -2535,7 +2671,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/tech-article-2/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/tech-article-2/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -2553,7 +2689,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/tech-article-2/" class="text-decoration-none text-dark hover-primary">基于深度学习的内窥镜缺陷自动识别系统</a>
+                                <a href="http://localhost:1317/news/tech-article-2/" class="text-decoration-none text-dark hover-primary">基于深度学习的内窥镜缺陷自动识别系统</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">介绍基于深度学习技术的内窥镜缺陷自动识别系统的设计与实现</p>
@@ -2589,7 +2725,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/industry-news-2/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/industry-news-2/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -2607,7 +2743,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/industry-news-2/" class="text-decoration-none text-dark hover-primary">AI技术赋能工业内窥镜检测新突破</a>
+                                <a href="http://localhost:1317/news/industry-news-2/" class="text-decoration-none text-dark hover-primary">AI技术赋能工业内窥镜检测新突破</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">人工智能技术与工业内窥镜的深度融合，实现智能缺陷识别和自动化检测</p>
@@ -2643,7 +2779,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/tech-article-3/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/tech-article-3/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -2661,7 +2797,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/tech-article-3/" class="text-decoration-none text-dark hover-primary">工业内窥镜光学系统设计与优化</a>
+                                <a href="http://localhost:1317/news/tech-article-3/" class="text-decoration-none text-dark hover-primary">工业内窥镜光学系统设计与优化</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">探讨工业内窥镜光学系统的设计原理和优化方法，提升成像质量</p>
@@ -2698,7 +2834,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/industry-news-3/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/industry-news-3/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -2716,7 +2852,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/industry-news-3/" class="text-decoration-none text-dark hover-primary">5G远程内窥镜检测系统解决方案发布</a>
+                                <a href="http://localhost:1317/news/industry-news-3/" class="text-decoration-none text-dark hover-primary">5G远程内窥镜检测系统解决方案发布</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">基于5G技术的远程内窥镜检测系统，实现远程实时监控和专家指导</p>
@@ -2752,7 +2888,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/2024-03-14-tech-trends/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/2024-03-14-tech-trends/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -2768,7 +2904,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/2024-03-14-tech-trends/" class="text-decoration-none text-dark hover-primary">新一代工业内窥镜技术发展趋势</a>
+                                <a href="http://localhost:1317/news/2024-03-14-tech-trends/" class="text-decoration-none text-dark hover-primary">新一代工业内窥镜技术发展趋势</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">探讨2024年工业内窥镜领域的最新技术发展趋势，包括AI图像识别、5G远程控制等创新应用</p>
@@ -2804,7 +2940,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/tech-article-4/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/tech-article-4/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -2822,7 +2958,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/tech-article-4/" class="text-decoration-none text-dark hover-primary">无线传输技术在内窥镜检测中的应用</a>
+                                <a href="http://localhost:1317/news/tech-article-4/" class="text-decoration-none text-dark hover-primary">无线传输技术在内窥镜检测中的应用</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">分析无线传输技术在内窥镜检测系统中的应用优势和技术挑战</p>
@@ -2859,7 +2995,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/industry-news-4/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/industry-news-4/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -2875,7 +3011,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/industry-news-4/" class="text-decoration-none text-dark hover-primary">新型管道爬行机器人技术取得重大突破</a>
+                                <a href="http://localhost:1317/news/industry-news-4/" class="text-decoration-none text-dark hover-primary">新型管道爬行机器人技术取得重大突破</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">创新型管道爬行机器人技术突破，提升复杂管道检测能力，为工业检测领域带来革命性进展</p>
@@ -2911,7 +3047,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/tech-article-5/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/tech-article-5/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -2929,7 +3065,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/tech-article-5/" class="text-decoration-none text-dark hover-primary">工业内窥镜探头微型化技术发展趋势</a>
+                                <a href="http://localhost:1317/news/tech-article-5/" class="text-decoration-none text-dark hover-primary">工业内窥镜探头微型化技术发展趋势</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">探讨工业内窥镜探头微型化技术的发展现状和未来趋势</p>
@@ -2966,7 +3102,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/industry-news-5/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/industry-news-5/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -2984,7 +3120,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/industry-news-5/" class="text-decoration-none text-dark hover-primary">绿色制造推动无损检测技术环保升级</a>
+                                <a href="http://localhost:1317/news/industry-news-5/" class="text-decoration-none text-dark hover-primary">绿色制造推动无损检测技术环保升级</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">绿色制造理念推动无损检测技术向环保化、节能化方向发展，内窥镜技术成为绿色检测的重要选择</p>
@@ -3020,7 +3156,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/2024-01-20-product-launch/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/2024-01-20-product-launch/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -3038,7 +3174,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/2024-01-20-product-launch/" class="text-decoration-none text-dark hover-primary">微视光电发布新一代K09520电子内窥镜</a>
+                                <a href="http://localhost:1317/news/2024-01-20-product-launch/" class="text-decoration-none text-dark hover-primary">微视光电发布新一代K09520电子内窥镜</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">深圳市微视光电科技有限公司正式发布新一代K09520电子内窥镜，该产品采用创新的图像处理技术，配备7英寸IPS触摸屏，具有超高清成像、长续航等特点</p>
@@ -3074,7 +3210,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/2024-01-16-exhibition-news/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/2024-01-16-exhibition-news/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -3092,7 +3228,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/2024-01-16-exhibition-news/" class="text-decoration-none text-dark hover-primary">2024年工业检测设备展览会即将开幕</a>
+                                <a href="http://localhost:1317/news/2024-01-16-exhibition-news/" class="text-decoration-none text-dark hover-primary">2024年工业检测设备展览会即将开幕</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">第二十届中国国际工业检测设备展览会将于2024年3月在深圳会展中心隆重举行。本届展会将汇集全球500多家知名企业，展示最新的工业检测技术和产品</p>
@@ -3128,7 +3264,7 @@
                             
                             <div class="card-img-overlay d-flex align-items-end">
                                 <div class="w-100 text-end mb-3">
-                                    <a href="http://localhost:1314/news/2024-01-15-industry-news-example/" class="btn btn-primary btn-sm">阅读全文</a>
+                                    <a href="http://localhost:1317/news/2024-01-15-industry-news-example/" class="btn btn-primary btn-sm">阅读全文</a>
                                 </div>
                             </div>
                         </div>
@@ -3146,7 +3282,7 @@
                                 
                             </div>
                             <h5 class="card-title">
-                                <a href="http://localhost:1314/news/2024-01-15-industry-news-example/" class="text-decoration-none text-dark hover-primary">工业内窥镜技术发展趋势分析</a>
+                                <a href="http://localhost:1317/news/2024-01-15-industry-news-example/" class="text-decoration-none text-dark hover-primary">工业内窥镜技术发展趋势分析</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1">本文深入分析了工业内窥镜技术的最新发展趋势，包括高清成像、智能识别、远程操控等方面的创新突破，探讨了这些技术进步对工业检测领域带来的深远影响</p>
@@ -3833,33 +3969,6 @@ small.text-muted i {
 }
 
  
-.pagination .page-link {
-    color: #1976d2;
-    padding: 0.5rem 0.75rem;
-    border-radius: 8px;
-    margin: 0 0.25rem;
-    font-size: 14px;
-    border-color: #e0e0e0;
-    transition: all 0.15s ease-in-out;
-}
-
-.pagination .page-link:hover {
-    background-color: #1976d2;
-    border-color: #1976d2;
-    color: white;
-}
-
-.pagination .page-item.active .page-link {
-    background-color: #1976d2;
-    border-color: #1976d2;
-    color: white;
-}
-
-.pagination .page-item.disabled .page-link {
-    color: #9e9e9e;
-    background-color: #f5f5f5;
-    border-color: #e0e0e0;
-}
 
  
 .btn-outline-primary.active,
@@ -4295,7 +4404,7 @@ function applyFiltersAndSort() {
 
     
     updateNewsDisplay();
-    updatePagination();
+    updateEnhancedPagination('newsList', filteredNews, 1);
     updateNewsCount();
     updateSelectedFilters();
 }
@@ -4354,72 +4463,7 @@ function updateNewsDisplay() {
     }
 }
 
-function updatePagination() {
-    const totalPages = Math.ceil(filteredNews.length / NEWS_ITEMS_PER_PAGE);
-    const paginationList = document.getElementById('pagination-list');
-    const paginationInfo = document.getElementById('pagination-info');
 
-    
-    if (filteredNews.length > 0) {
-        const startItem = (currentPage - 1) * NEWS_ITEMS_PER_PAGE + 1;
-        const endItem = Math.min(currentPage * NEWS_ITEMS_PER_PAGE, filteredNews.length);
-        paginationInfo.innerHTML = `显示第 ${currentPage} 页，共 ${totalPages} 页 (总计 ${filteredNews.length} 篇新闻，当前显示 ${startItem}-${endItem})`;
-    } else {
-        paginationInfo.innerHTML = '总计 0 篇新闻';
-    }
-
-    
-    if (totalPages <= 1) {
-        paginationList.style.display = 'none';
-        return;
-    } else {
-        paginationList.style.display = 'flex';
-    }
-
-    
-    let paginationHTML = '';
-
-    
-    if (currentPage > 1) {
-        paginationHTML += `<li class="page-item">
-            <a class="page-link" href="javascript:void(0)" onclick="goToPage(${currentPage - 1})" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        </li>`;
-    } else {
-        paginationHTML += `<li class="page-item disabled">
-            <span class="page-link" aria-hidden="true">&laquo;</span>
-        </li>`;
-    }
-
-    
-    for (let i = 1; i <= totalPages; i++) {
-        if (i === currentPage) {
-            paginationHTML += `<li class="page-item active">
-                <span class="page-link">${i}</span>
-            </li>`;
-        } else {
-            paginationHTML += `<li class="page-item">
-                <a class="page-link" href="javascript:void(0)" onclick="goToPage(${i})">${i}</a>
-            </li>`;
-        }
-    }
-
-    
-    if (currentPage < totalPages) {
-        paginationHTML += `<li class="page-item">
-            <a class="page-link" href="javascript:void(0)" onclick="goToPage(${currentPage + 1})" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>`;
-    } else {
-        paginationHTML += `<li class="page-item disabled">
-            <span class="page-link" aria-hidden="true">&raquo;</span>
-        </li>`;
-    }
-
-    paginationList.innerHTML = paginationHTML;
-}
 
 function updateNewsCount() {
     const countInfo = document.getElementById('news-count-info');
@@ -4479,17 +4523,7 @@ function removeFilter(filterType, value) {
     applyFiltersAndSort();
 }
 
-function goToPage(page) {
-    currentPage = page;
-    updateNewsDisplay();
-    updatePagination();
 
-    
-    document.getElementById('newsList').scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-    });
-}
 
 
 

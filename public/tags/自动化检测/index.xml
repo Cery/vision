@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>自动化检测 on 维森视觉检测仪器</title>
-    <link>http://localhost:1314/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%A3%80%E6%B5%8B/</link>
+    <link>http://localhost:1317/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%A3%80%E6%B5%8B/</link>
     <description>Recent content in 自动化检测 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Tue, 19 Mar 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1314/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%A3%80%E6%B5%8B/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1317/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%A3%80%E6%B5%8B/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>基于深度学习的内窥镜缺陷自动识别系统</title>
-      <link>http://localhost:1314/news/tech-article-2/</link>
+      <link>http://localhost:1317/news/tech-article-2/</link>
       <pubDate>Tue, 19 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1314/news/tech-article-2/</guid>
+      <guid>http://localhost:1317/news/tech-article-2/</guid>
       <description>介绍基于深度学习技术的内窥镜缺陷自动识别系统的设计与实现</description>
     </item>
   </channel>

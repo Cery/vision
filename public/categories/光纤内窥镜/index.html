@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1314&amp;path=livereload" data-no-instant defer></script>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1317&amp;path=livereload" data-no-instant defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>光纤内窥镜 - 维森·视觉检测仪器</title>
@@ -26,25 +26,25 @@
 
 
 <meta property="og:type" content="article">
-<meta property="og:url" content="http://localhost:1314/categories/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/">
+<meta property="og:url" content="http://localhost:1317/categories/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/">
 <meta property="og:title" content="光纤内窥镜 - 维森视觉检测仪器">
 <meta property="og:description" content="专业的视觉检测设备信息与资讯发布平台，提供工业内窥镜、检测相机等产品信息，为制造业提供优质的检测解决方案">
-<meta property="og:image" content="http://localhost:1314/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta property="og:image" content="http://localhost:1317/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 <meta property="og:site_name" content="维森视觉检测仪器">
 <meta property="og:locale" content="zh_CN">
 
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="http://localhost:1314/categories/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/">
+<meta name="twitter:url" content="http://localhost:1317/categories/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/">
 <meta name="twitter:title" content="光纤内窥镜 - 维森视觉检测仪器">
 <meta name="twitter:description" content="专业的视觉检测设备信息与资讯发布平台，提供工业内窥镜、检测相机等产品信息，为制造业提供优质的检测解决方案">
-<meta name="twitter:image" content="http://localhost:1314/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta name="twitter:image" content="http://localhost:1317/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 
 
 
 
 
-<link rel="canonical" href="http://localhost:1314/categories/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/">
+<link rel="canonical" href="http://localhost:1317/categories/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/">
 
 
 <link rel="icon" type="image/svg+xml" href="/images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
@@ -1082,16 +1082,27 @@
         <a class="navbar-brand" href="/">
             <img src="/images/assets/brand/logos/brand_logos_logo-new_original_v1.svg" alt="维森视觉检测仪器" height="50" class="logo-img">
         </a>
-        
-        <button class="btn btn-primary d-lg-none me-2" style="position:relative;z-index:1051;"
-                data-bs-toggle="modal" data-bs-target="#searchModal">
-            <i class="fas fa-search fa-lg"></i>
-        </button>
-
 
         
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
-                data-bs-target="#navbarNav" aria-controls="navbarNav" 
+        <div class="d-lg-none d-flex align-items-center">
+            
+            <button class="btn btn-primary me-2 mobile-search-btn"
+                    data-bs-toggle="modal" data-bs-target="#searchModal"
+                    aria-label="搜索">
+                <i class="fas fa-search"></i>
+            </button>
+
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav" aria-controls="navbarNav"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+
+        
+        <button class="navbar-toggler d-none" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav" aria-controls="navbarNav"
                 aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -1184,6 +1195,58 @@
 }
 
  
+.mobile-search-btn {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 2px solid transparent;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    box-shadow: 0 3px 10px rgba(0, 123, 255, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.mobile-search-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mobile-search-btn:hover::before {
+    opacity: 1;
+}
+
+.mobile-search-btn:hover {
+    background: linear-gradient(135deg, #0056b3, #004085);
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+}
+
+.mobile-search-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
+}
+
+.mobile-search-btn i {
+    font-size: 18px;
+    z-index: 1;
+    position: relative;
+}
+
+ 
 @media (max-width: 768px) {
     .navbar-brand .logo-img {
         height: 40px;
@@ -1193,6 +1256,79 @@
         text-align: center;
         margin-top: 1rem;
     }
+
+     
+    .mobile-search-btn {
+        width: 44px;
+        height: 44px;
+    }
+
+    .mobile-search-btn i {
+        font-size: 16px;
+    }
+
+    .navbar-toggler {
+        width: 44px !important;
+        height: 44px !important;
+    }
+
+     
+    .d-lg-none.d-flex {
+        align-items: center;
+        gap: 0.75rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-brand .logo-img {
+        height: 35px;
+    }
+
+     
+    .mobile-search-btn {
+        width: 40px;
+        height: 40px;
+        margin-right: 0.5rem !important;
+    }
+
+    .mobile-search-btn i {
+        font-size: 15px;
+    }
+
+    .navbar-toggler {
+        padding: 0.5rem;
+        border: 2px solid #dee2e6;
+        border-radius: 50%;
+        width: 46px;
+        height: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fa;
+        transition: all 0.3s ease;
+    }
+
+    .navbar-toggler:hover {
+        background-color: #e9ecef;
+        border-color: #adb5bd;
+        transform: scale(1.05);
+    }
+
+    .navbar-toggler:focus {
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        border-color: #007bff;
+    }
+
+    .navbar-toggler:active {
+        transform: scale(0.95);
+    }
+
+    .navbar-toggler-icon {
+        width: 20px;
+        height: 20px;
+        background-size: 20px 20px;
+    }
+}
 
     .nav-item {
         margin: 0.25rem 0;
