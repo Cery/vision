@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>供应商数据测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>供应商数据同步测试</h1>
+    
+    <div class="test-section">
+        <h3>1. 搜索索引测试</h3>
+        <button onclick="testSearchIndex()">测试搜索索引</button>
+        <div id="searchIndexResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>2. 供应商MD文件测试</h3>
+        <button onclick="testSupplierFiles()">测试供应商文件</button>
+        <div id="supplierFilesResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>3. 数据同步测试</h3>
+        <button onclick="testDataSync()">测试数据同步</button>
+        <div id="dataSyncResult"></div>
+    </div>
+
+    <script>
+        async function testSearchIndex() {
+            const resultDiv = document.getElementById('searchIndexResult');
+            try {
+                const response = await fetch('/search-index.json');
+                const data = await response.json();
+                
+                const suppliers = data.filter(item => item.type === 'suppliers');
+                
+                resultDiv.innerHTML = `
+                    <div class="${suppliers.length > 0 ? 'success' : 'error'}">
+                        <p>搜索索引中找到 ${suppliers.length} 个供应商</p>
+                        <pre>${JSON.stringify(suppliers, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <p>搜索索引测试失败: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function testSupplierFiles() {
+            const resultDiv = document.getElementById('supplierFilesResult');
+            const files = ['vsndt', 'vis', 'spkj'];
+            const results = [];
+            
+            for (const file of files) {
+                try {
+                    const response = await fetch(`/suppliers/${file}/`);
+                    const text = await response.text();
+                    results.push({
+                        file: file,
+                        status: response.status,
+                        hasContent: text.length > 0,
+                        preview: text.substring(0, 200) + '...'
+                    });
+                } catch (error) {
+                    results.push({
+                        file: file,
+                        status: 'error',
+                        error: error.message
+                    });
+                }
+            }
+            
+            resultDiv.innerHTML = `
+                <div class="success">
+                    <p>供应商文件测试结果:</p>
+                    <pre>${JSON.stringify(results, null, 2)}</pre>
+                </div>
+            `;
+        }
+
+        async function testDataSync() {
+            const resultDiv = document.getElementById('dataSyncResult');
+            
+            try {
+                // 模拟数据同步逻辑
+                const response = await fetch('/search-index.json');
+                const searchData = await response.json();
+                
+                console.log('搜索数据:', searchData);
+                
+                // 解析供应商数据
+                let suppliersFromSearch = searchData.filter(page =>
+                    page.type === 'suppliers' &&
+                    page.title && page.title.trim() !== ''
+                ).map(page => {
+                    const supplierId = page.uri.replace('/suppliers/', '').replace('/', '');
+                    
+                    return {
+                        id: supplierId,
+                        name: page.title,
+                        title: page.title,
+                        address: page.params?.address || page.params?.contact?.address || '',
+                        type: page.params?.type || '制造商',
+                        series: page.params?.series || [],
+                        models: page.params?.models || [],
+                        contact_person: page.params?.contact_person || page.params?.contact?.contact_person || '',
+                        phone: page.params?.phone || page.params?.contact?.phone || '',
+                        email: page.params?.email || page.params?.contact?.email || '',
+                        description: page.params?.description || page.content || '',
+                        status: 'active',
+                        date: page.date || new Date().toISOString().split('T')[0],
+                        uri: page.uri,
+                        content: page.content || '',
+                        params: page.params || {}
+                    };
+                });
+
+                resultDiv.innerHTML = `
+                    <div class="${suppliersFromSearch.length > 0 ? 'success' : 'error'}">
+                        <p>数据同步结果: 找到 ${suppliersFromSearch.length} 个供应商</p>
+                        <pre>${JSON.stringify(suppliersFromSearch, null, 2)}</pre>
+                    </div>
+                `;
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <p>数据同步测试失败: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
