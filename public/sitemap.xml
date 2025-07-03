@@ -19,7 +19,7 @@
   
   <url>
     <loc>http://localhost:1317/product_categories/electronic-endoscope/</loc>
-    
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -32,7 +32,7 @@
   
   <url>
     <loc>http://localhost:1317/product_categories/electronic-endoscope/industrial-video-endoscope/</loc>
-    
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -45,20 +45,7 @@
   
   <url>
     <loc>http://localhost:1317/product_categories/fiber-endoscope/flexible-fiber/</loc>
-    
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1317/categories/industry-news/</loc>
-    
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -71,6 +58,19 @@
   
   <url>
     <loc>http://localhost:1317/product_categories/optical-endoscope/rigid-optical/</loc>
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1317/categories/industry-news/</loc>
     
     
     
@@ -97,7 +97,7 @@
   
   <url>
     <loc>http://localhost:1317/product_categories/electronic-endoscope/industrial-pipeline-endoscope/</loc>
-    
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -110,7 +110,7 @@
   
   <url>
     <loc>http://localhost:1317/product_categories/fiber-endoscope/</loc>
-    
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -123,7 +123,7 @@
   
   <url>
     <loc>http://localhost:1317/product_categories/optical-endoscope/flexible-optical/</loc>
-    
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -136,7 +136,7 @@
   
   <url>
     <loc>http://localhost:1317/product_categories/fiber-endoscope/rigid-fiber/</loc>
-    
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -188,20 +188,7 @@
   
   <url>
     <loc>http://localhost:1317/product_categories/optical-endoscope/</loc>
-    
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1317/categories/tech-news/</loc>
-    
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -214,6 +201,19 @@
   
   <url>
     <loc>http://localhost:1317/product_categories/electronic-endoscope/crawler-robot/</loc>
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1317/categories/tech-news/</loc>
     
     
     
@@ -267,6 +267,19 @@
   <url>
     <loc>http://localhost:1317/applications/research/</loc>
     <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1317/product_categories/</loc>
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -2345,19 +2358,6 @@
   
   <url>
     <loc>http://localhost:1317/12/</loc>
-    
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1317/product_categories/</loc>
     
     
     
