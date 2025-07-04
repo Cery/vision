@@ -23,18 +23,33 @@ const ensureDirectoryExists = (dirPath) => {
 // 初始化必要的目录
 ensureDirectoryExists('./static/images/products');
 ensureDirectoryExists('./static/images/content/products');
+ensureDirectoryExists('./static/images/media');
+ensureDirectoryExists('./static/files/media');
+ensureDirectoryExists('./static/files/downloads');
 ensureDirectoryExists('./content/products');
 
 // 配置multer用于文件上传
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         const uploadType = req.body.uploadType || 'products';
-        let uploadPath = './static/images/products';
-        
+        const supplier = req.body.supplier || 'default';
+        let uploadPath;
+
         if (uploadType === 'content') {
             uploadPath = './static/images/content/products';
+        } else if (uploadType === 'media') {
+            // 媒体库按供应商分组
+            if (file.mimetype.startsWith('image/')) {
+                uploadPath = `./static/images/media/${supplier}`;
+            } else {
+                uploadPath = `./static/files/media/${supplier}`;
+            }
+        } else if (file.mimetype.startsWith('image/')) {
+            uploadPath = './static/images/products';
+        } else {
+            uploadPath = './static/files/downloads';
         }
-        
+
         ensureDirectoryExists(uploadPath);
         cb(null, uploadPath);
     },
@@ -48,17 +63,33 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ 
+const upload = multer({
     storage: storage,
     limits: {
-        fileSize: 10 * 1024 * 1024 // 10MB限制
+        fileSize: 50 * 1024 * 1024 // 50MB限制
     },
     fileFilter: function (req, file, cb) {
-        // 检查文件类型
-        if (file.mimetype.startsWith('image/')) {
+        // 允许的文件类型
+        const allowedTypes = [
+            // 图片类型
+            'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/bmp',
+            // 文档类型
+            'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            // 文本类型
+            'text/plain', 'text/csv',
+            // 压缩文件
+            'application/zip', 'application/x-rar-compressed', 'application/x-7z-compressed',
+            // 其他常用类型
+            'application/octet-stream'
+        ];
+
+        if (allowedTypes.includes(file.mimetype) || file.mimetype.startsWith('image/') || file.mimetype.startsWith('text/')) {
             cb(null, true);
         } else {
-            cb(new Error('只允许上传图片文件'), false);
+            console.log(`⚠️ 不支持的文件类型: ${file.mimetype}`);
+            cb(null, true); // 暂时允许所有文件类型
         }
     }
 });
@@ -71,27 +102,69 @@ app.post('/api/upload/image', upload.single('image'), (req, res) => {
         }
 
         const uploadType = req.body.uploadType || 'products';
+        const supplier = req.body.supplier || 'default';
         let relativePath;
-        
+
         if (uploadType === 'content') {
             relativePath = `/images/content/products/${req.file.filename}`;
+        } else if (uploadType === 'media') {
+            // 媒体库按供应商分组
+            relativePath = `/images/media/${supplier}/${req.file.filename}`;
         } else {
             relativePath = `/images/products/${req.file.filename}`;
         }
 
         console.log(`📷 图片上传成功: ${relativePath}`);
-        
+
         res.json({
             success: true,
             message: '图片上传成功',
             path: relativePath,
             filename: req.file.filename,
             originalName: req.file.originalname,
-            size: req.file.size
+            size: req.file.size,
+            type: 'image',
+            supplier: supplier
         });
     } catch (error) {
         console.error('图片上传失败:', error);
         res.status(500).json({ success: false, message: '图片上传失败: ' + error.message });
+    }
+});
+
+// 文件上传接口
+app.post('/api/upload/file', upload.single('file'), (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: '没有上传文件' });
+        }
+
+        const uploadType = req.body.uploadType || 'downloads';
+        const supplier = req.body.supplier || 'default';
+        let relativePath;
+
+        if (uploadType === 'media') {
+            // 媒体库按供应商分组
+            relativePath = `/files/media/${supplier}/${req.file.filename}`;
+        } else {
+            relativePath = `/files/downloads/${req.file.filename}`;
+        }
+
+        console.log(`📄 文件上传成功: ${relativePath}`);
+
+        res.json({
+            success: true,
+            message: '文件上传成功',
+            path: relativePath,
+            filename: req.file.filename,
+            originalName: req.file.originalname,
+            size: req.file.size,
+            type: 'file',
+            supplier: supplier
+        });
+    } catch (error) {
+        console.error('文件上传失败:', error);
+        res.status(500).json({ success: false, message: '文件上传失败: ' + error.message });
     }
 });
 
@@ -222,11 +295,74 @@ app.get('/api/products/list', (req, res) => {
     }
 });
 
+// 获取媒体库列表接口
+app.get('/api/media/list', (req, res) => {
+    try {
+        const mediaLibrary = [];
+        const mediaPath = './static/images/media';
+        const filesPath = './static/files/media';
+
+        // 扫描图片媒体库
+        if (fs.existsSync(mediaPath)) {
+            const suppliers = fs.readdirSync(mediaPath);
+            suppliers.forEach(supplier => {
+                const supplierPath = path.join(mediaPath, supplier);
+                if (fs.statSync(supplierPath).isDirectory()) {
+                    const files = fs.readdirSync(supplierPath);
+                    files.forEach(file => {
+                        const filePath = path.join(supplierPath, file);
+                        const stats = fs.statSync(filePath);
+                        mediaLibrary.push({
+                            id: `img-${supplier}-${file}`,
+                            name: file,
+                            type: 'image',
+                            supplier: supplier,
+                            path: `/images/media/${supplier}/${file}`,
+                            size: stats.size,
+                            uploadDate: stats.mtime.toISOString().split('T')[0]
+                        });
+                    });
+                }
+            });
+        }
+
+        // 扫描文件媒体库
+        if (fs.existsSync(filesPath)) {
+            const suppliers = fs.readdirSync(filesPath);
+            suppliers.forEach(supplier => {
+                const supplierPath = path.join(filesPath, supplier);
+                if (fs.statSync(supplierPath).isDirectory()) {
+                    const files = fs.readdirSync(supplierPath);
+                    files.forEach(file => {
+                        const filePath = path.join(supplierPath, file);
+                        const stats = fs.statSync(filePath);
+                        mediaLibrary.push({
+                            id: `file-${supplier}-${file}`,
+                            name: file,
+                            type: 'file',
+                            supplier: supplier,
+                            path: `/files/media/${supplier}/${file}`,
+                            size: stats.size,
+                            uploadDate: stats.mtime.toISOString().split('T')[0]
+                        });
+                    });
+                }
+            });
+        }
+
+        res.json({ success: true, media: mediaLibrary });
+    } catch (error) {
+        console.error('获取媒体库列表失败:', error);
+        res.status(500).json({ success: false, message: '获取媒体库列表失败: ' + error.message });
+    }
+});
+
 // 启动服务器
 app.listen(PORT, () => {
     console.log(`🚀 文件服务器启动成功: http://localhost:${PORT}`);
     console.log(`📁 静态文件目录: ./static/images/`);
     console.log(`📝 产品文件目录: ./content/products/`);
+    console.log(`🗂️ 媒体库目录: ./static/images/media/ 和 ./static/files/media/`);
 });
 
 module.exports = app;

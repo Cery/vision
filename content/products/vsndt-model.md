@@ -1,15 +1,15 @@
 ---
-title: "WS-K10100工业内窥镜 - 1.0mm高清探头 精密检测工具"
+title: "WS-K1010工业内窥镜 - 1.0mm高清探头 精密检测工具"
 summary: WS-K1010是一款具备1.0mm超细直径和高亮光纤照明的工业视频内窥镜，广泛应用于航空维修、电子制造、医疗检测等狭小空间可视化场景。
 seo_title: "WS-K1010工业内窥镜 - 精密结构检测专用视频内窥镜"
 seo_description: "WS-K1010工业视频内窥镜，具备1.0mm直径、16万像素、光纤光源，专为精密结构检测设计，适用于航空维修、医疗装配、微型组件检查等行业。"
 seo_keywords: ["工业内窥镜", "工业视频内窥镜", "1.0mm探头", "高清内窥镜", "精密结构检测", "光纤照明内窥镜"]
 primary_category: "电子内窥镜"
-secondary_category: "工业管道内窥镜"
+secondary_category: "工业视频内窥镜"
 tags: ["微型探头", "高清成像", "航空检测", "医疗器械检查", "可视化检测"]
 model: "WS-K1010"
 series: "K系列"
-supplier: "天津维森科技有限公司"
+supplier: "深圳市微视光电科技有限公司"
 published: 2025-06-15T12:00:00+08:00
 gallery:
   - image: "/images/products/K-series/K-main.jpg"

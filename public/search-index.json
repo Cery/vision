@@ -60,64 +60,14 @@
   "params": {"date":"2024-03-20T00:00:00Z","draft":false,"features":["高精度科研检测","多学科应用支持","实验过程监控","数据采集分析","定制化解决方案"],"icon":"fas fa-microscope","image":"/images/banners/category/application_general_pipe-2_original_v1.jpg","iscjklanguage":true,"key_technologies":["超高分辨率成像","多光谱分析技术","实时数据采集","图像处理算法","测量标定技术"],"lastmod":"2024-03-20T00:00:00Z","publishdate":"2024-03-20T00:00:00Z","scenarios":[{"description":"材料微观结构、性能测试和失效分析研究","icon":"fas fa-atom","title":"材料科学研究"},{"description":"生物组织结构观察和医疗器械研发支持","icon":"fas fa-dna","title":"生物医学研究"},{"description":"机械结构分析、疲劳试验和性能评估","icon":"fas fa-cog","title":"机械工程研究"},{"description":"环境监测、污染检测和生态研究支持","icon":"fas fa-leaf","title":"环境科学研究"}],"summary":"科研实验检测分析专业解决方案，支持科学研究和技术创新","title":"科学研究","weight":6}
 },
 {
-  "uri": "/products/test-product-new/",
-  "title": "测试产品",
-  "content": "产品介绍 这是一个测试产品，用于验证产品管理系统的各项功能。\n主要特点 测试功能1 测试功能2 测试功能3 技术规格 详细的技术参数请参考上方参数表格。\n",
-  "summary": "这是一个测试产品，用于验证产品管理系统功能",
-  "type": "products",
-  "section": "products",
-  "date": "2025-07-04",
-  "params": {"application_scenarios":"这是测试产品的应用场景描述。\n适用于各种测试环境。\n","date":"2025-07-04T14:00:00+08:00","draft":false,"gallery":[{"alt":"测试产品主图","image":"/images/products/test/test-main.jpg","is_main":true}],"iscjklanguage":true,"lastmod":"2025-07-04T14:00:00+08:00","model":"TEST-001","parameters":[{"name":"测试参数1","value":"测试值1"},{"name":"测试参数2","value":"测试值2"}],"primary_category":"电子内窥镜","publishdate":"2025-07-04T14:00:00+08:00","published":"2025-07-04T14:00:00+08:00","related_products":["相关产品1","相关产品2"],"secondary_category":"工业视频内窥镜","series":"测试系列","summary":"这是一个测试产品，用于验证产品管理系统功能","supplier":"测试供应商","title":"测试产品"}
-},
-{
-  "uri": "/products/vf-8500/",
-  "title": "VF-8.5mm柔性光纤内窥镜",
-  "content": "1234o\n![](/images/content/products/products-item-1751613974647.jpg)\n",
-  "summary": "高清柔性光纤内窥镜，适用于复杂管道检测",
-  "type": "products",
-  "section": "products",
-  "date": "2025-07-04",
-  "params": {"application_scenarios":"\u003cp\u003e你能看见你\u003c/p\u003e\u003cp\u003e![](/images/content/products/products-item-1751613974638.jpg)\u003c/p\u003e\n","date":"2025-07-04T12:00:00+08:00","draft":false,"gallery":[{"alt":"产品图片 1","image":"/images/products/gallery/product-1751613974632-1.jpg","is_main":true}],"iscjklanguage":true,"lastmod":"2025-07-04T12:00:00+08:00","model":"VF-8500","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"2.8mm"},{"name":"像素","value":"100万"},{"name":"景深","value":"3mm~70mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"}],"primary_category":"电子内窥镜","publishdate":"2025-07-04T12:00:00+08:00","published":"2025-07-04T12:00:00+08:00","related_products":["model"],"secondary_category":"工业视频内窥镜","series":"VIS-P系列","summary":"高清柔性光纤内窥镜，适用于复杂管道检测","supplier":"天津维森科技有限公司","title":"VF-8.5mm柔性光纤内窥镜"}
-},
-{
-  "uri": "/products/lm6400/",
-  "title": "高清工业视频内窥镜LM6400",
-  "content": "123456789哦i脚后跟范德萨\n![](/images/content/products/products-item-1751612821665.jpg)\n",
-  "summary": "很快就会立刻联合利华快乐和就快回来快回来",
-  "type": "products",
-  "section": "products",
-  "date": "2025-07-04",
-  "params": {"application_scenarios":"\u003cp\u003e123456![](/images/content/products/products-item-1751612821661.jpg)\u003c/p\u003e\n","date":"2025-07-04T12:00:00+08:00","draft":false,"gallery":[{"alt":"产品图片 1","image":"/images/products/gallery/product-1751612821656-1.jpg","is_main":true},{"alt":"产品图片 2","image":"/images/products/gallery/product-1751612821657-2.jpg"}],"iscjklanguage":true,"lastmod":"2025-07-04T12:00:00+08:00","model":"LM6400","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"2.8mm"},{"name":"像素","value":"100万"},{"name":"景深","value":"3mm~70mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"}],"primary_category":"电子内窥镜","publishdate":"2025-07-04T12:00:00+08:00","published":"2025-07-04T12:00:00+08:00","related_products":["product-p1210"],"secondary_category":"工业视频内窥镜","series":"L系列","summary":"很快就会立刻联合利华快乐和就快回来快回来","supplier":"上海尚品科技有限公司","title":"高清工业视频内窥镜LM6400"}
-},
-{
-  "uri": "/products/zb-k3920/",
-  "title": "微视/圳本 3.9mm光纤探头 工业视频内窥镜",
-  "content": "微视/圳本 3.9mm光纤探头 工业视频内窥镜 产品概述 ZB-K3920是一款专业的工业视频内窥镜，采用百万像素高清成像技术，配备3.9mm超细光纤探头，特别适用于风电齿轮箱等精密设备的内部检测。设备具有360度旋转镜头功能，手持式设计便于现场操作，是工业检测领域的理想选择。\n核心特点 高精度成像 百万像素传感器: 提供清晰细腻的图像质量 360度旋转镜头: 全方位观察检测目标 LED白光照明: 确保充足的照明效果 便携设计 手持式结构: 轻便易携，适合现场作业 5英寸高清LCD: 大屏幕实时显示检测画面 人体工学设计: 长时间使用不疲劳 专业性能 3.9mm超细探头: 适用于狭小空间检测 2000mm插入长度: 满足深度检测需求 IP67防护等级: 适应恶劣工作环境 技术优势 成像技术 采用先进的光纤成像技术，结合百万像素传感器，确保在各种光线条件下都能获得清晰的检测图像。360度旋转功能让检测无死角，大大提高了检测效率和准确性。\n耐用性设计 设备采用工业级材料制造，探头具有优异的耐磨性和抗腐蚀性。IP67防护等级确保设备在潮湿、多尘等恶劣环境中稳定工作。\n智能功能 图像/视频录制: 支持检测过程的完整记录 32GB大容量存储: 可存储大量检测数据 长续航电池: 4小时以上连续工作时间 应用场景 风电行业 齿轮箱检测: 检查齿轮磨损、润滑情况 发电机检测: 内部线圈、轴承状态检查 塔筒检测: 内部结构完整性检查 工业设备 管道检测: 内壁腐蚀、堵塞情况检查 发动机检测: 缸体、活塞、阀门检查 压力容器: 内部焊缝、裂纹检测 质量控制 装配检查: 零部件安装质量验证 焊接检测: 焊缝质量和完整性检查 铸件检测: 内部缺陷和气孔检查 产品优势 专业定制: 针对风电齿轮箱等特殊应用优化设计 高性价比: 专业性能与合理价格的完美平衡 技术支持: 提供完善的技术培训和售后服务 快速响应: 本土化服务，快速响应客户需求 服务支持 技术培训 设备操作培训 检测技术指导 数据分析培训 售后服务 1年质保期 终身技术支持 配件供应保障 ZB-K3920工业视频内窥镜是您进行精密检测的可靠伙伴，为设备安全运行提供有力保障。\n",
-  "summary": "百万像素、手持式、360度旋转镜头、3.9mm直径风电齿轮箱检测规格",
-  "type": "products",
-  "section": "products",
-  "date": "2025-06-28",
-  "params": {"data_download":[{"file_path":"/downloads/products/ZB-K3920-specifications.pdf","file_title":"ZB-K3920产品规格书"},{"file_path":"/downloads/products/ZB-K3920-manual.pdf","file_title":"ZB-K3920操作手册"},{"file_path":"/downloads/products/ZB-K3920-parameters.xlsx","file_title":"ZB-K3920技术参数表"}],"date":"2025-06-28T00:00:00Z","draft":false,"featured_image":"/images/products/K-series/K-main.jpg","gallery":[{"alt":"ZB-K3920工业视频内窥镜主图","image":"/images/products/K-series/K-main.jpg","is_main":true},{"alt":"3.9mm光纤探头细节","image":"/images/products/K-series/K-1.jpg","is_main":false},{"alt":"高清显示屏","image":"/images/products/K-series/K-2.jpg","is_main":false},{"alt":"配件套装","image":"/images/products/K-series/KX-1.jpg","is_main":false},{"alt":"应用场景展示","image":"/images/products/K-series/KX-2.jpg","is_main":false}],"iscjklanguage":true,"lastmod":"2025-06-28T00:00:00Z","model":"ZB-K3920","primary_category":"电子内窥镜","product_code":"ZB-K3920","publishdate":"2025-06-28T00:00:00Z","related_products":["WS-K08510-a","WS-K1210-a","product-p08510"],"secondary_category":"工业视频内窥镜","series":"K系列","specifications":{"像素":"百万像素","光源":"LED白光","存储容量":"32GB内置存储","工作温度":"-10°C ~ +60°C","探头直径":"3.9mm","插入长度":"2000mm","显示屏":"5英寸高清LCD","电池续航":"≥4小时","视向角度":"360度旋转","防护等级":"IP67"},"status":"published","summary":"百万像素、手持式、360度旋转镜头、3.9mm直径风电齿轮箱检测规格","supplier":"深圳市微视光电科技有限公司","title":"微视/圳本 3.9mm光纤探头 工业视频内窥镜"}
-},
-{
-  "uri": "/products/model/",
-  "title": "WS-K10100工业内窥镜 - 1.0mm高清探头 精密检测工具",
+  "uri": "/products/vsndt-model/",
+  "title": "WS-K1010工业内窥镜 - 1.0mm高清探头 精密检测工具",
   "content": "WS-K1010工业视频内窥镜专为高密度、微型结构检测而设计，具备1.0mm高清探头、光纤照明系统和良好的防护能力，适用于航空维修、电子装配、科研仪器检测等领域。其灵活的结构与高清成像能力，成为高精度可视化检测领域的重要工具。\n",
   "summary": "WS-K1010是一款具备1.0mm超细直径和高亮光纤照明的工业视频内窥镜，广泛应用于航空维修、电子制造、医疗检测等狭小空间可视化场景。",
   "type": "products",
   "section": "products",
   "date": "2025-06-15",
-  "params": {"application_scenarios":"## 多行业狭小结构可视化检测解决方案\n\n### 精密零件装配检验（适用于电子、医疗等行业）\n\n- 电路板密集区域焊点检测\n- 小齿轮装配错位识别\n- 医疗设备接口内部可视检查\n\n![装配检测场景图](https://picsum.photos/1200/600?random=1)\n\n### 航空维修结构体检测\n\n- 飞行控制组件传感器检查\n- 涡轮附件裂纹排查\n- 航空冷却系统内部检测\n\n![航空检测场景图](https://picsum.photos/1200/600?random=2)\n\n### 工业设备隐蔽空间维护\n\n- 齿轮箱磨损情况评估\n- 自动化产线关键位置巡检\n- 工控系统内部结构可视化检查\n\n![工业设备检测场景图](https://picsum.photos/1200/600?random=3)\n\n### 产品核心优势\n\n- 1.0mm超细探头，突破可视检测极限\n- 光纤照明系统，适配黑暗狭窄空间\n- 支持工业、医疗、科研等高标准应用环境\n","data_download":[{"file_path":"/uploads/WS-K1010-spec.pdf","file_title":"WS-K1010产品规格书"}],"date":"2025-06-15T12:00:00+08:00","draft":false,"gallery":[{"alt":"WS-K1010工业内窥镜主图 - 1.0mm高清探头","image":"/images/products/K-series/K-main.jpg","is_main":true},{"alt":"WS-K1010 工业内窥镜 - 探头近景图","image":"/images/products/K-series/K-1.jpg"},{"alt":"WS-K1010 工业内窥镜 - 显示主机界面","image":"/images/products/K-series/K-2.jpg"},{"alt":"WS-K1010 工业内窥镜 - 操作实拍","image":"/images/products/K-series/K-3.jpg"},{"alt":"占位图：工业应用场景示意","image":"https://picsum.photos/800/600?random=11"}],"iscjklanguage":true,"lastmod":"2025-06-15T12:00:00+08:00","model":"WS-K1010","parameters":[{"name":"主机屏幕","value":"6英寸高清显示屏"},{"name":"待机时长","value":"8小时连续工作"},{"name":"探头直径","value":"1.0mm"},{"name":"像素","value":"160,000"},{"name":"景深","value":"5mm~80mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"高亮光纤光源"},{"name":"导向","value":"无导向"},{"name":"管线材质","value":"合金弹簧软管"},{"name":"防护等级","value":"IP67级防水防尘"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-06-15T12:00:00+08:00","published":"2025-06-15T12:00:00+08:00","related_products":["product-93430电子内窥镜-2801","product-93430电子内窥镜-2802","sample-product-3"],"secondary_category":"工业管道内窥镜","seo_description":"WS-K1010工业视频内窥镜，具备1.0mm直径、16万像素、光纤光源，专为精密结构检测设计，适用于航空维修、医疗装配、微型组件检查等行业。","seo_keywords":["工业内窥镜","工业视频内窥镜","1.0mm探头","高清内窥镜","精密结构检测","光纤照明内窥镜"],"seo_title":"WS-K1010工业内窥镜 - 精密结构检测专用视频内窥镜","series":"K系列","summary":"WS-K1010是一款具备1.0mm超细直径和高亮光纤照明的工业视频内窥镜，广泛应用于航空维修、电子制造、医疗检测等狭小空间可视化场景。","supplier":"天津维森科技有限公司","tags":["微型探头","高清成像","航空检测","医疗器械检查","可视化检测"],"title":"WS-K10100工业内窥镜 - 1.0mm高清探头 精密检测工具"}
-},
-{
-  "uri": "/products/ws-k1010-a/",
-  "title": "WS-K1010工业内窥镜",
-  "content": "WS-K1010工业视频内窥镜兼顾精细直径与良好画质表现，适用于电子、医疗、精密仪器等行业的小型结构可视化检测任务，满足高稳定性与灵活性并重的工业需求。\n",
-  "summary": "1.0mm直径高清探头，适配狭小空间高精度工业检测任务",
-  "type": "products",
-  "section": "products",
-  "date": "2025-06-15",
-  "params": {"application_scenarios":"## 多行业狭小结构可视化检测解决方案\n\n### 精密零件装配检验\n适用于电机、电控组件、医疗部件装配过程中的可视检测：\n\n- 电路板密集区域焊接确认\n- 小型齿轮装配错位识别\n- 医疗设备接口内部可视检查\n\n![装配检测](https://picsum.photos/1200/600?random=1)\n\n### 航空维修场景\n适配中等精度结构体检测，如：\n\n- 飞行控制组件传感器区域\n- 涡轮附件空间裂纹观察\n- 冷却管网检测\n\n![航空检测](https://picsum.photos/1200/600?random=2)\n\n### 工业设备内部结构维护\n可用于中型设备的定期检测任务：\n\n- 齿轮箱内部磨损检测\n- 自动化产线局部视觉评估\n- 工业控制系统隐蔽空间排查\n\n![工业设备检测](https://picsum.photos/1200/600?random=3)\n\n### 核心优势\n- 小于1mm直径设计，拓展可视化极限\n- 高亮光纤照明，有效覆盖黑暗细缝\n- 适用于仪器制造、航空检测、科研分析等领域\n","data_download":[{"file_path":"/uploads/WS-K1010-spec.pdf","file_title":"规格书"}],"date":"2025-06-15T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/K-series/K-main.jpg","is_main":true},{"alt":"产品副图1","image":"/images/products/K-series/K-1.jpg"},{"alt":"产品副图2","image":"/images/products/K-series/K-2.jpg"},{"alt":"产品副图3","image":"/images/products/K-series/K-3.jpg"},{"alt":"副图占位图","image":"https://picsum.photos/800/600?random=11"}],"iscjklanguage":true,"lastmod":"2025-06-15T12:00:00+08:00","model":"WS-K1010","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"1.0mm"},{"name":"像素","value":"16万"},{"name":"景深","value":"5mm~80mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"无导向"},{"name":"管线材质","value":"合金弹簧软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-06-15T12:00:00+08:00","published":"2025-06-15T12:00:00+08:00","related_products":["product-93430电子内窥镜-2801","product-93430电子内窥镜-2802","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"K系列","summary":"1.0mm直径高清探头，适配狭小空间高精度工业检测任务","supplier":"深圳市微视光电科技有限公司","title":"WS-K1010工业内窥镜"}
+  "params": {"application_scenarios":"## 多行业狭小结构可视化检测解决方案\n\n### 精密零件装配检验（适用于电子、医疗等行业）\n\n- 电路板密集区域焊点检测\n- 小齿轮装配错位识别\n- 医疗设备接口内部可视检查\n\n![装配检测场景图](https://picsum.photos/1200/600?random=1)\n\n### 航空维修结构体检测\n\n- 飞行控制组件传感器检查\n- 涡轮附件裂纹排查\n- 航空冷却系统内部检测\n\n![航空检测场景图](https://picsum.photos/1200/600?random=2)\n\n### 工业设备隐蔽空间维护\n\n- 齿轮箱磨损情况评估\n- 自动化产线关键位置巡检\n- 工控系统内部结构可视化检查\n\n![工业设备检测场景图](https://picsum.photos/1200/600?random=3)\n\n### 产品核心优势\n\n- 1.0mm超细探头，突破可视检测极限\n- 光纤照明系统，适配黑暗狭窄空间\n- 支持工业、医疗、科研等高标准应用环境\n","data_download":[{"file_path":"/uploads/WS-K1010-spec.pdf","file_title":"WS-K1010产品规格书"}],"date":"2025-06-15T12:00:00+08:00","draft":false,"gallery":[{"alt":"WS-K1010工业内窥镜主图 - 1.0mm高清探头","image":"/images/products/K-series/K-main.jpg","is_main":true},{"alt":"WS-K1010 工业内窥镜 - 探头近景图","image":"/images/products/K-series/K-1.jpg"},{"alt":"WS-K1010 工业内窥镜 - 显示主机界面","image":"/images/products/K-series/K-2.jpg"},{"alt":"WS-K1010 工业内窥镜 - 操作实拍","image":"/images/products/K-series/K-3.jpg"},{"alt":"占位图：工业应用场景示意","image":"https://picsum.photos/800/600?random=11"}],"iscjklanguage":true,"lastmod":"2025-06-15T12:00:00+08:00","model":"WS-K1010","parameters":[{"name":"主机屏幕","value":"6英寸高清显示屏"},{"name":"待机时长","value":"8小时连续工作"},{"name":"探头直径","value":"1.0mm"},{"name":"像素","value":"160,000"},{"name":"景深","value":"5mm~80mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"高亮光纤光源"},{"name":"导向","value":"无导向"},{"name":"管线材质","value":"合金弹簧软管"},{"name":"防护等级","value":"IP67级防水防尘"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-06-15T12:00:00+08:00","published":"2025-06-15T12:00:00+08:00","related_products":["product-93430电子内窥镜-2801","product-93430电子内窥镜-2802","sample-product-3"],"secondary_category":"工业视频内窥镜","seo_description":"WS-K1010工业视频内窥镜，具备1.0mm直径、16万像素、光纤光源，专为精密结构检测设计，适用于航空维修、医疗装配、微型组件检查等行业。","seo_keywords":["工业内窥镜","工业视频内窥镜","1.0mm探头","高清内窥镜","精密结构检测","光纤照明内窥镜"],"seo_title":"WS-K1010工业内窥镜 - 精密结构检测专用视频内窥镜","series":"K系列","summary":"WS-K1010是一款具备1.0mm超细直径和高亮光纤照明的工业视频内窥镜，广泛应用于航空维修、电子制造、医疗检测等狭小空间可视化场景。","supplier":"深圳市微视光电科技有限公司","tags":["微型探头","高清成像","航空检测","医疗器械检查","可视化检测"],"title":"WS-K1010工业内窥镜 - 1.0mm高清探头 精密检测工具"}
 },
 {
   "uri": "/products/product-dz60/",
@@ -128,176 +78,6 @@
   "section": "products",
   "date": "2025-01-01",
   "params": {"application_scenarios":"这里是深圳微视光电科技有限公司 WS-DZ60高清三维测量工业内窥镜的应用场景详细介绍：\n\n- 汽车检测\n- 航空航天\n- 工业设备维修\n","data_download":[{"file_path":"/uploads/规格书.pdf","file_title":"规格书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/DZ/DZ-1.jpg","is_main":true},{"alt":"工业内窥镜","image":"/images/products/DZ/DZ-2.jpg"},{"alt":"工业内窥镜","image":"/images/products/DZ/DZ-3.jpg"},{"image":"/images/products/DZ/DZ-4.jpg"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-DZ60","parameters":[{"name":"主机屏幕","value":"7英寸"},{"name":"待机时长","value":"2小时"},{"name":"探头直径","value":"6mm"},{"name":"像素","value":"100万"},{"name":"景深","value":"12mm~200mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"双目镜头直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"360°手电动导向"},{"name":"管线材质","value":"钨丝编织软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"DZ系列","summary":"便携式三维测量高清工业内窥镜","supplier":"深圳市微视光电科技有限公司","title":"WS-DZ60高清三维测量工业视频内窥镜"}
-},
-{
-  "uri": "/products/ws-k08510-a/",
-  "title": "WS-K08510超细工业电子内窥镜",
-  "content": "WS-K08510超细工业电子内窥镜以0.85mm超小探头直径，结合高分辨率16万像素高清成像，专为极小空间检测打造，适合医疗器械、精密模具等微型领域检测需求，保证细节清晰无遗漏。\n",
-  "summary": "0.85mm超小直径，高清成像，适用于极小空间检测",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"application_scenarios":"## 微型空间检测首选方案\n\n### 精密仪器维修\nWS-K08510超细工业电子内窥镜适用于各种微型仪器内部检查：\n- 医疗器械微型通道观察\n- 精密模具裂纹检测\n- 高密度装配电路板视觉检查\n\n![精密检测](https://picsum.photos/1200/600?random=1)\n\n### 航空航天精密检测\n极小直径探头适用于狭小空间复杂组件检测：\n- 涡轮叶片内部观察\n- 飞控部件组装质量评估\n- 材料结构细节排查\n\n![航空精密检测](https://picsum.photos/1200/600?random=2)\n\n### 高端制造领域应用\n满足最苛刻制造业现场需求：\n- 仪器仪表缝隙探查\n- 激光切割机头检测\n- 精密焊接质量检查\n\n![制造领域检测](https://picsum.photos/1200/600?random=3)\n\n### 核心优势\n- 超细直径0.85mm，深入极限空间\n- 光纤照明，暗部成像清晰\n- 坚固防护，适应工业环境\n- 长续航设计，保障高效作业\n","data_download":[{"file_path":"/uploads/规格书.pdf","file_title":"规格书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/K-series/K-main.jpg","is_main":true},{"alt":"超细内窥镜副图1","image":"/images/products/K-series/K-1.jpg"},{"alt":"超细内窥镜副图2","image":"/images/products/K-series/K-2.jpg"},{"alt":"超细内窥镜副图3","image":"/images/products/K-series/K-3.jpg"},{"alt":"副图4","image":"https://picsum.photos/800/600?random=5"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-K08510","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"0.85mm"},{"name":"像素","value":"16万"},{"name":"景深","value":"3mm~70mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"无导向"},{"name":"管线材质","value":"合金弹簧软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"K系列","summary":"0.85mm超小直径，高清成像，适用于极小空间检测","supplier":"深圳市微视光电科技有限公司","title":"WS-K08510超细工业电子内窥镜"}
-},
-{
-  "uri": "/products/ws-k09510-a/",
-  "title": "WS-K09510工业级内窥镜高清检测系统",
-  "content": "WS-K09510工业级内窥镜凭借0.95mm的极细探头直径与稳定的工业图像系统，为精密制造、科研检测等场景提供了极具穿透力与清晰度的微空间视觉解决方案。适合用于高难度内部结构检测，如发动机部件、航空空腔、医疗设备等应用环境。\n",
-  "summary": "0.95mm直径探头，适用于精密部件检测",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"application_scenarios":"## 微型工业部件检测的理想方案\n\n### 汽车制造与精密检测\nWS-K09510适用于以下精密检测场景：\n- 发动机喷油嘴内部可视检查\n- 涡轮增压系统微部件检测\n- 细管道结构腐蚀/堵塞排查\n\n![汽车检测应用](https://picsum.photos/1200/600?random=12)\n\n### 航空元件装配质量评估\n在高密度精密部件中进行可视化检测：\n- 飞机液压管线完整性分析\n- 航空扣件与密封件安装验证\n- 航空发动机微裂纹检查\n\n![航空检测场景](https://picsum.photos/1200/600?random=13)\n\n### 智能制造及仪器维修\n面向智能生产线与实验设备运维：\n- 微型传感器组装缺陷分析\n- 医疗设备微腔检查\n- PCB或光学腔体可视检修\n\n![智能制造应用](https://picsum.photos/1200/600?random=14)\n\n### 产品优势要点\n- 超细0.95mm探头，深入狭小空间\n- 高清图像采集，适配各类工业微观结构\n- 光纤照明稳定高亮，适合复杂照明环境\n- 工业防护标准，提升使用寿命\n","data_download":[{"file_path":"/uploads/WS-K09510-规格书.pdf","file_title":"产品规格说明书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/K-series/K-main.jpg","is_main":true},{"alt":"内窥镜展示图1","image":"/images/products/K-series/K-1.jpg"},{"alt":"内窥镜展示图2","image":"/images/products/K-series/K-2.jpg"},{"alt":"内窥镜展示图3","image":"/images/products/K-series/K-3.jpg"},{"alt":"内窥镜展示图4","image":"https://picsum.photos/800/600?random=11"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-K09510","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"0.95mm"},{"name":"像素","value":"16万"},{"name":"景深","value":"3mm~70mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"无导向"},{"name":"管线材质","value":"合金弹簧软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-4"],"secondary_category":"工业视频内窥镜","series":"K系列","summary":"0.95mm直径探头，适用于精密部件检测","supplier":"深圳市微视光电科技有限公司","title":"WS-K09510工业级内窥镜高清检测系统"}
-},
-{
-  "uri": "/products/ws-k1210-a/",
-  "title": "WS-K1210工业内窥镜",
-  "content": "WS-K1210工业内窥镜融合1.2mm直径微型探头与光纤照明系统，具备强大工业图像能力，是面向中小空间复杂结构检测应用的高性价比解决方案，广泛应用于制造、能源、科研等多个行业。\n",
-  "summary": "1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"application_scenarios":"## 微型空间与复杂结构检测利器\n\n### 精密制造设备检修\n- 小型仪器组件裂纹与磨损可视化\n- 检测模具通道与微型齿轮组\n- 适配高密度结构的清晰图像获取\n\n![精密制造检测](https://picsum.photos/1200/600?random=1)\n\n### 航空与电力维护领域\n- 航空接插件与电缆布线检查\n- 动力系统内部结构查看\n- 发电机及开关设备探测\n\n![航空检测](https://picsum.photos/1200/600?random=2)\n\n### 医疗研发与非破坏性检测\n- 医疗器械原型结构查看\n- 实验设备封闭腔体观察\n- 精细结构的无损排查\n\n![医疗设备检测](https://picsum.photos/1200/600?random=3)\n\n### 核心优势\n- 小直径1.2mm，突破常规检测盲区\n- 高清成像系统，图像细节丰富\n- 工业级抗干扰结构，适应多种环境\n- 结构紧凑，操控灵活\n","data_download":[{"file_path":"/uploads/规格书-WS-K1210.pdf","file_title":"规格书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/K-series/K-main.jpg","is_main":true},{"alt":"工业内窥镜副图1","image":"/images/products/K-series/K-1.jpg"},{"alt":"工业内窥镜副图2","image":"/images/products/K-series/K-2.jpg"},{"alt":"工业内窥镜副图3","image":"/images/products/K-series/K-3.jpg"},{"alt":"副图4","image":"https://picsum.photos/800/600?random=5"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-K1210","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"1.2mm"},{"name":"像素","value":"16万"},{"name":"景深","value":"5mm~80mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"无导向"},{"name":"管线材质","value":"合金弹簧软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"K系列","summary":"1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务","supplier":"深圳市微视光电科技有限公司","title":"WS-K1210工业内窥镜"}
-},
-{
-  "uri": "/products/ws-k1810-a/",
-  "title": "WS-K1210工业内窥镜",
-  "content": "WS-K1210工业内窥镜融合1.2mm直径微型探头与光纤照明系统，具备强大工业图像能力，是面向中小空间复杂结构检测应用的高性价比解决方案，广泛应用于制造、能源、科研等多个行业。\n",
-  "summary": "1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"application_scenarios":"## 微型空间与复杂结构检测利器\n\n### 精密制造设备检修\n- 小型仪器组件裂纹与磨损可视化\n- 检测模具通道与微型齿轮组\n- 适配高密度结构的清晰图像获取\n\n![精密制造检测](https://picsum.photos/1200/600?random=1)\n\n### 航空与电力维护领域\n- 航空接插件与电缆布线检查\n- 动力系统内部结构查看\n- 发电机及开关设备探测\n\n![航空检测](https://picsum.photos/1200/600?random=2)\n\n### 医疗研发与非破坏性检测\n- 医疗器械原型结构查看\n- 实验设备封闭腔体观察\n- 精细结构的无损排查\n\n![医疗设备检测](https://picsum.photos/1200/600?random=3)\n\n### 核心优势\n- 小直径1.2mm，突破常规检测盲区\n- 高清成像系统，图像细节丰富\n- 工业级抗干扰结构，适应多种环境\n- 结构紧凑，操控灵活\n","data_download":[{"file_path":"/uploads/规格书-WS-K1210.pdf","file_title":"规格书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/K-series/K-main.jpg","is_main":true},{"alt":"工业内窥镜副图1","image":"/images/products/K-series/K-1.jpg"},{"alt":"工业内窥镜副图2","image":"/images/products/K-series/K-2.jpg"},{"alt":"工业内窥镜副图3","image":"/images/products/K-series/K-3.jpg"},{"alt":"副图4","image":"https://picsum.photos/800/600?random=5"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-K1210","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"1.2mm"},{"name":"像素","value":"16万"},{"name":"景深","value":"5mm~80mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"无导向"},{"name":"管线材质","value":"合金弹簧软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"K系列","summary":"1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务","supplier":"深圳市微视光电科技有限公司","title":"WS-K1210工业内窥镜"}
-},
-{
-  "uri": "/products/ws-k1510-a/",
-  "title": "WS-K1510工业内窥镜 1.5mm超细探头",
-  "content": "WS-K1510 是一款兼顾探头细度与图像清晰度的工业内窥镜，适用于要求灵活进探与高清画面的多行业高标准检测任务。\n",
-  "summary": "采用1.5mm超细探头设计，兼顾灵活性与图像质量，适用于复杂工业检测场景",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"application_scenarios":"## 适用于高精度检测与微型组件可视化作业\n\n### 精密电子结构检测\n- 手机、相机内部结构检测\n- 电路焊点与芯片封装检查\n- 超小孔道视检\n\n![电子应用](https://picsum.photos/1200/600?random=10)\n\n### 医疗器械与实验器具验证\n- 腔体成型检验\n- 微管道内壁污染检测\n- 生物实验用具密封性测试\n\n![医疗检测](https://picsum.photos/1200/600?random=11)\n\n### 工业制造工艺质控\n- 激光焊接部位视觉辅助\n- 内腔异物快速判断\n- 非破坏检测流程配套\n\n![制造检测](https://picsum.photos/1200/600?random=12)\n","data_download":[{"file_path":"/uploads/说明书-WS-K1510.pdf","file_title":"产品说明书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/K-series/K-main.jpg","is_main":true},{"alt":"工业内窥镜副图1","image":"/images/products/K-series/K-1.jpg"},{"alt":"工业内窥镜副图2","image":"/images/products/K-series/K-2.jpg"},{"alt":"占位图","image":"https://picsum.photos/800/600?random=10"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-K1510","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"1.5mm"},{"name":"像素","value":"30万"},{"name":"景深","value":"10mm~80mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"无导向"},{"name":"管线材质","value":"合金弹簧软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2840","sample-product-3","product-93430电子内窥镜-2820"],"secondary_category":"工业视频内窥镜","series":"K系列","summary":"采用1.5mm超细探头设计，兼顾灵活性与图像质量，适用于复杂工业检测场景","supplier":"深圳市微视光电科技有限公司","title":"WS-K1510工业内窥镜 1.5mm超细探头"}
-},
-{
-  "uri": "/products/product-p08510/",
-  "title": "WS-P-08510高清工业视频内窥镜",
-  "content": " ",
-  "summary": "高清光纤照明内窥镜",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"application_scenarios":"这里是P6010工业内窥镜的应用场景详细介绍：\n\n- 汽车检测\n- 航空航天\n- 工业设备维修\n","data_download":[{"file_path":"/uploads/规格书.pdf","file_title":"规格书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/P60/P-MAIN.jpg","is_main":true},{"alt":"工业内窥镜","image":"/images/products/P60/P-1.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-2.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-3.jpg"},{"alt":"副图4","image":"/images/products/P60/P-4.jpg"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-P08510","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"0.85mm"},{"name":"像素","value":"16万"},{"name":"景深","value":"3mm~70mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"无导向"},{"name":"管线材质","value":"合金弹簧软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"P系列","summary":"高清光纤照明内窥镜","supplier":"深圳市微视光电科技有限公司","title":"WS-P-08510高清工业视频内窥镜"}
-},
-{
-  "uri": "/products/product-p09510/",
-  "title": "WS-P09510高清工业视频内窥镜",
-  "content": " ",
-  "summary": "高清光纤照明内窥镜",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"application_scenarios":"这里是P6010工业内窥镜的应用场景详细介绍：\n\n- 汽车检测\n- 航空航天\n- 工业设备维修\n","data_download":[{"file_path":"/uploads/规格书.pdf","file_title":"规格书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/P60/P-MAIN.jpg","is_main":true},{"alt":"工业内窥镜","image":"/images/products/P60/P-1.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-2.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-3.jpg"},{"alt":"副图4","image":"https://picsum.photos/800/600?random=5"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-P09510","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"0.95mm"},{"name":"像素","value":"16万"},{"name":"景深","value":"3mm~70mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"无导向"},{"name":"管线材质","value":"合金弹簧软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"P系列","summary":"高清光纤照明内窥镜","supplier":"深圳市微视光电科技有限公司","title":"WS-P09510高清工业视频内窥镜"}
-},
-{
-  "uri": "/products/product-p1010-model/",
-  "title": "WS-P1010高清工业视频内窥镜",
-  "content": " ",
-  "summary": "高清光纤照明360度旋转镜头内窥镜",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"application_scenarios":"## 工业内窥镜的多元化应用场景\n\n### 汽车工业检测\n在汽车制造和维修领域，WS-P1010高清工业视频内窥镜发挥着关键作用：\n- 发动机缸内壁检测\n- 变速箱内部磨损评估\n- 精密零部件质量检查\n\n![汽车工业检测](https://picsum.photos/1200/600?random=1)\n\n### 航空航天领域\n航空航天对设备精度要求极高，P1010内窥镜提供精准检测：\n- 飞机发动机内部检查\n- 航天器精密部件检测\n- 复合材料结构无损检测\n\n![航空航天检测](https://picsum.photos/1200/600?random=2)\n\n### 工业设备维修\n广泛应用于各类工业设备的预防性维护：\n- 管道内壁腐蚀检测\n- 机械设备内部磨损评估\n- 电力设备绝缘检查\n\n![工业设备维修](https://picsum.photos/1200/600?random=3)\n\n### 优势特点\n- 高清晰度图像采集\n- 极小探头直径（1mm）\n- 广泛的景深范围（3mm~70mm）\n- 坚固耐用的IP67防护等级\n- 长时间工作（8小时待机）\n","data_download":[{"file_path":"/uploads/规格书.pdf","file_title":"规格书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/P60/P-MAIN.jpg","is_main":true},{"alt":"工业内窥镜","image":"/images/products/P60/P-1.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-2.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-3.jpeg"},{"alt":"副图4","image":"https://picsum.photos/800/600?random=5"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-P1010","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"1mm"},{"name":"像素","value":"16万"},{"name":"景深","value":"3mm~70mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"无导向"},{"name":"管线材质","value":"合金弹簧软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"P系列","summary":"高清光纤照明360度旋转镜头内窥镜","supplier":"深圳市微视光电科技有限公司","title":"WS-P1010高清工业视频内窥镜"}
-},
-{
-  "uri": "/products/product-p1210/",
-  "title": "WS-P2810高清工业视频内窥镜",
-  "content": " ",
-  "summary": "高清光纤照明360度旋转镜头内窥镜",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"application_scenarios":"这里是P6010工业内窥镜的应用场景详细介绍：\n\n- 汽车检测\n- 航空航天\n- 工业设备维修\n","data_download":[{"file_path":"/uploads/规格书.pdf","file_title":"规格书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/P60/P-MAIN.jpg","is_main":true},{"alt":"工业内窥镜","image":"/images/products/P60/P-1.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-2.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-3.jpg"},{"alt":"副图4","image":"https://picsum.photos/800/600?random=5"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-P2810","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"2.8mm"},{"name":"像素","value":"100万"},{"name":"景深","value":"3mm~70mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"360°手动导向"},{"name":"管线材质","value":"钨丝编织软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"P系列","summary":"高清光纤照明360度旋转镜头内窥镜","supplier":"深圳市微视光电科技有限公司","title":"WS-P2810高清工业视频内窥镜"}
-},
-{
-  "uri": "/products/product-p1510/",
-  "title": "WS-P2810高清工业视频内窥镜",
-  "content": " ",
-  "summary": "高清光纤照明360度旋转镜头内窥镜",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"application_scenarios":"这里是P6010工业内窥镜的应用场景详细介绍：\n\n- 汽车检测\n- 航空航天\n- 工业设备维修\n","data_download":[{"file_path":"/uploads/规格书.pdf","file_title":"规格书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/P60/P-MAIN.jpg","is_main":true},{"alt":"工业内窥镜","image":"/images/products/P60/P-1.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-2.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-3.jpg"},{"alt":"副图4","image":"https://picsum.photos/800/600?random=5"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-P2810","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"2.8mm"},{"name":"像素","value":"100万"},{"name":"景深","value":"3mm~70mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"360°手动导向"},{"name":"管线材质","value":"钨丝编织软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"P系列","summary":"高清光纤照明360度旋转镜头内窥镜","supplier":"深圳市微视光电科技有限公司","title":"WS-P2810高清工业视频内窥镜"}
-},
-{
-  "uri": "/products/product-p1810/",
-  "title": "WS-P2810高清工业视频内窥镜",
-  "content": " ",
-  "summary": "高清光纤照明360度旋转镜头内窥镜",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"application_scenarios":"这里是P6010工业内窥镜的应用场景详细介绍：\n\n- 汽车检测\n- 航空航天\n- 工业设备维修\n","data_download":[{"file_path":"/uploads/规格书.pdf","file_title":"规格书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/P60/P-MAIN.jpg","is_main":true},{"alt":"工业内窥镜","image":"/images/products/P60/P-1.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-2.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-3.jpg"},{"alt":"副图4","image":"https://picsum.photos/800/600?random=5"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-P2810","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"2.8mm"},{"name":"像素","value":"100万"},{"name":"景深","value":"3mm~70mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"360°手动导向"},{"name":"管线材质","value":"钨丝编织软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"P系列","summary":"高清光纤照明360度旋转镜头内窥镜","supplier":"深圳市微视光电科技有限公司","title":"WS-P2810高清工业视频内窥镜"}
-},
-{
-  "uri": "/products/product-p2010/",
-  "title": "WS-P2810高清工业视频内窥镜",
-  "content": " ",
-  "summary": "高清光纤照明360度旋转镜头内窥镜",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"application_scenarios":"这里是P6010工业内窥镜的应用场景详细介绍：\n\n- 汽车检测\n- 航空航天\n- 工业设备维修\n","data_download":[{"file_path":"/uploads/规格书.pdf","file_title":"规格书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/P60/P-MAIN.jpg","is_main":true},{"alt":"工业内窥镜","image":"/images/products/P60/P-1.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-2.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-3.jpg"},{"alt":"副图4","image":"https://picsum.photos/800/600?random=5"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-P2810","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"2.8mm"},{"name":"像素","value":"100万"},{"name":"景深","value":"3mm~70mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"360°手动导向"},{"name":"管线材质","value":"钨丝编织软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"P系列","summary":"高清光纤照明360度旋转镜头内窥镜","supplier":"深圳市微视光电科技有限公司","title":"WS-P2810高清工业视频内窥镜"}
-},
-{
-  "uri": "/products/product-p2210/",
-  "title": "WS-P2810高清工业视频内窥镜",
-  "content": " ",
-  "summary": "高清光纤照明360度旋转镜头内窥镜",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"application_scenarios":"这里是P6010工业内窥镜的应用场景详细介绍：\n\n- 汽车检测\n- 航空航天\n- 工业设备维修\n","data_download":[{"file_path":"/uploads/规格书.pdf","file_title":"规格书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/P60/P-MAIN.jpg","is_main":true},{"alt":"工业内窥镜","image":"/images/products/P60/P-1.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-2.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-3.jpg"},{"alt":"副图4","image":"https://picsum.photos/800/600?random=5"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-P2810","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"2.8mm"},{"name":"像素","value":"100万"},{"name":"景深","value":"3mm~70mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"360°手动导向"},{"name":"管线材质","value":"钨丝编织软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"P系列","summary":"高清光纤照明360度旋转镜头内窥镜","supplier":"深圳市微视光电科技有限公司","title":"WS-P2810高清工业视频内窥镜"}
-},
-{
-  "uri": "/products/product-p2410/",
-  "title": "WS-P2810高清工业视频内窥镜",
-  "content": " ",
-  "summary": "高清光纤照明360度旋转镜头内窥镜",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"application_scenarios":"这里是P6010工业内窥镜的应用场景详细介绍：\n\n- 汽车检测\n- 航空航天\n- 工业设备维修\n","data_download":[{"file_path":"/uploads/规格书.pdf","file_title":"规格书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/P60/P-MAIN.jpg","is_main":true},{"alt":"工业内窥镜","image":"/images/products/P60/P-1.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-2.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-3.jpg"},{"alt":"副图4","image":"https://picsum.photos/800/600?random=5"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-P2810","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"2.8mm"},{"name":"像素","value":"100万"},{"name":"景深","value":"3mm~70mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"360°手动导向"},{"name":"管线材质","value":"钨丝编织软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"P系列","summary":"高清光纤照明360度旋转镜头内窥镜","supplier":"深圳市微视光电科技有限公司","title":"WS-P2810高清工业视频内窥镜"}
-},
-{
-  "uri": "/products/product-p2810/",
-  "title": "WS-P2810高清工业视频内窥镜",
-  "content": " ",
-  "summary": "高清光纤照明360度旋转镜头内窥镜",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"application_scenarios":"这里是P6010工业内窥镜的应用场景详细介绍：\n\n- 汽车检测\n- 航空航天\n- 工业设备维修\n","data_download":[{"file_path":"/uploads/规格书.pdf","file_title":"规格书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/P60/P-MAIN.jpg","is_main":true},{"alt":"工业内窥镜","image":"/images/products/P60/P-1.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-2.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-3.jpg"},{"alt":"副图4","image":"https://picsum.photos/800/600?random=5"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-P2810","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"2.8mm"},{"name":"像素","value":"100万"},{"name":"景深","value":"3mm~70mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"360°手动导向"},{"name":"管线材质","value":"钨丝编织软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"P系列","summary":"高清光纤照明360度旋转镜头内窥镜","supplier":"深圳市微视光电科技有限公司","title":"WS-P2810高清工业视频内窥镜"}
-},
-{
-  "uri": "/products/product-p3910/",
-  "title": "WS-P3910高清工业视频内窥镜",
-  "content": " ",
-  "summary": "百万像素、冷光源、360度旋转镜头内窥镜",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"application_scenarios":"这里是P6010工业内窥镜的应用场景详细介绍：\n\n- 汽车检测\n- 航空航天\n- 工业设备维修\n","data_download":[{"file_path":"/uploads/规格书.pdf","file_title":"规格书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/P60/P-MAIN.jpg","is_main":true},{"alt":"工业内窥镜","image":"/images/products/P60/P-1.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-2.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-3.jpg"},{"alt":"副图4","image":"https://picsum.photos/800/600?random=5"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"WS-P3910","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"6mm"},{"name":"像素","value":"100万"},{"name":"景深","value":"12mm~200mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"360°手动导向"},{"name":"管线材质","value":"钨丝编织软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"P系列","summary":"百万像素、冷光源、360度旋转镜头内窥镜","supplier":"深圳市微视光电科技有限公司","title":"WS-P3910高清工业视频内窥镜"}
-},
-{
-  "uri": "/products/p6010/",
-  "title": "WS-P6010高清工业视频内窥镜",
-  "content": " ",
-  "summary": "百万像素、冷光源、360度旋转镜头内窥镜",
-  "type": "products",
-  "section": "products",
-  "date": "2025-01-01",
-  "params": {"application_scenarios":"这里是P6010工业内窥镜的应用场景详细介绍：\n\n- 汽车检测\n- 航空航天\n- 工业设备维修\n","data_download":[{"file_path":"/uploads/规格书.pdf","file_title":"规格书"}],"date":"2025-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/P60/P-MAIN.jpg","is_main":true},{"alt":"工业内窥镜","image":"/images/products/P60/P-1.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-2.jpg"},{"alt":"工业内窥镜","image":"/images/products/P60/P-3.jpg"},{"alt":"副图4","image":"https://picsum.photos/800/600?random=5"}],"iscjklanguage":true,"lastmod":"2025-01-01T12:00:00+08:00","model":"P6010","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"6mm"},{"name":"像素","value":"100万"},{"name":"景深","value":"12mm~200mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"360°手动导向"},{"name":"管线材质","value":"钨丝编织软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"光学内窥镜","publishdate":"2025-01-01T12:00:00+08:00","published":"2025-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"硬性光学内窥镜","series":"P系列","summary":"百万像素、冷光源、360度旋转镜头内窥镜","supplier":"上海尚品科技有限公司","title":"WS-P6010高清工业视频内窥镜"}
 },
 {
   "uri": "/news/exhibition-news-5/",
@@ -388,14 +168,4 @@
   "section": "news",
   "date": "2024-01-15",
   "params": {"author":"技术部","categories":["技术文章"],"date":"2024-01-15T00:00:00Z","draft":false,"featured_image":"/images/news/新闻.webp","iscjklanguage":true,"lastmod":"2024-01-15T00:00:00Z","publishdate":"2024-01-15T00:00:00Z","summary":"本文深入分析了工业内窥镜技术的最新发展趋势，包括高清成像、智能识别、远程操控等方面的创新突破，探讨了这些技术进步对工业检测领域带来的深远影响","tags":["光纤内窥镜","智能识别","技术创新"],"title":"工业内窥镜技术发展趋势分析","views":128}
-},
-{
-  "uri": "/products/product-p8020/",
-  "title": "WS-P8050高清工业视频内窥镜",
-  "content": " ",
-  "summary": "百万像素、冷光源、360度旋转镜头内窥镜",
-  "type": "products",
-  "section": "products",
-  "date": "2023-01-01",
-  "params": {"application_scenarios":"这里是K09510电子内窥镜的应用场景详细介绍：\n\n- 汽车检测\n- 航空航天\n- 工业设备维修\n","data_download":[{"file_path":"/uploads/规格书.pdf","file_title":"规格书"}],"date":"2023-01-01T12:00:00+08:00","draft":false,"gallery":[{"alt":"主图","image":"/images/products/P60/P-MAIN.jpg","is_main":true},{"alt":"副图1","image":"/images/products/P60/P-2.jpg"},{"alt":"副图2","image":"/images/products/P60/P-3.jpg"},{"alt":"副图3","image":"/images/products/P60/P-1.jpg"}],"iscjklanguage":true,"lastmod":"2023-01-01T12:00:00+08:00","model":"K8050","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"8mm"},{"name":"像素","value":"100万"},{"name":"景深","value":"12mm~200mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"},{"name":"导向","value":"360°手动导向"},{"name":"管线材质","value":"钨丝编织软管"},{"name":"防护等级","value":"IP67"},{"name":"工作温度","value":"-20℃~70℃"}],"primary_category":"电子内窥镜","publishdate":"2023-01-01T12:00:00+08:00","published":"2023-01-01T12:00:00+08:00","related_products":["product-93430电子内窥镜-2792","product-93430电子内窥镜-2800","sample-product-3"],"secondary_category":"工业视频内窥镜","series":"P系列","summary":"百万像素、冷光源、360度旋转镜头内窥镜","supplier":"深圳市微视光电科技有限公司","title":"WS-P8050高清工业视频内窥镜"}
 }]

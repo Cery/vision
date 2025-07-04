@@ -593,6 +593,46 @@
         .category-tree-item.primary .product-count {
             background: #1976d2;
         }
+
+        /* 媒体库样式 */
+        .media-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .media-item:hover .media-overlay {
+            opacity: 1;
+        }
+
+        .media-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .supplier-group {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f8f9fa;
+            margin-bottom: 20px;
+        }
+
+        .media-item img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body>
@@ -1224,14 +1264,60 @@
                 </nav>
             </div>
 
+            <!-- 媒体库管理 -->
             <div id="media" class="content-section">
-                <div class="feature-coming-soon">
-                    <i class="fas fa-images"></i>
-                    <h5>媒体库</h5>
-                    <p>媒体文件管理功能正在开发中，将包含文件分类、批量操作和自动路径处理。</p>
-                    <button class="btn btn-primary" onclick="alert('媒体库功能开发中...')">
-                        <i class="fas fa-upload me-2"></i>上传文件
-                    </button>
+                <div class="search-filter-bar">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                <input type="text" class="form-control" id="mediaSearch" placeholder="搜索媒体文件..." onkeyup="filterMediaLibrary()">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="mediaSupplierFilter" onchange="filterMediaLibrary()">
+                                <option value="">所有供应商</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select class="form-select" id="mediaTypeFilter" onchange="filterMediaLibrary()">
+                                <option value="">所有类型</option>
+                                <option value="image">图片</option>
+                                <option value="file">文件</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="btn-group w-100">
+                                <button class="btn btn-primary" onclick="uploadToMediaLibrary('image')">
+                                    <i class="fas fa-image me-1"></i>上传图片
+                                </button>
+                                <button class="btn btn-success" onclick="uploadToMediaLibrary('file')">
+                                    <i class="fas fa-file me-1"></i>上传文件
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0"><i class="fas fa-folder-open me-2"></i>媒体库 - 按供应商分组</h6>
+                                <button class="btn btn-outline-secondary btn-sm" onclick="refreshMediaLibrary()">
+                                    <i class="fas fa-sync-alt me-1"></i>刷新
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div id="mediaLibraryContainer">
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-spinner fa-spin fa-2x text-muted"></i>
+                                        <p class="mt-2 text-muted">正在加载媒体库...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2446,62 +2532,90 @@ date: ${data.date}
 
         // 处理内容中的图片，转换为MD语法路径
         async function processImagesInContent(content, contentType, itemId) {
+            console.log('🖼️ 开始处理内容中的图片...');
+
             // 查找所有图片引用
             const imageRegex = /<img[^>]+src="([^"]+)"[^>]*>/g;
             const markdownImageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
 
             let processedContent = content;
+            let imageCount = 0;
 
             // 处理HTML img标签
             let match;
-            while ((match = imageRegex.exec(content)) !== null) {
+            const imgMatches = [...content.matchAll(imageRegex)];
+            for (const match of imgMatches) {
                 const originalSrc = match[1];
+                console.log(`📷 处理HTML图片 ${++imageCount}: ${originalSrc}`);
+
                 const newPath = await processImageUpload(originalSrc, contentType, itemId);
-                if (newPath) {
+                if (newPath && newPath !== originalSrc) {
                     const altText = extractAltFromImg(match[0]) || '图片';
                     const markdownImage = `![${altText}](${newPath})`;
                     processedContent = processedContent.replace(match[0], markdownImage);
+                    console.log(`✅ HTML图片已转换: ${originalSrc} → ${newPath}`);
                 }
             }
 
             // 处理Markdown图片语法中的路径
-            while ((match = markdownImageRegex.exec(content)) !== null) {
+            const mdMatches = [...content.matchAll(markdownImageRegex)];
+            for (const match of mdMatches) {
                 const altText = match[1];
                 const originalSrc = match[2];
+                console.log(`📷 处理Markdown图片 ${++imageCount}: ${originalSrc}`);
+
                 const newPath = await processImageUpload(originalSrc, contentType, itemId);
-                if (newPath) {
+                if (newPath && newPath !== originalSrc) {
                     const markdownImage = `![${altText}](${newPath})`;
                     processedContent = processedContent.replace(match[0], markdownImage);
+                    console.log(`✅ Markdown图片已转换: ${originalSrc} → ${newPath}`);
                 }
             }
 
+            console.log(`🎯 图片处理完成，共处理 ${imageCount} 个图片`);
             return processedContent;
         }
 
         // 处理单个图片上传
         async function processImageUpload(imageSrc, contentType, itemId) {
             try {
-                // 如果是本地文件或blob URL，需要上传
+                console.log(`🔍 分析图片路径: ${imageSrc}`);
+
+                // 如果是base64或blob URL，需要上传
                 if (imageSrc.startsWith('blob:') || imageSrc.startsWith('data:')) {
+                    console.log('📤 上传base64/blob图片到服务器...');
                     const uploadedPath = await uploadImageToMediaLibrary(imageSrc, contentType, itemId);
+                    console.log(`✅ 图片上传完成: ${uploadedPath}`);
                     return uploadedPath;
+                }
+
+                // 如果是完整的localhost URL，提取相对路径
+                if (imageSrc.includes('localhost:1314') || imageSrc.includes('localhost:3002')) {
+                    const urlObj = new URL(imageSrc);
+                    const relativePath = urlObj.pathname;
+                    console.log(`🔄 提取相对路径: ${imageSrc} → ${relativePath}`);
+                    return relativePath;
                 }
 
                 // 如果是外部URL，保持原样
                 if (imageSrc.startsWith('http://') || imageSrc.startsWith('https://')) {
+                    console.log('🌐 保持外部URL不变');
                     return imageSrc;
                 }
 
-                // 如果是相对路径，转换为标准路径
+                // 如果是相对路径，确保格式正确
                 if (imageSrc.startsWith('/')) {
+                    console.log('📁 使用现有相对路径');
                     return imageSrc;
                 }
 
                 // 其他情况，添加路径前缀
-                return `/images/content/${contentType}/${imageSrc}`;
+                const standardPath = `/images/content/${contentType}/${imageSrc}`;
+                console.log(`🔧 标准化路径: ${imageSrc} → ${standardPath}`);
+                return standardPath;
 
             } catch (error) {
-                console.error('处理图片失败:', error);
+                console.error('❌ 处理图片失败:', error);
                 return imageSrc; // 失败时返回原路径
             }
         }
@@ -3071,26 +3185,67 @@ date: ${data.date}
             const input = document.createElement('input');
             input.type = 'file';
             input.multiple = true;
+            input.accept = '.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.rar,.7z';
 
-            input.onchange = function(e) {
+            input.onchange = async function(e) {
                 const files = Array.from(e.target.files);
-                files.forEach(file => {
-                    const fileData = {
-                        name: file.name,
-                        size: file.size,
-                        type: file.type,
-                        url: URL.createObjectURL(file)
-                    };
+                console.log(`📤 上传 ${files.length} 个文件...`);
 
-                    if (type === 'downloads') {
-                        addFileToDownloads(fileData);
+                showSyncStatus(`正在上传 ${files.length} 个文件...`, 1000);
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    console.log(`📤 上传文件 ${i + 1}/${files.length}: ${file.name}`);
+
+                    try {
+                        // 上传文件到服务器
+                        const uploadResult = await uploadFileToServer(file, 'downloads');
+
+                        if (uploadResult.success) {
+                            // 添加到下载列表
+                            if (type === 'downloads') {
+                                addFileToDownloads({
+                                    name: file.name,
+                                    size: file.size,
+                                    type: file.type,
+                                    url: uploadResult.path,
+                                    path: uploadResult.path
+                                });
+                            }
+
+                            console.log(`✅ 文件 ${i + 1} 上传成功: ${uploadResult.path}`);
+                        } else {
+                            console.error(`❌ 文件 ${i + 1} 上传失败:`, uploadResult.message);
+                        }
+                    } catch (error) {
+                        console.error(`❌ 文件 ${i + 1} 上传失败:`, error);
                     }
+                }
 
-                    showSyncStatus(`文件 ${file.name} 已添加到媒体库`, 2000);
-                });
+                showSyncStatus(`✅ ${files.length} 个文件上传完成`, 2000);
             };
 
             input.click();
+        }
+
+        // 上传文件到服务器
+        async function uploadFileToServer(file, uploadType = 'downloads') {
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('uploadType', uploadType);
+
+                const response = await fetch('http://localhost:3002/api/upload/file', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                return result;
+            } catch (error) {
+                console.error('文件上传失败:', error);
+                return { success: false, message: error.message };
+            }
         }
 
         // 获取图片显示URL（处理本地存储的图片）
@@ -6633,13 +6788,251 @@ date: ${data.date}
         window.showCategoryHierarchy = showCategoryHierarchy;
         window.saveCategoryForm = saveCategoryForm;
 
+        // 媒体库管理功能实现
+
+        // 媒体库数据
+        let mediaLibraryData = [];
+
+        // 上传文件到媒体库
+        async function uploadToMediaLibrary(type) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.multiple = true;
+
+            if (type === 'image') {
+                input.accept = 'image/*';
+            } else {
+                input.accept = '.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.rar,.7z';
+            }
+
+            input.onchange = async function(e) {
+                const files = Array.from(e.target.files);
+                const supplier = document.getElementById('mediaSupplierFilter').value || 'default';
+
+                console.log(`📤 上传 ${files.length} 个${type === 'image' ? '图片' : '文件'}到媒体库...`);
+                showSyncStatus(`正在上传 ${files.length} 个文件...`, 1000);
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    try {
+                        const formData = new FormData();
+                        formData.append(type === 'image' ? 'image' : 'file', file);
+                        formData.append('uploadType', 'media');
+                        formData.append('supplier', supplier);
+
+                        const apiUrl = type === 'image' ?
+                            'http://localhost:3002/api/upload/image' :
+                            'http://localhost:3002/api/upload/file';
+
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            console.log(`✅ 文件 ${i + 1} 上传成功: ${result.path}`);
+                        } else {
+                            console.error(`❌ 文件 ${i + 1} 上传失败:`, result.message);
+                        }
+                    } catch (error) {
+                        console.error(`❌ 文件 ${i + 1} 上传失败:`, error);
+                    }
+                }
+
+                showSyncStatus(`✅ ${files.length} 个文件上传完成`, 2000);
+                refreshMediaLibrary();
+            };
+
+            input.click();
+        }
+
+        // 刷新媒体库
+        async function refreshMediaLibrary() {
+            try {
+                console.log('🔄 刷新媒体库...');
+                const response = await fetch('http://localhost:3002/api/media/list');
+                const result = await response.json();
+
+                if (result.success) {
+                    mediaLibraryData = result.media;
+                    renderMediaLibrary();
+                    updateSupplierFilter();
+                    console.log(`✅ 媒体库加载完成，共 ${mediaLibraryData.length} 个文件`);
+                } else {
+                    console.error('❌ 加载媒体库失败:', result.message);
+                }
+            } catch (error) {
+                console.error('❌ 连接媒体库服务器失败:', error);
+                // 显示空状态
+                document.getElementById('mediaLibraryContainer').innerHTML = `
+                    <div class="text-center py-4">
+                        <i class="fas fa-exclamation-triangle fa-2x text-warning"></i>
+                        <p class="mt-2 text-muted">无法连接到媒体库服务器</p>
+                        <button class="btn btn-outline-primary btn-sm" onclick="refreshMediaLibrary()">
+                            <i class="fas fa-retry me-1"></i>重试
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // 更新供应商筛选器
+        function updateSupplierFilter() {
+            const supplierFilter = document.getElementById('mediaSupplierFilter');
+            const suppliers = [...new Set(mediaLibraryData.map(item => item.supplier))];
+
+            // 保存当前选择
+            const currentValue = supplierFilter.value;
+
+            // 清空并重新填充
+            supplierFilter.innerHTML = '<option value="">所有供应商</option>';
+            suppliers.forEach(supplier => {
+                const option = document.createElement('option');
+                option.value = supplier;
+                option.textContent = supplier;
+                supplierFilter.appendChild(option);
+            });
+
+            // 恢复选择
+            supplierFilter.value = currentValue;
+        }
+
+        // 渲染媒体库
+        function renderMediaLibrary() {
+            const container = document.getElementById('mediaLibraryContainer');
+
+            if (mediaLibraryData.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-4">
+                        <i class="fas fa-folder-open fa-2x text-muted"></i>
+                        <p class="mt-2 text-muted">媒体库为空，点击上方按钮上传文件</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // 按供应商分组
+            const groupedData = {};
+            mediaLibraryData.forEach(item => {
+                if (!groupedData[item.supplier]) {
+                    groupedData[item.supplier] = { images: [], files: [] };
+                }
+                if (item.type === 'image') {
+                    groupedData[item.supplier].images.push(item);
+                } else {
+                    groupedData[item.supplier].files.push(item);
+                }
+            });
+
+            let html = '';
+            Object.keys(groupedData).forEach(supplier => {
+                const data = groupedData[supplier];
+                html += `
+                    <div class="supplier-group mb-4">
+                        <h6 class="text-primary mb-3">
+                            <i class="fas fa-building me-2"></i>${supplier}
+                            <span class="badge bg-secondary ms-2">${data.images.length + data.files.length} 个文件</span>
+                        </h6>
+
+                        ${data.images.length > 0 ? `
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-2"><i class="fas fa-images me-1"></i>图片 (${data.images.length})</h6>
+                                <div class="row g-2">
+                                    ${data.images.map(item => `
+                                        <div class="col-md-2 col-sm-3 col-4">
+                                            <div class="media-item">
+                                                <img src="${item.path}" alt="${item.name}" class="img-thumbnail" style="height: 100px; object-fit: cover;">
+                                                <div class="media-overlay">
+                                                    <button class="btn btn-sm btn-primary" onclick="selectMediaFile('${item.path}', '${item.name}')">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-danger" onclick="deleteMediaFile('${item.id}')">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                                <small class="text-muted d-block mt-1">${item.name}</small>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        ${data.files.length > 0 ? `
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-2"><i class="fas fa-file me-1"></i>文件 (${data.files.length})</h6>
+                                <div class="list-group">
+                                    ${data.files.map(item => `
+                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <i class="fas fa-file me-2"></i>
+                                                <strong>${item.name}</strong>
+                                                <small class="text-muted ms-2">${formatFileSize(item.size)}</small>
+                                            </div>
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-outline-primary" onclick="selectMediaFile('${item.path}', '${item.name}')">
+                                                    <i class="fas fa-check me-1"></i>选择
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger" onclick="deleteMediaFile('${item.id}')">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // 筛选媒体库
+        function filterMediaLibrary() {
+            const searchTerm = document.getElementById('mediaSearch').value.toLowerCase();
+            const supplierFilter = document.getElementById('mediaSupplierFilter').value;
+            const typeFilter = document.getElementById('mediaTypeFilter').value;
+
+            // 这里可以实现筛选逻辑
+            // 暂时重新渲染所有数据
+            renderMediaLibrary();
+        }
+
+        // 选择媒体文件
+        function selectMediaFile(path, name) {
+            console.log(`📁 选择媒体文件: ${name} (${path})`);
+            // 这里可以实现选择文件的逻辑
+            alert(`已选择文件: ${name}`);
+        }
+
+        // 删除媒体文件
+        function deleteMediaFile(fileId) {
+            if (confirm('确定要删除这个文件吗？')) {
+                console.log(`🗑️ 删除媒体文件: ${fileId}`);
+                // 这里可以实现删除文件的逻辑
+                alert('删除功能开发中...');
+            }
+        }
+
+        // 格式化文件大小
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
         // 媒体库管理
-        window.showMediaLibrary = showMediaLibrary;
-        window.uploadFiles = uploadFiles;
-        window.deleteMediaFile = deleteMediaFile;
-        window.openMediaLibrary = openMediaLibrary;
+        window.uploadToMediaLibrary = uploadToMediaLibrary;
+        window.refreshMediaLibrary = refreshMediaLibrary;
         window.filterMediaLibrary = filterMediaLibrary;
-        window.selectMediaFiles = selectMediaFiles;
+        window.selectMediaFile = selectMediaFile;
+        window.deleteMediaFile = deleteMediaFile;
 
         // 产品表单相关
         window.loadParameterTemplate = loadParameterTemplate;
@@ -6723,10 +7116,17 @@ date: ${data.date}
             // 设置图片拦截器
             setupImageInterceptor();
 
+            // 初始化媒体库
+            if (document.getElementById('media')) {
+                console.log('📁 初始化媒体库...');
+                refreshMediaLibrary();
+            }
+
             console.log('🔍 JavaScript 基础功能测试:');
             console.log('  - showSection 函数:', typeof showSection);
             console.log('  - addProduct 函数:', typeof addProduct);
             console.log('  - loadProjectData 函数:', typeof loadProjectData);
+            console.log('  - refreshMediaLibrary 函数:', typeof refreshMediaLibrary);
             console.log('✅ VisNDT 内容管理中心初始化完成');
             console.log('功能特色：');
             console.log('- 基于MD文件的内容管理');
