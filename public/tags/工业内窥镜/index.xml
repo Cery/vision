@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>工业内窥镜 on 维森视觉检测仪器</title>
-    <link>https://visndt.com/tags/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C/</link>
+    <link>http://localhost:1314/tags/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C/</link>
     <description>Recent content in 工业内窥镜 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Mon, 08 Jul 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://visndt.com/tags/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1314/tags/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>2024年日本东京精密检测技术博览会</title>
-      <link>https://visndt.com/news/exhibition-news-5/</link>
+      <link>http://localhost:1314/news/exhibition-news-5/</link>
       <pubDate>Mon, 08 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://visndt.com/news/exhibition-news-5/</guid>
+      <guid>http://localhost:1314/news/exhibition-news-5/</guid>
       <description>亚洲地区领先的精密检测技术展览会，展示工业内窥镜在精密制造中的应用</description>
     </item>
     <item>
       <title>工业内窥镜图像处理算法优化技术研究</title>
-      <link>https://visndt.com/news/tech-article-1/</link>
+      <link>http://localhost:1314/news/tech-article-1/</link>
       <pubDate>Fri, 22 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>https://visndt.com/news/tech-article-1/</guid>
+      <guid>http://localhost:1314/news/tech-article-1/</guid>
       <description>深入探讨工业内窥镜图像处理算法的优化方法，提升检测精度和效率</description>
     </item>
   </channel>
