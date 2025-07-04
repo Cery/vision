@@ -12,11 +12,9 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-// 静态文件服务 - 提供媒体库文件访问
-app.use('/media-library', express.static('./media-library'));
+// 静态文件服务 - 提供项目文件访问
 app.use('/images', express.static('./static/images'));
 app.use('/uploads', express.static('./static/uploads'));
-app.use('/files', express.static('./static/files'));
 
 // 确保必要的目录存在
 const ensureDirectoryExists = (dirPath) => {
@@ -316,99 +314,125 @@ app.get('/api/products/list', (req, res) => {
     }
 });
 
-// 扫描目录中的文件
-function scanDirectory(dirPath, basePath, type, supplier = 'default') {
-    const files = [];
-    if (!fs.existsSync(dirPath)) return files;
-
-    try {
-        const items = fs.readdirSync(dirPath);
-        items.forEach(item => {
-            const itemPath = path.join(dirPath, item);
-            const stats = fs.statSync(itemPath);
-
-            if (stats.isFile()) {
-                // 检查文件类型
-                const ext = path.extname(item).toLowerCase();
-                const isImage = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'].includes(ext);
-                const isDocument = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt', '.zip', '.rar', '.7z'].includes(ext);
-
-                if ((type === 'image' && isImage) || (type === 'file' && (isDocument || !isImage))) {
-                    files.push({
-                        id: `${type}-${supplier}-${item}-${stats.mtime.getTime()}`,
-                        name: item,
-                        type: type,
-                        supplier: supplier,
-                        path: `${basePath}/${item}`,
-                        size: stats.size,
-                        uploadDate: stats.mtime.toISOString().split('T')[0]
-                    });
-                }
-            } else if (stats.isDirectory()) {
-                // 递归扫描子目录
-                const subFiles = scanDirectory(itemPath, `${basePath}/${item}`, type, item);
-                files.push(...subFiles);
-            }
-        });
-    } catch (error) {
-        console.error(`扫描目录失败 ${dirPath}:`, error);
-    }
-
-    return files;
-}
-
-// 获取媒体库列表接口
+// 获取媒体库列表接口 - 扫描现有项目文件夹
 app.get('/api/media/list', (req, res) => {
     try {
         const mediaLibrary = [];
 
-        console.log('📂 扫描项目媒体库目录...');
+        console.log('📂 扫描项目媒体文件夹...');
 
-        // 扫描项目中的图片目录
-        const imagePaths = [
-            { dir: './static/images/products', base: '/images/products', supplier: '产品图片' },
-            { dir: './static/images/cases', base: '/images/cases', supplier: '案例图片' },
-            { dir: './static/images/news', base: '/images/news', supplier: '新闻图片' },
-            { dir: './static/images/carousel', base: '/images/carousel', supplier: '轮播图片' },
-            { dir: './static/images/banners', base: '/images/banners', supplier: '横幅图片' },
-            { dir: './static/images/supplier', base: '/images/supplier', supplier: '供应商图片' },
-            { dir: './static/images/application', base: '/images/application', supplier: '应用图片' },
-            { dir: './media-library/images/天津维森科技有限公司', base: '/media-library/images/天津维森科技有限公司', supplier: '天津维森科技有限公司' },
-            { dir: './media-library/images/上海尚品科技有限公司', base: '/media-library/images/上海尚品科技有限公司', supplier: '上海尚品科技有限公司' },
-            { dir: './media-library/images/北京华科仪科技股份有限公司', base: '/media-library/images/北京华科仪科技股份有限公司', supplier: '北京华科仪科技股份有限公司' },
-            { dir: './media-library/images/default', base: '/media-library/images/default', supplier: '默认图片' }
-        ];
+        // 定义图片文件夹映射
+        const imageFolders = {
+            'products': './static/images/products',
+            'cases': './static/images/cases',
+            'news': './static/images/news',
+            'application': './static/images/application',
+            'partner': './static/images/partner',
+            'supplier': './static/images/supplier',
+            'carousel': './static/images/carousel',
+            'banners': './static/images/banners'
+        };
 
-        imagePaths.forEach(({ dir, base, supplier }) => {
-            const images = scanDirectory(dir, base, 'image', supplier);
-            mediaLibrary.push(...images);
+        // 定义文件文件夹映射
+        const fileFolders = {
+            'products': './static/uploads/products',
+            'documents': './static/uploads/documents',
+            'manuals': './static/uploads/manuals',
+            'certificates': './static/uploads/certificates'
+        };
+
+        // 扫描图片文件夹
+        Object.keys(imageFolders).forEach(category => {
+            const folderPath = imageFolders[category];
+            if (fs.existsSync(folderPath)) {
+                scanFolder(folderPath, category, 'image', mediaLibrary);
+            }
         });
 
-        // 扫描项目中的文件目录
-        const filePaths = [
-            { dir: './static/uploads/products', base: '/uploads/products', supplier: '产品文件' },
-            { dir: './static/uploads', base: '/uploads', supplier: '上传文件' },
-            { dir: './static/files/downloads', base: '/files/downloads', supplier: '下载文件' },
-            { dir: './media-library/files/天津维森科技有限公司', base: '/media-library/files/天津维森科技有限公司', supplier: '天津维森科技有限公司' },
-            { dir: './media-library/files/上海尚品科技有限公司', base: '/media-library/files/上海尚品科技有限公司', supplier: '上海尚品科技有限公司' },
-            { dir: './media-library/files/北京华科仪科技股份有限公司', base: '/media-library/files/北京华科仪科技股份有限公司', supplier: '北京华科仪科技股份有限公司' },
-            { dir: './media-library/files/default', base: '/media-library/files/default', supplier: '默认文件' }
-        ];
-
-        filePaths.forEach(({ dir, base, supplier }) => {
-            const files = scanDirectory(dir, base, 'file', supplier);
-            mediaLibrary.push(...files);
+        // 扫描文件文件夹
+        Object.keys(fileFolders).forEach(category => {
+            const folderPath = fileFolders[category];
+            if (fs.existsSync(folderPath)) {
+                scanFolder(folderPath, category, 'file', mediaLibrary);
+            }
         });
 
-        console.log(`✅ 媒体库扫描完成，共找到 ${mediaLibrary.length} 个文件`);
-        console.log(`📊 文件分布: 图片 ${mediaLibrary.filter(f => f.type === 'image').length} 个，文件 ${mediaLibrary.filter(f => f.type === 'file').length} 个`);
-
+        console.log(`✅ 项目媒体库扫描完成，共找到 ${mediaLibrary.length} 个文件`);
         res.json({ success: true, media: mediaLibrary });
     } catch (error) {
         console.error('获取媒体库列表失败:', error);
         res.status(500).json({ success: false, message: '获取媒体库列表失败: ' + error.message });
     }
 });
+
+// 扫描文件夹的辅助函数
+function scanFolder(folderPath, category, type, mediaLibrary) {
+    try {
+        const items = fs.readdirSync(folderPath);
+        items.forEach(item => {
+            const itemPath = path.join(folderPath, item);
+            const stats = fs.statSync(itemPath);
+
+            if (stats.isFile()) {
+                // 检查文件类型
+                const ext = path.extname(item).toLowerCase();
+                const isImage = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'].includes(ext);
+                const isFile = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt', '.zip', '.rar', '.7z'].includes(ext);
+
+                if ((type === 'image' && isImage) || (type === 'file' && (isFile || !isImage))) {
+                    const relativePath = type === 'image' ?
+                        `/images/${category}/${item}` :
+                        `/uploads/${category}/${item}`;
+
+                    mediaLibrary.push({
+                        id: `${type}-${category}-${item}`,
+                        name: item,
+                        type: type,
+                        supplier: category,
+                        category: category,
+                        path: relativePath,
+                        size: stats.size,
+                        uploadDate: stats.mtime.toISOString().split('T')[0]
+                    });
+                }
+            } else if (stats.isDirectory()) {
+                // 递归扫描子文件夹
+                const subFolderPath = itemPath;
+                const subItems = fs.readdirSync(subFolderPath);
+                subItems.forEach(subItem => {
+                    const subItemPath = path.join(subFolderPath, subItem);
+                    const subStats = fs.statSync(subItemPath);
+
+                    if (subStats.isFile()) {
+                        const ext = path.extname(subItem).toLowerCase();
+                        const isImage = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'].includes(ext);
+                        const isFile = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt', '.zip', '.rar', '.7z'].includes(ext);
+
+                        if ((type === 'image' && isImage) || (type === 'file' && (isFile || !isImage))) {
+                            const relativePath = type === 'image' ?
+                                `/images/${category}/${item}/${subItem}` :
+                                `/uploads/${category}/${item}/${subItem}`;
+
+                            mediaLibrary.push({
+                                id: `${type}-${category}-${item}-${subItem}`,
+                                name: subItem,
+                                type: type,
+                                supplier: `${category}/${item}`,
+                                category: category,
+                                subfolder: item,
+                                path: relativePath,
+                                size: subStats.size,
+                                uploadDate: subStats.mtime.toISOString().split('T')[0]
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    } catch (error) {
+        console.error(`扫描文件夹 ${folderPath} 失败:`, error);
+    }
+}
 
 // 启动服务器
 app.listen(PORT, () => {
