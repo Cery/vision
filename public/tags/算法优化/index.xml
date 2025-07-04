@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>算法优化 on 维森视觉检测仪器</title>
-    <link>http://localhost:1314/tags/%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96/</link>
+    <link>https://visndt.com/tags/%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96/</link>
     <description>Recent content in 算法优化 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Fri, 22 Mar 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1314/tags/%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://visndt.com/tags/%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>工业内窥镜图像处理算法优化技术研究</title>
-      <link>http://localhost:1314/news/tech-article-1/</link>
+      <link>https://visndt.com/news/tech-article-1/</link>
       <pubDate>Fri, 22 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1314/news/tech-article-1/</guid>
+      <guid>https://visndt.com/news/tech-article-1/</guid>
       <description>深入探讨工业内窥镜图像处理算法的优化方法，提升检测精度和效率</description>
     </item>
   </channel>

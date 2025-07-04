@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>精密检测 on 维森视觉检测仪器</title>
-    <link>http://localhost:1314/tags/%E7%B2%BE%E5%AF%86%E6%A3%80%E6%B5%8B/</link>
+    <link>https://visndt.com/tags/%E7%B2%BE%E5%AF%86%E6%A3%80%E6%B5%8B/</link>
     <description>Recent content in 精密检测 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Mon, 08 Jul 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1314/tags/%E7%B2%BE%E5%AF%86%E6%A3%80%E6%B5%8B/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://visndt.com/tags/%E7%B2%BE%E5%AF%86%E6%A3%80%E6%B5%8B/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>2024年日本东京精密检测技术博览会</title>
-      <link>http://localhost:1314/news/exhibition-news-5/</link>
+      <link>https://visndt.com/news/exhibition-news-5/</link>
       <pubDate>Mon, 08 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1314/news/exhibition-news-5/</guid>
+      <guid>https://visndt.com/news/exhibition-news-5/</guid>
       <description>亚洲地区领先的精密检测技术展览会，展示工业内窥镜在精密制造中的应用</description>
     </item>
   </channel>

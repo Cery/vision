@@ -25,14 +25,7 @@ paginate = 12
     name = "产品中心"
     url = "/products"
     weight = 20
-  [[menu.main]]
-    name = "应用领域"
-    url = "/applications"
-    weight = 30
-  [[menu.main]]
-    name = "应用案例"
-    url = "/cases"
-    weight = 40
+
   [[menu.main]]
     name = "资讯中心"
     url = "/news"
