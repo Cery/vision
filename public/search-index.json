@@ -60,6 +60,16 @@
   "params": {"date":"2024-03-20T00:00:00Z","draft":false,"features":["高精度科研检测","多学科应用支持","实验过程监控","数据采集分析","定制化解决方案"],"icon":"fas fa-microscope","image":"/images/banners/category/application_general_pipe-2_original_v1.jpg","iscjklanguage":true,"key_technologies":["超高分辨率成像","多光谱分析技术","实时数据采集","图像处理算法","测量标定技术"],"lastmod":"2024-03-20T00:00:00Z","publishdate":"2024-03-20T00:00:00Z","scenarios":[{"description":"材料微观结构、性能测试和失效分析研究","icon":"fas fa-atom","title":"材料科学研究"},{"description":"生物组织结构观察和医疗器械研发支持","icon":"fas fa-dna","title":"生物医学研究"},{"description":"机械结构分析、疲劳试验和性能评估","icon":"fas fa-cog","title":"机械工程研究"},{"description":"环境监测、污染检测和生态研究支持","icon":"fas fa-leaf","title":"环境科学研究"}],"summary":"科研实验检测分析专业解决方案，支持科学研究和技术创新","title":"科学研究","weight":6}
 },
 {
+  "uri": "/products/g800/",
+  "title": "测试内窥镜",
+  "content": "详细描述\n![](/images/products/C40-series/C40-detail-2.jpg)\n",
+  "summary": "G800简要介绍",
+  "type": "products",
+  "section": "products",
+  "date": "2025-07-04",
+  "params": {"application_scenarios":"\u003cp\u003e应用场景\u003c/p\u003e\u003cp\u003e![](/images/products/DZ/DZX-1.jpg)\u003c/p\u003e\n","date":"2025-07-04T12:00:00+08:00","draft":false,"gallery":[{"alt":"产品图片 1","image":"http://localhost:1313/images/products/K-1-1751616125079.jpg","is_main":true}],"iscjklanguage":true,"lastmod":"2025-07-04T12:00:00+08:00","model":"G800","parameters":[{"name":"主机屏幕","value":"6英寸"},{"name":"待机时长","value":"8小时"},{"name":"探头直径","value":"2.8mm"},{"name":"像素","value":"100万"},{"name":"景深","value":"3mm~70mm"},{"name":"视场角","value":"120度"},{"name":"视向","value":"直视"},{"name":"光源","value":"光纤光源"}],"primary_category":"电子内窥镜","publishdate":"2025-07-04T12:00:00+08:00","published":"2025-07-04T12:00:00+08:00","related_products":["vsndt-model"],"secondary_category":"爬行机器人","series":"LA系列","summary":"G800简要介绍","supplier":"深圳市微视光电科技有限公司","title":"测试内窥镜"}
+},
+{
   "uri": "/products/vsndt-model/",
   "title": "WS-K1010工业内窥镜 - 1.0mm高清探头 精密检测工具",
   "content": "WS-K1010工业视频内窥镜专为高密度、微型结构检测而设计，具备1.0mm高清探头、光纤照明系统和良好的防护能力，适用于航空维修、电子装配、科研仪器检测等领域。其灵活的结构与高清成像能力，成为高精度可视化检测领域的重要工具。\n",
