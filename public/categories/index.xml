@@ -2,73 +2,73 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>所有资讯分类 on 维森视觉检测仪器</title>
-    <link>http://localhost:1317/categories/</link>
+    <link>http://localhost:1314/categories/</link>
     <description>Recent content in 所有资讯分类 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Mon, 08 Jul 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1317/categories/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1314/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>展会资讯</title>
-      <link>http://localhost:1317/categories/%E5%B1%95%E4%BC%9A%E8%B5%84%E8%AE%AF/</link>
+      <link>http://localhost:1314/categories/%E5%B1%95%E4%BC%9A%E8%B5%84%E8%AE%AF/</link>
       <pubDate>Mon, 08 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1317/categories/%E5%B1%95%E4%BC%9A%E8%B5%84%E8%AE%AF/</guid>
+      <guid>http://localhost:1314/categories/%E5%B1%95%E4%BC%9A%E8%B5%84%E8%AE%AF/</guid>
       <description></description>
     </item>
     <item>
       <title>技术文章</title>
-      <link>http://localhost:1317/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/</link>
+      <link>http://localhost:1314/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/</link>
       <pubDate>Fri, 22 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1317/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/</guid>
+      <guid>http://localhost:1314/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/</guid>
       <description></description>
     </item>
     <item>
       <title>行业资讯</title>
-      <link>http://localhost:1317/categories/%E8%A1%8C%E4%B8%9A%E8%B5%84%E8%AE%AF/</link>
+      <link>http://localhost:1314/categories/%E8%A1%8C%E4%B8%9A%E8%B5%84%E8%AE%AF/</link>
       <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1317/categories/%E8%A1%8C%E4%B8%9A%E8%B5%84%E8%AE%AF/</guid>
+      <guid>http://localhost:1314/categories/%E8%A1%8C%E4%B8%9A%E8%B5%84%E8%AE%AF/</guid>
       <description></description>
     </item>
     <item>
       <title>电子内窥镜</title>
-      <link>http://localhost:1317/categories/%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C/</link>
+      <link>http://localhost:1314/categories/%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C/</link>
       <pubDate>Wed, 20 Dec 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1317/categories/%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C/</guid>
+      <guid>http://localhost:1314/categories/%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C/</guid>
       <description></description>
     </item>
     <item>
       <title>管道内窥镜</title>
-      <link>http://localhost:1317/categories/%E7%AE%A1%E9%81%93%E5%86%85%E7%AA%A5%E9%95%9C/</link>
+      <link>http://localhost:1314/categories/%E7%AE%A1%E9%81%93%E5%86%85%E7%AA%A5%E9%95%9C/</link>
       <pubDate>Wed, 20 Dec 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1317/categories/%E7%AE%A1%E9%81%93%E5%86%85%E7%AA%A5%E9%95%9C/</guid>
+      <guid>http://localhost:1314/categories/%E7%AE%A1%E9%81%93%E5%86%85%E7%AA%A5%E9%95%9C/</guid>
       <description></description>
     </item>
     <item>
       <title>光纤内窥镜</title>
-      <link>http://localhost:1317/categories/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/</link>
+      <link>http://localhost:1314/categories/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/</link>
       <pubDate>Wed, 20 Dec 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1317/categories/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/</guid>
+      <guid>http://localhost:1314/categories/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/</guid>
       <description></description>
     </item>
     <item>
       <title>光学内窥镜</title>
-      <link>http://localhost:1317/categories/%E5%85%89%E5%AD%A6%E5%86%85%E7%AA%A5%E9%95%9C/</link>
+      <link>http://localhost:1314/categories/%E5%85%89%E5%AD%A6%E5%86%85%E7%AA%A5%E9%95%9C/</link>
       <pubDate>Wed, 20 Dec 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1317/categories/%E5%85%89%E5%AD%A6%E5%86%85%E7%AA%A5%E9%95%9C/</guid>
+      <guid>http://localhost:1314/categories/%E5%85%89%E5%AD%A6%E5%86%85%E7%AA%A5%E9%95%9C/</guid>
       <description></description>
     </item>
     <item>
       <title>内窥镜</title>
-      <link>http://localhost:1317/categories/%E5%86%85%E7%AA%A5%E9%95%9C/</link>
+      <link>http://localhost:1314/categories/%E5%86%85%E7%AA%A5%E9%95%9C/</link>
       <pubDate>Wed, 20 Dec 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1317/categories/%E5%86%85%E7%AA%A5%E9%95%9C/</guid>
+      <guid>http://localhost:1314/categories/%E5%86%85%E7%AA%A5%E9%95%9C/</guid>
       <description></description>
     </item>
     <item>
       <title>爬行机器人</title>
-      <link>http://localhost:1317/categories/%E7%88%AC%E8%A1%8C%E6%9C%BA%E5%99%A8%E4%BA%BA/</link>
+      <link>http://localhost:1314/categories/%E7%88%AC%E8%A1%8C%E6%9C%BA%E5%99%A8%E4%BA%BA/</link>
       <pubDate>Wed, 20 Dec 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1317/categories/%E7%88%AC%E8%A1%8C%E6%9C%BA%E5%99%A8%E4%BA%BA/</guid>
+      <guid>http://localhost:1314/categories/%E7%88%AC%E8%A1%8C%E6%9C%BA%E5%99%A8%E4%BA%BA/</guid>
       <description></description>
     </item>
   </channel>

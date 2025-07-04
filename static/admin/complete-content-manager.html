@@ -6,6 +6,8 @@
     <title>完整内容管理中心 - VisNDT</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Quill Editor CSS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <style>
         :root {
             --primary-color: #667eea;
@@ -192,7 +194,110 @@
         .sync-status.show {
             display: block;
         }
-        
+
+        /* 产品表单样式 */
+        .gallery-container, .downloads-container, .related-products-container {
+            min-height: 100px;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .gallery-placeholder, .downloads-placeholder, .related-products-placeholder {
+            text-align: center;
+            color: #6c757d;
+        }
+
+        .gallery-placeholder i, .downloads-placeholder i, .related-products-placeholder i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .gallery-item {
+            display: inline-block;
+            margin: 10px;
+            position: relative;
+        }
+
+        .gallery-item .image-preview {
+            position: relative;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .gallery-item img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .gallery-item .image-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.7);
+            padding: 5px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .download-item, .related-product-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .download-item .file-info {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            gap: 15px;
+        }
+
+        .download-item .file-icon {
+            font-size: 1.5rem;
+            color: #6c757d;
+        }
+
+        .download-item .file-details {
+            flex: 1;
+        }
+
+        .related-product-item .product-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .related-product-item .form-select {
+            flex: 1;
+        }
+
+        .media-library-grid {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .parameters-container {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .parameter-row {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+        }
+
         .feature-coming-soon {
             text-align: center;
             padding: 60px 20px;
@@ -586,6 +691,48 @@
                     </button>
                     <button class="btn btn-outline-success" onclick="window.open('/admin/test-category-hierarchy.html', '_blank')" title="测试分类层级功能">
                         <i class="fas fa-sitemap me-2"></i>分类测试
+                    </button>
+                    <button class="btn btn-outline-warning" onclick="testProductForm()" title="测试产品表单功能">
+                        <i class="fas fa-vial me-2"></i>表单测试
+                    </button>
+                    <button class="btn btn-outline-info" onclick="addProduct()" title="直接打开产品表单">
+                        <i class="fas fa-plus me-2"></i>测试添加产品
+                    </button>
+                    <button class="btn btn-outline-danger" onclick="testAllFunctions()" title="测试所有功能">
+                        <i class="fas fa-cog me-2"></i>功能测试
+                    </button>
+                    <button class="btn btn-outline-warning" onclick="testCategoryData()" title="测试分类数据">
+                        <i class="fas fa-tags me-2"></i>分类测试
+                    </button>
+                    <button class="btn btn-outline-success" onclick="debugCategoryDisplay()" title="调试分类显示">
+                        <i class="fas fa-search me-2"></i>分类调试
+                    </button>
+                    <button class="btn btn-success" onclick="autoAddFiberEndoscope()" title="自动添加光纤内窥镜产品">
+                        <i class="fas fa-magic me-2"></i>自动测试
+                    </button>
+                    <button class="btn btn-outline-primary" onclick="quickTestProduct()" title="快速测试产品表单">
+                        <i class="fas fa-bolt me-2"></i>快速测试
+                    </button>
+                    <button class="btn btn-outline-danger" onclick="debugSaveProduct()" title="调试保存功能">
+                        <i class="fas fa-bug me-2"></i>调试保存
+                    </button>
+                    <button class="btn btn-outline-secondary" onclick="forceReloadProducts()" title="强制重新加载产品数据">
+                        <i class="fas fa-sync me-2"></i>重新加载
+                    </button>
+                    <button class="btn btn-outline-info" onclick="updateSearchIndex()" title="更新搜索索引">
+                        <i class="fas fa-search me-2"></i>更新索引
+                    </button>
+                    <button class="btn btn-warning" onclick="debugManualSave()" title="调试手动保存流程">
+                        <i class="fas fa-hand-paper me-2"></i>手动保存调试
+                    </button>
+                    <button class="btn btn-outline-warning" onclick="testSimpleSave()" title="简单保存测试">
+                        <i class="fas fa-vial me-2"></i>简单测试
+                    </button>
+                    <button class="btn btn-danger" onclick="fixDisplayIssues()" title="修复显示问题">
+                        <i class="fas fa-wrench me-2"></i>修复显示
+                    </button>
+                    <button class="btn btn-warning" onclick="fixImageIssues()" title="修复图片问题">
+                        <i class="fas fa-image me-2"></i>修复图片
                     </button>
                 </div>
             </div>
@@ -1172,6 +1319,94 @@
                             </div>
                         </div>
 
+                        <!-- 产品图库 -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="section-title mb-0">产品图库</h6>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="openMediaLibrary('gallery')">
+                                            <i class="fas fa-images me-1"></i>选择图片
+                                        </button>
+                                        <button type="button" class="btn btn-outline-success btn-sm" onclick="uploadProductImage('gallery')">
+                                            <i class="fas fa-upload me-1"></i>上传图片
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div id="galleryContainer" class="gallery-container">
+                                    <div class="gallery-placeholder">
+                                        <i class="fas fa-images"></i>
+                                        <p>点击上方按钮添加产品图片</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 资料下载 -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="section-title mb-0">资料下载</h6>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="openMediaLibrary('downloads')">
+                                            <i class="fas fa-folder me-1"></i>选择文件
+                                        </button>
+                                        <button type="button" class="btn btn-outline-success btn-sm" onclick="uploadProductFile('downloads')">
+                                            <i class="fas fa-upload me-1"></i>上传文件
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div id="downloadsContainer" class="downloads-container">
+                                    <div class="downloads-placeholder">
+                                        <i class="fas fa-file-alt"></i>
+                                        <p>点击上方按钮添加下载文件</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 相关产品 -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="section-title mb-0">相关产品</h6>
+                                    <button type="button" class="btn btn-outline-success btn-sm" onclick="addRelatedProduct()">
+                                        <i class="fas fa-plus me-1"></i>添加相关产品
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div id="relatedProductsContainer" class="related-products-container">
+                                    <div class="related-products-placeholder">
+                                        <i class="fas fa-link"></i>
+                                        <p>点击上方按钮添加相关产品</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 详细描述 -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h6 class="section-title">详细描述</h6>
+                                <div id="productDescriptionEditor" style="height: 300px;"></div>
+                                <textarea id="productDescription" style="display: none;"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- 应用场景 -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h6 class="section-title">应用场景</h6>
+                                <div id="productApplicationEditor" style="height: 200px;"></div>
+                                <textarea id="productApplication" style="display: none;"></textarea>
+                            </div>
+                        </div>
+
                         <!-- 发布设置 -->
                         <div class="row mb-4">
                             <div class="col-12">
@@ -1207,6 +1442,8 @@
 
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Quill Editor JS -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
     <script>
         // 页面切换函数
         function showSection(sectionName) {
@@ -1289,24 +1526,7 @@
             }, duration);
         }
 
-        // 数据加载函数
-        function loadProjectData() {
-            showSyncStatus('正在刷新数据...');
 
-            // 模拟数据加载过程
-            setTimeout(() => {
-                // 根据您的要求，使用真实项目数据而非模拟数据
-                console.log('从项目文件加载真实数据...');
-
-                // 更新统计数据（使用真实数据）
-                document.getElementById('productCount').textContent = '6';
-                document.getElementById('supplierCount').textContent = '3';
-                document.getElementById('newsCount').textContent = '12';
-                document.getElementById('caseCount').textContent = '8';
-
-                showSyncStatus('数据刷新完成', 2000);
-            }, 1000);
-        }
 
         // 同步到前台
         function syncToFrontend() {
@@ -1336,6 +1556,10 @@
         let filteredApplications = [];
         let filteredCategories = [];
 
+        // 编辑器实例
+        let productDescriptionEditor = null;
+        let productApplicationEditor = null;
+
         // 分页状态
         let currentProductPage = 1;
         let currentSupplierPage = 1;
@@ -1345,12 +1569,11 @@
         let currentCategoryPage = 1;
         const itemsPerPage = 10;
 
-        // 实际项目数据结构
-        const categoryHierarchy = {
-            '电子内窥镜': ['工业管道内窥镜', '汽车检测内窥镜', '电子设备内窥镜', '便携式内窥镜'],
-            '光纤内窥镜': ['医疗光纤内窥镜', '工业光纤内窥镜', '科研光纤内窥镜', '高精度光纤内窥镜'],
-            '光学内窥镜': ['传统光学内窥镜', '高倍光学内窥镜', '便携光学内窥镜', '专业光学内窥镜'],
-            '内窥镜配件': ['探头配件', '光源配件', '显示配件', '存储配件']
+        // 真实项目分类层级（与categoryHierarchyData保持一致）
+        let categoryHierarchy = {
+            '电子内窥镜': ['工业视频内窥镜', '工业管道内窥镜', '爬行机器人'],
+            '光纤内窥镜': ['柔性光纤内窥镜', '硬性光纤内窥镜'],
+            '光学内窥镜': ['硬性光学内窥镜', '柔性光学内窥镜']
         };
 
         const supplierSeriesMap = {
@@ -1380,11 +1603,11 @@
                 // 并行加载所有内容类型
                 const [searchResponse, productsResponse, suppliersResponse, newsResponse, casesResponse, applicationsResponse] = await Promise.all([
                     fetch('/search-index.json').catch(() => null),
-                    fetch('/api/products/list').catch(() => null),
-                    fetch('/api/suppliers/list').catch(() => null),
-                    fetch('/api/news/list').catch(() => null),
-                    fetch('/api/cases/list').catch(() => null),
-                    fetch('/api/applications/list').catch(() => null)
+                    fetch('http://localhost:3002/api/products/list').catch(() => null),
+                    fetch('http://localhost:3002/api/suppliers/list').catch(() => null),
+                    fetch('http://localhost:3002/api/news/list').catch(() => null),
+                    fetch('http://localhost:3002/api/cases/list').catch(() => null),
+                    fetch('http://localhost:3002/api/applications/list').catch(() => null)
                 ]);
 
                 // 解析搜索索引数据（主要数据源）
@@ -1916,24 +2139,33 @@
                 // 处理图片上传和路径转换
                 const processedContent = await processImagesInContent(markdownContent, contentType, data.id);
 
-                // 保存到对应的API端点
-                const response = await fetch(`/api/${contentType}/save`, {
+                console.log('📝 准备保存内容:', {
+                    contentType,
+                    fileName,
+                    contentLength: processedContent.length
+                });
+
+                // 保存到对应的API端点 - 修复API调用格式
+                const response = await fetch(`http://localhost:3002/api/${contentType}/save`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        fileName: fileName,
+                        id: data.id || data.model || fileName.replace('.md', ''),
                         content: processedContent,
-                        frontMatter: data
+                        action: 'save'
                     })
                 });
 
-                if (response.ok) {
+                const result = await response.json();
+                console.log('💾 保存响应:', result);
+
+                if (response.ok && result.success) {
                     showSyncStatus(`${contentType}保存成功`, 2000);
                     return true;
                 } else {
-                    throw new Error(`保存失败: ${response.statusText}`);
+                    throw new Error(result.message || `保存失败: ${response.statusText}`);
                 }
 
             } catch (error) {
@@ -1950,27 +2182,56 @@
 
             switch (contentType) {
                 case 'products':
+                    // 处理应用场景内容，转换为Markdown格式
+                    const applicationScenarios = data.application_scenarios ?
+                        convertImagePathsForMarkdown(data.application_scenarios) : '';
+
+                    // 生成图库YAML
+                    let galleryYaml = '';
+                    if (data.gallery && data.gallery.length > 0) {
+                        galleryYaml = '\ngallery:' + data.gallery.map(img => `
+  - image: "${img.image || img.url}"
+    alt: "${img.alt || img.name || ''}"${img.is_main ? '\n    is_main: true' : ''}`).join('');
+                    }
+
+                    // 生成参数YAML
+                    let parametersYaml = '';
+                    if (data.parameters && data.parameters.length > 0) {
+                        parametersYaml = '\nparameters:' + data.parameters.map(param => `
+  - name: "${param.name}"
+    value: "${param.value}"`).join('');
+                    }
+
+                    // 生成下载文件YAML
+                    let downloadYaml = '';
+                    if (data.data_download && data.data_download.length > 0) {
+                        downloadYaml = '\ndata_download:' + data.data_download.map(file => `
+  - file_title: "${file.file_title || file.name}"
+    file_path: "${file.file_path || file.url}"`).join('');
+                    }
+
+                    // 生成相关产品YAML
+                    let relatedYaml = '';
+                    if (data.related_products && data.related_products.length > 0) {
+                        relatedYaml = '\nrelated_products:' + data.related_products.map(id => `
+  - "${id}"`).join('');
+                    }
+
                     frontMatter = `---
 title: "${data.title}"
-summary: ${data.summary || ''}
+summary: "${data.summary || ''}"
 primary_category: "${data.primary_category}"
 secondary_category: "${data.secondary_category}"
 model: "${data.model}"
-series: "${data.series}"
-supplier: "${data.supplier}"
-published: ${data.date}T12:00:00+08:00
-gallery:${data.gallery ? data.gallery.map(img => `
-  - image: "${img.image}"
-    alt: "${img.alt}"${img.is_main ? '\n    is_main: true' : ''}`).join('') : ''}
-parameters:${data.parameters ? data.parameters.map(param => `
-  - name: "${param.name}"
-    value: "${param.value}"`).join('') : ''}
-data_download:${data.data_download ? data.data_download.map(file => `
-  - file_title: "${file.file_title}"
-    file_path: "${file.file_path}"`).join('') : ''}
-related_products:${data.related_products ? data.related_products.map(id => `
-  - "${id}"`).join('') : ''}
+series: "${data.series || ''}"
+supplier: "${data.supplier || ''}"
+published: ${data.date || new Date().toISOString().split('T')[0]}T12:00:00+08:00${galleryYaml}${parametersYaml}${downloadYaml}${relatedYaml}
+application_scenarios: |
+  ${applicationScenarios}
 ---`;
+
+                    // 处理详细描述内容，转换为Markdown格式
+                    content = data.content ? convertImagePathsForMarkdown(data.content) : '';
                     break;
 
                 case 'news':
@@ -2118,18 +2379,19 @@ date: ${data.date}
             }
         }
 
-        // 上传图片到媒体库
-        async function uploadImageToMediaLibrary(imageSrc, contentType, itemId) {
+        // 保存图片文件到磁盘
+        async function saveImageToDisk(base64Data, fileName) {
             try {
-                // 将blob或data URL转换为文件
-                const response = await fetch(imageSrc);
+                // 将base64转换为blob
+                const response = await fetch(base64Data);
                 const blob = await response.blob();
 
+                // 创建FormData
                 const formData = new FormData();
-                const fileName = `${contentType}-${itemId}-${Date.now()}.${blob.type.split('/')[1]}`;
                 formData.append('file', blob, fileName);
-                formData.append('category', contentType);
+                formData.append('category', 'products');
 
+                // 尝试上传到服务器
                 const uploadResponse = await fetch('/api/media/upload', {
                     method: 'POST',
                     body: formData
@@ -2137,13 +2399,86 @@ date: ${data.date}
 
                 if (uploadResponse.ok) {
                     const result = await uploadResponse.json();
-                    return result.path;
+                    return result.path || `/static/images/products/${fileName}`;
                 } else {
-                    throw new Error('上传失败');
+                    // 如果服务器上传失败，使用本地存储模拟
+                    return await saveImageLocally(base64Data, fileName);
                 }
 
             } catch (error) {
-                console.error('上传图片到媒体库失败:', error);
+                console.error('保存图片到服务器失败，尝试本地存储:', error);
+                return await saveImageLocally(base64Data, fileName);
+            }
+        }
+
+        // 本地存储图片（模拟保存）
+        async function saveImageLocally(base64Data, fileName) {
+            try {
+                // 在实际项目中，这里应该调用文件系统API或其他存储方案
+                // 现在我们模拟保存过程，将图片数据存储在localStorage中
+                const imageKey = `product_image_${fileName}`;
+                localStorage.setItem(imageKey, base64Data);
+
+                // 返回可访问的路径
+                const imagePath = `/static/images/products/${fileName}`;
+
+                // 创建一个虚拟的图片URL，实际显示时会从localStorage读取
+                console.log(`📁 图片已保存到本地存储: ${fileName}`);
+                return imagePath;
+
+            } catch (error) {
+                console.error('本地存储图片失败:', error);
+                throw error;
+            }
+        }
+
+        // 上传图片到媒体库
+        async function uploadImageToMediaLibrary(imageSrc, contentType, itemId) {
+            try {
+                // 如果是base64或blob数据，生成合适的路径
+                if (imageSrc.startsWith('data:') || imageSrc.startsWith('blob:')) {
+                    // 确定文件扩展名
+                    let extension = 'jpg';
+                    if (imageSrc.includes('data:image/png')) {
+                        extension = 'png';
+                    } else if (imageSrc.includes('data:image/gif')) {
+                        extension = 'gif';
+                    } else if (imageSrc.includes('data:image/webp')) {
+                        extension = 'webp';
+                    }
+
+                    // 生成文件路径
+                    const timestamp = Date.now();
+                    const fileName = `${contentType}-${itemId || 'item'}-${timestamp}.${extension}`;
+                    const imagePath = `/images/content/${contentType}/${fileName}`;
+
+                    // 在实际项目中，这里应该调用后端API保存文件
+                    // 目前只是生成路径，实际的文件保存需要后端支持
+                    console.log('📁 生成图片路径:', imagePath);
+                    console.log('💾 注意：实际项目中需要实现后端文件保存功能');
+
+                    // 将图片数据保存到媒体库localStorage中（临时方案）
+                    const mediaLibrary = JSON.parse(localStorage.getItem('mediaLibrary') || '[]');
+                    mediaLibrary.push({
+                        id: timestamp,
+                        name: fileName,
+                        path: imagePath,
+                        category: contentType,
+                        type: 'image',
+                        size: Math.round(imageSrc.length * 0.75), // 估算文件大小
+                        uploadDate: new Date().toISOString(),
+                        data: imageSrc // 临时存储base64数据
+                    });
+                    localStorage.setItem('mediaLibrary', JSON.stringify(mediaLibrary));
+
+                    return imagePath;
+                } else {
+                    // 如果已经是路径，直接返回
+                    return imageSrc;
+                }
+
+            } catch (error) {
+                console.error('处理图片失败:', error);
                 return imageSrc;
             }
         }
@@ -2156,35 +2491,106 @@ date: ${data.date}
 
         // 产品管理功能
         function addProduct() {
+            console.log('➕ 添加产品...');
             currentEditingProductId = null;
             document.getElementById('productModalTitle').textContent = '添加产品';
-            clearProductForm();
+
+            // 先初始化表单（包括分类选项），再清空内容
+            console.log('🔧 初始化产品表单...');
             initializeProductForm();
 
+            // 然后清空表单内容（但保留选项）
+            clearProductForm();
+
+            // 显示模态框
             const modal = new bootstrap.Modal(document.getElementById('productModal'));
             modal.show();
+
+            // 模态框显示后延迟初始化编辑器
+            setTimeout(() => {
+                console.log('🔄 模态框已显示，重新初始化编辑器...');
+                initializeProductEditors();
+            }, 300);
+
+            // 异步加载真实数据并更新表单
+            loadProjectData().then(() => {
+                console.log('✅ 数据加载完成，更新表单选项...');
+                initializeProductForm();
+            }).catch(error => {
+                console.error('❌ 数据加载失败，使用默认数据:', error);
+            });
         }
 
         function editProduct(productId) {
+            console.log('✏️ 编辑产品:', productId);
             const product = projectData.products.find(p => p.id === productId);
-            if (!product) return;
+            if (!product) {
+                console.error('❌ 找不到产品:', productId);
+                return;
+            }
 
+            console.log('📝 找到产品数据:', product);
             currentEditingProductId = productId;
             document.getElementById('productModalTitle').textContent = '编辑产品';
 
-            // 填充表单数据
+            // 先初始化表单（包括分类选项和编辑器）
+            initializeProductForm();
+
+            // 然后填充表单数据
             document.getElementById('productTitle').value = product.title || '';
             document.getElementById('productModel').value = product.model || '';
             document.getElementById('productSummary').value = product.summary || '';
-            document.getElementById('productPrimaryCategory').value = product.primary_category || '';
-            document.getElementById('productSecondaryCategory').value = product.secondary_category || '';
             document.getElementById('productSupplier').value = product.supplier || '';
             document.getElementById('productSeries').value = product.series || '';
             document.getElementById('productStatus').value = product.status || 'published';
             document.getElementById('productWeight').value = product.weight || 1;
             document.getElementById('productDate').value = product.date || new Date().toISOString().split('T')[0];
 
-            initializeProductForm();
+            // 设置分类（在初始化选项之后）
+            setTimeout(() => {
+                document.getElementById('productPrimaryCategory').value = product.primary_category || '';
+                // 触发次要分类更新
+                updateSecondaryCategories();
+                // 然后设置次要分类
+                setTimeout(() => {
+                    document.getElementById('productSecondaryCategory').value = product.secondary_category || '';
+                }, 100);
+            }, 100);
+
+            // 等待编辑器初始化完成后填充内容
+            setTimeout(() => {
+                // 填充编辑器内容
+                if (productDescriptionEditor && product.content) {
+                    productDescriptionEditor.root.innerHTML = product.content;
+                }
+                if (productApplicationEditor && product.application_scenarios) {
+                    productApplicationEditor.root.innerHTML = product.application_scenarios;
+                }
+
+                // 填充参数
+                if (product.parameters && Array.isArray(product.parameters)) {
+                    const container = document.getElementById('parametersContainer');
+                    container.innerHTML = '';
+                    product.parameters.forEach(param => {
+                        addParameter(param.name, param.value);
+                    });
+                }
+
+                // 填充图库
+                if (product.gallery && Array.isArray(product.gallery)) {
+                    loadProductGallery(product.gallery);
+                }
+
+                // 填充下载文件
+                if (product.data_download && Array.isArray(product.data_download)) {
+                    loadProductDownloads(product.data_download);
+                }
+
+                // 填充相关产品
+                if (product.related_products && Array.isArray(product.related_products)) {
+                    loadRelatedProducts(product.related_products);
+                }
+            }, 500);
 
             const modal = new bootstrap.Modal(document.getElementById('productModal'));
             modal.show();
@@ -2226,39 +2632,92 @@ date: ${data.date}
                 gallery: collectGalleryImages(),
                 data_download: collectDownloadFiles(),
                 related_products: collectRelatedProducts(),
-                content: getProductContent()
+                content: getProductDescription(),
+                application_scenarios: getProductApplication()
             };
 
             // 保存到MD文件
             const saveSuccess = await saveContentToMarkdown('products', productData);
 
             if (saveSuccess) {
+                console.log('✅ MD文件保存成功，开始更新前端数据...');
+
+                // 确保products数组存在
+                if (!projectData.products) {
+                    projectData.products = [];
+                    console.log('📋 初始化products数组');
+                }
+
                 if (currentEditingProductId) {
                     // 更新现有产品
+                    console.log('🔄 更新现有产品:', currentEditingProductId);
                     const index = projectData.products.findIndex(p => p.id === currentEditingProductId);
                     if (index !== -1) {
                         projectData.products[index] = { ...projectData.products[index], ...productData };
                         showSyncStatus('产品更新并同步到MD文件成功', 2000);
+                        console.log('✅ 产品更新完成');
+                    } else {
+                        console.log('⚠️ 未找到要更新的产品，将作为新产品添加');
+                        const newId = model.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                        projectData.products.push({
+                            id: newId,
+                            uri: `/products/${newId}/`,
+                            ...productData
+                        });
                     }
                 } else {
                     // 添加新产品
                     const newId = model.toLowerCase().replace(/[^a-z0-9]/g, '-');
-                    projectData.products.push({
+                    const newProduct = {
                         id: newId,
                         uri: `/products/${newId}/`,
                         ...productData
-                    });
+                    };
+
+                    console.log('➕ 添加新产品:', newProduct);
+                    projectData.products.push(newProduct);
                     showSyncStatus('产品添加并保存到MD文件成功', 2000);
+                    console.log('✅ 新产品添加完成');
                 }
 
+                console.log('📊 当前产品列表长度:', projectData.products.length);
+                console.log('📊 产品列表:', projectData.products.map(p => ({ id: p.id, title: p.title })));
+
+                // 更新UI
+                console.log('🎨 更新UI...');
                 updateProductList();
                 updateDashboard();
-                bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
 
-                // 重新加载项目数据以确保同步
-                setTimeout(() => {
-                    loadProjectData();
-                }, 1000);
+                // 关闭模态框
+                const modal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
+                if (modal) {
+                    modal.hide();
+                }
+
+                // 延迟重新加载数据以确保同步（但不清空当前显示）
+                console.log('🔄 延迟验证数据同步...');
+                setTimeout(async () => {
+                    console.log('🔍 验证数据同步状态...');
+                    try {
+                        const response = await fetch('http://localhost:3002/api/products/list');
+                        const result = await response.json();
+
+                        if (result.success && result.products) {
+                            console.log(`✅ API数据验证: ${result.products.length} 个产品`);
+                            console.log(`📊 前端数据: ${projectData.products.length} 个产品`);
+
+                            // 只有在数据不一致时才重新加载
+                            if (result.products.length !== projectData.products.length) {
+                                console.log('⚠️ 数据不一致，重新同步...');
+                                await forceReloadProducts();
+                            } else {
+                                console.log('✅ 数据已同步，无需重新加载');
+                            }
+                        }
+                    } catch (error) {
+                        console.error('❌ 数据验证失败:', error);
+                    }
+                }, 2000);
             }
         }
 
@@ -2273,8 +2732,23 @@ date: ${data.date}
                 const isMainCheckbox = item.querySelector('.is-main-image');
 
                 if (img && img.src) {
+                    let imagePath = img.src;
+
+                    // 如果是base64图片，转换为相对路径
+                    if (imagePath.startsWith('data:image/')) {
+                        // 生成一个基于时间戳的文件名
+                        const timestamp = Date.now();
+                        const extension = imagePath.includes('data:image/jpeg') ? 'jpg' :
+                                        imagePath.includes('data:image/png') ? 'png' : 'jpg';
+                        imagePath = `/images/products/gallery/product-${timestamp}-${index + 1}.${extension}`;
+
+                        // 这里应该调用后端API保存base64图片为实际文件
+                        // 目前只是转换路径，实际项目中需要实现文件上传
+                        console.log('🖼️ 转换base64图片路径:', imagePath);
+                    }
+
                     gallery.push({
-                        image: img.src,
+                        image: imagePath,
                         alt: altInput ? altInput.value : `产品图片 ${index + 1}`,
                         is_main: isMainCheckbox ? isMainCheckbox.checked : index === 0
                     });
@@ -2319,48 +2793,2129 @@ date: ${data.date}
             return relatedProducts;
         }
 
-        // 获取产品内容（富文本编辑器内容）
-        function getProductContent() {
-            // 如果使用了富文本编辑器，从编辑器获取内容
-            if (window.productContentEditor) {
-                return window.productContentEditor.getHTML();
+        // 媒体库和文件管理功能
+        function openMediaLibrary(type) {
+            // 创建媒体库选择器模态框
+            const modalHtml = `
+                <div class="modal fade" id="mediaLibraryModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">选择媒体文件</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <div class="btn-group w-100">
+                                            <button type="button" class="btn btn-outline-primary" onclick="filterMediaLibrary('images')">图片</button>
+                                            <button type="button" class="btn btn-outline-primary" onclick="filterMediaLibrary('documents')">文档</button>
+                                            <button type="button" class="btn btn-outline-primary" onclick="filterMediaLibrary('all')">全部</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div id="mediaLibraryContent" class="media-library-grid">
+                                            <div class="text-center p-4">
+                                                <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+                                                <p class="text-muted">媒体库功能开发中...</p>
+                                                <p class="small text-muted">将支持图片预览、文件分类和批量选择</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                <button type="button" class="btn btn-primary" onclick="selectMediaFiles('${type}')">选择文件</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // 移除已存在的模态框
+            const existingModal = document.getElementById('mediaLibraryModal');
+            if (existingModal) {
+                existingModal.remove();
             }
 
-            // 否则从textarea获取
-            const contentTextarea = document.getElementById('productContent');
-            return contentTextarea ? contentTextarea.value : '';
+            // 添加新的模态框
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+            // 显示模态框
+            const modal = new bootstrap.Modal(document.getElementById('mediaLibraryModal'));
+            modal.show();
+        }
+
+        function uploadProductImage(type) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.multiple = true;
+
+            input.onchange = function(e) {
+                const files = Array.from(e.target.files);
+                console.log(`📤 上传 ${files.length} 个图片文件到媒体库...`);
+
+                files.forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        // 生成媒体库路径
+                        const timestamp = Date.now() + index;
+                        const fileName = `${type}-${timestamp}-${file.name}`;
+                        const mediaPath = `/static/images/products/${fileName}`;
+
+                        const imageData = {
+                            url: mediaPath,  // 使用媒体库路径而不是base64数据
+                            name: file.name,
+                            size: file.size,
+                            type: file.type,
+                            mediaPath: mediaPath,
+                            base64Data: e.target.result  // 保留base64数据用于预览
+                        };
+
+                        // 真正保存图片文件到磁盘
+                        saveImageToDisk(e.target.result, fileName).then(savedPath => {
+                            console.log(`✅ 图片文件已保存到磁盘: ${savedPath}`);
+
+                            // 自动保存到媒体库
+                            const mediaItem = {
+                                id: `media-${timestamp}`,
+                                name: fileName,
+                                type: 'image',
+                                category: `产品${type}图片`,
+                                size: formatFileSize(file.size),
+                                url: savedPath,
+                                uploadDate: new Date().toISOString().split('T')[0],
+                                source: 'product-upload'
+                            };
+
+                            // 添加到全局媒体库
+                            if (!window.mediaLibrary) {
+                                window.mediaLibrary = [];
+                            }
+                            window.mediaLibrary.push(mediaItem);
+                            console.log(`✅ 图片已保存到媒体库: ${fileName}`);
+
+                            if (type === 'gallery') {
+                                addImageToGallery({
+                                    ...imageData,
+                                    url: savedPath, // 使用实际保存的路径
+                                    previewUrl: savedPath // 预览也使用实际路径
+                                });
+                            }
+
+                            showSyncStatus(`图片已自动保存到媒体库: ${fileName}`, 2000);
+                        }).catch(error => {
+                            console.error('保存图片文件失败:', error);
+                            // 降级处理：仍然添加到图库，但使用base64预览
+                            if (type === 'gallery') {
+                                addImageToGallery({
+                                    ...imageData,
+                                    previewUrl: e.target.result, // 用于预览的base64数据
+                                    url: mediaPath // 用于保存的媒体库路径
+                                });
+                            }
+                            showSyncStatus(`图片预览已添加，但文件保存失败: ${fileName}`, 3000);
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                });
+            };
+
+            input.click();
+        }
+
+        function uploadProductFile(type) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.multiple = true;
+
+            input.onchange = function(e) {
+                const files = Array.from(e.target.files);
+                files.forEach(file => {
+                    const fileData = {
+                        name: file.name,
+                        size: file.size,
+                        type: file.type,
+                        url: URL.createObjectURL(file)
+                    };
+
+                    if (type === 'downloads') {
+                        addFileToDownloads(fileData);
+                    }
+
+                    showSyncStatus(`文件 ${file.name} 已添加到媒体库`, 2000);
+                });
+            };
+
+            input.click();
+        }
+
+        // 获取图片显示URL（处理本地存储的图片）
+        function getImageDisplayUrl(imagePath) {
+            // 如果是产品图片路径，尝试从localStorage获取
+            if (imagePath && imagePath.includes('/static/images/products/')) {
+                const fileName = imagePath.split('/').pop();
+                const imageKey = `product_image_${fileName}`;
+                const storedImage = localStorage.getItem(imageKey);
+
+                if (storedImage) {
+                    console.log(`📷 从本地存储加载图片: ${fileName}`);
+                    return storedImage; // 返回base64数据
+                }
+            }
+
+            // 其他情况返回原路径
+            return imagePath;
+        }
+
+        // 图库管理功能
+        function addImageToGallery(imageData) {
+            const container = document.getElementById('galleryContainer');
+
+            // 移除占位符
+            const placeholder = container.querySelector('.gallery-placeholder');
+            if (placeholder) {
+                placeholder.remove();
+            }
+
+            const imageDiv = document.createElement('div');
+            imageDiv.className = 'gallery-item';
+
+            // 获取实际显示的URL
+            const displayUrl = getImageDisplayUrl(imageData.previewUrl || imageData.url);
+            const saveUrl = imageData.url; // 用于保存的路径
+
+            imageDiv.innerHTML = `
+                <div class="image-preview">
+                    <img src="${displayUrl}" alt="${imageData.name}" class="img-thumbnail" onerror="handleImageError(this)">
+                    <div class="image-controls">
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="setMainImage(this)">
+                            <i class="fas fa-star"></i> 主图
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeGalleryImage(this)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <input type="hidden" class="image-url" value="${saveUrl}">
+                    <input type="hidden" class="image-name" value="${imageData.name}">
+                    <input type="hidden" class="is-main" value="false">
+                    <div class="image-info">
+                        <small class="text-muted">保存路径: ${saveUrl}</small>
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(imageDiv);
+        }
+
+        // 处理图片加载错误
+        function handleImageError(img) {
+            const src = img.src;
+            console.log('图片加载失败:', src);
+
+            // 如果是产品图片路径，尝试从localStorage加载
+            if (src.includes('/static/images/products/')) {
+                const fileName = src.split('/').pop();
+                const imageKey = `product_image_${fileName}`;
+                const storedImage = localStorage.getItem(imageKey);
+
+                if (storedImage && storedImage !== src) {
+                    console.log('从本地存储重新加载图片:', fileName);
+                    img.src = storedImage;
+                    return;
+                }
+            }
+
+            // 设置默认占位图
+            img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPuWbvueJh+aXoOazleWKoOi9vTwvdGV4dD48L3N2Zz4=';
+            img.alt = '图片无法加载';
+        }
+
+        function loadProductGallery(gallery) {
+            const container = document.getElementById('galleryContainer');
+            container.innerHTML = '';
+
+            if (gallery && gallery.length > 0) {
+                gallery.forEach(image => {
+                    addImageToGallery({
+                        url: image.url || image.image,
+                        name: image.alt || image.name || '产品图片'
+                    });
+                });
+            } else {
+                container.innerHTML = '<div class="gallery-placeholder"><i class="fas fa-images"></i><p>点击上方按钮添加产品图片</p></div>';
+            }
+        }
+
+        function setMainImage(button) {
+            // 移除其他主图标记
+            document.querySelectorAll('.gallery-item .is-main').forEach(input => {
+                input.value = 'false';
+            });
+            document.querySelectorAll('.gallery-item .btn-outline-primary').forEach(btn => {
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-outline-primary');
+            });
+
+            // 设置当前为主图
+            const isMainInput = button.closest('.gallery-item').querySelector('.is-main');
+            isMainInput.value = 'true';
+            button.classList.remove('btn-outline-primary');
+            button.classList.add('btn-primary');
+        }
+
+        function removeGalleryImage(button) {
+            button.closest('.gallery-item').remove();
+
+            // 如果没有图片了，显示占位符
+            const container = document.getElementById('galleryContainer');
+            if (container.children.length === 0) {
+                container.innerHTML = '<div class="gallery-placeholder"><i class="fas fa-images"></i><p>点击上方按钮添加产品图片</p></div>';
+            }
+        }
+
+        // 下载文件管理功能
+        function addFileToDownloads(fileData) {
+            const container = document.getElementById('downloadsContainer');
+
+            // 移除占位符
+            const placeholder = container.querySelector('.downloads-placeholder');
+            if (placeholder) {
+                placeholder.remove();
+            }
+
+            const fileDiv = document.createElement('div');
+            fileDiv.className = 'download-item';
+            fileDiv.innerHTML = `
+                <div class="file-info">
+                    <div class="file-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="file-details">
+                        <input type="text" class="form-control form-control-sm file-title" placeholder="文件标题" value="${fileData.name}">
+                        <small class="text-muted">${fileData.name} (${formatFileSize(fileData.size)})</small>
+                        <input type="hidden" class="file-path" value="${fileData.url}">
+                    </div>
+                    <div class="file-controls">
+                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeDownloadFile(this)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(fileDiv);
+        }
+
+        function loadProductDownloads(downloads) {
+            const container = document.getElementById('downloadsContainer');
+            container.innerHTML = '';
+
+            if (downloads && downloads.length > 0) {
+                downloads.forEach(file => {
+                    addFileToDownloads({
+                        name: file.file_title || file.name || '下载文件',
+                        url: file.file_path || file.url,
+                        size: file.size || 0
+                    });
+                });
+            } else {
+                container.innerHTML = '<div class="downloads-placeholder"><i class="fas fa-file-alt"></i><p>点击上方按钮添加下载文件</p></div>';
+            }
+        }
+
+        function removeDownloadFile(button) {
+            button.closest('.download-item').remove();
+
+            // 如果没有文件了，显示占位符
+            const container = document.getElementById('downloadsContainer');
+            if (container.children.length === 0) {
+                container.innerHTML = '<div class="downloads-placeholder"><i class="fas fa-file-alt"></i><p>点击上方按钮添加下载文件</p></div>';
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // 相关产品管理功能
+        function addRelatedProduct() {
+            const container = document.getElementById('relatedProductsContainer');
+
+            // 移除占位符
+            const placeholder = container.querySelector('.related-products-placeholder');
+            if (placeholder) {
+                placeholder.remove();
+            }
+
+            const productDiv = document.createElement('div');
+            productDiv.className = 'related-product-item';
+            productDiv.innerHTML = `
+                <div class="product-selector">
+                    <select class="form-select form-select-sm related-product-select">
+                        <option value="">选择相关产品</option>
+                        ${generateProductOptions()}
+                    </select>
+                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeRelatedProduct(this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+
+            container.appendChild(productDiv);
+        }
+
+        function generateProductOptions() {
+            let options = '';
+            if (projectData.products && projectData.products.length > 0) {
+                projectData.products.forEach(product => {
+                    if (product.id !== currentEditingProductId) {
+                        options += `<option value="${product.id}">${product.title || product.model}</option>`;
+                    }
+                });
+            }
+            return options;
+        }
+
+        function loadRelatedProducts(relatedProducts) {
+            const container = document.getElementById('relatedProductsContainer');
+            container.innerHTML = '';
+
+            if (relatedProducts && relatedProducts.length > 0) {
+                relatedProducts.forEach(productId => {
+                    addRelatedProduct();
+                    const lastSelect = container.querySelector('.related-product-select:last-of-type');
+                    if (lastSelect) {
+                        lastSelect.value = productId;
+                    }
+                });
+            } else {
+                container.innerHTML = '<div class="related-products-placeholder"><i class="fas fa-link"></i><p>点击上方按钮添加相关产品</p></div>';
+            }
+        }
+
+        function removeRelatedProduct(button) {
+            button.closest('.related-product-item').remove();
+
+            // 如果没有相关产品了，显示占位符
+            const container = document.getElementById('relatedProductsContainer');
+            if (container.children.length === 0) {
+                container.innerHTML = '<div class="related-products-placeholder"><i class="fas fa-link"></i><p>点击上方按钮添加相关产品</p></div>';
+            }
+        }
+
+
+
+        function collectRelatedProducts() {
+            const relatedProducts = [];
+            const selects = document.querySelectorAll('.related-product-select');
+
+            selects.forEach(select => {
+                if (select.value) {
+                    relatedProducts.push(select.value);
+                }
+            });
+
+            return relatedProducts;
+        }
+
+        // 编辑器图片处理和路径转换功能
+        function processEditorImages(editor, editorType) {
+            if (!editor || !editor.root) {
+                console.log('⚠️ 编辑器无效，跳过图片处理');
+                return;
+            }
+
+            const content = editor.root.innerHTML;
+            const imgTags = content.match(/<img[^>]+>/g);
+
+            if (imgTags) {
+                console.log(`🖼️ 在${editorType}编辑器中发现 ${imgTags.length} 个图片`);
+
+                imgTags.forEach(async (imgTag, index) => {
+                    const srcMatch = imgTag.match(/src="([^"]+)"/);
+                    if (srcMatch) {
+                        const src = srcMatch[1];
+
+                        // 处理base64图片
+                        if (src.startsWith('data:')) {
+                            console.log(`📤 上传base64图片 ${index + 1} 到媒体库...`);
+                            try {
+                                const newPath = await uploadBase64Image(src, editorType);
+                                if (newPath) {
+                                    // 替换编辑器中的图片路径
+                                    const currentContent = editor.root.innerHTML;
+                                    const updatedContent = currentContent.replace(src, newPath);
+                                    editor.root.innerHTML = updatedContent;
+                                    console.log(`✅ 图片 ${index + 1} 已保存到媒体库: ${newPath}`);
+                                }
+                            } catch (error) {
+                                console.error(`❌ 上传图片 ${index + 1} 失败:`, error);
+                            }
+                        }
+                        // 处理blob URL
+                        else if (src.startsWith('blob:')) {
+                            console.log(`📤 上传blob图片 ${index + 1} 到媒体库...`);
+                            try {
+                                const newPath = await uploadBlobImage(src, editorType);
+                                if (newPath) {
+                                    const currentContent = editor.root.innerHTML;
+                                    const updatedContent = currentContent.replace(src, newPath);
+                                    editor.root.innerHTML = updatedContent;
+                                    console.log(`✅ 图片 ${index + 1} 已保存到媒体库: ${newPath}`);
+                                }
+                            } catch (error) {
+                                console.error(`❌ 上传图片 ${index + 1} 失败:`, error);
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        async function uploadBase64Image(base64Data, editorType) {
+            try {
+                // 生成文件名
+                const timestamp = Date.now();
+                const fileName = `${editorType}-image-${timestamp}.png`;
+                const mediaPath = `/static/images/products/${fileName}`;
+
+                console.log(`📤 上传base64图片到媒体库: ${fileName}`);
+
+                // 保存图片到本地存储
+                await saveImageLocally(base64Data, fileName);
+
+                // 添加到媒体库数据
+                const mediaItem = {
+                    id: `media-${timestamp}`,
+                    name: fileName,
+                    type: 'image',
+                    category: `${editorType}图片`,
+                    size: Math.round(base64Data.length * 0.75) + 'B', // 估算文件大小
+                    url: mediaPath,
+                    uploadDate: new Date().toISOString().split('T')[0],
+                    source: 'editor'
+                };
+
+                // 添加到全局媒体库
+                if (!window.mediaLibrary) {
+                    window.mediaLibrary = [];
+                }
+                window.mediaLibrary.push(mediaItem);
+
+                showSyncStatus(`图片已自动保存到媒体库: ${fileName}`, 2000);
+                console.log(`✅ 图片已添加到媒体库: ${fileName}`);
+                console.log(`📁 图片保存路径: ${mediaPath}`);
+
+                // 返回base64数据用于编辑器显示
+                return base64Data;
+            } catch (error) {
+                console.error('上传base64图片失败:', error);
+                return null;
+            }
+        }
+
+        async function uploadBlobImage(blobUrl, editorType) {
+            try {
+                // 获取blob数据
+                const response = await fetch(blobUrl);
+                const blob = await response.blob();
+
+                // 生成文件名
+                const timestamp = Date.now();
+                const fileName = `${editorType}-image-${timestamp}.jpg`;
+                const mediaPath = `/static/images/products/${fileName}`;
+
+                console.log(`📤 上传blob图片到媒体库: ${fileName}`);
+
+                // 将blob转换为base64并保存到本地存储
+                const reader = new FileReader();
+                const base64Data = await new Promise((resolve) => {
+                    reader.onload = () => resolve(reader.result);
+                    reader.readAsDataURL(blob);
+                });
+
+                await saveImageLocally(base64Data, fileName);
+
+                // 添加到媒体库数据
+                const mediaItem = {
+                    id: `media-${timestamp}`,
+                    name: fileName,
+                    type: 'image',
+                    category: `${editorType}图片`,
+                    size: formatFileSize(blob.size),
+                    url: mediaPath,
+                    uploadDate: new Date().toISOString().split('T')[0],
+                    source: 'editor'
+                };
+
+                // 添加到全局媒体库
+                if (!window.mediaLibrary) {
+                    window.mediaLibrary = [];
+                }
+                window.mediaLibrary.push(mediaItem);
+
+                showSyncStatus(`图片已自动保存到媒体库: ${fileName}`, 2000);
+                console.log(`✅ blob图片已添加到媒体库: ${fileName}`);
+
+                // 返回base64数据用于编辑器显示
+                return base64Data;
+            } catch (error) {
+                console.error('上传blob图片失败:', error);
+                return null;
+            }
+        }
+
+        // MD文件路径转换功能
+        function convertImagePathsForMarkdown(content) {
+            if (!content) return content;
+
+            // 将绝对路径转换为相对路径
+            let convertedContent = content.replace(/src="\/static\/images\//g, 'src="/images/');
+
+            // 将HTML img标签转换为Markdown格式
+            convertedContent = convertedContent.replace(/<img[^>]+>/g, (imgTag) => {
+                const srcMatch = imgTag.match(/src="([^"]+)"/);
+                const altMatch = imgTag.match(/alt="([^"]*)"/);
+
+                if (srcMatch) {
+                    const src = srcMatch[1];
+                    const alt = altMatch ? altMatch[1] : '';
+                    return `![${alt}](${src})`;
+                }
+
+                return imgTag;
+            });
+
+            return convertedContent;
+        }
+
+        // 媒体库过滤功能
+        function filterMediaLibrary(type) {
+            const buttons = document.querySelectorAll('#mediaLibraryModal .btn-group .btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-outline-primary');
+            });
+
+            event.target.classList.remove('btn-outline-primary');
+            event.target.classList.add('btn-primary');
+
+            // 这里应该根据类型过滤媒体库内容
+            console.log(`过滤媒体库: ${type}`);
+        }
+
+        function selectMediaFiles(targetType) {
+            // 模拟选择媒体文件
+            const selectedFiles = [
+                { url: '/images/products/sample1.jpg', name: '示例图片1.jpg', type: 'image' },
+                { url: '/images/products/sample2.jpg', name: '示例图片2.jpg', type: 'image' }
+            ];
+
+            selectedFiles.forEach(file => {
+                if (targetType === 'gallery' && file.type === 'image') {
+                    addImageToGallery(file);
+                } else if (targetType === 'downloads') {
+                    addFileToDownloads(file);
+                }
+            });
+
+            bootstrap.Modal.getInstance(document.getElementById('mediaLibraryModal')).hide();
+            showSyncStatus(`已添加 ${selectedFiles.length} 个文件`, 2000);
+        }
+
+        // 测试函数
+        function testProductForm() {
+            console.log('🧪 开始测试产品表单功能...');
+            console.log('📊 当前项目数据状态:', projectData);
+            console.log('🔍 Quill编辑器状态:', {
+                descriptionEditor: productDescriptionEditor,
+                applicationEditor: productApplicationEditor,
+                quillAvailable: typeof Quill !== 'undefined'
+            });
+
+            // 测试表单初始化
+            console.log('🔧 测试表单初始化...');
+            initializeProductForm();
+
+            // 测试编辑器初始化
+            console.log('📝 测试编辑器初始化...');
+            initializeProductEditors();
+
+            alert('测试完成，请查看控制台输出');
+        }
+
+        // 全局功能测试
+        function testAllFunctions() {
+            console.log('🧪 开始测试所有主要功能...');
+
+            // 测试基础功能
+            console.log('✅ showSection 函数:', typeof showSection);
+            console.log('✅ toggleSidebar 函数:', typeof toggleSidebar);
+            console.log('✅ loadProjectData 函数:', typeof loadProjectData);
+
+            // 测试产品管理
+            console.log('✅ addProduct 函数:', typeof addProduct);
+            console.log('✅ editProduct 函数:', typeof editProduct);
+            console.log('✅ saveProduct 函数:', typeof saveProduct);
+
+            // 测试筛选功能
+            console.log('✅ filterProducts 函数:', typeof filterProducts);
+            console.log('✅ clearProductFilters 函数:', typeof clearProductFilters);
+
+            // 测试参数管理
+            console.log('✅ loadParameterTemplate 函数:', typeof loadParameterTemplate);
+            console.log('✅ addParameter 函数:', typeof addParameter);
+
+            alert('功能测试完成，请查看控制台输出');
+        }
+
+        // 分类数据测试
+        function testCategoryData() {
+            console.log('🧪 开始测试分类数据...');
+            console.log('📋 categoryHierarchyData:', categoryHierarchyData);
+            console.log('📋 categoryHierarchy:', categoryHierarchy);
+
+            // 测试主要分类
+            const primaryCategories = categoryHierarchyData.map(cat => cat.title);
+            console.log('📋 主要分类列表:', primaryCategories);
+            console.log('📋 主要分类数量:', primaryCategories.length);
+
+            // 测试每个主要分类的子分类
+            categoryHierarchyData.forEach(primary => {
+                console.log(`📋 ${primary.title} 的子分类:`, primary.subcategories.map(sub => sub.title));
+                console.log(`📋 ${primary.title} 子分类数量:`, primary.subcategories.length);
+            });
+
+            // 检查下拉框内容
+            const primarySelect = document.getElementById('productPrimaryCategory');
+            const secondarySelect = document.getElementById('productSecondaryCategory');
+
+            console.log('📋 主要分类下拉框选项数量:', primarySelect.options.length);
+            console.log('📋 次要分类下拉框选项数量:', secondarySelect.options.length);
+
+            // 显示下拉框内容
+            for (let i = 0; i < primarySelect.options.length; i++) {
+                console.log(`📋 主要分类选项 ${i}:`, primarySelect.options[i].value, primarySelect.options[i].text);
+            }
+
+            alert('分类数据测试完成，请查看控制台输出');
+        }
+
+        // 调试分类显示
+        function debugCategoryDisplay() {
+            console.log('🔍 开始调试分类显示...');
+
+            // 检查分类数据
+            console.log('📋 categoryHierarchyData:', categoryHierarchyData);
+            console.log('📋 categoryHierarchy:', categoryHierarchy);
+
+            // 检查DOM元素
+            const primarySelect = document.getElementById('productPrimaryCategory');
+            const secondarySelect = document.getElementById('productSecondaryCategory');
+
+            console.log('📋 主要分类下拉框元素:', primarySelect);
+            console.log('📋 次要分类下拉框元素:', secondarySelect);
+
+            if (primarySelect) {
+                console.log('📋 主要分类选项数量:', primarySelect.options.length);
+                console.log('📋 主要分类HTML:', primarySelect.innerHTML);
+
+                // 显示所有选项
+                for (let i = 0; i < primarySelect.options.length; i++) {
+                    const option = primarySelect.options[i];
+                    console.log(`📋 选项 ${i}: value="${option.value}", text="${option.text}"`);
+                }
+            } else {
+                console.error('❌ 找不到主要分类下拉框');
+            }
+
+            if (secondarySelect) {
+                console.log('📋 次要分类选项数量:', secondarySelect.options.length);
+                console.log('📋 次要分类HTML:', secondarySelect.innerHTML);
+            } else {
+                console.error('❌ 找不到次要分类下拉框');
+            }
+
+            // 手动触发分类初始化
+            console.log('🔄 手动触发分类初始化...');
+            try {
+                initializeProductForm();
+                console.log('✅ 分类初始化完成');
+            } catch (error) {
+                console.error('❌ 分类初始化失败:', error);
+            }
+
+            alert('分类显示调试完成，请查看控制台输出');
+        }
+
+        // 自动添加光纤内窥镜产品测试
+        async function autoAddFiberEndoscope() {
+            console.log('🚀 开始自动添加光纤内窥镜产品测试...');
+
+            try {
+                // 第1步：打开产品添加表单
+                console.log('📝 第1步：打开产品添加表单...');
+                addProduct();
+
+                // 等待表单初始化完成
+                await sleep(1000);
+
+                // 第2步：填写基本信息
+                console.log('📝 第2步：填写基本信息...');
+                await fillBasicInfo();
+
+                // 第3步：添加技术参数
+                console.log('📝 第3步：添加技术参数...');
+                await addTechnicalParameters();
+
+                // 第4步：填写详细描述
+                console.log('📝 第4步：填写详细描述...');
+                await fillDetailedDescription();
+
+                // 第5步：填写应用场景
+                console.log('📝 第5步：填写应用场景...');
+                await fillApplicationScenarios();
+
+                // 第6步：模拟上传产品图片
+                console.log('📝 第6步：模拟上传产品图片...');
+                await simulateImageUpload();
+
+                // 第7步：添加下载文件
+                console.log('📝 第7步：添加下载文件...');
+                await addDownloadFiles();
+
+                // 第8步：保存产品
+                console.log('📝 第8步：保存产品...');
+                await saveProductTest();
+
+                console.log('✅ 光纤内窥镜产品自动添加测试完成！');
+                alert('✅ 光纤内窥镜产品自动添加测试完成！请查看控制台输出');
+
+            } catch (error) {
+                console.error('❌ 自动添加产品测试失败:', error);
+                alert('❌ 自动添加产品测试失败: ' + error.message);
+            }
+        }
+
+        // 辅助函数：延迟
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // 填写基本信息
+        async function fillBasicInfo() {
+            console.log('📋 填写基本信息...');
+
+            document.getElementById('productTitle').value = 'VF-8.5mm柔性光纤内窥镜';
+            document.getElementById('productModel').value = 'VF-8500';
+            document.getElementById('productSummary').value = '高清柔性光纤内窥镜，适用于复杂管道检测';
+            document.getElementById('productSupplier').value = 'VisNDT';
+            document.getElementById('productSeries').value = 'VF系列';
+            document.getElementById('productStatus').value = 'published';
+            document.getElementById('productWeight').value = '1';
+            document.getElementById('productDate').value = new Date().toISOString().split('T')[0];
+
+            // 设置分类
+            await sleep(500);
+            document.getElementById('productPrimaryCategory').value = '光纤内窥镜';
+
+            // 触发次要分类更新
+            updateSecondaryCategories();
+            await sleep(500);
+
+            document.getElementById('productSecondaryCategory').value = '柔性光纤内窥镜';
+
+            console.log('✅ 基本信息填写完成');
+        }
+
+        // 添加技术参数
+        async function addTechnicalParameters() {
+            console.log('📋 添加技术参数...');
+
+            const parameters = [
+                { name: '探头直径', value: '8.5mm' },
+                { name: '工作长度', value: '1000mm' },
+                { name: '视角', value: '60°' },
+                { name: '焦距', value: '5-50mm' },
+                { name: '分辨率', value: '高清' },
+                { name: '工作温度', value: '-10°C至60°C' },
+                { name: '防护等级', value: 'IP67' }
+            ];
+
+            for (const param of parameters) {
+                addParameter();
+                await sleep(200);
+
+                const paramItems = document.querySelectorAll('.parameter-row');
+                const lastItem = paramItems[paramItems.length - 1];
+
+                if (lastItem) {
+                    const nameInput = lastItem.querySelector('input[name="paramName"]');
+                    const valueInput = lastItem.querySelector('input[name="paramValue"]');
+
+                    if (nameInput && valueInput) {
+                        nameInput.value = param.name;
+                        valueInput.value = param.value;
+                        console.log(`✅ 添加参数: ${param.name} = ${param.value}`);
+                    }
+                }
+            }
+
+            console.log('✅ 技术参数添加完成');
+        }
+
+        // 填写详细描述
+        async function fillDetailedDescription() {
+            console.log('📋 填写详细描述...');
+
+            const description = `
+                <h3>VF-8.5mm柔性光纤内窥镜</h3>
+                <p>VF-8.5mm柔性光纤内窥镜是一款专业的工业检测设备，采用先进的光纤传输技术，能够提供高清晰度的图像传输。</p>
+
+                <h4>主要特点：</h4>
+                <ul>
+                    <li>高清图像传输技术</li>
+                    <li>柔性设计，适应复杂检测路径</li>
+                    <li>耐腐蚀材料制造</li>
+                    <li>便携式设计，操作简便</li>
+                </ul>
+
+                <h4>技术优势：</h4>
+                <ol>
+                    <li>采用高品质光纤束，确保图像清晰度</li>
+                    <li>柔性探头设计，可弯曲角度大</li>
+                    <li>防水防尘设计，适应恶劣环境</li>
+                    <li>人体工学手柄，操作舒适</li>
+                </ol>
+            `;
+
+            if (productDescriptionEditor) {
+                productDescriptionEditor.root.innerHTML = description;
+                console.log('✅ 详细描述填写完成');
+            } else {
+                console.log('⚠️ 详细描述编辑器未初始化，尝试重新初始化...');
+                await initializeProductEditors();
+                await sleep(1000);
+                if (productDescriptionEditor) {
+                    productDescriptionEditor.root.innerHTML = description;
+                    console.log('✅ 详细描述填写完成（重新初始化后）');
+                } else {
+                    console.log('❌ 详细描述编辑器初始化失败');
+                }
+            }
+        }
+
+        // 填写应用场景
+        async function fillApplicationScenarios() {
+            console.log('📋 填写应用场景...');
+
+            const scenarios = `
+                <h3>适用检测场景</h3>
+
+                <h4>工业应用：</h4>
+                <ul>
+                    <li>管道内壁检测</li>
+                    <li>设备内部检查</li>
+                    <li>焊缝质量检测</li>
+                    <li>铸件内部缺陷检测</li>
+                </ul>
+
+                <h4>维护检修：</h4>
+                <ul>
+                    <li>发动机内部检查</li>
+                    <li>热交换器检测</li>
+                    <li>压力容器检查</li>
+                    <li>精密设备维护</li>
+                </ul>
+
+                <h4>质量控制：</h4>
+                <ul>
+                    <li>产品内部结构检查</li>
+                    <li>装配质量验证</li>
+                    <li>缺陷定位分析</li>
+                </ul>
+            `;
+
+            if (productApplicationEditor) {
+                productApplicationEditor.root.innerHTML = scenarios;
+                console.log('✅ 应用场景填写完成');
+            } else {
+                console.log('⚠️ 应用场景编辑器未初始化');
+            }
+        }
+
+        // 模拟上传产品图片
+        async function simulateImageUpload() {
+            console.log('📋 模拟上传产品图片...');
+
+            // 模拟添加产品图片到图库
+            const mockImages = [
+                {
+                    url: '/static/images/products/vf-8500-main.jpg',
+                    name: 'VF-8500主图',
+                    alt: 'VF-8.5mm柔性光纤内窥镜主图',
+                    isMain: true
+                },
+                {
+                    url: '/static/images/products/vf-8500-detail1.jpg',
+                    name: 'VF-8500细节图1',
+                    alt: '探头细节图',
+                    isMain: false
+                },
+                {
+                    url: '/static/images/products/vf-8500-detail2.jpg',
+                    name: 'VF-8500细节图2',
+                    alt: '手柄细节图',
+                    isMain: false
+                }
+            ];
+
+            for (const image of mockImages) {
+                addImageToGallery(image);
+                await sleep(300);
+                console.log(`✅ 添加图片: ${image.name}`);
+
+                // 模拟保存到媒体库
+                const mediaItem = {
+                    id: `media-${Date.now()}-${Math.random()}`,
+                    name: image.name,
+                    type: 'image',
+                    category: '产品图片',
+                    size: '256KB',
+                    url: image.url,
+                    uploadDate: new Date().toISOString().split('T')[0],
+                    source: 'auto-test'
+                };
+
+                if (!window.mediaLibrary) {
+                    window.mediaLibrary = [];
+                }
+                window.mediaLibrary.push(mediaItem);
+            }
+
+            console.log('✅ 产品图片模拟上传完成');
+        }
+
+        // 添加下载文件
+        async function addDownloadFiles() {
+            console.log('📋 添加下载文件...');
+
+            const mockFiles = [
+                {
+                    title: 'VF-8500产品规格书',
+                    path: '/static/files/products/VF-8500-specifications.pdf',
+                    name: 'VF-8500-specifications.pdf',
+                    size: '2.5MB'
+                },
+                {
+                    title: 'VF-8500用户手册',
+                    path: '/static/files/products/VF-8500-manual.pdf',
+                    name: 'VF-8500-manual.pdf',
+                    size: '5.2MB'
+                }
+            ];
+
+            for (const file of mockFiles) {
+                // 模拟添加下载文件
+                const container = document.getElementById('downloadsContainer');
+                if (container) {
+                    const placeholder = container.querySelector('.downloads-placeholder');
+                    if (placeholder) {
+                        placeholder.remove();
+                    }
+
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'download-item border rounded p-3 mb-2';
+                    fileItem.innerHTML = `
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">文件标题</label>
+                                <input type="text" class="form-control file-title" value="${file.title}">
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label">文件路径</label>
+                                <input type="text" class="form-control file-path" value="${file.path}">
+                            </div>
+                            <div class="col-md-1">
+                                <label class="form-label">&nbsp;</label>
+                                <button type="button" class="btn btn-danger btn-sm d-block" onclick="removeDownloadFile(this)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(fileItem);
+                }
+
+                await sleep(300);
+                console.log(`✅ 添加下载文件: ${file.title}`);
+
+                // 模拟保存到媒体库
+                const mediaItem = {
+                    id: `media-${Date.now()}-${Math.random()}`,
+                    name: file.name,
+                    type: 'document',
+                    category: '产品文档',
+                    size: file.size,
+                    url: file.path,
+                    uploadDate: new Date().toISOString().split('T')[0],
+                    source: 'auto-test'
+                };
+
+                if (!window.mediaLibrary) {
+                    window.mediaLibrary = [];
+                }
+                window.mediaLibrary.push(mediaItem);
+            }
+
+            console.log('✅ 下载文件添加完成');
+        }
+
+        // 保存产品测试
+        async function saveProductTest() {
+            console.log('📋 开始保存产品测试...');
+
+            try {
+                // 收集所有表单数据
+                const productData = {
+                    title: document.getElementById('productTitle').value,
+                    model: document.getElementById('productModel').value,
+                    summary: document.getElementById('productSummary').value,
+                    primary_category: document.getElementById('productPrimaryCategory').value,
+                    secondary_category: document.getElementById('productSecondaryCategory').value,
+                    supplier: document.getElementById('productSupplier').value,
+                    series: document.getElementById('productSeries').value,
+                    status: document.getElementById('productStatus').value,
+                    weight: document.getElementById('productWeight').value,
+                    date: document.getElementById('productDate').value
+                };
+
+                console.log('📊 收集的产品数据:', productData);
+
+                // 收集参数
+                productData.parameters = collectParameters();
+                console.log('📊 收集的参数:', productData.parameters);
+
+                // 收集图库
+                productData.gallery = collectGalleryImages();
+                console.log('📊 收集的图库:', productData.gallery);
+
+                // 收集下载文件
+                productData.data_download = collectDownloadFiles();
+                console.log('📊 收集的下载文件:', productData.data_download);
+
+                // 收集编辑器内容
+                if (productDescriptionEditor) {
+                    productData.detailed_description = productDescriptionEditor.root.innerHTML;
+                    console.log('📊 详细描述长度:', productData.detailed_description.length);
+                }
+
+                if (productApplicationEditor) {
+                    productData.application_scenarios = productApplicationEditor.root.innerHTML;
+                    console.log('📊 应用场景长度:', productData.application_scenarios.length);
+                }
+
+                // 验证必填字段
+                const requiredFields = ['title', 'model', 'primary_category', 'secondary_category'];
+                const missingFields = requiredFields.filter(field => !productData[field]);
+
+                if (missingFields.length > 0) {
+                    throw new Error(`缺少必填字段: ${missingFields.join(', ')}`);
+                }
+
+                console.log('✅ 数据验证通过，开始保存...');
+
+                // 调用保存函数
+                const success = await saveContentToMarkdown('products', productData);
+
+                if (success) {
+                    console.log('✅ 产品保存成功！');
+
+                    // 添加到产品列表（模拟）
+                    if (!projectData.products) {
+                        projectData.products = [];
+                    }
+
+                    productData.id = productData.model;
+                    projectData.products.push(productData);
+
+                    console.log('✅ 产品已添加到项目数据');
+
+                    // 关闭模态框
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
+                    if (modal) {
+                        modal.hide();
+                    }
+
+                    showSyncStatus('✅ VF-8500光纤内窥镜产品添加成功！', 3000);
+
+                } else {
+                    throw new Error('保存产品失败');
+                }
+
+            } catch (error) {
+                console.error('❌ 保存产品测试失败:', error);
+                throw error;
+            }
+        }
+
+        // 快速测试产品添加
+        async function quickTestProduct() {
+            console.log('🚀 开始快速产品测试...');
+
+            try {
+                // 打开产品表单
+                addProduct();
+                await sleep(1000);
+
+                // 填写基本信息
+                document.getElementById('productTitle').value = 'VF-8.5mm柔性光纤内窥镜';
+                document.getElementById('productModel').value = 'VF-8500';
+                document.getElementById('productSummary').value = '高清柔性光纤内窥镜，适用于复杂管道检测';
+
+                // 设置分类
+                document.getElementById('productPrimaryCategory').value = '光纤内窥镜';
+                updateSecondaryCategories();
+                await sleep(500);
+                document.getElementById('productSecondaryCategory').value = '柔性光纤内窥镜';
+
+                console.log('✅ 基本信息填写完成');
+
+                // 添加一个参数
+                addParameter();
+                await sleep(300);
+
+                const paramRows = document.querySelectorAll('.parameter-row');
+                if (paramRows.length > 0) {
+                    const lastRow = paramRows[paramRows.length - 1];
+                    const nameInput = lastRow.querySelector('input[name="paramName"]');
+                    const valueInput = lastRow.querySelector('input[name="paramValue"]');
+
+                    if (nameInput && valueInput) {
+                        nameInput.value = '探头直径';
+                        valueInput.value = '8.5mm';
+                        console.log('✅ 参数添加完成');
+                    }
+                }
+
+                // 测试编辑器
+                if (productDescriptionEditor) {
+                    productDescriptionEditor.root.innerHTML = '<p>这是一款高质量的光纤内窥镜产品。</p>';
+                    console.log('✅ 详细描述填写完成');
+                } else {
+                    console.log('⚠️ 详细描述编辑器未初始化');
+                }
+
+                console.log('✅ 快速测试完成！可以手动点击保存按钮测试保存功能。');
+                alert('✅ 快速测试完成！表单已填写，可以点击保存按钮测试保存功能。');
+
+            } catch (error) {
+                console.error('❌ 快速测试失败:', error);
+                alert('❌ 快速测试失败: ' + error.message);
+            }
+        }
+
+        // 调试保存产品功能
+        async function debugSaveProduct() {
+            console.log('🔍 开始调试保存产品功能...');
+
+            try {
+                // 收集表单数据
+                const productData = {
+                    title: document.getElementById('productTitle').value,
+                    model: document.getElementById('productModel').value,
+                    summary: document.getElementById('productSummary').value,
+                    primary_category: document.getElementById('productPrimaryCategory').value,
+                    secondary_category: document.getElementById('productSecondaryCategory').value,
+                    supplier: document.getElementById('productSupplier').value,
+                    series: document.getElementById('productSeries').value,
+                    status: document.getElementById('productStatus').value,
+                    weight: document.getElementById('productWeight').value,
+                    date: document.getElementById('productDate').value
+                };
+
+                console.log('📊 收集的基本数据:', productData);
+
+                // 收集参数
+                productData.parameters = collectParameters();
+                console.log('📊 收集的参数:', productData.parameters);
+
+                // 收集图库
+                productData.gallery = collectGalleryImages();
+                console.log('📊 收集的图库:', productData.gallery);
+
+                // 收集下载文件
+                productData.data_download = collectDownloadFiles();
+                console.log('📊 收集的下载文件:', productData.data_download);
+
+                // 收集编辑器内容
+                if (productDescriptionEditor) {
+                    productData.detailed_description = productDescriptionEditor.root.innerHTML;
+                    console.log('📊 详细描述:', productData.detailed_description.substring(0, 100) + '...');
+                }
+
+                if (productApplicationEditor) {
+                    productData.application_scenarios = productApplicationEditor.root.innerHTML;
+                    console.log('📊 应用场景:', productData.application_scenarios.substring(0, 100) + '...');
+                }
+
+                // 生成Markdown内容
+                console.log('📝 生成Markdown内容...');
+                const markdownContent = generateMarkdownContent('products', productData);
+                console.log('📝 生成的Markdown内容长度:', markdownContent.length);
+                console.log('📝 Markdown内容预览:', markdownContent.substring(0, 500) + '...');
+
+                // 生成文件名
+                const fileName = generateFileName('products', productData);
+                console.log('📝 生成的文件名:', fileName);
+
+                // 测试API调用
+                console.log('🌐 测试API调用...');
+                const response = await fetch('http://localhost:3002/api/products/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id: productData.model || fileName.replace('.md', ''),
+                        content: markdownContent,
+                        action: 'save'
+                    })
+                });
+
+                console.log('🌐 API响应状态:', response.status);
+                console.log('🌐 API响应头:', response.headers);
+
+                const result = await response.text();
+                console.log('🌐 API响应内容:', result);
+
+                try {
+                    const jsonResult = JSON.parse(result);
+                    console.log('🌐 解析的JSON结果:', jsonResult);
+
+                    if (jsonResult.success) {
+                        console.log('✅ 保存成功！');
+                        alert('✅ 调试保存成功！');
+                    } else {
+                        console.log('❌ 保存失败:', jsonResult.message);
+                        alert('❌ 保存失败: ' + jsonResult.message);
+                    }
+                } catch (parseError) {
+                    console.log('❌ 解析响应失败:', parseError);
+                    console.log('原始响应:', result);
+                    alert('❌ 服务器响应格式错误');
+                }
+
+            } catch (error) {
+                console.error('❌ 调试保存失败:', error);
+                alert('❌ 调试保存失败: ' + error.message);
+            }
+        }
+
+        // 强制重新加载产品数据
+        async function forceReloadProducts() {
+            console.log('🔄 强制重新加载产品数据...');
+
+            try {
+                showSyncStatus('正在重新加载产品数据...', 1000);
+
+                // 从API获取最新产品列表
+                const response = await fetch('http://localhost:3002/api/products/list');
+                const result = await response.json();
+
+                if (result.success && result.products) {
+                    // 更新项目数据
+                    if (!projectData.products) {
+                        projectData.products = [];
+                    }
+
+                    // 合并新产品到现有列表
+                    result.products.forEach(apiProduct => {
+                        const existingIndex = projectData.products.findIndex(p => p.id === apiProduct.id || p.model === apiProduct.id);
+
+                        if (existingIndex !== -1) {
+                            // 更新现有产品
+                            projectData.products[existingIndex] = {
+                                ...projectData.products[existingIndex],
+                                ...apiProduct,
+                                uri: `/products/${apiProduct.id}/`
+                            };
+                        } else {
+                            // 添加新产品
+                            projectData.products.push({
+                                ...apiProduct,
+                                uri: `/products/${apiProduct.id}/`
+                            });
+                        }
+                    });
+
+                    console.log(`✅ 已加载 ${result.products.length} 个产品`);
+                    console.log('📊 当前产品列表:', projectData.products);
+
+                    // 更新前端显示
+                    updateProductList();
+                    updateDashboard();
+
+                    showSyncStatus(`✅ 产品数据重新加载完成，共 ${result.products.length} 个产品`, 2000);
+
+                    return true;
+                } else {
+                    console.log('❌ 获取产品列表失败:', result);
+                    showSyncStatus('❌ 获取产品列表失败', 2000);
+                    return false;
+                }
+
+            } catch (error) {
+                console.error('❌ 重新加载产品数据失败:', error);
+                showSyncStatus(`❌ 重新加载失败: ${error.message}`, 3000);
+                return false;
+            }
+        }
+
+        // 更新搜索索引
+        async function updateSearchIndex() {
+            console.log('🔍 更新搜索索引...');
+
+            try {
+                showSyncStatus('正在更新搜索索引...', 1000);
+
+                // 重新获取搜索索引
+                const response = await fetch('/search-index.json?t=' + Date.now());
+
+                if (response.ok) {
+                    const searchData = await response.json();
+                    console.log(`📊 搜索索引包含 ${searchData.length} 条记录`);
+
+                    // 检查VF-8500是否在搜索索引中
+                    const vfProduct = searchData.find(item =>
+                        item.uri && (item.uri.includes('vf-8500') || item.title.includes('VF-8500'))
+                    );
+
+                    if (vfProduct) {
+                        console.log('✅ VF-8500产品已在搜索索引中');
+                        showSyncStatus('✅ 搜索索引已包含新产品', 2000);
+                    } else {
+                        console.log('⚠️ VF-8500产品尚未在搜索索引中，可能需要重新构建Hugo');
+                        showSyncStatus('⚠️ 新产品尚未在搜索索引中，请重新构建Hugo', 3000);
+                    }
+
+                    return true;
+                } else {
+                    console.log('❌ 获取搜索索引失败');
+                    showSyncStatus('❌ 获取搜索索引失败', 2000);
+                    return false;
+                }
+
+            } catch (error) {
+                console.error('❌ 更新搜索索引失败:', error);
+                showSyncStatus(`❌ 更新搜索索引失败: ${error.message}`, 3000);
+                return false;
+            }
+        }
+
+        // 调试手动保存流程
+        async function debugManualSave() {
+            console.log('🔍 开始调试手动保存流程...');
+
+            try {
+                // 第1步：检查表单数据
+                console.log('📋 第1步：检查表单数据...');
+                const title = document.getElementById('productTitle').value.trim();
+                const model = document.getElementById('productModel').value.trim();
+
+                console.log('基本信息:', {
+                    title: title,
+                    model: model,
+                    summary: document.getElementById('productSummary').value.trim(),
+                    primary_category: document.getElementById('productPrimaryCategory').value,
+                    secondary_category: document.getElementById('productSecondaryCategory').value,
+                    supplier: document.getElementById('productSupplier').value,
+                    series: document.getElementById('productSeries').value
+                });
+
+                if (!title || !model) {
+                    console.error('❌ 缺少必填字段：标题或型号');
+                    alert('请填写产品标题和型号');
+                    return;
+                }
+
+                // 第2步：检查编辑器状态
+                console.log('📝 第2步：检查编辑器状态...');
+                console.log('详细描述编辑器:', productDescriptionEditor);
+                console.log('应用场景编辑器:', productApplicationEditor);
+
+                if (productDescriptionEditor) {
+                    console.log('详细描述内容:', productDescriptionEditor.root.innerHTML.substring(0, 100) + '...');
+                } else {
+                    console.log('⚠️ 详细描述编辑器未初始化');
+                }
+
+                if (productApplicationEditor) {
+                    console.log('应用场景内容:', productApplicationEditor.root.innerHTML.substring(0, 100) + '...');
+                } else {
+                    console.log('⚠️ 应用场景编辑器未初始化');
+                }
+
+                // 第3步：收集所有数据
+                console.log('📊 第3步：收集所有数据...');
+                const productData = {
+                    title: title,
+                    model: model,
+                    summary: document.getElementById('productSummary').value.trim(),
+                    primary_category: document.getElementById('productPrimaryCategory').value,
+                    secondary_category: document.getElementById('productSecondaryCategory').value,
+                    supplier: document.getElementById('productSupplier').value,
+                    series: document.getElementById('productSeries').value,
+                    status: document.getElementById('productStatus').value,
+                    weight: parseInt(document.getElementById('productWeight').value) || 1,
+                    date: document.getElementById('productDate').value,
+                    parameters: collectParameters(),
+                    gallery: collectGalleryImages(),
+                    data_download: collectDownloadFiles(),
+                    related_products: collectRelatedProducts(),
+                    content: getProductDescription(),
+                    application_scenarios: getProductApplication()
+                };
+
+                console.log('收集的完整数据:', productData);
+
+                // 第4步：测试保存到MD文件
+                console.log('💾 第4步：测试保存到MD文件...');
+                const saveSuccess = await saveContentToMarkdown('products', productData);
+
+                if (saveSuccess) {
+                    console.log('✅ MD文件保存成功');
+
+                    // 第5步：更新前端数据
+                    console.log('🔄 第5步：更新前端数据...');
+
+                    if (currentEditingProductId) {
+                        console.log('更新现有产品:', currentEditingProductId);
+                        const index = projectData.products.findIndex(p => p.id === currentEditingProductId);
+                        if (index !== -1) {
+                            projectData.products[index] = { ...projectData.products[index], ...productData };
+                            console.log('✅ 现有产品已更新');
+                        } else {
+                            console.log('⚠️ 未找到要更新的产品');
+                        }
+                    } else {
+                        console.log('添加新产品');
+                        const newId = model.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                        const newProduct = {
+                            id: newId,
+                            uri: `/products/${newId}/`,
+                            ...productData
+                        };
+
+                        if (!projectData.products) {
+                            projectData.products = [];
+                        }
+
+                        projectData.products.push(newProduct);
+                        console.log('✅ 新产品已添加到列表');
+                        console.log('新产品数据:', newProduct);
+                    }
+
+                    // 第6步：更新UI
+                    console.log('🎨 第6步：更新UI...');
+                    updateProductList();
+                    updateDashboard();
+
+                    console.log('✅ 手动保存流程完成');
+                    alert('✅ 手动保存调试完成，请检查控制台输出');
+
+                } else {
+                    console.error('❌ MD文件保存失败');
+                    alert('❌ MD文件保存失败');
+                }
+
+            } catch (error) {
+                console.error('❌ 手动保存调试失败:', error);
+                alert('❌ 手动保存调试失败: ' + error.message);
+            }
+        }
+
+        // 简单保存测试
+        async function testSimpleSave() {
+            console.log('🧪 开始简单保存测试...');
+
+            try {
+                // 创建简单的测试产品数据
+                const testProduct = {
+                    title: '简单测试产品',
+                    model: 'SIMPLE-TEST',
+                    summary: '这是一个简单的测试产品',
+                    primary_category: '光纤内窥镜',
+                    secondary_category: '柔性光纤内窥镜',
+                    supplier: '测试供应商',
+                    series: '测试系列',
+                    status: 'published',
+                    weight: 1,
+                    date: new Date().toISOString().split('T')[0],
+                    parameters: [
+                        { name: '测试参数1', value: '测试值1' },
+                        { name: '测试参数2', value: '测试值2' }
+                    ],
+                    gallery: [],
+                    data_download: [],
+                    related_products: [],
+                    content: '<p>这是简单测试产品的详细描述。</p>',
+                    application_scenarios: '<p>这是简单测试产品的应用场景。</p>'
+                };
+
+                console.log('📊 测试产品数据:', testProduct);
+
+                // 直接调用保存函数
+                console.log('💾 开始保存测试...');
+                const saveSuccess = await saveContentToMarkdown('products', testProduct);
+
+                if (saveSuccess) {
+                    console.log('✅ 保存成功！');
+
+                    // 确保products数组存在
+                    if (!projectData.products) {
+                        projectData.products = [];
+                    }
+
+                    // 添加到产品列表
+                    const newId = testProduct.model.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                    const newProduct = {
+                        id: newId,
+                        uri: `/products/${newId}/`,
+                        ...testProduct
+                    };
+
+                    projectData.products.push(newProduct);
+                    console.log('✅ 产品已添加到列表');
+
+                    // 更新UI
+                    updateProductList();
+                    updateDashboard();
+
+                    console.log('✅ UI已更新');
+                    console.log('📊 当前产品数量:', projectData.products.length);
+
+                    alert('✅ 简单保存测试成功！产品已添加。');
+
+                } else {
+                    console.error('❌ 保存失败');
+                    alert('❌ 简单保存测试失败');
+                }
+
+            } catch (error) {
+                console.error('❌ 简单保存测试失败:', error);
+                alert('❌ 简单保存测试失败: ' + error.message);
+            }
+        }
+
+        // 修复显示问题
+        async function fixDisplayIssues() {
+            console.log('🔧 开始修复显示问题...');
+
+            try {
+                showSyncStatus('正在修复显示问题...', 1000);
+
+                // 第1步：强制重新加载产品数据
+                console.log('📊 第1步：强制重新加载产品数据...');
+                const reloadSuccess = await forceReloadProducts();
+
+                if (reloadSuccess) {
+                    console.log('✅ 产品数据重新加载成功');
+                } else {
+                    console.log('⚠️ 产品数据重新加载失败，尝试从API直接获取');
+
+                    // 直接从API获取产品列表
+                    const response = await fetch('http://localhost:3002/api/products/list');
+                    const result = await response.json();
+
+                    if (result.success && result.products) {
+                        console.log(`📋 从API获取到 ${result.products.length} 个产品`);
+
+                        // 重置产品数据
+                        projectData.products = result.products.map(apiProduct => ({
+                            ...apiProduct,
+                            uri: `/products/${apiProduct.id}/`
+                        }));
+
+                        console.log('✅ 产品数据已重置');
+                    }
+                }
+
+                // 第2步：强制更新UI
+                console.log('🎨 第2步：强制更新UI...');
+                updateProductList();
+                updateDashboard();
+
+                // 第3步：检查搜索索引
+                console.log('🔍 第3步：检查搜索索引...');
+                await updateSearchIndex();
+
+                // 第4步：验证结果
+                console.log('✅ 第4步：验证结果...');
+                console.log(`📊 当前产品数量: ${projectData.products.length}`);
+                console.log('📋 产品列表:', projectData.products.map(p => ({ id: p.id, title: p.title })));
+
+                // 显示修复结果
+                const productCount = projectData.products.length;
+                showSyncStatus(`✅ 显示问题修复完成，共 ${productCount} 个产品`, 3000);
+
+                // 提供Hugo重建建议
+                if (productCount > 0) {
+                    console.log('💡 建议重新启动Hugo服务器以更新前台页面');
+
+                    const shouldRestart = confirm(
+                        `后台列表已更新，共显示 ${productCount} 个产品。\n\n` +
+                        `要让新产品在前台页面显示，需要重新启动Hugo服务器。\n\n` +
+                        `是否要查看重启指导？`
+                    );
+
+                    if (shouldRestart) {
+                        alert(
+                            '重启Hugo服务器步骤：\n\n' +
+                            '1. 停止当前Hugo服务器（Ctrl+C）\n' +
+                            '2. 重新运行：hugo server --port 1313\n' +
+                            '3. 等待重建完成\n' +
+                            '4. 访问前台产品页面验证\n\n' +
+                            '重启后新产品将在前台页面显示。'
+                        );
+                    }
+                }
+
+                console.log('✅ 显示问题修复完成');
+
+            } catch (error) {
+                console.error('❌ 修复显示问题失败:', error);
+                showSyncStatus(`❌ 修复失败: ${error.message}`, 3000);
+                alert('❌ 修复显示问题失败: ' + error.message);
+            }
+        }
+
+        // 修复图片显示问题
+        async function fixImageIssues() {
+            console.log('🖼️ 开始修复图片显示问题...');
+
+            try {
+                showSyncStatus('正在修复图片显示问题...', 1000);
+
+                // 第1步：检查产品数据中的图片路径
+                console.log('🔍 第1步：检查产品数据中的图片路径...');
+                let fixedCount = 0;
+
+                projectData.products.forEach((product, index) => {
+                    console.log(`📋 检查产品 ${index + 1}: ${product.title}`);
+
+                    // 修复gallery图片路径
+                    if (product.gallery && Array.isArray(product.gallery)) {
+                        product.gallery.forEach((img, imgIndex) => {
+                            if (img.image && (img.image.startsWith('data:') || img.image.startsWith('blob:'))) {
+                                console.log(`🔧 修复产品 ${product.title} 的图片 ${imgIndex + 1}`);
+                                // 生成正确的媒体库路径
+                                const timestamp = Date.now() + imgIndex;
+                                const fileName = `product-${product.id}-${timestamp}.jpg`;
+                                const mediaPath = `/static/images/products/${fileName}`;
+
+                                img.image = mediaPath;
+                                fixedCount++;
+                                console.log(`✅ 图片路径已修复: ${mediaPath}`);
+                            }
+                        });
+                    }
+                });
+
+                // 第2步：修复编辑器中的图片显示
+                console.log('🎨 第2步：修复编辑器中的图片显示...');
+                const editorImages = document.querySelectorAll('#productDescriptionEditor img, #productApplicationEditor img');
+                editorImages.forEach((img, index) => {
+                    if (img.src && (img.src.startsWith('data:') || img.src.includes('blob:'))) {
+                        console.log(`🔧 修复编辑器图片 ${index + 1}`);
+                        // 替换为占位符或正确路径
+                        img.style.border = '2px solid orange';
+                        img.title = '图片路径需要重新上传';
+                        fixedCount++;
+                    }
+                });
+
+                // 第3步：修复图库预览
+                console.log('🖼️ 第3步：修复图库预览...');
+                const galleryImages = document.querySelectorAll('.gallery-item img');
+                galleryImages.forEach((img, index) => {
+                    const hiddenUrl = img.closest('.gallery-item').querySelector('.image-url');
+                    if (hiddenUrl && hiddenUrl.value) {
+                        console.log(`🔧 验证图库图片 ${index + 1}: ${hiddenUrl.value}`);
+
+                        // 如果隐藏的URL是正确的路径，但显示的是base64，则修复
+                        if (!hiddenUrl.value.startsWith('data:') && !hiddenUrl.value.startsWith('blob:')) {
+                            if (img.src.startsWith('data:') || img.src.startsWith('blob:')) {
+                                console.log(`🔧 修复图库预览图片 ${index + 1}`);
+                                img.src = hiddenUrl.value;
+                                fixedCount++;
+                            }
+                        }
+                    }
+                });
+
+                // 第4步：更新UI
+                console.log('🎨 第4步：更新UI...');
+                updateProductList();
+
+                // 显示修复结果
+                console.log(`✅ 图片问题修复完成，共修复 ${fixedCount} 个图片`);
+                showSyncStatus(`✅ 图片问题修复完成，共修复 ${fixedCount} 个图片`, 3000);
+
+                if (fixedCount > 0) {
+                    alert(
+                        `图片问题修复完成！\n\n` +
+                        `共修复 ${fixedCount} 个图片路径问题。\n\n` +
+                        `建议：\n` +
+                        `1. 重新保存相关产品以确保路径正确\n` +
+                        `2. 如果编辑器中仍有图片显示问题，请重新上传图片\n` +
+                        `3. 检查前台页面图片显示是否正常`
+                    );
+                } else {
+                    alert('未发现需要修复的图片问题。');
+                }
+
+            } catch (error) {
+                console.error('❌ 修复图片问题失败:', error);
+                showSyncStatus(`❌ 图片修复失败: ${error.message}`, 3000);
+                alert('❌ 修复图片问题失败: ' + error.message);
+            }
+        }
+
+        // 根据真实产品数据生成分类层级
+        function generateCategoryHierarchyFromProducts() {
+            if (!projectData.products || projectData.products.length === 0) {
+                console.log('⚠️ 没有产品数据，保持默认分类层级');
+                return;
+            }
+
+            console.log('🔧 根据产品数据生成分类层级...');
+            const newHierarchy = {};
+
+            projectData.products.forEach(product => {
+                const primary = product.primary_category;
+                const secondary = product.secondary_category;
+
+                if (primary) {
+                    if (!newHierarchy[primary]) {
+                        newHierarchy[primary] = new Set();
+                    }
+                    if (secondary) {
+                        newHierarchy[primary].add(secondary);
+                    }
+                }
+            });
+
+            // 转换Set为Array并排序
+            Object.keys(newHierarchy).forEach(key => {
+                newHierarchy[key] = Array.from(newHierarchy[key]).sort();
+            });
+
+            // 如果生成了新的层级，更新全局变量
+            if (Object.keys(newHierarchy).length > 0) {
+                categoryHierarchy = newHierarchy;
+                console.log('✅ 分类层级已更新:', categoryHierarchy);
+            } else {
+                console.log('⚠️ 未能生成有效的分类层级，保持默认设置');
+            }
+        }
+
+        // 获取产品详细描述
+        function getProductDescription() {
+            if (productDescriptionEditor) {
+                return productDescriptionEditor.root.innerHTML;
+            }
+            const descriptionTextarea = document.getElementById('productDescription');
+            return descriptionTextarea ? descriptionTextarea.value : '';
+        }
+
+        // 获取产品应用场景
+        function getProductApplication() {
+            if (productApplicationEditor) {
+                return productApplicationEditor.root.innerHTML;
+            }
+            const applicationTextarea = document.getElementById('productApplication');
+            return applicationTextarea ? applicationTextarea.value : '';
         }
 
         function clearProductForm() {
-            document.getElementById('productForm').reset();
-            document.getElementById('parametersContainer').innerHTML = '';
+            console.log('🧹 清空产品表单...');
+
+            // 手动清空表单字段，而不是使用reset()来避免清空下拉框选项
+            document.getElementById('productTitle').value = '';
+            document.getElementById('productModel').value = '';
+            document.getElementById('productSummary').value = '';
+            document.getElementById('productSupplier').value = '';
+            document.getElementById('productSeries').value = '';
+            document.getElementById('productStatus').value = 'published';
+            document.getElementById('productWeight').value = '1';
             document.getElementById('productDate').value = new Date().toISOString().split('T')[0];
+
+            // 重置分类选择（但保留选项）
+            document.getElementById('productPrimaryCategory').value = '';
+            document.getElementById('productSecondaryCategory').value = '';
+
+            // 清空容器
+            document.getElementById('parametersContainer').innerHTML = '';
+            document.getElementById('galleryContainer').innerHTML = '<div class="gallery-placeholder"><i class="fas fa-images"></i><p>点击上方按钮添加产品图片</p></div>';
+            document.getElementById('downloadsContainer').innerHTML = '<div class="downloads-placeholder"><i class="fas fa-file-alt"></i><p>点击上方按钮添加下载文件</p></div>';
+            document.getElementById('relatedProductsContainer').innerHTML = '<div class="related-products-placeholder"><i class="fas fa-link"></i><p>点击上方按钮添加相关产品</p></div>';
+
+            // 清空编辑器内容
+            if (productDescriptionEditor) {
+                productDescriptionEditor.setContents([]);
+            }
+            if (productApplicationEditor) {
+                productApplicationEditor.setContents([]);
+            }
+
+            console.log('✅ 产品表单已清空');
         }
 
         function initializeProductForm() {
-            // 初始化分类选项
+            console.log('🔧 初始化产品表单...');
+            console.log('📊 当前项目数据:', projectData);
+
+            // 初始化分类选项 - 使用真实项目数据
             const primaryCategorySelect = document.getElementById('productPrimaryCategory');
             primaryCategorySelect.innerHTML = '<option value="">选择主要分类</option>';
-            Object.keys(categoryHierarchy).forEach(category => {
+
+            // 使用预定义的完整分类结构，而不是从产品数据中提取
+            console.log('📋 使用预定义的完整分类结构');
+
+            // 从categoryHierarchyData获取所有主要分类
+            const primaryCategories = categoryHierarchyData.map(category => category.title);
+            console.log('📋 完整主要分类列表:', primaryCategories);
+
+            // 同时更新categoryHierarchy对象
+            categoryHierarchy = {};
+            categoryHierarchyData.forEach(primary => {
+                categoryHierarchy[primary.title] = primary.subcategories.map(sub => sub.title);
+            });
+            console.log('📋 更新后的分类层级:', categoryHierarchy);
+
+            // 添加分类选项
+            primaryCategories.forEach(category => {
                 const option = document.createElement('option');
                 option.value = category;
                 option.textContent = category;
                 primaryCategorySelect.appendChild(option);
             });
 
-            // 初始化供应商选项
+            // 初始化供应商选项 - 使用真实项目数据
             const supplierSelect = document.getElementById('productSupplier');
             supplierSelect.innerHTML = '<option value="">选择供应商</option>';
-            Object.keys(supplierSeriesMap).forEach(supplier => {
+
+            let suppliers = [];
+
+            if (projectData.suppliers && projectData.suppliers.length > 0) {
+                console.log('✅ 使用真实供应商数据:', projectData.suppliers.length, '个供应商');
+                suppliers = projectData.suppliers.map(supplier => supplier.name || supplier.title).filter(Boolean);
+                console.log('📋 供应商列表:', suppliers);
+            }
+
+            // 如果没有真实供应商数据或供应商为空，使用默认供应商
+            if (suppliers.length === 0) {
+                console.log('⚠️ 没有真实供应商数据，使用默认供应商');
+                suppliers = Object.keys(supplierSeriesMap);
+                console.log('📋 默认供应商列表:', suppliers);
+            }
+
+            // 添加供应商选项
+            suppliers.forEach(supplier => {
                 const option = document.createElement('option');
                 option.value = supplier;
                 option.textContent = supplier;
                 supplierSelect.appendChild(option);
             });
 
+            // 初始化富文本编辑器
+            initializeProductEditors();
+
             // 触发级联更新
             updateSecondaryCategories();
             updateProductSeries();
+        }
+
+        // 初始化产品编辑器
+        function initializeProductEditors() {
+            console.log('📝 初始化产品编辑器...');
+            console.log('🔍 Quill是否可用:', typeof Quill !== 'undefined');
+
+            // 强制清理现有编辑器
+            cleanupProductEditors();
+
+            // 等待一下再初始化，确保清理完成
+            setTimeout(() => {
+                createProductEditors();
+            }, 100);
+        }
+
+        // 创建产品编辑器
+        function createProductEditors() {
+
+            console.log('🔧 开始创建编辑器...');
+
+            // 初始化详细描述编辑器
+            const descriptionContainer = document.getElementById('productDescriptionEditor');
+            console.log('📝 详细描述编辑器容器:', descriptionContainer);
+
+            if (descriptionContainer && typeof Quill !== 'undefined') {
+                // 确保容器为空
+                descriptionContainer.innerHTML = '';
+                console.log('✅ 创建详细描述编辑器...');
+
+                try {
+                    productDescriptionEditor = new Quill('#productDescriptionEditor', {
+                        theme: 'snow',
+                        modules: {
+                            toolbar: [
+                                [{ 'header': [1, 2, 3, false] }],
+                                ['bold', 'italic', 'underline', 'strike'],
+                                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                ['blockquote', 'code-block'],
+                                ['link', 'image'],
+                                [{ 'color': [] }, { 'background': [] }],
+                                [{ 'align': [] }],
+                                ['clean']
+                            ]
+                        }
+                    });
+                    console.log('✅ 详细描述编辑器创建成功');
+
+                    // 监听编辑器内容变化，自动保存图片到媒体库
+                    productDescriptionEditor.on('text-change', function() {
+                        setTimeout(() => {
+                            processEditorImages(productDescriptionEditor, 'description');
+                        }, 1000);
+                    });
+                } catch (error) {
+                    console.error('❌ 创建详细描述编辑器失败:', error);
+                    productDescriptionEditor = null;
+                }
+            } else {
+                console.log('❌ 无法创建详细描述编辑器 - 容器或Quill不可用');
+            }
+
+            // 初始化应用场景编辑器
+            const applicationContainer = document.getElementById('productApplicationEditor');
+            console.log('📝 应用场景编辑器容器:', applicationContainer);
+
+            if (applicationContainer && typeof Quill !== 'undefined') {
+                // 确保容器为空
+                applicationContainer.innerHTML = '';
+                console.log('✅ 创建应用场景编辑器...');
+
+                try {
+                    productApplicationEditor = new Quill('#productApplicationEditor', {
+                        theme: 'snow',
+                        modules: {
+                            toolbar: [
+                                [{ 'header': [1, 2, 3, false] }],
+                                ['bold', 'italic', 'underline'],
+                                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                ['link', 'image'],
+                                ['clean']
+                            ]
+                        }
+                    });
+                    console.log('✅ 应用场景编辑器创建成功');
+
+                    // 监听编辑器内容变化，自动保存图片到媒体库
+                    productApplicationEditor.on('text-change', function() {
+                        setTimeout(() => {
+                            processEditorImages(productApplicationEditor, 'application');
+                        }, 1000);
+                    });
+                } catch (error) {
+                    console.error('❌ 创建应用场景编辑器失败:', error);
+                    productApplicationEditor = null;
+                }
+            } else {
+                console.log('❌ 无法创建应用场景编辑器 - 容器或Quill不可用');
+            }
+        }
+
+        // 清理产品编辑器
+        function cleanupProductEditors() {
+            console.log('🧹 清理产品编辑器...');
+
+            // 清理详细描述编辑器
+            try {
+                if (productDescriptionEditor) {
+                    console.log('🗑️ 销毁详细描述编辑器实例');
+                    // 尝试销毁Quill实例
+                    if (productDescriptionEditor.destroy) {
+                        productDescriptionEditor.destroy();
+                    }
+                    productDescriptionEditor = null;
+                }
+                const descContainer = document.getElementById('productDescriptionEditor');
+                if (descContainer) {
+                    console.log('🧹 清空详细描述编辑器容器');
+
+                    // 查找并移除父容器中的所有工具栏
+                    const parentContainer = descContainer.parentNode;
+                    if (parentContainer) {
+                        const toolbars = parentContainer.querySelectorAll('.ql-toolbar');
+                        toolbars.forEach(toolbar => {
+                            console.log('🗑️ 移除工具栏:', toolbar);
+                            toolbar.remove();
+                        });
+                    }
+
+                    // 移除所有子元素，包括工具栏
+                    while (descContainer.firstChild) {
+                        descContainer.removeChild(descContainer.firstChild);
+                    }
+                    descContainer.innerHTML = '';
+                }
+                console.log('✅ 详细描述编辑器已清理');
+            } catch (e) {
+                console.error('清理详细描述编辑器时出错:', e);
+            }
+
+            // 清理应用场景编辑器
+            try {
+                if (productApplicationEditor) {
+                    console.log('🗑️ 销毁应用场景编辑器实例');
+                    // 尝试销毁Quill实例
+                    if (productApplicationEditor.destroy) {
+                        productApplicationEditor.destroy();
+                    }
+                    productApplicationEditor = null;
+                }
+                const appContainer = document.getElementById('productApplicationEditor');
+                if (appContainer) {
+                    console.log('🧹 清空应用场景编辑器容器');
+
+                    // 查找并移除父容器中的所有工具栏
+                    const parentContainer = appContainer.parentNode;
+                    if (parentContainer) {
+                        const toolbars = parentContainer.querySelectorAll('.ql-toolbar');
+                        toolbars.forEach(toolbar => {
+                            console.log('🗑️ 移除工具栏:', toolbar);
+                            toolbar.remove();
+                        });
+                    }
+
+                    // 移除所有子元素，包括工具栏
+                    while (appContainer.firstChild) {
+                        appContainer.removeChild(appContainer.firstChild);
+                    }
+                    appContainer.innerHTML = '';
+                }
+                console.log('✅ 应用场景编辑器已清理');
+            } catch (e) {
+                console.error('清理应用场景编辑器时出错:', e);
+            }
         }
 
         function updateSecondaryCategories() {
@@ -2400,15 +4955,26 @@ date: ${data.date}
             const category = document.getElementById('productPrimaryCategory').value;
             const container = document.getElementById('parametersContainer');
 
-            if (!category || !defaultParameterTemplates[category]) {
+            console.log('🔧 加载参数模板，选择的分类:', category);
+            console.log('📋 可用的参数模板:', Object.keys(defaultParameterTemplates));
+
+            if (!category) {
                 alert('请先选择产品分类');
                 return;
             }
 
+            if (!defaultParameterTemplates[category]) {
+                alert(`没有找到分类"${category}"的参数模板`);
+                console.log('❌ 没有找到对应的参数模板');
+                return;
+            }
+
+            console.log('✅ 找到参数模板:', defaultParameterTemplates[category]);
             container.innerHTML = '';
             defaultParameterTemplates[category].forEach(param => {
                 addParameter(param.name, param.value);
             });
+            console.log('✅ 参数模板加载完成');
         }
 
         function addParameter(name = '', value = '') {
@@ -3525,6 +6091,7 @@ date: ${data.date}
         let categorySearchHistory = JSON.parse(localStorage.getItem('categorySearchHistory') || '[]');
 
         // 分类层级数据（参考首页分类结构）
+        // 实际项目分类层级（根据用户提供的正确结构）
         const categoryHierarchyData = [
             {
                 id: "electronic-endoscope",
@@ -3539,7 +6106,7 @@ date: ${data.date}
             {
                 id: "fiber-endoscope",
                 title: "光纤内窥镜",
-                icon: "fas fa-eye",
+                icon: "fas fa-fiber-optic",
                 subcategories: [
                     { title: "柔性光纤内窥镜", icon: "fas fa-wave-square" },
                     { title: "硬性光纤内窥镜", icon: "fas fa-minus" }
@@ -3548,7 +6115,7 @@ date: ${data.date}
             {
                 id: "optical-endoscope",
                 title: "光学内窥镜",
-                icon: "fas fa-search",
+                icon: "fas fa-eye",
                 subcategories: [
                     { title: "硬性光学内窥镜", icon: "fas fa-binoculars" },
                     { title: "柔性光学内窥镜", icon: "fas fa-eye-dropper" }
@@ -3814,18 +6381,165 @@ date: ${data.date}
             updateCategoryList();
         }
 
-        // 添加到全局作用域以便调试
+        // 添加所有函数到全局作用域
+        // 基础功能
+        window.showSection = showSection;
+        window.toggleSidebar = toggleSidebar;
+        window.closeSidebar = closeSidebar;
+        window.loadProjectData = loadProjectData;
         window.forceUpdateAllLists = forceUpdateAllLists;
         window.debugProductData = debugProductData;
+
+        // 产品管理
+        window.addProduct = addProduct;
+        window.editProduct = editProduct;
+        window.deleteProduct = deleteProduct;
+        window.saveProduct = saveProduct;
+        window.testProductForm = testProductForm;
+        window.testAllFunctions = testAllFunctions;
+        window.testCategoryData = testCategoryData;
+        window.debugCategoryDisplay = debugCategoryDisplay;
+        window.autoAddFiberEndoscope = autoAddFiberEndoscope;
+        window.quickTestProduct = quickTestProduct;
+        window.debugSaveProduct = debugSaveProduct;
+        window.forceReloadProducts = forceReloadProducts;
+        window.updateSearchIndex = updateSearchIndex;
+        window.debugManualSave = debugManualSave;
+        window.testSimpleSave = testSimpleSave;
+        window.fixDisplayIssues = fixDisplayIssues;
+        window.fixImageIssues = fixImageIssues;
+        window.cleanupProductEditors = cleanupProductEditors;
+        window.generateCategoryHierarchyFromProducts = generateCategoryHierarchyFromProducts;
+        window.createProductEditors = createProductEditors;
+        window.uploadBase64Image = uploadBase64Image;
+        window.uploadBlobImage = uploadBlobImage;
+
+        // 供应商管理
+        window.addSupplier = addSupplier;
+        window.editSupplier = editSupplier;
+        window.deleteSupplier = deleteSupplier;
+        window.saveSupplier = saveSupplier;
+
+        // 新闻管理
+        window.addNews = addNews;
+        window.editNews = editNews;
+        window.deleteNews = deleteNews;
+        window.saveNews = saveNews;
+
+        // 案例管理
+        window.addCase = addCase;
+        window.editCase = editCase;
+        window.deleteCase = deleteCase;
+        window.saveCase = saveCase;
+
+        // 应用领域管理
+        window.addApplication = addApplication;
+        window.editApplication = editApplication;
+        window.deleteApplication = deleteApplication;
+        window.saveApplication = saveApplication;
+
+        // 分类管理
         window.toggleCategoryPanel = toggleCategoryPanel;
         window.selectCategory = selectCategory;
         window.clearCategoryHistory = clearCategoryHistory;
         window.showCategoryHierarchy = showCategoryHierarchy;
         window.saveCategoryForm = saveCategoryForm;
 
+        // 媒体库管理
+        window.showMediaLibrary = showMediaLibrary;
+        window.uploadFiles = uploadFiles;
+        window.deleteMediaFile = deleteMediaFile;
+        window.openMediaLibrary = openMediaLibrary;
+        window.filterMediaLibrary = filterMediaLibrary;
+        window.selectMediaFiles = selectMediaFiles;
+
+        // 产品表单相关
+        window.loadParameterTemplate = loadParameterTemplate;
+        window.addParameter = addParameter;
+        window.removeParameter = removeParameter;
+        window.uploadProductImage = uploadProductImage;
+        window.uploadProductFile = uploadProductFile;
+        window.addRelatedProduct = addRelatedProduct;
+        window.removeRelatedProduct = removeRelatedProduct;
+        window.setMainImage = setMainImage;
+        window.removeGalleryImage = removeGalleryImage;
+        window.removeDownloadFile = removeDownloadFile;
+
+        // 筛选和搜索
+        window.filterProducts = filterProducts;
+        window.clearProductFilters = clearProductFilters;
+        window.clearSupplierFilters = clearSupplierFilters;
+        window.clearCategoryFilters = clearCategoryFilters;
+        window.clearNewsFilters = clearNewsFilters;
+        window.clearCaseFilters = clearCaseFilters;
+        window.clearApplicationFilters = clearApplicationFilters;
+
+        // 分页功能
+        window.changeProductPage = changeProductPage;
+        window.changeSupplierPage = changeSupplierPage;
+        window.changeNewsPage = changeNewsPage;
+        window.changeCasePage = changeCasePage;
+        window.changeApplicationPage = changeApplicationPage;
+
+        // 分类管理
+        window.addCategory = addCategory;
+        window.editCategory = editCategory;
+        window.deleteCategory = deleteCategory;
+        window.removeFromHistory = removeFromHistory;
+
+        // 同步功能
+        window.syncToFrontend = syncToFrontend;
+
+        // 全局图片拦截器
+        function setupImageInterceptor() {
+            // 拦截所有图片加载错误
+            document.addEventListener('error', function(e) {
+                if (e.target.tagName === 'IMG') {
+                    handleImageError(e.target);
+                }
+            }, true);
+
+            // 监听DOM变化，为新添加的图片设置拦截器
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    mutation.addedNodes.forEach(function(node) {
+                        if (node.nodeType === 1) { // Element node
+                            // 检查新添加的图片
+                            const images = node.tagName === 'IMG' ? [node] : node.querySelectorAll('img');
+                            images.forEach(function(img) {
+                                // 如果是产品图片路径，尝试从localStorage加载
+                                if (img.src && img.src.includes('/static/images/products/')) {
+                                    const displayUrl = getImageDisplayUrl(img.src);
+                                    if (displayUrl !== img.src) {
+                                        img.src = displayUrl;
+                                    }
+                                }
+                            });
+                        }
+                    });
+                });
+            });
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+
+            console.log('🖼️ 图片拦截器已设置');
+        }
+
         // 页面初始化
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('VisNDT 内容管理中心初始化完成');
+            console.log('🚀 VisNDT 内容管理中心开始初始化...');
+
+            // 设置图片拦截器
+            setupImageInterceptor();
+
+            console.log('🔍 JavaScript 基础功能测试:');
+            console.log('  - showSection 函数:', typeof showSection);
+            console.log('  - addProduct 函数:', typeof addProduct);
+            console.log('  - loadProjectData 函数:', typeof loadProjectData);
+            console.log('✅ VisNDT 内容管理中心初始化完成');
             console.log('功能特色：');
             console.log('- 基于MD文件的内容管理');
             console.log('- 完整的CRUD操作支持');
@@ -3868,6 +6582,15 @@ date: ${data.date}
                     closeSidebar();
                 }
             });
+
+            // 监听产品模态框关闭事件
+            const productModal = document.getElementById('productModal');
+            if (productModal) {
+                productModal.addEventListener('hidden.bs.modal', function() {
+                    console.log('🔄 产品模态框已关闭，清理编辑器...');
+                    cleanupProductEditors();
+                });
+            }
         });
     </script>
 

@@ -2,30 +2,30 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Product_types on 维森视觉检测仪器</title>
-    <link>http://localhost:1313/product_types/</link>
+    <link>http://localhost:1314/product_types/</link>
     <description>Recent content in Product_types on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <atom:link href="http://localhost:1313/product_types/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1314/product_types/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>便携式</title>
-      <link>http://localhost:1313/product_types/portable_type/</link>
+      <link>http://localhost:1314/product_types/portable_type/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/product_types/portable_type/</guid>
+      <guid>http://localhost:1314/product_types/portable_type/</guid>
       <description></description>
     </item>
     <item>
       <title>机械臂</title>
-      <link>http://localhost:1313/product_types/robot-arm/</link>
+      <link>http://localhost:1314/product_types/robot-arm/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/product_types/robot-arm/</guid>
+      <guid>http://localhost:1314/product_types/robot-arm/</guid>
       <description></description>
     </item>
     <item>
       <title>台式</title>
-      <link>http://localhost:1313/product_types/desktop_type/</link>
+      <link>http://localhost:1314/product_types/desktop_type/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/product_types/desktop_type/</guid>
+      <guid>http://localhost:1314/product_types/desktop_type/</guid>
       <description></description>
     </item>
   </channel>

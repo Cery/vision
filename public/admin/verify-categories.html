@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分类结构验证</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>分类结构验证</h2>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>当前系统分类结构</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="currentStructure"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>期望的分类结构</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="expectedStructure">
+                            <h6><i class="fas fa-video"></i> 电子内窥镜</h6>
+                            <ul class="list-unstyled ms-3">
+                                <li><i class="fas fa-camera"></i> 工业视频内窥镜</li>
+                                <li><i class="fas fa-pipe-section"></i> 工业管道内窥镜</li>
+                                <li><i class="fas fa-robot"></i> 爬行机器人</li>
+                            </ul>
+                            
+                            <h6><i class="fas fa-fiber-optic"></i> 光纤内窥镜</h6>
+                            <ul class="list-unstyled ms-3">
+                                <li><i class="fas fa-wave-square"></i> 柔性光纤内窥镜</li>
+                                <li><i class="fas fa-minus"></i> 硬性光纤内窥镜</li>
+                            </ul>
+                            
+                            <h6><i class="fas fa-eye"></i> 光学内窥镜</h6>
+                            <ul class="list-unstyled ms-3">
+                                <li><i class="fas fa-binoculars"></i> 硬性光学内窥镜</li>
+                                <li><i class="fas fa-eye-dropper"></i> 柔性光学内窥镜</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>验证结果</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="verificationResult"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 当前系统的分类结构
+        const categoryHierarchyData = [
+            {
+                id: "electronic-endoscope",
+                title: "电子内窥镜",
+                icon: "fas fa-video",
+                subcategories: [
+                    { title: "工业视频内窥镜", icon: "fas fa-camera" },
+                    { title: "工业管道内窥镜", icon: "fas fa-pipe-section" },
+                    { title: "爬行机器人", icon: "fas fa-robot" }
+                ]
+            },
+            {
+                id: "fiber-endoscope",
+                title: "光纤内窥镜",
+                icon: "fas fa-fiber-optic",
+                subcategories: [
+                    { title: "柔性光纤内窥镜", icon: "fas fa-wave-square" },
+                    { title: "硬性光纤内窥镜", icon: "fas fa-minus" }
+                ]
+            },
+            {
+                id: "optical-endoscope",
+                title: "光学内窥镜",
+                icon: "fas fa-eye",
+                subcategories: [
+                    { title: "硬性光学内窥镜", icon: "fas fa-binoculars" },
+                    { title: "柔性光学内窥镜", icon: "fas fa-eye-dropper" }
+                ]
+            }
+        ];
+
+        // 期望的分类结构
+        const expectedStructure = {
+            '电子内窥镜': ['工业视频内窥镜', '工业管道内窥镜', '爬行机器人'],
+            '光纤内窥镜': ['柔性光纤内窥镜', '硬性光纤内窥镜'],
+            '光学内窥镜': ['硬性光学内窥镜', '柔性光学内窥镜']
+        };
+
+        function displayCurrentStructure() {
+            const container = document.getElementById('currentStructure');
+            let html = '';
+            
+            categoryHierarchyData.forEach(primary => {
+                html += `
+                    <h6><i class="${primary.icon}"></i> ${primary.title}</h6>
+                    <ul class="list-unstyled ms-3">
+                `;
+                
+                primary.subcategories.forEach(sub => {
+                    html += `<li><i class="${sub.icon}"></i> ${sub.title}</li>`;
+                });
+                
+                html += '</ul>';
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function verifyStructure() {
+            const result = document.getElementById('verificationResult');
+            let isCorrect = true;
+            let messages = [];
+
+            // 检查主要分类数量
+            const currentPrimaryCount = categoryHierarchyData.length;
+            const expectedPrimaryCount = Object.keys(expectedStructure).length;
+            
+            if (currentPrimaryCount === expectedPrimaryCount) {
+                messages.push(`✅ 主要分类数量正确: ${currentPrimaryCount} 个`);
+            } else {
+                messages.push(`❌ 主要分类数量错误: 期望 ${expectedPrimaryCount} 个，实际 ${currentPrimaryCount} 个`);
+                isCorrect = false;
+            }
+
+            // 检查每个主要分类
+            categoryHierarchyData.forEach(primary => {
+                const primaryTitle = primary.title;
+                
+                if (expectedStructure[primaryTitle]) {
+                    messages.push(`✅ 主要分类 "${primaryTitle}" 存在`);
+                    
+                    // 检查子分类
+                    const currentSubs = primary.subcategories.map(sub => sub.title);
+                    const expectedSubs = expectedStructure[primaryTitle];
+                    
+                    if (currentSubs.length === expectedSubs.length) {
+                        messages.push(`✅ "${primaryTitle}" 子分类数量正确: ${currentSubs.length} 个`);
+                        
+                        // 检查每个子分类
+                        expectedSubs.forEach(expectedSub => {
+                            if (currentSubs.includes(expectedSub)) {
+                                messages.push(`✅ 子分类 "${expectedSub}" 存在`);
+                            } else {
+                                messages.push(`❌ 子分类 "${expectedSub}" 缺失`);
+                                isCorrect = false;
+                            }
+                        });
+                    } else {
+                        messages.push(`❌ "${primaryTitle}" 子分类数量错误: 期望 ${expectedSubs.length} 个，实际 ${currentSubs.length} 个`);
+                        isCorrect = false;
+                    }
+                } else {
+                    messages.push(`❌ 主要分类 "${primaryTitle}" 不在期望列表中`);
+                    isCorrect = false;
+                }
+            });
+
+            // 显示结果
+            const statusClass = isCorrect ? 'alert-success' : 'alert-danger';
+            const statusIcon = isCorrect ? 'fas fa-check-circle' : 'fas fa-exclamation-triangle';
+            const statusText = isCorrect ? '分类结构完全正确！' : '分类结构存在问题';
+            
+            let html = `
+                <div class="alert ${statusClass}">
+                    <h6><i class="${statusIcon}"></i> ${statusText}</h6>
+                </div>
+                <ul class="list-unstyled">
+            `;
+            
+            messages.forEach(message => {
+                html += `<li>${message}</li>`;
+            });
+            
+            html += '</ul>';
+            result.innerHTML = html;
+        }
+
+        // 页面加载完成后执行验证
+        document.addEventListener('DOMContentLoaded', function() {
+            displayCurrentStructure();
+            verifyStructure();
+        });
+    </script>
+</body>
+</html>

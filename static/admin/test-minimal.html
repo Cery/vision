@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>最小化测试</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>最小化功能测试</h2>
+        
+        <div class="alert alert-info">
+            <h5>测试说明</h5>
+            <p>这个页面用于测试基本的JavaScript功能是否正常工作。</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <h4>导航测试</h4>
+                <div class="nav flex-column nav-pills">
+                    <button class="nav-link active" onclick="showSection('dashboard')">
+                        <i class="fas fa-home me-2"></i>仪表板
+                    </button>
+                    <button class="nav-link" onclick="showSection('products')">
+                        <i class="fas fa-box me-2"></i>产品管理
+                    </button>
+                    <button class="nav-link" onclick="showSection('suppliers')">
+                        <i class="fas fa-truck me-2"></i>供应商管理
+                    </button>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <h4>操作测试</h4>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary" onclick="addProduct()">
+                        <i class="fas fa-plus me-2"></i>添加产品
+                    </button>
+                    <button class="btn btn-success" onclick="loadProjectData()">
+                        <i class="fas fa-sync me-2"></i>加载数据
+                    </button>
+                    <button class="btn btn-info" onclick="testFunction()">
+                        <i class="fas fa-cog me-2"></i>测试功能
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-12">
+                <div id="dashboard" class="content-section active">
+                    <h4>仪表板</h4>
+                    <p>这是仪表板内容。</p>
+                </div>
+                
+                <div id="products" class="content-section" style="display: none;">
+                    <h4>产品管理</h4>
+                    <p>这是产品管理内容。</p>
+                </div>
+                
+                <div id="suppliers" class="content-section" style="display: none;">
+                    <h4>供应商管理</h4>
+                    <p>这是供应商管理内容。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-12">
+                <h4>状态日志</h4>
+                <div id="logArea" class="border p-3 bg-light" style="height: 200px; overflow-y: auto;">
+                    <p>等待操作...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        console.log('🚀 最小化测试页面开始加载...');
+        
+        // 基础函数
+        function showSection(sectionName) {
+            log(`📍 切换到: ${sectionName}`);
+            
+            // 隐藏所有内容区域
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // 移除所有导航链接的活动状态
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // 显示目标区域
+            const targetSection = document.getElementById(sectionName);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+            }
+            
+            // 设置对应导航链接为活动状态
+            const targetLink = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+            if (targetLink) {
+                targetLink.classList.add('active');
+            }
+        }
+        
+        function addProduct() {
+            log('➕ 添加产品功能被调用');
+            alert('添加产品功能正常工作！');
+        }
+        
+        function loadProjectData() {
+            log('🔄 加载项目数据功能被调用');
+            alert('数据加载功能正常工作！');
+        }
+        
+        function testFunction() {
+            log('🧪 测试功能被调用');
+            const now = new Date().toLocaleTimeString();
+            alert(`测试功能正常工作！当前时间: ${now}`);
+        }
+        
+        function log(message) {
+            const logArea = document.getElementById('logArea');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('p');
+            logEntry.className = 'mb-1';
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            logArea.appendChild(logEntry);
+            logArea.scrollTop = logArea.scrollHeight;
+            console.log(message);
+        }
+        
+        // 页面初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            log('✅ 页面DOM加载完成');
+            log('🔍 测试基础函数:');
+            log(`  - showSection: ${typeof showSection}`);
+            log(`  - addProduct: ${typeof addProduct}`);
+            log(`  - loadProjectData: ${typeof loadProjectData}`);
+            log('🎯 所有功能已就绪，可以开始测试');
+        });
+        
+        console.log('✅ 最小化测试页面脚本加载完成');
+    </script>
+</body>
+</html>
