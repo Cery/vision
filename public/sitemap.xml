@@ -278,6 +278,153 @@
   
   
   <url>
+    <loc>https://visndt.com/tags/</loc>
+    <lastmod>2025-06-15T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>https://visndt.com/products/vsndt-model/</loc>
+    <lastmod>2025-06-15T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <image:image>
+      <image:loc>https://visndt.com/images/products/K-series/K-main.jpg</image:loc>
+      <image:title>WS-K1010工业内窥镜主图 - 1.0mm高清探头</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>https://visndt.com/images/products/K-series/K-1.jpg</image:loc>
+      <image:title>WS-K1010 工业内窥镜 - 探头近景图</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>https://visndt.com/images/products/K-series/K-2.jpg</image:loc>
+      <image:title>WS-K1010 工业内窥镜 - 显示主机界面</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>https://visndt.com/images/products/K-series/K-3.jpg</image:loc>
+      <image:title>WS-K1010 工业内窥镜 - 操作实拍</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>https://picsum.photos/800/600?random=11</image:loc>
+      <image:title>占位图：工业应用场景示意</image:title>
+    </image:image>
+    
+    
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>https://visndt.com/products/</loc>
+    <lastmod>2025-06-15T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>https://visndt.com/tags/%E9%AB%98%E6%B8%85%E6%88%90%E5%83%8F/</loc>
+    <lastmod>2025-06-15T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>https://visndt.com/tags/%E8%88%AA%E7%A9%BA%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-06-15T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>https://visndt.com/tags/%E5%8F%AF%E8%A7%86%E5%8C%96%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-06-15T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>https://visndt.com/tags/%E5%BE%AE%E5%9E%8B%E6%8E%A2%E5%A4%B4/</loc>
+    <lastmod>2025-06-15T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>https://visndt.com/tags/%E5%8C%BB%E7%96%97%E5%99%A8%E6%A2%B0%E6%A3%80%E6%9F%A5/</loc>
+    <lastmod>2025-06-15T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
     <loc>https://visndt.com/new-products/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
@@ -304,7 +451,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/product-dz60/</loc>
+    <loc>https://visndt.com/products/vsndt-dz60/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
@@ -351,75 +498,6 @@
   
   
   <url>
-    <loc>https://visndt.com/products/product-p1010-model/</loc>
-    <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-MAIN.jpg</image:loc>
-      <image:title>主图</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-1.jpg</image:loc>
-      <image:title>工业内窥镜</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-2.jpg</image:loc>
-      <image:title>工业内窥镜</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-3.jpeg</image:loc>
-      <image:title>工业内窥镜</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>https://picsum.photos/800/600?random=5</image:loc>
-      <image:title>副图4</image:title>
-    </image:image>
-    
-    
-    
-    
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>https://visndt.com/products/</loc>
-    <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
-    
-    
-    
-    
-
-    
-    
-    
-  </url>
-  
-  
-  
-  <url>
     <loc>https://visndt.com/</loc>
     <lastmod>2025-01-01T00:00:00&#43;00:00</lastmod>
     
@@ -434,19 +512,6 @@
   
   <url>
     <loc>https://visndt.com/news/exhibition-news-5/</loc>
-    <lastmod>2024-07-08T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>https://visndt.com/tags/</loc>
     <lastmod>2024-07-08T00:00:00&#43;00:00</lastmod>
     
     

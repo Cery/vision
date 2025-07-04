@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>产品中心 on 维森视觉检测仪器</title>
-    <link>http://localhost:1314/products/</link>
+    <link>https://visndt.com/products/</link>
     <description>Recent content in 产品中心 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Sun, 15 Jun 2025 12:00:00 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1314/products/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://visndt.com/products/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>WS-K1010工业内窥镜 - 1.0mm高清探头 精密检测工具</title>
-      <link>http://localhost:1314/products/vsndt-model/</link>
+      <link>https://visndt.com/products/vsndt-model/</link>
       <pubDate>Sun, 15 Jun 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1314/products/vsndt-model/</guid>
+      <guid>https://visndt.com/products/vsndt-model/</guid>
       <description>WS-K1010是一款具备1.0mm超细直径和高亮光纤照明的工业视频内窥镜，广泛应用于航空维修、电子制造、医疗检测等狭小空间可视化场景。</description>
     </item>
     <item>
       <title>WS-DZ60高清三维测量工业视频内窥镜</title>
-      <link>http://localhost:1314/products/product-dz60/</link>
+      <link>https://visndt.com/products/vsndt-dz60/</link>
       <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1314/products/product-dz60/</guid>
+      <guid>https://visndt.com/products/vsndt-dz60/</guid>
       <description>便携式三维测量高清工业内窥镜</description>
     </item>
   </channel>

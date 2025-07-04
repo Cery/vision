@@ -12,6 +12,9 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
+// 静态文件服务 - 提供媒体库文件访问
+app.use('/media-library', express.static('./media-library'));
+
 // 确保必要的目录存在
 const ensureDirectoryExists = (dirPath) => {
     if (!fs.existsSync(dirPath)) {
@@ -23,10 +26,25 @@ const ensureDirectoryExists = (dirPath) => {
 // 初始化必要的目录
 ensureDirectoryExists('./static/images/products');
 ensureDirectoryExists('./static/images/content/products');
-ensureDirectoryExists('./static/images/media');
-ensureDirectoryExists('./static/files/media');
-ensureDirectoryExists('./static/files/downloads');
 ensureDirectoryExists('./content/products');
+
+// 媒体库专用目录 - 指向项目中的特定文件夹
+ensureDirectoryExists('./media-library');
+ensureDirectoryExists('./media-library/images');
+ensureDirectoryExists('./media-library/files');
+
+// 按供应商分组的媒体库目录
+const defaultSuppliers = [
+    '天津维森科技有限公司',
+    '上海尚品科技有限公司',
+    '北京华科仪科技股份有限公司',
+    'default'
+];
+
+defaultSuppliers.forEach(supplier => {
+    ensureDirectoryExists(`./media-library/images/${supplier}`);
+    ensureDirectoryExists(`./media-library/files/${supplier}`);
+});
 
 // 配置multer用于文件上传
 const storage = multer.diskStorage({
@@ -38,11 +56,11 @@ const storage = multer.diskStorage({
         if (uploadType === 'content') {
             uploadPath = './static/images/content/products';
         } else if (uploadType === 'media') {
-            // 媒体库按供应商分组
+            // 媒体库按供应商分组 - 指向专用媒体库目录
             if (file.mimetype.startsWith('image/')) {
-                uploadPath = `./static/images/media/${supplier}`;
+                uploadPath = `./media-library/images/${supplier}`;
             } else {
-                uploadPath = `./static/files/media/${supplier}`;
+                uploadPath = `./media-library/files/${supplier}`;
             }
         } else if (file.mimetype.startsWith('image/')) {
             uploadPath = './static/images/products';
@@ -108,8 +126,8 @@ app.post('/api/upload/image', upload.single('image'), (req, res) => {
         if (uploadType === 'content') {
             relativePath = `/images/content/products/${req.file.filename}`;
         } else if (uploadType === 'media') {
-            // 媒体库按供应商分组
-            relativePath = `/images/media/${supplier}/${req.file.filename}`;
+            // 媒体库按供应商分组 - 返回媒体库路径
+            relativePath = `/media-library/images/${supplier}/${req.file.filename}`;
         } else {
             relativePath = `/images/products/${req.file.filename}`;
         }
@@ -144,8 +162,8 @@ app.post('/api/upload/file', upload.single('file'), (req, res) => {
         let relativePath;
 
         if (uploadType === 'media') {
-            // 媒体库按供应商分组
-            relativePath = `/files/media/${supplier}/${req.file.filename}`;
+            // 媒体库按供应商分组 - 返回媒体库路径
+            relativePath = `/media-library/files/${supplier}/${req.file.filename}`;
         } else {
             relativePath = `/files/downloads/${req.file.filename}`;
         }
@@ -299,14 +317,16 @@ app.get('/api/products/list', (req, res) => {
 app.get('/api/media/list', (req, res) => {
     try {
         const mediaLibrary = [];
-        const mediaPath = './static/images/media';
-        const filesPath = './static/files/media';
+        const imagesPath = './media-library/images';
+        const filesPath = './media-library/files';
+
+        console.log('📂 扫描媒体库目录...');
 
         // 扫描图片媒体库
-        if (fs.existsSync(mediaPath)) {
-            const suppliers = fs.readdirSync(mediaPath);
+        if (fs.existsSync(imagesPath)) {
+            const suppliers = fs.readdirSync(imagesPath);
             suppliers.forEach(supplier => {
-                const supplierPath = path.join(mediaPath, supplier);
+                const supplierPath = path.join(imagesPath, supplier);
                 if (fs.statSync(supplierPath).isDirectory()) {
                     const files = fs.readdirSync(supplierPath);
                     files.forEach(file => {
@@ -317,7 +337,7 @@ app.get('/api/media/list', (req, res) => {
                             name: file,
                             type: 'image',
                             supplier: supplier,
-                            path: `/images/media/${supplier}/${file}`,
+                            path: `/media-library/images/${supplier}/${file}`,
                             size: stats.size,
                             uploadDate: stats.mtime.toISOString().split('T')[0]
                         });
@@ -341,7 +361,7 @@ app.get('/api/media/list', (req, res) => {
                             name: file,
                             type: 'file',
                             supplier: supplier,
-                            path: `/files/media/${supplier}/${file}`,
+                            path: `/media-library/files/${supplier}/${file}`,
                             size: stats.size,
                             uploadDate: stats.mtime.toISOString().split('T')[0]
                         });
@@ -350,6 +370,7 @@ app.get('/api/media/list', (req, res) => {
             });
         }
 
+        console.log(`✅ 媒体库扫描完成，共找到 ${mediaLibrary.length} 个文件`);
         res.json({ success: true, media: mediaLibrary });
     } catch (error) {
         console.error('获取媒体库列表失败:', error);
