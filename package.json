@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "维森视觉检测仪器网站",
   "scripts": {
+    "start": "node server.js",
     "dev": "npm-run-all --parallel hugo cms product-server",
     "hugo": "hugo server -D --port 1313",
     "cms": "netlify-cms-proxy-server --port 8081 --config static/admin/config.yml",
