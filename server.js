@@ -318,6 +318,7 @@ app.get('/api/products/list', (req, res) => {
 app.get('/api/media/list', (req, res) => {
     try {
         const mediaLibrary = [];
+        const { category, type, search, supplier } = req.query;
 
         console.log('📂 扫描项目媒体文件夹...');
 
@@ -342,26 +343,169 @@ app.get('/api/media/list', (req, res) => {
         };
 
         // 扫描图片文件夹
-        Object.keys(imageFolders).forEach(category => {
-            const folderPath = imageFolders[category];
+        Object.keys(imageFolders).forEach(categoryKey => {
+            const folderPath = imageFolders[categoryKey];
             if (fs.existsSync(folderPath)) {
-                scanFolder(folderPath, category, 'image', mediaLibrary);
+                scanFolder(folderPath, categoryKey, 'image', mediaLibrary);
             }
         });
 
         // 扫描文件文件夹
-        Object.keys(fileFolders).forEach(category => {
-            const folderPath = fileFolders[category];
+        Object.keys(fileFolders).forEach(categoryKey => {
+            const folderPath = fileFolders[categoryKey];
             if (fs.existsSync(folderPath)) {
-                scanFolder(folderPath, category, 'file', mediaLibrary);
+                scanFolder(folderPath, categoryKey, 'file', mediaLibrary);
             }
         });
 
-        console.log(`✅ 项目媒体库扫描完成，共找到 ${mediaLibrary.length} 个文件`);
-        res.json({ success: true, media: mediaLibrary });
+        // 应用筛选条件
+        let filteredMedia = mediaLibrary;
+
+        if (category) {
+            filteredMedia = filteredMedia.filter(item => item.category === category);
+        }
+
+        if (type) {
+            filteredMedia = filteredMedia.filter(item => item.type === type);
+        }
+
+        if (supplier) {
+            filteredMedia = filteredMedia.filter(item => item.supplier === supplier);
+        }
+
+        if (search) {
+            const searchLower = search.toLowerCase();
+            filteredMedia = filteredMedia.filter(item =>
+                item.name.toLowerCase().includes(searchLower)
+            );
+        }
+
+        console.log(`✅ 项目媒体库扫描完成，共找到 ${mediaLibrary.length} 个文件，筛选后 ${filteredMedia.length} 个`);
+        res.json({ success: true, media: filteredMedia, total: mediaLibrary.length });
     } catch (error) {
         console.error('获取媒体库列表失败:', error);
         res.status(500).json({ success: false, message: '获取媒体库列表失败: ' + error.message });
+    }
+});
+
+// 删除媒体文件接口
+app.delete('/api/media/:id', (req, res) => {
+    try {
+        const { id } = req.params;
+        console.log(`🗑️ 删除媒体文件: ${id}`);
+
+        // 解析文件ID获取路径信息
+        const [type, category, filename] = id.split('-');
+
+        let filePath;
+        if (type === 'image') {
+            filePath = path.join('./static/images', category, filename);
+        } else {
+            filePath = path.join('./static/uploads', category, filename);
+        }
+
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+            console.log(`✅ 文件删除成功: ${filePath}`);
+            res.json({ success: true, message: '文件删除成功' });
+        } else {
+            console.log(`❌ 文件不存在: ${filePath}`);
+            res.status(404).json({ success: false, message: '文件不存在' });
+        }
+    } catch (error) {
+        console.error('删除媒体文件失败:', error);
+        res.status(500).json({ success: false, message: '删除文件失败: ' + error.message });
+    }
+});
+
+// 重命名媒体文件接口
+app.put('/api/media/:id/rename', (req, res) => {
+    try {
+        const { id } = req.params;
+        const { newName } = req.body;
+
+        console.log(`📝 重命名媒体文件: ${id} -> ${newName}`);
+
+        // 解析文件ID获取路径信息
+        const [type, category, oldFilename] = id.split('-');
+
+        let oldPath, newPath;
+        if (type === 'image') {
+            oldPath = path.join('./static/images', category, oldFilename);
+            newPath = path.join('./static/images', category, newName);
+        } else {
+            oldPath = path.join('./static/uploads', category, oldFilename);
+            newPath = path.join('./static/uploads', category, newName);
+        }
+
+        if (fs.existsSync(oldPath)) {
+            if (fs.existsSync(newPath)) {
+                return res.status(400).json({ success: false, message: '目标文件名已存在' });
+            }
+
+            fs.renameSync(oldPath, newPath);
+            console.log(`✅ 文件重命名成功: ${oldPath} -> ${newPath}`);
+
+            const newId = `${type}-${category}-${newName}`;
+            res.json({
+                success: true,
+                message: '文件重命名成功',
+                newId: newId,
+                newPath: type === 'image' ? `/images/${category}/${newName}` : `/uploads/${category}/${newName}`
+            });
+        } else {
+            console.log(`❌ 源文件不存在: ${oldPath}`);
+            res.status(404).json({ success: false, message: '源文件不存在' });
+        }
+    } catch (error) {
+        console.error('重命名媒体文件失败:', error);
+        res.status(500).json({ success: false, message: '重命名文件失败: ' + error.message });
+    }
+});
+
+// 批量删除媒体文件接口
+app.delete('/api/media/batch', (req, res) => {
+    try {
+        const { ids } = req.body;
+        console.log(`🗑️ 批量删除媒体文件: ${ids.length} 个文件`);
+
+        const results = [];
+        let successCount = 0;
+
+        ids.forEach(id => {
+            try {
+                const [type, category, filename] = id.split('-');
+
+                let filePath;
+                if (type === 'image') {
+                    filePath = path.join('./static/images', category, filename);
+                } else {
+                    filePath = path.join('./static/uploads', category, filename);
+                }
+
+                if (fs.existsSync(filePath)) {
+                    fs.unlinkSync(filePath);
+                    results.push({ id, success: true, message: '删除成功' });
+                    successCount++;
+                } else {
+                    results.push({ id, success: false, message: '文件不存在' });
+                }
+            } catch (error) {
+                results.push({ id, success: false, message: error.message });
+            }
+        });
+
+        console.log(`✅ 批量删除完成: ${successCount}/${ids.length} 个文件删除成功`);
+        res.json({
+            success: true,
+            message: `批量删除完成: ${successCount}/${ids.length} 个文件删除成功`,
+            results: results,
+            successCount: successCount,
+            totalCount: ids.length
+        });
+    } catch (error) {
+        console.error('批量删除媒体文件失败:', error);
+        res.status(500).json({ success: false, message: '批量删除失败: ' + error.message });
     }
 });
 

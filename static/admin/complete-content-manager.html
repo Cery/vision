@@ -634,6 +634,45 @@
             object-fit: cover;
         }
 
+        /* 增强的媒体库样式 */
+        .media-item {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .media-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 批量操作工具栏样式 */
+        #batchOperationBar {
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 媒体项选择状态 */
+        .media-item-checkbox:checked ~ .media-item {
+            border-color: #007bff;
+            background-color: rgba(0, 123, 255, 0.1);
+        }
+
+        /* 预览模态框样式 */
+        #mediaPreviewModal .modal-body img {
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
         /* 媒体库选择器样式 */
         .media-item-modal {
             position: relative;
@@ -697,40 +736,6 @@
 
         .editor-media-item:hover img {
             opacity: 0.8;
-        }
-
-        /* 复制按钮样式 */
-        .btn-outline-success:hover {
-            background-color: #198754;
-            border-color: #198754;
-            color: white;
-        }
-
-        .btn-group .btn {
-            border-radius: 0;
-        }
-
-        .btn-group .btn:first-child {
-            border-top-left-radius: 0.375rem;
-            border-bottom-left-radius: 0.375rem;
-        }
-
-        .btn-group .btn:last-child {
-            border-top-right-radius: 0.375rem;
-            border-bottom-right-radius: 0.375rem;
-        }
-
-        /* 复制模态框样式 */
-        #copyProductModal .card {
-            border: 1px solid #dee2e6;
-        }
-
-        #copyProductModal .form-check {
-            margin-bottom: 0.5rem;
-        }
-
-        #copyProductModal .alert {
-            margin-bottom: 0;
         }
     </style>
 </head>
@@ -1367,13 +1372,13 @@
             <div id="media" class="content-section">
                 <div class="search-filter-bar">
                     <div class="row g-3">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-search"></i></span>
                                 <input type="text" class="form-control" id="mediaSearch" placeholder="搜索媒体文件..." onkeyup="filterMediaLibrary()">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <select class="form-select" id="mediaCategoryFilter" onchange="filterMediaLibrary()">
                                 <option value="">所有分类</option>
                                 <option value="products">产品</option>
@@ -1396,6 +1401,11 @@
                                 <option value="file">文件</option>
                             </select>
                         </div>
+                        <div class="col-md-2">
+                            <select class="form-select" id="mediaSupplierFilter" onchange="filterMediaLibrary()">
+                                <option value="">所有供应商</option>
+                            </select>
+                        </div>
                         <div class="col-md-3">
                             <div class="btn-group w-100">
                                 <button class="btn btn-primary" onclick="uploadToMediaLibrary('image')">
@@ -1409,14 +1419,47 @@
                     </div>
                 </div>
 
+                <!-- 批量操作工具栏 -->
+                <div class="row mt-3" id="batchOperationBar" style="display: none;">
+                    <div class="col-12">
+                        <div class="alert alert-info d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fas fa-check-square me-2"></i>
+                                已选择 <span id="selectedCount">0</span> 个文件
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-outline-danger btn-sm" onclick="batchDeleteMedia()">
+                                    <i class="fas fa-trash me-1"></i>批量删除
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm" onclick="clearSelection()">
+                                    <i class="fas fa-times me-1"></i>取消选择
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row mt-3">
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <h6 class="mb-0"><i class="fas fa-folder-open me-2"></i>项目媒体库 - 按分类管理</h6>
-                                <button class="btn btn-outline-secondary btn-sm" onclick="refreshMediaLibrary()">
-                                    <i class="fas fa-sync-alt me-1"></i>刷新
-                                </button>
+                                <div class="d-flex align-items-center">
+                                    <h6 class="mb-0 me-3"><i class="fas fa-folder-open me-2"></i>项目媒体库 - 按分类管理</h6>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="selectAllMedia" onchange="toggleSelectAll()">
+                                        <label class="form-check-label" for="selectAllMedia">
+                                            全选
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn btn-outline-secondary btn-sm" onclick="refreshMediaLibrary()">
+                                        <i class="fas fa-sync-alt me-1"></i>刷新
+                                    </button>
+                                    <button class="btn btn-outline-info btn-sm" onclick="toggleViewMode()">
+                                        <i class="fas fa-th me-1" id="viewModeIcon"></i><span id="viewModeText">网格视图</span>
+                                    </button>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <div id="mediaLibraryContainer">
@@ -1624,75 +1667,6 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                     <button type="button" class="btn btn-primary" onclick="saveProduct()">
                         <i class="fas fa-save me-2"></i>保存产品
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 复制产品模态框 -->
-    <div class="modal fade" id="copyProductModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="fas fa-copy me-2"></i>复制产品
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">原产品信息</label>
-                        <div class="card bg-light">
-                            <div class="card-body">
-                                <h6 id="originalProductTitle" class="card-title mb-1"></h6>
-                                <p id="originalProductModel" class="card-text text-muted mb-0"></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="copyProductTitle" class="form-label">新产品名称 <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="copyProductTitle" placeholder="请输入新产品名称">
-                        <div class="form-text">建议在原名称基础上添加版本号或特殊标识</div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="copyProductModel" class="form-label">新产品型号 <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="copyProductModel" placeholder="请输入新产品型号">
-                        <div class="form-text">型号必须唯一，不能与现有产品重复</div>
-                    </div>
-
-                    <div class="mb-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="copyProductImages" checked>
-                            <label class="form-check-label" for="copyProductImages">
-                                复制产品图片
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="copyProductFiles" checked>
-                            <label class="form-check-label" for="copyProductFiles">
-                                复制下载文件
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="copyProductParams" checked>
-                            <label class="form-check-label" for="copyProductParams">
-                                复制技术参数
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <strong>说明：</strong>复制的产品将保存为草稿状态，您可以在复制后进一步编辑。
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-success" onclick="confirmCopyProduct()">
-                        <i class="fas fa-copy me-2"></i>确认复制
                     </button>
                 </div>
             </div>
@@ -3050,115 +3024,6 @@ date: ${data.date}
             }
         }
 
-        // 全局变量存储要复制的产品
-        let productToCopy = null;
-
-        function copyProduct(productId) {
-            console.log('📋 复制产品:', productId);
-            const product = projectData.products.find(p => p.id === productId);
-            if (!product) {
-                console.error('❌ 找不到要复制的产品:', productId);
-                alert('找不到要复制的产品');
-                return;
-            }
-
-            // 存储要复制的产品
-            productToCopy = product;
-
-            // 填充模态框信息
-            document.getElementById('originalProductTitle').textContent = product.title;
-            document.getElementById('originalProductModel').textContent = `型号: ${product.model}`;
-
-            // 设置默认的新产品信息
-            document.getElementById('copyProductTitle').value = product.title + ' (副本)';
-            document.getElementById('copyProductModel').value = product.model + '-copy';
-
-            // 重置复选框
-            document.getElementById('copyProductImages').checked = true;
-            document.getElementById('copyProductFiles').checked = true;
-            document.getElementById('copyProductParams').checked = true;
-
-            // 显示模态框
-            const modal = new bootstrap.Modal(document.getElementById('copyProductModal'));
-            modal.show();
-        }
-
-        function confirmCopyProduct() {
-            if (!productToCopy) {
-                alert('没有选择要复制的产品');
-                return;
-            }
-
-            const newTitle = document.getElementById('copyProductTitle').value.trim();
-            const newModel = document.getElementById('copyProductModel').value.trim();
-
-            if (!newTitle || !newModel) {
-                alert('请填写新产品名称和型号');
-                return;
-            }
-
-            // 检查型号是否已存在
-            const existingProduct = projectData.products.find(p => p.model === newModel);
-            if (existingProduct) {
-                alert('该型号已存在，请使用其他型号');
-                return;
-            }
-
-            // 创建产品副本
-            const copiedProduct = JSON.parse(JSON.stringify(productToCopy)); // 深拷贝
-
-            // 设置新的基本信息
-            copiedProduct.id = 'product-' + Date.now();
-            copiedProduct.title = newTitle;
-            copiedProduct.model = newModel;
-
-            // 更新时间戳
-            copiedProduct.date = new Date().toISOString().split('T')[0];
-            copiedProduct.lastmod = new Date().toISOString();
-
-            // 设置为草稿状态
-            copiedProduct.status = 'draft';
-
-            // 根据用户选择处理复制内容
-            if (!document.getElementById('copyProductImages').checked) {
-                copiedProduct.gallery = [];
-            }
-
-            if (!document.getElementById('copyProductFiles').checked) {
-                copiedProduct.downloads = [];
-            }
-
-            if (!document.getElementById('copyProductParams').checked) {
-                copiedProduct.parameters = [];
-            }
-
-            console.log('✅ 创建产品副本:', copiedProduct);
-
-            // 添加到产品列表
-            projectData.products.unshift(copiedProduct); // 添加到列表开头
-
-            // 更新显示
-            updateProductList();
-            updateDashboard();
-
-            // 关闭模态框
-            const modal = bootstrap.Modal.getInstance(document.getElementById('copyProductModal'));
-            modal.hide();
-
-            // 显示成功消息
-            showSyncStatus(`✅ 产品 "${productToCopy.title}" 复制成功`, 3000);
-
-            // 询问是否立即编辑副本
-            setTimeout(() => {
-                if (confirm('产品复制成功！是否立即编辑副本？')) {
-                    editProduct(copiedProduct.id);
-                }
-            }, 500);
-
-            // 清空全局变量
-            productToCopy = null;
-        }
-
         async function saveProduct() {
             const title = document.getElementById('productTitle').value.trim();
             const model = document.getElementById('productModel').value.trim();
@@ -3347,11 +3212,11 @@ date: ${data.date}
         // 媒体库和文件管理功能
         // 媒体库选择器的全局变量
         let currentMediaLibraryType = '';
-        let selectedMediaFiles = [];
+        let selectedModalMediaFiles = [];
 
         function openMediaLibrary(type) {
             currentMediaLibraryType = type;
-            selectedMediaFiles = [];
+            selectedModalMediaFiles = [];
 
             console.log(`📁 打开媒体库选择器，类型: ${type}`);
 
@@ -6279,9 +6144,6 @@ date: ${data.date}
                             <button class="btn btn-outline-primary" onclick="editProduct('${product.id}')" title="编辑">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="btn btn-outline-success" onclick="copyProduct('${product.id}')" title="复制产品">
-                                <i class="fas fa-copy"></i>
-                            </button>
                             <button class="btn btn-outline-danger" onclick="deleteProduct('${product.id}')" title="删除">
                                 <i class="fas fa-trash"></i>
                             </button>
@@ -7629,8 +7491,10 @@ date: ${data.date}
 
         // 媒体库管理功能实现
 
-        // 媒体库数据
+        // 媒体库数据和状态
         let mediaLibraryData = [];
+        let selectedMediaFiles = new Set();
+        let isGridView = true;
 
         // 上传文件到媒体库
         async function uploadToMediaLibrary(type) {
@@ -7690,6 +7554,251 @@ date: ${data.date}
             };
 
             input.click();
+        }
+
+        // 切换视图模式
+        function toggleViewMode() {
+            isGridView = !isGridView;
+            const icon = document.getElementById('viewModeIcon');
+            const text = document.getElementById('viewModeText');
+
+            if (isGridView) {
+                icon.className = 'fas fa-th me-1';
+                text.textContent = '网格视图';
+            } else {
+                icon.className = 'fas fa-list me-1';
+                text.textContent = '列表视图';
+            }
+
+            renderMediaLibrary();
+        }
+
+        // 全选/取消全选
+        function toggleSelectAll() {
+            const selectAllCheckbox = document.getElementById('selectAllMedia');
+            const checkboxes = document.querySelectorAll('.media-item-checkbox');
+
+            if (selectAllCheckbox.checked) {
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = true;
+                    selectedMediaFiles.add(checkbox.value);
+                });
+            } else {
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                selectedMediaFiles.clear();
+            }
+
+            updateBatchOperationBar();
+        }
+
+        // 选择媒体文件
+        function selectMediaFile(fileId, checkbox) {
+            if (checkbox.checked) {
+                selectedMediaFiles.add(fileId);
+            } else {
+                selectedMediaFiles.delete(fileId);
+            }
+
+            updateBatchOperationBar();
+            updateSelectAllCheckbox();
+        }
+
+        // 更新批量操作工具栏
+        function updateBatchOperationBar() {
+            const batchBar = document.getElementById('batchOperationBar');
+            const selectedCount = document.getElementById('selectedCount');
+
+            if (selectedMediaFiles.size > 0) {
+                batchBar.style.display = 'block';
+                selectedCount.textContent = selectedMediaFiles.size;
+            } else {
+                batchBar.style.display = 'none';
+            }
+        }
+
+        // 更新全选复选框状态
+        function updateSelectAllCheckbox() {
+            const selectAllCheckbox = document.getElementById('selectAllMedia');
+            const checkboxes = document.querySelectorAll('.media-item-checkbox');
+            const checkedCount = document.querySelectorAll('.media-item-checkbox:checked').length;
+
+            if (checkedCount === 0) {
+                selectAllCheckbox.indeterminate = false;
+                selectAllCheckbox.checked = false;
+            } else if (checkedCount === checkboxes.length) {
+                selectAllCheckbox.indeterminate = false;
+                selectAllCheckbox.checked = true;
+            } else {
+                selectAllCheckbox.indeterminate = true;
+            }
+        }
+
+        // 清除选择
+        function clearSelection() {
+            selectedMediaFiles.clear();
+            document.querySelectorAll('.media-item-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            document.getElementById('selectAllMedia').checked = false;
+            updateBatchOperationBar();
+        }
+
+        // 批量删除媒体文件
+        async function batchDeleteMedia() {
+            if (selectedMediaFiles.size === 0) {
+                alert('请先选择要删除的文件');
+                return;
+            }
+
+            if (!confirm(`确定要删除选中的 ${selectedMediaFiles.size} 个文件吗？此操作不可撤销。`)) {
+                return;
+            }
+
+            try {
+                showSyncStatus(`正在删除 ${selectedMediaFiles.size} 个文件...`, 1000);
+
+                const response = await fetch('http://localhost:3002/api/media/batch', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ids: Array.from(selectedMediaFiles)
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showSyncStatus(`✅ 批量删除完成: ${result.successCount}/${result.totalCount} 个文件删除成功`, 3000);
+                    clearSelection();
+                    refreshMediaLibrary();
+                } else {
+                    showSyncStatus(`❌ 批量删除失败: ${result.message}`, 3000);
+                }
+            } catch (error) {
+                console.error('批量删除失败:', error);
+                showSyncStatus('❌ 批量删除失败，请检查网络连接', 3000);
+            }
+        }
+
+        // 删除单个媒体文件
+        async function deleteMediaFile(fileId, fileName) {
+            if (!confirm(`确定要删除文件 "${fileName}" 吗？此操作不可撤销。`)) {
+                return;
+            }
+
+            try {
+                showSyncStatus(`正在删除文件 ${fileName}...`, 1000);
+
+                const response = await fetch(`http://localhost:3002/api/media/${fileId}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showSyncStatus(`✅ 文件 ${fileName} 删除成功`, 2000);
+                    refreshMediaLibrary();
+                } else {
+                    showSyncStatus(`❌ 删除失败: ${result.message}`, 3000);
+                }
+            } catch (error) {
+                console.error('删除文件失败:', error);
+                showSyncStatus('❌ 删除文件失败，请检查网络连接', 3000);
+            }
+        }
+
+        // 重命名媒体文件
+        async function renameMediaFile(fileId, currentName) {
+            const newName = prompt('请输入新的文件名:', currentName);
+            if (!newName || newName === currentName) {
+                return;
+            }
+
+            try {
+                showSyncStatus(`正在重命名文件...`, 1000);
+
+                const response = await fetch(`http://localhost:3002/api/media/${fileId}/rename`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        newName: newName
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showSyncStatus(`✅ 文件重命名成功`, 2000);
+                    refreshMediaLibrary();
+                } else {
+                    showSyncStatus(`❌ 重命名失败: ${result.message}`, 3000);
+                }
+            } catch (error) {
+                console.error('重命名文件失败:', error);
+                showSyncStatus('❌ 重命名文件失败，请检查网络连接', 3000);
+            }
+        }
+
+        // 预览媒体文件
+        function previewMedia(path, name, type) {
+            if (type === 'image') {
+                // 创建图片预览模态框
+                const modalHtml = `
+                    <div class="modal fade" id="mediaPreviewModal" tabindex="-1">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">
+                                        <i class="fas fa-image me-2"></i>图片预览 - ${name}
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <img src="${path}" alt="${name}" class="img-fluid" style="max-height: 500px;">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" onclick="downloadMedia('${path}', '${name}')">
+                                        <i class="fas fa-download me-1"></i>下载
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // 移除已存在的模态框
+                const existingModal = document.getElementById('mediaPreviewModal');
+                if (existingModal) {
+                    existingModal.remove();
+                }
+
+                // 添加新的模态框
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+                // 显示模态框
+                const modal = new bootstrap.Modal(document.getElementById('mediaPreviewModal'));
+                modal.show();
+            }
+        }
+
+        // 下载媒体文件
+        function downloadMedia(path, name) {
+            const link = document.createElement('a');
+            link.href = path;
+            link.download = name;
+            link.target = '_blank';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showSyncStatus(`✅ 开始下载 ${name}`, 2000);
         }
 
         // 显示分类选择对话框
@@ -7806,29 +7915,52 @@ date: ${data.date}
         // 更新分类筛选器
         function updateCategoryFilter() {
             const categoryFilter = document.getElementById('mediaCategoryFilter');
-            const categories = [...new Set(mediaLibraryData.map(item => item.category || item.supplier))];
+            const supplierFilter = document.getElementById('mediaSupplierFilter');
+
+            // 获取所有分类和供应商
+            const categories = [...new Set(mediaLibraryData.map(item => item.category))];
+            const suppliers = [...new Set(mediaLibraryData.map(item => item.supplier))];
 
             // 保存当前选择
-            const currentValue = categoryFilter.value;
+            const currentCategoryValue = categoryFilter?.value || '';
+            const currentSupplierValue = supplierFilter?.value || '';
 
-            // 清空并重新填充
-            categoryFilter.innerHTML = `
-                <option value="">所有分类</option>
-                <option value="products">产品</option>
-                <option value="cases">案例</option>
-                <option value="news">新闻</option>
-                <option value="application">应用</option>
-                <option value="partner">合作伙伴</option>
-                <option value="supplier">供应商</option>
-                <option value="carousel">轮播图</option>
-                <option value="banners">横幅</option>
-                <option value="documents">文档</option>
-                <option value="manuals">手册</option>
-                <option value="certificates">证书</option>
-            `;
+            // 更新分类筛选器
+            if (categoryFilter) {
+                categoryFilter.innerHTML = `
+                    <option value="">所有分类</option>
+                    <option value="products">产品</option>
+                    <option value="cases">案例</option>
+                    <option value="news">新闻</option>
+                    <option value="application">应用</option>
+                    <option value="partner">合作伙伴</option>
+                    <option value="supplier">供应商</option>
+                    <option value="carousel">轮播图</option>
+                    <option value="banners">横幅</option>
+                    <option value="documents">文档</option>
+                    <option value="manuals">手册</option>
+                    <option value="certificates">证书</option>
+                `;
 
-            // 恢复选择
-            categoryFilter.value = currentValue;
+                // 恢复选择
+                categoryFilter.value = currentCategoryValue;
+            }
+
+            // 更新供应商筛选器
+            if (supplierFilter) {
+                supplierFilter.innerHTML = '<option value="">所有供应商</option>';
+                suppliers.forEach(supplier => {
+                    if (supplier) {
+                        const option = document.createElement('option');
+                        option.value = supplier;
+                        option.textContent = supplier;
+                        supplierFilter.appendChild(option);
+                    }
+                });
+
+                // 恢复选择
+                supplierFilter.value = currentSupplierValue;
+            }
         }
 
         // 渲染媒体库
@@ -7845,9 +7977,35 @@ date: ${data.date}
                 return;
             }
 
+            // 应用筛选
+            let filteredData = mediaLibraryData;
+
+            const searchTerm = document.getElementById('mediaSearch')?.value.toLowerCase() || '';
+            const categoryFilter = document.getElementById('mediaCategoryFilter')?.value || '';
+            const typeFilter = document.getElementById('mediaTypeFilter')?.value || '';
+            const supplierFilter = document.getElementById('mediaSupplierFilter')?.value || '';
+
+            if (searchTerm) {
+                filteredData = filteredData.filter(item =>
+                    item.name.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            if (categoryFilter) {
+                filteredData = filteredData.filter(item => item.category === categoryFilter);
+            }
+
+            if (typeFilter) {
+                filteredData = filteredData.filter(item => item.type === typeFilter);
+            }
+
+            if (supplierFilter) {
+                filteredData = filteredData.filter(item => item.supplier === supplierFilter);
+            }
+
             // 按分类分组
             const groupedData = {};
-            mediaLibraryData.forEach(item => {
+            filteredData.forEach(item => {
                 const category = item.category || item.supplier;
                 if (!groupedData[category]) {
                     groupedData[category] = { images: [], files: [] };
@@ -7888,24 +8046,63 @@ date: ${data.date}
                         ${data.images.length > 0 ? `
                             <div class="mb-3">
                                 <h6 class="text-muted mb-2"><i class="fas fa-images me-1"></i>图片 (${data.images.length})</h6>
-                                <div class="row g-2">
-                                    ${data.images.map(item => `
-                                        <div class="col-md-2 col-sm-3 col-4">
-                                            <div class="media-item">
-                                                <img src="${item.path}" alt="${item.name}" class="img-thumbnail" style="height: 100px; object-fit: cover;">
-                                                <div class="media-overlay">
-                                                    <button class="btn btn-sm btn-primary" onclick="selectMediaFile('${item.path}', '${item.name}')">
-                                                        <i class="fas fa-check"></i>
+                                ${isGridView ? `
+                                    <div class="row g-2">
+                                        ${data.images.map(item => `
+                                            <div class="col-md-2 col-sm-3 col-4">
+                                                <div class="media-item position-relative">
+                                                    <div class="form-check position-absolute" style="top: 5px; left: 5px; z-index: 10;">
+                                                        <input class="form-check-input media-item-checkbox" type="checkbox" value="${item.id}"
+                                                               onchange="selectMediaFile('${item.id}', this)">
+                                                    </div>
+                                                    <img src="${item.path}" alt="${item.name}" class="img-thumbnail w-100" style="height: 100px; object-fit: cover;">
+                                                    <div class="media-overlay">
+                                                        <div class="btn-group">
+                                                            <button class="btn btn-sm btn-outline-light" onclick="previewMedia('${item.path}', '${item.name}', 'image')" title="预览">
+                                                                <i class="fas fa-eye"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-outline-light" onclick="renameMediaFile('${item.id}', '${item.name}')" title="重命名">
+                                                                <i class="fas fa-edit"></i>
+                                                            </button>
+                                                            <button class="btn btn-sm btn-outline-danger" onclick="deleteMediaFile('${item.id}', '${item.name}')" title="删除">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <small class="text-muted d-block mt-1 text-truncate" title="${item.name}">${item.name}</small>
+                                                    <small class="text-muted">${formatFileSize(item.size)}</small>
+                                                </div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                ` : `
+                                    <div class="list-group">
+                                        ${data.images.map(item => `
+                                            <div class="list-group-item d-flex align-items-center">
+                                                <div class="form-check me-3">
+                                                    <input class="form-check-input media-item-checkbox" type="checkbox" value="${item.id}"
+                                                           onchange="selectMediaFile('${item.id}', this)">
+                                                </div>
+                                                <img src="${item.path}" alt="${item.name}" class="me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                                <div class="flex-grow-1">
+                                                    <h6 class="mb-1">${item.name}</h6>
+                                                    <small class="text-muted">${formatFileSize(item.size)} • ${item.uploadDate}</small>
+                                                </div>
+                                                <div class="btn-group">
+                                                    <button class="btn btn-sm btn-outline-primary" onclick="previewMedia('${item.path}', '${item.name}', 'image')" title="预览">
+                                                        <i class="fas fa-eye"></i>
                                                     </button>
-                                                    <button class="btn btn-sm btn-danger" onclick="deleteMediaFile('${item.id}')">
+                                                    <button class="btn btn-sm btn-outline-secondary" onclick="renameMediaFile('${item.id}', '${item.name}')" title="重命名">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteMediaFile('${item.id}', '${item.name}')" title="删除">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </div>
-                                                <small class="text-muted d-block mt-1">${item.name}</small>
                                             </div>
-                                        </div>
-                                    `).join('')}
-                                </div>
+                                        `).join('')}
+                                    </div>
+                                `}
                             </div>
                         ` : ''}
 
@@ -7914,17 +8111,26 @@ date: ${data.date}
                                 <h6 class="text-muted mb-2"><i class="fas fa-file me-1"></i>文件 (${data.files.length})</h6>
                                 <div class="list-group">
                                     ${data.files.map(item => `
-                                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <i class="fas fa-file me-2"></i>
-                                                <strong>${item.name}</strong>
-                                                <small class="text-muted ms-2">${formatFileSize(item.size)}</small>
+                                        <div class="list-group-item d-flex align-items-center">
+                                            <div class="form-check me-3">
+                                                <input class="form-check-input media-item-checkbox" type="checkbox" value="${item.id}"
+                                                       onchange="selectMediaFile('${item.id}', this)">
+                                            </div>
+                                            <div class="me-3">
+                                                <i class="fas fa-file fa-2x text-muted"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1">${item.name}</h6>
+                                                <small class="text-muted">${formatFileSize(item.size)} • ${item.uploadDate}</small>
                                             </div>
                                             <div class="btn-group">
-                                                <button class="btn btn-sm btn-outline-primary" onclick="selectMediaFile('${item.path}', '${item.name}')">
-                                                    <i class="fas fa-check me-1"></i>选择
+                                                <button class="btn btn-sm btn-outline-primary" onclick="downloadMedia('${item.path}', '${item.name}')" title="下载">
+                                                    <i class="fas fa-download"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-outline-danger" onclick="deleteMediaFile('${item.id}')">
+                                                <button class="btn btn-sm btn-outline-secondary" onclick="renameMediaFile('${item.id}', '${item.name}')" title="重命名">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger" onclick="deleteMediaFile('${item.id}', '${item.name}')" title="删除">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </div>
@@ -7982,6 +8188,13 @@ date: ${data.date}
         window.filterMediaLibrary = filterMediaLibrary;
         window.selectMediaFile = selectMediaFile;
         window.deleteMediaFile = deleteMediaFile;
+        window.toggleViewMode = toggleViewMode;
+        window.toggleSelectAll = toggleSelectAll;
+        window.clearSelection = clearSelection;
+        window.batchDeleteMedia = batchDeleteMedia;
+        window.renameMediaFile = renameMediaFile;
+        window.previewMedia = previewMedia;
+        window.downloadMedia = downloadMedia;
 
         // 产品表单相关
         window.loadParameterTemplate = loadParameterTemplate;
