@@ -4210,6 +4210,68 @@ date: ${data.date}
             }
         }
 
+        // 从Hugo静态文件加载产品数据
+        async function loadProductsFromHugo() {
+            try {
+                console.log('📂 从Hugo静态文件加载产品数据...');
+
+                // 尝试从Hugo生成的产品索引文件加载
+                try {
+                    const response = await fetch('/products-index.json');
+                    if (response.ok) {
+                        const products = await response.json();
+                        console.log('✅ 从products-index.json加载产品:', products.length);
+                        return products;
+                    }
+                } catch (error) {
+                    console.log('⚠️ 无法从products-index.json加载，尝试其他方式');
+                }
+
+                // 备用方案：从通用index.json加载
+                try {
+                    const response = await fetch('/index.json');
+                    if (response.ok) {
+                        const data = await response.json();
+                        const products = data.filter(item => item.section === 'products' && item.title);
+                        console.log('✅ 从index.json加载产品:', products.length);
+                        return products;
+                    }
+                } catch (error) {
+                    console.log('⚠️ 无法从index.json加载，尝试其他方式');
+                }
+
+                // 备用方案：从localStorage加载已保存的产品
+                const savedProducts = localStorage.getItem('products');
+                if (savedProducts) {
+                    const products = JSON.parse(savedProducts);
+                    console.log('✅ 从localStorage加载产品:', products.length);
+                    return products;
+                }
+
+                // 如果都没有，返回默认的示例产品
+                const defaultProducts = [
+                    {
+                        id: 'sample-product',
+                        title: '示例产品',
+                        model: 'SAMPLE-001',
+                        summary: '这是一个示例产品',
+                        primary_category: '电子内窥镜',
+                        secondary_category: '工业视频内窥镜',
+                        supplier: '示例供应商',
+                        published: new Date().toISOString(),
+                        slug: 'sample-product'
+                    }
+                ];
+
+                console.log('✅ 使用默认示例产品');
+                return defaultProducts;
+
+            } catch (error) {
+                console.error('❌ 加载产品数据失败:', error);
+                return [];
+            }
+        }
+
         // 强制重新加载产品数据
         async function forceReloadProducts() {
             console.log('🔄 强制重新加载产品数据...');
@@ -4217,49 +4279,34 @@ date: ${data.date}
             try {
                 showSyncStatus('正在重新加载产品数据...', 1000);
 
-                // 从API获取最新产品列表
-                const response = await fetch('http://localhost:3002/api/products/list');
-                const result = await response.json();
+                // 从Hugo生成的JSON文件加载产品数据
+                const products = await loadProductsFromHugo();
 
-                if (result.success && result.products) {
+                if (products && products.length > 0) {
                     // 更新项目数据
                     if (!projectData.products) {
                         projectData.products = [];
                     }
 
-                    // 合并新产品到现有列表
-                    result.products.forEach(apiProduct => {
-                        const existingIndex = projectData.products.findIndex(p => p.id === apiProduct.id || p.model === apiProduct.id);
+                    // 清空现有产品列表，重新加载
+                    projectData.products = products.map(product => ({
+                        ...product,
+                        uri: `/products/${product.slug || product.id}/`
+                    }));
 
-                        if (existingIndex !== -1) {
-                            // 更新现有产品
-                            projectData.products[existingIndex] = {
-                                ...projectData.products[existingIndex],
-                                ...apiProduct,
-                                uri: `/products/${apiProduct.id}/`
-                            };
-                        } else {
-                            // 添加新产品
-                            projectData.products.push({
-                                ...apiProduct,
-                                uri: `/products/${apiProduct.id}/`
-                            });
-                        }
-                    });
-
-                    console.log(`✅ 已加载 ${result.products.length} 个产品`);
+                    console.log(`✅ 已加载 ${products.length} 个产品`);
                     console.log('📊 当前产品列表:', projectData.products);
 
                     // 更新前端显示
                     updateProductList();
                     updateDashboard();
 
-                    showSyncStatus(`✅ 产品数据重新加载完成，共 ${result.products.length} 个产品`, 2000);
+                    showSyncStatus(`✅ 产品数据重新加载完成，共 ${products.length} 个产品`, 2000);
 
                     return true;
                 } else {
-                    console.log('❌ 获取产品列表失败:', result);
-                    showSyncStatus('❌ 获取产品列表失败', 2000);
+                    console.log('❌ 未找到产品数据');
+                    showSyncStatus('❌ 未找到产品数据', 2000);
                     return false;
                 }
 
