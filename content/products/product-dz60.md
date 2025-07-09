@@ -1,4 +1,4 @@
----
+﻿---
 title: "WS-DZ60高清三维测量工业视频内窥镜"
 summary: 便携式三维测量高清工业内窥镜
 primary_category: "电子内窥镜"
@@ -34,13 +34,13 @@ parameters:
   - name: "光源"
     value: "光纤光源"
   - name: "导向"
-    value: "360°手电动导向"
+    value: "360手电动导向"
   - name: "管线材质"
     value: "钨丝编织软管"
   - name: "防护等级"
     value: "IP67"
   - name: "工作温度"
-    value: "-20℃~70℃"
+    value: "-20~70"
 application_scenarios: |
   这里是深圳微视光电科技有限公司 WS-DZ60高清三维测量工业内窥镜的应用场景详细介绍：
   

@@ -7,7 +7,6 @@ categories:
 tags:
 - 图像处理
 - 算法优化
-- 工业内窥镜
 author: 技术研发部
 views: 245
 featured_image: "/images/news/新闻.webp"

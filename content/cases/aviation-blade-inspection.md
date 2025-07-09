@@ -1,6 +1,6 @@
 ---
 title: "航空发动机叶片精密检测解决方案"
-primary_category: ["电子视频内窥镜"]
+primary_category: ["电子内窥镜"]
 application_field: ["航空航天"]
 application_scenario: ["航空叶片"]
 featured_image: "/images/cases/case-4.webp"

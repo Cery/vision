@@ -1,4 +1,4 @@
----
+﻿---
 title: "WS-P1010高清工业视频内窥镜"
 summary: 高清光纤照明360度旋转镜头内窥镜
 primary_category: "电子内窥镜"
@@ -43,7 +43,7 @@ parameters:
   - name: "防护等级"
     value: "IP67"
   - name: "工作温度"
-    value: "-20℃~70℃"
+    value: "-20~70"
 application_scenarios: |
   ## 工业内窥镜的多元化应用场景
 

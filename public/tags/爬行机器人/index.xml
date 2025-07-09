@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>爬行机器人 on 维森视觉检测仪器</title>
+    <link>http://localhost:1313/tags/%E7%88%AC%E8%A1%8C%E6%9C%BA%E5%99%A8%E4%BA%BA/</link>
+    <description>Recent content in 爬行机器人 on 维森视觉检测仪器</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 09 Jul 2025 09:31:37 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/%E7%88%AC%E8%A1%8C%E6%9C%BA%E5%99%A8%E4%BA%BA/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>1</title>
+      <link>http://localhost:1313/products/1/</link>
+      <pubDate>Wed, 09 Jul 2025 09:31:37 +0000</pubDate>
+      <guid>http://localhost:1313/products/1/</guid>
+      <description>1</description>
+    </item>
+  </channel>
+</rss>

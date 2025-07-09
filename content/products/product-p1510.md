@@ -1,4 +1,4 @@
----
+﻿---
 title: "WS-P2810高清工业视频内窥镜"
 summary: 高清光纤照明360度旋转镜头内窥镜
 primary_category: "电子内窥镜"
@@ -37,13 +37,13 @@ parameters:
   - name: "光源"
     value: "光纤光源"
   - name: "导向"
-    value: "360°手动导向"
+    value: "360手动导向"
   - name: "管线材质"
     value: "钨丝编织软管"
   - name: "防护等级"
     value: "IP67"
   - name: "工作温度"
-    value: "-20℃~70℃"
+    value: "-20~70"
 application_scenarios: |
   这里是P6010工业内窥镜的应用场景详细介绍：
   

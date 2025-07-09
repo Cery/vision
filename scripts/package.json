@@ -1,0 +1,26 @@
+{
+  "name": "vision-markdown-server",
+  "version": "1.0.0",
+  "description": "Markdown文件自动保存服务器",
+  "main": "markdown-server.js",
+  "scripts": {
+    "start": "node markdown-server.js",
+    "dev": "nodemon markdown-server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "markdown",
+    "cms",
+    "hugo",
+    "file-server"
+  ],
+  "author": "Vision CMS",
+  "license": "MIT"
+}

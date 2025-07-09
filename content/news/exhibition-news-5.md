@@ -7,7 +7,6 @@ categories:
 tags:
 - 精密检测
 - 工业内窥镜
-- 亚洲展会
 author: 市场部
 views: 92
 ---

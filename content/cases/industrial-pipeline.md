@@ -1,7 +1,7 @@
 ---
 title: "工业管道智能检测与维护系统"
-primary_category: ["管道内窥镜", "爬行机器人"]
-application_field: ["石油化工", "市政工程", "工业制造"]
+primary_category: ["管道内窥镜"]
+application_field: ["石油化工"]
 application_scenario: ["工业管道"]
 featured_image: "/images/cases/case-5.webp"
 summary: "为各类工业管道提供全方位的智能检测解决方案，包括石化管道、市政管网、工业冷却管道等，实现管道安全运行和预防性维护。"
