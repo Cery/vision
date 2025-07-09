@@ -278,8 +278,8 @@
   
   
   <url>
-    <loc>http://localhost:1313/products/1/</loc>
-    <lastmod>2025-07-09T10:46:11&#43;00:00</lastmod>
+    <loc>http://localhost:1313/products/s-00/</loc>
+    <lastmod>2025-07-09T14:36:33&#43;00:00</lastmod>
     
     
     
@@ -291,7 +291,7 @@
     
     
     <image:image>
-      <image:loc>http://localhost:1313/images/products/F-series/F%20-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/blob:http:/localhost:1313/03be2114-9af1-4eb7-a1de-760ebabad5f3</image:loc>
       <image:title>F -1.jpg</image:title>
     </image:image>
     
@@ -305,7 +305,7 @@
   
   <url>
     <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2025-07-09T10:46:11&#43;00:00</lastmod>
+    <lastmod>2025-07-09T14:36:33&#43;00:00</lastmod>
     
     
     
@@ -318,7 +318,7 @@
   
   <url>
     <loc>http://localhost:1313/products/</loc>
-    <lastmod>2025-07-09T10:46:11&#43;00:00</lastmod>
+    <lastmod>2025-07-09T14:36:33&#43;00:00</lastmod>
     
     
     
@@ -326,32 +326,6 @@
 
     
     
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/tags/%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2025-07-09T10:46:11&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E7%AE%A1%E9%81%93%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2025-07-09T10:46:11&#43;00:00</lastmod>
-    
-    
-    
-    
-
     
   </url>
   
@@ -359,7 +333,20 @@
   
   <url>
     <loc>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/</loc>
-    <lastmod>2025-07-09T10:46:11&#43;00:00</lastmod>
+    <lastmod>2025-07-09T14:36:33&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <lastmod>2025-07-09T14:36:33&#43;00:00</lastmod>
     
     
     
@@ -372,7 +359,20 @@
   
   <url>
     <loc>http://localhost:1313/tags/%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2025-07-09T10:46:11&#43;00:00</lastmod>
+    <lastmod>2025-07-09T14:36:33&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E6%9F%94%E6%80%A7%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <lastmod>2025-07-09T14:36:33&#43;00:00</lastmod>
     
     
     
@@ -418,15 +418,15 @@
     
     
     <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/KX-3.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
       <image:title>WS-K1010 工业内窥镜 - 操作实拍</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/KX-4.jpg</image:loc>
-      <image:title>WS-K1010 工业内窥镜 - 应用场景示意</image:title>
+      <image:loc>https://picsum.photos/800/600?random=11</image:loc>
+      <image:title>占位图：工业应用场景示意</image:title>
     </image:image>
     
     
@@ -472,15 +472,15 @@
     
     
     <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/KX-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
       <image:title>产品副图3</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/KX-2.jpg</image:loc>
-      <image:title>产品副图4</image:title>
+      <image:loc>https://picsum.photos/800/600?random=11</image:loc>
+      <image:title>副图占位图</image:title>
     </image:image>
     
     
@@ -583,7 +583,7 @@
   
   
   <url>
-    <loc>http://localhost:1313/products/product-dz60/</loc>
+    <loc>http://localhost:1313/products/vsndt-dz60/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
@@ -664,69 +664,15 @@
     
     
     <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/KX-3.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
       <image:title>工业内窥镜副图3</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/KX-4.jpg</image:loc>
-      <image:title>工业内窥镜副图4</image:title>
-    </image:image>
-    
-    
-    
-    
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/products/ws-k1810-a/</loc>
-    <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
-      <image:title>主图</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
-      <image:title>工业内窥镜副图1</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
-      <image:title>工业内窥镜副图2</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/KX-6.jpg</image:loc>
-      <image:title>工业内窥镜副图3</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/KX-7.jpg</image:loc>
-      <image:title>工业内窥镜副图4</image:title>
+      <image:loc>https://picsum.photos/800/600?random=5</image:loc>
+      <image:title>副图4</image:title>
     </image:image>
     
     
@@ -772,8 +718,8 @@
     
     
     <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/KX-5.jpg</image:loc>
-      <image:title>工业内窥镜副图3</image:title>
+      <image:loc>https://picsum.photos/800/600?random=10</image:loc>
+      <image:title>占位图</image:title>
     </image:image>
     
     
@@ -840,60 +786,6 @@
   
   <url>
     <loc>http://localhost:1313/products/product-p1210/</loc>
-    <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/P60/P-MAIN.jpg</image:loc>
-      <image:title>主图</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
-      <image:title>工业内窥镜</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
-      <image:title>工业内窥镜</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/P60/P-3.jpg</image:loc>
-      <image:title>工业内窥镜</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>https://picsum.photos/800/600?random=5</image:loc>
-      <image:title>副图4</image:title>
-    </image:image>
-    
-    
-    
-    
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/products/product-p1510/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
@@ -1287,19 +1179,6 @@
   
   
   <url>
-    <loc>http://localhost:1313/tags/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2024-01-15T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
     <loc>http://localhost:1313/cooperation/</loc>
     <lastmod>2024-01-15T00:00:00&#43;00:00</lastmod>
     
@@ -1411,6 +1290,21 @@
     
     
 
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/vsndt-model/</loc>
+    
+    
+    
+    
+    
+
+    
+    
     
   </url>
   

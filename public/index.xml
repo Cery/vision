@@ -6,7 +6,7 @@
     <description>Recent content in 首页 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 09 Jul 2025 10:46:11 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 09 Jul 2025 14:56:46 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>航空航天</title>
@@ -149,11 +149,18 @@
       <description>科研实验检测分析专业解决方案，支持科学研究和技术创新</description>
     </item>
     <item>
+      <title>2</title>
+      <link>http://localhost:1313/products/v-00/</link>
+      <pubDate>Wed, 09 Jul 2025 14:56:46 +0000</pubDate>
+      <guid>http://localhost:1313/products/v-00/</guid>
+      <description>高清柔性光纤内窥镜适用于复杂管道检测</description>
+    </item>
+    <item>
       <title>1</title>
-      <link>http://localhost:1313/products/1/</link>
-      <pubDate>Wed, 09 Jul 2025 10:46:11 +0000</pubDate>
-      <guid>http://localhost:1313/products/1/</guid>
-      <description>1</description>
+      <link>http://localhost:1313/products/s-00/</link>
+      <pubDate>Wed, 09 Jul 2025 14:36:33 +0000</pubDate>
+      <guid>http://localhost:1313/products/s-00/</guid>
+      <description>高清柔性光纤内窥镜适用于复杂管道检测</description>
     </item>
     <item>
       <title>WS-K10100工业内窥镜 - 1.0mm高清探头 精密检测工具</title>
@@ -178,9 +185,9 @@
     </item>
     <item>
       <title>WS-DZ60高清三维测量工业视频内窥镜</title>
-      <link>http://localhost:1313/products/product-dz60/</link>
+      <link>http://localhost:1313/products/vsndt-dz60/</link>
       <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/product-dz60/</guid>
+      <guid>http://localhost:1313/products/vsndt-dz60/</guid>
       <description>便携式三维测量高清工业内窥镜</description>
     </item>
     <item>
@@ -188,13 +195,6 @@
       <link>http://localhost:1313/products/ws-k1210-a/</link>
       <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
       <guid>http://localhost:1313/products/ws-k1210-a/</guid>
-      <description>1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务</description>
-    </item>
-    <item>
-      <title>WS-K1210工业内窥镜</title>
-      <link>http://localhost:1313/products/ws-k1810-a/</link>
-      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/ws-k1810-a/</guid>
       <description>1.2mm直径探头搭载工业级光学系统，适用于中小型空间检测任务</description>
     </item>
     <item>
@@ -216,13 +216,6 @@
       <link>http://localhost:1313/products/product-p1210/</link>
       <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
       <guid>http://localhost:1313/products/product-p1210/</guid>
-      <description>高清光纤照明360度旋转镜头内窥镜</description>
-    </item>
-    <item>
-      <title>WS-P2810高清工业视频内窥镜</title>
-      <link>http://localhost:1313/products/product-p1510/</link>
-      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/product-p1510/</guid>
       <description>高清光纤照明360度旋转镜头内窥镜</description>
     </item>
     <item>
@@ -294,6 +287,13 @@
       <pubDate>Mon, 15 Jan 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/news/2024-01-15-industry-news-example/</guid>
       <description>本文深入分析了工业内窥镜技术的最新发展趋势，包括高清成像、智能识别、远程操控等方面的创新突破，探讨了这些技术进步对工业检测领域带来的深远影响</description>
+    </item>
+    <item>
+      <title></title>
+      <link>http://localhost:1313/products/vsndt-model/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/products/vsndt-model/</guid>
+      <description>&lt;h1 id=&#34;title-ws-k10100工业内窥镜---10mm高清探头-精密检测工具&#34;&gt;&amp;laquo;&amp;laquo;&amp;laquo;&amp;lt; HEAD:content/products/model.md&#xA;﻿&amp;mdash;&#xA;title: &amp;ldquo;WS-K10100工业内窥镜 - 1.0mm高清探头 精密检测工具&amp;rdquo;&lt;/h1&gt;&#xA;&lt;hr&gt;&#xA;&lt;p&gt;title: &amp;ldquo;WS-K1010工业内窥镜 - 1.0mm高清探头 精密检测工具&amp;rdquo;&lt;/p&gt;</description>
     </item>
     <item>
       <title>便携式</title>

@@ -1,4 +1,4 @@
-﻿---
+---
 title: "WS-K10100工业内窥镜 - 1.0mm高清探头 精密检测工具"
 summary: WS-K1010是一款具备1.0mm超细直径和高亮光纤照明的工业视频内窥镜，广泛应用于航空维修、电子制造、医疗检测等狭小空间可视化场景。
 seo_title: "WS-K1010工业内窥镜 - 精密结构检测专用视频内窥镜"
@@ -19,10 +19,10 @@ gallery:
     alt: "WS-K1010 工业内窥镜 - 探头近景图"
   - image: "/images/products/K-series/K-2.jpg"
     alt: "WS-K1010 工业内窥镜 - 显示主机界面"
-  - image: "/images/products/K-series/KX-3.jpg"
+  - image: "/images/products/K-series/K-3.jpg"
     alt: "WS-K1010 工业内窥镜 - 操作实拍"
-  - image: "/images/products/K-series/KX-4.jpg"
-    alt: "WS-K1010 工业内窥镜 - 应用场景示意"
+  - image: "https://picsum.photos/800/600?random=11"
+    alt: "占位图：工业应用场景示意"
 parameters:
   - name: "主机屏幕"
     value: "6英寸高清显示屏"
@@ -57,7 +57,7 @@ application_scenarios: |
   - 小齿轮装配错位识别
   - 医疗设备接口内部可视检查
 
-  ![装配检测场景图](/images/application/electric-1.jpg)
+  ![装配检测场景图](https://picsum.photos/1200/600?random=1)
 
   ### 航空维修结构体检测
 
@@ -65,7 +65,7 @@ application_scenarios: |
   - 涡轮附件裂纹排查
   - 航空冷却系统内部检测
 
-  ![航空检测场景图](/images/application/air-1.jpg)
+  ![航空检测场景图](https://picsum.photos/1200/600?random=2)
 
   ### 工业设备隐蔽空间维护
 
@@ -73,7 +73,7 @@ application_scenarios: |
   - 自动化产线关键位置巡检
   - 工控系统内部结构可视化检查
 
-  ![工业设备检测场景图](/images/application/pipe-1.jpg)
+  ![工业设备检测场景图](https://picsum.photos/1200/600?random=3)
 
   ### 产品核心优势
 
@@ -82,10 +82,8 @@ application_scenarios: |
   - 支持工业、医疗、科研等高标准应用环境
 
 data_download:
-  - file_title: "产品技术参数文档"
-    file_path: "/uploads/products/1750727651704_HJææ¯åæ°.pdf"
-  - file_title: "产品规格书"
-    file_path: "/uploads/products/1750727631696_GK18äº§åè§æ ¼ä¹¦.doc"
+  - file_title: "WS-K1010产品规格书"
+    file_path: "/uploads/WS-K1010-spec.pdf"
 related_products:
   - "product-93430电子内窥镜-2801"
   - "product-93430电子内窥镜-2802"

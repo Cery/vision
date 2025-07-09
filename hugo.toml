@@ -122,9 +122,16 @@ enableGitInfo = true
   baseName = "search-index"
   isPlainText = true
 
+# 产品索引配置
+[outputFormats.ProductIndex]
+  mediaType = "application/json"
+  baseName = "products-index"
+  isPlainText = true
+
 # 输出配置
 [outputs]
   home = ["HTML", "RSS", "SearchIndex"]
+  section = ["HTML", "RSS", "ProductIndex"]
 
 # Markup配置 - 优化中文处理
 [markup]

@@ -1,60 +1,6 @@
 {{ define "main" }}
-<!-- SEO优化的结构化数据 -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org/",
-  "@type": "Product",
-  "name": "{{ .Title }}",
-  "description": "{{ .Params.summary | default .Summary }}",
-  "brand": {
-    "@type": "Brand",
-    "name": "{{ .Params.supplier | default "VisNDT" }}"
-  },
-  "model": "{{ .Params.model }}",
-  "category": "{{ .Params.primary_category }}",
-  {{ if .Params.gallery }}
-  {{ $firstImage := index .Params.gallery 0 }}
-  {{ if reflect.IsMap $firstImage }}
-  "image": "{{ $firstImage.image | absURL }}",
-  {{ else }}
-  "image": "{{ $firstImage | absURL }}",
-  {{ end }}
-  {{ end }}
-  "offers": {
-    "@type": "Offer",
-    "availability": "https://schema.org/InStock",
-    "priceCurrency": "CNY"
-  }
-}
-</script>
-
 <div class="container py-5">
     {{ partial "breadcrumbs.html" . }}
-
-    <!-- 产品标题区域 - SEO优化 -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="product-header">
-                <h1 class="product-title">{{ .Title }}</h1>
-                {{ with .Params.summary }}
-                <p class="product-subtitle text-muted">{{ . }}</p>
-                {{ end }}
-                <!-- 产品标签 -->
-                <div class="product-tags mb-3">
-                    {{ with .Params.primary_category }}
-                    <span class="badge bg-primary me-2">{{ . }}</span>
-                    {{ end }}
-                    {{ with .Params.secondary_category }}
-                    <span class="badge bg-secondary me-2">{{ . }}</span>
-                    {{ end }}
-                    {{ range .Params.tags }}
-                    <span class="badge bg-outline-primary me-1">{{ . }}</span>
-                    {{ end }}
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="row">
         <div class="col-lg-6">
             <div class="card shadow-sm mb-4">
@@ -93,7 +39,7 @@
                                             <img src="{{ .image | relURL }}"
                                                  class="img-fluid rounded object-fit-cover thumbnail-image"
                                                  alt="{{ .alt | default "产品图片" }}"
-                                                 onclick="switchMainImage('{{ .image | relURL }}', '{{ .alt | default `产品图片` }}')"
+                                                 onclick="switchMainImage('{{ .image | relURL }}', '{{ .alt | default "产品图片" }}')"
                                                  data-full-image="{{ .image | relURL }}">
                                         </div>
                                     </div>
@@ -129,27 +75,28 @@
         </div>
 
         <div class="col-lg-6">
-            <div class="card shadow-sm mb-4 product-info-card">
+            <div class="card shadow-sm mb-4">
                 <div class="card-body">
-                    <!-- 产品核心信息 -->
-                    <div class="product-core-info mb-4">
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="info-item">
-                                    <span class="info-label">型号</span>
-                                    <span class="info-value">{{ .Params.model | default "未指定" }}</span>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="info-item">
-                                    <span class="info-label">系列</span>
-                                    <span class="info-value">{{ .Params.series | default "标准系列" }}</span>
-                                </div>
-                            </div>
-                        </div>
+                    <h2 class="mb-3">{{ .Title }}</h2>
+                    {{ with .Params.summary }}
+                    <p class="lead text-muted">{{ . }}</p>
+                    {{ end }}
+
+                    <!-- 产品分类标签 -->
+                    <div class="product-categories mb-3">
+                        {{ with .Params.primary_category }}
+                        <span class="badge bg-dark me-2 mb-1" style="font-size: 0.9rem; padding: 0.5rem 0.8rem;">
+                            <i class="fas fa-folder me-1"></i>{{ . }}
+                        </span>
+                        {{ end }}
+                        {{ with .Params.secondary_category }}
+                        <span class="badge bg-dark me-2 mb-1" style="font-size: 0.9rem; padding: 0.5rem 0.8rem;">
+                            <i class="fas fa-tag me-1"></i>{{ . }}
+                        </span>
+                        {{ end }}
                     </div>
 
-                    <hr class="product-divider">
+                    <hr>
 
                     <ul class="list-unstyled product-details-list">
                         {{ with .Params.product_category }}
@@ -231,25 +178,20 @@
             </div>
 
             {{ with .Params.parameters }}
-            <div class="card shadow-sm mb-4 product-params-card">
-                <div class="card-header bg-gradient-primary text-white">
-                    <h5 class="card-title mb-0">
-                        <i class="fas fa-cogs me-2"></i>核心参数
-                    </h5>
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">产品参数</h5>
                 </div>
                 <div class="card-body">
-                    <div class="row g-3">
+                    <div class="row">
                         {{ $displayCount := 0 }}
                         {{ range . }}
                             {{ if .group }}
                                 {{ range .items }}
                                     {{ if or (eq .name "主机屏幕") (eq .name "待机时长") (eq .name "探头直径") (eq .name "像素") (eq .name "视向") (eq .name "光源") (eq .name "导向") (eq .name "管线材质") }}
                                         {{ if lt $displayCount 8 }}
-                                            <div class="col-6">
-                                                <div class="param-item">
-                                                    <span class="param-label">{{ .name }}</span>
-                                                    <span class="param-value">{{ .value }}</span>
-                                                </div>
+                                            <div class="col-6 mb-2">
+                                                <strong>{{ .name }}：</strong> {{ .value }}
                                             </div>
                                             {{ $displayCount = add $displayCount 1 }}
                                         {{ end }}
@@ -258,11 +200,8 @@
                             {{ else }}
                                 {{ if or (eq .name "主机屏幕") (eq .name "待机时长") (eq .name "探头直径") (eq .name "像素") (eq .name "视向") (eq .name "光源") (eq .name "导向") (eq .name "管线材质") }}
                                     {{ if lt $displayCount 8 }}
-                                        <div class="col-6">
-                                            <div class="param-item">
-                                                <span class="param-label">{{ .name }}</span>
-                                                <span class="param-value">{{ .value }}</span>
-                                            </div>
+                                        <div class="col-6 mb-2">
+                                            <strong>{{ .name }}：</strong> {{ .value }}
                                         </div>
                                         {{ $displayCount = add $displayCount 1 }}
                                     {{ end }}
@@ -278,28 +217,20 @@
 
     <div class="row">
         <div class="col-12">
-            <div class="card shadow-sm product-content-card">
+            <div class="card shadow-sm">
                 <div class="card-header bg-white p-0">
-                    <ul class="nav nav-tabs product-tabs" id="productTab" role="tablist">
+                    <ul class="nav nav-tabs" id="productTab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="intro-tab" data-bs-toggle="tab" data-bs-target="#intro" type="button" role="tab" aria-controls="intro" aria-selected="true">
-                                <i class="fas fa-info-circle me-2"></i>产品介绍
-                            </button>
+                            <button class="nav-link active" id="intro-tab" data-bs-toggle="tab" data-bs-target="#intro" type="button" role="tab" aria-controls="intro" aria-selected="true">产品介绍</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="detailed-specs-tab" data-bs-toggle="tab" data-bs-target="#detailed-specs" type="button" role="tab" aria-controls="detailed-specs" aria-selected="false">
-                                <i class="fas fa-list-ul me-2"></i>详细参数
-                            </button>
+                            <button class="nav-link" id="detailed-specs-tab" data-bs-toggle="tab" data-bs-target="#detailed-specs" type="button" role="tab" aria-controls="detailed-specs" aria-selected="false">详细参数</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="application-tab" data-bs-toggle="tab" data-bs-target="#application" type="button" role="tab" aria-controls="application" aria-selected="false">
-                                <i class="fas fa-tools me-2"></i>应用场景
-                            </button>
+                            <button class="nav-link" id="application-tab" data-bs-toggle="tab" data-bs-target="#application" type="button" role="tab" aria-controls="application" aria-selected="false">应用场景</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="download-tab" data-bs-toggle="tab" data-bs-target="#download" type="button" role="tab" aria-controls="download" aria-selected="false">
-                                <i class="fas fa-download me-2"></i>资料下载
-                            </button>
+                            <button class="nav-link" id="download-tab" data-bs-toggle="tab" data-bs-target="#download" type="button" role="tab" aria-controls="download" aria-selected="false">资料下载</button>
                         </li>
                     </ul>
                 </div>
@@ -422,82 +353,6 @@
         </div>
     </div>
 </div>
-
-<!-- 图片显示修复脚本 -->
-<script>
-// 修复localStorage中的图片显示问题
-function fixLocalStorageImages() {
-    try {
-        const mediaLibrary = JSON.parse(localStorage.getItem('mediaLibrary') || '[]');
-
-        // 查找所有需要修复的图片
-        const images = document.querySelectorAll('img[src^="/images/products/"], img[src^="/images/content/"]');
-
-        images.forEach(img => {
-            const originalSrc = img.src;
-            const relativePath = originalSrc.replace(window.location.origin, '');
-
-            // 在媒体库中查找对应的图片
-            const mediaItem = mediaLibrary.find(item => item.path === relativePath);
-
-            if (mediaItem && mediaItem.data) {
-                // 如果在localStorage中找到了图片数据，使用base64数据
-                img.src = mediaItem.data;
-                console.log(`✅ 修复图片显示: ${relativePath}`);
-            } else {
-                // 如果没有找到，检查图片是否真实存在
-                const testImg = new Image();
-                testImg.onload = function() {
-                    // 图片存在，不需要修复
-                    console.log(`✅ 图片正常: ${relativePath}`);
-                };
-                testImg.onerror = function() {
-                    // 图片不存在，显示占位图
-                    img.src = '/images/placeholder.svg';
-                    img.alt = '图片加载失败';
-                    console.log(`❌ 图片不存在: ${relativePath}`);
-                };
-                testImg.src = originalSrc;
-            }
-        });
-
-        // 修复下载链接
-        const downloadLinks = document.querySelectorAll('a[href^="/uploads/"]');
-        downloadLinks.forEach(link => {
-            const originalHref = link.href;
-            const relativePath = originalHref.replace(window.location.origin, '');
-
-            // 检查文件是否存在
-            fetch(originalHref, { method: 'HEAD' })
-                .then(response => {
-                    if (!response.ok) {
-                        // 文件不存在，禁用链接
-                        link.style.color = '#6c757d';
-                        link.style.textDecoration = 'line-through';
-                        link.onclick = function(e) {
-                            e.preventDefault();
-                            alert('文件暂时不可用');
-                        };
-                        console.log(`❌ 下载文件不存在: ${relativePath}`);
-                    } else {
-                        console.log(`✅ 下载文件正常: ${relativePath}`);
-                    }
-                })
-                .catch(error => {
-                    console.log(`❌ 检查下载文件失败: ${relativePath}`, error);
-                });
-        });
-
-    } catch (error) {
-        console.error('修复图片显示时出错:', error);
-    }
-}
-
-// 页面加载完成后执行修复
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(fixLocalStorageImages, 500);
-});
-</script>
 
 <!-- 修复浏览次数的JavaScript -->
 <script>
@@ -731,113 +586,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
-/* 产品页面样式 - SEO优化设计 */
-
-/* 产品标题区域 */
-.product-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 2rem;
-    border-radius: 15px;
-    margin-bottom: 2rem;
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
-}
-
-.product-title {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    line-height: 1.2;
-}
-
-.product-subtitle {
-    font-size: 1.1rem;
-    opacity: 0.9;
-    margin-bottom: 1rem;
-}
-
-.product-tags .badge {
-    font-size: 0.85rem;
-    padding: 0.5rem 0.8rem;
-    border-radius: 20px;
-}
-
-/* 产品信息卡片 */
-.product-info-card {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-}
-
-.product-core-info .info-item {
-    text-align: center;
-    padding: 1rem;
-    background: #f8f9fa;
-    border-radius: 10px;
-    margin-bottom: 1rem;
-}
-
-.info-label {
-    display: block;
-    font-size: 0.85rem;
-    color: #6c757d;
-    margin-bottom: 0.25rem;
-    font-weight: 500;
-}
-
-.info-value {
-    display: block;
-    font-size: 1.1rem;
-    color: #212529;
-    font-weight: 600;
-}
-
-.product-divider {
-    border-color: #e9ecef;
-    margin: 1.5rem 0;
-}
-
-/* 参数卡片优化 */
-.product-params-card {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-}
-
-.bg-gradient-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 15px 15px 0 0;
-}
-
-.param-item {
-    background: #f8f9fa;
-    padding: 1rem;
-    border-radius: 10px;
-    text-align: center;
-    height: 100%;
-    transition: all 0.3s ease;
-}
-
-.param-item:hover {
-    background: #e9ecef;
-    transform: translateY(-2px);
-}
-
-.param-label {
-    display: block;
-    font-size: 0.85rem;
-    color: #6c757d;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-}
-
-.param-value {
-    display: block;
-    font-size: 1rem;
-    color: #212529;
-    font-weight: 600;
-}
-
+/* 产品页面样式 - 统一设计 */
 .product-details-list li {
     margin-bottom: 0.75rem;
     font-size: 14px;
@@ -850,119 +599,45 @@ document.addEventListener('DOMContentLoaded', function() {
     font-weight: 500;
 }
 
-/* 内容区域样式 */
-.tab-content {
-    padding: 2rem;
-    min-height: 400px;
-}
-
 .content img {
     max-width: 100%;
     height: auto;
     margin: 1.5rem 0;
     border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-}
-
-.content img:hover {
-    transform: scale(1.02);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
 .content p {
-    line-height: 1.7;
+    line-height: 1.6;
     margin-bottom: 1.5rem;
-    font-size: 15px;
-    color: #495057;
+    font-size: 14px;
+    color: #212121;
 }
 
 .content h2, .content h3, .content h4 {
-    color: #667eea;
+    color: #1976d2;
     font-weight: 600;
     margin-top: 2rem;
     margin-bottom: 1rem;
-    position: relative;
 }
 
-.content h2::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -5px;
-    width: 50px;
-    height: 3px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 2px;
-}
-
-/* 产品图片网格 */
-.content ul {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    list-style: none;
-    padding: 0;
-    margin: 2rem 0;
-}
-
-.content li {
-    margin: 0;
-}
-
-.content li img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin: 0;
-}
-
-/* 产品内容卡片 */
-.product-content-card {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    overflow: hidden;
-}
-
-/* 标签页样式优化 */
-.product-tabs {
-    border-bottom: 2px solid #f8f9fa;
-}
-
-.product-tabs .nav-link {
+.nav-tabs .nav-link {
     font-size: 14px;
     font-weight: 500;
-    color: #6c757d;
-    border: none;
-    border-radius: 0;
-    padding: 1rem 1.5rem;
-    transition: all 0.3s ease;
-    position: relative;
+    color: #616161;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.15s ease-in-out;
 }
 
-.product-tabs .nav-link:hover {
-    color: #667eea;
-    background-color: rgba(102, 126, 234, 0.05);
+.nav-tabs .nav-link.active {
+    border-color: #e0e0e0 #e0e0e0 #fff;
+    background-color: #fff;
+    color: #1976d2;
 }
 
-.product-tabs .nav-link.active {
-    color: #667eea;
-    background-color: transparent;
-    border-bottom: 3px solid #667eea;
-    font-weight: 600;
-}
-
-.product-tabs .nav-link.active::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 30px;
-    height: 3px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 2px;
+.nav-tabs .nav-link:hover {
+    color: #1976d2;
+    background-color: rgba(25, 118, 210, 0.05);
 }
 
 .detailed-params-table {

@@ -1,0 +1,26 @@
+{{- $products := slice -}}
+{{- range .Site.Pages -}}
+  {{- if and (eq .Section "products") (ne .Title "") (ne .File.BaseFileName "_index") -}}
+    {{- $product := dict
+      "id" (.File.BaseFileName | default .Title | urlize)
+      "title" .Title
+      "summary" (.Summary | default "")
+      "model" (.Params.model | default "")
+      "series" (.Params.series | default "")
+      "primary_category" (.Params.primary_category | default "")
+      "secondary_category" (.Params.secondary_category | default "")
+      "supplier" (.Params.supplier | default "")
+      "published" (.Date.Format "2006-01-02T15:04:05Z07:00")
+      "slug" (.File.BaseFileName | default (.Title | urlize))
+      "url" .RelPermalink
+      "section" .Section
+      "gallery" (.Params.gallery | default slice)
+      "parameters" (.Params.parameters | default slice)
+      "related_products" (.Params.related_products | default slice)
+      "application_scenarios" (.Params.application_scenarios | default "")
+      "content" (.Content | plainify | truncate 200)
+    -}}
+    {{- $products = $products | append $product -}}
+  {{- end -}}
+{{- end -}}
+{{- $products | jsonify -}}

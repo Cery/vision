@@ -738,6 +738,17 @@
                     <button class="btn btn-outline-success" onclick="testProductSaveSync()">
                         <i class="fas fa-sync me-2"></i>测试产品同步
                     </button>
+                </div>
+                <div class="d-flex gap-2 mt-2">
+                    <button class="btn btn-outline-danger" onclick="fixUploadsEncoding()">
+                        <i class="fas fa-tools me-2"></i>修复文件编码
+                    </button>
+                    <button class="btn btn-outline-info" onclick="fixMdFileReferences()">
+                        <i class="fas fa-file-code me-2"></i>修复MD文件BOM
+                    </button>
+                    <button class="btn btn-outline-primary" onclick="checkFileEncodingStatus()">
+                        <i class="fas fa-search me-2"></i>检查文件编码
+                    </button>
                     <div class="btn-group">
                         <button class="btn btn-outline-success" onclick="quickTestProduct()" title="快速测试产品表单">
                             <i class="fas fa-bolt me-2"></i>快速测试
@@ -2705,7 +2716,7 @@ date: ${data.date}
             }
         }
 
-        // 保存图片到媒体库并返回正确路径
+        // 保存图片到实际文件系统并返回正确路径
         async function saveImageToMediaLibrary(base64Data, imageName, category = 'products') {
             try {
                 console.log(`💾 保存图片到媒体库: ${imageName}`);
@@ -2718,12 +2729,20 @@ date: ${data.date}
                     extension = 'jpg';
                 } else if (base64Data.includes('data:image/webp')) {
                     extension = 'webp';
+                } else if (base64Data.includes('data:image/gif')) {
+                    extension = 'gif';
                 }
 
-                // 生成安全的文件名（处理中文编码）
+                // 生成安全的文件名（避免中文编码问题）
                 const timestamp = Date.now();
-                const safeImageName = imageName.replace(/[^\w\u4e00-\u9fa5-]/g, '_');
-                const fileName = `${safeImageName}_${timestamp}.${extension}`;
+                const randomId = Math.random().toString(36).substring(2, 8);
+                const safeImageName = imageName
+                    .replace(/[^\w-]/g, '_')  // 只保留字母、数字、下划线和连字符
+                    .replace(/_{2,}/g, '_')   // 合并多个下划线
+                    .replace(/^_|_$/g, '');   // 移除开头和结尾的下划线
+
+                const fileName = `${safeImageName}_${timestamp}_${randomId}.${extension}`;
+                console.log(`📝 生成文件名: ${fileName}`);
 
                 // 根据分类确定保存路径
                 let savePath;
@@ -2738,27 +2757,160 @@ date: ${data.date}
                         savePath = `/images/content/${category}/${fileName}`;
                 }
 
-                // 保存到localStorage媒体库（模拟实际文件保存）
-                const mediaLibrary = JSON.parse(localStorage.getItem('mediaLibrary') || '[]');
-                const mediaItem = {
-                    id: timestamp,
-                    name: fileName,
-                    path: savePath,
-                    category: category,
-                    type: 'image',
-                    size: Math.round(base64Data.length * 0.75), // 估算文件大小
-                    uploadDate: new Date().toISOString(),
-                    data: base64Data // 保存base64数据用于预览
-                };
+                // 尝试保存到实际文件系统
+                const saveSuccess = await saveImageToFileSystem(base64Data, fileName, category);
 
-                mediaLibrary.push(mediaItem);
-                localStorage.setItem('mediaLibrary', JSON.stringify(mediaLibrary));
+                if (saveSuccess) {
+                    console.log(`✅ 图片已保存到文件系统: ${savePath}`);
 
-                console.log(`✅ 图片已保存到媒体库: ${savePath}`);
-                return savePath;
+                    // 验证文件是否真的存在
+                    try {
+                        const response = await fetch(savePath);
+                        if (response.ok) {
+                            console.log(`✅ 图片文件验证成功: ${savePath}`);
+                            return savePath;
+                        } else {
+                            console.log(`⚠️ 图片文件验证失败，使用降级方案`);
+                        }
+                    } catch (verifyError) {
+                        console.log(`⚠️ 图片文件验证出错，使用降级方案`);
+                    }
+                }
+
+                // 降级方案：创建可访问的图片URL
+                console.log(`🔄 使用降级方案保存图片: ${fileName}`);
+                const accessibleUrl = await createAccessibleImageUrl(base64Data, fileName, savePath);
+                return accessibleUrl || savePath;
 
             } catch (error) {
                 console.error('保存图片到媒体库失败:', error);
+                return null;
+            }
+        }
+
+        // 保存图片到实际文件系统
+        async function saveImageToFileSystem(base64Data, fileName, category) {
+            try {
+                // 检查是否有文件系统API权限
+                if (!window.showDirectoryPicker) {
+                    console.log('⚠️ 浏览器不支持文件系统API');
+                    return false;
+                }
+
+                // 获取项目目录句柄
+                const projectDirHandle = await getProjectDirectoryHandle();
+                if (!projectDirHandle) {
+                    console.log('⚠️ 无法获取项目目录句柄');
+                    return false;
+                }
+
+                // 确定目标目录路径
+                let targetPath;
+                switch (category) {
+                    case 'products':
+                        targetPath = ['static', 'images', 'products'];
+                        break;
+                    case 'application':
+                        targetPath = ['static', 'images', 'content', 'products'];
+                        break;
+                    default:
+                        targetPath = ['static', 'images', 'content', category];
+                }
+
+                // 创建目录结构
+                let currentDirHandle = projectDirHandle;
+                for (const dirName of targetPath) {
+                    try {
+                        currentDirHandle = await currentDirHandle.getDirectoryHandle(dirName, { create: true });
+                    } catch (error) {
+                        console.error(`创建目录失败: ${dirName}`, error);
+                        return false;
+                    }
+                }
+
+                // 将base64转换为Blob
+                const response = await fetch(base64Data);
+                const blob = await response.blob();
+
+                // 创建文件
+                const fileHandle = await currentDirHandle.getFileHandle(fileName, { create: true });
+                const writable = await fileHandle.createWritable();
+                await writable.write(blob);
+                await writable.close();
+
+                console.log(`✅ 图片已保存到文件系统: ${targetPath.join('/')}/${fileName}`);
+                return true;
+
+            } catch (error) {
+                console.error('保存图片到文件系统失败:', error);
+                return false;
+            }
+        }
+
+        // 创建可访问的图片URL（降级方案）
+        async function createAccessibleImageUrl(base64Data, fileName, targetPath) {
+            try {
+                console.log(`🔄 创建可访问的图片URL: ${fileName}`);
+
+                // 将base64转换为Blob
+                const response = await fetch(base64Data);
+                const blob = await response.blob();
+
+                // 方案1：尝试使用Content Server API保存
+                try {
+                    // 确定目录
+                    let directory = 'images';
+                    if (targetPath.includes('/products/')) {
+                        directory = 'images/products';
+                    } else if (targetPath.includes('/content/')) {
+                        directory = 'images/content/products';
+                    }
+
+                    const apiResponse = await fetch('http://localhost:3001/api/save-image', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            fileName: fileName,
+                            imageData: base64Data,
+                            directory: directory
+                        })
+                    });
+
+                    if (apiResponse.ok) {
+                        const result = await apiResponse.json();
+                        console.log(`✅ 通过API保存图片成功: ${result.filePath}`);
+                        return result.filePath;
+                    }
+                } catch (apiError) {
+                    console.log(`⚠️ API保存失败，尝试其他方案: ${apiError.message}`);
+                }
+
+                // 方案2：创建临时URL并保存到localStorage
+                const tempUrl = URL.createObjectURL(blob);
+
+                // 保存到临时存储，用于图片代理服务
+                const tempImages = JSON.parse(localStorage.getItem('tempImages') || '{}');
+                tempImages[fileName] = {
+                    url: tempUrl,
+                    data: base64Data,
+                    targetPath: targetPath,
+                    created: Date.now()
+                };
+                localStorage.setItem('tempImages', JSON.stringify(tempImages));
+
+                // 同时保存到全局映射，供前台页面访问
+                if (!window.imageUrlMapping) {
+                    window.imageUrlMapping = {};
+                }
+                window.imageUrlMapping[targetPath] = tempUrl;
+
+                console.log(`📝 创建临时图片URL: ${fileName} -> ${targetPath}`);
+                return targetPath; // 返回目标路径，让前台通过代理访问
+
+            } catch (error) {
+                console.error('创建可访问图片URL失败:', error);
                 return null;
             }
         }
@@ -2768,37 +2920,149 @@ date: ${data.date}
             try {
                 console.log(`📁 保存文件到uploads: ${file.name}`);
 
-                // 生成安全的文件名（处理中文编码）
+                // 生成安全的文件名（避免中文编码问题）
                 const timestamp = Date.now();
-                const extension = file.name.split('.').pop();
-                const safeFileName = file.name.replace(/[^\w\u4e00-\u9fa5.-]/g, '_');
-                const fileName = `${productModel}_${timestamp}_${safeFileName}`;
-                const filePath = `/uploads/products/${fileName}`;
+                const randomId = Math.random().toString(36).substring(2, 8);
+                const extension = file.name.split('.').pop().toLowerCase();
 
-                // 读取文件内容
-                const fileContent = await readFileAsBase64(file);
+                // 创建安全的文件名（只使用英文字符）
+                const baseFileName = productModel
+                    .replace(/[^\w-]/g, '_')  // 只保留字母、数字、下划线和连字符
+                    .replace(/_{2,}/g, '_')   // 合并多个下划线
+                    .replace(/^_|_$/g, '');   // 移除开头和结尾的下划线
 
-                // 保存到localStorage（模拟实际文件保存）
-                const uploadsLibrary = JSON.parse(localStorage.getItem('uploadsLibrary') || '[]');
-                const uploadItem = {
-                    id: timestamp,
-                    name: fileName,
-                    originalName: file.name,
-                    path: filePath,
-                    type: file.type,
-                    size: file.size,
-                    uploadDate: new Date().toISOString(),
-                    data: fileContent // 保存文件内容
-                };
+                const fileName = `${baseFileName}_${timestamp}_${randomId}.${extension}`;
+                const filePath = `/uploads/${fileName}`;
 
-                uploadsLibrary.push(uploadItem);
-                localStorage.setItem('uploadsLibrary', JSON.stringify(uploadsLibrary));
+                console.log(`📝 生成安全文件名: ${file.name} -> ${fileName}`);
 
-                console.log(`✅ 文件已保存到uploads: ${filePath}`);
-                return filePath;
+                // 尝试保存到实际文件系统
+                const saveSuccess = await saveFileToFileSystem(file, fileName);
+
+                if (saveSuccess) {
+                    console.log(`✅ 文件已保存到文件系统: ${filePath}`);
+
+                    // 验证文件是否可访问
+                    try {
+                        const response = await fetch(filePath);
+                        if (response.ok) {
+                            console.log(`✅ 文件验证成功: ${filePath}`);
+                            return filePath;
+                        }
+                    } catch (verifyError) {
+                        console.log(`⚠️ 文件验证失败，使用降级方案`);
+                    }
+                }
+
+                // 降级方案：创建可访问的文件URL
+                console.log(`🔄 使用降级方案保存文件: ${fileName}`);
+                const accessibleUrl = await createAccessibleFileUrl(file, fileName, filePath);
+                return accessibleUrl || filePath;
 
             } catch (error) {
                 console.error('保存文件到uploads失败:', error);
+                return null;
+            }
+        }
+
+        // 保存文件到实际文件系统
+        async function saveFileToFileSystem(file, fileName) {
+            try {
+                // 检查是否有文件系统API权限
+                if (!window.showDirectoryPicker) {
+                    console.log('⚠️ 浏览器不支持文件系统API');
+                    return false;
+                }
+
+                // 获取项目目录句柄
+                const projectDirHandle = await getProjectDirectoryHandle();
+                if (!projectDirHandle) {
+                    console.log('⚠️ 无法获取项目目录句柄');
+                    return false;
+                }
+
+                // 创建uploads目录
+                let uploadsDirHandle;
+                try {
+                    uploadsDirHandle = await projectDirHandle.getDirectoryHandle('static', { create: true });
+                    uploadsDirHandle = await uploadsDirHandle.getDirectoryHandle('uploads', { create: true });
+                } catch (error) {
+                    console.error('创建uploads目录失败:', error);
+                    return false;
+                }
+
+                // 创建文件
+                const fileHandle = await uploadsDirHandle.getFileHandle(fileName, { create: true });
+                const writable = await fileHandle.createWritable();
+                await writable.write(file);
+                await writable.close();
+
+                console.log(`✅ 文件已保存到文件系统: static/uploads/${fileName}`);
+                return true;
+
+            } catch (error) {
+                console.error('保存文件到文件系统失败:', error);
+                return false;
+            }
+        }
+
+        // 创建可访问的文件URL（降级方案）
+        async function createAccessibleFileUrl(file, fileName, targetPath) {
+            try {
+                console.log(`🔄 创建可访问的文件URL: ${fileName}`);
+
+                // 方案1：尝试使用Content Server API保存
+                try {
+                    // 将文件转换为base64
+                    const fileBase64 = await fileToBase64(file);
+
+                    const apiResponse = await fetch('http://localhost:3001/api/save-file', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            fileName: fileName,
+                            fileData: fileBase64,
+                            directory: 'uploads'
+                        })
+                    });
+
+                    if (apiResponse.ok) {
+                        const result = await apiResponse.json();
+                        console.log(`✅ 通过API保存文件成功: ${result.filePath}`);
+                        return result.filePath;
+                    }
+                } catch (apiError) {
+                    console.log(`⚠️ API保存失败，尝试其他方案: ${apiError.message}`);
+                }
+
+                // 方案2：创建临时URL并保存到localStorage
+                const tempUrl = URL.createObjectURL(file);
+
+                // 保存到临时存储，用于文件代理服务
+                const tempFiles = JSON.parse(localStorage.getItem('tempFiles') || '{}');
+                tempFiles[fileName] = {
+                    url: tempUrl,
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    targetPath: targetPath,
+                    created: Date.now()
+                };
+                localStorage.setItem('tempFiles', JSON.stringify(tempFiles));
+
+                // 同时保存到全局映射，供前台页面访问
+                if (!window.fileUrlMapping) {
+                    window.fileUrlMapping = {};
+                }
+                window.fileUrlMapping[targetPath] = tempUrl;
+
+                console.log(`📝 创建临时文件URL: ${fileName} -> ${targetPath}`);
+                return targetPath; // 返回目标路径，让前台通过代理访问
+
+            } catch (error) {
+                console.error('创建可访问文件URL失败:', error);
                 return null;
             }
         }
@@ -8365,6 +8629,9 @@ PowerShell脚本已下载: save-${fileName.replace('.md', '')}.ps1
         window.testDataSyncStatus = testDataSyncStatus;
         window.testSupplierDataSync = testSupplierDataSync;
         window.testProductSaveSync = testProductSaveSync;
+        window.fixUploadsEncoding = fixUploadsEncoding;
+        window.fixMdFileReferences = fixMdFileReferences;
+        window.checkFileEncodingStatus = checkFileEncodingStatus;
         window.testImageUpload = testImageUpload;
         window.checkAPIStatus = checkAPIStatus;
         window.testProductSaveFlow = testProductSaveFlow;
@@ -8515,6 +8782,12 @@ PowerShell脚本已下载: save-${fileName.replace('.md', '')}.ps1
             // 初始化基本数据结构
             initializeProjectData();
 
+            // 启动图片代理服务
+            initImageProxyService();
+
+            // 清理过期的临时文件
+            cleanupTempFiles();
+
             // 立即加载项目数据并强制同步
             console.log('🔄 开始自动数据同步...');
             autoSyncDataOnLoad();
@@ -8657,6 +8930,373 @@ PowerShell脚本已下载: save-${fileName.replace('.md', '')}.ps1
                     showError('同步测试失败: ' + error.message);
                 }
             }, 1000);
+        }
+
+        // 图片代理服务 - 处理前台页面对图片的访问
+        function initImageProxyService() {
+            console.log('🖼️ 初始化图片代理服务...');
+
+            // 监听前台页面的图片请求
+            window.addEventListener('message', function(event) {
+                if (event.data.type === 'REQUEST_IMAGE') {
+                    const { fileName, requestId } = event.data;
+                    console.log(`📡 收到图片请求: ${fileName}`);
+
+                    // 从临时存储中获取图片
+                    const tempImages = JSON.parse(localStorage.getItem('tempImages') || '{}');
+                    const tempFiles = JSON.parse(localStorage.getItem('tempFiles') || '{}');
+
+                    let imageData = null;
+
+                    // 查找图片数据
+                    if (tempImages[fileName]) {
+                        imageData = tempImages[fileName].data;
+                    } else if (tempFiles[fileName]) {
+                        imageData = tempFiles[fileName].url;
+                    }
+
+                    // 发送响应
+                    event.source.postMessage({
+                        type: 'IMAGE_RESPONSE',
+                        requestId: requestId,
+                        fileName: fileName,
+                        imageData: imageData
+                    }, event.origin);
+                }
+            });
+
+            console.log('✅ 图片代理服务已启动');
+        }
+
+        // 清理过期的临时文件
+        function cleanupTempFiles() {
+            try {
+                const now = Date.now();
+                const maxAge = 24 * 60 * 60 * 1000; // 24小时
+
+                // 清理临时图片
+                const tempImages = JSON.parse(localStorage.getItem('tempImages') || '{}');
+                let cleanedImages = {};
+                for (const [fileName, data] of Object.entries(tempImages)) {
+                    if (now - data.created < maxAge) {
+                        cleanedImages[fileName] = data;
+                    } else {
+                        // 释放URL对象
+                        if (data.url && data.url.startsWith('blob:')) {
+                            URL.revokeObjectURL(data.url);
+                        }
+                    }
+                }
+                localStorage.setItem('tempImages', JSON.stringify(cleanedImages));
+
+                // 清理临时文件
+                const tempFiles = JSON.parse(localStorage.getItem('tempFiles') || '{}');
+                let cleanedFiles = {};
+                for (const [fileName, data] of Object.entries(tempFiles)) {
+                    if (now - data.created < maxAge) {
+                        cleanedFiles[fileName] = data;
+                    } else {
+                        // 释放URL对象
+                        if (data.url && data.url.startsWith('blob:')) {
+                            URL.revokeObjectURL(data.url);
+                        }
+                    }
+                }
+                localStorage.setItem('tempFiles', JSON.stringify(cleanedFiles));
+
+                console.log('🧹 临时文件清理完成');
+
+            } catch (error) {
+                console.error('清理临时文件失败:', error);
+            }
+        }
+
+        // 修复uploads目录中的文件编码问题
+        async function fixUploadsEncoding() {
+            try {
+                console.log('🔧 开始修复uploads目录编码问题...');
+
+                // 检查是否有文件系统API权限
+                if (!window.showDirectoryPicker) {
+                    showError('浏览器不支持文件系统API，无法修复文件编码');
+                    return;
+                }
+
+                // 获取项目目录句柄
+                const projectDirHandle = await getProjectDirectoryHandle();
+                if (!projectDirHandle) {
+                    showError('无法获取项目目录句柄');
+                    return;
+                }
+
+                // 获取uploads目录
+                let uploadsDirHandle;
+                try {
+                    const staticDirHandle = await projectDirHandle.getDirectoryHandle('static');
+                    uploadsDirHandle = await staticDirHandle.getDirectoryHandle('uploads');
+                } catch (error) {
+                    console.log('uploads目录不存在，跳过修复');
+                    return;
+                }
+
+                // 遍历uploads目录中的文件
+                const filesToRename = [];
+                for await (const [name, handle] of uploadsDirHandle.entries()) {
+                    if (handle.kind === 'file') {
+                        // 检查文件名是否包含编码问题
+                        if (name.includes('%') || name.includes('?') || /[^\x00-\x7F]/.test(name)) {
+                            console.log(`发现编码问题文件: ${name}`);
+
+                            // 生成新的安全文件名
+                            const extension = name.split('.').pop();
+                            const timestamp = Date.now();
+                            const randomId = Math.random().toString(36).substring(2, 8);
+                            const newName = `fixed_file_${timestamp}_${randomId}.${extension}`;
+
+                            filesToRename.push({
+                                oldName: name,
+                                newName: newName,
+                                handle: handle
+                            });
+                        }
+                    }
+                }
+
+                if (filesToRename.length === 0) {
+                    showSuccess('uploads目录中没有发现编码问题的文件');
+                    return;
+                }
+
+                // 重命名文件
+                for (const fileInfo of filesToRename) {
+                    try {
+                        // 读取原文件内容
+                        const file = await fileInfo.handle.getFile();
+
+                        // 创建新文件
+                        const newFileHandle = await uploadsDirHandle.getFileHandle(fileInfo.newName, { create: true });
+                        const writable = await newFileHandle.createWritable();
+                        await writable.write(file);
+                        await writable.close();
+
+                        console.log(`✅ 文件重命名成功: ${fileInfo.oldName} -> ${fileInfo.newName}`);
+
+                        // 删除原文件（注意：某些浏览器可能不支持删除操作）
+                        try {
+                            await uploadsDirHandle.removeEntry(fileInfo.oldName);
+                            console.log(`🗑️ 原文件已删除: ${fileInfo.oldName}`);
+                        } catch (deleteError) {
+                            console.warn(`⚠️ 无法删除原文件: ${fileInfo.oldName}`, deleteError);
+                        }
+
+                    } catch (error) {
+                        console.error(`❌ 重命名文件失败: ${fileInfo.oldName}`, error);
+                    }
+                }
+
+                showSuccess(`文件编码修复完成！处理了 ${filesToRename.length} 个文件`);
+
+            } catch (error) {
+                console.error('修复uploads编码失败:', error);
+                showError('修复uploads编码失败: ' + error.message);
+            }
+        }
+
+        // 检查和修复MD文件中的BOM和编码问题
+        async function fixMdFileReferences() {
+            try {
+                console.log('🔧 开始修复MD文件编码问题...');
+
+                // 检查是否有文件系统API权限
+                if (!window.showDirectoryPicker) {
+                    showError('浏览器不支持文件系统API，无法修复文件编码');
+                    return;
+                }
+
+                // 获取项目目录句柄
+                const projectDirHandle = await getProjectDirectoryHandle();
+                if (!projectDirHandle) {
+                    showError('无法获取项目目录句柄');
+                    return;
+                }
+
+                // 获取content/products目录
+                let productsDirHandle;
+                try {
+                    const contentDirHandle = await projectDirHandle.getDirectoryHandle('content');
+                    productsDirHandle = await contentDirHandle.getDirectoryHandle('products');
+                } catch (error) {
+                    console.log('content/products目录不存在，跳过修复');
+                    return;
+                }
+
+                // 遍历products目录中的MD文件
+                const filesToFix = [];
+                for await (const [name, handle] of productsDirHandle.entries()) {
+                    if (handle.kind === 'file' && name.endsWith('.md')) {
+                        console.log(`检查文件: ${name}`);
+
+                        // 读取文件内容
+                        const file = await handle.getFile();
+                        const arrayBuffer = await file.arrayBuffer();
+                        const uint8Array = new Uint8Array(arrayBuffer);
+
+                        // 检查是否有BOM
+                        const hasBOM = uint8Array.length >= 3 &&
+                                      uint8Array[0] === 0xEF &&
+                                      uint8Array[1] === 0xBB &&
+                                      uint8Array[2] === 0xBF;
+
+                        if (hasBOM) {
+                            console.log(`发现BOM问题文件: ${name}`);
+                            filesToFix.push({
+                                name: name,
+                                handle: handle,
+                                content: uint8Array.slice(3) // 移除BOM
+                            });
+                        }
+                    }
+                }
+
+                if (filesToFix.length === 0) {
+                    showSuccess('没有发现需要修复的MD文件');
+                    return;
+                }
+
+                // 修复文件
+                for (const fileInfo of filesToFix) {
+                    try {
+                        // 创建新的文件内容（无BOM）
+                        const writable = await fileInfo.handle.createWritable();
+                        await writable.write(fileInfo.content);
+                        await writable.close();
+
+                        console.log(`✅ 文件BOM修复成功: ${fileInfo.name}`);
+
+                    } catch (error) {
+                        console.error(`❌ 修复文件失败: ${fileInfo.name}`, error);
+                    }
+                }
+
+                showSuccess(`MD文件编码修复完成！处理了 ${filesToFix.length} 个文件`);
+
+            } catch (error) {
+                console.error('修复MD文件编码失败:', error);
+                showError('修复MD文件编码失败: ' + error.message);
+            }
+        }
+
+        // 检查文件编码状态
+        async function checkFileEncodingStatus() {
+            try {
+                console.log('🔍 检查文件编码状态...');
+
+                // 检查是否有文件系统API权限
+                if (!window.showDirectoryPicker) {
+                    showInfo('浏览器不支持文件系统API，无法检查文件编码');
+                    return;
+                }
+
+                // 获取项目目录句柄
+                const projectDirHandle = await getProjectDirectoryHandle();
+                if (!projectDirHandle) {
+                    showError('无法获取项目目录句柄');
+                    return;
+                }
+
+                // 检查content/products目录
+                let productsDirHandle;
+                try {
+                    const contentDirHandle = await projectDirHandle.getDirectoryHandle('content');
+                    productsDirHandle = await contentDirHandle.getDirectoryHandle('products');
+                } catch (error) {
+                    showError('content/products目录不存在');
+                    return;
+                }
+
+                let totalFiles = 0;
+                let bomFiles = 0;
+                let cleanFiles = 0;
+                const results = [];
+
+                // 检查所有MD文件
+                for await (const [name, handle] of productsDirHandle.entries()) {
+                    if (handle.kind === 'file' && name.endsWith('.md')) {
+                        totalFiles++;
+
+                        try {
+                            const file = await handle.getFile();
+                            const arrayBuffer = await file.arrayBuffer();
+                            const uint8Array = new Uint8Array(arrayBuffer);
+
+                            // 检查是否有BOM
+                            const hasBOM = uint8Array.length >= 3 &&
+                                          uint8Array[0] === 0xEF &&
+                                          uint8Array[1] === 0xBB &&
+                                          uint8Array[2] === 0xBF;
+
+                            if (hasBOM) {
+                                bomFiles++;
+                                results.push(`❌ ${name} - 有BOM问题`);
+                            } else {
+                                cleanFiles++;
+                                results.push(`✅ ${name} - 编码正常`);
+                            }
+
+                        } catch (error) {
+                            results.push(`⚠️ ${name} - 检查失败: ${error.message}`);
+                        }
+                    }
+                }
+
+                // 显示结果
+                console.log('📊 文件编码检查结果:');
+                results.forEach(result => console.log(result));
+
+                const statusMessage = `文件编码检查完成！\n总计: ${totalFiles} 个文件\n正常: ${cleanFiles} 个\n有BOM: ${bomFiles} 个`;
+
+                if (bomFiles > 0) {
+                    showError(statusMessage);
+                } else {
+                    showSuccess(statusMessage);
+                }
+
+            } catch (error) {
+                console.error('检查文件编码状态失败:', error);
+                showError('检查文件编码状态失败: ' + error.message);
+            }
+        }
+
+        // 文件转base64的辅助函数
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // 图片错误处理函数
+        function handleImageError(img) {
+            console.log(`🔍 图片加载失败，尝试从localStorage获取: ${img.src}`);
+
+            // 尝试从localStorage获取图片数据
+            const tempImages = JSON.parse(localStorage.getItem('tempImages') || '{}');
+            const fileName = img.src.split('/').pop();
+
+            // 查找匹配的图片数据
+            for (const [key, value] of Object.entries(tempImages)) {
+                if (key === fileName || value.targetPath === img.src) {
+                    console.log(`✅ 找到图片数据: ${key}`);
+                    img.src = value.data;
+                    return;
+                }
+            }
+
+            // 如果还是找不到，设置占位符
+            img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPuWbvueJh+aaguaXtuWKoOi9vTwvdGV4dD48L3N2Zz4=';
+            console.log(`❌ 未找到图片数据，使用占位符: ${fileName}`);
         }
 
         // 自动数据同步函数

@@ -1,4 +1,4 @@
-﻿---
+---
 title: "WS-P2810高清工业视频内窥镜"
 summary: 高清光纤照明360度旋转镜头内窥镜
 primary_category: "电子内窥镜"

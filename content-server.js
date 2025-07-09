@@ -118,6 +118,51 @@ app.post('/api/save-image', async (req, res) => {
     }
 });
 
+// 保存普通文件
+app.post('/api/save-file', async (req, res) => {
+    try {
+        const { fileName, fileData, directory = 'uploads' } = req.body;
+
+        if (!fileName || !fileData) {
+            return res.status(400).json({
+                success: false,
+                message: '缺少必要参数: fileName, fileData'
+            });
+        }
+
+        // 确保目录存在
+        const targetDir = path.join(STATIC_DIR, directory);
+        await ensureDirectory(targetDir);
+
+        // 处理base64数据
+        let base64Data = fileData;
+        if (base64Data.startsWith('data:')) {
+            base64Data = base64Data.split(',')[1];
+        }
+
+        // 写入文件
+        const filePath = path.join(targetDir, fileName);
+        await fs.writeFile(filePath, base64Data, 'base64');
+
+        const relativePath = `/${directory}/${fileName}`;
+        console.log(`✅ 文件已保存: ${relativePath}`);
+
+        res.json({
+            success: true,
+            message: `文件 ${fileName} 保存成功`,
+            filePath: relativePath,
+            timestamp: new Date().toISOString()
+        });
+
+    } catch (error) {
+        console.error('❌ 保存文件失败:', error);
+        res.status(500).json({
+            success: false,
+            message: `保存文件失败: ${error.message}`
+        });
+    }
+});
+
 // 获取目录文件列表
 app.get('/api/media/:directory', async (req, res) => {
     try {
