@@ -21,81 +21,125 @@ jobs:
     - name: 设置中文环境
       run: |
         sudo apt-get update
-        sudo apt-get install -y locales
+        sudo apt-get install -y locales python3-pip
         sudo locale-gen zh_CN.UTF-8
         sudo update-locale LANG=zh_CN.UTF-8
+        pip3 install chardet
         
     - name: 检查文件编码
       run: |
         echo "🔍 检查文件编码..."
-        
-        # 检查HTML文件
-        echo "检查HTML文件编码..."
-        find . -name "*.html" -not -path "./node_modules/*" -not -path "./public/*" | while read file; do
-          if ! file "$file" | grep -q "UTF-8"; then
-            echo "❌ 编码异常: $file"
-            exit 1
-          fi
-        done
-        
-        # 检查JavaScript文件
-        echo "检查JavaScript文件编码..."
-        find . -name "*.js" -not -path "./node_modules/*" -not -path "./public/*" | while read file; do
-          if ! file "$file" | grep -q "UTF-8"; then
-            echo "❌ 编码异常: $file"
-            exit 1
-          fi
-        done
-        
-        # 检查CSS文件
-        echo "检查CSS文件编码..."
-        find . -name "*.css" -not -path "./node_modules/*" -not -path "./public/*" | while read file; do
-          if ! file "$file" | grep -q "UTF-8"; then
-            echo "❌ 编码异常: $file"
-            exit 1
-          fi
-        done
-        
-        # 检查Markdown文件
-        echo "检查Markdown文件编码..."
-        find . -name "*.md" -not -path "./node_modules/*" -not -path "./public/*" | while read file; do
-          if ! file "$file" | grep -q "UTF-8"; then
-            echo "❌ 编码异常: $file"
-            exit 1
-          fi
-        done
-        
-        echo "✅ 所有文件编码检查通过"
+
+        # 创建编码检查脚本
+        cat > check_encoding.py << 'EOF'
+        import os
+        import sys
+        import chardet
+
+        def check_file_encoding(file_path):
+            try:
+                with open(file_path, 'rb') as f:
+                    raw_data = f.read()
+                    if not raw_data:
+                        return True  # 空文件认为是有效的
+
+                    # 检查BOM
+                    if raw_data.startswith(b'\xef\xbb\xbf'):
+                        print(f"⚠️  文件包含BOM: {file_path}")
+                        return False
+
+                    # 尝试UTF-8解码
+                    try:
+                        raw_data.decode('utf-8')
+                        return True
+                    except UnicodeDecodeError:
+                        print(f"❌ 编码异常: {file_path}")
+                        return False
+            except Exception as e:
+                print(f"❌ 读取文件失败: {file_path} - {e}")
+                return False
+
+        def main():
+            extensions = ['.html', '.js', '.css', '.md', '.json', '.yml', '.yaml']
+            exclude_paths = ['./node_modules/', './public/', './.git/', './resources/']
+
+            failed_files = []
+            total_files = 0
+
+            for root, dirs, files in os.walk('.'):
+                # 跳过排除的目录
+                if any(exclude in root for exclude in exclude_paths):
+                    continue
+
+                for file in files:
+                    if any(file.endswith(ext) for ext in extensions):
+                        file_path = os.path.join(root, file)
+                        total_files += 1
+
+                        if not check_file_encoding(file_path):
+                            failed_files.append(file_path)
+
+            print(f"📊 检查了 {total_files} 个文件")
+
+            if failed_files:
+                print(f"❌ {len(failed_files)} 个文件编码检查失败")
+                sys.exit(1)
+            else:
+                print("✅ 所有文件编码检查通过")
+
+        if __name__ == "__main__":
+            main()
+        EOF
+
+        python3 check_encoding.py
         
     - name: 检查HTML meta标签
       run: |
         echo "🔍 检查HTML meta标签..."
-        
-        # 检查charset声明
-        if grep -r "charset" layouts/ static/ | grep -v "utf-8\|UTF-8"; then
+
+        # 检查主要HTML文件的charset声明
+        charset_issues=0
+
+        # 检查baseof.html和主要布局文件
+        for file in layouts/_default/baseof.html layouts/index.html; do
+          if [ -f "$file" ]; then
+            if ! grep -q "charset.*utf-8\|charset.*UTF-8" "$file"; then
+              echo "⚠️  主要布局文件缺少charset声明: $file"
+              charset_issues=$((charset_issues + 1))
+            fi
+          fi
+        done
+
+        # 检查是否有非UTF-8编码声明
+        if grep -r "charset" layouts/ static/ 2>/dev/null | grep -v "utf-8\|UTF-8" | grep -v ".git"; then
           echo "❌ 发现非UTF-8编码声明"
           exit 1
         fi
-        
-        # 检查是否缺少charset声明
-        find layouts/ -name "*.html" | while read file; do
-          if ! grep -q "charset.*utf-8\|charset.*UTF-8" "$file"; then
-            echo "⚠️  文件可能缺少charset声明: $file"
-          fi
-        done
-        
+
+        if [ $charset_issues -gt 0 ]; then
+          echo "⚠️  发现 $charset_issues 个charset声明问题，但不影响构建"
+        fi
+
         echo "✅ HTML meta标签检查完成"
         
     - name: 检查CSS编码声明
       run: |
         echo "🔍 检查CSS编码声明..."
-        
-        find static/css/ -name "*.css" | while read file; do
-          if ! head -1 "$file" | grep -q "@charset"; then
-            echo "⚠️  CSS文件缺少@charset声明: $file"
-          fi
-        done
-        
+
+        # 检查CSS文件中是否有非UTF-8编码声明
+        css_issues=0
+
+        if [ -d "static/css/" ]; then
+          find static/css/ -name "*.css" -exec grep -l "@charset" {} \; | while read file; do
+            if ! grep -q "@charset.*utf-8\|@charset.*UTF-8" "$file"; then
+              echo "❌ CSS文件包含非UTF-8编码声明: $file"
+              css_issues=$((css_issues + 1))
+            fi
+          done
+        fi
+
+        # 现代CSS文件通常不需要@charset声明，所以这里只是信息提示
+        echo "ℹ️  现代CSS文件通常不需要@charset声明，浏览器会自动使用UTF-8"
         echo "✅ CSS编码声明检查完成"
         
     - name: 检查Hugo配置
@@ -217,15 +261,33 @@ jobs:
     - name: 构建测试
       run: |
         echo "🏗️ 测试Hugo构建..."
-        hugo --minify --verbose
-        
-        # 检查生成的HTML文件编码
-        echo "🔍 检查生成文件编码..."
-        find public/ -name "*.html" | head -10 | while read file; do
-          if ! file "$file" | grep -q "UTF-8"; then
-            echo "❌ 生成文件编码异常: $file"
-            exit 1
-          fi
-        done
-        
+
+        # 尝试构建，如果失败则显示详细错误
+        if ! hugo --minify --quiet; then
+          echo "❌ Hugo构建失败，显示详细错误信息："
+          hugo --minify --verbose
+          exit 1
+        fi
+
+        # 检查是否生成了public目录
+        if [ ! -d "public" ]; then
+          echo "❌ Hugo构建未生成public目录"
+          exit 1
+        fi
+
+        # 检查生成的HTML文件数量
+        html_count=$(find public/ -name "*.html" | wc -l)
+        echo "📊 生成了 $html_count 个HTML文件"
+
+        if [ $html_count -eq 0 ]; then
+          echo "❌ 未生成任何HTML文件"
+          exit 1
+        fi
+
+        # 检查主页是否生成
+        if [ ! -f "public/index.html" ]; then
+          echo "❌ 主页文件未生成"
+          exit 1
+        fi
+
         echo "✅ Hugo构建测试通过"

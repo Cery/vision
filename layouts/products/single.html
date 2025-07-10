@@ -371,10 +371,20 @@
 // 防止重复初始化的标记
 let isInitialized = false;
 let pageViewsElement;
-// 从data属性获取页面信息
-const pageData = document.getElementById('page-data');
-const currentPath = pageData.dataset.currentPath;
-const pageTitle = pageData.dataset.pageTitle;
+// 页面信息变量
+let currentPath = '';
+let pageTitle = '';
+
+// 获取页面信息的函数
+function getPageData() {
+    const pageData = document.getElementById('page-data');
+    if (pageData) {
+        currentPath = pageData.dataset.currentPath;
+        pageTitle = pageData.dataset.pageTitle;
+        return true;
+    }
+    return false;
+}
 
 // LeanCloud配置
 const LC_APP_ID = 'pUEgNUJ66pc7S4FqVpqxkTkx-MdYXbMMI';
@@ -386,7 +396,14 @@ function initPageViews() {
         console.log('页面访问统计已初始化，跳过重复初始化');
         return;
     }
-    
+
+    // 获取页面数据
+    if (!getPageData()) {
+        console.error('无法获取页面数据，延迟重试');
+        setTimeout(initPageViews, 500);
+        return;
+    }
+
     pageViewsElement = document.getElementById('page-views');
     if (!pageViewsElement) {
         console.log('未找到页面访问统计元素');
@@ -395,7 +412,7 @@ function initPageViews() {
 
     console.log('初始化页面访问统计, 路径:', currentPath);
     isInitialized = true;
-    
+
     // 只使用LeanCloud直接API方式，避免Valine冲突
     initLeanCloudViews();
 }
