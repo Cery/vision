@@ -288,7 +288,14 @@
                             {{ with .Params.data_download }}
                             <ul class="list-unstyled">
                                 {{ range . }}
-                                <li><a href="{{ .file_path | relURL }}" target="_blank">{{ .file_title }}</a></li>
+                                <li>
+                                    <a href="{{ .file_path | relURL }}"
+                                       target="_blank"
+                                       class="download-link"
+                                       data-file-path="{{ .file_path }}">
+                                        <i class="fas fa-download me-2"></i>{{ .file_title }}
+                                    </a>
+                                </li>
                                 {{ end }}
                             </ul>
                             {{ else }}
@@ -954,6 +961,80 @@ document.addEventListener('DOMContentLoaded', function() {
                 callNowBtn.href = 'tel:' + cleanPhone;
             }
         });
+    }
+
+    // 处理文件下载链接和图片显示
+    document.addEventListener('DOMContentLoaded', function() {
+        // 处理产品图片显示
+        const productImages = document.querySelectorAll('img[src*="/images/products/"]');
+        productImages.forEach(img => {
+            const originalSrc = img.src;
+            const fileName = originalSrc.split('/').pop();
+            const imageKey = `product_image_${fileName}`;
+            const storedImage = localStorage.getItem(imageKey);
+
+            if (storedImage) {
+                console.log(`📷 从本地存储加载产品图片: ${fileName}`);
+                img.src = storedImage;
+            }
+        });
+
+        const downloadLinks = document.querySelectorAll('.download-link');
+
+        downloadLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                const filePath = this.getAttribute('data-file-path');
+
+                // 检查是否是本地存储的文件
+                if (filePath && filePath.includes('/uploads/products/')) {
+                    const fileName = filePath.split('/').pop();
+                    const fileKey = `product_file_${fileName}`;
+                    const storedFile = localStorage.getItem(fileKey);
+
+                    if (storedFile) {
+                        e.preventDefault(); // 阻止默认链接行为
+
+                        try {
+                            const fileData = JSON.parse(storedFile);
+                            console.log(`📁 从本地存储下载文件: ${fileName}`);
+
+                            // 创建下载链接
+                            const blob = dataURLtoBlob(fileData.data);
+                            const url = URL.createObjectURL(blob);
+
+                            // 创建临时下载链接
+                            const tempLink = document.createElement('a');
+                            tempLink.href = url;
+                            tempLink.download = fileData.originalName || fileName;
+                            document.body.appendChild(tempLink);
+                            tempLink.click();
+                            document.body.removeChild(tempLink);
+
+                            // 清理URL对象
+                            setTimeout(() => URL.revokeObjectURL(url), 100);
+
+                        } catch (error) {
+                            console.error('下载文件失败:', error);
+                            // 如果解析失败，使用原始链接
+                            window.open(filePath, '_blank');
+                        }
+                    }
+                }
+            });
+        });
+    });
+
+    // 将dataURL转换为Blob的辅助函数
+    function dataURLtoBlob(dataURL) {
+        const arr = dataURL.split(',');
+        const mime = arr[0].match(/:(.*?);/)[1];
+        const bstr = atob(arr[1]);
+        let n = bstr.length;
+        const u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], { type: mime });
     }
 });
 </script>

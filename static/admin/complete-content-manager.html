@@ -2915,7 +2915,7 @@ date: ${data.date}
             }
         }
 
-        // 保存文件到uploads目录
+        // 保存文件到uploads目录（简化版本）
         async function saveFileToUploads(file, productModel) {
             try {
                 console.log(`📁 保存文件到uploads: ${file.name}`);
@@ -2932,32 +2932,52 @@ date: ${data.date}
                     .replace(/^_|_$/g, '');   // 移除开头和结尾的下划线
 
                 const fileName = `${baseFileName}_${timestamp}_${randomId}.${extension}`;
-                const filePath = `/uploads/${fileName}`;
+                const filePath = `/uploads/products/${fileName}`;
 
                 console.log(`📝 生成安全文件名: ${file.name} -> ${fileName}`);
 
-                // 尝试保存到实际文件系统
-                const saveSuccess = await saveFileToFileSystem(file, fileName);
+                // 将文件保存到localStorage（作为base64）
+                const reader = new FileReader();
+                const base64Data = await new Promise((resolve, reject) => {
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
 
-                if (saveSuccess) {
-                    console.log(`✅ 文件已保存到文件系统: ${filePath}`);
+                // 保存到localStorage
+                const fileKey = `product_file_${fileName}`;
+                const fileData = {
+                    name: file.name,
+                    originalName: file.name,
+                    type: file.type,
+                    size: file.size,
+                    data: base64Data,
+                    path: filePath,
+                    timestamp: timestamp
+                };
 
-                    // 验证文件是否可访问
-                    try {
-                        const response = await fetch(filePath);
-                        if (response.ok) {
-                            console.log(`✅ 文件验证成功: ${filePath}`);
-                            return filePath;
-                        }
-                    } catch (verifyError) {
-                        console.log(`⚠️ 文件验证失败，使用降级方案`);
-                    }
-                }
+                localStorage.setItem(fileKey, JSON.stringify(fileData));
+                console.log(`✅ 文件已保存到本地存储: ${fileName}`);
 
-                // 降级方案：创建可访问的文件URL
-                console.log(`🔄 使用降级方案保存文件: ${fileName}`);
-                const accessibleUrl = await createAccessibleFileUrl(file, fileName, filePath);
-                return accessibleUrl || filePath;
+                // 添加到全局媒体库
+                const mediaItem = {
+                    id: `file-${timestamp}`,
+                    name: fileName,
+                    originalName: file.name,
+                    type: 'file',
+                    category: '产品资料',
+                    size: formatFileSize(file.size),
+                    url: filePath,
+                    uploadDate: new Date().toISOString().split('T')[0],
+                    source: 'upload'
+                };
+
+                // 添加到媒体库数据
+                let mediaLibraryData = JSON.parse(localStorage.getItem('mediaLibraryData') || '[]');
+                mediaLibraryData.push(mediaItem);
+                localStorage.setItem('mediaLibraryData', JSON.stringify(mediaLibraryData));
+
+                return filePath;
 
             } catch (error) {
                 console.error('保存文件到uploads失败:', error);
@@ -3574,8 +3594,8 @@ PowerShell脚本已下载: save-${fileName.replace('.md', '')}.ps1
                 const imageKey = `product_image_${fileName}`;
                 localStorage.setItem(imageKey, base64Data);
 
-                // 返回可访问的路径
-                const imagePath = `/static/images/products/${fileName}`;
+                // 返回可访问的路径（Hugo静态文件路径）
+                const imagePath = `/images/products/${fileName}`;
 
                 // 创建一个虚拟的图片URL，实际显示时会从localStorage读取
                 console.log(`📁 图片已保存到本地存储: ${fileName}`);
@@ -4357,7 +4377,7 @@ PowerShell脚本已下载: save-${fileName.replace('.md', '')}.ps1
         // 获取图片显示URL（处理本地存储的图片）
         function getImageDisplayUrl(imagePath) {
             // 如果是产品图片路径，尝试从localStorage获取
-            if (imagePath && imagePath.includes('/static/images/products/')) {
+            if (imagePath && (imagePath.includes('/images/products/') || imagePath.includes('/static/images/products/'))) {
                 const fileName = imagePath.split('/').pop();
                 const imageKey = `product_image_${fileName}`;
                 const storedImage = localStorage.getItem(imageKey);
@@ -4370,6 +4390,46 @@ PowerShell脚本已下载: save-${fileName.replace('.md', '')}.ps1
 
             // 其他情况返回原路径
             return imagePath;
+        }
+
+        // 获取文件下载URL（处理本地存储的文件）
+        function getFileDownloadUrl(filePath) {
+            // 如果是产品文件路径，尝试从localStorage获取
+            if (filePath && filePath.includes('/uploads/products/')) {
+                const fileName = filePath.split('/').pop();
+                const fileKey = `product_file_${fileName}`;
+                const storedFile = localStorage.getItem(fileKey);
+
+                if (storedFile) {
+                    try {
+                        const fileData = JSON.parse(storedFile);
+                        console.log(`📁 从本地存储加载文件: ${fileName}`);
+
+                        // 创建下载链接
+                        const blob = dataURLtoBlob(fileData.data);
+                        const url = URL.createObjectURL(blob);
+                        return url;
+                    } catch (e) {
+                        console.error('解析文件数据失败:', e);
+                    }
+                }
+            }
+
+            // 返回原路径
+            return filePath;
+        }
+
+        // 将dataURL转换为Blob
+        function dataURLtoBlob(dataURL) {
+            const arr = dataURL.split(',');
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new Blob([u8arr], { type: mime });
         }
 
         // 图库管理功能
@@ -4895,7 +4955,7 @@ PowerShell脚本已下载: save-${fileName.replace('.md', '')}.ps1
                 // 生成文件名
                 const timestamp = Date.now();
                 const fileName = `${editorType}-image-${timestamp}.png`;
-                const mediaPath = `/static/images/products/${fileName}`;
+                const mediaPath = `/images/products/${fileName}`;
 
                 console.log(`📤 上传base64图片到媒体库: ${fileName}`);
 
@@ -4941,7 +5001,7 @@ PowerShell脚本已下载: save-${fileName.replace('.md', '')}.ps1
                 // 生成文件名
                 const timestamp = Date.now();
                 const fileName = `${editorType}-image-${timestamp}.jpg`;
-                const mediaPath = `/static/images/products/${fileName}`;
+                const mediaPath = `/images/products/${fileName}`;
 
                 console.log(`📤 上传blob图片到媒体库: ${fileName}`);
 
@@ -5067,8 +5127,8 @@ PowerShell脚本已下载: save-${fileName.replace('.md', '')}.ps1
 
                 // 并行加载images和uploads目录
                 const [imagesData, uploadsData] = await Promise.all([
-                    loadDirectoryFiles('/static/images'),
-                    loadDirectoryFiles('/static/uploads')
+                    loadDirectoryFiles('/images'),
+                    loadDirectoryFiles('/uploads')
                 ]);
 
                 const allFiles = [...imagesData, ...uploadsData];
@@ -5647,19 +5707,19 @@ PowerShell脚本已下载: save-${fileName.replace('.md', '')}.ps1
             // 模拟添加产品图片到图库
             const mockImages = [
                 {
-                    url: '/static/images/products/vf-8500-main.jpg',
+                    url: '/images/products/vf-8500-main.jpg',
                     name: 'VF-8500主图',
                     alt: 'VF-8.5mm柔性光纤内窥镜主图',
                     isMain: true
                 },
                 {
-                    url: '/static/images/products/vf-8500-detail1.jpg',
+                    url: '/images/products/vf-8500-detail1.jpg',
                     name: 'VF-8500细节图1',
                     alt: '探头细节图',
                     isMain: false
                 },
                 {
-                    url: '/static/images/products/vf-8500-detail2.jpg',
+                    url: '/images/products/vf-8500-detail2.jpg',
                     name: 'VF-8500细节图2',
                     alt: '手柄细节图',
                     isMain: false
@@ -6725,7 +6785,7 @@ PowerShell脚本已下载: save-${fileName.replace('.md', '')}.ps1
                                 // 生成正确的媒体库路径
                                 const timestamp = Date.now() + imgIndex;
                                 const fileName = `product-${product.id}-${timestamp}.jpg`;
-                                const mediaPath = `/static/images/products/${fileName}`;
+                                const mediaPath = `/images/products/${fileName}`;
 
                                 img.image = mediaPath;
                                 fixedCount++;
@@ -8744,7 +8804,7 @@ PowerShell脚本已下载: save-${fileName.replace('.md', '')}.ps1
                             const images = node.tagName === 'IMG' ? [node] : node.querySelectorAll('img');
                             images.forEach(function(img) {
                                 // 如果是产品图片路径，尝试从localStorage加载
-                                if (img.src && img.src.includes('/static/images/products/')) {
+                                if (img.src && (img.src.includes('/images/products/') || img.src.includes('/static/images/products/'))) {
                                     const displayUrl = getImageDisplayUrl(img.src);
                                     if (displayUrl !== img.src) {
                                         img.src = displayUrl;
