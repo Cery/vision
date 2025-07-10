@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>浏览次数测试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .result {
+            background: #f5f5f5;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 3px;
+        }
+        .error {
+            background: #ffebee;
+            color: #c62828;
+        }
+        .success {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+        button {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #1565c0;
+        }
+    </style>
+</head>
+<body>
+    <h1>浏览次数功能测试</h1>
+    
+    <div class="test-section">
+        <h2>当前页面浏览次数</h2>
+        <p>浏览次数: <span id="page-views">加载中...</span></p>
+        <button onclick="testPageViews()">测试浏览次数</button>
+        <button onclick="clearResults()">清除结果</button>
+        <div id="test-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>LeanCloud API 连接测试</h2>
+        <button onclick="testLeanCloudConnection()">测试连接</button>
+        <div id="connection-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>调试信息</h2>
+        <div id="debug-info"></div>
+    </div>
+
+    <script>
+        // LeanCloud配置
+        const LC_APP_ID = 'pUEgNUJ66pc7S4FqVpqxkTkx-MdYXbMMI';
+        const LC_APP_KEY = 'K9OXRf3L6Zp0s6TEzJElWQ5r';
+        
+        // 页面信息
+        const currentPath = '/test-pageviews.html';
+        const pageTitle = '浏览次数测试页面';
+        
+        let pageViewsElement;
+        
+        function log(message, type = 'info') {
+            const debugInfo = document.getElementById('debug-info');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = `result ${type}`;
+            logEntry.innerHTML = `[${timestamp}] ${message}`;
+            debugInfo.appendChild(logEntry);
+            console.log(message);
+        }
+        
+        function clearResults() {
+            document.getElementById('test-results').innerHTML = '';
+            document.getElementById('connection-results').innerHTML = '';
+            document.getElementById('debug-info').innerHTML = '';
+        }
+        
+        function testLeanCloudConnection() {
+            log('开始测试LeanCloud连接...');
+            const url = 'https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter';
+            
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'X-LC-Id': LC_APP_ID,
+                    'X-LC-Key': LC_APP_KEY,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                log(`HTTP状态: ${response.status} ${response.statusText}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                log('LeanCloud连接成功!', 'success');
+                log(`返回数据: ${JSON.stringify(data, null, 2)}`);
+                document.getElementById('connection-results').innerHTML = 
+                    '<div class="result success">✓ LeanCloud API连接正常</div>';
+            })
+            .catch(error => {
+                log(`LeanCloud连接失败: ${error.message}`, 'error');
+                document.getElementById('connection-results').innerHTML = 
+                    `<div class="result error">✗ 连接失败: ${error.message}</div>`;
+            });
+        }
+        
+        function testPageViews() {
+            log('开始测试浏览次数功能...');
+            pageViewsElement = document.getElementById('page-views');
+            
+            if (!pageViewsElement) {
+                log('未找到page-views元素', 'error');
+                return;
+            }
+            
+            initLeanCloudViews();
+        }
+        
+        function initLeanCloudViews() {
+            const url = 'https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter';
+            
+            log(`查询URL: ${currentPath}`);
+            
+            const queryUrl = url + '?where=' + encodeURIComponent(JSON.stringify({url: currentPath}));
+            log(`完整查询URL: ${queryUrl}`);
+            
+            fetch(queryUrl, {
+                method: 'GET',
+                headers: {
+                    'X-LC-Id': LC_APP_ID,
+                    'X-LC-Key': LC_APP_KEY,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                log(`查询响应状态: ${response.status}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                log(`查询结果: ${JSON.stringify(data, null, 2)}`);
+                if (data.results && data.results.length > 0) {
+                    const record = data.results[0];
+                    const currentViews = record.time || 0;
+                    
+                    log(`当前浏览次数: ${currentViews}`, 'success');
+                    pageViewsElement.textContent = currentViews.toString();
+                    
+                    const newViews = currentViews + 1;
+                    log(`准备更新为: ${newViews}`);
+                    updateCounter(record.objectId, newViews);
+                } else {
+                    log('未找到记录，创建新记录');
+                    createCounter();
+                }
+            })
+            .catch(error => {
+                log(`查询失败: ${error.message}`, 'error');
+                pageViewsElement.textContent = '0';
+                document.getElementById('test-results').innerHTML = 
+                    `<div class="result error">查询失败: ${error.message}</div>`;
+            });
+        }
+        
+        function createCounter() {
+            const url = 'https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter';
+            
+            log('创建新的计数器记录');
+            pageViewsElement.textContent = '1';
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-LC-Id': LC_APP_ID,
+                    'X-LC-Key': LC_APP_KEY,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    url: currentPath,
+                    title: pageTitle,
+                    time: 1,
+                    createdAt: new Date().toISOString()
+                })
+            })
+            .then(response => {
+                log(`创建响应状态: ${response.status}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                log(`创建成功: ${JSON.stringify(data, null, 2)}`, 'success');
+                document.getElementById('test-results').innerHTML = 
+                    '<div class="result success">✓ 计数器创建成功，浏览次数: 1</div>';
+            })
+            .catch(error => {
+                log(`创建失败: ${error.message}`, 'error');
+                document.getElementById('test-results').innerHTML = 
+                    `<div class="result error">创建失败: ${error.message}</div>`;
+            });
+        }
+        
+        function updateCounter(objectId, views) {
+            const url = `https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter/${objectId}`;
+            
+            log(`更新计数器 ID: ${objectId}, 新值: ${views}`);
+            
+            fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'X-LC-Id': LC_APP_ID,
+                    'X-LC-Key': LC_APP_KEY,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    time: views,
+                    updatedAt: new Date().toISOString()
+                })
+            })
+            .then(response => {
+                log(`更新响应状态: ${response.status}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                log(`更新成功: ${JSON.stringify(data, null, 2)}`, 'success');
+                pageViewsElement.textContent = views.toString();
+                document.getElementById('test-results').innerHTML = 
+                    `<div class="result success">✓ 浏览次数更新成功: ${views}</div>`;
+            })
+            .catch(error => {
+                log(`更新失败: ${error.message}`, 'error');
+                document.getElementById('test-results').innerHTML = 
+                    `<div class="result error">更新失败: ${error.message}</div>`;
+            });
+        }
+        
+        // 页面加载时自动测试
+        window.addEventListener('load', function() {
+            log('页面加载完成，开始自动测试');
+            setTimeout(() => {
+                testLeanCloudConnection();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

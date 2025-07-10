@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeanCloud 连接测试工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            background: #fafafa;
+        }
+        .result {
+            background: #f5f5f5;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #ccc;
+        }
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            border-left-color: #f44336;
+        }
+        .success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border-left-color: #4caf50;
+        }
+        .warning {
+            background: #fff3e0;
+            color: #ef6c00;
+            border-left-color: #ff9800;
+        }
+        button {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #1565c0;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .config-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .step {
+            margin: 15px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+        .step h4 {
+            margin: 0 0 10px 0;
+            color: #1976d2;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 LeanCloud 连接测试工具</h1>
+        
+        <div class="config-info">
+            <h3>当前配置信息</h3>
+            <p><strong>App ID:</strong> pUEgNUJ66pc7S4FqVpqxkTkx-MdYXbMMI</p>
+            <p><strong>App Key:</strong> K9OXRf3L6Zp0s6TEzJElWQ5r</p>
+            <p><strong>API 节点:</strong> lncldglobal.com (国际版)</p>
+        </div>
+
+        <div class="test-section">
+            <h2>🌐 网络连接测试</h2>
+            <button onclick="testConnection()">测试连接</button>
+            <button onclick="testAllNodes()">测试所有节点</button>
+            <button onclick="clearResults()">清除结果</button>
+            <div id="connection-results"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📊 数据操作测试</h2>
+            <button onclick="testDataOperations()">测试数据操作</button>
+            <div id="data-results"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔧 解决方案</h2>
+            <div id="solutions"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📋 详细日志</h2>
+            <button onclick="clearLogs()">清除日志</button>
+            <div id="debug-logs"></div>
+        </div>
+    </div>
+
+    <script>
+        const LC_APP_ID = 'pUEgNUJ66pc7S4FqVpqxkTkx-MdYXbMMI';
+        const LC_APP_KEY = 'K9OXRf3L6Zp0s6TEzJElWQ5r';
+        
+        const API_NODES = [
+            { name: '国际版', url: 'https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter' },
+            { name: '国内版', url: 'https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncld.net/1.1/classes/Counter' },
+            { name: '华东节点', url: 'https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldapi.com/1.1/classes/Counter' }
+        ];
+
+        function log(message, type = 'info') {
+            const debugLogs = document.getElementById('debug-logs');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = `result ${type}`;
+            logEntry.innerHTML = `[${timestamp}] ${message}`;
+            debugLogs.appendChild(logEntry);
+            console.log(message);
+        }
+
+        function clearResults() {
+            document.getElementById('connection-results').innerHTML = '';
+            document.getElementById('data-results').innerHTML = '';
+            document.getElementById('solutions').innerHTML = '';
+        }
+
+        function clearLogs() {
+            document.getElementById('debug-logs').innerHTML = '';
+        }
+
+        function showSolutions(workingNode = null) {
+            const solutions = document.getElementById('solutions');
+            
+            if (workingNode) {
+                solutions.innerHTML = `
+                    <div class="result success">
+                        <h4>✅ 找到可用节点：${workingNode.name}</h4>
+                        <p>建议更新代码中的API地址：</p>
+                        <pre>const url = '${workingNode.url}';</pre>
+                    </div>
+                `;
+            } else {
+                solutions.innerHTML = `
+                    <div class="result error">
+                        <h4>❌ 所有LeanCloud节点都无法访问</h4>
+                    </div>
+                    <div class="step">
+                        <h4>解决方案1：检查网络和防火墙</h4>
+                        <p>• 检查网络连接是否正常</p>
+                        <p>• 检查防火墙是否阻止了HTTPS请求</p>
+                        <p>• 尝试使用VPN或代理</p>
+                    </div>
+                    <div class="step">
+                        <h4>解决方案2：检查LeanCloud配置</h4>
+                        <p>• 登录LeanCloud控制台检查应用状态</p>
+                        <p>• 确认App ID和App Key是否正确</p>
+                        <p>• 检查域名白名单设置</p>
+                    </div>
+                    <div class="step">
+                        <h4>解决方案3：使用替代统计服务</h4>
+                        <p>• 不蒜子统计（已集成备用方案）</p>
+                        <p>• Google Analytics</p>
+                        <p>• 百度统计</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function testConnection() {
+            const results = document.getElementById('connection-results');
+            results.innerHTML = '<div class="result">正在测试连接...</div>';
+            
+            log('开始测试LeanCloud连接');
+            
+            try {
+                const response = await fetch(API_NODES[0].url, {
+                    method: 'GET',
+                    headers: {
+                        'X-LC-Id': LC_APP_ID,
+                        'X-LC-Key': LC_APP_KEY,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                log(`响应状态: ${response.status} ${response.statusText}`);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    results.innerHTML = `
+                        <div class="result success">
+                            ✅ 连接成功！<br>
+                            状态码: ${response.status}<br>
+                            返回数据: ${JSON.stringify(data, null, 2)}
+                        </div>
+                    `;
+                    log('LeanCloud连接测试成功', 'success');
+                    showSolutions(API_NODES[0]);
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                results.innerHTML = `
+                    <div class="result error">
+                        ❌ 连接失败<br>
+                        错误信息: ${error.message}
+                    </div>
+                `;
+                log(`连接失败: ${error.message}`, 'error');
+                showSolutions();
+            }
+        }
+
+        async function testAllNodes() {
+            const results = document.getElementById('connection-results');
+            results.innerHTML = '<div class="result">正在测试所有节点...</div>';
+            
+            log('开始测试所有LeanCloud节点');
+            
+            let workingNode = null;
+            let resultsHtml = '';
+
+            for (const node of API_NODES) {
+                try {
+                    log(`测试节点: ${node.name} - ${node.url}`);
+                    
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 10000);
+                    
+                    const response = await fetch(node.url, {
+                        method: 'GET',
+                        headers: {
+                            'X-LC-Id': LC_APP_ID,
+                            'X-LC-Key': LC_APP_KEY,
+                            'Content-Type': 'application/json'
+                        },
+                        signal: controller.signal
+                    });
+
+                    clearTimeout(timeoutId);
+
+                    if (response.ok) {
+                        resultsHtml += `
+                            <div class="result success">
+                                ✅ ${node.name} - 连接成功 (${response.status})
+                            </div>
+                        `;
+                        if (!workingNode) workingNode = node;
+                        log(`${node.name} 连接成功`, 'success');
+                    } else {
+                        resultsHtml += `
+                            <div class="result error">
+                                ❌ ${node.name} - 连接失败 (${response.status})
+                            </div>
+                        `;
+                        log(`${node.name} 连接失败: ${response.status}`, 'error');
+                    }
+                } catch (error) {
+                    resultsHtml += `
+                        <div class="result error">
+                            ❌ ${node.name} - ${error.message}
+                        </div>
+                    `;
+                    log(`${node.name} 连接异常: ${error.message}`, 'error');
+                }
+            }
+
+            results.innerHTML = resultsHtml;
+            showSolutions(workingNode);
+        }
+
+        async function testDataOperations() {
+            const results = document.getElementById('data-results');
+            results.innerHTML = '<div class="result">正在测试数据操作...</div>';
+            
+            log('开始测试数据操作');
+            
+            try {
+                // 测试查询
+                const queryUrl = API_NODES[0].url + '?limit=1';
+                const response = await fetch(queryUrl, {
+                    method: 'GET',
+                    headers: {
+                        'X-LC-Id': LC_APP_ID,
+                        'X-LC-Key': LC_APP_KEY,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    results.innerHTML = `
+                        <div class="result success">
+                            ✅ 数据查询成功<br>
+                            返回记录数: ${data.results ? data.results.length : 0}<br>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                    log('数据操作测试成功', 'success');
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                results.innerHTML = `
+                    <div class="result error">
+                        ❌ 数据操作失败<br>
+                        错误信息: ${error.message}
+                    </div>
+                `;
+                log(`数据操作失败: ${error.message}`, 'error');
+            }
+        }
+
+        // 页面加载时自动运行基础测试
+        window.addEventListener('load', function() {
+            log('LeanCloud测试工具加载完成');
+            setTimeout(testConnection, 1000);
+        });
+    </script>
+</body>
+</html>

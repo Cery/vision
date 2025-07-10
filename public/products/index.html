@@ -7,7 +7,29 @@
     
     
     <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="维森视觉检测仪器">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1976d2">
+<meta name="msapplication-TileColor" content="#1976d2">
+<meta name="msapplication-navbutton-color" content="#1976d2">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="browsermode" content="application">
+<meta name="x5-orientation" content="portrait">
+<meta name="x5-fullscreen" content="true">
+<meta name="x5-page-mode" content="app">
+<meta name="screen-orientation" content="portrait">
+<meta name="full-screen" content="yes">
+<meta name="imagemode" content="force">
+<meta name="wap-font-scale" content="no">
+<meta name="HandheldFriendly" content="true">
+<meta http-equiv="cleartype" content="on">
+<meta http-equiv="x-ua-compatible" content="IE=edge">
+<meta name="renderer" content="webkit">
+<meta name="force-rendering" content="webkit">
 
 
 
@@ -142,6 +164,10 @@
 
 <link href="/css/custom.css" rel="stylesheet">
 <link href="/css/news-filters.css" rel="stylesheet">
+
+<link href="/css/mobile-optimization.css" rel="stylesheet">
+
+<link href="/css/browser-compatibility.css" rel="stylesheet">
 
 <style>
      
@@ -1014,6 +1040,9 @@
 <script src="/js/search.js"></script>
 <script src="/js/search-modal.js"></script>
 
+
+<script src="/js/mobile-optimization.js"></script>
+
 <link rel="stylesheet" href="/css/image-utils.css">
 
 
@@ -1356,13 +1385,13 @@
                                 <span class="badge bg-primary me-2">一级分类</span>
                                 <small class="text-muted">选择产品主要类别</small>
                             </div>
-                            <div class="category-primary bg-gradient p-3 rounded-3 border-2 border-primary">
-                                <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <div class="category-primary bg-gradient p-2 p-md-3 rounded-3 border-2 border-primary">
+                                <div class="d-flex flex-wrap gap-1 gap-md-2 align-items-center justify-content-center justify-content-md-start">
                                     
                                     
 
-                                    <a href="http://localhost:1313/products" class="btn btn-lg btn-primary fw-bold shadow-sm primary-btn active">
-                                        <i class="fas fa-home me-1"></i>全部分类
+                                    <a href="http://localhost:1313/products" class="btn btn-sm btn-md-lg btn-primary fw-bold shadow-sm primary-btn active">
+                                        <i class="fas fa-home me-1"></i><span class="d-none d-sm-inline">全部</span>分类
                                     </a>
 
                                     
@@ -1486,9 +1515,9 @@
                                         
                                         
                                         
-                                            <a href='http://localhost:1313/products?primary_category=%e7%94%b5%e5%ad%90%e5%86%85%e7%aa%a5%e9%95%9c' class="btn btn-lg btn-outline-primary fw-bold shadow-sm primary-btn ">
-                                                <i class="fas fa-folder me-1"></i>电子内窥镜
-                                                <span class="badge bg-light text-dark ms-1">28</span>
+                                            <a href='http://localhost:1313/products?primary_category=%e7%94%b5%e5%ad%90%e5%86%85%e7%aa%a5%e9%95%9c' class="btn btn-sm btn-md-lg btn-outline-primary fw-bold shadow-sm primary-btn ">
+                                                <i class="fas fa-folder me-1"></i><span class="category-text">电子内窥镜</span>
+                                                <span class="badge bg-light text-dark ms-1 d-none d-sm-inline">28</span>
                                             </a>
                                         
                                     
@@ -4664,7 +4693,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业管道内窥镜"
              data-screen-size="5英寸高清显示屏"
@@ -4877,7 +4906,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="5英寸高清显示屏"
@@ -5090,7 +5119,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="5英寸高清显示屏"
@@ -5303,7 +5332,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="5英寸高清显示屏"
@@ -5516,7 +5545,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="5英寸高清显示屏"
@@ -5729,7 +5758,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="5英寸高清显示屏"
@@ -5942,7 +5971,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="5英寸高清显示屏"
@@ -6155,7 +6184,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="5英寸高清显示屏"
@@ -6368,7 +6397,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="5英寸高清显示屏"
@@ -6581,7 +6610,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="5英寸高清显示屏"
@@ -6794,7 +6823,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="5英寸高清显示屏"
@@ -7007,7 +7036,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="5英寸高清显示屏"
@@ -7220,7 +7249,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="5英寸高清显示屏"
@@ -7433,7 +7462,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="5英寸高清显示屏"
@@ -7646,7 +7675,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="6英寸"
@@ -7861,7 +7890,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="6英寸"
@@ -8074,7 +8103,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="6英寸"
@@ -8287,7 +8316,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="6英寸"
@@ -8500,7 +8529,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="6英寸"
@@ -8713,7 +8742,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="6英寸"
@@ -8926,7 +8955,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="6英寸"
@@ -9139,7 +9168,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="6英寸"
@@ -9352,7 +9381,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="6英寸"
@@ -9565,7 +9594,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="6英寸"
@@ -9778,7 +9807,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="6英寸"
@@ -9991,7 +10020,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="6英寸"
@@ -10204,7 +10233,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="6英寸"
@@ -10417,7 +10446,7 @@
             
         
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="电子内窥镜"
              data-secondary-category="工业视频内窥镜"
              data-screen-size="6英寸"

@@ -20,13 +20,13 @@
                                 <span class="badge bg-primary me-2">一级分类</span>
                                 <small class="text-muted">选择产品主要类别</small>
                             </div>
-                            <div class="category-primary bg-gradient p-3 rounded-3 border-2 border-primary">
-                                <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <div class="category-primary bg-gradient p-2 p-md-3 rounded-3 border-2 border-primary">
+                                <div class="d-flex flex-wrap gap-1 gap-md-2 align-items-center justify-content-center justify-content-md-start">
                                     {{ $currentPrimaryCategory := "" }}
                                     {{ $currentSecondaryCategory := "" }}
 
-                                    <a href="{{ "products" | absURL }}" class="btn btn-lg btn-primary fw-bold shadow-sm primary-btn {{ if not $currentPrimaryCategory }}active{{ end }}">
-                                        <i class="fas fa-home me-1"></i>全部分类
+                                    <a href="{{ "products" | absURL }}" class="btn btn-sm btn-md-lg btn-primary fw-bold shadow-sm primary-btn {{ if not $currentPrimaryCategory }}active{{ end }}">
+                                        <i class="fas fa-home me-1"></i><span class="d-none d-sm-inline">全部</span>分类
                                     </a>
 
                                     {{ $allProducts := where .Site.RegularPages "Type" "products" }}
@@ -42,9 +42,9 @@
                                         {{ $category := . }}
                                         {{ $productsInCategory := where $allProducts "Params.primary_category" $category }}
                                         {{ if gt (len $productsInCategory) 0 }}
-                                            <a href='{{ printf "products?primary_category=%s" . | absURL }}' class="btn btn-lg btn-outline-primary fw-bold shadow-sm primary-btn {{ if eq $currentPrimaryCategory . }}active{{ end }}">
-                                                <i class="fas fa-folder me-1"></i>{{ . }}
-                                                <span class="badge bg-light text-dark ms-1">{{ len $productsInCategory }}</span>
+                                            <a href='{{ printf "products?primary_category=%s" . | absURL }}' class="btn btn-sm btn-md-lg btn-outline-primary fw-bold shadow-sm primary-btn {{ if eq $currentPrimaryCategory . }}active{{ end }}">
+                                                <i class="fas fa-folder me-1"></i><span class="category-text">{{ . }}</span>
+                                                <span class="badge bg-light text-dark ms-1 d-none d-sm-inline">{{ len $productsInCategory }}</span>
                                             </a>
                                         {{ end }}
                                     {{ end }}
@@ -245,7 +245,7 @@
             {{ if eq .name "导向" }}{{ $guidance = .value }}{{ end }}
         {{ end }}
 
-        <div class="col-md-6 col-lg-4 mb-4 product-item"
+        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
              data-primary-category="{{ .Params.primary_category }}"
              data-secondary-category="{{ .Params.secondary_category }}"
              data-screen-size="{{ $screenSize }}"
