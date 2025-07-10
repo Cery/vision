@@ -1291,11 +1291,29 @@ a:focus {
     margin-bottom: 2rem;
 }
 
+/* 搜索历史区域布局 */
+.search-history-section {
+    position: relative;
+}
+
+/* 搜索历史头部布局 */
+.search-history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.search-history-title {
+    flex: 1;
+}
+
 .search-history-section h6,
 .search-hot-keywords-section h6 {
     color: var(--text-color);
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
     display: flex;
     align-items: center;
 }
@@ -1308,6 +1326,37 @@ a:focus {
     background: var(--primary-color);
     margin-right: 0.5rem;
     border-radius: 2px;
+}
+
+/* 清除历史按钮样式 */
+.clear-history-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    padding: 0.375rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.clear-history-btn:hover {
+    background: var(--danger-color, #dc3545);
+    border-color: var(--danger-color, #dc3545);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+}
+
+.clear-history-btn:active {
+    transform: translateY(0);
 }
 
 .search-history-item {

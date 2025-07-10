@@ -163,45 +163,107 @@
                     <p>GitHub 内容管理允许您直接通过 GitHub 仓库编辑网站内容。所有更改都会自动同步到网站，并且支持版本控制和协作编辑。</p>
                 </div>
 
+                <div class="github-action" style="border: 3px solid #28a745;">
+                    <div class="icon" style="background: linear-gradient(135deg, #28a745, #20c997); color: white;">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <h4>本地版 GitHub CMS <span style="background: #28a745; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; margin-left: 8px;">推荐开发使用</span></h4>
+                    <p><strong>适用场景：</strong>个人开发、内容创作<br>
+                       <strong>特色功能：</strong>实时预览、离线编辑、自动保存、快速响应<br>
+                       <strong>使用条件：</strong>需要本地Hugo环境 (localhost:1313)</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; margin: 10px 0; font-size: 14px;">
+                        ✅ 实时预览效果 &nbsp;&nbsp; ✅ 离线工作 &nbsp;&nbsp; ✅ 无网络延迟 &nbsp;&nbsp; ✅ 文件直接操作
+                    </div>
+                    <a href="github-cms-local.html" class="btn" style="background: #28a745; border-color: #28a745;">
+                        <i class="fas fa-desktop me-2"></i>打开本地版CMS
+                    </a>
+                </div>
+
+                <div class="github-action" style="border: 3px solid #007bff;">
+                    <div class="icon" style="background: linear-gradient(135deg, #007bff, #0056b3); color: white;">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <h4>在线版 GitHub CMS <span style="background: #007bff; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; margin-left: 8px;">推荐团队协作</span></h4>
+                    <p><strong>适用场景：</strong>团队协作、远程管理、多人编辑<br>
+                       <strong>特色功能：</strong>GitHub同步、版本控制、多设备访问、协作编辑<br>
+                       <strong>使用条件：</strong>需要GitHub Token认证，网络连接</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; margin: 10px 0; font-size: 14px;">
+                        ✅ 随时随地访问 &nbsp;&nbsp; ✅ 团队协作 &nbsp;&nbsp; ✅ 版本控制 &nbsp;&nbsp; ✅ 自动同步
+                    </div>
+                    <a href="github-auth.html" class="btn" style="background: #007bff; border-color: #007bff;">
+                        <i class="fas fa-cloud me-2"></i>打开在线版CMS
+                    </a>
+                </div>
+
                 <div class="github-action">
                     <div class="icon">
                         <i class="fab fa-github"></i>
                     </div>
-                    <h4>访问 GitHub 仓库</h4>
-                    <p>直接访问 GitHub 仓库，在线编辑内容文件。支持 Markdown 编辑、文件上传和版本控制。</p>
+                    <h4>直接访问 GitHub</h4>
+                    <p>直接访问 GitHub 仓库进行高级操作，适合熟悉Git的用户。</p>
                     <a href="https://github.com/Cery/vision" target="_blank" class="btn">
                         <i class="fab fa-github me-2"></i>打开 GitHub 仓库
                     </a>
                 </div>
 
-                <div class="github-action">
-                    <div class="icon">
-                        <i class="fas fa-edit"></i>
-                    </div>
-                    <h4>在线编辑内容</h4>
-                    <p>使用 GitHub 的在线编辑器直接修改内容文件，支持实时预览和语法高亮。</p>
-                    <a href="https://github.com/Cery/vision/tree/main/content" target="_blank" class="btn">
-                        <i class="fas fa-edit me-2"></i>编辑内容文件
-                    </a>
-                </div>
-
-                <div class="github-action">
-                    <div class="icon">
-                        <i class="fas fa-upload"></i>
-                    </div>
-                    <h4>上传媒体文件</h4>
-                    <p>上传图片、文档等媒体文件到 GitHub 仓库，自动生成正确的文件路径。</p>
-                    <a href="https://github.com/Cery/vision/tree/main/static/images" target="_blank" class="btn">
-                        <i class="fas fa-upload me-2"></i>上传媒体文件
-                    </a>
-                </div>
-
                 <div class="info-box">
-                    <h5><i class="fas fa-lightbulb me-2"></i>使用提示</h5>
-                    <p>1. 编辑内容后，网站会在几分钟内自动更新<br>
-                       2. 支持 Markdown 语法，可以轻松格式化文本<br>
-                       3. 所有更改都有版本记录，可以随时回滚<br>
-                       4. 可以邀请其他人协作编辑内容</p>
+                    <h5><i class="fas fa-lightbulb me-2"></i>版本对比选择指南</h5>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                            <thead>
+                                <tr style="background: #f8f9fa;">
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: left;">功能特性</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center; color: #28a745;">本地版CMS</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center; color: #007bff;">在线版CMS</th>
+                                    <th style="padding: 12px; border: 1px solid #dee2e6; text-align: center; color: #6c757d;">直接GitHub</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #dee2e6;"><strong>访问方式</strong></td>
+                                    <td style="padding: 10px; border: 1px solid #dee2e6; text-align: center;">localhost:1313</td>
+                                    <td style="padding: 10px; border: 1px solid #dee2e6; text-align: center;">任何网址</td>
+                                    <td style="padding: 10px; border: 1px solid #dee2e6; text-align: center;">github.com</td>
+                                </tr>
+                                <tr style="background: #f8f9fa;">
+                                    <td style="padding: 10px; border: 1px solid #dee2e6;"><strong>实时预览</strong></td>
+                                    <td style="padding: 10px; border: 1px solid #dee2e6; text-align: center;">✅ 即时</td>
+                                    <td style="padding: 10px; border: 1px solid #dee2e6; text-align: center;">⚡ 延迟2-5分钟</td>
+                                    <td style="padding: 10px; border: 1px solid #dee2e6; text-align: center;">❌ 无预览</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #dee2e6;"><strong>离线编辑</strong></td>
+                                    <td style="padding: 10px; border: 1px solid #dee2e6; text-align: center;">✅ 完全支持</td>
+                                    <td style="padding: 10px; border: 1px solid #dee2e6; text-align: center;">❌ 需要网络</td>
+                                    <td style="padding: 10px; border: 1px solid #dee2e6; text-align: center;">❌ 需要网络</td>
+                                </tr>
+                                <tr style="background: #f8f9fa;">
+                                    <td style="padding: 10px; border: 1px solid #dee2e6;"><strong>多人协作</strong></td>
+                                    <td style="padding: 10px; border: 1px solid #dee2e6; text-align: center;">❌ 单用户</td>
+                                    <td style="padding: 10px; border: 1px solid #dee2e6; text-align: center;">✅ 多用户</td>
+                                    <td style="padding: 10px; border: 1px solid #dee2e6; text-align: center;">✅ 多用户</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #dee2e6;"><strong>设备要求</strong></td>
+                                    <td style="padding: 10px; border: 1px solid #dee2e6; text-align: center;">需要Hugo环境</td>
+                                    <td style="padding: 10px; border: 1px solid #dee2e6; text-align: center;">任何浏览器</td>
+                                    <td style="padding: 10px; border: 1px solid #dee2e6; text-align: center;">任何浏览器</td>
+                                </tr>
+                                <tr style="background: #f8f9fa;">
+                                    <td style="padding: 10px; border: 1px solid #dee2e6;"><strong>学习成本</strong></td>
+                                    <td style="padding: 10px; border: 1px solid #dee2e6; text-align: center;">⭐⭐ 简单</td>
+                                    <td style="padding: 10px; border: 1px solid #dee2e6; text-align: center;">⭐⭐ 简单</td>
+                                    <td style="padding: 10px; border: 1px solid #dee2e6; text-align: center;">⭐⭐⭐⭐ 复杂</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="margin-top: 15px; padding: 10px; background: #e7f3ff; border-radius: 6px;">
+                        <strong>💡 推荐使用场景：</strong><br>
+                        🏠 <strong>个人开发</strong> → 本地版CMS (实时预览，快速响应)<br>
+                        👥 <strong>团队协作</strong> → 在线版CMS (多人编辑，随时访问)<br>
+                        🔧 <strong>高级操作</strong> → 直接GitHub (版本管理，分支操作)
+                    </div>
                 </div>
 
                 <div class="text-center mt-4">

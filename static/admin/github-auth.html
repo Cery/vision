@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub CMS 登录 - VisNDT</title>
+    <link href="css/github-cms-common.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .auth-header {
+            background: linear-gradient(135deg, var(--github-dark) 0%, var(--github-secondary) 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .auth-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .auth-header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .auth-body {
+            padding: 40px 30px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--github-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--github-border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--github-primary);
+            box-shadow: 0 0 0 3px rgba(3, 102, 214, 0.1);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--github-primary) 0%, #0256cc 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(3, 102, 214, 0.3);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .help-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--github-light);
+            border-radius: 8px;
+        }
+
+        .help-section h4 {
+            margin: 0 0 15px 0;
+            color: var(--github-dark);
+            font-size: 1.1rem;
+        }
+
+        .help-section ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .help-section li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .help-section a {
+            color: var(--github-primary);
+            text-decoration: none;
+        }
+
+        .help-section a:hover {
+            text-decoration: underline;
+        }
+
+        .security-note {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .security-note i {
+            color: #856404;
+            margin-right: 8px;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                margin: 0 10px;
+            }
+            
+            .auth-header {
+                padding: 30px 20px;
+            }
+            
+            .auth-body {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">
+        <i class="fas fa-arrow-left mr-2"></i>返回
+    </a>
+
+    <div class="auth-container">
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="text-center">
+                <div class="loading mb-2"></div>
+                <div>验证中...</div>
+            </div>
+        </div>
+
+        <div class="auth-header">
+            <h1><i class="fab fa-github mr-3"></i>GitHub CMS</h1>
+            <p>安全登录到内容管理系统</p>
+        </div>
+
+        <div class="auth-body">
+            <form id="authForm">
+                <div class="form-group">
+                    <label class="form-label" for="githubToken">
+                        <i class="fas fa-key mr-2"></i>GitHub Personal Access Token
+                    </label>
+                    <input 
+                        type="password" 
+                        id="githubToken" 
+                        class="form-control" 
+                        placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <i class="fas fa-sign-in-alt mr-2"></i>登录
+                </button>
+            </form>
+
+            <div class="help-section">
+                <h4><i class="fas fa-question-circle mr-2"></i>如何获取 GitHub Token？</h4>
+                <ol>
+                    <li>访问 <a href="https://github.com/settings/tokens" target="_blank">GitHub Settings → Developer settings</a></li>
+                    <li>点击 "Personal access tokens" → "Tokens (classic)"</li>
+                    <li>点击 "Generate new token" → "Generate new token (classic)"</li>
+                    <li>设置 Token 名称和过期时间</li>
+                    <li>选择权限：<strong>repo</strong> (完整仓库访问权限)</li>
+                    <li>点击 "Generate token" 并复制生成的 Token</li>
+                    <li>将 Token 粘贴到上方输入框中</li>
+                </ol>
+            </div>
+
+            <div class="security-note">
+                <i class="fas fa-shield-alt"></i>
+                <strong>安全提示：</strong>您的 Token 将被加密存储在本地浏览器中，不会发送到任何第三方服务器。Token 仅用于访问您的 GitHub 仓库。
+            </div>
+        </div>
+    </div>
+
+    <script src="js/github-api.js"></script>
+    <script src="js/cms-utils.js"></script>
+    <script>
+        // 认证系统
+        class AuthSystem {
+            constructor() {
+                this.githubAPI = new GitHubAPI();
+                this.init();
+            }
+
+            init() {
+                // 检查是否已经登录
+                this.checkExistingAuth();
+                
+                // 绑定表单事件
+                document.getElementById('authForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleLogin();
+                });
+
+                // Token输入框事件
+                document.getElementById('githubToken').addEventListener('input', (e) => {
+                    this.validateTokenFormat(e.target.value);
+                });
+            }
+
+            checkExistingAuth() {
+                const token = StorageUtils.get('github_token');
+                if (token) {
+                    // 验证现有Token
+                    this.verifyAndRedirect(token);
+                }
+            }
+
+            validateTokenFormat(token) {
+                const tokenPattern = /^ghp_[a-zA-Z0-9]{36}$/;
+                const isValid = tokenPattern.test(token);
+                
+                const input = document.getElementById('githubToken');
+                const button = document.getElementById('loginBtn');
+                
+                if (token.length > 0 && !isValid) {
+                    input.style.borderColor = var('--github-danger');
+                    button.disabled = true;
+                } else {
+                    input.style.borderColor = var('--github-border');
+                    button.disabled = false;
+                }
+            }
+
+            async handleLogin() {
+                const token = document.getElementById('githubToken').value.trim();
+                
+                if (!token) {
+                    notify.error('请输入 GitHub Token');
+                    return;
+                }
+
+                this.showLoading(true);
+
+                try {
+                    // 验证Token
+                    const result = await this.verifyToken(token);
+                    
+                    if (result.valid) {
+                        // 存储Token
+                        this.storeToken(token);
+                        
+                        // 存储用户信息
+                        StorageUtils.set('github_user', result.user, 24 * 60 * 60 * 1000); // 24小时
+                        
+                        notify.success('登录成功！正在跳转...');
+                        
+                        // 跳转到管理页面
+                        setTimeout(() => {
+                            window.location.href = 'github-cms-online.html';
+                        }, 1000);
+                        
+                    } else {
+                        throw new Error(result.error);
+                    }
+                    
+                } catch (error) {
+                    this.showLoading(false);
+                    notify.error('登录失败: ' + error.message);
+                }
+            }
+
+            async verifyToken(token) {
+                this.githubAPI.setToken(token);
+                return await this.githubAPI.verifyToken();
+            }
+
+            async verifyAndRedirect(token) {
+                try {
+                    const result = await this.verifyToken(token);
+                    if (result.valid) {
+                        // Token仍然有效，直接跳转
+                        window.location.href = 'github-cms-online.html';
+                    } else {
+                        // Token无效，清除存储
+                        this.clearAuth();
+                    }
+                } catch (error) {
+                    console.log('Token验证失败，需要重新登录');
+                    this.clearAuth();
+                }
+            }
+
+            storeToken(token) {
+                // 简单的加密存储（实际项目中应使用更强的加密）
+                const encrypted = btoa(token);
+                StorageUtils.set('github_token', encrypted, 24 * 60 * 60 * 1000); // 24小时过期
+            }
+
+            clearAuth() {
+                StorageUtils.remove('github_token');
+                StorageUtils.remove('github_user');
+            }
+
+            showLoading(show) {
+                const overlay = document.getElementById('loadingOverlay');
+                const button = document.getElementById('loginBtn');
+                
+                if (show) {
+                    overlay.classList.add('show');
+                    button.disabled = true;
+                } else {
+                    overlay.classList.remove('show');
+                    button.disabled = false;
+                }
+            }
+        }
+
+        // 初始化认证系统
+        document.addEventListener('DOMContentLoaded', function() {
+            new AuthSystem();
+        });
+
+        // 键盘快捷键
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                document.getElementById('authForm').dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+</body>
+</html>

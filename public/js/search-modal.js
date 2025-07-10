@@ -397,10 +397,17 @@
             if (history.length > 0) {
                 historySectionHtml = `
                     <div class="search-history-section">
-                        <h6>
-                            <i class="fas fa-history me-2"></i>
-                            搜索历史
-                        </h6>
+                        <div class="search-history-header">
+                            <div class="search-history-title">
+                                <h6>
+                                    <i class="fas fa-history me-2"></i>
+                                    搜索历史
+                                </h6>
+                            </div>
+                            <button id="clearHistoryBtn" class="clear-history-btn">
+                                <i class="fas fa-trash me-1"></i>清除所有历史
+                            </button>
+                        </div>
                         <div class="history-items">
                             ${history.map(query => `
                                 <div class="search-history-item" data-query="${escapeHTML(query)}">
@@ -410,11 +417,6 @@
                                     </button>
                                 </div>
                             `).join('')}
-                        </div>
-                        <div class="text-center mt-3">
-                            <button id="clearHistoryBtn">
-                                <i class="fas fa-trash me-1"></i>清除所有历史
-                            </button>
                         </div>
                     </div>
                 `;

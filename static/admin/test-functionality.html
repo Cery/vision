@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>功能测试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border-left: 4px solid #ccc;
+        }
+        .success {
+            background-color: #d4edda;
+            border-left-color: #28a745;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border-left-color: #dc3545;
+            color: #721c24;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border-left-color: #17a2b8;
+            color: #0c5460;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .iframe-container {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 后台管理功能测试</h1>
+    
+    <div class="test-section">
+        <h2>📋 测试清单</h2>
+        <div id="testResults">
+            <div class="test-result info">准备开始测试...</div>
+        </div>
+        <button onclick="runAllTests()">运行所有测试</button>
+        <button onclick="clearResults()">清除结果</button>
+        <button onclick="openAdminPage()">打开管理页面</button>
+    </div>
+
+    <div class="test-section">
+        <h2>🖥️ 管理页面预览</h2>
+        <div class="iframe-container">
+            <iframe src="/admin/complete-content-manager.html" id="adminFrame"></iframe>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🛠️ 问题解决方案</h2>
+        <div id="solutions">
+            <p>如果管理页面功能失效，请尝试以下解决方案：</p>
+            <ol>
+                <li><strong>清除浏览器缓存</strong> - 按 Ctrl+F5 强制刷新</li>
+                <li><strong>检查JavaScript控制台</strong> - 按 F12 查看错误信息</li>
+                <li><strong>重新加载页面</strong> - 完全关闭浏览器后重新打开</li>
+                <li><strong>检查网络连接</strong> - 确保CDN资源能正常加载</li>
+            </ol>
+        </div>
+        <button onclick="fixCommonIssues()">尝试修复常见问题</button>
+    </div>
+
+    <script>
+        let testResults = [];
+
+        function addTestResult(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            testResults.push({ message, type, timestamp });
+            updateTestDisplay();
+        }
+
+        function updateTestDisplay() {
+            const container = document.getElementById('testResults');
+            container.innerHTML = testResults.map(result => 
+                `<div class="test-result ${result.type}">
+                    [${result.timestamp}] ${result.message}
+                </div>`
+            ).join('');
+        }
+
+        function clearResults() {
+            testResults = [];
+            updateTestDisplay();
+        }
+
+        async function runAllTests() {
+            clearResults();
+            addTestResult('开始运行测试套件...', 'info');
+
+            // 测试1: 检查管理页面是否可访问
+            try {
+                const response = await fetch('/admin/complete-content-manager.html');
+                if (response.ok) {
+                    addTestResult('✅ 管理页面文件可访问', 'success');
+                } else {
+                    addTestResult('❌ 管理页面文件无法访问', 'error');
+                }
+            } catch (error) {
+                addTestResult('❌ 网络请求失败: ' + error.message, 'error');
+            }
+
+            // 测试2: 检查CDN资源
+            await testCDNResources();
+
+            // 测试3: 检查iframe加载
+            testIframeLoading();
+
+            // 测试4: 检查本地存储
+            testLocalStorage();
+
+            addTestResult('测试套件完成', 'info');
+        }
+
+        async function testCDNResources() {
+            const resources = [
+                'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
+                'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
+                'https://cdn.quilljs.com/1.3.6/quill.snow.css',
+                'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js',
+                'https://cdn.quilljs.com/1.3.6/quill.min.js'
+            ];
+
+            for (const resource of resources) {
+                try {
+                    const response = await fetch(resource, { method: 'HEAD' });
+                    if (response.ok) {
+                        addTestResult(`✅ CDN资源可用: ${resource.split('/').pop()}`, 'success');
+                    } else {
+                        addTestResult(`❌ CDN资源不可用: ${resource.split('/').pop()}`, 'error');
+                    }
+                } catch (error) {
+                    addTestResult(`❌ CDN资源检查失败: ${resource.split('/').pop()}`, 'error');
+                }
+            }
+        }
+
+        function testIframeLoading() {
+            const iframe = document.getElementById('adminFrame');
+            
+            iframe.onload = function() {
+                try {
+                    // 尝试访问iframe内容
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    if (iframeDoc && iframeDoc.title) {
+                        addTestResult('✅ 管理页面在iframe中正常加载', 'success');
+                        
+                        // 检查关键元素
+                        const sidebar = iframeDoc.querySelector('.sidebar');
+                        const mainContent = iframeDoc.querySelector('.main-content');
+                        
+                        if (sidebar && mainContent) {
+                            addTestResult('✅ 页面结构完整', 'success');
+                        } else {
+                            addTestResult('❌ 页面结构不完整', 'error');
+                        }
+                    } else {
+                        addTestResult('❌ 无法访问iframe内容', 'error');
+                    }
+                } catch (error) {
+                    addTestResult('❌ iframe内容检查失败: ' + error.message, 'error');
+                }
+            };
+
+            iframe.onerror = function() {
+                addTestResult('❌ iframe加载失败', 'error');
+            };
+        }
+
+        function testLocalStorage() {
+            try {
+                localStorage.setItem('test', 'value');
+                const value = localStorage.getItem('test');
+                localStorage.removeItem('test');
+                
+                if (value === 'value') {
+                    addTestResult('✅ 本地存储功能正常', 'success');
+                } else {
+                    addTestResult('❌ 本地存储功能异常', 'error');
+                }
+            } catch (error) {
+                addTestResult('❌ 本地存储不可用: ' + error.message, 'error');
+            }
+        }
+
+        function openAdminPage() {
+            window.open('/admin/complete-content-manager.html', '_blank');
+        }
+
+        function fixCommonIssues() {
+            addTestResult('尝试修复常见问题...', 'info');
+            
+            // 清除可能的缓存
+            if ('caches' in window) {
+                caches.keys().then(function(names) {
+                    for (let name of names) {
+                        caches.delete(name);
+                    }
+                    addTestResult('✅ 清除了Service Worker缓存', 'success');
+                });
+            }
+
+            // 重新加载iframe
+            const iframe = document.getElementById('adminFrame');
+            iframe.src = iframe.src;
+            addTestResult('✅ 重新加载了管理页面', 'success');
+
+            // 清除本地存储中可能的错误数据
+            try {
+                const keys = Object.keys(localStorage);
+                keys.forEach(key => {
+                    if (key.startsWith('admin_') || key.startsWith('content_')) {
+                        localStorage.removeItem(key);
+                    }
+                });
+                addTestResult('✅ 清除了相关本地存储数据', 'success');
+            } catch (error) {
+                addTestResult('❌ 清除本地存储失败: ' + error.message, 'error');
+            }
+
+            addTestResult('修复尝试完成，请刷新管理页面', 'info');
+        }
+
+        // 页面加载时自动运行基础测试
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                addTestResult('页面加载完成，可以开始测试', 'info');
+                // 自动运行基础测试
+                runAllTests();
+            }, 1000);
+        });
+
+        // 监听iframe加载
+        document.getElementById('adminFrame').addEventListener('load', function() {
+            addTestResult('管理页面iframe已加载', 'info');
+        });
+    </script>
+</body>
+</html>

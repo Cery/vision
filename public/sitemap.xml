@@ -5,7 +5,7 @@
   
   
   <url>
-    <loc>https://visndt.com/applications/aerospace/</loc>
+    <loc>http://localhost:1313/applications/aerospace/</loc>
     <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -18,7 +18,7 @@
   
   
   <url>
-    <loc>https://visndt.com/product_categories/electronic-endoscope/</loc>
+    <loc>http://localhost:1313/product_categories/electronic-endoscope/</loc>
     <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
@@ -31,7 +31,7 @@
   
   
   <url>
-    <loc>https://visndt.com/product_categories/electronic-endoscope/industrial-video-endoscope/</loc>
+    <loc>http://localhost:1313/product_categories/electronic-endoscope/industrial-video-endoscope/</loc>
     <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
@@ -44,7 +44,7 @@
   
   
   <url>
-    <loc>https://visndt.com/product_categories/fiber-endoscope/flexible-fiber/</loc>
+    <loc>http://localhost:1313/product_categories/fiber-endoscope/flexible-fiber/</loc>
     <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
@@ -57,7 +57,7 @@
   
   
   <url>
-    <loc>https://visndt.com/product_categories/optical-endoscope/rigid-optical/</loc>
+    <loc>http://localhost:1313/product_categories/optical-endoscope/rigid-optical/</loc>
     <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
@@ -70,7 +70,7 @@
   
   
   <url>
-    <loc>https://visndt.com/categories/industry-news/</loc>
+    <loc>http://localhost:1313/categories/industry-news/</loc>
     
     
     
@@ -83,7 +83,7 @@
   
   
   <url>
-    <loc>https://visndt.com/applications/energy/</loc>
+    <loc>http://localhost:1313/applications/energy/</loc>
     <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -96,7 +96,7 @@
   
   
   <url>
-    <loc>https://visndt.com/product_categories/electronic-endoscope/industrial-pipeline-endoscope/</loc>
+    <loc>http://localhost:1313/product_categories/electronic-endoscope/industrial-pipeline-endoscope/</loc>
     <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
@@ -109,7 +109,7 @@
   
   
   <url>
-    <loc>https://visndt.com/product_categories/fiber-endoscope/</loc>
+    <loc>http://localhost:1313/product_categories/fiber-endoscope/</loc>
     <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
@@ -122,7 +122,7 @@
   
   
   <url>
-    <loc>https://visndt.com/product_categories/optical-endoscope/flexible-optical/</loc>
+    <loc>http://localhost:1313/product_categories/optical-endoscope/flexible-optical/</loc>
     <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
@@ -135,7 +135,7 @@
   
   
   <url>
-    <loc>https://visndt.com/product_categories/fiber-endoscope/rigid-fiber/</loc>
+    <loc>http://localhost:1313/product_categories/fiber-endoscope/rigid-fiber/</loc>
     <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
@@ -148,7 +148,7 @@
   
   
   <url>
-    <loc>https://visndt.com/categories/exhibition-news/</loc>
+    <loc>http://localhost:1313/categories/exhibition-news/</loc>
     
     
     
@@ -161,7 +161,7 @@
   
   
   <url>
-    <loc>https://visndt.com/applications/automotive/</loc>
+    <loc>http://localhost:1313/applications/automotive/</loc>
     <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -174,7 +174,7 @@
   
   
   <url>
-    <loc>https://visndt.com/product_categories/optical-endoscope/</loc>
+    <loc>http://localhost:1313/product_categories/optical-endoscope/</loc>
     <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
@@ -187,7 +187,7 @@
   
   
   <url>
-    <loc>https://visndt.com/product_categories/electronic-endoscope/crawler-robot/</loc>
+    <loc>http://localhost:1313/product_categories/electronic-endoscope/crawler-robot/</loc>
     <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
@@ -200,7 +200,7 @@
   
   
   <url>
-    <loc>https://visndt.com/categories/tech-news/</loc>
+    <loc>http://localhost:1313/categories/tech-news/</loc>
     
     
     
@@ -213,7 +213,7 @@
   
   
   <url>
-    <loc>https://visndt.com/applications/machinery/</loc>
+    <loc>http://localhost:1313/applications/machinery/</loc>
     <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -226,7 +226,7 @@
   
   
   <url>
-    <loc>https://visndt.com/categories/company-news/</loc>
+    <loc>http://localhost:1313/categories/company-news/</loc>
     
     
     
@@ -239,7 +239,7 @@
   
   
   <url>
-    <loc>https://visndt.com/applications/casting/</loc>
+    <loc>http://localhost:1313/applications/casting/</loc>
     <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -252,7 +252,7 @@
   
   
   <url>
-    <loc>https://visndt.com/applications/research/</loc>
+    <loc>http://localhost:1313/applications/research/</loc>
     <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -265,7 +265,7 @@
   
   
   <url>
-    <loc>https://visndt.com/product_categories/</loc>
+    <loc>http://localhost:1313/product_categories/</loc>
     <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
@@ -278,8 +278,34 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/</loc>
-    <lastmod>2025-06-15T12:00:00&#43;08:00</lastmod>
+    <loc>http://localhost:1313/products/1/</loc>
+    <lastmod>2025-07-10T14:10:16&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/1-gallery-1_1752156611660_tsmqec.jpg</image:loc>
+      <image:title>F -1.jpg</image:title>
+    </image:image>
+    
+    
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2025-07-10T14:10:16&#43;00:00</lastmod>
     
     
     
@@ -291,7 +317,74 @@
   
   
   <url>
-    <loc>https://visndt.com/products/model/</loc>
+    <loc>http://localhost:1313/products/</loc>
+    <lastmod>2025-07-10T14:10:16&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-07-10T14:10:16&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <lastmod>2025-07-10T14:10:16&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <lastmod>2025-07-10T14:10:16&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E6%9F%94%E6%80%A7%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <lastmod>2025-07-10T14:10:16&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/model/</loc>
     <lastmod>2025-06-15T12:00:00&#43;08:00</lastmod>
     
     
@@ -304,28 +397,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-main.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
       <image:title>WS-K1010工业内窥镜主图 - 1.0mm高清探头</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
       <image:title>WS-K1010 工业内窥镜 - 探头近景图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
       <image:title>WS-K1010 工业内窥镜 - 显示主机界面</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-3.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
       <image:title>WS-K1010 工业内窥镜 - 操作实拍</image:title>
     </image:image>
     
@@ -345,22 +438,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/</loc>
-    <lastmod>2025-06-15T12:00:00&#43;08:00</lastmod>
-    
-    
-    
-    
-
-    
-    
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>https://visndt.com/tags/%E9%AB%98%E6%B8%85%E6%88%90%E5%83%8F/</loc>
+    <loc>http://localhost:1313/tags/%E9%AB%98%E6%B8%85%E6%88%90%E5%83%8F/</loc>
     <lastmod>2025-06-15T12:00:00&#43;08:00</lastmod>
     
     
@@ -373,7 +451,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E8%88%AA%E7%A9%BA%E6%A3%80%E6%B5%8B/</loc>
+    <loc>http://localhost:1313/tags/%E8%88%AA%E7%A9%BA%E6%A3%80%E6%B5%8B/</loc>
     <lastmod>2025-06-15T12:00:00&#43;08:00</lastmod>
     
     
@@ -386,7 +464,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E5%8F%AF%E8%A7%86%E5%8C%96%E6%A3%80%E6%B5%8B/</loc>
+    <loc>http://localhost:1313/tags/%E5%8F%AF%E8%A7%86%E5%8C%96%E6%A3%80%E6%B5%8B/</loc>
     <lastmod>2025-06-15T12:00:00&#43;08:00</lastmod>
     
     
@@ -399,7 +477,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E5%BE%AE%E5%9E%8B%E6%8E%A2%E5%A4%B4/</loc>
+    <loc>http://localhost:1313/tags/%E5%BE%AE%E5%9E%8B%E6%8E%A2%E5%A4%B4/</loc>
     <lastmod>2025-06-15T12:00:00&#43;08:00</lastmod>
     
     
@@ -412,7 +490,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-k08510/</loc>
+    <loc>http://localhost:1313/products/ws-k08510/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -425,28 +503,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-main.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
       <image:title>WS-K08510工业内窥镜主图 - 0.85mm超细探头</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
       <image:title>WS-K08510 超细探头近景图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
       <image:title>WS-K08510 显示主机界面</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-3.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
       <image:title>WS-K08510 精密检测应用</image:title>
     </image:image>
     
@@ -459,7 +537,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-k09510/</loc>
+    <loc>http://localhost:1313/products/ws-k09510/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -472,28 +550,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-main.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
       <image:title>WS-K09510工业内窥镜主图 - 0.95mm超细探头</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
       <image:title>WS-K09510 超细探头细节图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
       <image:title>WS-K09510 显示主机界面</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-3.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
       <image:title>WS-K09510 微型机械检测应用</image:title>
     </image:image>
     
@@ -506,7 +584,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-k1010/</loc>
+    <loc>http://localhost:1313/products/ws-k1010/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -519,28 +597,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-main.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
       <image:title>WS-K1010工业内窥镜主图 - 1.0mm超细探头</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
       <image:title>WS-K1010 超细探头特写</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
       <image:title>WS-K1010 显示主机界面</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-3.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
       <image:title>WS-K1010 精密制造检测应用</image:title>
     </image:image>
     
@@ -553,7 +631,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-k1210/</loc>
+    <loc>http://localhost:1313/products/ws-k1210/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -566,28 +644,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-main.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
       <image:title>WS-K1210工业内窥镜主图 - 1.2mm超细探头</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
       <image:title>WS-K1210 超细探头特写</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
       <image:title>WS-K1210 显示主机界面</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-3.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
       <image:title>WS-K1210 精密机械检测应用</image:title>
     </image:image>
     
@@ -600,7 +678,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-k1510/</loc>
+    <loc>http://localhost:1313/products/ws-k1510/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -613,28 +691,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-main.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
       <image:title>WS-K1510工业内窥镜主图 - 1.5mm双向导向探头</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
       <image:title>WS-K1510 双向导向探头特写</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
       <image:title>WS-K1510 显示主机操作界面</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-3.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
       <image:title>WS-K1510 汽车制造检测应用</image:title>
     </image:image>
     
@@ -647,7 +725,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-k1810/</loc>
+    <loc>http://localhost:1313/products/ws-k1810/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -660,28 +738,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-main.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
       <image:title>WS-K1810工业内窥镜主图 - 1.8mm双向导向探头</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
       <image:title>WS-K1810 双向导向探头特写</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
       <image:title>WS-K1810 显示主机操作界面</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-3.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
       <image:title>WS-K1810 汽车发动机检测应用</image:title>
     </image:image>
     
@@ -694,7 +772,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-k2010/</loc>
+    <loc>http://localhost:1313/products/ws-k2010/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -707,28 +785,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-main.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
       <image:title>WS-K2010工业内窥镜主图 - 2mm无导向直视探头</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
       <image:title>WS-K2010 无导向探头特写</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
       <image:title>WS-K2010 显示主机操作界面</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-3.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
       <image:title>WS-K2010 管道检测应用</image:title>
     </image:image>
     
@@ -741,7 +819,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-k2210/</loc>
+    <loc>http://localhost:1313/products/ws-k2210/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -754,28 +832,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-main.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
       <image:title>WS-K2210工业内窥镜主图 - 2.2mm双向导向探头</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
       <image:title>WS-K2210 双向导向探头特写</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
       <image:title>WS-K2210 显示主机操作界面</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-3.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
       <image:title>WS-K2210 机械制造检测应用</image:title>
     </image:image>
     
@@ -788,7 +866,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-k2410/</loc>
+    <loc>http://localhost:1313/products/ws-k2410/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -801,28 +879,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-main.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
       <image:title>WS-K2410工业内窥镜主图 - 2.4mm双向导向探头</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
       <image:title>WS-K2410 双向导向探头特写</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
       <image:title>WS-K2410 显示主机操作界面</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-3.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
       <image:title>WS-K2410 质量控制检测应用</image:title>
     </image:image>
     
@@ -835,7 +913,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-k2810/</loc>
+    <loc>http://localhost:1313/products/ws-k2810/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -848,28 +926,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-main.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
       <image:title>WS-K2810工业内窥镜主图 - 2.8mm四方向导向探头</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
       <image:title>WS-K2810 四方向导向探头特写</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
       <image:title>WS-K2810 显示主机操作界面</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-3.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
       <image:title>WS-K2810 通用工业检测应用</image:title>
     </image:image>
     
@@ -882,7 +960,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-k3915/</loc>
+    <loc>http://localhost:1313/products/ws-k3915/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -895,28 +973,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-main.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
       <image:title>WS-K3915工业内窥镜主图 - 3.9mm四方向导向探头</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
       <image:title>WS-K3915 四方向导向探头特写</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
       <image:title>WS-K3915 显示主机操作界面</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-3.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
       <image:title>WS-K3915 石化管道检测应用</image:title>
     </image:image>
     
@@ -929,7 +1007,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-k6020/</loc>
+    <loc>http://localhost:1313/products/ws-k6020/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -942,28 +1020,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-main.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
       <image:title>WS-K6020工业内窥镜主图 - 6mm大直径超远景深探头</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
       <image:title>WS-K6020 大直径探头特写</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
       <image:title>WS-K6020 显示主机操作界面</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-3.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
       <image:title>WS-K6020 大型设备检测应用</image:title>
     </image:image>
     
@@ -976,7 +1054,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-k6030/</loc>
+    <loc>http://localhost:1313/products/ws-k6030/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -989,28 +1067,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-main.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
       <image:title>WS-K6030工业内窥镜主图 - 6mm大直径深度检测探头</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
       <image:title>WS-K6030 大直径探头特写</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
       <image:title>WS-K6030 显示主机操作界面</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-3.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
       <image:title>WS-K6030 大型设备检测应用</image:title>
     </image:image>
     
@@ -1023,7 +1101,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E6%A0%87%E5%87%86%E6%8E%A2%E5%A4%B4/</loc>
+    <loc>http://localhost:1313/tags/%E6%A0%87%E5%87%86%E6%8E%A2%E5%A4%B4/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1036,7 +1114,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E4%BA%A7%E5%93%81%E9%AA%8C%E8%AF%81/</loc>
+    <loc>http://localhost:1313/tags/%E4%BA%A7%E5%93%81%E9%AA%8C%E8%AF%81/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1049,7 +1127,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E8%B6%85%E7%BB%86%E6%8E%A2%E5%A4%B4/</loc>
+    <loc>http://localhost:1313/tags/%E8%B6%85%E7%BB%86%E6%8E%A2%E5%A4%B4/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1062,7 +1140,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E8%B6%85%E8%BF%9C%E6%99%AF%E6%B7%B1/</loc>
+    <loc>http://localhost:1313/tags/%E8%B6%85%E8%BF%9C%E6%99%AF%E6%B7%B1/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1075,7 +1153,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E8%88%B9%E8%88%B6%E6%A3%80%E6%9F%A5/</loc>
+    <loc>http://localhost:1313/tags/%E8%88%B9%E8%88%B6%E6%A3%80%E6%9F%A5/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1088,7 +1166,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E5%A4%A7%E5%9E%8B%E8%AE%BE%E5%A4%87/</loc>
+    <loc>http://localhost:1313/tags/%E5%A4%A7%E5%9E%8B%E8%AE%BE%E5%A4%87/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1101,7 +1179,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E5%A4%A7%E7%9B%B4%E5%BE%84%E6%8E%A2%E5%A4%B4/</loc>
+    <loc>http://localhost:1313/tags/%E5%A4%A7%E7%9B%B4%E5%BE%84%E6%8E%A2%E5%A4%B4/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1114,7 +1192,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E7%94%B5%E5%8A%9B%E6%A3%80%E6%B5%8B/</loc>
+    <loc>http://localhost:1313/tags/%E7%94%B5%E5%8A%9B%E6%A3%80%E6%B5%8B/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1127,7 +1205,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E7%94%B5%E5%AD%90%E6%A3%80%E6%B5%8B/</loc>
+    <loc>http://localhost:1313/tags/%E7%94%B5%E5%AD%90%E6%A3%80%E6%B5%8B/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1140,7 +1218,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E9%AB%98%E7%AB%AF%E5%88%B6%E9%80%A0/</loc>
+    <loc>http://localhost:1313/tags/%E9%AB%98%E7%AB%AF%E5%88%B6%E9%80%A0/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1153,7 +1231,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E9%AB%98%E7%B2%BE%E5%BA%A6%E6%A3%80%E6%B5%8B/</loc>
+    <loc>http://localhost:1313/tags/%E9%AB%98%E7%B2%BE%E5%BA%A6%E6%A3%80%E6%B5%8B/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1166,7 +1244,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E4%BF%AE/</loc>
+    <loc>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E4%BF%AE/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1179,7 +1257,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E5%B7%A5%E4%B8%9A%E5%88%B6%E9%80%A0/</loc>
+    <loc>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E5%88%B6%E9%80%A0/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1192,7 +1270,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E7%AE%A1%E9%81%93%E6%A3%80%E6%B5%8B/</loc>
+    <loc>http://localhost:1313/tags/%E7%AE%A1%E9%81%93%E6%A3%80%E6%B5%8B/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1205,7 +1283,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E7%AE%A1%E9%81%93%E6%A3%80%E6%9F%A5/</loc>
+    <loc>http://localhost:1313/tags/%E7%AE%A1%E9%81%93%E6%A3%80%E6%9F%A5/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1218,7 +1296,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E5%85%89%E5%AD%A6%E4%BB%AA%E5%99%A8/</loc>
+    <loc>http://localhost:1313/tags/%E5%85%89%E5%AD%A6%E4%BB%AA%E5%99%A8/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1231,7 +1309,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E8%88%AA%E7%A9%BA%E5%88%B6%E9%80%A0/</loc>
+    <loc>http://localhost:1313/tags/%E8%88%AA%E7%A9%BA%E5%88%B6%E9%80%A0/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1244,7 +1322,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E6%9C%BA%E6%A2%B0%E5%88%B6%E9%80%A0/</loc>
+    <loc>http://localhost:1313/tags/%E6%9C%BA%E6%A2%B0%E5%88%B6%E9%80%A0/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1257,7 +1335,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD/</loc>
+    <loc>http://localhost:1313/tags/%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1270,7 +1348,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E7%B2%BE%E5%AF%86%E7%94%B5%E5%AD%90/</loc>
+    <loc>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E7%94%B5%E5%AD%90/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1283,7 +1361,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E7%B2%BE%E5%AF%86%E6%9C%BA%E6%A2%B0/</loc>
+    <loc>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E6%9C%BA%E6%A2%B0/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1296,7 +1374,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E7%B2%BE%E5%AF%86%E6%A3%80%E6%B5%8B/</loc>
+    <loc>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E6%A3%80%E6%B5%8B/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1309,7 +1387,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E7%B2%BE%E5%AF%86%E5%88%B6%E9%80%A0/</loc>
+    <loc>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E5%88%B6%E9%80%A0/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1322,7 +1400,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E6%B1%BD%E8%BD%A6%E6%A3%80%E6%B5%8B/</loc>
+    <loc>http://localhost:1313/tags/%E6%B1%BD%E8%BD%A6%E6%A3%80%E6%B5%8B/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1335,7 +1413,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E6%B1%BD%E8%BD%A6%E5%88%B6%E9%80%A0/</loc>
+    <loc>http://localhost:1313/tags/%E6%B1%BD%E8%BD%A6%E5%88%B6%E9%80%A0/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1348,7 +1426,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E8%AE%BE%E5%A4%87%E6%A3%80%E6%B5%8B/</loc>
+    <loc>http://localhost:1313/tags/%E8%AE%BE%E5%A4%87%E6%A3%80%E6%B5%8B/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1361,7 +1439,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E8%AE%BE%E5%A4%87%E7%BB%B4%E6%8A%A4/</loc>
+    <loc>http://localhost:1313/tags/%E8%AE%BE%E5%A4%87%E7%BB%B4%E6%8A%A4/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1374,7 +1452,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E6%B7%B1%E5%BA%A6%E6%A3%80%E6%B5%8B/</loc>
+    <loc>http://localhost:1313/tags/%E6%B7%B1%E5%BA%A6%E6%A3%80%E6%B5%8B/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1387,7 +1465,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E7%9F%B3%E5%8C%96%E6%A3%80%E6%B5%8B/</loc>
+    <loc>http://localhost:1313/tags/%E7%9F%B3%E5%8C%96%E6%A3%80%E6%B5%8B/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1400,7 +1478,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E5%8F%8C%E5%90%91%E5%AF%BC%E5%90%91/</loc>
+    <loc>http://localhost:1313/tags/%E5%8F%8C%E5%90%91%E5%AF%BC%E5%90%91/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1413,7 +1491,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E5%9B%9B%E6%96%B9%E5%90%91%E5%AF%BC%E5%90%91/</loc>
+    <loc>http://localhost:1313/tags/%E5%9B%9B%E6%96%B9%E5%90%91%E5%AF%BC%E5%90%91/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1426,7 +1504,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E7%89%B9%E7%A7%8D%E6%A3%80%E6%B5%8B/</loc>
+    <loc>http://localhost:1313/tags/%E7%89%B9%E7%A7%8D%E6%A3%80%E6%B5%8B/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1439,7 +1517,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E9%80%9A%E7%94%A8%E5%B7%A5%E4%B8%9A/</loc>
+    <loc>http://localhost:1313/tags/%E9%80%9A%E7%94%A8%E5%B7%A5%E4%B8%9A/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1452,7 +1530,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E5%BE%AE%E7%94%B5%E5%AD%90%E6%A3%80%E6%9F%A5/</loc>
+    <loc>http://localhost:1313/tags/%E5%BE%AE%E7%94%B5%E5%AD%90%E6%A3%80%E6%9F%A5/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1465,7 +1543,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E5%BE%AE%E5%9E%8B%E6%9C%BA%E6%A2%B0/</loc>
+    <loc>http://localhost:1313/tags/%E5%BE%AE%E5%9E%8B%E6%9C%BA%E6%A2%B0/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1478,7 +1556,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E5%BE%AE%E5%9E%8B%E6%A3%80%E6%B5%8B/</loc>
+    <loc>http://localhost:1313/tags/%E5%BE%AE%E5%9E%8B%E6%A3%80%E6%B5%8B/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1491,7 +1569,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E6%97%A0%E5%AF%BC%E5%90%91/</loc>
+    <loc>http://localhost:1313/tags/%E6%97%A0%E5%AF%BC%E5%90%91/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1504,7 +1582,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E7%BB%86%E5%BE%84%E6%8E%A2%E5%A4%B4/</loc>
+    <loc>http://localhost:1313/tags/%E7%BB%86%E5%BE%84%E6%8E%A2%E5%A4%B4/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1517,7 +1595,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E5%8C%BB%E7%96%97%E5%99%A8%E6%A2%B0/</loc>
+    <loc>http://localhost:1313/tags/%E5%8C%BB%E7%96%97%E5%99%A8%E6%A2%B0/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1530,7 +1608,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E5%8C%BB%E7%96%97%E8%AE%BE%E5%A4%87/</loc>
+    <loc>http://localhost:1313/tags/%E5%8C%BB%E7%96%97%E8%AE%BE%E5%A4%87/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1543,7 +1621,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E7%9B%B4%E8%A7%86%E6%A3%80%E6%B5%8B/</loc>
+    <loc>http://localhost:1313/tags/%E7%9B%B4%E8%A7%86%E6%A3%80%E6%B5%8B/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1556,7 +1634,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E5%88%B6%E9%80%A0%E4%B8%9A/</loc>
+    <loc>http://localhost:1313/tags/%E5%88%B6%E9%80%A0%E4%B8%9A/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1569,7 +1647,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6/</loc>
+    <loc>http://localhost:1313/tags/%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1582,7 +1660,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E9%87%8D%E5%9E%8B%E6%9C%BA%E6%A2%B0/</loc>
+    <loc>http://localhost:1313/tags/%E9%87%8D%E5%9E%8B%E6%9C%BA%E6%A2%B0/</loc>
     <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
@@ -1595,7 +1673,7 @@
   
   
   <url>
-    <loc>https://visndt.com/new-products/</loc>
+    <loc>http://localhost:1313/new-products/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
@@ -1608,7 +1686,7 @@
   
   
   <url>
-    <loc>https://visndt.com/new-products/ultrasonic-ndt-2024/</loc>
+    <loc>http://localhost:1313/new-products/ultrasonic-ndt-2024/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
@@ -1621,7 +1699,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-k1210-a/</loc>
+    <loc>http://localhost:1313/products/ws-k1210-a/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
@@ -1634,28 +1712,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-main.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
       <image:title>主图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
       <image:title>工业内窥镜副图1</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
       <image:title>工业内窥镜副图2</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/K-series/K-3.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
       <image:title>工业内窥镜副图3</image:title>
     </image:image>
     
@@ -1675,7 +1753,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-p08510/</loc>
+    <loc>http://localhost:1313/products/ws-p08510/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
@@ -1688,28 +1766,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-MAIN.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-MAIN.jpg</image:loc>
       <image:title>WS-P08510高清工业视频内窥镜主图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
       <image:title>WS-P08510工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
       <image:title>WS-P08510工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-3.jpeg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-3.jpeg</image:loc>
       <image:title>WS-P08510工业内窥镜</image:title>
     </image:image>
     
@@ -1722,7 +1800,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-p09510/</loc>
+    <loc>http://localhost:1313/products/ws-p09510/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
@@ -1735,28 +1813,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-MAIN.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-MAIN.jpg</image:loc>
       <image:title>WS-P09510高清工业视频内窥镜主图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
       <image:title>WS-P09510工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
       <image:title>WS-P09510工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-3.jpeg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-3.jpeg</image:loc>
       <image:title>WS-P09510工业内窥镜</image:title>
     </image:image>
     
@@ -1769,7 +1847,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-p1010/</loc>
+    <loc>http://localhost:1313/products/ws-p1010/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
@@ -1782,28 +1860,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-MAIN.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-MAIN.jpg</image:loc>
       <image:title>WS-P1010高清工业视频内窥镜主图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
       <image:title>WS-P1010工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
       <image:title>WS-P1010工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-3.jpeg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-3.jpeg</image:loc>
       <image:title>WS-P1010工业内窥镜</image:title>
     </image:image>
     
@@ -1816,7 +1894,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-p1210/</loc>
+    <loc>http://localhost:1313/products/ws-p1210/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
@@ -1829,28 +1907,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-MAIN.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-MAIN.jpg</image:loc>
       <image:title>WS-P1210高清工业视频内窥镜主图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
       <image:title>WS-P1210工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
       <image:title>WS-P1210工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-3.jpeg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-3.jpeg</image:loc>
       <image:title>WS-P1210工业内窥镜</image:title>
     </image:image>
     
@@ -1863,7 +1941,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-p1510/</loc>
+    <loc>http://localhost:1313/products/ws-p1510/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
@@ -1876,28 +1954,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-MAIN.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-MAIN.jpg</image:loc>
       <image:title>WS-P1510高清工业视频内窥镜主图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
       <image:title>WS-P1510工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
       <image:title>WS-P1510工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-3.jpeg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-3.jpeg</image:loc>
       <image:title>WS-P1510工业内窥镜</image:title>
     </image:image>
     
@@ -1910,7 +1988,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-p1810/</loc>
+    <loc>http://localhost:1313/products/ws-p1810/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
@@ -1923,28 +2001,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-MAIN.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-MAIN.jpg</image:loc>
       <image:title>WS-P1810高清工业视频内窥镜主图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
       <image:title>WS-P1810工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
       <image:title>WS-P1810工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-3.jpeg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-3.jpeg</image:loc>
       <image:title>WS-P1810工业内窥镜</image:title>
     </image:image>
     
@@ -1957,7 +2035,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-p2010/</loc>
+    <loc>http://localhost:1313/products/ws-p2010/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
@@ -1970,28 +2048,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-MAIN.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-MAIN.jpg</image:loc>
       <image:title>WS-P2010高清工业视频内窥镜主图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
       <image:title>WS-P2010工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
       <image:title>WS-P2010工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-3.jpeg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-3.jpeg</image:loc>
       <image:title>WS-P2010工业内窥镜</image:title>
     </image:image>
     
@@ -2004,7 +2082,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-p2210/</loc>
+    <loc>http://localhost:1313/products/ws-p2210/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
@@ -2017,28 +2095,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-MAIN.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-MAIN.jpg</image:loc>
       <image:title>WS-P2210高清工业视频内窥镜主图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
       <image:title>WS-P2210工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
       <image:title>WS-P2210工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-3.jpeg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-3.jpeg</image:loc>
       <image:title>WS-P2210工业内窥镜</image:title>
     </image:image>
     
@@ -2051,7 +2129,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-p2410/</loc>
+    <loc>http://localhost:1313/products/ws-p2410/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
@@ -2064,28 +2142,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-MAIN.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-MAIN.jpg</image:loc>
       <image:title>WS-P2410高清工业视频内窥镜主图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
       <image:title>WS-P2410工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
       <image:title>WS-P2410工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-3.jpeg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-3.jpeg</image:loc>
       <image:title>WS-P2410工业内窥镜</image:title>
     </image:image>
     
@@ -2098,7 +2176,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-p2810/</loc>
+    <loc>http://localhost:1313/products/ws-p2810/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
@@ -2111,28 +2189,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-MAIN.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-MAIN.jpg</image:loc>
       <image:title>WS-P2810高清工业视频内窥镜主图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
       <image:title>WS-P2810工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
       <image:title>WS-P2810工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-3.jpeg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-3.jpeg</image:loc>
       <image:title>WS-P2810工业内窥镜</image:title>
     </image:image>
     
@@ -2145,7 +2223,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-p3915/</loc>
+    <loc>http://localhost:1313/products/ws-p3915/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
@@ -2158,28 +2236,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-MAIN.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-MAIN.jpg</image:loc>
       <image:title>WS-P3915高清工业视频内窥镜主图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
       <image:title>WS-P3915工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
       <image:title>WS-P3915工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-3.jpeg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-3.jpeg</image:loc>
       <image:title>WS-P3915工业内窥镜</image:title>
     </image:image>
     
@@ -2192,7 +2270,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-p6020/</loc>
+    <loc>http://localhost:1313/products/ws-p6020/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
@@ -2205,28 +2283,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-MAIN.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-MAIN.jpg</image:loc>
       <image:title>WS-P6020高清工业视频内窥镜主图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
       <image:title>WS-P6020工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
       <image:title>WS-P6020工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-3.jpeg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-3.jpeg</image:loc>
       <image:title>WS-P6020工业内窥镜</image:title>
     </image:image>
     
@@ -2239,7 +2317,7 @@
   
   
   <url>
-    <loc>https://visndt.com/products/ws-p6030/</loc>
+    <loc>http://localhost:1313/products/ws-p6030/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
@@ -2252,28 +2330,28 @@
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-MAIN.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-MAIN.jpg</image:loc>
       <image:title>WS-P6030高清工业视频内窥镜主图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
       <image:title>WS-P6030工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
       <image:title>WS-P6030工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>https://visndt.com/images/products/P60/P-3.jpeg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-3.jpeg</image:loc>
       <image:title>WS-P6030工业内窥镜</image:title>
     </image:image>
     
@@ -2286,7 +2364,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E7%B2%BE%E5%AF%86%E5%8C%BB%E7%96%97/</loc>
+    <loc>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E5%8C%BB%E7%96%97/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
@@ -2299,7 +2377,7 @@
   
   
   <url>
-    <loc>https://visndt.com/</loc>
+    <loc>http://localhost:1313/</loc>
     <lastmod>2025-01-01T00:00:00&#43;00:00</lastmod>
     
     
@@ -2312,7 +2390,7 @@
   
   
   <url>
-    <loc>https://visndt.com/news/exhibition-news-5/</loc>
+    <loc>http://localhost:1313/news/exhibition-news-5/</loc>
     <lastmod>2024-07-08T00:00:00&#43;00:00</lastmod>
     
     
@@ -2325,7 +2403,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <loc>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
     <lastmod>2024-07-08T00:00:00&#43;00:00</lastmod>
     
     
@@ -2338,7 +2416,7 @@
   
   
   <url>
-    <loc>https://visndt.com/categories/</loc>
+    <loc>http://localhost:1313/categories/</loc>
     <lastmod>2024-07-08T00:00:00&#43;00:00</lastmod>
     
     
@@ -2351,7 +2429,7 @@
   
   
   <url>
-    <loc>https://visndt.com/categories/%E5%B1%95%E4%BC%9A%E8%B5%84%E8%AE%AF/</loc>
+    <loc>http://localhost:1313/categories/%E5%B1%95%E4%BC%9A%E8%B5%84%E8%AE%AF/</loc>
     <lastmod>2024-07-08T00:00:00&#43;00:00</lastmod>
     
     
@@ -2364,7 +2442,7 @@
   
   
   <url>
-    <loc>https://visndt.com/news/</loc>
+    <loc>http://localhost:1313/news/</loc>
     <lastmod>2024-07-08T00:00:00&#43;00:00</lastmod>
     
     
@@ -2377,7 +2455,7 @@
   
   
   <url>
-    <loc>https://visndt.com/news/tech-article-1/</loc>
+    <loc>http://localhost:1313/news/tech-article-1/</loc>
     <lastmod>2024-03-22T00:00:00&#43;00:00</lastmod>
     
     
@@ -2390,7 +2468,7 @@
   
   
   <url>
-    <loc>https://visndt.com/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/</loc>
+    <loc>http://localhost:1313/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/</loc>
     <lastmod>2024-03-22T00:00:00&#43;00:00</lastmod>
     
     
@@ -2403,7 +2481,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96/</loc>
+    <loc>http://localhost:1313/tags/%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96/</loc>
     <lastmod>2024-03-22T00:00:00&#43;00:00</lastmod>
     
     
@@ -2416,7 +2494,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/</loc>
+    <loc>http://localhost:1313/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/</loc>
     <lastmod>2024-03-22T00:00:00&#43;00:00</lastmod>
     
     
@@ -2429,7 +2507,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/</loc>
+    <loc>http://localhost:1313/tags/%E6%8A%80%E6%9C%AF%E5%88%9B%E6%96%B0/</loc>
     <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -2442,7 +2520,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E6%8A%80%E6%9C%AF%E5%88%9B%E6%96%B0/</loc>
+    <loc>http://localhost:1313/news/industry-news-1/</loc>
     <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -2455,7 +2533,7 @@
   
   
   <url>
-    <loc>https://visndt.com/news/industry-news-1/</loc>
+    <loc>http://localhost:1313/categories/%E8%A1%8C%E4%B8%9A%E8%B5%84%E8%AE%AF/</loc>
     <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -2468,7 +2546,7 @@
   
   
   <url>
-    <loc>https://visndt.com/categories/%E8%A1%8C%E4%B8%9A%E8%B5%84%E8%AE%AF/</loc>
+    <loc>http://localhost:1313/applications/</loc>
     <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -2481,20 +2559,7 @@
   
   
   <url>
-    <loc>https://visndt.com/applications/</loc>
-    <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>https://visndt.com/cases/aviation-blade-inspection/</loc>
+    <loc>http://localhost:1313/cases/aviation-blade-inspection/</loc>
     <lastmod>2024-01-25T00:00:00&#43;00:00</lastmod>
     
     
@@ -2507,7 +2572,7 @@
   
   
   <url>
-    <loc>https://visndt.com/cases/</loc>
+    <loc>http://localhost:1313/cases/</loc>
     <lastmod>2024-01-25T00:00:00&#43;00:00</lastmod>
     
     
@@ -2520,7 +2585,7 @@
   
   
   <url>
-    <loc>https://visndt.com/cases/automotive-manufacturing/</loc>
+    <loc>http://localhost:1313/cases/automotive-manufacturing/</loc>
     <lastmod>2024-01-22T00:00:00&#43;00:00</lastmod>
     
     
@@ -2533,7 +2598,7 @@
   
   
   <url>
-    <loc>https://visndt.com/cases/wind-turbine-gearbox/</loc>
+    <loc>http://localhost:1313/cases/wind-turbine-gearbox/</loc>
     <lastmod>2024-01-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -2546,7 +2611,7 @@
   
   
   <url>
-    <loc>https://visndt.com/cases/gas-turbine-inspection/</loc>
+    <loc>http://localhost:1313/cases/gas-turbine-inspection/</loc>
     <lastmod>2024-01-18T00:00:00&#43;00:00</lastmod>
     
     
@@ -2559,7 +2624,7 @@
   
   
   <url>
-    <loc>https://visndt.com/cases/industrial-pipeline/</loc>
+    <loc>http://localhost:1313/cases/industrial-pipeline/</loc>
     <lastmod>2024-01-15T00:00:00&#43;00:00</lastmod>
     
     
@@ -2572,7 +2637,7 @@
   
   
   <url>
-    <loc>https://visndt.com/news/2024-01-15-industry-news-example/</loc>
+    <loc>http://localhost:1313/news/2024-01-15-industry-news-example/</loc>
     <lastmod>2024-01-15T00:00:00&#43;00:00</lastmod>
     
     
@@ -2585,7 +2650,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <loc>http://localhost:1313/cooperation/</loc>
     <lastmod>2024-01-15T00:00:00&#43;00:00</lastmod>
     
     
@@ -2598,7 +2663,7 @@
   
   
   <url>
-    <loc>https://visndt.com/cooperation/</loc>
+    <loc>http://localhost:1313/tags/%E6%99%BA%E8%83%BD%E8%AF%86%E5%88%AB/</loc>
     <lastmod>2024-01-15T00:00:00&#43;00:00</lastmod>
     
     
@@ -2611,20 +2676,7 @@
   
   
   <url>
-    <loc>https://visndt.com/tags/%E6%99%BA%E8%83%BD%E8%AF%86%E5%88%AB/</loc>
-    <lastmod>2024-01-15T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>https://visndt.com/categories/%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <loc>http://localhost:1313/categories/%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
     <lastmod>2023-12-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -2637,7 +2689,7 @@
   
   
   <url>
-    <loc>https://visndt.com/customs/</loc>
+    <loc>http://localhost:1313/customs/</loc>
     <lastmod>2023-12-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -2650,7 +2702,7 @@
   
   
   <url>
-    <loc>https://visndt.com/categories/%E7%AE%A1%E9%81%93%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <loc>http://localhost:1313/categories/%E7%AE%A1%E9%81%93%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
     <lastmod>2023-12-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -2663,7 +2715,7 @@
   
   
   <url>
-    <loc>https://visndt.com/categories/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <loc>http://localhost:1313/categories/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
     <lastmod>2023-12-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -2676,7 +2728,7 @@
   
   
   <url>
-    <loc>https://visndt.com/categories/%E5%85%89%E5%AD%A6%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <loc>http://localhost:1313/categories/%E5%85%89%E5%AD%A6%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
     <lastmod>2023-12-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -2689,7 +2741,7 @@
   
   
   <url>
-    <loc>https://visndt.com/categories/%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <loc>http://localhost:1313/categories/%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
     <lastmod>2023-12-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -2702,7 +2754,7 @@
   
   
   <url>
-    <loc>https://visndt.com/categories/%E7%88%AC%E8%A1%8C%E6%9C%BA%E5%99%A8%E4%BA%BA/</loc>
+    <loc>http://localhost:1313/categories/%E7%88%AC%E8%A1%8C%E6%9C%BA%E5%99%A8%E4%BA%BA/</loc>
     <lastmod>2023-12-20T00:00:00&#43;00:00</lastmod>
     
     
@@ -2715,7 +2767,7 @@
   
   
   <url>
-    <loc>https://visndt.com/12/</loc>
+    <loc>http://localhost:1313/12/</loc>
     
     
     
@@ -2728,7 +2780,7 @@
   
   
   <url>
-    <loc>https://visndt.com/product_types/</loc>
+    <loc>http://localhost:1313/product_types/</loc>
     
     
     
@@ -2741,7 +2793,7 @@
   
   
   <url>
-    <loc>https://visndt.com/product_types/portable_type/</loc>
+    <loc>http://localhost:1313/product_types/portable_type/</loc>
     
     
     
@@ -2754,7 +2806,7 @@
   
   
   <url>
-    <loc>https://visndt.com/suppliers/</loc>
+    <loc>http://localhost:1313/suppliers/</loc>
     
     
     
@@ -2767,7 +2819,7 @@
   
   
   <url>
-    <loc>https://visndt.com/product_types/robot-arm/</loc>
+    <loc>http://localhost:1313/product_types/robot-arm/</loc>
     
     
     
@@ -2780,7 +2832,7 @@
   
   
   <url>
-    <loc>https://visndt.com/suppliers/sp/</loc>
+    <loc>http://localhost:1313/suppliers/sp/</loc>
     
     
     
@@ -2793,7 +2845,7 @@
   
   
   <url>
-    <loc>https://visndt.com/suppliers/vsndt/</loc>
+    <loc>http://localhost:1313/suppliers/vsndt/</loc>
     
     
     
@@ -2806,7 +2858,7 @@
   
   
   <url>
-    <loc>https://visndt.com/search/</loc>
+    <loc>http://localhost:1313/search/</loc>
     
     
     
@@ -2819,7 +2871,7 @@
   
   
   <url>
-    <loc>https://visndt.com/product_types/desktop_type/</loc>
+    <loc>http://localhost:1313/product_types/desktop_type/</loc>
     
     
     
@@ -2832,7 +2884,7 @@
   
   
   <url>
-    <loc>https://visndt.com/customs/success/</loc>
+    <loc>http://localhost:1313/customs/success/</loc>
     
     
     
@@ -2845,7 +2897,7 @@
   
   
   <url>
-    <loc>https://visndt.com/suppliers/vis/</loc>
+    <loc>http://localhost:1313/suppliers/vis/</loc>
     
     
     
