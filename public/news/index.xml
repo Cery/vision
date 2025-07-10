@@ -2,38 +2,38 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>资讯中心 on 维森视觉检测仪器</title>
-    <link>http://localhost:1313/news/</link>
+    <link>https://visndt.com/news/</link>
     <description>Recent content in 资讯中心 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Mon, 08 Jul 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/news/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://visndt.com/news/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>2024年日本东京精密检测技术博览会</title>
-      <link>http://localhost:1313/news/exhibition-news-5/</link>
+      <link>https://visndt.com/news/exhibition-news-5/</link>
       <pubDate>Mon, 08 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/news/exhibition-news-5/</guid>
+      <guid>https://visndt.com/news/exhibition-news-5/</guid>
       <description>亚洲地区领先的精密检测技术展览会，展示工业内窥镜在精密制造中的应用</description>
     </item>
     <item>
       <title>工业内窥镜图像处理算法优化技术研究</title>
-      <link>http://localhost:1313/news/tech-article-1/</link>
+      <link>https://visndt.com/news/tech-article-1/</link>
       <pubDate>Fri, 22 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/news/tech-article-1/</guid>
+      <guid>https://visndt.com/news/tech-article-1/</guid>
       <description>深入探讨工业内窥镜图像处理算法的优化方法，提升检测精度和效率</description>
     </item>
     <item>
       <title>内窥镜技术在工业检测中的创新应用</title>
-      <link>http://localhost:1313/news/industry-news-1/</link>
+      <link>https://visndt.com/news/industry-news-1/</link>
       <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/news/industry-news-1/</guid>
+      <guid>https://visndt.com/news/industry-news-1/</guid>
       <description>探讨最新内窥镜技术在工业检测领域的创新应用，提高检测效率和精度</description>
     </item>
     <item>
       <title>工业内窥镜技术发展趋势分析</title>
-      <link>http://localhost:1313/news/2024-01-15-industry-news-example/</link>
+      <link>https://visndt.com/news/2024-01-15-industry-news-example/</link>
       <pubDate>Mon, 15 Jan 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/news/2024-01-15-industry-news-example/</guid>
+      <guid>https://visndt.com/news/2024-01-15-industry-news-example/</guid>
       <description>本文深入分析了工业内窥镜技术的最新发展趋势，包括高清成像、智能识别、远程操控等方面的创新突破，探讨了这些技术进步对工业检测领域带来的深远影响</description>
     </item>
   </channel>

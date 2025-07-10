@@ -2,25 +2,39 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>细径探头 on 维森视觉检测仪器</title>
-    <link>http://localhost:1313/tags/%E7%BB%86%E5%BE%84%E6%8E%A2%E5%A4%B4/</link>
+    <link>https://visndt.com/tags/%E7%BB%86%E5%BE%84%E6%8E%A2%E5%A4%B4/</link>
     <description>Recent content in 细径探头 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Fri, 10 Jan 2025 12:00:00 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/%E7%BB%86%E5%BE%84%E6%8E%A2%E5%A4%B4/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://visndt.com/tags/%E7%BB%86%E5%BE%84%E6%8E%A2%E5%A4%B4/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>WS-K1510工业内窥镜 - 1.5mm细径探头 双向导向检测</title>
-      <link>http://localhost:1313/products/ws-k1510/</link>
+      <link>https://visndt.com/products/ws-k1510/</link>
       <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/ws-k1510/</guid>
+      <guid>https://visndt.com/products/ws-k1510/</guid>
       <description>WS-K1510是一款具备1.5mm细径的工业视频内窥镜，配备双向180度导向功能，专为汽车制造和精密检测设计，广泛应用于汽车工业、精密机械、航空制造等复杂结构检测场景。</description>
     </item>
     <item>
       <title>WS-K1810工业内窥镜 - 1.8mm细径探头 双向导向检测</title>
-      <link>http://localhost:1313/products/ws-k1810/</link>
+      <link>https://visndt.com/products/ws-k1810/</link>
       <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/ws-k1810/</guid>
+      <guid>https://visndt.com/products/ws-k1810/</guid>
       <description>WS-K1810是一款具备1.8mm细径的工业视频内窥镜，配备两方向180度导向功能，专为复杂管道和精密结构检测设计，广泛应用于汽车制造、航空航天、精密机械等行业。</description>
+    </item>
+    <item>
+      <title>WS-P1510高清工业视频内窥镜 - 1.5mm双向导向探头</title>
+      <link>https://visndt.com/products/ws-p1510/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>https://visndt.com/products/ws-p1510/</guid>
+      <description>高清光纤照明360度旋转镜头内窥镜，1.5mm双向导向探头专为汽车制造检测设计</description>
+    </item>
+    <item>
+      <title>WS-P1810高清工业视频内窥镜 - 1.8mm双向导向探头</title>
+      <link>https://visndt.com/products/ws-p1810/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>https://visndt.com/products/ws-p1810/</guid>
+      <description>高清光纤照明360度旋转镜头内窥镜，1.8mm双向导向探头专为复杂结构检测设计</description>
     </item>
   </channel>
 </rss>

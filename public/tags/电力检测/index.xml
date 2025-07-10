@@ -2,18 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>电力检测 on 维森视觉检测仪器</title>
-    <link>http://localhost:1313/tags/%E7%94%B5%E5%8A%9B%E6%A3%80%E6%B5%8B/</link>
+    <link>https://visndt.com/tags/%E7%94%B5%E5%8A%9B%E6%A3%80%E6%B5%8B/</link>
     <description>Recent content in 电力检测 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Fri, 10 Jan 2025 12:00:00 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/%E7%94%B5%E5%8A%9B%E6%A3%80%E6%B5%8B/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://visndt.com/tags/%E7%94%B5%E5%8A%9B%E6%A3%80%E6%B5%8B/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>WS-K3915工业内窥镜 - 3.9mm标准探头 四方向360度导向</title>
-      <link>http://localhost:1313/products/ws-k3915/</link>
+      <link>https://visndt.com/products/ws-k3915/</link>
       <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/ws-k3915/</guid>
+      <guid>https://visndt.com/products/ws-k3915/</guid>
       <description>WS-K3915是一款具备3.9mm标准直径的工业视频内窥镜，配备四方向360度导向功能，专为大型设备和复杂管道系统检测设计，广泛应用于石油化工、电力、船舶等重工业领域。</description>
+    </item>
+    <item>
+      <title>WS-P3915高清工业视频内窥镜 - 3.9mm四方向导向探头</title>
+      <link>https://visndt.com/products/ws-p3915/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>https://visndt.com/products/ws-p3915/</guid>
+      <description>高清光纤照明360度旋转镜头内窥镜，3.9mm四方向导向探头专为石化电力船舶检测设计</description>
     </item>
   </channel>
 </rss>

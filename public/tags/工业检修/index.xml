@@ -2,18 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>工业检修 on 维森视觉检测仪器</title>
-    <link>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E4%BF%AE/</link>
+    <link>https://visndt.com/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E4%BF%AE/</link>
     <description>Recent content in 工业检修 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Fri, 10 Jan 2025 12:00:00 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E4%BF%AE/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://visndt.com/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E4%BF%AE/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>WS-K2210工业内窥镜 - 2.2mm标准探头 双向导向检测</title>
-      <link>http://localhost:1313/products/ws-k2210/</link>
+      <link>https://visndt.com/products/ws-k2210/</link>
       <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/ws-k2210/</guid>
+      <guid>https://visndt.com/products/ws-k2210/</guid>
       <description>WS-K2210是一款具备2.2mm标准直径的工业视频内窥镜，配备双向180度导向功能，专为机械制造和设备检修设计，广泛应用于机械制造、设备维护、工业检修等标准检测场景。</description>
+    </item>
+    <item>
+      <title>WS-P2210高清工业视频内窥镜 - 2.2mm双向导向探头</title>
+      <link>https://visndt.com/products/ws-p2210/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>https://visndt.com/products/ws-p2210/</guid>
+      <description>高清光纤照明360度旋转镜头内窥镜，2.2mm双向导向探头专为机械制造检测设计</description>
     </item>
   </channel>
 </rss>

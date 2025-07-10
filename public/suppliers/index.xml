@@ -2,30 +2,30 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>供应商 on 维森视觉检测仪器</title>
-    <link>http://localhost:1313/suppliers/</link>
+    <link>https://visndt.com/suppliers/</link>
     <description>Recent content in 供应商 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <atom:link href="http://localhost:1313/suppliers/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://visndt.com/suppliers/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>上海尚品科技有限公司</title>
-      <link>http://localhost:1313/suppliers/sp/</link>
+      <link>https://visndt.com/suppliers/sp/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/suppliers/sp/</guid>
+      <guid>https://visndt.com/suppliers/sp/</guid>
       <description></description>
     </item>
     <item>
       <title>深圳市微视光电科技有限公司</title>
-      <link>http://localhost:1313/suppliers/vsndt/</link>
+      <link>https://visndt.com/suppliers/vsndt/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/suppliers/vsndt/</guid>
+      <guid>https://visndt.com/suppliers/vsndt/</guid>
       <description></description>
     </item>
     <item>
       <title>天津维森科技有限公司</title>
-      <link>http://localhost:1313/suppliers/vis/</link>
+      <link>https://visndt.com/suppliers/vis/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/suppliers/vis/</guid>
+      <guid>https://visndt.com/suppliers/vis/</guid>
       <description></description>
     </item>
   </channel>
