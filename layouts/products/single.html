@@ -38,9 +38,11 @@
                                         <div class="thumbnail-container">
                                             <img src="{{ .image | relURL }}"
                                                  class="img-fluid rounded object-fit-cover thumbnail-image"
-                                                 alt="{{ .alt | default "产品图片" }}"
-                                                 onclick="switchMainImage('{{ .image | relURL }}', '{{ .alt | default "产品图片" }}')"
-                                                 data-full-image="{{ .image | relURL }}">
+                                                 alt="{{ .alt | default "产品图片" | htmlEscape }}"
+                                                 data-image-url="{{ .image | relURL | htmlEscape }}"
+                                                 data-image-alt="{{ .alt | default "产品图片" | htmlEscape }}"
+                                                 data-full-image="{{ .image | relURL | htmlEscape }}"
+                                                 onclick="switchMainImageFromData(this)">
                                         </div>
                                     </div>
                                     {{ else }}
@@ -49,8 +51,10 @@
                                             <img src="{{ . | relURL }}"
                                                  class="img-fluid rounded object-fit-cover thumbnail-image"
                                                  alt="产品图片"
-                                                 onclick="switchMainImage('{{ . | relURL }}', '产品图片')"
-                                                 data-full-image="{{ . | relURL }}">
+                                                 data-image-url="{{ . | relURL | htmlEscape }}"
+                                                 data-image-alt="产品图片"
+                                                 data-full-image="{{ . | relURL | htmlEscape }}"
+                                                 onclick="switchMainImageFromData(this)">
                                         </div>
                                     </div>
                                     {{ end }}
@@ -63,8 +67,10 @@
                                 <img src="/images/products/default-gallery-{{ . }}.jpg"
                                      class="img-fluid rounded object-fit-cover thumbnail-image"
                                      alt="副图占位图"
-                                     onclick="switchMainImage('/images/products/default-gallery-{{ . }}.jpg', '副图占位图')"
-                                     data-full-image="/images/products/default-gallery-{{ . }}.jpg">
+                                     data-image-url="/images/products/default-gallery-{{ . }}.jpg"
+                                     data-image-alt="副图占位图"
+                                     data-full-image="/images/products/default-gallery-{{ . }}.jpg"
+                                     onclick="switchMainImageFromData(this)">
                             </div>
                         </div>
                         {{ end }}
@@ -354,13 +360,21 @@
     </div>
 </div>
 
+<!-- 页面数据存储 -->
+<div id="page-data"
+     data-current-path="{{ .RelPermalink | htmlEscape }}"
+     data-page-title="{{ .Title | htmlEscape }}"
+     style="display: none;"></div>
+
 <!-- 修复浏览次数的JavaScript -->
 <script>
 // 防止重复初始化的标记
 let isInitialized = false;
 let pageViewsElement;
-const currentPath = {{ .RelPermalink | jsonify }};
-const pageTitle = {{ .Title | jsonify }};
+// 从data属性获取页面信息
+const pageData = document.getElementById('page-data');
+const currentPath = pageData.dataset.currentPath;
+const pageTitle = pageData.dataset.pageTitle;
 
 // LeanCloud配置
 const LC_APP_ID = 'pUEgNUJ66pc7S4FqVpqxkTkx-MdYXbMMI';
@@ -570,6 +584,13 @@ function switchMainImage(imageUrl, altText) {
             thumbnail.classList.remove('active-thumbnail');
         }
     });
+}
+
+// 从data属性获取数据并切换主图
+function switchMainImageFromData(element) {
+    const imageUrl = element.dataset.imageUrl;
+    const altText = element.dataset.imageAlt;
+    switchMainImage(imageUrl, altText);
 }
 
 // 为缩略图添加点击事件监听器
