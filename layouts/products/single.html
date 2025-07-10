@@ -124,14 +124,14 @@
                             {{ if $foundSupplier }}
                             <a href="#" data-bs-toggle="modal" data-bs-target="#supplierModal"
                                 class="supplier-link"
-                                data-supplier-title="{{ $foundSupplier.Title }}"
-                                data-supplier-address="{{ $foundSupplier.Params.address | default "未提供" }}"
-                                data-supplier-type="{{ $foundSupplier.Params.type | default "未提供" }}"
-                                data-supplier-contact-person="{{ $foundSupplier.Params.contact_person | default "未提供" }}"
-                                data-supplier-position="{{ $foundSupplier.Params.position | default "未提供" }}"
-                                data-supplier-phone="{{ $foundSupplier.Params.phone | default "未提供" }}"
-                                data-supplier-email="{{ $foundSupplier.Params.email | default "未提供" }}"
-                                data-supplier-content="{{ ($foundSupplier.Params.description | default "暂无简介") | safeHTML }}"
+                                data-supplier-title="{{ $foundSupplier.Title | htmlEscape }}"
+                                data-supplier-address="{{ $foundSupplier.Params.address | default "未提供" | htmlEscape }}"
+                                data-supplier-type="{{ $foundSupplier.Params.type | default "未提供" | htmlEscape }}"
+                                data-supplier-contact-person="{{ $foundSupplier.Params.contact_person | default "未提供" | htmlEscape }}"
+                                data-supplier-position="{{ $foundSupplier.Params.position | default "未提供" | htmlEscape }}"
+                                data-supplier-phone="{{ $foundSupplier.Params.phone | default "未提供" | htmlEscape }}"
+                                data-supplier-email="{{ $foundSupplier.Params.email | default "未提供" | htmlEscape }}"
+                                data-supplier-content="{{ ($foundSupplier.Params.description | default "暂无简介") | htmlEscape }}"
                                 data-supplier-series='{{ $foundSupplier.Params.series | jsonify | safeHTMLAttr }}'
                                 data-supplier-models='{{ $foundSupplier.Params.models | jsonify | safeHTMLAttr }}'
                                 data-supplier-gallery='{{ $foundSupplier.Params.gallery | jsonify | safeHTMLAttr }}'>
@@ -165,10 +165,10 @@
                                     {{ end }}
                                 {{ end }}
                                 {{ if $foundSupplier }}
-                                data-supplier-title="{{ $foundSupplier.Title }}"
-                                data-supplier-contact-person="{{ $foundSupplier.Params.contact_person | default "客服" }}"
-                                data-supplier-position="{{ $foundSupplier.Params.position | default "销售顾问" }}"
-                                data-supplier-phone="{{ $foundSupplier.Params.phone | default "400-000-0000" }}"
+                                data-supplier-title="{{ $foundSupplier.Title | htmlEscape }}"
+                                data-supplier-contact-person="{{ $foundSupplier.Params.contact_person | default "客服" | htmlEscape }}"
+                                data-supplier-position="{{ $foundSupplier.Params.position | default "销售顾问" | htmlEscape }}"
+                                data-supplier-phone="{{ $foundSupplier.Params.phone | default "400-000-0000" | htmlEscape }}"
                                 {{ end }}
                                 {{ end }}>
                             <i class="bi bi-telephone-fill me-2"></i>电话沟通
@@ -359,8 +359,8 @@
 // 防止重复初始化的标记
 let isInitialized = false;
 let pageViewsElement;
-let currentPath = '{{ .RelPermalink }}';
-let pageTitle = '{{ .Title }}';
+const currentPath = {{ .RelPermalink | jsonify }};
+const pageTitle = {{ .Title | jsonify }};
 
 // LeanCloud配置
 const LC_APP_ID = 'pUEgNUJ66pc7S4FqVpqxkTkx-MdYXbMMI';
