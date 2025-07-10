@@ -1291,12 +1291,22 @@ a:focus {
     margin-bottom: 2rem;
 }
 
+/* 搜索历史区域布局 */
+.search-history-section {
+    position: relative;
+}
+
 /* 搜索历史头部布局 */
 .search-history-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 1rem;
+    position: relative;
+}
+
+.search-history-title {
+    flex: 1;
 }
 
 .search-history-section h6,
@@ -1330,6 +1340,11 @@ a:focus {
     display: flex;
     align-items: center;
     gap: 0.25rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 
 .clear-history-btn:hover {
@@ -1337,6 +1352,7 @@ a:focus {
     border-color: var(--danger-color, #dc3545);
     color: white;
     transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
 }
 
 .clear-history-btn:active {
