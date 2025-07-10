@@ -3859,15 +3859,21 @@ PowerShell脚本已下载: save-${fileName.replace('.md', '')}.ps1
                 // 获取和处理富文本内容
                 console.log('📝 处理富文本内容...');
                 let applicationScenarios = '';
-                if (window.applicationScenariosQuill) {
-                    const htmlContent = window.applicationScenariosQuill.root.innerHTML;
+                if (productApplicationEditor) {
+                    const htmlContent = productApplicationEditor.root.innerHTML;
                     applicationScenarios = await processRichTextImages(htmlContent, model, 'application');
+                    console.log('📝 应用场景内容已处理，长度:', applicationScenarios.length);
+                } else {
+                    console.log('⚠️ 应用场景编辑器未初始化');
                 }
 
                 let detailedDescription = '';
-                if (window.productDescriptionQuill) {
-                    const htmlContent = window.productDescriptionQuill.root.innerHTML;
+                if (productDescriptionEditor) {
+                    const htmlContent = productDescriptionEditor.root.innerHTML;
                     detailedDescription = await processRichTextImages(htmlContent, model, 'description');
+                    console.log('📝 详细描述内容已处理，长度:', detailedDescription.length);
+                } else {
+                    console.log('⚠️ 详细描述编辑器未初始化');
                 }
                 console.log('✅ 富文本内容处理完成');
 
