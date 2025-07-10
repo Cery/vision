@@ -15,5 +15,12 @@
       <guid>http://localhost:1313/products/model/</guid>
       <description>WS-K1010是一款具备1.0mm超细直径和高亮光纤照明的工业视频内窥镜，广泛应用于航空维修、电子制造、医疗检测等狭小空间可视化场景。</description>
     </item>
+    <item>
+      <title>WS-K1810工业内窥镜 - 1.8mm细径探头 双向导向检测</title>
+      <link>http://localhost:1313/products/ws-k1810/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-k1810/</guid>
+      <description>WS-K1810是一款具备1.8mm细径的工业视频内窥镜，配备两方向180度导向功能，专为复杂管道和精密结构检测设计，广泛应用于汽车制造、航空航天、精密机械等行业。</description>
+    </item>
   </channel>
 </rss>

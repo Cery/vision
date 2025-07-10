@@ -6,11 +6,14 @@
 <title>{{ .Site.Title }} - {{ .Site.Params.description | default "专业的视觉检测设备信息与资讯发布平台" }}</title>
 <meta name="description" content="{{ .Site.Params.description | default "专业的视觉检测设备信息与资讯发布平台，提供工业内窥镜、检测相机等产品信息，为制造业提供优质的检测解决方案。" }}">
 {{ else }}
-<title>{{ .Title }} - {{ .Site.Title }}</title>
-<meta name="description" content="{{ .Params.description | default .Summary | default .Site.Params.description | truncate 160 }}">
+<!-- 优先使用自定义SEO标题，否则使用默认标题 -->
+<title>{{ if .Params.seo_title }}{{ .Params.seo_title }}{{ else }}{{ .Title }} - {{ .Site.Title }}{{ end }}</title>
+<!-- 优先使用自定义SEO描述，否则使用summary或默认描述 -->
+<meta name="description" content="{{ if .Params.seo_description }}{{ .Params.seo_description | truncate 160 }}{{ else }}{{ .Params.summary | default .Summary | default .Site.Params.description | truncate 160 }}{{ end }}">
 {{ end }}
 
-<meta name="keywords" content="{{ if .Params.tags }}{{ delimit .Params.tags ", " }}{{ else }}工业内窥镜,视觉检测,检测设备,工业检测,内窥镜,检测仪器,维森,VisNDT{{ end }}">
+<!-- 关键词优先使用seo_keywords，然后是tags，最后是默认关键词 -->
+<meta name="keywords" content="{{ if .Params.seo_keywords }}{{ delimit .Params.seo_keywords ", " }}{{ else if .Params.tags }}{{ delimit .Params.tags ", " }}{{ else }}工业内窥镜,视觉检测,检测设备,工业检测,内窥镜,检测仪器,维森,VisNDT{{ end }}">
 <meta name="author" content="{{ .Site.Title }}">
 <meta name="robots" content="index, follow">
 <meta name="googlebot" content="index, follow">
@@ -19,21 +22,65 @@
 <meta name="language" content="zh-CN">
 <meta http-equiv="content-language" content="zh-CN">
 
+<!-- 产品特定的SEO元数据 -->
+{{ if eq .Section "products" }}
+{{ if .Params.model }}<meta name="product:model" content="{{ .Params.model }}">{{ end }}
+{{ if .Params.series }}<meta name="product:series" content="{{ .Params.series }}">{{ end }}
+{{ if .Params.supplier }}<meta name="product:manufacturer" content="{{ .Params.supplier }}">{{ end }}
+{{ if .Params.primary_category }}<meta name="product:category" content="{{ .Params.primary_category }}">{{ end }}
+{{ if .Params.secondary_category }}<meta name="product:subcategory" content="{{ .Params.secondary_category }}">{{ end }}
+<meta name="product:availability" content="in_stock">
+<meta name="product:condition" content="new">
+{{ end }}
+
 <!-- Open Graph / Facebook -->
-<meta property="og:type" content="{{ if .IsHome }}website{{ else }}article{{ end }}">
+<meta property="og:type" content="{{ if .IsHome }}website{{ else if eq .Section "products" }}product{{ else }}article{{ end }}">
 <meta property="og:url" content="{{ .Permalink }}">
-<meta property="og:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} - {{ .Site.Title }}{{ end }}">
-<meta property="og:description" content="{{ .Params.description | default .Summary | default .Site.Params.description | truncate 160 }}">
-<meta property="og:image" content="{{ if .Params.featured_image }}{{ .Params.featured_image | absURL }}{{ else }}{{ "/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg" | absURL }}{{ end }}">
+<meta property="og:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else if .Params.seo_title }}{{ .Params.seo_title }}{{ else }}{{ .Title }} - {{ .Site.Title }}{{ end }}">
+<meta property="og:description" content="{{ if .Params.seo_description }}{{ .Params.seo_description | truncate 160 }}{{ else }}{{ .Params.summary | default .Summary | default .Site.Params.description | truncate 160 }}{{ end }}">
+<!-- 产品页面优先使用gallery中的主图 -->
+{{ $ogImage := "" }}
+{{ if and (eq .Section "products") .Params.gallery }}
+    {{ if reflect.IsSlice .Params.gallery }}
+        {{ $mainImage := index .Params.gallery 0 }}
+        {{ if reflect.IsMap $mainImage }}
+            {{ $ogImage = $mainImage.image | absURL }}
+        {{ else }}
+            {{ $ogImage = $mainImage | absURL }}
+        {{ end }}
+    {{ end }}
+{{ else if .Params.featured_image }}
+    {{ $ogImage = .Params.featured_image | absURL }}
+{{ else }}
+    {{ $ogImage = "/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg" | absURL }}
+{{ end }}
+<meta property="og:image" content="{{ $ogImage }}">
+{{ if and (eq .Section "products") .Params.gallery (reflect.IsSlice .Params.gallery) }}
+{{ range after 1 .Params.gallery }}
+{{ if reflect.IsMap . }}
+<meta property="og:image" content="{{ .image | absURL }}">
+{{ else }}
+<meta property="og:image" content="{{ . | absURL }}">
+{{ end }}
+{{ end }}
+{{ end }}
 <meta property="og:site_name" content="{{ .Site.Title }}">
 <meta property="og:locale" content="zh_CN">
+<!-- 产品特定的Open Graph属性 -->
+{{ if eq .Section "products" }}
+{{ if .Params.model }}<meta property="product:model" content="{{ .Params.model }}">{{ end }}
+{{ if .Params.supplier }}<meta property="product:brand" content="{{ .Params.supplier }}">{{ end }}
+<meta property="product:availability" content="in stock">
+<meta property="product:condition" content="new">
+{{ if .Params.primary_category }}<meta property="product:category" content="{{ .Params.primary_category }}">{{ end }}
+{{ end }}
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="{{ .Permalink }}">
-<meta name="twitter:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} - {{ .Site.Title }}{{ end }}">
-<meta name="twitter:description" content="{{ .Params.description | default .Summary | default .Site.Params.description | truncate 160 }}">
-<meta name="twitter:image" content="{{ if .Params.featured_image }}{{ .Params.featured_image | absURL }}{{ else }}{{ "/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg" | absURL }}{{ end }}">
+<meta name="twitter:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else if .Params.seo_title }}{{ .Params.seo_title }}{{ else }}{{ .Title }} - {{ .Site.Title }}{{ end }}">
+<meta name="twitter:description" content="{{ if .Params.seo_description }}{{ .Params.seo_description | truncate 160 }}{{ else }}{{ .Params.summary | default .Summary | default .Site.Params.description | truncate 160 }}{{ end }}">
+<meta name="twitter:image" content="{{ $ogImage }}">
 
 <!-- 结构化数据 -->
 {{ if .IsHome }}
@@ -59,18 +106,95 @@
   "@context": "https://schema.org",
   "@type": "Product",
   "name": "{{ .Title }}",
-  "description": "{{ .Params.description | default .Summary | default .Title }}",
-  "image": "{{ if .Params.featured_image }}{{ .Params.featured_image | absURL }}{{ else }}{{ "/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg" | absURL }}{{ end }}",
+  "description": "{{ if .Params.seo_description }}{{ .Params.seo_description }}{{ else }}{{ .Params.summary | default .Summary | default .Title }}{{ end }}",
+  {{ if .Params.model }}"model": "{{ .Params.model }}",{{ end }}
+  {{ if .Params.series }}"category": "{{ .Params.series }}",{{ end }}
+  "image": {{ if and .Params.gallery (reflect.IsSlice .Params.gallery) }}[
+    {{ range $index, $image := .Params.gallery }}
+      {{ if $index }},{{ end }}
+      {{ if reflect.IsMap $image }}"{{ $image.image | absURL }}"{{ else }}"{{ $image | absURL }}"{{ end }}
+    {{ end }}
+  ]{{ else }}"{{ $ogImage }}"{{ end }},
   "brand": {
     "@type": "Brand",
-    "name": "{{ .Site.Title }}"
+    "name": "{{ if .Params.supplier }}{{ .Params.supplier }}{{ else }}{{ .Site.Title }}{{ end }}"
   },
   "manufacturer": {
     "@type": "Organization",
-    "name": "{{ .Site.Title }}"
-  }
+    "name": "{{ if .Params.supplier }}{{ .Params.supplier }}{{ else }}{{ .Site.Title }}{{ end }}"
+  }{{ if .Params.parameters }},
+  "additionalProperty": [
+    {{ range $index, $param := .Params.parameters }}
+      {{ if $index }},{{ end }}
+      {
+        "@type": "PropertyValue",
+        "name": "{{ $param.name }}",
+        "value": "{{ $param.value }}"
+      }
+    {{ end }}
+  ]{{ end }}{{ if .Params.primary_category }},
+  "category": "{{ .Params.primary_category }}{{ if .Params.secondary_category }} > {{ .Params.secondary_category }}{{ end }}"{{ end }}{{ if .Params.tags }},
+  "keywords": "{{ delimit .Params.tags ", " }}"{{ end }}
 }
 </script>
+<!-- 产品页面面包屑导航结构化数据 -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "{{ .Site.BaseURL }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "产品中心",
+      "item": "{{ .Site.BaseURL }}products/"
+    }{{ if .Params.primary_category }},
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ .Params.primary_category }}",
+      "item": "{{ .Site.BaseURL }}categories/{{ .Params.primary_category | urlize }}/"
+    }{{ end }}{{ if .Params.secondary_category }},
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "{{ .Params.secondary_category }}",
+      "item": "{{ .Site.BaseURL }}categories/{{ .Params.secondary_category | urlize }}/"
+    }{{ end }},
+    {
+      "@type": "ListItem",
+      "position": {{ if and .Params.primary_category .Params.secondary_category }}5{{ else if .Params.primary_category }}4{{ else }}3{{ end }},
+      "name": "{{ .Title }}",
+      "item": "{{ .Permalink }}"
+    }
+  ]
+}
+</script>
+<!-- 产品应用场景结构化数据 -->
+{{ if .Params.application_scenarios }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "{{ .Title }}应用场景",
+  "description": "{{ .Title }}在各行业的应用场景和使用方法",
+  "image": "{{ $ogImage }}",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "产品应用",
+      "text": "{{ .Params.application_scenarios | plainify | truncate 200 }}"
+    }
+  ]
+}
+</script>
+{{ end }}
 {{ else if eq .Section "news" }}
 <script type="application/ld+json">
 {

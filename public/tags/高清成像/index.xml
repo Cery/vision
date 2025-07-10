@@ -15,5 +15,12 @@
       <guid>http://localhost:1313/products/model/</guid>
       <description>WS-K1010是一款具备1.0mm超细直径和高亮光纤照明的工业视频内窥镜，广泛应用于航空维修、电子制造、医疗检测等狭小空间可视化场景。</description>
     </item>
+    <item>
+      <title>WS-P08510高清工业视频内窥镜 - 0.85mm超细探头</title>
+      <link>http://localhost:1313/products/ws-p08510/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-p08510/</guid>
+      <description>高清光纤照明360度旋转镜头内窥镜，0.85mm超细探头专为极限精密检测设计</description>
+    </item>
   </channel>
 </rss>

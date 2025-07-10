@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>标准检测 on 维森视觉检测仪器</title>
+    <link>http://localhost:1313/tags/%E6%A0%87%E5%87%86%E6%A3%80%E6%B5%8B/</link>
+    <description>Recent content in 标准检测 on 维森视觉检测仪器</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 10 Jan 2025 12:00:00 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/%E6%A0%87%E5%87%86%E6%A3%80%E6%B5%8B/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>WS-K2210工业内窥镜 - 2.2mm标准探头 双向导向检测</title>
+      <link>http://localhost:1313/products/ws-k2210/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-k2210/</guid>
+      <description>WS-K2210是一款具备2.2mm标准直径的工业视频内窥镜，配备双向180度导向功能，专为机械制造和设备检修设计，广泛应用于机械制造、设备维护、工业检修等标准检测场景。</description>
+    </item>
+    <item>
+      <title>WS-K2410工业内窥镜 - 2.4mm标准探头 双向导向质量控制</title>
+      <link>http://localhost:1313/products/ws-k2410/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-k2410/</guid>
+      <description>WS-K2410是一款具备2.4mm标准直径的工业视频内窥镜，配备双向180度导向功能，专为工业制造和质量控制设计，广泛应用于工业制造、质量检测、产品验证等标准检测场景。</description>
+    </item>
+  </channel>
+</rss>

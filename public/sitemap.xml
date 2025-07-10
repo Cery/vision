@@ -278,101 +278,8 @@
   
   
   <url>
-    <loc>http://localhost:1313/products/s-00/</loc>
-    <lastmod>2025-07-09T14:36:33&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/blob:http:/localhost:1313/03be2114-9af1-4eb7-a1de-760ebabad5f3</image:loc>
-      <image:title>F -1.jpg</image:title>
-    </image:image>
-    
-    
-    
-    
-    
-  </url>
-  
-  
-  
-  <url>
     <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2025-07-09T14:36:33&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/products/</loc>
-    <lastmod>2025-07-09T14:36:33&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-    
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/</loc>
-    <lastmod>2025-07-09T14:36:33&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/tags/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2025-07-09T14:36:33&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/tags/%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2025-07-09T14:36:33&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/tags/%E6%9F%94%E6%80%A7%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2025-07-09T14:36:33&#43;00:00</lastmod>
+    <lastmod>2025-06-15T12:00:00&#43;08:00</lastmod>
     
     
     
@@ -438,52 +345,13 @@
   
   
   <url>
-    <loc>http://localhost:1313/products/ws-k1010-a/</loc>
+    <loc>http://localhost:1313/products/</loc>
     <lastmod>2025-06-15T12:00:00&#43;08:00</lastmod>
     
     
     
     
 
-    
-    
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
-      <image:title>主图</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
-      <image:title>产品副图1</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
-      <image:title>产品副图2</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
-      <image:title>产品副图3</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>https://picsum.photos/800/600?random=11</image:loc>
-      <image:title>副图占位图</image:title>
-    </image:image>
-    
-    
     
     
     
@@ -544,8 +412,1243 @@
   
   
   <url>
-    <loc>http://localhost:1313/tags/%E5%8C%BB%E7%96%97%E5%99%A8%E6%A2%B0%E6%A3%80%E6%9F%A5/</loc>
-    <lastmod>2025-06-15T12:00:00&#43;08:00</lastmod>
+    <loc>http://localhost:1313/products/ws-k08510/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
+      <image:title>WS-K08510工业内窥镜主图 - 0.85mm超细探头</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
+      <image:title>WS-K08510 超细探头近景图</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
+      <image:title>WS-K08510 显示主机界面</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
+      <image:title>WS-K08510 精密检测应用</image:title>
+    </image:image>
+    
+    
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/ws-k09510/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
+      <image:title>WS-K09510工业内窥镜主图 - 0.95mm超细探头</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
+      <image:title>WS-K09510 超细探头细节图</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
+      <image:title>WS-K09510 显示主机界面</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
+      <image:title>WS-K09510 微型机械检测应用</image:title>
+    </image:image>
+    
+    
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/ws-k1010/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
+      <image:title>WS-K1010工业内窥镜主图 - 1.0mm超细探头</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
+      <image:title>WS-K1010 超细探头特写</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
+      <image:title>WS-K1010 显示主机界面</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
+      <image:title>WS-K1010 精密制造检测应用</image:title>
+    </image:image>
+    
+    
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/ws-k1210/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
+      <image:title>WS-K1210工业内窥镜主图 - 1.2mm超细探头</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
+      <image:title>WS-K1210 超细探头特写</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
+      <image:title>WS-K1210 显示主机界面</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
+      <image:title>WS-K1210 精密机械检测应用</image:title>
+    </image:image>
+    
+    
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/ws-k1510/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
+      <image:title>WS-K1510工业内窥镜主图 - 1.5mm双向导向探头</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
+      <image:title>WS-K1510 双向导向探头特写</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
+      <image:title>WS-K1510 显示主机操作界面</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
+      <image:title>WS-K1510 汽车制造检测应用</image:title>
+    </image:image>
+    
+    
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/ws-k1810/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
+      <image:title>WS-K1810工业内窥镜主图 - 1.8mm双向导向探头</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
+      <image:title>WS-K1810 双向导向探头特写</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
+      <image:title>WS-K1810 显示主机操作界面</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
+      <image:title>WS-K1810 汽车发动机检测应用</image:title>
+    </image:image>
+    
+    
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/ws-k2010/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
+      <image:title>WS-K2010工业内窥镜主图 - 2mm无导向直视探头</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
+      <image:title>WS-K2010 无导向探头特写</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
+      <image:title>WS-K2010 显示主机操作界面</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
+      <image:title>WS-K2010 管道检测应用</image:title>
+    </image:image>
+    
+    
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/ws-k2210/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
+      <image:title>WS-K2210工业内窥镜主图 - 2.2mm双向导向探头</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
+      <image:title>WS-K2210 双向导向探头特写</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
+      <image:title>WS-K2210 显示主机操作界面</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
+      <image:title>WS-K2210 机械制造检测应用</image:title>
+    </image:image>
+    
+    
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/ws-k2410/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
+      <image:title>WS-K2410工业内窥镜主图 - 2.4mm双向导向探头</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
+      <image:title>WS-K2410 双向导向探头特写</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
+      <image:title>WS-K2410 显示主机操作界面</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
+      <image:title>WS-K2410 质量控制检测应用</image:title>
+    </image:image>
+    
+    
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/ws-k2810/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
+      <image:title>WS-K2810工业内窥镜主图 - 2.8mm四方向导向探头</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
+      <image:title>WS-K2810 四方向导向探头特写</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
+      <image:title>WS-K2810 显示主机操作界面</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
+      <image:title>WS-K2810 通用工业检测应用</image:title>
+    </image:image>
+    
+    
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/ws-k3915/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
+      <image:title>WS-K3915工业内窥镜主图 - 3.9mm四方向导向探头</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
+      <image:title>WS-K3915 四方向导向探头特写</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
+      <image:title>WS-K3915 显示主机操作界面</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
+      <image:title>WS-K3915 石化管道检测应用</image:title>
+    </image:image>
+    
+    
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/ws-k6020/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
+      <image:title>WS-K6020工业内窥镜主图 - 6mm大直径超远景深探头</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
+      <image:title>WS-K6020 大直径探头特写</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
+      <image:title>WS-K6020 显示主机操作界面</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
+      <image:title>WS-K6020 大型设备检测应用</image:title>
+    </image:image>
+    
+    
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/ws-k6030/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
+      <image:title>WS-K6030工业内窥镜主图 - 6mm大直径深度检测探头</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
+      <image:title>WS-K6030 大直径探头特写</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
+      <image:title>WS-K6030 显示主机操作界面</image:title>
+    </image:image>
+    
+    
+    
+    <image:image>
+      <image:loc>http://localhost:1313/images/products/K-series/K-3.jpg</image:loc>
+      <image:title>WS-K6030 大型设备检测应用</image:title>
+    </image:image>
+    
+    
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E6%A0%87%E5%87%86%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E6%A0%87%E5%87%86%E6%8E%A2%E5%A4%B4/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E4%BA%A7%E5%93%81%E9%AA%8C%E8%AF%81/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E8%B6%85%E7%BB%86%E6%8E%A2%E5%A4%B4/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E8%B6%85%E8%BF%9C%E6%99%AF%E6%B7%B1/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E8%88%B9%E8%88%B6%E6%A3%80%E6%9F%A5/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%A4%A7%E5%9E%8B%E8%AE%BE%E5%A4%87/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%A4%A7%E7%9B%B4%E5%BE%84%E6%8E%A2%E5%A4%B4/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E7%94%B5%E5%8A%9B%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E7%94%B5%E5%AD%90%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%A4%9A%E9%A2%86%E5%9F%9F%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%A4%8D%E6%9D%82%E7%BB%93%E6%9E%84%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E9%AB%98%E7%AB%AF%E5%88%B6%E9%80%A0/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E9%AB%98%E7%B2%BE%E5%BA%A6%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E4%BF%AE/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E5%88%B6%E9%80%A0/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E7%AE%A1%E9%81%93%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E7%AE%A1%E9%81%93%E6%A3%80%E6%9F%A5/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%85%89%E5%AD%A6%E4%BB%AA%E5%99%A8/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E8%88%AA%E7%A9%BA%E5%88%B6%E9%80%A0/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E6%9C%BA%E6%A2%B0%E5%88%B6%E9%80%A0/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E7%94%B5%E5%AD%90/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E6%9C%BA%E6%A2%B0/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E5%88%B6%E9%80%A0/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E6%B1%BD%E8%BD%A6%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E6%B1%BD%E8%BD%A6%E5%88%B6%E9%80%A0/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E8%AE%BE%E5%A4%87%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E8%AE%BE%E5%A4%87%E7%BB%B4%E6%8A%A4/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E6%B7%B1%E5%BA%A6%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E7%9F%B3%E5%8C%96%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%8F%8C%E5%90%91%E5%AF%BC%E5%90%91/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%9B%9B%E6%96%B9%E5%90%91%E5%AF%BC%E5%90%91/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E7%89%B9%E7%A7%8D%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E9%80%9A%E7%94%A8%E5%B7%A5%E4%B8%9A/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%BE%AE%E7%94%B5%E5%AD%90%E6%A3%80%E6%9F%A5/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%BE%AE%E5%9E%8B%E6%9C%BA%E6%A2%B0/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%BE%AE%E5%9E%8B%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E7%BB%B4%E4%BF%AE%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E6%97%A0%E5%AF%BC%E5%90%91/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E7%BB%86%E5%BE%84%E6%8E%A2%E5%A4%B4/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%8C%BB%E7%96%97%E5%99%A8%E6%A2%B0/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%8C%BB%E7%96%97%E8%AE%BE%E5%A4%87/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E7%9B%B4%E8%A7%86%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%88%B6%E9%80%A0%E4%B8%9A/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E9%87%8D%E5%B7%A5%E4%B8%9A%E8%AE%BE%E5%A4%87/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E9%87%8D%E5%9E%8B%E6%9C%BA%E6%A2%B0/</loc>
+    <lastmod>2025-01-10T12:00:00&#43;08:00</lastmod>
     
     
     
@@ -577,53 +1680,6 @@
     
     
 
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/products/vsndt-dz60/</loc>
-    <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/DZ/DZ-1.jpg</image:loc>
-      <image:title>主图</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/DZ/DZ-2.jpg</image:loc>
-      <image:title>工业内窥镜</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/DZ/DZ-3.jpg</image:loc>
-      <image:title>工业内窥镜</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/DZ/DZ-4.jpg</image:loc>
-      <image:title>产品图片</image:title>
-    </image:image>
-    
-    
-    
-    
     
   </url>
   
@@ -684,54 +1740,7 @@
   
   
   <url>
-    <loc>http://localhost:1313/products/ws-k1510-a/</loc>
-    <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/K-main.jpg</image:loc>
-      <image:title>主图</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/K-1.jpg</image:loc>
-      <image:title>工业内窥镜副图1</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/K-series/K-2.jpg</image:loc>
-      <image:title>工业内窥镜副图2</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>https://picsum.photos/800/600?random=10</image:loc>
-      <image:title>占位图</image:title>
-    </image:image>
-    
-    
-    
-    
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/products/product-p1010-model/</loc>
+    <loc>http://localhost:1313/products/ws-p08510/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
@@ -745,35 +1754,28 @@
     
     <image:image>
       <image:loc>http://localhost:1313/images/products/P60/P-MAIN.jpg</image:loc>
-      <image:title>主图</image:title>
+      <image:title>WS-P08510高清工业视频内窥镜主图</image:title>
     </image:image>
     
     
     
     <image:image>
       <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
-      <image:title>工业内窥镜</image:title>
+      <image:title>WS-P08510工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
       <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
-      <image:title>工业内窥镜</image:title>
+      <image:title>WS-P08510工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
       <image:loc>http://localhost:1313/images/products/P60/P-3.jpeg</image:loc>
-      <image:title>工业内窥镜</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>https://picsum.photos/800/600?random=5</image:loc>
-      <image:title>副图4</image:title>
+      <image:title>WS-P08510工业内窥镜</image:title>
     </image:image>
     
     
@@ -785,108 +1787,13 @@
   
   
   <url>
-    <loc>http://localhost:1313/products/product-p1210/</loc>
+    <loc>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E5%8C%BB%E7%96%97/</loc>
     <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
     
     
 
-    
-    
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/P60/P-MAIN.jpg</image:loc>
-      <image:title>主图</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
-      <image:title>工业内窥镜</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
-      <image:title>工业内窥镜</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/P60/P-3.jpg</image:loc>
-      <image:title>工业内窥镜</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>https://picsum.photos/800/600?random=5</image:loc>
-      <image:title>副图4</image:title>
-    </image:image>
-    
-    
-    
-    
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/products/product-p1810/</loc>
-    <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/P60/P-MAIN.jpg</image:loc>
-      <image:title>主图</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
-      <image:title>工业内窥镜</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
-      <image:title>工业内窥镜</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>http://localhost:1313/images/products/P60/P-3.jpg</image:loc>
-      <image:title>工业内窥镜</image:title>
-    </image:image>
-    
-    
-    
-    <image:image>
-      <image:loc>https://picsum.photos/800/600?random=5</image:loc>
-      <image:title>副图4</image:title>
-    </image:image>
-    
-    
-    
-    
     
   </url>
   
@@ -920,19 +1827,6 @@
   
   <url>
     <loc>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2024-07-08T00:00:00&#43;00:00</lastmod>
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E6%A3%80%E6%B5%8B/</loc>
     <lastmod>2024-07-08T00:00:00&#43;00:00</lastmod>
     
     
@@ -1025,6 +1919,19 @@
   <url>
     <loc>http://localhost:1313/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/</loc>
     <lastmod>2024-03-22T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -1179,6 +2086,19 @@
   
   
   <url>
+    <loc>http://localhost:1313/tags/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <lastmod>2024-01-15T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
     <loc>http://localhost:1313/cooperation/</loc>
     <lastmod>2024-01-15T00:00:00&#43;00:00</lastmod>
     
@@ -1290,21 +2210,6 @@
     
     
 
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>http://localhost:1313/products/vsndt-model/</loc>
-    
-    
-    
-    
-    
-
-    
-    
     
   </url>
   
