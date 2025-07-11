@@ -1,0 +1,62 @@
+{{- $products := slice -}}
+{{- $categories := slice -}}
+{{- $suppliers := slice -}}
+
+{{- /* 收集所有产品数据 */ -}}
+{{- range .Site.Pages -}}
+  {{- if and (eq .Section "products") (ne .Title "") (ne .File.BaseFileName "_index") -}}
+    {{- $product := dict
+      "id" (.File.BaseFileName | default .Title | urlize)
+      "title" .Title
+      "summary" (.Summary | default "")
+      "model" (.Params.model | default "")
+      "series" (.Params.series | default "")
+      "primary_category" (.Params.primary_category | default "")
+      "secondary_category" (.Params.secondary_category | default "")
+      "supplier" (.Params.supplier | default "")
+      "published" (.Date.Format "2006-01-02T15:04:05Z07:00")
+      "slug" (.File.BaseFileName | default (.Title | urlize))
+      "url" .RelPermalink
+      "section" .Section
+      "gallery" (.Params.gallery | default slice)
+      "parameters" (.Params.parameters | default slice)
+      "related_products" (.Params.related_products | default slice)
+      "application_scenarios" (.Params.application_scenarios | default "")
+      "content" (.Content | plainify | truncate 200)
+      "tags" (.Params.tags | default slice)
+      "featured" (.Params.featured | default false)
+      "price_range" (.Params.price_range | default "")
+      "availability" (.Params.availability | default "available")
+    -}}
+    {{- $products = $products | append $product -}}
+    
+    {{- /* 收集分类信息 */ -}}
+    {{- if .Params.primary_category -}}
+      {{- $categories = $categories | append .Params.primary_category -}}
+    {{- end -}}
+    
+    {{- /* 收集供应商信息 */ -}}
+    {{- if .Params.supplier -}}
+      {{- $suppliers = $suppliers | append .Params.supplier -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* 去重分类和供应商 */ -}}
+{{- $categories = $categories | uniq | sort -}}
+{{- $suppliers = $suppliers | uniq | sort -}}
+
+{{- /* 构建最终的JSON结构 */ -}}
+{{- $result := dict
+  "products" $products
+  "meta" (dict
+    "total_products" (len $products)
+    "categories" $categories
+    "suppliers" $suppliers
+    "generated_at" (now.Format "2006-01-02T15:04:05Z07:00")
+    "section" .Section
+    "page_title" .Title
+  )
+-}}
+
+{{- $result | jsonify -}}

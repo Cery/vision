@@ -1,0 +1,77 @@
+{
+  "version": "1.0.0",
+  "generated": "2025-07-11T03:07:49.472Z",
+  "categories": {
+    "K-series": {
+      "product-main_800x600": "/images/placeholders/K-series/product-main-800x600.svg",
+      "product-thumb_400x300": "/images/placeholders/K-series/product-thumb-400x300.svg",
+      "product-small_300x200": "/images/placeholders/K-series/product-small-300x200.svg",
+      "qr-code_100x100": "/images/placeholders/K-series/qr-code-100x100.svg",
+      "banner_1200x400": "/images/placeholders/K-series/banner-1200x400.svg",
+      "avatar_150x150": "/images/placeholders/K-series/avatar-150x150.svg"
+    },
+    "P-series": {
+      "product-main_800x600": "/images/placeholders/P-series/product-main-800x600.svg",
+      "product-thumb_400x300": "/images/placeholders/P-series/product-thumb-400x300.svg",
+      "product-small_300x200": "/images/placeholders/P-series/product-small-300x200.svg",
+      "qr-code_100x100": "/images/placeholders/P-series/qr-code-100x100.svg",
+      "banner_1200x400": "/images/placeholders/P-series/banner-1200x400.svg",
+      "avatar_150x150": "/images/placeholders/P-series/avatar-150x150.svg"
+    },
+    "DZ-series": {
+      "product-main_800x600": "/images/placeholders/DZ-series/product-main-800x600.svg",
+      "product-thumb_400x300": "/images/placeholders/DZ-series/product-thumb-400x300.svg",
+      "product-small_300x200": "/images/placeholders/DZ-series/product-small-300x200.svg",
+      "qr-code_100x100": "/images/placeholders/DZ-series/qr-code-100x100.svg",
+      "banner_1200x400": "/images/placeholders/DZ-series/banner-1200x400.svg",
+      "avatar_150x150": "/images/placeholders/DZ-series/avatar-150x150.svg"
+    },
+    "F-series": {
+      "product-main_800x600": "/images/placeholders/F-series/product-main-800x600.svg",
+      "product-thumb_400x300": "/images/placeholders/F-series/product-thumb-400x300.svg",
+      "product-small_300x200": "/images/placeholders/F-series/product-small-300x200.svg",
+      "qr-code_100x100": "/images/placeholders/F-series/qr-code-100x100.svg",
+      "banner_1200x400": "/images/placeholders/F-series/banner-1200x400.svg",
+      "avatar_150x150": "/images/placeholders/F-series/avatar-150x150.svg"
+    },
+    "general": {
+      "product-main_800x600": "/images/placeholders/general/product-main-800x600.svg",
+      "product-thumb_400x300": "/images/placeholders/general/product-thumb-400x300.svg",
+      "product-small_300x200": "/images/placeholders/general/product-small-300x200.svg",
+      "qr-code_100x100": "/images/placeholders/general/qr-code-100x100.svg",
+      "banner_1200x400": "/images/placeholders/general/banner-1200x400.svg",
+      "avatar_150x150": "/images/placeholders/general/avatar-150x150.svg"
+    },
+    "news": {
+      "product-main_800x600": "/images/placeholders/news/product-main-800x600.svg",
+      "product-thumb_400x300": "/images/placeholders/news/product-thumb-400x300.svg",
+      "product-small_300x200": "/images/placeholders/news/product-small-300x200.svg",
+      "qr-code_100x100": "/images/placeholders/news/qr-code-100x100.svg",
+      "banner_1200x400": "/images/placeholders/news/banner-1200x400.svg",
+      "avatar_150x150": "/images/placeholders/news/avatar-150x150.svg"
+    },
+    "case": {
+      "product-main_800x600": "/images/placeholders/case/product-main-800x600.svg",
+      "product-thumb_400x300": "/images/placeholders/case/product-thumb-400x300.svg",
+      "product-small_300x200": "/images/placeholders/case/product-small-300x200.svg",
+      "qr-code_100x100": "/images/placeholders/case/qr-code-100x100.svg",
+      "banner_1200x400": "/images/placeholders/case/banner-1200x400.svg",
+      "avatar_150x150": "/images/placeholders/case/avatar-150x150.svg"
+    },
+    "supplier": {
+      "product-main_800x600": "/images/placeholders/supplier/product-main-800x600.svg",
+      "product-thumb_400x300": "/images/placeholders/supplier/product-thumb-400x300.svg",
+      "product-small_300x200": "/images/placeholders/supplier/product-small-300x200.svg",
+      "qr-code_100x100": "/images/placeholders/supplier/qr-code-100x100.svg",
+      "banner_1200x400": "/images/placeholders/supplier/banner-1200x400.svg",
+      "avatar_150x150": "/images/placeholders/supplier/avatar-150x150.svg"
+    }
+  },
+  "defaults": {
+    "product": "/images/placeholders/general/product-main-800x600.svg",
+    "news": "/images/placeholders/news/product-main-800x600.svg",
+    "case": "/images/placeholders/case/product-main-800x600.svg",
+    "supplier": "/images/placeholders/supplier/product-main-800x600.svg",
+    "error": "/images/placeholder.svg"
+  }
+}

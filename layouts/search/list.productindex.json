@@ -1,0 +1,73 @@
+{{- $products := slice -}}
+{{- $searchableFields := slice -}}
+
+{{- /* 收集所有产品数据，优化搜索字段 */ -}}
+{{- range .Site.Pages -}}
+  {{- if and (eq .Section "products") (ne .Title "") (ne .File.BaseFileName "_index") -}}
+    {{- $searchText := printf "%s %s %s %s %s %s" .Title (.Params.model | default "") (.Params.series | default "") (.Params.primary_category | default "") (.Params.supplier | default "") (.Content | plainify | truncate 100) -}}
+    {{- $product := dict
+      "id" (.File.BaseFileName | default .Title | urlize)
+      "title" .Title
+      "summary" (.Summary | default "")
+      "model" (.Params.model | default "")
+      "series" (.Params.series | default "")
+      "primary_category" (.Params.primary_category | default "")
+      "secondary_category" (.Params.secondary_category | default "")
+      "supplier" (.Params.supplier | default "")
+      "published" (.Date.Format "2006-01-02T15:04:05Z07:00")
+      "slug" (.File.BaseFileName | default (.Title | urlize))
+      "url" .RelPermalink
+      "section" .Section
+      "gallery" (.Params.gallery | default slice)
+      "parameters" (.Params.parameters | default slice)
+      "related_products" (.Params.related_products | default slice)
+      "application_scenarios" (.Params.application_scenarios | default "")
+      "content" (.Content | plainify | truncate 200)
+      "tags" (.Params.tags | default slice)
+      "featured" (.Params.featured | default false)
+      "price_range" (.Params.price_range | default "")
+      "availability" (.Params.availability | default "available")
+      "weight" (.Weight | default 0)
+      "search_text" $searchText
+      "search_keywords" (slice .Title (.Params.model | default "") (.Params.series | default "") (.Params.primary_category | default "") (.Params.supplier | default ""))
+    -}}
+    {{- $products = $products | append $product -}}
+    
+    {{- /* 收集搜索字段 */ -}}
+    {{- $searchableFields = $searchableFields | append .Title -}}
+    {{- if .Params.model -}}
+      {{- $searchableFields = $searchableFields | append .Params.model -}}
+    {{- end -}}
+    {{- if .Params.series -}}
+      {{- $searchableFields = $searchableFields | append .Params.series -}}
+    {{- end -}}
+    {{- if .Params.primary_category -}}
+      {{- $searchableFields = $searchableFields | append .Params.primary_category -}}
+    {{- end -}}
+    {{- if .Params.supplier -}}
+      {{- $searchableFields = $searchableFields | append .Params.supplier -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* 去重搜索字段 */ -}}
+{{- $searchableFields = $searchableFields | uniq | sort -}}
+
+{{- /* 构建搜索优化的产品索引JSON */ -}}
+{{- $result := dict
+  "products" $products
+  "meta" (dict
+    "total_products" (len $products)
+    "generated_at" (now.Format "2006-01-02T15:04:05Z07:00")
+    "section" .Section
+    "page_title" .Title
+    "description" (.Description | default "产品搜索索引")
+    "search_optimized" true
+  )
+  "search_data" (dict
+    "searchable_fields" $searchableFields
+    "total_searchable_terms" (len $searchableFields)
+  )
+-}}
+
+{{- $result | jsonify -}}

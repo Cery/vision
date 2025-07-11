@@ -1,0 +1,2199 @@
+{{ define "main" }}
+<!-- 展会头部信息区 -->
+<div class="exhibition-header-section{{ if or .Params.cover .Params.featured_image }} has-cover{{ end }}"
+     {{ $coverImage := "" }}
+     {{ if .Params.cover }}
+         {{ $coverImage = .Params.cover }}
+     {{ else if .Params.featured_image }}
+         {{ $coverImage = .Params.featured_image }}
+     {{ end }}
+     {{ if $coverImage }}
+     style="background-image: url('{{ $coverImage | relURL }}');"
+     {{ end }}>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <!-- 展会标签 -->
+                <div class="exhibition-badges mb-3">
+                    <span class="badge badge-exhibition">
+                        <i class="bi bi-calendar-event me-1"></i>展会资讯
+                    </span>
+                    {{ with .Params.exhibition_type }}
+                    <span class="badge badge-type">
+                        <i class="bi bi-tag me-1"></i>{{ . }}
+                    </span>
+                    {{ end }}
+                    {{ range .Params.tags }}
+                    <span class="badge badge-tag">{{ . }}</span>
+                    {{ end }}
+                </div>
+
+                <!-- 展会标题 -->
+                <h1 class="exhibition-title mb-4">{{ .Title }}</h1>
+
+                <!-- 展会核心信息 -->
+                <div class="exhibition-info-structured">
+                    <div class="row g-4">
+                        <div class="col-md-6 col-lg-3">
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="bi bi-calendar3 me-2"></i>展会时间
+                                </div>
+                                <div class="info-value">{{ .Params.event_date }}</div>
+                                {{ with .Params.opening_hours }}
+                                <div class="info-sub">开馆时间：{{ . }}</div>
+                                {{ end }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-3">
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="bi bi-geo-alt me-2"></i>展会地点
+                                </div>
+                                <div class="info-value">{{ .Params.location }}</div>
+                                {{ with .Params.detailed_location }}
+                                <div class="info-sub">{{ . }}</div>
+                                {{ end }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-3">
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="bi bi-building me-2"></i>主办单位
+                                </div>
+                                <div class="info-value">{{ .Params.organizer }}</div>
+                                {{ with .Params.exhibition_industry }}
+                                <div class="info-sub">行业：{{ . }}</div>
+                                {{ end }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-3">
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="bi bi-arrow-repeat me-2"></i>举办周期
+                                </div>
+                                <div class="info-value">{{ .Params.cycle | default "定期举办" }}</div>
+                                {{ if or .Params.exhibition_area .Params.exhibitor_count .Params.visitor_count }}
+                                <div class="info-sub">
+                                    {{ $hasArea := .Params.exhibition_area }}
+                                    {{ $hasExhibitor := .Params.exhibitor_count }}
+                                    {{ with .Params.exhibition_area }}面积：{{ . }}{{ end }}
+                                    {{ with .Params.exhibitor_count }}{{ if $hasArea }} | {{ end }}展商：{{ . }}{{ end }}
+                                    {{ with .Params.visitor_count }}{{ if or $hasArea $hasExhibitor }} | {{ end }}观众：{{ . }}{{ end }}
+                                </div>
+                                {{ end }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 展会摘要 -->
+                {{ with .Params.summary }}
+                <div class="exhibition-summary mt-3">
+                    <p class="lead">{{ . }}</p>
+                </div>
+                {{ end }}
+
+                <!-- 展会倒计时 -->
+                <div class="exhibition-countdown mt-3">
+                    <div class="countdown-container" data-target-date="{{ .Params.event_date }}">
+                        <div class="countdown-display">
+                            <div class="countdown-status">
+                                <i class="bi bi-clock-history me-2"></i>
+                                <span class="countdown-label">距离展会开始还有</span>
+                            </div>
+                            <div class="countdown-timer">
+                                <div class="countdown-item">
+                                    <span class="countdown-number" id="days">--</span>
+                                    <span class="countdown-unit">天</span>
+                                </div>
+                                <div class="countdown-item">
+                                    <span class="countdown-number" id="hours">--</span>
+                                    <span class="countdown-unit">时</span>
+                                </div>
+                                <div class="countdown-item">
+                                    <span class="countdown-number" id="minutes">--</span>
+                                    <span class="countdown-unit">分</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="countdown-ended" style="display: none;">
+                            <div class="ended-status">
+                                <i class="bi bi-check-circle me-2"></i>
+                                <span class="ended-label">展会已结束</span>
+                            </div>
+                            <div class="ended-message">感谢您的关注，期待下届再会！</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    {{ partial "breadcrumbs.html" . }}
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- 展会内容区域 -->
+
+
+            <!-- 展会介绍 -->
+            <div class="exhibition-content mb-5">
+                <h3 class="section-title mb-4">
+                    <i class="bi bi-file-text me-2"></i>展会介绍
+                </h3>
+
+                <!-- 文章元信息 -->
+                <div class="article-meta mb-4">
+                    <div class="d-flex flex-wrap align-items-center text-muted">
+                        <div class="me-4 mb-2">
+                            <i class="bi bi-calendar3 me-1"></i>
+                            <span>发布时间：{{ .Date.Format "2006年01月02日" }}</span>
+                        </div>
+                        {{ if .Params.author }}
+                        <div class="me-4 mb-2">
+                            <i class="bi bi-person me-1"></i>
+                            <span>作者：{{ .Params.author }}</span>
+                        </div>
+                        {{ end }}
+                        <div class="me-4 mb-2">
+                            <i class="bi bi-eye me-1"></i>
+                            <span>浏览次数：<span id="exhibition-view-count">{{ .Params.views | default 0 }}</span></span>
+                        </div>
+                        {{ if .Params.categories }}
+                        <div class="me-4 mb-2">
+                            <i class="bi bi-folder me-1"></i>
+                            <span>分类：
+                                {{ range $index, $category := .Params.categories }}
+                                    {{ if $index }}, {{ end }}{{ $category }}
+                                {{ end }}
+                            </span>
+                        </div>
+                        {{ end }}
+                    </div>
+                </div>
+
+                <div class="article-content">
+                    {{ .Content }}
+                </div>
+            </div>
+
+            <!-- 展品范围 -->
+            {{ with .Params.exhibition_scope }}
+            <div class="exhibition-scope mb-5">
+                <h3 class="section-title mb-4">
+                    <i class="bi bi-grid me-2"></i>展品范围
+                </h3>
+
+                <div class="scope-content">
+                    {{ range $index, $scope := . }}
+                    <div class="scope-category mb-4">
+                        <h4 class="scope-category-title">
+                            {{ if eq .category "军用航空" }}
+                            <i class="bi bi-shield-check me-2 text-primary"></i>
+                            {{ else if eq .category "民用航空" }}
+                            <i class="bi bi-airplane me-2 text-success"></i>
+                            {{ else if eq .category "航天技术" }}
+                            <i class="bi bi-rocket-takeoff me-2 text-info"></i>
+                            {{ else if eq .category "航空服务" }}
+                            <i class="bi bi-gear me-2 text-warning"></i>
+                            {{ else }}
+                            <i class="bi bi-box me-2 text-secondary"></i>
+                            {{ end }}
+                            {{ .category }}
+                        </h4>
+                        <div class="scope-items">
+                            {{ range .items }}
+                            <span class="scope-item-tag">{{ . }}</span>
+                            {{ end }}
+                        </div>
+                    </div>
+                    {{ end }}
+                </div>
+            </div>
+            {{ end }}
+
+            <!-- 历届视图 -->
+            {{ with .Params.historical_images }}
+            <div class="historical-gallery mb-5">
+                <h3 class="section-title mb-4">
+                    <i class="bi bi-images me-2"></i>历届精彩回顾
+                </h3>
+
+                <div class="gallery-grid">
+                    {{ range $index, $image := . }}
+                    <div class="gallery-item">
+                        <img src="{{ .image }}" alt="往届展会图片{{ add $index 1 }}" class="gallery-image" loading="lazy">
+                    </div>
+                    {{ end }}
+                </div>
+            </div>
+            {{ end }}
+
+            <!-- 往届参展商 -->
+            {{ with .Params.previous_exhibitors }}
+            <div class="previous-exhibitors mb-5">
+                <h3 class="section-title mb-4">
+                    <i class="bi bi-building me-2"></i>往届参展商名录
+                </h3>
+
+                <div class="exhibitors-list">
+                    <div class="row">
+                        {{ range $index, $exhibitor := . }}
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="exhibitor-list-item">
+                                <div class="exhibitor-info">
+                                    <span class="exhibitor-number">{{ add $index 1 }}.</span>
+                                    <span class="exhibitor-name">{{ .name }}</span>
+                                    {{ with .category }}
+                                    <span class="exhibitor-category-tag">{{ . }}</span>
+                                    {{ end }}
+                                </div>
+                            </div>
+                        </div>
+                        {{ end }}
+                    </div>
+                </div>
+            </div>
+            {{ end }}
+        </div>
+
+        <!-- 侧边栏 -->
+        <div class="col-lg-4">
+            <!-- 参展信息 -->
+            {{ if or .Params.contact_info .Params.registration_info }}
+            <div class="sidebar-card mb-4">
+                <div class="sidebar-header">
+                    <h5 class="sidebar-title">
+                        <i class="bi bi-person-plus me-2"></i>参展信息
+                    </h5>
+                </div>
+                <div class="sidebar-content">
+                    {{ with .Params.contact_info }}
+                    <div class="contact-info mb-3">
+                        <h6 class="contact-title">联系方式</h6>
+                        {{ with .phone }}<p class="contact-item"><i class="bi bi-telephone me-2"></i>{{ . }}</p>{{ end }}
+                        {{ with .email }}<p class="contact-item"><i class="bi bi-envelope me-2"></i>{{ . }}</p>{{ end }}
+                        {{ with .website }}<p class="contact-item"><i class="bi bi-globe me-2"></i><a href="{{ . }}" target="_blank">{{ . }}</a></p>{{ end }}
+                    </div>
+                    {{ end }}
+
+                    {{ with .Params.registration_info }}
+                    <div class="registration-info">
+                        <h6 class="registration-title">报名信息</h6>
+                        {{ with .deadline }}<p class="registration-item"><i class="bi bi-calendar-check me-2"></i>报名截止：{{ . }}</p>{{ end }}
+                        {{ with .fee }}<p class="registration-item"><i class="bi bi-currency-dollar me-2"></i>参展费用：{{ . }}</p>{{ end }}
+                        {{ with .url }}<p class="registration-item"><a href="{{ . }}" target="_blank" class="btn btn-primary btn-sm w-100">立即报名</a></p>{{ end }}
+                    </div>
+                    {{ end }}
+                </div>
+            </div>
+            {{ end }}
+
+            <!-- 相关产品推荐 -->
+            {{ with .Params.related_products }}
+            <div class="sidebar-card mb-4">
+                <div class="sidebar-header">
+                    <h5 class="sidebar-title">
+                        <i class="bi bi-box-seam me-2"></i>相关产品推荐
+                    </h5>
+                </div>
+                <div class="sidebar-content">
+                    {{ range . }}
+                    {{ $product := site.GetPage (printf "/products/%s" .) }}
+                    {{ if $product }}
+                    <div class="product-item">
+                        <div class="d-flex align-items-start">
+                            {{ with $product.Params.gallery }}
+                            {{ range first 1 . }}
+                            <img src="{{ .image }}" alt="{{ .alt }}" class="product-thumb me-3">
+                            {{ end }}
+                            {{ end }}
+                            <div class="flex-grow-1">
+                                <h6 class="product-title">
+                                    <a href="{{ $product.RelPermalink | relURL }}" class="text-decoration-none">{{ $product.Title }}</a>
+                                </h6>
+                                <p class="product-summary">{{ $product.Params.summary | truncate 50 }}</p>
+                                <div class="product-meta">
+                                    <span class="product-model">{{ $product.Params.model }}</span>
+                                    <a href="{{ $product.RelPermalink | relURL }}" class="btn btn-outline-primary btn-sm">查看详情</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{ end }}
+                    {{ end }}
+                </div>
+            </div>
+            {{ end }}
+
+            <!-- 相关展会 -->
+            <div class="sidebar-card mb-4">
+                <div class="sidebar-header">
+                    <h5 class="sidebar-title">
+                        <i class="bi bi-calendar-event me-2"></i>相关展会
+                    </h5>
+                </div>
+                <div class="sidebar-content">
+                    {{ $currentPage := . }}
+                    {{ $relatedPages := where (where .Site.RegularPages "Type" "news") "RelPermalink" "ne" .RelPermalink }}
+                    {{ $relatedByCategory := where $relatedPages "Params.categories" "intersect" (slice "展会信息") }}
+                    {{ range first 5 $relatedByCategory }}
+                    <div class="exhibition-item">
+                        <h6 class="exhibition-title">
+                            <a href="{{ .RelPermalink | relURL }}" class="text-decoration-none">{{ .Title }}</a>
+                        </h6>
+                        <div class="exhibition-meta">
+                            <div class="exhibition-date">
+                                <i class="bi bi-calendar3 me-1"></i>{{ .Params.event_date }}
+                            </div>
+                            <div class="exhibition-location">
+                                <i class="bi bi-geo-alt me-1"></i>{{ .Params.location }}
+                            </div>
+                        </div>
+                    </div>
+                    {{ end }}
+                </div>
+            </div>
+
+
+
+            <!-- 分享功能 -->
+            <div class="sidebar-card">
+                <div class="sidebar-header">
+                    <h5 class="sidebar-title">
+                        <i class="bi bi-share me-2"></i>分享展会
+                    </h5>
+                </div>
+                <div class="sidebar-content">
+                    <div class="share-buttons">
+                        <button class="btn btn-outline-success btn-sm w-100 mb-2" onclick="shareToWeChat()">
+                            <i class="bi bi-wechat me-2"></i>微信分享
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm w-100 mb-2" onclick="shareToWeibo()">
+                            <i class="bi bi-share me-2"></i>微博分享
+                        </button>
+                        <button class="btn btn-outline-primary btn-sm w-100" onclick="copyLink()">
+                            <i class="bi bi-link-45deg me-2"></i>复制链接
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* 展会资讯专用样式 */
+
+/* 面包屑导航优化 */
+.exhibition-breadcrumb {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+    margin-bottom: 0;
+}
+
+.exhibition-breadcrumb .breadcrumb {
+    background: transparent;
+    font-size: 0.95rem;
+    margin-bottom: 0;
+    padding: 1.25rem 0;
+    border-radius: 0;
+}
+
+.exhibition-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    color: #495057;
+    font-weight: 600;
+    margin: 0 0.75rem;
+}
+
+.exhibition-breadcrumb .breadcrumb-item a {
+    color: #495057;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0;
+}
+
+.exhibition-breadcrumb .breadcrumb-item a:hover {
+    color: #007bff;
+    background-color: rgba(0, 123, 255, 0.1);
+    text-decoration: none;
+}
+
+.exhibition-breadcrumb .breadcrumb-item.active {
+    color: #212529;
+    font-weight: 600;
+}
+
+:root {
+    --exhibition-primary: #2563eb;
+    --exhibition-secondary: #1e40af;
+    --exhibition-success: #059669;
+    --exhibition-warning: #d97706;
+    --exhibition-info: #0891b2;
+    --exhibition-light: #f8fafc;
+    --exhibition-dark: #1e293b;
+    --exhibition-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --exhibition-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    --exhibition-shadow-hover: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+/* 展会头部信息区 */
+.exhibition-header-section {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    padding: 2.5rem 0;
+    margin-bottom: 2rem;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.exhibition-header-section.has-cover {
+    background-blend-mode: overlay;
+}
+
+.exhibition-header-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(30, 60, 114, 0.85);
+    z-index: 1;
+}
+
+.exhibition-header-section .container {
+    position: relative;
+    z-index: 2;
+}
+
+.exhibition-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.badge-exhibition {
+    background: rgba(255,255,255,0.25);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 30px;
+    font-weight: 600;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.3);
+    font-size: 0.95rem;
+}
+
+.badge-type {
+    background: #ffc107;
+    color: #000;
+    padding: 0.6rem 1.2rem;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 8px rgba(255,193,7,0.3);
+}
+
+.badge-tag {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    font-weight: 500;
+}
+
+.exhibition-title {
+    font-size: 5.5rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    text-shadow: 4px 4px 16px rgba(0,0,0,0.8);
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+}
+
+.exhibition-summary {
+    font-size: 1.4rem;
+    color: #ffffff;
+    text-shadow: 3px 3px 12px rgba(0,0,0,0.8);
+    line-height: 1.6;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+/* 结构化信息展示 */
+.exhibition-info-structured {
+    background: rgba(255,255,255,0.15);
+    border-radius: 0;
+    padding: 1.5rem;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.info-item {
+    text-align: center;
+    padding: 0.75rem 0.5rem;
+}
+
+.info-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+    margin-bottom: 0.25rem;
+    line-height: 1.3;
+}
+
+.info-sub {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.8);
+    font-weight: 500;
+}
+
+/* 倒计时样式 */
+.exhibition-countdown {
+    background: rgba(255,255,255,0.1);
+    border-radius: 0;
+    padding: 1.25rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.countdown-display {
+    text-align: center;
+}
+
+.countdown-status {
+    margin-bottom: 1rem;
+}
+
+.countdown-label {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+}
+
+.countdown-timer {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.countdown-item {
+    text-align: center;
+    background: rgba(255,255,255,0.15);
+    border-radius: 0;
+    padding: 0.75rem 1rem;
+    min-width: 70px;
+    backdrop-filter: blur(5px);
+}
+
+.countdown-number {
+    display: block;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.countdown-unit {
+    font-size: 0.9rem;
+    color: #ffffff;
+    text-shadow: 1px 1px 6px rgba(0,0,0,0.6);
+    font-weight: 500;
+}
+
+.countdown-ended {
+    text-align: center;
+}
+
+.ended-status {
+    margin-bottom: 1rem;
+}
+
+.ended-label {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffc107;
+}
+
+.ended-message {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.8);
+    font-style: italic;
+}
+
+/* 内容区域样式 */
+.section-title {
+    color: var(--exhibition-primary);
+    font-size: 1.75rem;
+    font-weight: 700;
+    border-bottom: 3px solid var(--exhibition-primary);
+    padding-bottom: 0.75rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+.section-title i {
+    font-size: 1.5rem;
+    margin-right: 0.75rem;
+}
+
+/* 文章元信息样式 */
+.article-meta {
+    padding: 1rem 0;
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 1.5rem;
+}
+
+.article-meta .text-muted {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.article-meta i {
+    color: var(--exhibition-primary);
+    font-size: 0.85rem;
+}
+
+.article-content {
+    line-height: 1.8;
+    color: #2d3748;
+    font-size: 1.1rem;
+    font-weight: 400;
+}
+
+.article-content h2 {
+    color: var(--exhibition-primary);
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--exhibition-primary);
+}
+
+.article-content h3 {
+    color: var(--exhibition-secondary);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.article-content h4 {
+    color: #374151;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.article-content p {
+    margin-bottom: 1.25rem;
+    text-align: justify;
+}
+
+.article-content ul, .article-content ol {
+    margin-bottom: 1.25rem;
+    padding-left: 1.5rem;
+}
+
+.article-content li {
+    margin-bottom: 0.5rem;
+}
+
+/* 展会内容区域 */
+.exhibition-content {
+    background: white;
+    border-radius: 0;
+    padding: 2.5rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid #e9ecef;
+    margin-bottom: 2rem;
+}
+
+/* 展品范围样式 */
+.exhibition-scope {
+    background: white;
+    border-radius: 0;
+    padding: 2.5rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid #e9ecef;
+    margin-bottom: 2rem;
+}
+
+.scope-category {
+    border-left: 4px solid var(--exhibition-primary);
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+    background: #f8f9fa;
+    border-radius: 0;
+}
+
+.scope-category-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--exhibition-primary);
+    margin-bottom: 1rem;
+}
+
+.scope-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.scope-item-tag {
+    background: white;
+    color: var(--exhibition-primary);
+    padding: 0.6rem 1.2rem;
+    border-radius: 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border: 2px solid var(--exhibition-primary);
+    transition: all 0.3s ease;
+}
+
+.scope-item-tag:hover {
+    background: var(--exhibition-primary);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+/* 历届视图网格样式 */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.gallery-item {
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.gallery-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover .gallery-image {
+    transform: scale(1.05);
+}
+
+/* 往届参展商列表样式 */
+.exhibitors-list {
+    background: white;
+    border-radius: 0;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.exhibitor-list-item {
+    padding: 0.75rem 1rem;
+    border-radius: 0;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+}
+
+.exhibitor-list-item:hover {
+    background: #f8fafc;
+    border-left-color: var(--exhibition-primary);
+    transform: translateX(5px);
+}
+
+.exhibitor-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.exhibitor-number {
+    font-weight: 600;
+    color: var(--exhibition-primary);
+    min-width: 30px;
+    font-size: 0.9rem;
+}
+
+.exhibitor-name {
+    font-weight: 600;
+    color: var(--exhibition-dark);
+    font-size: 1rem;
+    flex: 1;
+    min-width: 120px;
+}
+
+.exhibitor-category-tag {
+    font-size: 0.8rem;
+    color: var(--exhibition-primary);
+    background: rgba(37, 99, 235, 0.1);
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* 侧边栏样式 */
+.sidebar-card {
+    background: white;
+    border-radius: 0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid #e9ecef;
+    overflow: hidden;
+}
+
+.sidebar-header {
+    background: var(--exhibition-gradient);
+    color: white;
+    padding: 1rem 1.5rem;
+}
+
+.sidebar-title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.sidebar-content {
+    padding: 1.5rem;
+}
+
+/* 产品推荐样式 */
+.product-item {
+    padding: 1rem 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.product-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.product-thumb {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 0;
+}
+
+.product-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.product-title a {
+    color: var(--exhibition-dark);
+    transition: color 0.2s ease;
+}
+
+.product-title a:hover {
+    color: var(--exhibition-primary);
+}
+
+.product-summary {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+}
+
+.product-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.product-model {
+    font-size: 0.8rem;
+    color: var(--exhibition-primary);
+    font-weight: 500;
+}
+
+/* 相关展会样式 */
+.exhibition-item {
+    padding: 1rem 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.exhibition-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.exhibition-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.exhibition-title a {
+    color: var(--exhibition-dark);
+    transition: color 0.2s ease;
+}
+
+.exhibition-title a:hover {
+    color: var(--exhibition-primary);
+}
+
+.exhibition-meta {
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.exhibition-date, .exhibition-location {
+    margin-bottom: 0.25rem;
+}
+
+/* 联系信息样式 */
+.contact-title, .registration-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--exhibition-dark);
+    margin-bottom: 0.75rem;
+}
+
+.contact-item, .registration-item {
+    font-size: 0.9rem;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.contact-item i, .registration-item i {
+    color: var(--exhibition-primary);
+    width: 16px;
+}
+
+/* 分享按钮样式 */
+.share-buttons .btn {
+    transition: all 0.2s ease;
+}
+
+.share-buttons .btn:hover {
+    transform: translateY(-1px);
+}
+
+/* 信息卡片网格 */
+.exhibition-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.info-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: var(--exhibition-shadow);
+    transition: all 0.3s ease;
+    border: 1px solid #e5e7eb;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--exhibition-shadow-hover);
+}
+
+.info-card-primary { border-left: 4px solid var(--exhibition-primary); }
+.info-card-success { border-left: 4px solid var(--exhibition-success); }
+.info-card-info { border-left: 4px solid var(--exhibition-info); }
+.info-card-warning { border-left: 4px solid var(--exhibition-warning); }
+
+.info-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.info-card-primary .info-icon {
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--exhibition-primary);
+}
+
+.info-card-success .info-icon {
+    background: rgba(5, 150, 105, 0.1);
+    color: var(--exhibition-success);
+}
+
+.info-card-info .info-icon {
+    background: rgba(8, 145, 178, 0.1);
+    color: var(--exhibition-info);
+}
+
+.info-card-warning .info-icon {
+    background: rgba(217, 119, 6, 0.1);
+    color: var(--exhibition-warning);
+}
+
+.info-content h6 {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--exhibition-dark);
+}
+
+.info-content p {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    color: #374151;
+}
+
+.info-content small {
+    color: #6b7280;
+}
+
+/* 统计数据部分 */
+.exhibition-stats-section {
+    background: var(--exhibition-light);
+    border-radius: 20px;
+    padding: 3rem 2rem;
+}
+
+.section-header {
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--exhibition-dark);
+    margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+    color: #6b7280;
+    font-size: 1.1rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: var(--exhibition-shadow);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--exhibition-primary);
+}
+
+.stat-card-primary::before { background: var(--exhibition-primary); }
+.stat-card-success::before { background: var(--exhibition-success); }
+.stat-card-warning::before { background: var(--exhibition-warning); }
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--exhibition-shadow-hover);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+}
+
+.stat-card-primary .stat-icon {
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--exhibition-primary);
+}
+
+.stat-card-success .stat-icon {
+    background: rgba(5, 150, 105, 0.1);
+    color: var(--exhibition-success);
+}
+
+.stat-card-warning .stat-icon {
+    background: rgba(217, 119, 6, 0.1);
+    color: var(--exhibition-warning);
+}
+
+.stat-content {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--exhibition-dark);
+    line-height: 1;
+}
+
+.stat-unit {
+    font-size: 1rem;
+    color: #6b7280;
+    margin-left: 0.25rem;
+}
+
+.stat-label {
+    font-size: 1rem;
+    color: #6b7280;
+    margin-top: 0.5rem;
+}
+
+.stat-progress {
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--exhibition-primary);
+    border-radius: 3px;
+    transition: width 2s ease;
+    width: 0;
+}
+
+.stat-card-success .progress-bar { background: var(--exhibition-success); }
+.stat-card-warning .progress-bar { background: var(--exhibition-warning); }
+
+/* 内容卡片 */
+.exhibition-content-section .content-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: var(--exhibition-shadow);
+    overflow: hidden;
+}
+
+.content-header {
+    background: var(--exhibition-gradient);
+    color: white;
+    padding: 1.5rem 2rem;
+}
+
+.content-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.content-body {
+    padding: 2rem;
+}
+
+.article-content {
+    line-height: 1.8;
+    color: #374151;
+}
+
+.article-content h2 {
+    color: var(--exhibition-primary);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.article-content h3 {
+    color: var(--exhibition-secondary);
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+/* 展品范围样式 */
+.exhibition-scope-section {
+    background: var(--exhibition-light);
+    border-radius: 20px;
+    padding: 3rem 2rem;
+}
+
+.scope-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.scope-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: var(--exhibition-shadow);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+.scope-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--exhibition-shadow-hover);
+}
+
+.scope-header {
+    background: var(--exhibition-gradient);
+    color: white;
+    padding: 1.5rem;
+    text-align: center;
+    position: relative;
+}
+
+.scope-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.8rem;
+    backdrop-filter: blur(10px);
+}
+
+.scope-title {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.scope-body {
+    padding: 1.5rem;
+}
+
+.scope-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.scope-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f3f4f6;
+    transition: all 0.2s ease;
+}
+
+.scope-item:last-child {
+    border-bottom: none;
+}
+
+.scope-item:hover {
+    background: #f8fafc;
+    padding-left: 0.5rem;
+}
+
+.scope-item i {
+    color: var(--exhibition-success);
+    margin-right: 0.75rem;
+    font-size: 1rem;
+}
+
+.scope-footer {
+    background: #f8fafc;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    border-top: 1px solid #e5e7eb;
+}
+
+.scope-count {
+    color: #6b7280;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* 历届视图样式 */
+.historical-gallery-section {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    box-shadow: var(--exhibition-shadow);
+}
+
+.gallery-container {
+    position: relative;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.gallery-item {
+    position: relative;
+}
+
+.gallery-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--exhibition-shadow);
+    transition: all 0.3s ease;
+}
+
+.gallery-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--exhibition-shadow-hover);
+}
+
+.gallery-image {
+    position: relative;
+    overflow: hidden;
+    height: 250px;
+}
+
+.gallery-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.gallery-card:hover .gallery-image img {
+    transform: scale(1.1);
+}
+
+.gallery-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.gallery-card:hover .gallery-overlay {
+    opacity: 1;
+}
+
+.gallery-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.gallery-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.9);
+    border: none;
+    color: var(--exhibition-primary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+}
+
+.gallery-btn:hover {
+    background: white;
+    transform: scale(1.1);
+}
+
+.gallery-caption {
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gallery-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--exhibition-dark);
+}
+
+.gallery-index {
+    background: var(--exhibition-primary);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.gallery-more {
+    margin-top: 2rem;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .exhibition-header-section {
+        padding: 2rem 0;
+    }
+
+    .exhibition-title {
+        font-size: 4.2rem;
+        line-height: 1.05;
+        margin-bottom: 0.75rem;
+    }
+
+    .exhibition-summary {
+        font-size: 1.1rem;
+    }
+
+    .exhibition-info-structured {
+        padding: 1.25rem;
+    }
+
+    .countdown-timer {
+        gap: 1rem;
+    }
+
+    .countdown-item {
+        padding: 0.6rem 0.8rem;
+        min-width: 60px;
+    }
+
+    .countdown-number {
+        font-size: 1.8rem;
+    }
+
+    .exhibition-info-structured {
+        padding: 1.5rem;
+    }
+
+    .info-item {
+        margin-bottom: 1.5rem;
+        padding: 0.75rem 0.25rem;
+    }
+
+    .info-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .info-label {
+        font-size: 0.9rem;
+    }
+
+    .info-value {
+        font-size: 1.2rem;
+    }
+
+    .info-sub {
+        font-size: 0.8rem;
+    }
+
+    .scope-items {
+        gap: 0.25rem;
+    }
+
+    .scope-item-tag {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+    }
+
+    .sidebar-content {
+        padding: 1rem;
+    }
+
+    .product-thumb {
+        width: 50px;
+        height: 50px;
+    }
+
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .gallery-image {
+        height: 150px;
+    }
+
+    .exhibitors-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+
+    .exhibitor-item {
+        padding: 1rem;
+    }
+
+    .exhibitor-logo {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+@media (max-width: 576px) {
+    .exhibition-header-section {
+        padding: 1.5rem 0;
+    }
+
+    .exhibition-title {
+        font-size: 3.2rem;
+        line-height: 1.1;
+        margin-bottom: 0.5rem;
+    }
+
+    .exhibition-summary {
+        font-size: 1rem;
+    }
+
+    .exhibition-info-structured {
+        padding: 1rem;
+    }
+
+    .exhibition-countdown {
+        padding: 1rem;
+    }
+
+    .countdown-timer {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: center;
+    }
+
+    .countdown-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 180px;
+        padding: 0.6rem 1rem;
+    }
+
+    .countdown-number {
+        font-size: 1.6rem;
+    }
+
+    .exhibition-badges {
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .badge-exhibition, .badge-type, .badge-tag {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .exhibition-info-structured {
+        padding: 1rem;
+    }
+
+    .info-value {
+        font-size: 1.1rem;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+    }
+
+    .sidebar-header {
+        padding: 0.75rem 1rem;
+    }
+
+    .sidebar-title {
+        font-size: 1rem;
+    }
+}
+
+/* 动画效果 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes countUp {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+/* AOS动画支持 */
+[data-aos] {
+    opacity: 0;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+[data-aos].aos-animate {
+    opacity: 1;
+}
+</style>
+
+<!-- 展会功能脚本 -->
+<script>
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', function() {
+    initCountdown();
+    initStatsAnimation();
+    initProgressBars();
+    initAOS();
+    initViewCounter();
+});
+
+// 倒计时功能
+function initCountdown() {
+    const countdownContainer = document.querySelector('.countdown-container');
+    if (!countdownContainer) return;
+
+    const targetDateStr = countdownContainer.getAttribute('data-target-date');
+    if (!targetDateStr) return;
+
+    // 解析目标日期范围
+    const dateRange = parseChineseDateRange(targetDateStr);
+    if (!dateRange) return;
+
+    const countdownDisplay = countdownContainer.querySelector('.countdown-display');
+    const countdownEnded = countdownContainer.querySelector('.countdown-ended');
+    const countdownLabel = countdownContainer.querySelector('.countdown-label');
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const startDistance = dateRange.startDate - now;
+        const endDistance = dateRange.endDate - now;
+
+        // 如果展会已经结束
+        if (endDistance < 0) {
+            countdownDisplay.style.display = 'none';
+            countdownEnded.style.display = 'block';
+            return;
+        }
+
+        // 如果展会正在进行中
+        if (startDistance < 0 && endDistance > 0) {
+            countdownLabel.textContent = '展会正在进行中，距离结束还有';
+            const days = Math.floor(endDistance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((endDistance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((endDistance % (1000 * 60 * 60)) / (1000 * 60));
+
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            return;
+        }
+
+        // 展会还未开始
+        countdownLabel.textContent = '距离展会开始还有';
+        const days = Math.floor(startDistance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((startDistance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((startDistance % (1000 * 60 * 60)) / (1000 * 60));
+
+        document.getElementById('days').textContent = days.toString().padStart(2, '0');
+        document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+        document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 60000); // 每分钟更新一次
+}
+
+// 解析中文日期范围格式
+function parseChineseDateRange(dateStr) {
+    // 匹配格式：2026年11月10日~11月15日 或 2026年11月10日~12月15日
+    const rangeMatch = dateStr.match(/(\d{4})年(\d{1,2})月(\d{1,2})日~(\d{1,2})月(\d{1,2})日/);
+    if (rangeMatch) {
+        const year = parseInt(rangeMatch[1]);
+        const startMonth = parseInt(rangeMatch[2]) - 1;
+        const startDay = parseInt(rangeMatch[3]);
+        const endMonth = parseInt(rangeMatch[4]) - 1;
+        const endDay = parseInt(rangeMatch[5]);
+
+        const startDate = new Date(year, startMonth, startDay).getTime();
+        const endDate = new Date(year, endMonth, endDay, 23, 59, 59).getTime(); // 结束日期设为当天最后一刻
+
+        return { startDate, endDate };
+    }
+
+    // 如果只有单个日期，则认为是单日展会
+    const singleMatch = dateStr.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
+    if (singleMatch) {
+        const year = parseInt(singleMatch[1]);
+        const month = parseInt(singleMatch[2]) - 1;
+        const day = parseInt(singleMatch[3]);
+
+        const startDate = new Date(year, month, day).getTime();
+        const endDate = new Date(year, month, day, 23, 59, 59).getTime();
+
+        return { startDate, endDate };
+    }
+
+    return null;
+}
+
+// 统计数据动画
+function initStatsAnimation() {
+    const statNumbers = document.querySelectorAll('.stat-number[data-target]');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateNumber(entry.target);
+                observer.unobserve(entry.target);
+            }
+        });
+    });
+
+    statNumbers.forEach(stat => observer.observe(stat));
+}
+
+function animateNumber(element) {
+    const target = parseInt(element.getAttribute('data-target'));
+    const duration = 2000;
+    const step = target / (duration / 16);
+    let current = 0;
+
+    const timer = setInterval(() => {
+        current += step;
+        if (current >= target) {
+            current = target;
+            clearInterval(timer);
+        }
+        element.textContent = Math.floor(current).toLocaleString();
+    }, 16);
+}
+
+// 进度条动画
+function initProgressBars() {
+    const progressBars = document.querySelectorAll('.progress-bar[data-width]');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const width = entry.target.getAttribute('data-width');
+                setTimeout(() => {
+                    entry.target.style.width = width + '%';
+                }, 500);
+                observer.unobserve(entry.target);
+            }
+        });
+    });
+
+    progressBars.forEach(bar => observer.observe(bar));
+}
+
+// 初始化AOS动画
+function initAOS() {
+    // 简单的AOS实现
+    const aosElements = document.querySelectorAll('[data-aos]');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('aos-animate');
+                observer.unobserve(entry.target);
+            }
+        });
+    });
+
+    aosElements.forEach(el => observer.observe(el));
+}
+
+// 图片灯箱功能
+function openLightbox(imageSrc, caption) {
+    const lightbox = document.createElement('div');
+    lightbox.className = 'lightbox-overlay';
+    lightbox.innerHTML = `
+        <div class="lightbox-container">
+            <div class="lightbox-header">
+                <h5>${caption}</h5>
+                <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+            </div>
+            <div class="lightbox-content">
+                <img src="${imageSrc}" alt="${caption}" class="lightbox-image">
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(lightbox);
+    document.body.style.overflow = 'hidden';
+
+    // 点击背景关闭
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+            closeLightbox();
+        }
+    });
+}
+
+function closeLightbox() {
+    const lightbox = document.querySelector('.lightbox-overlay');
+    if (lightbox) {
+        document.body.removeChild(lightbox);
+        document.body.style.overflow = '';
+    }
+}
+
+// 分享图片功能
+function shareImage(imageSrc, caption) {
+    if (navigator.share) {
+        navigator.share({
+            title: caption,
+            text: `查看展会图片：${caption}`,
+            url: window.location.href
+        });
+    } else {
+        copyLink();
+    }
+}
+
+// 加载更多图片
+function loadMoreGallery() {
+    alert('更多历届图片功能开发中...');
+}
+
+// 分享功能
+function shareToWeChat() {
+    const title = document.title;
+    const url = window.location.href;
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`;
+
+    const modal = document.createElement('div');
+    modal.className = 'modal fade';
+    modal.innerHTML = `
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">微信分享</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="mb-3">请使用微信扫描二维码分享</p>
+                    <img src="${qrUrl}" alt="微信分享二维码" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+    const bsModal = new bootstrap.Modal(modal);
+    bsModal.show();
+
+    modal.addEventListener('hidden.bs.modal', () => {
+        document.body.removeChild(modal);
+    });
+}
+
+function shareToWeibo() {
+    const title = document.title;
+    const url = window.location.href;
+    const summary = document.querySelector('meta[name="description"]')?.content || '';
+    const weiboUrl = `https://service.weibo.com/share/share.php?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title + ' ' + summary)}`;
+    window.open(weiboUrl, '_blank', 'width=600,height=400');
+}
+
+function copyLink() {
+    const url = window.location.href;
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url).then(() => {
+            showToast('链接已复制到剪贴板', 'success');
+        }).catch(() => {
+            fallbackCopyTextToClipboard(url);
+        });
+    } else {
+        fallbackCopyTextToClipboard(url);
+    }
+}
+
+function fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.select();
+    try {
+        document.execCommand('copy');
+        showToast('链接已复制到剪贴板', 'success');
+    } catch (err) {
+        showToast('复制失败，请手动复制链接', 'error');
+    }
+    document.body.removeChild(textArea);
+}
+
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast-notification toast-${type}`;
+    toast.textContent = message;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 100);
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            document.body.removeChild(toast);
+        }, 300);
+    }, 3000);
+}
+
+// 浏览次数统计功能
+function initViewCounter() {
+    const LC_APP_ID = 'pUEgNUJ66pc7S4FqVpqxkTkx-MdYXbMMI';
+    const LC_APP_KEY = 'K9OXRf3L6Zp0s6TEzJElWQ5r';
+    const currentUrl = window.location.pathname;
+
+    // 增加浏览次数
+    incrementViewCount(currentUrl, LC_APP_ID, LC_APP_KEY);
+
+    // 获取并显示浏览次数
+    fetchViewCount(currentUrl, LC_APP_ID, LC_APP_KEY);
+}
+
+function incrementViewCount(url, appId, appKey) {
+    const data = {
+        url: url,
+        time: { "__op": "Increment", "amount": 1 }
+    };
+
+    fetch(`https://${appId.substring(0, 8)}.api.lncldglobal.com/1.1/classes/Counter`, {
+        method: 'POST',
+        headers: {
+            'X-LC-Id': appId,
+            'X-LC-Key': appKey,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            // 如果记录不存在，创建新记录
+            return createViewCount(url, appId, appKey);
+        }
+        return response.json();
+    })
+    .catch(error => {
+        console.log('浏览次数统计:', error.message);
+        // 尝试创建新记录
+        createViewCount(url, appId, appKey);
+    });
+}
+
+function createViewCount(url, appId, appKey) {
+    const data = {
+        url: url,
+        time: 1
+    };
+
+    return fetch(`https://${appId.substring(0, 8)}.api.lncldglobal.com/1.1/classes/Counter`, {
+        method: 'POST',
+        headers: {
+            'X-LC-Id': appId,
+            'X-LC-Key': appKey,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .catch(error => {
+        console.log('创建浏览记录失败:', error.message);
+    });
+}
+
+function fetchViewCount(url, appId, appKey) {
+    const query = encodeURIComponent(JSON.stringify({ url: url }));
+
+    fetch(`https://${appId.substring(0, 8)}.api.lncldglobal.com/1.1/classes/Counter?where=${query}`, {
+        method: 'GET',
+        headers: {
+            'X-LC-Id': appId,
+            'X-LC-Key': appKey,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.results && data.results.length > 0) {
+            const viewCount = data.results[0].time || 0;
+            updateViewCountDisplay(viewCount);
+        }
+    })
+    .catch(error => {
+        console.log('获取浏览次数失败:', error.message);
+    });
+}
+
+function updateViewCountDisplay(count) {
+    const viewCountElement = document.getElementById('exhibition-view-count');
+    if (viewCountElement) {
+        // 添加数字动画效果
+        const currentCount = parseInt(viewCountElement.textContent) || 0;
+        animateNumber(viewCountElement, currentCount, count, 1000);
+    }
+}
+
+function animateNumber(element, start, end, duration) {
+    const startTime = performance.now();
+    const difference = end - start;
+
+    function updateNumber(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        // 使用缓动函数
+        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+        const current = Math.round(start + difference * easeOutQuart);
+
+        element.textContent = current.toLocaleString();
+
+        if (progress < 1) {
+            requestAnimationFrame(updateNumber);
+        }
+    }
+
+    requestAnimationFrame(updateNumber);
+}
+</script>
+
+<!-- 灯箱样式 -->
+<style>
+.lightbox-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.9);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.lightbox-container {
+    max-width: 90vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.lightbox-header {
+    padding: 1rem;
+    background: var(--exhibition-primary);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.lightbox-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox-content {
+    padding: 1rem;
+}
+
+.lightbox-image {
+    max-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+}
+
+.toast-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    z-index: 10000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+}
+
+.toast-notification.show {
+    transform: translateX(0);
+}
+
+.toast-success {
+    background: var(--exhibition-success);
+}
+
+.toast-error {
+    background: #dc2626;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+</style>
+{{ end }}

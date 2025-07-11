@@ -1,0 +1,54 @@
+{{- $products := slice -}}
+{{- $currentCategory := .Title -}}
+
+{{- /* 收集当前分类下的产品 */ -}}
+{{- range .Site.Pages -}}
+  {{- if and (eq .Section "products") (ne .Title "") (ne .File.BaseFileName "_index") -}}
+    {{- if or (eq .Params.primary_category $currentCategory) (eq .Params.secondary_category $currentCategory) -}}
+      {{- $product := dict
+        "id" (.File.BaseFileName | default .Title | urlize)
+        "title" .Title
+        "summary" (.Summary | default "")
+        "model" (.Params.model | default "")
+        "series" (.Params.series | default "")
+        "primary_category" (.Params.primary_category | default "")
+        "secondary_category" (.Params.secondary_category | default "")
+        "supplier" (.Params.supplier | default "")
+        "published" (.Date.Format "2006-01-02T15:04:05Z07:00")
+        "slug" (.File.BaseFileName | default (.Title | urlize))
+        "url" .RelPermalink
+        "section" .Section
+        "gallery" (.Params.gallery | default slice)
+        "parameters" (.Params.parameters | default slice)
+        "related_products" (.Params.related_products | default slice)
+        "application_scenarios" (.Params.application_scenarios | default "")
+        "content" (.Content | plainify | truncate 200)
+        "tags" (.Params.tags | default slice)
+        "featured" (.Params.featured | default false)
+        "price_range" (.Params.price_range | default "")
+        "availability" (.Params.availability | default "available")
+        "weight" (.Weight | default 0)
+      -}}
+      {{- $products = $products | append $product -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* 构建分类产品索引JSON */ -}}
+{{- $result := dict
+  "products" $products
+  "meta" (dict
+    "total_products" (len $products)
+    "category" $currentCategory
+    "generated_at" (now.Format "2006-01-02T15:04:05Z07:00")
+    "section" .Section
+    "page_title" .Title
+    "description" (.Description | default (printf "%s分类产品索引" $currentCategory))
+  )
+  "category_info" (dict
+    "name" $currentCategory
+    "product_count" (len $products)
+  )
+-}}
+
+{{- $result | jsonify -}}

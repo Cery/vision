@@ -15,12 +15,5 @@
       <guid>http://localhost:1313/products/ws-k08510/</guid>
       <description>WS-K08510是一款具备0.85mm超细直径的工业视频内窥镜，专为极限狭小空间设计，广泛应用于精密电子、微型机械、医疗器械等超精密检测场景。</description>
     </item>
-    <item>
-      <title>2024年日本东京精密检测技术博览会</title>
-      <link>http://localhost:1313/news/exhibition-news-5/</link>
-      <pubDate>Mon, 08 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/news/exhibition-news-5/</guid>
-      <description>亚洲地区领先的精密检测技术展览会，展示工业内窥镜在精密制造中的应用</description>
-    </item>
   </channel>
 </rss>

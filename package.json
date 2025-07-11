@@ -10,10 +10,18 @@
     "product-server": "node product-server.js",
     "product-server:dev": "nodemon product-server.js",
     "build": "hugo --gc --minify",
+    "build:css": "postcss static/css/main.css -o static/css/main.min.css",
     "cms:proxy": "netlify-cms-proxy-server --port 8081 --config static/admin/config.yml",
     "encoding:check": "node scripts/simple-encoding-fix.js",
     "encoding:fix": "node scripts/simple-encoding-fix.js",
-    "precommit": "npm run encoding:check"
+    "precommit": "npm run encoding:check",
+    "setup": "node scripts/setup-dev-environment.js",
+    "images:optimize": "node scripts/optimize-images.js",
+    "images:validate": "node scripts/validate-all-images.js",
+    "images:placeholders": "node scripts/create-placeholder-images.js",
+    "images:all": "node scripts/run-image-optimization.js",
+    "clean": "rimraf public resources optimization-results",
+    "test": "echo \"No tests specified\" && exit 0"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -23,13 +31,19 @@
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^7.0.2",
     "autoprefixer": "^10.4.21",
+    "concurrently": "^9.2.0",
+    "glob": "^11.0.3",
+    "gray-matter": "^4.0.3",
+    "js-yaml": "^4.1.0",
     "netlify-cli": "^17.19.0",
     "netlify-cms-app": "^2.15.72",
     "netlify-cms-proxy-server": "^1.3.24",
     "nodemon": "^3.0.1",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.5.4",
-    "postcss-cli": "^11.0.1"
+    "postcss-cli": "^11.0.1",
+    "rimraf": "^6.0.1",
+    "sharp": "^0.34.3"
   },
   "main": "content-server.js",
   "directories": {

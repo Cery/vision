@@ -6,7 +6,7 @@
     <description>Recent content in 首页 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 15 Jun 2025 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 11 Jul 2025 10:00:00 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>航空航天</title>
@@ -149,11 +149,39 @@
       <description>科研实验检测分析专业解决方案，支持科学研究和技术创新</description>
     </item>
     <item>
+      <title>中国（珠海）国际航空航天展览会</title>
+      <link>http://localhost:1313/news/exhibition-template-example/</link>
+      <pubDate>Fri, 11 Jul 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/news/exhibition-template-example/</guid>
+      <description>中国国际航空航天博览会是唯一由中央政府批准举办的国际性专业航空航天展览，以实物展示、贸易洽谈、学术交流和飞行表演为主要特征。</description>
+    </item>
+    <item>
       <title>WS-K10100工业内窥镜 - 1.0mm高清探头 精密检测工具</title>
       <link>http://localhost:1313/products/model/</link>
       <pubDate>Sun, 15 Jun 2025 12:00:00 +0800</pubDate>
       <guid>http://localhost:1313/products/model/</guid>
       <description>WS-K1010是一款具备1.0mm超细直径和高亮光纤照明的工业视频内窥镜，广泛应用于航空维修、电子制造、医疗检测等狭小空间可视化场景。</description>
+    </item>
+    <item>
+      <title>2026年第二十四届中国国际铸造博览会暨第十九届压铸工业展览会</title>
+      <link>http://localhost:1313/news/2026-china-international-foundry-expo-shanghai/</link>
+      <pubDate>Sat, 11 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/news/2026-china-international-foundry-expo-shanghai/</guid>
+      <description>中国国际铸造博览会创办于1987年，是中国唯一一个由国家级行业协会主办的铸造类展会，独具权威性、代表性、前瞻性和导向性，被誉为中国铸造业发展的风向标。</description>
+    </item>
+    <item>
+      <title>2025年中国（沈阳）国际铸造及热加工展览会</title>
+      <link>http://localhost:1313/news/2025-shenyang-foundry-heat-treatment-exhibition/</link>
+      <pubDate>Sat, 11 Jan 2025 11:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/news/2025-shenyang-foundry-heat-treatment-exhibition/</guid>
+      <description>中国沈阳国际铸造及热加工展览会（简称：沈阳铸造展）以&amp;rsquo;铸造强基地，实现制造强国梦，热加工集大成，振兴东北老工业基地&amp;rsquo;为主题，是铸造行业的重要展示平台。</description>
+    </item>
+    <item>
+      <title>2025年航空发动机和燃气轮机聚焦大会暨展览会GTF</title>
+      <link>http://localhost:1313/news/2025-aviation-engine-gas-turbine-conference/</link>
+      <pubDate>Sat, 11 Jan 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/news/2025-aviation-engine-gas-turbine-conference/</guid>
+      <description>燃气轮机是支持能源清洁利用和高效转化的核心设备，本次大会以&amp;rsquo;燃气轮机技术助力低碳社会&amp;rsquo;为主题，汇聚国内外专家学者，展示航空发动机和燃气轮机领域最前沿的科技成果。</description>
     </item>
     <item>
       <title>WS-K08510工业内窥镜 - 0.85mm超细探头 极限精密检测</title>
@@ -352,13 +380,6 @@
       <description>高清光纤照明360度旋转镜头内窥镜，6mm深度检测专用探头专为大型设备特种检测设计</description>
     </item>
     <item>
-      <title>2024年日本东京精密检测技术博览会</title>
-      <link>http://localhost:1313/news/exhibition-news-5/</link>
-      <pubDate>Mon, 08 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/news/exhibition-news-5/</guid>
-      <description>亚洲地区领先的精密检测技术展览会，展示工业内窥镜在精密制造中的应用</description>
-    </item>
-    <item>
       <title>工业内窥镜图像处理算法优化技术研究</title>
       <link>http://localhost:1313/news/tech-article-1/</link>
       <pubDate>Fri, 22 Mar 2024 00:00:00 +0000</pubDate>
@@ -406,13 +427,6 @@
       <pubDate>Mon, 15 Jan 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/cases/industrial-pipeline/</guid>
       <description>为各类工业管道提供全方位的智能检测解决方案，包括石化管道、市政管网、工业冷却管道等，实现管道安全运行和预防性维护。</description>
-    </item>
-    <item>
-      <title>工业内窥镜技术发展趋势分析</title>
-      <link>http://localhost:1313/news/2024-01-15-industry-news-example/</link>
-      <pubDate>Mon, 15 Jan 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/news/2024-01-15-industry-news-example/</guid>
-      <description>本文深入分析了工业内窥镜技术的最新发展趋势，包括高清成像、智能识别、远程操控等方面的创新突破，探讨了这些技术进步对工业检测领域带来的深远影响</description>
     </item>
     <item>
       <title>便携式</title>

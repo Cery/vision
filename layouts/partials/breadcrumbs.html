@@ -1,5 +1,5 @@
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb bg-light p-3 rounded">
+<nav aria-label="breadcrumb" class="exhibition-breadcrumb">
+    <ol class="breadcrumb bg-light p-3 mb-4">
         <li class="breadcrumb-item"><a href="{{ "/" | relURL }}">首页</a></li>
         {{ range .Ancestors.Reverse }}
             {{ if not .IsHome }}
@@ -8,4 +8,4 @@
         {{ end }}
         <li class="breadcrumb-item active" aria-current="page">{{ .Title }}</li>
     </ol>
-</nav> 
+</nav>

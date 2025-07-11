@@ -7,6 +7,10 @@ theme = 'ananke'
 # 中文字符处理配置
 hasCJKLanguage = true
 
+# URL配置
+canonifyURLs = false
+relativeURLs = false
+
 # 启用分类功能
 [taxonomies]
   category = 'categories'

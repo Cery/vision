@@ -1,0 +1,77 @@
+{{- $products := slice -}}
+{{- $categories := slice -}}
+{{- $series := slice -}}
+{{- $suppliers := slice -}}
+
+{{- /* 收集当前section的产品数据 */ -}}
+{{- range .Pages -}}
+  {{- if ne .Title "" -}}
+    {{- $product := dict
+      "id" (.File.BaseFileName | default .Title | urlize)
+      "title" .Title
+      "summary" (.Summary | default "")
+      "model" (.Params.model | default "")
+      "series" (.Params.series | default "")
+      "primary_category" (.Params.primary_category | default "")
+      "secondary_category" (.Params.secondary_category | default "")
+      "supplier" (.Params.supplier | default "")
+      "published" (.Date.Format "2006-01-02T15:04:05Z07:00")
+      "slug" (.File.BaseFileName | default (.Title | urlize))
+      "url" .RelPermalink
+      "section" .Section
+      "gallery" (.Params.gallery | default slice)
+      "parameters" (.Params.parameters | default slice)
+      "related_products" (.Params.related_products | default slice)
+      "application_scenarios" (.Params.application_scenarios | default "")
+      "content" (.Content | plainify | truncate 200)
+      "tags" (.Params.tags | default slice)
+      "featured" (.Params.featured | default false)
+      "price_range" (.Params.price_range | default "")
+      "availability" (.Params.availability | default "available")
+      "weight" (.Weight | default 0)
+    -}}
+    {{- $products = $products | append $product -}}
+    
+    {{- /* 收集分类信息 */ -}}
+    {{- if .Params.primary_category -}}
+      {{- $categories = $categories | append .Params.primary_category -}}
+    {{- end -}}
+    
+    {{- /* 收集系列信息 */ -}}
+    {{- if .Params.series -}}
+      {{- $series = $series | append .Params.series -}}
+    {{- end -}}
+    
+    {{- /* 收集供应商信息 */ -}}
+    {{- if .Params.supplier -}}
+      {{- $suppliers = $suppliers | append .Params.supplier -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* 去重并排序 */ -}}
+{{- $categories = $categories | uniq | sort -}}
+{{- $series = $series | uniq | sort -}}
+{{- $suppliers = $suppliers | uniq | sort -}}
+
+{{- /* 构建产品索引JSON */ -}}
+{{- $result := dict
+  "products" $products
+  "meta" (dict
+    "total_products" (len $products)
+    "categories" $categories
+    "series" $series
+    "suppliers" $suppliers
+    "generated_at" (now.Format "2006-01-02T15:04:05Z07:00")
+    "section" .Section
+    "page_title" .Title
+    "description" (.Description | default "产品索引")
+  )
+  "filters" (dict
+    "by_category" $categories
+    "by_series" $series
+    "by_supplier" $suppliers
+  )
+-}}
+
+{{- $result | jsonify -}}
