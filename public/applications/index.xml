@@ -2,52 +2,52 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>应用领域 on 维森视觉检测仪器</title>
-    <link>http://localhost:1313/applications/</link>
+    <link>http://localhost:1314/applications/</link>
     <description>Recent content in 应用领域 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Wed, 20 Mar 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/applications/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1314/applications/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>航空航天</title>
-      <link>http://localhost:1313/applications/aerospace/</link>
+      <link>http://localhost:1314/applications/aerospace/</link>
       <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/applications/aerospace/</guid>
+      <guid>http://localhost:1314/applications/aerospace/</guid>
       <description>为航空航天领域提供高精度无损检测解决方案，确保飞行器安全性和可靠性</description>
     </item>
     <item>
       <title>能源电力</title>
-      <link>http://localhost:1313/applications/energy/</link>
+      <link>http://localhost:1314/applications/energy/</link>
       <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/applications/energy/</guid>
+      <guid>http://localhost:1314/applications/energy/</guid>
       <description>助力能源电力设备安全运行监测，保障电力系统稳定可靠</description>
     </item>
     <item>
       <title>汽车制造</title>
-      <link>http://localhost:1313/applications/automotive/</link>
+      <link>http://localhost:1314/applications/automotive/</link>
       <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/applications/automotive/</guid>
+      <guid>http://localhost:1314/applications/automotive/</guid>
       <description>汽车制造质量控制全程监测方案，确保汽车产品质量和安全性</description>
     </item>
     <item>
       <title>机械制造</title>
-      <link>http://localhost:1313/applications/machinery/</link>
+      <link>http://localhost:1314/applications/machinery/</link>
       <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/applications/machinery/</guid>
+      <guid>http://localhost:1314/applications/machinery/</guid>
       <description>机械制造质量检测与工艺优化，提升机械产品精度和可靠性</description>
     </item>
     <item>
       <title>精密铸造</title>
-      <link>http://localhost:1313/applications/casting/</link>
+      <link>http://localhost:1314/applications/casting/</link>
       <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/applications/casting/</guid>
+      <guid>http://localhost:1314/applications/casting/</guid>
       <description>精密铸造工艺过程质量控制，确保铸件质量和工艺稳定性</description>
     </item>
     <item>
       <title>科学研究</title>
-      <link>http://localhost:1313/applications/research/</link>
+      <link>http://localhost:1314/applications/research/</link>
       <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/applications/research/</guid>
+      <guid>http://localhost:1314/applications/research/</guid>
       <description>科研实验检测分析专业解决方案，支持科学研究和技术创新</description>
     </item>
   </channel>

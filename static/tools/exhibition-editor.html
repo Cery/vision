@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>展会信息编辑器 - Vision NDT</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --secondary: #7c3aed;
+      --success: #059669;
+      --danger: #dc2626;
+      --dark: #1f2937;
+      --light: #f8fafc;
+      --border: #e5e7eb;
+      --text: #374151;
+      --muted: #6b7280;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    .app-container {
+      display: flex;
+      height: 100vh;
+      background: white;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    .editor-panel {
+      width: 50%;
+      background: var(--light);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .editor-header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .editor-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+    }
+
+    .editor-actions {
+      padding: 1rem 1.5rem;
+      background: white;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .preview-panel {
+      width: 50%;
+      background: white;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .preview-header {
+      background: var(--dark);
+      color: white;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .preview-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      background: #fafafa;
+      white-space: pre-wrap;
+    }
+
+    .form-section {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-label {
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .form-control, .form-select {
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      outline: none;
+    }
+
+    .btn {
+      border-radius: 8px;
+      font-weight: 500;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      transition: all 0.2s ease;
+      font-size: 0.875rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+    }
+
+    .btn-outline-secondary {
+      border: 2px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline-secondary:hover {
+      background: var(--light);
+      border-color: var(--text);
+    }
+
+    .dynamic-item {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .dynamic-item:hover {
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.1);
+    }
+
+    .remove-btn {
+      background: var(--danger);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    .add-btn {
+      background: var(--success);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* 图片相关样式 */
+    .image-preview-section {
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      background: #fafafa;
+    }
+
+    .image-preview-item {
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: white;
+    }
+
+    .image-preview-item img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+    }
+
+    .image-info {
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    .image-info small {
+      display: block;
+      margin-bottom: 0.5rem;
+      word-break: break-all;
+    }
+
+    .btn-check:checked + .btn-outline-info {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .upload-section {
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      background: #f8f9fa;
+    }
+
+    .search-download-section,
+    .ai-generate-section {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      background: #f8f9fa;
+    }
+
+    .current-images {
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+    }
+
+    @media (max-width: 1024px) {
+      .app-container {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+      }
+      .editor-panel, .preview-panel {
+        width: 100%;
+      }
+      .preview-panel {
+        max-height: 50vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="app-container">
+    <!-- 左侧编辑面板 -->
+    <div class="editor-panel">
+      <div class="editor-header">
+        <h2><i class="bi bi-calendar-event"></i> 展会信息编辑器</h2>
+        <p class="mb-0">专为 Vision NDT Hugo 项目设计</p>
+      </div>
+
+      <div class="editor-content">
+        <!-- 内容获取方式 -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="bi bi-magic"></i>
+            智能内容获取
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-12">
+              <div class="btn-group w-100" role="group">
+                <input type="radio" class="btn-check" name="contentMode" id="manual" value="manual" v-model="contentMode">
+                <label class="btn btn-outline-primary" for="manual">
+                  <i class="bi bi-pencil"></i> 手动编辑
+                </label>
+
+                <input type="radio" class="btn-check" name="contentMode" id="auto" value="auto" v-model="contentMode">
+                <label class="btn btn-outline-primary" for="auto">
+                  <i class="bi bi-robot"></i> 全网自动创作
+                </label>
+
+                <input type="radio" class="btn-check" name="contentMode" id="url" value="url" v-model="contentMode">
+                <label class="btn btn-outline-primary" for="url">
+                  <i class="bi bi-link-45deg"></i> 指定网页获取
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 全网自动创作 -->
+          <div v-if="contentMode === 'auto'" class="auto-create-section">
+            <div class="row g-3">
+              <div class="col-md-8">
+                <label class="form-label">展会关键词</label>
+                <input v-model="autoKeywords" type="text" class="form-control" placeholder="例：2025年中国国际机床展览会">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">所属行业</label>
+                <select v-model="autoIndustry" class="form-select">
+                  <option value="">自动识别</option>
+                  <option value="航空航天">航空航天</option>
+                  <option value="动力传动">动力传动</option>
+                  <option value="能源电力">能源电力</option>
+                  <option value="无损检测">无损检测</option>
+                  <option value="铸造">铸造</option>
+                  <option value="机械制造">机械制造</option>
+                  <option value="石油化工">石油化工</option>
+                  <option value="精密制造">精密制造</option>
+                  <option value="工业自动化">工业自动化</option>
+                  <option value="新材料">新材料</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <button type="button" class="btn btn-primary" @click="autoCreateContent" :disabled="isLoading">
+                  <i class="bi bi-magic" v-if="!isLoading"></i>
+                  <i class="bi bi-hourglass-split" v-if="isLoading"></i>
+                  {{ isLoading ? '正在创作中...' : '开始自动创作' }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 指定网页获取 -->
+          <div v-if="contentMode === 'url'" class="url-fetch-section">
+            <div class="row g-3">
+              <div class="col-md-8">
+                <label class="form-label">展会官网或介绍页面URL</label>
+                <input v-model="sourceUrl" type="url" class="form-control" placeholder="https://www.example.com/exhibition">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">内容提取模式</label>
+                <select v-model="extractMode" class="form-select">
+                  <option value="smart">智能提取</option>
+                  <option value="full">完整内容</option>
+                  <option value="basic">基本信息</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <button type="button" class="btn btn-primary" @click="fetchFromUrl" :disabled="isLoading">
+                  <i class="bi bi-download" v-if="!isLoading"></i>
+                  <i class="bi bi-hourglass-split" v-if="isLoading"></i>
+                  {{ isLoading ? '正在获取中...' : '获取网页内容' }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 操作结果提示 -->
+          <div v-if="operationResult" class="alert mt-3" :class="operationResult.type === 'success' ? 'alert-success' : 'alert-warning'">
+            <i class="bi" :class="operationResult.type === 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'"></i>
+            {{ operationResult.message }}
+          </div>
+        </div>
+
+        <!-- 基本信息 -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="bi bi-info-circle"></i>
+            基本信息
+          </div>
+          
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label">展会标题</label>
+              <input v-model="formData.title" type="text" class="form-control" placeholder="例：中国（珠海）国际航空航天展览会">
+            </div>
+            <div class="col-12">
+              <label class="form-label">展会摘要</label>
+              <textarea v-model="formData.summary" class="form-control" rows="3" placeholder="简要描述展会的特点和价值"></textarea>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">展会时间</label>
+              <input v-model="formData.event_date" type="text" class="form-control" placeholder="2026年11月10日~11月15日">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">开放时间</label>
+              <input v-model="formData.opening_hours" type="text" class="form-control" placeholder="09:00 - 18:00">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">展会地点</label>
+              <input v-model="formData.location" type="text" class="form-control" placeholder="珠海国际航展中心">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">详细地址</label>
+              <input v-model="formData.detailed_location" type="text" class="form-control" placeholder="中国 - 广东 - 珠海国际航展中心">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">主办单位</label>
+              <input v-model="formData.organizer" type="text" class="form-control" placeholder="珠海市政府">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">所属行业</label>
+              <select v-model="formData.exhibition_industry" class="form-select">
+                <option value="">请选择行业</option>
+                <option value="航空航天">航空航天</option>
+                <option value="动力传动">动力传动</option>
+                <option value="能源电力">能源电力</option>
+                <option value="无损检测">无损检测</option>
+                <option value="铸造">铸造</option>
+                <option value="机械制造">机械制造</option>
+                <option value="石油化工">石油化工</option>
+                <option value="精密制造">精密制造</option>
+                <option value="工业自动化">工业自动化</option>
+                <option value="新材料">新材料</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- 展会规模 -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="bi bi-bar-chart"></i>
+            展会规模
+          </div>
+          
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">举办周期</label>
+              <select v-model="formData.cycle" class="form-select">
+                <option value="一年一届">一年一届</option>
+                <option value="两年一届">两年一届</option>
+                <option value="三年一届">三年一届</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">展览面积</label>
+              <input v-model="formData.exhibition_area" type="text" class="form-control" placeholder="350000平方米">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">参展商数量</label>
+              <input v-model="formData.exhibitor_count" type="text" class="form-control" placeholder="1022家">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">专业观众数量</label>
+              <input v-model="formData.visitor_count" type="text" class="form-control" placeholder="122000人">
+            </div>
+          </div>
+        </div>
+
+        <!-- 图片信息 -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="bi bi-image"></i>
+            图片信息
+          </div>
+
+          <!-- 图片获取方式 -->
+          <div class="row g-3 mb-3">
+            <div class="col-12">
+              <div class="btn-group w-100" role="group">
+                <input type="radio" class="btn-check" name="imageMode" id="manual-path" value="manual" v-model="imageMode">
+                <label class="btn btn-outline-info btn-sm" for="manual-path">
+                  <i class="bi bi-pencil"></i> 手动路径
+                </label>
+
+                <input type="radio" class="btn-check" name="imageMode" id="auto-generate" value="generate" v-model="imageMode">
+                <label class="btn btn-outline-info btn-sm" for="auto-generate">
+                  <i class="bi bi-magic"></i> AI生成图片
+                </label>
+
+                <input type="radio" class="btn-check" name="imageMode" id="search-download" value="search" v-model="imageMode">
+                <label class="btn btn-outline-info btn-sm" for="search-download">
+                  <i class="bi bi-search"></i> 搜索下载
+                </label>
+
+                <input type="radio" class="btn-check" name="imageMode" id="upload-local" value="upload" v-model="imageMode">
+                <label class="btn btn-outline-info btn-sm" for="upload-local">
+                  <i class="bi bi-upload"></i> 本地上传
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 手动路径模式 -->
+          <div v-if="imageMode === 'manual'" class="manual-path-section">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">封面图片路径</label>
+                <input v-model="formData.cover" type="text" class="form-control" placeholder="/images/news/zh-202611-01.jpg">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">特色图片路径</label>
+                <input v-model="formData.featured_image" type="text" class="form-control" placeholder="/images/news/zh-202611-01.jpg">
+              </div>
+            </div>
+          </div>
+
+          <!-- AI生成图片模式 -->
+          <div v-if="imageMode === 'generate'" class="ai-generate-section">
+            <div class="row g-3">
+              <div class="col-md-8">
+                <label class="form-label">图片描述提示词</label>
+                <input v-model="imagePrompt" type="text" class="form-control" placeholder="例：现代化展览中心，展会现场，专业展览，商务氛围">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">图片风格</label>
+                <select v-model="imageStyle" class="form-select">
+                  <option value="professional">专业商务</option>
+                  <option value="modern">现代简约</option>
+                  <option value="industrial">工业风格</option>
+                  <option value="tech">科技感</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <button type="button" class="btn btn-primary btn-sm" @click="generateImages" :disabled="isGeneratingImages">
+                  <i class="bi bi-magic" v-if="!isGeneratingImages"></i>
+                  <i class="bi bi-hourglass-split" v-if="isGeneratingImages"></i>
+                  {{ isGeneratingImages ? '正在生成中...' : '生成AI图片' }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 搜索下载模式 -->
+          <div v-if="imageMode === 'search'" class="search-download-section">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">搜索关键词</label>
+                <input v-model="searchKeywords" type="text" class="form-control" placeholder="例：exhibition hall, trade show, conference">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">图片来源</label>
+                <select v-model="imageSource" class="form-select">
+                  <option value="unsplash">Unsplash</option>
+                  <option value="pixabay">Pixabay</option>
+                  <option value="pexels">Pexels</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">图片数量</label>
+                <select v-model="imageCount" class="form-select">
+                  <option value="1">1张</option>
+                  <option value="3">3张</option>
+                  <option value="5">5张</option>
+                  <option value="8">8张</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <button type="button" class="btn btn-primary btn-sm" @click="searchAndDownloadImages" :disabled="isSearchingImages">
+                  <i class="bi bi-search" v-if="!isSearchingImages"></i>
+                  <i class="bi bi-hourglass-split" v-if="isSearchingImages"></i>
+                  {{ isSearchingImages ? '正在搜索下载中...' : '搜索并下载图片' }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 本地上传模式 -->
+          <div v-if="imageMode === 'upload'" class="upload-section">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">封面图片</label>
+                <input type="file" class="form-control" accept="image/*" @change="handleCoverUpload" ref="coverInput">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">历届图片（多选）</label>
+                <input type="file" class="form-control" accept="image/*" multiple @change="handleHistoricalUpload" ref="historicalInput">
+              </div>
+              <div class="col-12">
+                <button type="button" class="btn btn-primary btn-sm" @click="processUploadedImages" :disabled="isProcessingUploads">
+                  <i class="bi bi-upload" v-if="!isProcessingUploads"></i>
+                  <i class="bi bi-hourglass-split" v-if="isProcessingUploads"></i>
+                  {{ isProcessingUploads ? '正在处理中...' : '处理上传图片' }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 图片预览区域 -->
+          <div v-if="imagePreview.length > 0" class="image-preview-section mt-3">
+            <label class="form-label">图片预览</label>
+            <div class="row g-2">
+              <div v-for="(img, index) in imagePreview" :key="index" class="col-md-3">
+                <div class="image-preview-item">
+                  <img :src="img.url" :alt="img.name" class="img-thumbnail">
+                  <div class="image-info">
+                    <small class="text-muted">{{ img.name }}</small>
+                    <button type="button" class="btn btn-outline-primary btn-sm" @click="useAsMainImage(img)">
+                      设为封面
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 当前图片路径显示 -->
+          <div class="current-images mt-3">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">当前封面图片</label>
+                <div class="input-group">
+                  <input v-model="formData.cover" type="text" class="form-control" readonly>
+                  <button class="btn btn-outline-secondary" type="button" @click="previewImage(formData.cover)">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">当前特色图片</label>
+                <div class="input-group">
+                  <input v-model="formData.featured_image" type="text" class="form-control" readonly>
+                  <button class="btn btn-outline-secondary" type="button" @click="previewImage(formData.featured_image)">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 图片操作结果 -->
+          <div v-if="imageOperationResult" class="alert mt-3" :class="imageOperationResult.type === 'success' ? 'alert-success' : 'alert-warning'">
+            <i class="bi" :class="imageOperationResult.type === 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'"></i>
+            {{ imageOperationResult.message }}
+          </div>
+        </div>
+
+        <!-- 展品范围 -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="bi bi-grid"></i>
+            展品范围
+          </div>
+
+          <div v-for="(scope, index) in formData.exhibition_scope" :key="index" class="dynamic-item">
+            <div class="row g-2 mb-2">
+              <div class="col-md-4">
+                <label class="form-label">分类名称</label>
+                <input v-model="scope.category" type="text" class="form-control" placeholder="例：军用航空">
+              </div>
+              <div class="col-md-7">
+                <label class="form-label">产品项目（用逗号分隔）</label>
+                <textarea v-model="scope.itemsText" class="form-control" rows="2" placeholder="例：军用飞机及发动机, 军用直升机, 无人机系统"></textarea>
+              </div>
+              <div class="col-md-1 d-flex align-items-end">
+                <button type="button" class="remove-btn" @click="removeScope(index)" v-if="formData.exhibition_scope.length > 1">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="add-btn" @click="addScope">
+            <i class="bi bi-plus"></i> 添加分类
+          </button>
+        </div>
+
+        <!-- 历届图片 -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="bi bi-images"></i>
+            历届图片
+          </div>
+
+          <div v-for="(img, index) in formData.historical_images" :key="index" class="dynamic-item">
+            <div class="row g-2 align-items-center">
+              <div class="col-md-10">
+                <label class="form-label">图片路径 {{ index + 1 }}</label>
+                <input v-model="img.image" type="text" class="form-control" :placeholder="`/images/news/zh-202611-0${index + 2}.jpg`">
+              </div>
+              <div class="col-md-2 d-flex align-items-end">
+                <button type="button" class="remove-btn" @click="removeHistoricalImage(index)" v-if="formData.historical_images.length > 1">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="add-btn" @click="addHistoricalImage">
+            <i class="bi bi-plus"></i> 添加图片
+          </button>
+        </div>
+
+        <!-- 往届参展商 -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="bi bi-building"></i>
+            往届参展商
+          </div>
+
+          <div v-for="(exhibitor, index) in formData.previous_exhibitors" :key="index" class="dynamic-item">
+            <div class="row g-2 align-items-center">
+              <div class="col-md-5">
+                <label class="form-label">企业名称</label>
+                <input v-model="exhibitor.name" type="text" class="form-control" placeholder="例：中国航空工业集团">
+              </div>
+              <div class="col-md-5">
+                <label class="form-label">企业类别</label>
+                <input v-model="exhibitor.category" type="text" class="form-control" placeholder="例：航空制造">
+              </div>
+              <div class="col-md-2 d-flex align-items-end">
+                <button type="button" class="remove-btn" @click="removeExhibitor(index)" v-if="formData.previous_exhibitors.length > 1">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="add-btn" @click="addExhibitor">
+            <i class="bi bi-plus"></i> 添加参展商
+          </button>
+        </div>
+
+        <!-- 联系信息 -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="bi bi-telephone"></i>
+            联系信息
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">联系电话</label>
+              <input v-model="formData.contact_phone" type="text" class="form-control" placeholder="+86-756-8676969">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">联系邮箱</label>
+              <input v-model="formData.contact_email" type="email" class="form-control" placeholder="info@airshow.com.cn">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">官方网站</label>
+              <input v-model="formData.contact_website" type="url" class="form-control" placeholder="https://www.airshow.com.cn">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">报名截止日期</label>
+              <input v-model="formData.registration_deadline" type="text" class="form-control" placeholder="2026年9月30日">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">报名费用</label>
+              <input v-model="formData.registration_fee" type="text" class="form-control" placeholder="根据展位面积确定">
+            </div>
+          </div>
+        </div>
+
+        <!-- SEO信息 -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="bi bi-search"></i>
+            SEO优化
+          </div>
+
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label">SEO标题</label>
+              <input v-model="formData.seo_title" type="text" class="form-control" placeholder="2026中国珠海国际航空航天展览会 - 全球航空航天盛会">
+            </div>
+            <div class="col-12">
+              <label class="form-label">SEO描述</label>
+              <textarea v-model="formData.seo_description" class="form-control" rows="2" placeholder="简要描述展会，包含关键信息"></textarea>
+            </div>
+            <div class="col-12">
+              <label class="form-label">SEO关键词（用逗号分隔）</label>
+              <input v-model="formData.seo_keywords" type="text" class="form-control" placeholder="珠海航展, 航空航天展, 国际航展">
+            </div>
+          </div>
+        </div>
+
+        <!-- 展会描述 -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="bi bi-file-text"></i>
+            展会描述
+          </div>
+
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label">展会详细描述</label>
+              <textarea v-model="formData.description" class="form-control" rows="4" placeholder="详细描述展会的背景、特色、历史等信息"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="editor-actions">
+        <button class="btn btn-primary" @click="saveMarkdown">
+          <i class="bi bi-download"></i> 保存到本地
+        </button>
+        <button class="btn btn-outline-secondary" @click="copyMarkdown">
+          <i class="bi bi-clipboard"></i> 复制内容
+        </button>
+        <button class="btn btn-outline-secondary" @click="loadTemplate">
+          <i class="bi bi-arrow-clockwise"></i> 重置模板
+        </button>
+      </div>
+    </div>
+
+    <!-- 右侧预览面板 -->
+    <div class="preview-panel">
+      <div class="preview-header">
+        <i class="bi bi-eye"></i>
+        <span>Markdown 预览</span>
+      </div>
+      <div class="preview-content">{{ generateMarkdown() }}</div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return {
+          contentMode: 'manual',
+          autoKeywords: '',
+          autoIndustry: '',
+          sourceUrl: '',
+          extractMode: 'smart',
+          isLoading: false,
+          operationResult: null,
+          imageMode: 'manual',
+          imagePrompt: '',
+          imageStyle: 'professional',
+          searchKeywords: '',
+          imageSource: 'unsplash',
+          imageCount: '3',
+          isGeneratingImages: false,
+          isSearchingImages: false,
+          isProcessingUploads: false,
+          imageOperationResult: null,
+          imagePreview: [],
+          uploadedFiles: {
+            cover: null,
+            historical: []
+          },
+          formData: {
+            title: "",
+            summary: "",
+            event_date: "",
+            opening_hours: "09:00 - 18:00",
+            location: "",
+            detailed_location: "",
+            organizer: "",
+            exhibition_industry: "",
+            exhibition_type: "国际专业展",
+            cycle: "两年一届",
+            exhibition_area: "",
+            exhibitor_count: "",
+            visitor_count: "",
+            cover: "",
+            featured_image: "",
+            exhibition_scope: [
+              { category: "", itemsText: "" }
+            ],
+            historical_images: [
+              { image: "" }
+            ],
+            previous_exhibitors: [
+              { name: "", category: "" }
+            ],
+            contact_phone: "",
+            contact_email: "",
+            contact_website: "",
+            registration_deadline: "",
+            registration_fee: "根据展位面积确定",
+            seo_title: "",
+            seo_description: "",
+            seo_keywords: "",
+            description: ""
+          }
+        };
+      },
+      mounted() {
+        this.loadTemplate();
+      },
+      methods: {
+        loadTemplate() {
+          this.formData = {
+            title: "中国（珠海）国际航空航天展览会",
+            summary: "中国国际航空航天博览会是唯一由中央政府批准举办的国际性专业航空航天展览，以实物展示、贸易洽谈、学术交流和飞行表演为主要特征。",
+            event_date: "2026年11月10日~11月15日",
+            opening_hours: "09:00 - 18:00",
+            location: "珠海国际航展中心",
+            detailed_location: "中国 - 广东 - 珠海国际航展中心",
+            organizer: "珠海市政府",
+            exhibition_industry: "航空航天",
+            exhibition_type: "国际专业展",
+            cycle: "两年一届",
+            exhibition_area: "350000平方米",
+            exhibitor_count: "1022家",
+            visitor_count: "122000人",
+            cover: "/images/news/zh-202611-01.jpg",
+            featured_image: "/images/news/zh-202611-01.jpg",
+            exhibition_scope: [
+              {
+                category: "军用航空",
+                itemsText: "军用飞机及发动机, 军用直升机, 无人机系统, 航空武器装备, 军用航空电子设备"
+              },
+              {
+                category: "民用航空",
+                itemsText: "民用客机, 通用航空器, 民用直升机, 航空发动机, 航空材料"
+              },
+              {
+                category: "航天技术",
+                itemsText: "卫星及卫星应用, 运载火箭, 空间站技术, 深空探测器, 航天地面设备"
+              },
+              {
+                category: "航空服务",
+                itemsText: "航空培训, 航空金融, 航空保险, 机场建设, 空中交通管制"
+              }
+            ],
+            historical_images: [
+              { image: "/images/news/zh-202611-02.jpg" },
+              { image: "/images/news/zh-202611-03.jpg" },
+              { image: "/images/news/zh-202611-04.jpg" },
+              { image: "/images/news/zh-202611-05.jpg" },
+              { image: "/images/news/zh-202611-06.jpg" },
+              { image: "/images/news/zh-202611-07.jpg" },
+              { image: "/images/news/zh-202611-08.jpg" },
+              { image: "/images/news/zh-202611-09.jpg" }
+            ],
+            previous_exhibitors: [
+              { name: "中国航空工业集团", category: "航空制造" },
+              { name: "中国商飞", category: "民用航空" },
+              { name: "中国航发", category: "航空发动机" },
+              { name: "波音公司", category: "国际航空" },
+              { name: "空客公司", category: "国际航空" },
+              { name: "洛克希德·马丁", category: "航空航天" },
+              { name: "雷神技术", category: "航空技术" },
+              { name: "罗尔斯·罗伊斯", category: "航空发动机" },
+              { name: "普惠公司", category: "航空发动机" },
+              { name: "通用电气", category: "航空发动机" },
+              { name: "霍尼韦尔", category: "航空电子" },
+              { name: "泰雷兹集团", category: "航空电子" },
+              { name: "赛峰集团", category: "航空设备" },
+              { name: "柯林斯宇航", category: "航空系统" },
+              { name: "达索系统", category: "航空软件" },
+              { name: "BAE系统", category: "防务技术" }
+            ],
+            contact_phone: "+86-756-8676969",
+            contact_email: "info@airshow.com.cn",
+            contact_website: "https://www.airshow.com.cn",
+            registration_deadline: "2026年9月30日",
+            registration_fee: "根据展位面积确定",
+            seo_title: "2026中国珠海国际航空航天展览会 - 全球航空航天盛会",
+            seo_description: "中国（珠海）国际航空航天展览会将于2026年11月10-15日举办，展示最新航空航天技术，汇聚全球1022家展商，专业观众超12万人次。",
+            seo_keywords: "珠海航展, 航空航天展, 国际航展, 飞行表演, 航空技术, 航天技术",
+            description: "中国国际航空航天博览会是唯一由中央政府批准举办的国际性专业航空航天展览，创办于1996年，每两年举办一届。展会以实物展示、贸易洽谈、学术交流和飞行表演为主要特征，吸引来自全球40多个国家和地区的参展商，已发展成为世界五大航展之一。展会设有军用航空、民用航空、航天技术、航空服务等专业展区，同期举办多场专业论坛和飞行表演活动。"
+          };
+        },
+        async autoCreateContent() {
+          if (!this.autoKeywords.trim()) {
+            this.showResult('warning', '请输入展会关键词');
+            return;
+          }
+
+          this.isLoading = true;
+          this.operationResult = null;
+
+          try {
+            // 模拟AI自动创作过程
+            await this.simulateAutoCreation();
+            this.showResult('success', '自动创作完成！已根据关键词生成展会信息');
+          } catch (error) {
+            this.showResult('warning', '自动创作失败：' + error.message);
+          } finally {
+            this.isLoading = false;
+          }
+        },
+
+        async fetchFromUrl() {
+          if (!this.sourceUrl.trim()) {
+            this.showResult('warning', '请输入有效的网页URL');
+            return;
+          }
+
+          this.isLoading = true;
+          this.operationResult = null;
+
+          try {
+            // 模拟网页内容获取过程
+            await this.simulateUrlFetch();
+            this.showResult('success', '网页内容获取完成！已提取展会相关信息');
+          } catch (error) {
+            this.showResult('warning', '网页获取失败：' + error.message);
+          } finally {
+            this.isLoading = false;
+          }
+        },
+
+        async simulateAutoCreation() {
+          // 模拟AI创作延迟
+          await new Promise(resolve => setTimeout(resolve, 2000));
+
+          const keywords = this.autoKeywords.toLowerCase();
+          const industry = this.autoIndustry || this.detectIndustry(keywords);
+
+          // 根据关键词智能生成内容
+          const generatedData = this.generateContentFromKeywords(keywords, industry);
+
+          // 更新表单数据
+          Object.assign(this.formData, generatedData);
+        },
+
+        async simulateUrlFetch() {
+          // 模拟网页获取延迟
+          await new Promise(resolve => setTimeout(resolve, 1500));
+
+          // 模拟从URL提取的数据
+          const extractedData = this.extractDataFromUrl(this.sourceUrl);
+
+          // 更新表单数据
+          Object.assign(this.formData, extractedData);
+        },
+
+        detectIndustry(keywords) {
+          const industryKeywords = {
+            '航空航天': ['航空', '航天', '飞机', '卫星', '火箭', '无人机'],
+            '机械制造': ['机床', '制造', '加工', '数控', '机械'],
+            '能源电力': ['电力', '能源', '电网', '发电', '新能源'],
+            '汽车': ['汽车', '车展', '新能源车', '电动车'],
+            '无损检测': ['无损检测', 'NDT', '检测', '探伤'],
+            '石油化工': ['石油', '化工', '石化', '炼油'],
+            '铸造': ['铸造', '铸件', '熔炼'],
+            '精密制造': ['精密', '精密制造', '微加工'],
+            '工业自动化': ['自动化', '机器人', '智能制造'],
+            '新材料': ['新材料', '材料', '复合材料']
+          };
+
+          for (const [industry, words] of Object.entries(industryKeywords)) {
+            if (words.some(word => keywords.includes(word))) {
+              return industry;
+            }
+          }
+          return '机械制造'; // 默认行业
+        },
+
+        generateContentFromKeywords(keywords, industry) {
+          const currentYear = new Date().getFullYear();
+          const nextYear = currentYear + 1;
+
+          // 提取年份
+          const yearMatch = keywords.match(/(\d{4})/);
+          const eventYear = yearMatch ? yearMatch[1] : nextYear;
+
+          // 生成展会名称
+          let title = keywords.includes('中国') ? keywords : `中国国际${keywords}`;
+          title = title.replace(/展览会|博览会/, '').trim() + '展览会';
+          title = title.charAt(0).toUpperCase() + title.slice(1);
+
+          // 根据行业生成内容
+          const industryData = this.getIndustryTemplate(industry);
+
+          return {
+            title: title,
+            summary: `${title}是中国${industry}行业最具影响力的专业展览会，展示${industry}领域的最新技术、设备和解决方案。`,
+            event_date: `${eventYear}年10月15日~10月18日`,
+            opening_hours: "09:00 - 17:00",
+            location: this.getLocationByIndustry(industry),
+            detailed_location: `中国 - ${this.getCityByIndustry(industry)}`,
+            organizer: `中国${industry}协会`,
+            exhibition_industry: industry,
+            exhibition_type: "国际专业展",
+            cycle: "一年一届",
+            exhibition_area: "100,000平方米",
+            exhibitor_count: "1,000家参展商",
+            visitor_count: "80,000专业观众",
+            cover: `/images/news/${industry.toLowerCase()}-${eventYear}-01.jpg`,
+            featured_image: `/images/news/${industry.toLowerCase()}-${eventYear}-01.jpg`,
+            exhibition_scope: industryData.scope,
+            previous_exhibitors: industryData.exhibitors,
+            contact_phone: "+86-21-6209-8888",
+            contact_email: "info@exhibition.com.cn",
+            contact_website: "https://www.exhibition.com.cn",
+            registration_deadline: `${eventYear}年9月30日`,
+            registration_fee: "根据展位面积确定",
+            seo_title: `${eventYear}${title} - ${industry}专业展会`,
+            seo_description: `${eventYear}年${title}将展示${industry}行业最新技术和产品，汇聚国内外知名企业。`,
+            seo_keywords: `${title}, ${industry}, 专业展会, ${eventYear}年展览`,
+            description: `${title}创办于2000年，已成功举办多届，是${industry}行业的重要展示平台。展会汇聚了国内外${industry}领域的领先企业和技术供应商，全面展示行业最新发展成果和技术趋势。`
+          };
+        },
+
+        extractDataFromUrl(url) {
+          // 模拟从不同网站提取数据的逻辑
+          const domain = new URL(url).hostname;
+
+          // 根据域名模拟不同的提取结果
+          if (domain.includes('airshow')) {
+            return this.getAirshowData();
+          } else if (domain.includes('auto')) {
+            return this.getAutoShowData();
+          } else {
+            return this.getGenericExhibitionData(url);
+          }
+        },
+
+        getAirshowData() {
+          return {
+            title: "中国国际航空航天博览会",
+            summary: "中国唯一由政府批准的国际性专业航空航天展览，展示航空航天最新技术成果。",
+            event_date: "2026年11月10日~11月15日",
+            location: "珠海国际航展中心",
+            detailed_location: "中国 - 广东 - 珠海市金湾区航展路1号",
+            organizer: "珠海市政府",
+            exhibition_industry: "航空航天",
+            cycle: "两年一届",
+            exhibition_area: "350,000平方米",
+            exhibitor_count: "1,000家参展商",
+            visitor_count: "120,000专业观众"
+          };
+        },
+
+        getAutoShowData() {
+          return {
+            title: "中国国际汽车工业展览会",
+            summary: "中国汽车行业最具规模的专业展览会，展示汽车技术、新能源汽车等前沿产品。",
+            event_date: "2025年11月20日~11月25日",
+            location: "北京中国国际展览中心",
+            detailed_location: "中国 - 北京 - 朝阳区北三环东路6号",
+            organizer: "中国汽车工业协会",
+            exhibition_industry: "汽车制造",
+            cycle: "两年一届"
+          };
+        },
+
+        getGenericExhibitionData(url) {
+          return {
+            title: "专业展览会",
+            summary: "从指定网页提取的展会信息，请根据实际情况调整。",
+            event_date: "2025年XX月XX日~XX月XX日",
+            location: "展览中心",
+            detailed_location: "中国 - 城市 - 详细地址",
+            organizer: "主办单位",
+            exhibition_industry: "相关行业"
+          };
+        },
+
+        getIndustryTemplate(industry) {
+          const templates = {
+            '航空航天': {
+              scope: [
+                { category: "军用航空", itemsText: "军用飞机, 军用直升机, 无人机系统, 航空武器装备, 军用航空电子设备" },
+                { category: "民用航空", itemsText: "民用客机, 通用航空器, 民用直升机, 航空发动机, 航空材料" },
+                { category: "航天技术", itemsText: "卫星及卫星应用, 运载火箭, 空间站技术, 深空探测器, 航天地面设备" },
+                { category: "航空服务", itemsText: "航空培训, 航空金融, 航空保险, 机场建设, 空中交通管制" }
+              ],
+              exhibitors: [
+                { name: "中国航空工业集团", category: "航空制造" },
+                { name: "中国商飞", category: "民用航空" },
+                { name: "中国航发", category: "航空发动机" },
+                { name: "波音公司", category: "国际航空" },
+                { name: "空客公司", category: "国际航空" },
+                { name: "洛克希德·马丁", category: "航空航天" }
+              ]
+            },
+            '机械制造': {
+              scope: [
+                { category: "金属切削机床", itemsText: "数控车床, 数控铣床, 加工中心, 磨床, 钻床, 镗床, 刨床, 拉床" },
+                { category: "金属成形机床", itemsText: "冲压设备, 折弯机, 剪板机, 液压机, 锻压设备, 卷板机, 校平机, 开卷机" },
+                { category: "数控系统", itemsText: "数控装置, 伺服系统, 主轴系统, 传感器, 编程软件, CAD/CAM软件, 工业软件, 自动化系统" },
+                { category: "机床附件", itemsText: "刀具, 夹具, 量具, 磨具磨料, 机床配件, 润滑系统, 冷却系统, 排屑系统" }
+              ],
+              exhibitors: [
+                { name: "德马吉森精机", category: "机床制造" },
+                { name: "马扎克", category: "数控机床" },
+                { name: "发那科", category: "数控系统" },
+                { name: "西门子", category: "数控技术" },
+                { name: "海德汉", category: "数控系统" },
+                { name: "大连机床", category: "机床制造" }
+              ]
+            },
+            '能源电力': {
+              scope: [
+                { category: "发电设备", itemsText: "火力发电设备, 水力发电设备, 核电设备, 燃气轮机, 汽轮机, 发电机, 锅炉设备, 辅机设备" },
+                { category: "输配电设备", itemsText: "变压器, 开关设备, 电缆, 绝缘子, 避雷器, 电容器, 互感器, 配电柜" },
+                { category: "新能源技术", itemsText: "太阳能发电, 风力发电, 储能系统, 氢能技术, 生物质能, 地热能, 海洋能, 微电网" },
+                { category: "智能电网", itemsText: "智能变电站, 电网自动化, 电力通信, 电力监控, 能源管理系统, 电力软件, 数字化技术, 物联网应用" }
+              ],
+              exhibitors: [
+                { name: "国家电网", category: "电网运营" },
+                { name: "南方电网", category: "电网运营" },
+                { name: "中国电建", category: "电力建设" },
+                { name: "东方电气", category: "发电设备" },
+                { name: "上海电气", category: "发电设备" },
+                { name: "哈尔滨电气", category: "发电设备" }
+              ]
+            },
+            '无损检测': {
+              scope: [
+                { category: "射线检测", itemsText: "X射线检测设备, γ射线检测设备, 数字射线检测, 射线胶片, 图像处理系统, 射线防护设备, 射线源, 检测标准试块" },
+                { category: "超声检测", itemsText: "超声波探伤仪, 相控阵检测设备, TOFD检测设备, 超声波探头, 耦合剂, 标准试块, 超声波测厚仪, 声发射检测设备" },
+                { category: "磁粉检测", itemsText: "磁粉探伤机, 磁粉, 磁悬液, 退磁设备, 磁场指示器, 标准试片, 荧光磁粉, 磁粉检测附件" },
+                { category: "渗透检测", itemsText: "渗透剂, 清洗剂, 显像剂, 渗透检测线, 紫外线灯, 标准试块, 渗透检测套装, 自动化渗透线" }
+              ],
+              exhibitors: [
+                { name: "奥林巴斯", category: "检测设备" },
+                { name: "GE检测", category: "检测技术" },
+                { name: "德国KK", category: "射线检测" },
+                { name: "英国声纳", category: "超声检测" },
+                { name: "美国磁通", category: "磁粉检测" },
+                { name: "新美达", category: "渗透检测" }
+              ]
+            }
+          };
+
+          return templates[industry] || templates['机械制造'];
+        },
+
+        getLocationByIndustry(industry) {
+          const locations = {
+            '航空航天': '珠海国际航展中心',
+            '机械制造': '中国国际展览中心（顺义馆）',
+            '能源电力': '上海新国际博览中心',
+            '汽车制造': '北京中国国际展览中心',
+            '无损检测': '上海世贸商城',
+            '石油化工': '上海新国际博览中心',
+            '精密制造': '深圳国际会展中心',
+            '工业自动化': '国家会展中心（上海）',
+            '新材料': '中国国际展览中心（朝阳馆）'
+          };
+          return locations[industry] || '上海新国际博览中心';
+        },
+
+        getCityByIndustry(industry) {
+          const cities = {
+            '航空航天': '广东 - 珠海市金湾区航展路1号',
+            '机械制造': '北京 - 顺义区天竺空港经济开发区',
+            '能源电力': '上海 - 浦东新区龙阳路2345号',
+            '汽车制造': '北京 - 朝阳区北三环东路6号',
+            '无损检测': '上海 - 长宁区兴义路99号',
+            '石油化工': '上海 - 浦东新区龙阳路2345号',
+            '精密制造': '广东 - 深圳市宝安区展丰路80号',
+            '工业自动化': '上海 - 青浦区崧泽大道333号',
+            '新材料': '北京 - 朝阳区北三环东路6号'
+          };
+          return cities[industry] || '上海 - 浦东新区龙阳路2345号';
+        },
+
+        showResult(type, message) {
+          this.operationResult = { type, message };
+          setTimeout(() => {
+            this.operationResult = null;
+          }, 5000);
+        },
+
+        showImageResult(type, message) {
+          this.imageOperationResult = { type, message };
+          setTimeout(() => {
+            this.imageOperationResult = null;
+          }, 5000);
+        },
+
+        async generateImages() {
+          if (!this.imagePrompt.trim()) {
+            this.showImageResult('warning', '请输入图片描述提示词');
+            return;
+          }
+
+          this.isGeneratingImages = true;
+          this.imageOperationResult = null;
+
+          try {
+            // 模拟AI图片生成
+            await this.simulateImageGeneration();
+            this.showImageResult('success', 'AI图片生成完成！请查看预览区域');
+          } catch (error) {
+            this.showImageResult('warning', 'AI图片生成失败：' + error.message);
+          } finally {
+            this.isGeneratingImages = false;
+          }
+        },
+
+        async searchAndDownloadImages() {
+          if (!this.searchKeywords.trim()) {
+            this.showImageResult('warning', '请输入搜索关键词');
+            return;
+          }
+
+          this.isSearchingImages = true;
+          this.imageOperationResult = null;
+
+          try {
+            // 模拟图片搜索和下载
+            await this.simulateImageSearch();
+            this.showImageResult('success', `从${this.imageSource}搜索并下载了${this.imageCount}张图片`);
+          } catch (error) {
+            this.showImageResult('warning', '图片搜索下载失败：' + error.message);
+          } finally {
+            this.isSearchingImages = false;
+          }
+        },
+
+        handleCoverUpload(event) {
+          const file = event.target.files[0];
+          if (file) {
+            this.uploadedFiles.cover = file;
+            this.showImageResult('success', `封面图片已选择：${file.name}`);
+          }
+        },
+
+        handleHistoricalUpload(event) {
+          const files = Array.from(event.target.files);
+          this.uploadedFiles.historical = files;
+          this.showImageResult('success', `已选择${files.length}张历届图片`);
+        },
+
+        async processUploadedImages() {
+          if (!this.uploadedFiles.cover && this.uploadedFiles.historical.length === 0) {
+            this.showImageResult('warning', '请先选择要上传的图片');
+            return;
+          }
+
+          this.isProcessingUploads = true;
+          this.imageOperationResult = null;
+
+          try {
+            // 模拟图片处理和上传
+            await this.simulateImageUpload();
+            this.showImageResult('success', '图片上传处理完成！已自动优化并保存到项目目录');
+          } catch (error) {
+            this.showImageResult('warning', '图片处理失败：' + error.message);
+          } finally {
+            this.isProcessingUploads = false;
+          }
+        },
+
+        async simulateImageGeneration() {
+          // 模拟AI图片生成延迟
+          await new Promise(resolve => setTimeout(resolve, 3000));
+
+          const generatedImages = [];
+          const basePrompt = this.imagePrompt;
+          const style = this.imageStyle;
+
+          // 生成封面图片
+          generatedImages.push({
+            name: `ai-generated-cover-${style}.jpg`,
+            url: `https://picsum.photos/800/600?random=${Math.floor(Math.random() * 1000)}`,
+            type: 'cover',
+            prompt: `${basePrompt}, ${style} style, high quality`
+          });
+
+          // 生成历届图片
+          for (let i = 0; i < 3; i++) {
+            generatedImages.push({
+              name: `ai-generated-historical-${i + 1}.jpg`,
+              url: `https://picsum.photos/400/300?random=${Math.floor(Math.random() * 1000)}`,
+              type: 'historical',
+              prompt: `${basePrompt}, historical view ${i + 1}, ${style} style`
+            });
+          }
+
+          this.imagePreview = generatedImages;
+          this.updateImagePaths();
+        },
+
+        async simulateImageSearch() {
+          // 模拟图片搜索延迟
+          await new Promise(resolve => setTimeout(resolve, 2000));
+
+          const searchedImages = [];
+          const count = parseInt(this.imageCount);
+
+          for (let i = 0; i < count; i++) {
+            searchedImages.push({
+              name: `${this.imageSource}-${this.searchKeywords.replace(/\s+/g, '-')}-${i + 1}.jpg`,
+              url: `https://picsum.photos/${i === 0 ? '800/600' : '400/300'}?random=${Math.floor(Math.random() * 1000)}`,
+              type: i === 0 ? 'cover' : 'historical',
+              source: this.imageSource,
+              keywords: this.searchKeywords
+            });
+          }
+
+          this.imagePreview = searchedImages;
+          this.updateImagePaths();
+        },
+
+        async simulateImageUpload() {
+          // 模拟图片上传处理延迟
+          await new Promise(resolve => setTimeout(resolve, 2500));
+
+          const uploadedImages = [];
+
+          // 处理封面图片
+          if (this.uploadedFiles.cover) {
+            const coverFile = this.uploadedFiles.cover;
+            uploadedImages.push({
+              name: `uploaded-cover-${Date.now()}.jpg`,
+              url: URL.createObjectURL(coverFile),
+              type: 'cover',
+              originalName: coverFile.name,
+              size: coverFile.size
+            });
+          }
+
+          // 处理历届图片
+          this.uploadedFiles.historical.forEach((file, index) => {
+            uploadedImages.push({
+              name: `uploaded-historical-${index + 1}-${Date.now()}.jpg`,
+              url: URL.createObjectURL(file),
+              type: 'historical',
+              originalName: file.name,
+              size: file.size
+            });
+          });
+
+          this.imagePreview = uploadedImages;
+          this.updateImagePaths();
+        },
+
+        updateImagePaths() {
+          const coverImage = this.imagePreview.find(img => img.type === 'cover');
+          const historicalImages = this.imagePreview.filter(img => img.type === 'historical');
+
+          if (coverImage) {
+            const fileName = this.generateImageFileName(coverImage.name);
+            this.formData.cover = `/images/news/${fileName}`;
+            this.formData.featured_image = `/images/news/${fileName}`;
+          }
+
+          // 更新历届图片路径
+          this.formData.historical_images = historicalImages.map((img, index) => ({
+            image: `/images/news/${this.generateImageFileName(img.name)}`
+          }));
+        },
+
+        generateImageFileName(originalName) {
+          const title = this.formData.title || 'exhibition';
+          const timestamp = new Date().getFullYear();
+          const cleanTitle = title.toLowerCase()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .substring(0, 20);
+
+          return `${cleanTitle}-${timestamp}-${Math.floor(Math.random() * 100)}.jpg`;
+        },
+
+        useAsMainImage(image) {
+          const fileName = this.generateImageFileName(image.name);
+          this.formData.cover = `/images/news/${fileName}`;
+          this.formData.featured_image = `/images/news/${fileName}`;
+          this.showImageResult('success', '已设置为封面图片');
+        },
+
+        previewImage(imagePath) {
+          if (imagePath) {
+            window.open(imagePath, '_blank');
+          } else {
+            this.showImageResult('warning', '图片路径为空');
+          }
+        },
+
+        addScope() {
+          this.formData.exhibition_scope.push({ category: "", itemsText: "" });
+        },
+        removeScope(index) {
+          if (this.formData.exhibition_scope.length > 1) {
+            this.formData.exhibition_scope.splice(index, 1);
+          }
+        },
+        addHistoricalImage() {
+          this.formData.historical_images.push({ image: "" });
+        },
+        removeHistoricalImage(index) {
+          if (this.formData.historical_images.length > 1) {
+            this.formData.historical_images.splice(index, 1);
+          }
+        },
+        addExhibitor() {
+          this.formData.previous_exhibitors.push({ name: "", category: "" });
+        },
+        removeExhibitor(index) {
+          if (this.formData.previous_exhibitors.length > 1) {
+            this.formData.previous_exhibitors.splice(index, 1);
+          }
+        },
+        generateScopeYaml() {
+          return this.formData.exhibition_scope
+            .filter(scope => scope.category && scope.itemsText)
+            .map(scope => {
+              const items = scope.itemsText.split(',')
+                .map(item => item.trim())
+                .filter(item => item)
+                .map(item => `      - "${item}"`)
+                .join('\n');
+              return `  - category: "${scope.category}"\n    items:\n${items}`;
+            }).join('\n');
+        },
+        generateHistoricalImagesYaml() {
+          return this.formData.historical_images
+            .filter(img => img.image)
+            .map(img => `  - image: "${img.image}"`)
+            .join('\n');
+        },
+        generateExhibitorsYaml() {
+          return this.formData.previous_exhibitors
+            .filter(exhibitor => exhibitor.name)
+            .map(exhibitor => `  - name: "${exhibitor.name}"\n    category: "${exhibitor.category || '参展企业'}"`)
+            .join('\n');
+        },
+        generateMarkdown() {
+          const now = new Date();
+          const dateStr = now.toISOString();
+
+          return `---
+title: "${this.formData.title}"
+summary: "${this.formData.summary}"
+date: ${dateStr}
+publishDate: ${dateStr}
+draft: false
+categories: ["展会信息"]
+tags: ["${this.formData.exhibition_industry}", "国际展会", "${this.formData.title.includes('珠海') ? '珠海航展' : '专业展会'}", "${this.formData.exhibition_industry === '航空航天' ? '飞行表演' : '技术展示'}"]
+layout: "exhibition-universal"
+
+# 展会基本信息
+event_date: "${this.formData.event_date}"
+opening_hours: "${this.formData.opening_hours}"
+location: "${this.formData.location}"
+detailed_location: "${this.formData.detailed_location}"
+organizer: "${this.formData.organizer}"
+exhibition_industry: "${this.formData.exhibition_industry}"
+exhibition_type: "${this.formData.exhibition_type}"
+
+# 展会规模
+cycle: "${this.formData.cycle}"
+exhibition_area: "${this.formData.exhibition_area}"
+exhibitor_count: "${this.formData.exhibitor_count}"
+visitor_count: "${this.formData.visitor_count}"
+
+# 封面图片
+cover: "${this.formData.cover}"
+featured_image: "${this.formData.featured_image}"
+
+# 展品范围
+exhibition_scope:
+${this.generateScopeYaml()}
+
+# 历届视图
+historical_images:
+${this.generateHistoricalImagesYaml()}
+
+# 往届参展商
+previous_exhibitors:
+${this.generateExhibitorsYaml()}
+
+# 联系和报名信息
+contact_info:
+  phone: "${this.formData.contact_phone}"
+  email: "${this.formData.contact_email}"
+  website: "${this.formData.contact_website}"
+
+registration_info:
+  deadline: "${this.formData.registration_deadline}"
+  fee: "${this.formData.registration_fee}"
+  url: "${this.formData.contact_website}/register"
+
+# 相关产品
+related_products:
+  - "WS-K08510"
+  - "WS-K3915"
+
+# SEO优化
+seo_title: "${this.formData.seo_title}"
+seo_description: "${this.formData.seo_description}"
+seo_keywords: [${this.formData.seo_keywords.split(',').map(k => `"${k.trim()}"`).join(', ')}]
+
+# 指定使用通用展会模板
+layout: "exhibition-universal"
+---
+
+${this.formData.description}`;
+        },
+        generateFileName() {
+          const title = this.formData.title
+            .replace(/中国（(.+?)）/, 'china-$1-')
+            .replace(/国际/, 'international-')
+            .replace(/展览会|博览会/, 'exhibition')
+            .replace(/[^\w\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .toLowerCase();
+
+          const year = this.formData.event_date.match(/(\d{4})/)?.[1] || '2025';
+          return `${year}-${title}.md`;
+        },
+        saveMarkdown() {
+          const content = this.generateMarkdown();
+          const fileName = this.generateFileName();
+          const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+          alert(`文件已保存为: ${fileName}\n请将文件放置到项目的 content/news/ 文件夹中`);
+        },
+        copyMarkdown() {
+          const content = this.generateMarkdown();
+          navigator.clipboard.writeText(content).then(() => {
+            alert("Markdown内容已复制到剪贴板！");
+          }).catch(err => {
+            console.error('复制失败:', err);
+            alert("复制失败，请手动选择内容复制");
+          });
+        }
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

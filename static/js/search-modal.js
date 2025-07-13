@@ -404,19 +404,21 @@
                                     搜索历史
                                 </h6>
                             </div>
-                            <button id="clearHistoryBtn" class="clear-history-btn">
+                        </div>
+                        <div class="history-content-wrapper">
+                            <button id="clearHistoryBtn" class="clear-history-btn-top">
                                 <i class="fas fa-trash me-1"></i>清除所有历史
                             </button>
-                        </div>
-                        <div class="history-items">
-                            ${history.map(query => `
-                                <div class="search-history-item" data-query="${escapeHTML(query)}">
-                                    <span class="history-text">${escapeHTML(query)}</span>
-                                    <button class="remove-history" data-query="${escapeHTML(query)}">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            `).join('')}
+                            <div class="history-items">
+                                ${history.map(query => `
+                                    <div class="search-history-item" data-query="${escapeHTML(query)}">
+                                        <span class="history-text">${escapeHTML(query)}</span>
+                                        <button class="remove-history" data-query="${escapeHTML(query)}">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                `).join('')}
+                            </div>
                         </div>
                     </div>
                 `;

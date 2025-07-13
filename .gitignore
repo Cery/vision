@@ -57,3 +57,20 @@ Thumbs.db
 
 # Hugo 缓存
 .hugo_build.lock
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# Python图片抓取服务
+static/tools/python-crawler/venv/
+static/tools/python-crawler/__pycache__/
+static/tools/python-crawler/*.pyc

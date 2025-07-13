@@ -42,9 +42,5 @@
       mini_image: "https://picsum.photos/24/24?random=6"
       mini_icon: "fas fa-binoculars"
       product_count: 7
-    - title: "柔性光学内窥镜"
-      mini_image: "https://picsum.photos/24/24?random=7"
-      mini_icon: "fas fa-eye-dropper"
-      product_count: 3
 
 

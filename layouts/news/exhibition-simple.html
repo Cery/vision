@@ -1,0 +1,1082 @@
+{{ define "main" }}
+<!-- 展会资讯专用模板 - 简洁版 -->
+<div class="exhibition-page">
+    <!-- 展会头部横幅 -->
+    <div class="exhibition-hero">
+        {{ $coverImage := "" }}
+        {{ if .Params.cover }}
+            {{ $coverImage = .Params.cover }}
+        {{ else if .Params.featured_image }}
+            {{ $coverImage = .Params.featured_image }}
+        {{ end }}
+        
+        {{ if $coverImage }}
+        <div class="hero-image" style="background-image: url('{{ $coverImage | relURL }}');"></div>
+        {{ end }}
+        
+        <div class="hero-overlay">
+            <div class="container">
+                <div class="hero-content">
+                    <!-- 展会分类标签 -->
+                    <div class="exhibition-tags">
+                        <span class="tag-primary">
+                            <i class="bi bi-calendar-event"></i>展会资讯
+                        </span>
+                        {{ with .Params.exhibition_type }}
+                        <span class="tag-secondary">{{ . }}</span>
+                        {{ end }}
+                    </div>
+                    
+                    <!-- 展会标题 -->
+                    <h1 class="exhibition-title">{{ .Title }}</h1>
+                    
+                    <!-- 展会摘要 -->
+                    {{ with .Params.summary }}
+                    <p class="exhibition-summary">{{ . }}</p>
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 展会核心信息卡片 -->
+    <div class="exhibition-info-section">
+        <div class="container">
+            <div class="info-cards">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="bi bi-calendar3"></i>
+                    </div>
+                    <div class="info-content">
+                        <h6>展会时间</h6>
+                        <p>{{ .Params.event_date | default "待定" }}</p>
+                        {{ with .Params.opening_hours }}
+                        <small>开馆时间：{{ . }}</small>
+                        {{ end }}
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="bi bi-geo-alt"></i>
+                    </div>
+                    <div class="info-content">
+                        <h6>展会地点</h6>
+                        <p>{{ .Params.location | default "待定" }}</p>
+                        {{ with .Params.detailed_location }}
+                        <small>{{ . }}</small>
+                        {{ end }}
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="bi bi-building"></i>
+                    </div>
+                    <div class="info-content">
+                        <h6>主办单位</h6>
+                        <p>{{ .Params.organizer | default "待定" }}</p>
+                        {{ with .Params.exhibition_industry }}
+                        <small>行业：{{ . }}</small>
+                        {{ end }}
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="bi bi-graph-up"></i>
+                    </div>
+                    <div class="info-content">
+                        <h6>展会规模</h6>
+                        <p>{{ .Params.cycle | default "定期举办" }}</p>
+                        {{ if or .Params.exhibition_area .Params.exhibitor_count .Params.visitor_count }}
+                        <small>
+                            {{ with .Params.exhibition_area }}面积：{{ . }}{{ end }}
+                            {{ with .Params.exhibitor_count }}{{ if $.Params.exhibition_area }} | {{ end }}展商：{{ . }}{{ end }}
+                            {{ with .Params.visitor_count }}{{ if or $.Params.exhibition_area $.Params.exhibitor_count }} | {{ end }}观众：{{ . }}{{ end }}
+                        </small>
+                        {{ end }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 展会倒计时 -->
+    {{ if .Params.event_date }}
+    <div class="countdown-section">
+        <div class="container">
+            <div class="countdown-card" data-target-date="{{ .Params.event_date }}">
+                <div class="countdown-header">
+                    <h5><i class="bi bi-clock"></i>展会倒计时</h5>
+                </div>
+                <div class="countdown-display">
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="days">--</span>
+                        <span class="countdown-label">天</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="hours">--</span>
+                        <span class="countdown-label">时</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="minutes">--</span>
+                        <span class="countdown-label">分</span>
+                    </div>
+                </div>
+                <div class="countdown-ended" style="display: none;">
+                    <p><i class="bi bi-check-circle"></i>展会已结束，感谢关注！</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ end }}
+
+    <!-- 主要内容区域 -->
+    <div class="main-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- 面包屑导航 -->
+                    {{ partial "breadcrumbs.html" . }}
+
+                    <!-- 展会详细介绍 -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h3><i class="bi bi-file-text"></i>展会介绍</h3>
+                            <div class="article-meta">
+                                <span><i class="bi bi-calendar3"></i>发布时间：{{ .Date.Format "2006年01月02日" }}</span>
+                                {{ with .Params.author }}
+                                <span><i class="bi bi-person"></i>作者：{{ . }}</span>
+                                {{ end }}
+                                <span><i class="bi bi-eye"></i>浏览：<span id="view-count">{{ .Params.views | default 0 }}</span>次</span>
+                            </div>
+                        </div>
+                        
+                        <div class="article-content">
+                            {{ .Content }}
+                        </div>
+                    </div>
+
+                    <!-- 展品范围 -->
+                    {{ with .Params.exhibition_scope }}
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h3><i class="bi bi-grid"></i>展品范围</h3>
+                        </div>
+                        
+                        <div class="scope-grid">
+                            {{ range . }}
+                            <div class="scope-category">
+                                <h5 class="scope-title">{{ .category }}</h5>
+                                <div class="scope-items">
+                                    {{ range .items }}
+                                    <span class="scope-tag">{{ . }}</span>
+                                    {{ end }}
+                                </div>
+                            </div>
+                            {{ end }}
+                        </div>
+                    </div>
+                    {{ end }}
+
+                    <!-- 历届回顾 -->
+                    {{ with .Params.historical_images }}
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h3><i class="bi bi-images"></i>历届回顾</h3>
+                        </div>
+                        
+                        <div class="gallery-grid">
+                            {{ range $index, $image := . }}
+                            <div class="gallery-item">
+                                <img src="{{ .image }}" alt="往届展会图片{{ add $index 1 }}" loading="lazy">
+                            </div>
+                            {{ end }}
+                        </div>
+                    </div>
+                    {{ end }}
+
+                    <!-- 往届参展商 -->
+                    {{ with .Params.previous_exhibitors }}
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h3><i class="bi bi-building"></i>往届参展商</h3>
+                        </div>
+                        
+                        <div class="exhibitors-grid">
+                            {{ range $index, $exhibitor := . }}
+                            <div class="exhibitor-item">
+                                <span class="exhibitor-name">{{ .name }}</span>
+                                {{ with .category }}
+                                <span class="exhibitor-category">{{ . }}</span>
+                                {{ end }}
+                            </div>
+                            {{ end }}
+                        </div>
+                    </div>
+                    {{ end }}
+                </div>
+
+                <!-- 侧边栏 -->
+                <div class="col-lg-4">
+                    <!-- 参展信息 -->
+                    {{ if or .Params.contact_info .Params.registration_info }}
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-person-plus"></i>参展信息</h5>
+                        </div>
+                        <div class="card-body">
+                            {{ with .Params.contact_info }}
+                            <div class="contact-section">
+                                <h6>联系方式</h6>
+                                {{ with .phone }}<p><i class="bi bi-telephone"></i>{{ . }}</p>{{ end }}
+                                {{ with .email }}<p><i class="bi bi-envelope"></i>{{ . }}</p>{{ end }}
+                                {{ with .website }}<p><i class="bi bi-globe"></i><a href="{{ . }}" target="_blank">{{ . }}</a></p>{{ end }}
+                            </div>
+                            {{ end }}
+
+                            {{ with .Params.registration_info }}
+                            <div class="registration-section">
+                                <h6>报名信息</h6>
+                                {{ with .deadline }}<p><i class="bi bi-calendar-check"></i>截止：{{ . }}</p>{{ end }}
+                                {{ with .fee }}<p><i class="bi bi-currency-dollar"></i>费用：{{ . }}</p>{{ end }}
+                                {{ with .url }}<p><a href="{{ . }}" target="_blank" class="btn btn-primary btn-sm">立即报名</a></p>{{ end }}
+                            </div>
+                            {{ end }}
+                        </div>
+                    </div>
+                    {{ end }}
+
+                    <!-- 相关产品 -->
+                    {{ with .Params.related_products }}
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-box-seam"></i>相关产品</h5>
+                        </div>
+                        <div class="card-body">
+                            {{ range . }}
+                            {{ $product := site.GetPage (printf "/products/%s" .) }}
+                            {{ if $product }}
+                            <div class="product-item">
+                                <h6><a href="{{ $product.RelPermalink }}">{{ $product.Title }}</a></h6>
+                                <p>{{ $product.Params.summary | truncate 50 }}</p>
+                                <small>型号：{{ $product.Params.model }}</small>
+                            </div>
+                            {{ end }}
+                            {{ end }}
+                        </div>
+                    </div>
+                    {{ end }}
+
+                    <!-- 相关展会 -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-calendar-event"></i>相关展会</h5>
+                        </div>
+                        <div class="card-body">
+                            {{ $currentPage := . }}
+                            {{ $relatedPages := where (where .Site.RegularPages "Type" "news") "RelPermalink" "ne" .RelPermalink }}
+                            {{ $relatedByCategory := where $relatedPages "Params.categories" "intersect" (slice "展会信息") }}
+                            {{ range first 5 $relatedByCategory }}
+                            <div class="related-exhibition">
+                                <h6><a href="{{ .RelPermalink }}">{{ .Title }}</a></h6>
+                                <p><i class="bi bi-calendar3"></i>{{ .Params.event_date }}</p>
+                                <p><i class="bi bi-geo-alt"></i>{{ .Params.location }}</p>
+                            </div>
+                            {{ end }}
+                        </div>
+                    </div>
+
+                    <!-- 分享功能 -->
+                    <div class="sidebar-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-share"></i>分享展会</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="share-buttons">
+                                <button class="btn btn-outline-success btn-sm" onclick="shareToWeChat()">
+                                    <i class="bi bi-wechat"></i>微信
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm" onclick="shareToWeibo()">
+                                    <i class="bi bi-share"></i>微博
+                                </button>
+                                <button class="btn btn-outline-primary btn-sm" onclick="copyLink()">
+                                    <i class="bi bi-link-45deg"></i>复制链接
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 展会资讯专用样式 -->
+<style>
+/* 展会页面基础样式 */
+.exhibition-page {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}
+
+/* 展会头部横幅 */
+.exhibition-hero {
+    position: relative;
+    min-height: 400px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    overflow: hidden;
+}
+
+.hero-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.hero-overlay {
+    position: relative;
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.5);
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+}
+
+.hero-content {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.exhibition-tags {
+    margin-bottom: 1rem;
+}
+
+.tag-primary, .tag-secondary {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    margin: 0 0.5rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.tag-primary {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.tag-secondary {
+    background: #ffc107;
+    color: #000;
+}
+
+.exhibition-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.exhibition-summary {
+    font-size: 1.2rem;
+    margin-bottom: 0;
+    opacity: 0.9;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* 展会信息卡片 */
+.exhibition-info-section {
+    background: #f8f9fa;
+    padding: 2rem 0;
+    margin-top: -50px;
+    position: relative;
+    z-index: 3;
+}
+
+.info-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.info-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+}
+
+.info-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.info-content h6 {
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.info-content p {
+    color: #666;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.info-content small {
+    color: #999;
+    font-size: 0.85rem;
+}
+
+/* 倒计时样式 */
+.countdown-section {
+    background: white;
+    padding: 2rem 0;
+}
+
+.countdown-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.countdown-header h5 {
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.countdown-display {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.countdown-item {
+    text-align: center;
+}
+
+.countdown-number {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.countdown-label {
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* 主要内容区域 */
+.main-content {
+    padding: 3rem 0;
+}
+
+.content-section {
+    background: white;
+    margin-bottom: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.section-header {
+    background: #f8f9fa;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.section-header h3 {
+    color: #333;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.article-meta {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.article-meta span {
+    margin-right: 1rem;
+}
+
+.article-meta i {
+    margin-right: 0.25rem;
+    color: #667eea;
+}
+
+.article-content {
+    padding: 2rem;
+    line-height: 1.7;
+    color: #333;
+}
+
+.article-content h2, .article-content h3, .article-content h4 {
+    color: #667eea;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.article-content p {
+    margin-bottom: 1.5rem;
+}
+
+.article-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+/* 展品范围样式 */
+.scope-grid {
+    padding: 2rem;
+}
+
+.scope-category {
+    margin-bottom: 2rem;
+}
+
+.scope-title {
+    color: #667eea;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.scope-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.scope-tag {
+    background: #f8f9fa;
+    color: #667eea;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.scope-tag:hover {
+    background: #667eea;
+    color: white;
+}
+
+/* 图片画廊样式 */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 2rem;
+}
+
+.gallery-item {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover {
+    transform: scale(1.05);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+/* 参展商网格 */
+.exhibitors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 2rem;
+}
+
+.exhibitor-item {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    border-left: 3px solid #667eea;
+}
+
+.exhibitor-name {
+    display: block;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.exhibitor-category {
+    font-size: 0.8rem;
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+    padding: 0.2rem 0.5rem;
+    border-radius: 12px;
+}
+
+/* 侧边栏样式 */
+.sidebar-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+}
+
+.card-header h5 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.contact-section, .registration-section {
+    margin-bottom: 1.5rem;
+}
+
+.contact-section:last-child, .registration-section:last-child {
+    margin-bottom: 0;
+}
+
+.contact-section h6, .registration-section h6 {
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.contact-section p, .registration-section p {
+    color: #666;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.contact-section i, .registration-section i {
+    color: #667eea;
+    margin-right: 0.5rem;
+    width: 16px;
+}
+
+.product-item, .related-exhibition {
+    padding: 1rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.product-item:last-child, .related-exhibition:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.product-item h6, .related-exhibition h6 {
+    margin-bottom: 0.5rem;
+}
+
+.product-item h6 a, .related-exhibition h6 a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.product-item h6 a:hover, .related-exhibition h6 a:hover {
+    color: #667eea;
+}
+
+.product-item p, .related-exhibition p {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+.product-item small {
+    color: #999;
+    font-size: 0.8rem;
+}
+
+.share-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.share-buttons .btn {
+    flex: 1;
+    min-width: 80px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .exhibition-title {
+        font-size: 2rem;
+    }
+
+    .exhibition-summary {
+        font-size: 1rem;
+    }
+
+    .info-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .countdown-display {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .countdown-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+    }
+
+    .countdown-number {
+        font-size: 2rem;
+        margin-bottom: 0;
+    }
+
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .exhibitors-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .share-buttons {
+        flex-direction: column;
+    }
+
+    .share-buttons .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .exhibition-hero {
+        min-height: 300px;
+    }
+
+    .hero-overlay {
+        min-height: 300px;
+    }
+
+    .exhibition-title {
+        font-size: 1.5rem;
+    }
+
+    .exhibition-summary {
+        font-size: 0.9rem;
+    }
+
+    .info-card {
+        padding: 1rem;
+    }
+
+    .info-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+
+    .countdown-number {
+        font-size: 1.5rem;
+    }
+
+    .article-content {
+        padding: 1rem;
+    }
+
+    .scope-grid, .gallery-grid, .exhibitors-grid {
+        padding: 1rem;
+    }
+}
+</style>
+
+<!-- 展会功能脚本 -->
+<script>
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', function() {
+    initCountdown();
+    initViewCounter();
+});
+
+// 倒计时功能
+function initCountdown() {
+    const countdownCard = document.querySelector('.countdown-card[data-target-date]');
+    if (!countdownCard) return;
+
+    const targetDateStr = countdownCard.getAttribute('data-target-date');
+    if (!targetDateStr) return;
+
+    // 解析目标日期
+    const dateRange = parseChineseDateRange(targetDateStr);
+    if (!dateRange) return;
+
+    const countdownDisplay = countdownCard.querySelector('.countdown-display');
+    const countdownEnded = countdownCard.querySelector('.countdown-ended');
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const startDistance = dateRange.startDate - now;
+        const endDistance = dateRange.endDate - now;
+
+        // 如果展会已经结束
+        if (endDistance < 0) {
+            countdownDisplay.style.display = 'none';
+            countdownEnded.style.display = 'block';
+            return;
+        }
+
+        // 如果展会正在进行中
+        if (startDistance < 0 && endDistance > 0) {
+            const days = Math.floor(endDistance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((endDistance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((endDistance % (1000 * 60 * 60)) / (1000 * 60));
+
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            return;
+        }
+
+        // 展会还未开始
+        const days = Math.floor(startDistance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((startDistance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((startDistance % (1000 * 60 * 60)) / (1000 * 60));
+
+        document.getElementById('days').textContent = days.toString().padStart(2, '0');
+        document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+        document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 60000); // 每分钟更新一次
+}
+
+// 解析中文日期范围格式
+function parseChineseDateRange(dateStr) {
+    // 匹配格式：2026年11月10日~11月15日
+    const rangeMatch = dateStr.match(/(\d{4})年(\d{1,2})月(\d{1,2})日~(\d{1,2})月(\d{1,2})日/);
+    if (rangeMatch) {
+        const year = parseInt(rangeMatch[1]);
+        const startMonth = parseInt(rangeMatch[2]) - 1;
+        const startDay = parseInt(rangeMatch[3]);
+        const endMonth = parseInt(rangeMatch[4]) - 1;
+        const endDay = parseInt(rangeMatch[5]);
+
+        const startDate = new Date(year, startMonth, startDay).getTime();
+        const endDate = new Date(year, endMonth, endDay, 23, 59, 59).getTime();
+
+        return { startDate, endDate };
+    }
+
+    // 如果只有单个日期
+    const singleMatch = dateStr.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
+    if (singleMatch) {
+        const year = parseInt(singleMatch[1]);
+        const month = parseInt(singleMatch[2]) - 1;
+        const day = parseInt(singleMatch[3]);
+
+        const startDate = new Date(year, month, day).getTime();
+        const endDate = new Date(year, month, day, 23, 59, 59).getTime();
+
+        return { startDate, endDate };
+    }
+
+    return null;
+}
+
+// 浏览次数统计
+function initViewCounter() {
+    const viewCountElement = document.getElementById('view-count');
+    if (!viewCountElement) return;
+
+    const currentPath = window.location.pathname;
+    const storageKey = 'pageviews_' + currentPath.replace(/[^a-zA-Z0-9]/g, '_');
+
+    try {
+        let currentViews = parseInt(localStorage.getItem(storageKey) || '0');
+        currentViews += 1;
+        localStorage.setItem(storageKey, currentViews.toString());
+        viewCountElement.textContent = currentViews.toString();
+    } catch (error) {
+        console.error('浏览次数统计失败:', error);
+        viewCountElement.textContent = '1';
+    }
+}
+
+// 分享功能
+function shareToWeChat() {
+    const title = document.title;
+    const url = window.location.href;
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`;
+
+    // 创建简单的模态框
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    `;
+
+    modal.innerHTML = `
+        <div style="background: white; padding: 2rem; border-radius: 10px; text-align: center; max-width: 300px;">
+            <h5 style="margin-bottom: 1rem;">微信分享</h5>
+            <p style="margin-bottom: 1rem; color: #666;">请使用微信扫描二维码分享</p>
+            <img src="${qrUrl}" alt="微信分享二维码" style="max-width: 100%; margin-bottom: 1rem;">
+            <button onclick="this.closest('[style*=fixed]').remove()" style="background: #667eea; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">关闭</button>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // 点击背景关闭
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            document.body.removeChild(modal);
+        }
+    });
+}
+
+function shareToWeibo() {
+    const title = document.title;
+    const url = window.location.href;
+    const summary = document.querySelector('meta[name="description"]')?.content || '';
+    const weiboUrl = `https://service.weibo.com/share/share.php?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title + ' ' + summary)}`;
+    window.open(weiboUrl, '_blank', 'width=600,height=400');
+}
+
+function copyLink() {
+    const url = window.location.href;
+
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url).then(() => {
+            showToast('链接已复制到剪贴板', 'success');
+        }).catch(() => {
+            fallbackCopyTextToClipboard(url);
+        });
+    } else {
+        fallbackCopyTextToClipboard(url);
+    }
+}
+
+function fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.select();
+
+    try {
+        document.execCommand('copy');
+        showToast('链接已复制到剪贴板', 'success');
+    } catch (err) {
+        showToast('复制失败，请手动复制链接', 'error');
+    }
+
+    document.body.removeChild(textArea);
+}
+
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#007bff'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 5px;
+        z-index: 9999;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        animation: slideIn 0.3s ease;
+    `;
+
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    // 3秒后自动移除
+    setTimeout(() => {
+        if (document.body.contains(toast)) {
+            toast.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => {
+                if (document.body.contains(toast)) {
+                    document.body.removeChild(toast);
+                }
+            }, 300);
+        }
+    }, 3000);
+}
+
+// 添加动画样式
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+`;
+document.head.appendChild(style);
+</script>
+
+{{ end }}

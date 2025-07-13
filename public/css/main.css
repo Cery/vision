@@ -1299,14 +1299,19 @@ a:focus {
 /* 搜索历史头部布局 */
 .search-history-header {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    justify-content: flex-start;
+    align-items: center;
     margin-bottom: 1rem;
     position: relative;
 }
 
 .search-history-title {
     flex: 1;
+}
+
+/* 历史内容包装器 */
+.history-content-wrapper {
+    position: relative;
 }
 
 .search-history-section h6,
@@ -1342,12 +1347,29 @@ a:focus {
     gap: 0.25rem;
     white-space: nowrap;
     flex-shrink: 0;
+}
+
+/* 顶部清除历史按钮样式 */
+.clear-history-btn-top {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    padding: 0.375rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    white-space: nowrap;
     position: absolute;
     top: 0;
     right: 0;
+    z-index: 10;
 }
 
-.clear-history-btn:hover {
+.clear-history-btn:hover,
+.clear-history-btn-top:hover {
     background: var(--danger-color, #dc3545);
     border-color: var(--danger-color, #dc3545);
     color: white;
@@ -1355,8 +1377,14 @@ a:focus {
     box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
 }
 
-.clear-history-btn:active {
+.clear-history-btn:active,
+.clear-history-btn-top:active {
     transform: translateY(0);
+}
+
+/* 历史项目容器调整 */
+.history-items {
+    padding-top: 2.5rem; /* 为顶部按钮留出空间 */
 }
 
 .search-history-item {

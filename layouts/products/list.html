@@ -53,7 +53,7 @@
                         </div>
 
                         <!-- 二级分类 -->
-                        <div class="category-secondary-container">
+                        <div class="category-secondary-container" id="secondaryCategoryContainer">
                             <div class="category-level-label">
                                 <span class="badge bg-secondary me-2">二级分类</span>
                                 <small class="text-muted">选择产品细分类别</small>
@@ -62,26 +62,33 @@
                                 <!-- 连接线 -->
                                 <div class="category-connector"></div>
 
-                                <div class="d-flex flex-wrap gap-1 align-items-center">
+                                <div class="d-flex flex-wrap gap-1 align-items-center" id="secondaryCategoryButtons">
                                     <a href="{{ "products" | absURL }}" class="btn btn-outline-secondary btn-sm secondary-btn {{ if not $currentSecondaryCategory }}active{{ end }}">
                                         <i class="fas fa-list me-1"></i>全部二级分类
                                     </a>
 
-                                    {{ $allSecondaryCategories := slice }}
-                                    {{ range $allProducts }}
-                                        {{ with .Params.secondary_category }}
-                                            {{ $allSecondaryCategories = $allSecondaryCategories | append . }}
+                                    <!-- 二级分类按钮将通过JavaScript动态生成 -->
+                                    {{ range $primaryCategories }}
+                                        {{ $primaryCategory := . }}
+                                        {{ $productsInPrimary := where $allProducts "Params.primary_category" $primaryCategory }}
+                                        {{ $secondaryInPrimary := slice }}
+                                        {{ range $productsInPrimary }}
+                                            {{ with .Params.secondary_category }}
+                                                {{ $secondaryInPrimary = $secondaryInPrimary | append . }}
+                                            {{ end }}
                                         {{ end }}
-                                    {{ end }}
-                                    {{ $allSecondaryCategories = uniq $allSecondaryCategories }}
+                                        {{ $secondaryInPrimary = uniq $secondaryInPrimary }}
 
-                                    {{ range $allSecondaryCategories }}
-                                        {{ $category := . }}
-                                        {{ $productsInCategory := where $allProducts "Params.secondary_category" $category }}
-                                        {{ if gt (len $productsInCategory) 0 }}
-                                            <a href='{{ printf "products?secondary_category=%s" . | absURL }}' class="btn btn-outline-secondary btn-sm secondary-btn {{ if eq $currentSecondaryCategory . }}active{{ end }}">
+                                        {{ range $secondaryInPrimary }}
+                                            {{ $secondaryCategory := . }}
+                                            {{ $productsInSecondary := where $productsInPrimary "Params.secondary_category" $secondaryCategory }}
+                                            <a href='{{ printf "products?primary_category=%s&secondary_category=%s" $primaryCategory . | absURL }}'
+                                               class="btn btn-outline-secondary btn-sm secondary-btn secondary-category-btn"
+                                               data-primary-category="{{ $primaryCategory }}"
+                                               data-secondary-category="{{ . }}"
+                                               style="display: none;">
                                                 <i class="fas fa-tag me-1"></i>{{ . }}
-                                                <span class="badge bg-light text-dark ms-1">{{ len $productsInCategory }}</span>
+                                                <span class="badge bg-light text-dark ms-1">{{ len $productsInSecondary }}</span>
                                             </a>
                                         {{ end }}
                                     {{ end }}
@@ -276,7 +283,7 @@
                 {{ end }}
                 
                 <a href="{{ .Permalink }}" class="card-img-link">
-                    <img src="{{ $mainImage }}" class="card-img-top" alt="{{ .Title }}" style="height: 240px; object-fit: cover;" onerror="handleImageError(this)">
+                    <img src="{{ $mainImage }}" class="card-img-top" alt="{{ .Title }}" style="height: 240px; object-fit: contain; padding: 8px; background: #fafafa;" onerror="handleImageError(this)">
                     {{ if .Params.tags }}
                     <div class="product-tags">
                         {{ range .Params.tags }}
@@ -903,16 +910,60 @@ function updateCategoryButtons(currentPrimary, currentSecondary) {
         }
     });
 
-    // 更新二级分类按钮状态
-    document.querySelectorAll('.secondary-btn').forEach(btn => {
+    // 更新二级分类显示逻辑
+    updateSecondaryCategories(currentPrimary, currentSecondary);
+}
+
+function updateSecondaryCategories(currentPrimary, currentSecondary) {
+    // 获取所有二级分类按钮
+    const allSecondaryBtns = document.querySelectorAll('.secondary-category-btn');
+    const allSecondaryBtn = document.querySelector('.secondary-btn:not(.secondary-category-btn)');
+
+    // 先隐藏所有二级分类按钮
+    allSecondaryBtns.forEach(btn => {
+        btn.style.display = 'none';
         btn.classList.remove('active');
-        const href = btn.getAttribute('href');
-        if (!currentSecondary && href.includes('products') && !href.includes('?')) {
-            btn.classList.add('active');
-        } else if (currentSecondary && href.includes(`secondary_category=${currentSecondary}`)) {
-            btn.classList.add('active');
-        }
     });
+
+    if (currentPrimary) {
+        // 如果选择了一级分类，只显示该分类下的二级分类
+        allSecondaryBtns.forEach(btn => {
+            const btnPrimaryCategory = btn.getAttribute('data-primary-category');
+            if (btnPrimaryCategory === currentPrimary) {
+                btn.style.display = 'inline-block';
+
+                // 检查是否为当前选中的二级分类
+                const btnSecondaryCategory = btn.getAttribute('data-secondary-category');
+                if (currentSecondary && btnSecondaryCategory === currentSecondary) {
+                    btn.classList.add('active');
+                    // 如果有选中的二级分类，"全部二级分类"按钮不激活
+                    if (allSecondaryBtn) allSecondaryBtn.classList.remove('active');
+                }
+            }
+        });
+
+        // 如果没有选中二级分类，激活"全部二级分类"按钮
+        if (!currentSecondary && allSecondaryBtn) {
+            allSecondaryBtn.classList.add('active');
+        }
+    } else {
+        // 如果没有选择一级分类，显示所有二级分类
+        allSecondaryBtns.forEach(btn => {
+            btn.style.display = 'inline-block';
+
+            // 检查是否为当前选中的二级分类
+            const btnSecondaryCategory = btn.getAttribute('data-secondary-category');
+            if (currentSecondary && btnSecondaryCategory === currentSecondary) {
+                btn.classList.add('active');
+                if (allSecondaryBtn) allSecondaryBtn.classList.remove('active');
+            }
+        });
+
+        // 如果没有选中二级分类，激活"全部二级分类"按钮
+        if (!currentSecondary && allSecondaryBtn) {
+            allSecondaryBtn.classList.add('active');
+        }
+    }
 }
 
 // 显示产品

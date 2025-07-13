@@ -136,7 +136,7 @@
                                 <a href="{{ .RelPermalink | relURL }}" class="text-decoration-none text-dark hover-primary">{{ .Title }}</a>
                             </h5>
                             {{ with .Params.summary }}
-                            <p class="card-text text-muted flex-grow-1">{{ . }}</p>
+                            <p class="card-text text-muted flex-grow-1">{{ . | truncate 70 "..." }}</p>
                             {{ end }}
                             <div class="mt-auto">
                                 <div class="d-flex justify-content-between align-items-center">
@@ -366,8 +366,6 @@ body {
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    height: 3.15rem; /* 精确控制到第三行2/3处 */
-    max-height: 3.15rem;
 }
 
 /* 徽章样式 */

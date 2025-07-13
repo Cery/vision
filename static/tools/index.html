@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>开发工具 - Vision NDT</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .main-container {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      overflow: hidden;
+      margin: 2rem auto;
+      max-width: 1200px;
+    }
+    .header {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      color: white;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+    .tool-card {
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .tool-card:hover {
+      border-color: #4f46e5;
+      box-shadow: 0 8px 25px rgba(79, 70, 229, 0.15);
+      transform: translateY(-2px);
+    }
+    .tool-icon {
+      font-size: 3rem;
+      color: #4f46e5;
+      margin-bottom: 1rem;
+    }
+    .tool-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 1rem;
+    }
+    .tool-description {
+      color: #6b7280;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    .tool-features {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 1.5rem;
+    }
+    .tool-features li {
+      color: #059669;
+      margin-bottom: 0.5rem;
+    }
+    .tool-features li:before {
+      content: "✓ ";
+      font-weight: bold;
+      margin-right: 0.5rem;
+    }
+    .btn-tool {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      border: none;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+    .btn-tool:hover {
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+    }
+    .stats-section {
+      background: #f8fafc;
+      padding: 2rem;
+      border-top: 2px solid #e5e7eb;
+    }
+    .stat-item {
+      text-align: center;
+      padding: 1rem;
+    }
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #4f46e5;
+    }
+    .stat-label {
+      color: #6b7280;
+      font-size: 0.9rem;
+    }
+    .breadcrumb-nav {
+      background: #f8fafc;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .breadcrumb {
+      margin: 0;
+      background: none;
+    }
+    .breadcrumb-item a {
+      color: #4f46e5;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="main-container">
+      <!-- 面包屑导航 -->
+      <div class="breadcrumb-nav">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">首页</a></li>
+            <li class="breadcrumb-item active" aria-current="page">开发工具</li>
+          </ol>
+        </nav>
+      </div>
+
+      <!-- 页面头部 -->
+      <div class="header">
+        <h1><i class="bi bi-tools"></i> Vision NDT 开发工具</h1>
+        <p class="lead mb-0">专为 Vision NDT 项目设计的开发和内容管理工具集</p>
+      </div>
+
+      <!-- 工具列表 -->
+      <div class="container py-4">
+        <div class="row">
+          <!-- 展会信息编辑器 -->
+          <div class="col-lg-6">
+            <div class="tool-card" onclick="window.open('exhibition-editor.html', '_blank')">
+              <div class="text-center">
+                <i class="bi bi-calendar-event tool-icon"></i>
+              </div>
+              <div class="tool-title">展会信息编辑器</div>
+              <div class="tool-description">
+                专为 Vision NDT Hugo 项目设计的展会信息编辑工具，支持左右分屏编辑预览，完全符合项目模板规范。新增AI智能创作和网页内容获取功能。
+              </div>
+              <ul class="tool-features">
+                <li>左右分屏：编辑与预览同步</li>
+                <li>Hugo语法：完全符合项目规范</li>
+                <li>🤖 AI创作：基于关键词智能生成内容</li>
+                <li>🔗 网页获取：从官网自动提取展会信息</li>
+                <li>智能表单：动态添加展品和参展商</li>
+                <li>一键保存：自动生成文件名</li>
+                <li>实时预览：Markdown格式实时显示</li>
+              </ul>
+              <a href="exhibition-editor.html" class="btn-tool" target="_blank">
+                <i class="bi bi-box-arrow-up-right"></i> 打开编辑器
+              </a>
+            </div>
+          </div>
+
+          <!-- 预留位置：内容管理工具 -->
+          <div class="col-lg-6">
+            <div class="tool-card" style="opacity: 0.6; cursor: not-allowed;">
+              <div class="text-center">
+                <i class="bi bi-file-earmark-text tool-icon"></i>
+              </div>
+              <div class="tool-title">内容管理工具 <span class="badge bg-secondary">即将推出</span></div>
+              <div class="tool-description">
+                批量管理新闻文章、产品信息和页面内容的综合工具，支持批量编辑、导入导出等功能。
+              </div>
+              <ul class="tool-features">
+                <li>批量编辑：同时管理多个内容文件</li>
+                <li>导入导出：支持Excel和CSV格式</li>
+                <li>模板管理：预设多种内容模板</li>
+                <li>SEO优化：自动生成SEO相关字段</li>
+                <li>图片管理：集成图片上传和管理</li>
+              </ul>
+              <button class="btn-tool" disabled>
+                <i class="bi bi-hourglass-split"></i> 开发中
+              </button>
+            </div>
+          </div>
+
+          <!-- 图片处理工具 -->
+          <div class="col-lg-6">
+            <div class="tool-card" onclick="window.open('image-processor.html', '_blank')">
+              <div class="text-center">
+                <i class="bi bi-image tool-icon"></i>
+              </div>
+              <div class="tool-title">图片处理工具</div>
+              <div class="tool-description">
+                专业的图片批量处理工具，支持压缩、裁剪、格式转换和智能优化，为展会图片提供完整的处理方案。
+              </div>
+              <ul class="tool-features">
+                <li>批量上传：支持拖拽和多选上传</li>
+                <li>智能压缩：保持质量的同时减小文件大小</li>
+                <li>格式转换：支持WebP、JPEG、PNG转换</li>
+                <li>尺寸调整：自动生成封面和缩略图尺寸</li>
+                <li>路径生成：自动生成Hugo项目路径代码</li>
+                <li>批量下载：一键下载所有处理后的图片</li>
+              </ul>
+              <a href="image-processor.html" class="btn-tool" target="_blank">
+                <i class="bi bi-box-arrow-up-right"></i> 打开工具
+              </a>
+            </div>
+          </div>
+
+          <!-- 预留位置：数据分析工具 -->
+          <div class="col-lg-6">
+            <div class="tool-card" style="opacity: 0.6; cursor: not-allowed;">
+              <div class="text-center">
+                <i class="bi bi-graph-up tool-icon"></i>
+              </div>
+              <div class="tool-title">数据分析工具 <span class="badge bg-secondary">即将推出</span></div>
+              <div class="tool-description">
+                网站数据分析和报告生成工具，帮助了解访问情况、内容表现和用户行为。
+              </div>
+              <ul class="tool-features">
+                <li>访问统计：页面浏览量和用户行为分析</li>
+                <li>内容分析：热门内容和搜索关键词</li>
+                <li>性能监控：页面加载速度和错误监控</li>
+                <li>报告生成：自动生成分析报告</li>
+                <li>趋势预测：基于历史数据的趋势分析</li>
+              </ul>
+              <button class="btn-tool" disabled>
+                <i class="bi bi-hourglass-split"></i> 开发中
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 统计信息 -->
+      <div class="stats-section">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="stat-item">
+              <div class="stat-number">2</div>
+              <div class="stat-label">可用工具</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stat-item">
+              <div class="stat-number">2</div>
+              <div class="stat-label">开发中</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stat-item">
+              <div class="stat-number">100%</div>
+              <div class="stat-label">项目兼容</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stat-item">
+              <div class="stat-number">0</div>
+              <div class="stat-label">配置需求</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // 添加一些交互效果
+    document.addEventListener('DOMContentLoaded', function() {
+      // 为工具卡片添加点击效果
+      const toolCards = document.querySelectorAll('.tool-card:not([style*="opacity"])');
+      toolCards.forEach(card => {
+        card.addEventListener('click', function() {
+          const link = this.querySelector('a[href]');
+          if (link) {
+            window.open(link.href, '_blank');
+          }
+        });
+      });
+
+      // 添加页面加载动画
+      const cards = document.querySelectorAll('.tool-card');
+      cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          card.style.transition = 'all 0.6s ease';
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, index * 200);
+      });
+    });
+  </script>
+</body>
+</html>

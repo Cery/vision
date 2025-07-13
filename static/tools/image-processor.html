@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图片处理工具 - Vision NDT</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --secondary: #7c3aed;
+      --success: #059669;
+      --danger: #dc2626;
+      --dark: #1f2937;
+      --light: #f8fafc;
+      --border: #e5e7eb;
+      --text: #374151;
+      --muted: #6b7280;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .main-card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .content {
+      padding: 2rem;
+    }
+
+    .tool-section {
+      background: var(--light);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .upload-area {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 3rem 2rem;
+      text-align: center;
+      background: white;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .upload-area:hover {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .upload-area.dragover {
+      border-color: var(--primary);
+      background: #eff6ff;
+    }
+
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .image-item {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .image-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .image-item img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .image-info {
+      padding: 1rem;
+    }
+
+    .image-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .btn {
+      border-radius: 8px;
+      font-weight: 500;
+      border: none;
+      transition: all 0.2s ease;
+      font-size: 0.875rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+    }
+
+    .btn-sm {
+      padding: 0.375rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .progress-container {
+      margin-top: 1rem;
+    }
+
+    .processing-status {
+      background: #e0f2fe;
+      border: 1px solid #0288d1;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .download-section {
+      background: #f0fdf4;
+      border: 1px solid #16a34a;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    /* 功能选择标签 */
+    .function-tabs {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .function-tab {
+      padding: 0.75rem 1.5rem;
+      border: 2px solid var(--border);
+      background: white;
+      color: var(--text);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .function-tab:hover {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .function-tab.active {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+    }
+
+    /* 网页抓取样式 */
+    .crawl-input-area {
+      background: #f8fafc;
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+    }
+
+    /* 抓取方式选择标签 */
+    .crawl-method-tabs {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .crawl-method-tab {
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--border);
+      background: white;
+      color: var(--text);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .crawl-method-tab:hover {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .crawl-method-tab.active {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+    }
+
+    .crawled-images-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .crawled-image-item {
+      position: relative;
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .crawled-image-item:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .crawled-image-item.selected {
+      border-color: var(--success);
+      background: #f0fdf4;
+    }
+
+    .crawled-image-item img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .image-checkbox {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      z-index: 10;
+    }
+
+    .image-checkbox input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .image-info {
+      padding: 0.75rem;
+    }
+
+    .image-info input {
+      margin-bottom: 0.5rem;
+    }
+
+    .crawl-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    /* 服务状态样式 */
+    .service-status {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .status-indicator.online {
+      background: var(--success);
+      box-shadow: 0 0 8px rgba(5, 150, 105, 0.4);
+    }
+
+    .status-indicator.offline {
+      background: var(--danger);
+      box-shadow: 0 0 8px rgba(220, 38, 38, 0.4);
+    }
+
+    /* 设置步骤样式 */
+    .setup-steps, .quick-start, .troubleshooting {
+      background: rgba(255, 255, 255, 0.5);
+      border-left: 4px solid var(--primary);
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .setup-steps h6, .quick-start h6, .troubleshooting h6 {
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .setup-steps ol, .quick-start ol, .troubleshooting ul {
+      margin-bottom: 0;
+      padding-left: 1.2rem;
+    }
+
+    .setup-steps li, .quick-start li, .troubleshooting li {
+      margin-bottom: 0.3rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="container">
+    <div class="main-card">
+      <div class="header">
+        <h1><i class="bi bi-image"></i> 图片处理工具</h1>
+        <p class="mb-0">专为展会图片优化设计的批量处理工具</p>
+      </div>
+
+      <div class="content">
+        <!-- 功能选择 -->
+        <div class="tool-section">
+          <div class="section-title">
+            <i class="bi bi-gear"></i>
+            功能选择
+          </div>
+
+          <div class="function-tabs mb-3">
+            <button class="function-tab active" data-function="upload" @click="switchFunction('upload')">
+              <i class="bi bi-upload"></i> 本地上传
+            </button>
+            <button class="function-tab" data-function="crawl" @click="switchFunction('crawl')">
+              <i class="bi bi-globe"></i> 网页抓取
+            </button>
+          </div>
+        </div>
+
+        <!-- 图片上传区域 -->
+        <div class="tool-section" v-show="currentFunction === 'upload'">
+          <div class="section-title">
+            <i class="bi bi-upload"></i>
+            图片上传
+          </div>
+          
+          <div class="upload-area" @click="triggerFileInput" @dragover.prevent="handleDragOver" @dragleave.prevent="handleDragLeave" @drop.prevent="handleDrop">
+            <i class="bi bi-cloud-upload" style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;"></i>
+            <h5>拖拽图片到此处或点击上传</h5>
+            <p class="text-muted">支持 JPG、PNG、WebP 格式，单个文件最大 10MB</p>
+            <input type="file" ref="fileInput" multiple accept="image/*" style="display: none;" @change="handleFileSelect">
+          </div>
+        </div>
+
+        <!-- 网页抓取区域 -->
+        <div class="tool-section" v-show="currentFunction === 'crawl'">
+          <div class="section-title">
+            <i class="bi bi-globe"></i>
+            图片获取方式
+          </div>
+
+          <!-- 抓取方式选择 -->
+          <div class="crawl-method-tabs mb-3">
+            <button class="crawl-method-tab" :class="{ active: crawlMethod === 'urls' }" @click="crawlMethod = 'urls'">
+              <i class="bi bi-link-45deg"></i> 图片URL列表
+            </button>
+            <button class="crawl-method-tab" :class="{ active: crawlMethod === 'html' }" @click="crawlMethod = 'html'">
+              <i class="bi bi-file-code"></i> HTML文件解析
+            </button>
+            <button class="crawl-method-tab" :class="{ active: crawlMethod === 'python' }" @click="crawlMethod = 'python'">
+              <i class="bi bi-robot"></i> Python抓取
+            </button>
+          </div>
+
+          <!-- 图片URL列表输入 -->
+          <div v-if="crawlMethod === 'urls'" class="crawl-input-area">
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label">图片URL列表 <small class="text-muted">(每行一个URL)</small></label>
+                <textarea v-model="imageUrlList" class="form-control" rows="8" placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg&#10;https://example.com/image3.jpg"></textarea>
+              </div>
+              <div class="col-12">
+                <button class="btn btn-primary" @click="loadFromUrls" :disabled="isCrawling">
+                  <i class="bi bi-download" v-if="!isCrawling"></i>
+                  <i class="bi bi-hourglass-split" v-if="isCrawling"></i>
+                  {{ isCrawling ? '正在加载中...' : '加载图片列表' }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- HTML文件解析 -->
+          <div v-if="crawlMethod === 'html'" class="crawl-input-area">
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label">上传HTML文件 <small class="text-muted">(右键保存网页为HTML文件)</small></label>
+                <input type="file" class="form-control" accept=".html,.htm" @change="handleHtmlFileUpload" ref="htmlFileInput">
+                <div class="form-text">
+                  <i class="bi bi-info-circle"></i>
+                  在目标网页右键选择"另存为" → "网页，全部" → 上传保存的HTML文件
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">图片过滤</label>
+                <select v-model="htmlImageFilter" class="form-select">
+                  <option value="all">所有图片</option>
+                  <option value="large">大图片 (宽度>200px)</option>
+                  <option value="jpg">仅JPG格式</option>
+                  <option value="png">仅PNG格式</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">最小尺寸</label>
+                <input v-model="minImageSize" type="number" class="form-control" placeholder="200" min="50">
+                <div class="form-text">像素 (宽度或高度)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Python抓取服务 -->
+          <div v-if="crawlMethod === 'python'" class="crawl-input-area">
+            <div class="service-status mb-3">
+              <div class="d-flex align-items-center gap-2">
+                <span class="status-indicator" :class="{ online: serviceOnline, offline: !serviceOnline }"></span>
+                <span>Python服务状态: {{ serviceOnline ? '在线' : '离线' }}</span>
+                <button class="btn btn-outline-primary btn-sm" @click="checkServiceStatus">
+                  <i class="bi bi-arrow-clockwise"></i> 检查
+                </button>
+              </div>
+            </div>
+
+            <div v-if="!serviceOnline" class="alert alert-warning">
+              <h6><i class="bi bi-exclamation-triangle"></i> 启动Python抓取服务</h6>
+              <p class="mb-2">请先启动Python后端服务来使用真实的网页抓取功能：</p>
+
+              <div class="setup-steps">
+                <h6>🔧 首次设置步骤：</h6>
+                <ol class="mb-2">
+                  <li>进入 <code>tools/python-crawler/</code> 目录</li>
+                  <li>双击运行 <code>check_python_simple.bat</code> 检查Python环境</li>
+                  <li>如果Python未安装，运行 <code>install_python.bat</code> 获取安装指导</li>
+                  <li>Python安装完成后，双击运行 <code>start_service.bat</code></li>
+                  <li>等待服务启动完成（首次需要安装依赖包）</li>
+                  <li>点击"检查"按钮确认服务状态</li>
+                </ol>
+              </div>
+
+              <div class="quick-start">
+                <h6>⚡ 快速启动（Python已安装）：</h6>
+                <ol class="mb-2">
+                  <li>双击运行 <code>quick_start.bat</code></li>
+                  <li>等待服务启动</li>
+                  <li>点击"检查"按钮确认状态</li>
+                </ol>
+              </div>
+
+              <div class="troubleshooting">
+                <h6>🔍 故障排除：</h6>
+                <ul class="mb-2">
+                  <li>如果启动脚本无输出，说明Python未安装或未添加到PATH</li>
+                  <li>运行 <code>check_python_simple.bat</code> 诊断环境问题</li>
+                  <li>查看 <code>Python安装指南.md</code> 获取详细安装说明</li>
+                </ul>
+              </div>
+
+              <p class="mb-0">
+                <small class="text-muted">
+                  📁 服务文件位置: <code>static/tools/python-crawler/</code><br>
+                  📖 详细说明请查看该目录下的 README.md 文件
+                </small>
+              </p>
+            </div>
+
+            <div v-if="serviceOnline" class="row g-3">
+              <div class="col-md-8">
+                <label class="form-label">目标网页URL</label>
+                <input v-model="pythonCrawlUrl" type="text" class="form-control" placeholder="例如: www.vsndt.com 或 https://example.com" @blur="formatUrl">
+                <div class="form-text">
+                  <i class="bi bi-info-circle"></i>
+                  支持多种格式：www.example.com、example.com、https://example.com
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">图片过滤</label>
+                <select v-model="pythonImageFilter" class="form-select">
+                  <option value="all">所有图片</option>
+                  <option value="large">大图片 (>200px)</option>
+                  <option value="jpg">仅JPG格式</option>
+                  <option value="png">仅PNG格式</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">最小尺寸 (像素)</label>
+                <input v-model="pythonMinSize" type="number" class="form-control" placeholder="100" min="50">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">最大数量</label>
+                <input v-model="pythonMaxImages" type="number" class="form-control" placeholder="50" min="1" max="200">
+              </div>
+              <div class="col-12">
+                <button class="btn btn-primary" @click="pythonCrawlImages" :disabled="isCrawling">
+                  <i class="bi bi-robot" v-if="!isCrawling"></i>
+                  <i class="bi bi-hourglass-split" v-if="isCrawling"></i>
+                  {{ isCrawling ? '正在抓取中...' : '开始Python抓取' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 抓取结果显示 -->
+        <div class="tool-section" v-if="crawledImages.length > 0">
+          <div class="section-title">
+            <i class="bi bi-images"></i>
+            抓取到的图片 ({{ crawledImages.length }}张)
+          </div>
+
+          <div class="crawled-images-grid">
+            <div v-for="(image, index) in crawledImages" :key="index" class="crawled-image-item" :class="{ selected: image.selected }">
+              <div class="image-checkbox">
+                <input type="checkbox" v-model="image.selected" :id="'img-' + index">
+                <label :for="'img-' + index"></label>
+              </div>
+              <img :src="image.src" :alt="image.alt" @click="toggleImageSelection(index)">
+              <div class="image-info">
+                <input v-model="image.customName" type="text" class="form-control form-control-sm" :placeholder="image.originalName" @click.stop>
+                <small class="text-muted">{{ image.size || '未知大小' }}</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="crawl-actions mt-3">
+            <button class="btn btn-outline-primary" @click="selectAllCrawledImages">
+              <i class="bi bi-check-all"></i> 全选
+            </button>
+            <button class="btn btn-outline-secondary" @click="deselectAllCrawledImages">
+              <i class="bi bi-x-square"></i> 取消全选
+            </button>
+            <button class="btn btn-success" @click="saveSelectedImages" :disabled="!hasSelectedImages">
+              <i class="bi bi-download"></i> 保存选中图片 ({{ selectedImagesCount }})
+            </button>
+          </div>
+        </div>
+
+        <!-- 处理选项 -->
+        <div class="tool-section" v-if="uploadedImages.length > 0 || crawledImages.length > 0">
+          <div class="section-title">
+            <i class="bi bi-gear"></i>
+            处理选项
+          </div>
+          
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label class="form-label">压缩质量</label>
+              <select v-model="processingOptions.quality" class="form-select">
+                <option value="high">高质量 (90%)</option>
+                <option value="medium">中等质量 (75%)</option>
+                <option value="low">低质量 (60%)</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">输出格式</label>
+              <select v-model="processingOptions.format" class="form-select">
+                <option value="original">保持原格式</option>
+                <option value="jpg">JPEG</option>
+                <option value="webp">WebP</option>
+                <option value="png">PNG</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">尺寸调整</label>
+              <select v-model="processingOptions.resize" class="form-select">
+                <option value="none">不调整</option>
+                <option value="cover">封面尺寸 (800x600)</option>
+                <option value="thumbnail">缩略图 (400x300)</option>
+                <option value="custom">自定义尺寸</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">文件命名</label>
+              <select v-model="processingOptions.naming" class="form-select">
+                <option value="original">保持原名</option>
+                <option value="exhibition">展会格式</option>
+                <option value="timestamp">时间戳</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row g-3 mt-2" v-if="processingOptions.resize === 'custom'">
+            <div class="col-md-3">
+              <label class="form-label">宽度 (px)</label>
+              <input v-model="processingOptions.customWidth" type="number" class="form-control" placeholder="800">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">高度 (px)</label>
+              <input v-model="processingOptions.customHeight" type="number" class="form-control" placeholder="600">
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <button class="btn btn-primary" @click="processImages" :disabled="isProcessing">
+              <i class="bi bi-magic" v-if="!isProcessing"></i>
+              <i class="bi bi-hourglass-split" v-if="isProcessing"></i>
+              {{ isProcessing ? '正在处理中...' : '开始处理图片' }}
+            </button>
+          </div>
+        </div>
+
+        <!-- 图片预览 -->
+        <div class="tool-section" v-if="uploadedImages.length > 0">
+          <div class="section-title">
+            <i class="bi bi-images"></i>
+            图片预览 ({{ uploadedImages.length }}张)
+          </div>
+          
+          <div class="image-grid">
+            <div v-for="(image, index) in uploadedImages" :key="index" class="image-item">
+              <img :src="image.preview" :alt="image.name">
+              <div class="image-info">
+                <small class="text-muted d-block">{{ image.name }}</small>
+                <small class="text-muted">{{ formatFileSize(image.size) }}</small>
+                <div class="image-actions">
+                  <button class="btn btn-outline-primary btn-sm" @click="previewImage(image)">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button class="btn btn-outline-danger btn-sm" @click="removeImage(index)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 处理进度 -->
+        <div class="processing-status" v-if="isProcessing">
+          <h6><i class="bi bi-hourglass-split"></i> 正在处理图片...</h6>
+          <div class="progress">
+            <div class="progress-bar" :style="{width: processingProgress + '%'}"></div>
+          </div>
+          <small class="text-muted">{{ processingStatus }}</small>
+        </div>
+
+        <!-- 下载区域 -->
+        <div class="download-section" v-if="processedImages.length > 0">
+          <h6><i class="bi bi-download"></i> 处理完成</h6>
+          <p class="mb-2">已成功处理 {{ processedImages.length }} 张图片</p>
+          <button class="btn btn-success" @click="downloadAll">
+            <i class="bi bi-download"></i> 下载所有图片
+          </button>
+          <button class="btn btn-outline-primary ms-2" @click="generateImagePaths">
+            <i class="bi bi-code"></i> 生成路径代码
+          </button>
+        </div>
+
+        <!-- 路径代码 -->
+        <div class="tool-section" v-if="generatedPaths">
+          <div class="section-title">
+            <i class="bi bi-code-slash"></i>
+            生成的图片路径
+          </div>
+          <pre class="bg-light p-3 rounded"><code>{{ generatedPaths }}</code></pre>
+          <button class="btn btn-outline-secondary btn-sm" @click="copyPaths">
+            <i class="bi bi-clipboard"></i> 复制路径
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return {
+          currentFunction: 'upload',
+          uploadedImages: [],
+          crawledImages: [],
+          processedImages: [],
+          isProcessing: false,
+          isCrawling: false,
+          processingProgress: 0,
+          processingStatus: '',
+          generatedPaths: '',
+          crawlMethod: 'urls',
+          imageUrlList: '',
+          htmlImageFilter: 'all',
+          minImageSize: 200,
+          serviceOnline: false,
+          pythonCrawlUrl: '',
+          pythonImageFilter: 'all',
+          pythonMinSize: 100,
+          pythonMaxImages: 50,
+          processingOptions: {
+            quality: 'high',
+            format: 'original',
+            resize: 'none',
+            naming: 'exhibition',
+            customWidth: 800,
+            customHeight: 600
+          }
+        };
+      },
+      computed: {
+        hasSelectedImages() {
+          return this.crawledImages.some(img => img.selected);
+        },
+        selectedImagesCount() {
+          return this.crawledImages.filter(img => img.selected).length;
+        }
+      },
+      mounted() {
+        // 页面加载时检查Python服务状态
+        this.checkServiceStatus();
+      },
+      methods: {
+        switchFunction(func) {
+          this.currentFunction = func;
+          // 更新标签状态
+          document.querySelectorAll('.function-tab').forEach(tab => {
+            tab.classList.remove('active');
+          });
+          document.querySelector(`[data-function="${func}"]`).classList.add('active');
+
+          // 如果切换到Python抓取，检查服务状态
+          if (func === 'crawl' && this.crawlMethod === 'python') {
+            this.checkServiceStatus();
+          }
+        },
+
+        async checkServiceStatus() {
+          try {
+            const response = await fetch('http://localhost:5000/api/health', {
+              method: 'GET',
+              timeout: 3000
+            });
+            this.serviceOnline = response.ok;
+          } catch (error) {
+            this.serviceOnline = false;
+          }
+        },
+
+        async pythonCrawlImages() {
+          if (!this.pythonCrawlUrl.trim()) {
+            alert('请输入有效的网页URL');
+            return;
+          }
+
+          if (!this.serviceOnline) {
+            alert('Python服务未启动，请先运行启动脚本');
+            return;
+          }
+
+          // 自动修复URL格式
+          let originalUrl = this.pythonCrawlUrl.trim();
+          let url = this.fixUrlFormat(originalUrl);
+
+          // 如果URL被修复了，提示用户
+          if (url !== originalUrl) {
+            console.log(`URL已自动修复: ${originalUrl} → ${url}`);
+            this.pythonCrawlUrl = url; // 更新显示的URL
+          }
+
+          this.isCrawling = true;
+          this.crawledImages = [];
+
+          try {
+            const filters = {
+              format: this.pythonImageFilter,
+              min_size: parseInt(this.pythonMinSize) || 100,
+              large_only: this.pythonImageFilter === 'large',
+              max_images: parseInt(this.pythonMaxImages) || 50
+            };
+
+            const response = await fetch('http://localhost:5000/api/crawl', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                url: url,
+                filters: filters
+              })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+              this.crawledImages = result.images.map(img => ({
+                src: img.url,
+                alt: img.alt || img.title || '图片',
+                originalName: img.filename,
+                customName: '',
+                selected: false,
+                size: img.size_text,
+                width: img.width,
+                height: img.height
+              }));
+
+              alert(`成功抓取到 ${this.crawledImages.length} 张图片`);
+            } else {
+              alert('抓取失败：' + result.error);
+            }
+
+          } catch (error) {
+            alert('抓取失败：' + error.message);
+            console.error('Python抓取错误:', error);
+          } finally {
+            this.isCrawling = false;
+          }
+        },
+
+        triggerFileInput() {
+          this.$refs.fileInput.click();
+        },
+        
+        handleFileSelect(event) {
+          const files = Array.from(event.target.files);
+          this.addImages(files);
+        },
+        
+        handleDragOver(event) {
+          event.target.classList.add('dragover');
+        },
+        
+        handleDragLeave(event) {
+          event.target.classList.remove('dragover');
+        },
+        
+        handleDrop(event) {
+          event.target.classList.remove('dragover');
+          const files = Array.from(event.dataTransfer.files);
+          this.addImages(files);
+        },
+        
+        addImages(files) {
+          files.forEach(file => {
+            if (file.type.startsWith('image/')) {
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                this.uploadedImages.push({
+                  file: file,
+                  name: file.name,
+                  size: file.size,
+                  preview: e.target.result
+                });
+              };
+              reader.readAsDataURL(file);
+            }
+          });
+        },
+
+        async loadFromUrls() {
+          if (!this.imageUrlList.trim()) {
+            alert('请输入图片URL列表');
+            return;
+          }
+
+          this.isCrawling = true;
+          this.crawledImages = [];
+
+          try {
+            const urls = this.imageUrlList.split('\n')
+              .map(url => url.trim())
+              .filter(url => url && this.isValidImageUrl(url));
+
+            if (urls.length === 0) {
+              alert('没有找到有效的图片URL');
+              return;
+            }
+
+            await this.loadImagesFromUrls(urls);
+            alert(`成功加载 ${this.crawledImages.length} 张图片`);
+          } catch (error) {
+            alert('加载失败：' + error.message);
+          } finally {
+            this.isCrawling = false;
+          }
+        },
+
+        handleHtmlFileUpload(event) {
+          const file = event.target.files[0];
+          if (!file) return;
+
+          this.isCrawling = true;
+          this.crawledImages = [];
+
+          const reader = new FileReader();
+          reader.onload = async (e) => {
+            try {
+              const htmlContent = e.target.result;
+              await this.parseHtmlForImages(htmlContent);
+              alert(`从HTML文件中提取到 ${this.crawledImages.length} 张图片`);
+            } catch (error) {
+              alert('解析HTML文件失败：' + error.message);
+            } finally {
+              this.isCrawling = false;
+            }
+          };
+          reader.readAsText(file);
+        },
+
+        isValidImageUrl(url) {
+          try {
+            new URL(url);
+            return /\.(jpg|jpeg|png|gif|webp|bmp|svg)(\?.*)?$/i.test(url);
+          } catch {
+            return false;
+          }
+        },
+
+        async loadImagesFromUrls(urls) {
+          const loadPromises = urls.map(async (url, index) => {
+            try {
+              // 创建图片对象来检测图片是否可加载
+              const img = new Image();
+              img.crossOrigin = 'anonymous';
+
+              return new Promise((resolve) => {
+                img.onload = () => {
+                  const fileName = this.extractFileNameFromUrl(url);
+                  resolve({
+                    src: url,
+                    alt: `图片 ${index + 1}`,
+                    originalName: fileName,
+                    customName: '',
+                    selected: false,
+                    size: `${img.width}x${img.height}`,
+                    width: img.width,
+                    height: img.height
+                  });
+                };
+
+                img.onerror = () => {
+                  console.warn(`无法加载图片: ${url}`);
+                  resolve(null);
+                };
+
+                img.src = url;
+              });
+            } catch (error) {
+              console.warn(`处理URL失败: ${url}`, error);
+              return null;
+            }
+          });
+
+          const results = await Promise.all(loadPromises);
+          this.crawledImages = results.filter(img => img !== null);
+        },
+
+        async parseHtmlForImages(htmlContent) {
+          // 创建临时DOM来解析HTML
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(htmlContent, 'text/html');
+          const images = doc.querySelectorAll('img');
+
+          const imagePromises = Array.from(images).map(async (img, index) => {
+            let src = img.src || img.getAttribute('data-src') || img.getAttribute('data-original');
+
+            if (!src) return null;
+
+            // 处理相对路径
+            if (src.startsWith('./') || src.startsWith('../') || !src.startsWith('http')) {
+              console.warn(`跳过相对路径图片: ${src}`);
+              return null;
+            }
+
+            try {
+              // 检查图片是否可加载
+              const testImg = new Image();
+              testImg.crossOrigin = 'anonymous';
+
+              return new Promise((resolve) => {
+                testImg.onload = () => {
+                  // 应用过滤条件
+                  if (this.shouldIncludeImage(testImg, src)) {
+                    const fileName = this.extractFileNameFromUrl(src);
+                    resolve({
+                      src: src,
+                      alt: img.alt || `图片 ${index + 1}`,
+                      originalName: fileName,
+                      customName: '',
+                      selected: false,
+                      size: `${testImg.width}x${testImg.height}`,
+                      width: testImg.width,
+                      height: testImg.height
+                    });
+                  } else {
+                    resolve(null);
+                  }
+                };
+
+                testImg.onerror = () => {
+                  console.warn(`无法加载图片: ${src}`);
+                  resolve(null);
+                };
+
+                testImg.src = src;
+              });
+            } catch (error) {
+              console.warn(`处理图片失败: ${src}`, error);
+              return null;
+            }
+          });
+
+          const results = await Promise.all(imagePromises);
+          this.crawledImages = results.filter(img => img !== null);
+        },
+
+        shouldIncludeImage(img, src) {
+          // 尺寸过滤
+          if (img.width < this.minImageSize && img.height < this.minImageSize) {
+            return false;
+          }
+
+          // 格式过滤
+          if (this.htmlImageFilter === 'jpg' && !/\.jpe?g/i.test(src)) {
+            return false;
+          }
+          if (this.htmlImageFilter === 'png' && !/\.png/i.test(src)) {
+            return false;
+          }
+          if (this.htmlImageFilter === 'large' && img.width < 200) {
+            return false;
+          }
+
+          return true;
+        },
+
+        extractFileNameFromUrl(url) {
+          try {
+            const urlObj = new URL(url);
+            const pathname = urlObj.pathname;
+            const fileName = pathname.split('/').pop();
+            return fileName || `image-${Date.now()}.jpg`;
+          } catch {
+            return `image-${Date.now()}.jpg`;
+          }
+        },
+
+        fixUrlFormat(url) {
+          if (!url) return url;
+
+          url = url.trim();
+
+          // 如果已经有协议，直接返回
+          if (url.startsWith('http://') || url.startsWith('https://')) {
+            return url;
+          }
+
+          // 如果以www开头，添加https://
+          if (url.startsWith('www.')) {
+            return 'https://' + url;
+          }
+
+          // 如果看起来像域名，添加https://
+          if (url.includes('.') && !url.startsWith('ftp://') && !url.startsWith('file://')) {
+            return 'https://' + url;
+          }
+
+          // 其他情况，默认添加https://
+          return 'https://' + url;
+        },
+
+        formatUrl() {
+          if (this.pythonCrawlUrl) {
+            const originalUrl = this.pythonCrawlUrl.trim();
+            const fixedUrl = this.fixUrlFormat(originalUrl);
+            if (fixedUrl !== originalUrl) {
+              this.pythonCrawlUrl = fixedUrl;
+            }
+          }
+        },
+
+        toggleImageSelection(index) {
+          this.crawledImages[index].selected = !this.crawledImages[index].selected;
+        },
+
+        selectAllCrawledImages() {
+          this.crawledImages.forEach(img => img.selected = true);
+        },
+
+        deselectAllCrawledImages() {
+          this.crawledImages.forEach(img => img.selected = false);
+        },
+
+        async saveSelectedImages() {
+          const selectedImages = this.crawledImages.filter(img => img.selected);
+
+          if (selectedImages.length === 0) {
+            alert('请先选择要保存的图片');
+            return;
+          }
+
+          // 如果Python服务在线且图片数量较多，使用Python服务批量下载
+          if (this.serviceOnline && selectedImages.length > 3) {
+            try {
+              await this.pythonBatchDownload(selectedImages);
+              return;
+            } catch (error) {
+              console.warn('Python批量下载失败，降级到浏览器下载:', error);
+            }
+          }
+
+          // 使用现代浏览器的文件系统访问API（如果支持）
+          if ('showDirectoryPicker' in window) {
+            try {
+              const directoryHandle = await window.showDirectoryPicker();
+
+              for (const image of selectedImages) {
+                const fileName = image.customName || image.originalName;
+                const response = await fetch(image.src);
+                const blob = await response.blob();
+
+                const fileHandle = await directoryHandle.getFileHandle(fileName, { create: true });
+                const writable = await fileHandle.createWritable();
+                await writable.write(blob);
+                await writable.close();
+              }
+
+              alert(`成功保存 ${selectedImages.length} 张图片到选择的目录`);
+            } catch (error) {
+              if (error.name !== 'AbortError') {
+                console.error('保存失败:', error);
+                this.fallbackDownload(selectedImages);
+              }
+            }
+          } else {
+            // 降级方案：逐个下载
+            this.fallbackDownload(selectedImages);
+          }
+        },
+
+        async pythonBatchDownload(selectedImages) {
+          try {
+            const urls = selectedImages.map(img => img.src);
+            const filenames = selectedImages.map(img => img.customName || img.originalName);
+
+            const response = await fetch('http://localhost:5000/api/download', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                urls: urls,
+                filenames: filenames
+              })
+            });
+
+            if (response.ok) {
+              const blob = await response.blob();
+              const url = window.URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = url;
+              link.download = 'images.zip';
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              window.URL.revokeObjectURL(url);
+
+              alert(`成功下载 ${selectedImages.length} 张图片的压缩包`);
+            } else {
+              throw new Error('Python服务下载失败');
+            }
+          } catch (error) {
+            throw error;
+          }
+        },
+
+        fallbackDownload(images) {
+          alert('您的浏览器不支持目录选择，将逐个下载图片文件');
+
+          images.forEach((image, index) => {
+            setTimeout(() => {
+              const link = document.createElement('a');
+              link.href = image.src;
+              link.download = image.customName || image.originalName;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            }, index * 500); // 延迟下载避免浏览器阻止
+          });
+        },
+        
+        removeImage(index) {
+          this.uploadedImages.splice(index, 1);
+        },
+        
+        previewImage(image) {
+          window.open(image.preview, '_blank');
+        },
+        
+        async processImages() {
+          this.isProcessing = true;
+          this.processingProgress = 0;
+          this.processedImages = [];
+          
+          for (let i = 0; i < this.uploadedImages.length; i++) {
+            const image = this.uploadedImages[i];
+            this.processingStatus = `正在处理: ${image.name}`;
+            
+            // 模拟图片处理
+            await this.processImage(image);
+            
+            this.processingProgress = ((i + 1) / this.uploadedImages.length) * 100;
+          }
+          
+          this.isProcessing = false;
+          this.processingStatus = '处理完成！';
+        },
+        
+        async processImage(image) {
+          // 模拟处理延迟
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          const processedName = this.generateFileName(image.name);
+          
+          this.processedImages.push({
+            original: image,
+            name: processedName,
+            path: `/images/news/${processedName}`,
+            processed: true
+          });
+        },
+        
+        generateFileName(originalName) {
+          const timestamp = Date.now();
+          const extension = originalName.split('.').pop();
+          
+          switch (this.processingOptions.naming) {
+            case 'exhibition':
+              return `exhibition-${timestamp}.${extension}`;
+            case 'timestamp':
+              return `img-${timestamp}.${extension}`;
+            default:
+              return originalName;
+          }
+        },
+        
+        downloadAll() {
+          // 模拟下载所有处理后的图片
+          alert('图片处理完成！请将处理后的图片保存到项目的 static/images/news/ 目录中');
+        },
+        
+        generateImagePaths() {
+          const paths = this.processedImages.map(img => `"${img.path}"`).join(',\n  ');
+          this.generatedPaths = `# 封面图片\ncover: "${this.processedImages[0]?.path || ''}"\nfeatured_image: "${this.processedImages[0]?.path || ''}"\n\n# 历届视图\nhistorical_images:\n  - image: ${paths.replace(/,\n  /g, '\n  - image: ')}`;
+        },
+        
+        copyPaths() {
+          navigator.clipboard.writeText(this.generatedPaths).then(() => {
+            alert('路径代码已复制到剪贴板！');
+          });
+        },
+        
+        formatFileSize(bytes) {
+          if (bytes === 0) return '0 Bytes';
+          const k = 1024;
+          const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+          const i = Math.floor(Math.log(bytes) / Math.log(k));
+          return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
