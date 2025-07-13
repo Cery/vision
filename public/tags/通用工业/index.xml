@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>通用工业 on 维森视觉检测仪器</title>
-    <link>https://visndt.com/tags/%E9%80%9A%E7%94%A8%E5%B7%A5%E4%B8%9A/</link>
+    <link>http://localhost:1313/tags/%E9%80%9A%E7%94%A8%E5%B7%A5%E4%B8%9A/</link>
     <description>Recent content in 通用工业 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Fri, 10 Jan 2025 12:00:00 +0800</lastBuildDate>
-    <atom:link href="https://visndt.com/tags/%E9%80%9A%E7%94%A8%E5%B7%A5%E4%B8%9A/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/%E9%80%9A%E7%94%A8%E5%B7%A5%E4%B8%9A/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>WS-K2810工业内窥镜 - 2.8mm标准探头 四方向360度导向</title>
-      <link>https://visndt.com/products/ws-k2810/</link>
+      <link>http://localhost:1313/products/ws-k2810/</link>
       <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>https://visndt.com/products/ws-k2810/</guid>
+      <guid>http://localhost:1313/products/ws-k2810/</guid>
       <description>WS-K2810是一款具备2.8mm标准直径的工业视频内窥镜，配备四方向360度导向功能，专为通用工业检测设计，广泛应用于通用工业、设备检测、管道检查等多领域检测场景。</description>
     </item>
     <item>
       <title>WS-P2810高清工业视频内窥镜 - 2.8mm四方向导向探头</title>
-      <link>https://visndt.com/products/ws-p2810/</link>
+      <link>http://localhost:1313/products/ws-p2810/</link>
       <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>https://visndt.com/products/ws-p2810/</guid>
+      <guid>http://localhost:1313/products/ws-p2810/</guid>
       <description>高清光纤照明360度旋转镜头内窥镜，2.8mm四方向导向探头专为通用工业检测设计</description>
     </item>
   </channel>

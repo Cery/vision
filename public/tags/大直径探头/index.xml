@@ -2,38 +2,38 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>大直径探头 on 维森视觉检测仪器</title>
-    <link>https://visndt.com/tags/%E5%A4%A7%E7%9B%B4%E5%BE%84%E6%8E%A2%E5%A4%B4/</link>
+    <link>http://localhost:1313/tags/%E5%A4%A7%E7%9B%B4%E5%BE%84%E6%8E%A2%E5%A4%B4/</link>
     <description>Recent content in 大直径探头 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Fri, 10 Jan 2025 12:00:00 +0800</lastBuildDate>
-    <atom:link href="https://visndt.com/tags/%E5%A4%A7%E7%9B%B4%E5%BE%84%E6%8E%A2%E5%A4%B4/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/%E5%A4%A7%E7%9B%B4%E5%BE%84%E6%8E%A2%E5%A4%B4/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>WS-K6020工业内窥镜 - 6mm大直径探头 超远景深检测</title>
-      <link>https://visndt.com/products/ws-k6020/</link>
+      <link>http://localhost:1313/products/ws-k6020/</link>
       <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>https://visndt.com/products/ws-k6020/</guid>
+      <guid>http://localhost:1313/products/ws-k6020/</guid>
       <description>WS-K6020是一款具备6mm大直径的工业视频内窥镜，配备四方向360度导向和12-200mm超远景深，专为大型设备深度检测设计，广泛应用于大型机械、基础设施、重型装备等领域。</description>
     </item>
     <item>
       <title>WS-K6030工业内窥镜 - 6mm大直径探头 深度检测专用</title>
-      <link>https://visndt.com/products/ws-k6030/</link>
+      <link>http://localhost:1313/products/ws-k6030/</link>
       <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>https://visndt.com/products/ws-k6030/</guid>
+      <guid>http://localhost:1313/products/ws-k6030/</guid>
       <description>WS-K6030是一款具备6mm大直径的工业视频内窥镜，配备四方向360度导向和12-200mm超远景深，专为大型设备深度检测设计，广泛应用于大型设备、深度检测、特种检测等专业检测场景。</description>
     </item>
     <item>
       <title>WS-P6020高清工业视频内窥镜 - 6mm大直径探头</title>
-      <link>https://visndt.com/products/ws-p6020/</link>
+      <link>http://localhost:1313/products/ws-p6020/</link>
       <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>https://visndt.com/products/ws-p6020/</guid>
+      <guid>http://localhost:1313/products/ws-p6020/</guid>
       <description>高清光纤照明360度旋转镜头内窥镜，6mm大直径探头专为重型机械基础设施检测设计</description>
     </item>
     <item>
       <title>WS-P6030高清工业视频内窥镜 - 6mm深度检测专用探头</title>
-      <link>https://visndt.com/products/ws-p6030/</link>
+      <link>http://localhost:1313/products/ws-p6030/</link>
       <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>https://visndt.com/products/ws-p6030/</guid>
+      <guid>http://localhost:1313/products/ws-p6030/</guid>
       <description>高清光纤照明360度旋转镜头内窥镜，6mm深度检测专用探头专为大型设备特种检测设计</description>
     </item>
   </channel>

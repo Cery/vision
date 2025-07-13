@@ -2,38 +2,38 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>资讯中心 on 维森视觉检测仪器</title>
-    <link>https://visndt.com/news/</link>
+    <link>http://localhost:1313/news/</link>
     <description>Recent content in 资讯中心 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Sun, 13 Jul 2025 08:22:49 +0000</lastBuildDate>
-    <atom:link href="https://visndt.com/news/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/news/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>中国国际国际铸造展览会</title>
-      <link>https://visndt.com/news/2026-international-exhibition/</link>
+      <link>http://localhost:1313/news/2026-international-exhibition/</link>
       <pubDate>Sun, 13 Jul 2025 08:22:49 +0000</pubDate>
-      <guid>https://visndt.com/news/2026-international-exhibition/</guid>
+      <guid>http://localhost:1313/news/2026-international-exhibition/</guid>
       <description>中国国际国际铸造展览会是中国铸造行业最具影响力的专业展览会，展示铸造领域的最新技术、设备和解决方案。</description>
     </item>
     <item>
       <title>中国（珠海）国际航空航天展览会</title>
-      <link>https://visndt.com/news/exhibition-template-example/</link>
+      <link>http://localhost:1313/news/exhibition-template-example/</link>
       <pubDate>Fri, 11 Jul 2025 10:00:00 +0800</pubDate>
-      <guid>https://visndt.com/news/exhibition-template-example/</guid>
+      <guid>http://localhost:1313/news/exhibition-template-example/</guid>
       <description>中国国际航空航天博览会是唯一由中央政府批准举办的国际性专业航空航天展览，以实物展示、贸易洽谈、学术交流和飞行表演为主要特征。</description>
     </item>
     <item>
       <title>工业内窥镜图像处理算法优化技术研究</title>
-      <link>https://visndt.com/news/tech-article-1/</link>
+      <link>http://localhost:1313/news/tech-article-1/</link>
       <pubDate>Fri, 22 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>https://visndt.com/news/tech-article-1/</guid>
+      <guid>http://localhost:1313/news/tech-article-1/</guid>
       <description>深入探讨工业内窥镜图像处理算法的优化方法，提升检测精度和效率</description>
     </item>
     <item>
       <title>内窥镜技术在工业检测中的创新应用</title>
-      <link>https://visndt.com/news/industry-news-1/</link>
+      <link>http://localhost:1313/news/industry-news-1/</link>
       <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>https://visndt.com/news/industry-news-1/</guid>
+      <guid>http://localhost:1313/news/industry-news-1/</guid>
       <description>探讨最新内窥镜技术在工业检测领域的创新应用，提高检测效率和精度</description>
     </item>
   </channel>

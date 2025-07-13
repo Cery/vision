@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>精密电子 on 维森视觉检测仪器</title>
-    <link>https://visndt.com/tags/%E7%B2%BE%E5%AF%86%E7%94%B5%E5%AD%90/</link>
+    <link>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E7%94%B5%E5%AD%90/</link>
     <description>Recent content in 精密电子 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Fri, 10 Jan 2025 12:00:00 +0800</lastBuildDate>
-    <atom:link href="https://visndt.com/tags/%E7%B2%BE%E5%AF%86%E7%94%B5%E5%AD%90/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E7%94%B5%E5%AD%90/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>WS-K09510工业内窥镜 - 0.95mm超细探头 微型结构检测</title>
-      <link>https://visndt.com/products/ws-k09510/</link>
+      <link>http://localhost:1313/products/ws-k09510/</link>
       <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>https://visndt.com/products/ws-k09510/</guid>
+      <guid>http://localhost:1313/products/ws-k09510/</guid>
       <description>WS-K09510是一款具备0.95mm超细直径的工业视频内窥镜，专为微型结构和精密部件检测设计，广泛应用于精密电子、微型机械、高端制造等超精密检测场景。</description>
     </item>
     <item>
       <title>WS-P09510高清工业视频内窥镜 - 0.95mm超细探头</title>
-      <link>https://visndt.com/products/ws-p09510/</link>
+      <link>http://localhost:1313/products/ws-p09510/</link>
       <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>https://visndt.com/products/ws-p09510/</guid>
+      <guid>http://localhost:1313/products/ws-p09510/</guid>
       <description>高清光纤照明360度旋转镜头内窥镜，0.95mm超细探头专为微型结构检测设计</description>
     </item>
   </channel>

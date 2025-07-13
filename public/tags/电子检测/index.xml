@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>电子检测 on 维森视觉检测仪器</title>
-    <link>https://visndt.com/tags/%E7%94%B5%E5%AD%90%E6%A3%80%E6%B5%8B/</link>
+    <link>http://localhost:1313/tags/%E7%94%B5%E5%AD%90%E6%A3%80%E6%B5%8B/</link>
     <description>Recent content in 电子检测 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Fri, 10 Jan 2025 12:00:00 +0800</lastBuildDate>
-    <atom:link href="https://visndt.com/tags/%E7%94%B5%E5%AD%90%E6%A3%80%E6%B5%8B/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/%E7%94%B5%E5%AD%90%E6%A3%80%E6%B5%8B/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>WS-K1010工业内窥镜 - 1.0mm超细探头 精密制造检测</title>
-      <link>https://visndt.com/products/ws-k1010/</link>
+      <link>http://localhost:1313/products/ws-k1010/</link>
       <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>https://visndt.com/products/ws-k1010/</guid>
+      <guid>http://localhost:1313/products/ws-k1010/</guid>
       <description>WS-K1010是一款具备1.0mm超细直径的工业视频内窥镜，专为精密制造和电子检测设计，广泛应用于精密机械、电子制造、医疗器械等高精度检测场景。</description>
     </item>
     <item>
       <title>WS-P1010高清工业视频内窥镜 - 1.0mm超细探头</title>
-      <link>https://visndt.com/products/ws-p1010/</link>
+      <link>http://localhost:1313/products/ws-p1010/</link>
       <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>https://visndt.com/products/ws-p1010/</guid>
+      <guid>http://localhost:1313/products/ws-p1010/</guid>
       <description>高清光纤照明360度旋转镜头内窥镜，1.0mm超细探头专为精密制造检测设计</description>
     </item>
   </channel>
