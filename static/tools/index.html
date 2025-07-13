@@ -166,26 +166,27 @@
             </div>
           </div>
 
-          <!-- 预留位置：内容管理工具 -->
+          <!-- 内容统计仪表板 -->
           <div class="col-lg-6">
-            <div class="tool-card" style="opacity: 0.6; cursor: not-allowed;">
+            <div class="tool-card" onclick="window.open('/admin/content-dashboard.html', '_blank')">
               <div class="text-center">
-                <i class="bi bi-file-earmark-text tool-icon"></i>
+                <i class="bi bi-bar-chart-line tool-icon"></i>
               </div>
-              <div class="tool-title">内容管理工具 <span class="badge bg-secondary">即将推出</span></div>
+              <div class="tool-title">内容统计仪表板</div>
               <div class="tool-description">
-                批量管理新闻文章、产品信息和页面内容的综合工具，支持批量编辑、导入导出等功能。
+                全面的网站内容统计和分析工具，实时监控网站内容状态，提供详细的数据分析和可视化图表。
               </div>
               <ul class="tool-features">
-                <li>批量编辑：同时管理多个内容文件</li>
-                <li>导入导出：支持Excel和CSV格式</li>
-                <li>模板管理：预设多种内容模板</li>
-                <li>SEO优化：自动生成SEO相关字段</li>
-                <li>图片管理：集成图片上传和管理</li>
+                <li>内容统计：实时统计各类内容数量</li>
+                <li>数据可视化：图表展示内容分布</li>
+                <li>分类管理：按类型查看内容详情</li>
+                <li>搜索过滤：快速定位特定内容</li>
+                <li>导出功能：支持数据导出</li>
+                <li>实时更新：动态刷新统计数据</li>
               </ul>
-              <button class="btn-tool" disabled>
-                <i class="bi bi-hourglass-split"></i> 开发中
-              </button>
+              <a href="/admin/content-dashboard.html" class="btn-tool" target="_blank">
+                <i class="bi bi-box-arrow-up-right"></i> 打开仪表板
+              </a>
             </div>
           </div>
 

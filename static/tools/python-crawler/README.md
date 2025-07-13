@@ -8,8 +8,8 @@
 双击运行 `check_python_simple.bat` 检查Python是否已安装
 
 #### 2. 安装Python（如果需要）
-- 如果Python未安装，双击运行 `install_python.bat` 获取安装指导
-- 或直接访问 https://www.python.org/downloads/ 下载安装
+- 如果Python未安装，请访问 https://www.python.org/downloads/ 下载安装
+- 参考 `Python安装指南.md` 获取详细安装步骤
 - **重要**：安装时必须勾选 "Add Python to PATH" 选项
 
 #### 3. 启动服务
@@ -147,6 +147,25 @@ Response: ZIP文件流
 - 不存储用户数据
 - 不记录访问日志
 - 临时文件自动清理
+
+## 📁 文件说明
+
+### 核心文件
+- `image_crawler_service.py` - 图片抓取服务主程序
+- `requirements.txt` - Python依赖包配置文件
+- `venv/` - Python虚拟环境目录
+
+### 启动脚本
+- `start_service.bat` - 完整启动脚本（首次使用推荐）
+- `quick_start.bat` - 快速启动脚本（日常使用）
+
+### 工具脚本
+- `check_python_simple.bat` - Python环境检查工具
+
+### 文档文件
+- `README.md` - 主要使用说明（本文件）
+- `Python安装指南.md` - Python安装详细指导
+- `URL格式说明.md` - URL输入格式说明
 
 ## 📞 技术支持
 
