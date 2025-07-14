@@ -5,6 +5,7 @@ date: 2025-07-13T13:00:00+08:00
 publishDate: 2025-07-13T13:00:00+08:00
 draft: false
 categories: ["展会信息"]
+subcategories: ["能源动力"]
 tags: ["石油化工", "炼油技术", "化工设备", "管道阀门", "安全环保"]
 layout: "exhibition-universal"
 

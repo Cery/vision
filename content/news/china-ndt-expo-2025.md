@@ -5,6 +5,7 @@ date: 2025-07-13T11:00:00+08:00
 publishDate: 2025-07-13T11:00:00+08:00
 draft: false
 categories: ["展会信息"]
+subcategories: ["无损检测"]
 tags: ["无损检测", "NDT技术", "超声检测", "射线检测", "质量控制"]
 layout: "exhibition-universal"
 

@@ -5,6 +5,7 @@ date: 2025-07-13T13:30:00+08:00
 publishDate: 2025-07-13T13:30:00+08:00
 draft: false
 categories: ["展会信息"]
+subcategories: ["工业制造"]
 tags: ["精密制造", "精密加工", "微纳制造", "激光技术", "精密测量"]
 layout: "exhibition-universal"
 

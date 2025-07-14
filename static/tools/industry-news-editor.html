@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>行业资讯编辑器 - VisNDT</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #667eea;
+      --secondary-color: #764ba2;
+      --success-color: #28a745;
+      --warning-color: #ffc107;
+      --danger-color: #dc3545;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    .app-container {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .editor-panel {
+      width: 50%;
+      background: white;
+      border-right: 1px solid #e9ecef;
+      overflow-y: auto;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+
+    .preview-panel {
+      width: 50%;
+      background: #f8f9fa;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .editor-header {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .editor-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .editor-header p {
+      margin: 0.5rem 0 0 0;
+      opacity: 0.9;
+      font-size: 0.9rem;
+    }
+
+    .editor-content {
+      padding: 1.5rem;
+    }
+
+    .form-section {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      border: 1px solid #e9ecef;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: #495057;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-control, .form-select {
+      border-radius: 8px;
+      border: 1px solid #ced4da;
+      padding: 0.75rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+
+    .btn {
+      border-radius: 8px;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      border: none;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      border: none;
+    }
+
+    .btn-outline-secondary {
+      border-color: #6c757d;
+      color: #6c757d;
+    }
+
+    .content-mode-selector {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .mode-option {
+      flex: 1;
+      padding: 1rem;
+      border: 2px solid #e9ecef;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    .mode-option:hover {
+      border-color: var(--primary-color);
+      transform: translateY(-2px);
+    }
+
+    .mode-option.active {
+      border-color: var(--primary-color);
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    }
+
+    .mode-icon {
+      font-size: 2rem;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .mode-title {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.25rem;
+    }
+
+    .mode-desc {
+      font-size: 0.85rem;
+      color: #6c757d;
+    }
+
+    .preview-header {
+      background: linear-gradient(135deg, #343a40 0%, #495057 100%);
+      color: white;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .preview-content {
+      padding: 1.5rem;
+      background: white;
+      margin: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      min-height: calc(100vh - 200px);
+    }
+
+    .markdown-preview {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    .markdown-preview h1, .markdown-preview h2, .markdown-preview h3 {
+      color: var(--primary-color);
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .markdown-preview h1 {
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 0.5rem;
+    }
+
+    .markdown-preview h2 {
+      border-bottom: 1px solid #e9ecef;
+      padding-bottom: 0.3rem;
+    }
+
+    .markdown-preview code {
+      background: #f8f9fa;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+
+    .markdown-preview pre {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    .markdown-preview blockquote {
+      border-left: 4px solid var(--primary-color);
+      padding-left: 1rem;
+      margin-left: 0;
+      color: #6c757d;
+      font-style: italic;
+    }
+
+    .alert {
+      border-radius: 8px;
+      border: none;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .alert-success {
+      background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(32, 201, 151, 0.1) 100%);
+      color: #155724;
+      border-left: 4px solid #28a745;
+    }
+
+    .alert-warning {
+      background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 235, 59, 0.1) 100%);
+      color: #856404;
+      border-left: 4px solid #ffc107;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .auto-fetch-section, .url-fetch-section {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .tag-input-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .tag-item {
+      background: var(--primary-color);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tag-remove {
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .tag-remove:hover {
+      color: #ffcccc;
+    }
+
+    @media (max-width: 768px) {
+      .app-container {
+        flex-direction: column;
+        height: auto;
+      }
+      
+      .editor-panel, .preview-panel {
+        width: 100%;
+        height: auto;
+      }
+      
+      .preview-panel {
+        min-height: 500px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="app-container">
+    <!-- 左侧编辑面板 -->
+    <div class="editor-panel">
+      <div class="editor-header">
+        <h2><i class="bi bi-newspaper"></i> 行业资讯编辑器</h2>
+        <p class="mb-0">专为 Vision NDT Hugo 项目设计</p>
+      </div>
+
+      <div class="editor-content">
+        <!-- 内容获取方式 -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="bi bi-magic"></i>
+            智能内容获取
+          </div>
+          
+          <div class="content-mode-selector">
+            <div class="mode-option" :class="{ active: contentMode === 'manual' }" @click="contentMode = 'manual'">
+              <div class="mode-icon">
+                <i class="bi bi-pencil-square"></i>
+              </div>
+              <div class="mode-title">手动编辑</div>
+              <div class="mode-desc">手动填写资讯信息</div>
+            </div>
+            
+            <div class="mode-option" :class="{ active: contentMode === 'auto' }" @click="contentMode = 'auto'">
+              <div class="mode-icon">
+                <i class="bi bi-robot"></i>
+              </div>
+              <div class="mode-title">全网自动创作</div>
+              <div class="mode-desc">基于关键词智能生成</div>
+            </div>
+            
+            <div class="mode-option" :class="{ active: contentMode === 'url' }" @click="contentMode = 'url'">
+              <div class="mode-icon">
+                <i class="bi bi-link-45deg"></i>
+              </div>
+              <div class="mode-title">指定网页获取</div>
+              <div class="mode-desc">从指定网页提取内容</div>
+            </div>
+          </div>
+
+          <!-- 全网自动创作 -->
+          <div v-if="contentMode === 'auto'" class="auto-fetch-section">
+            <div class="row g-3">
+              <div class="col-md-8">
+                <label class="form-label">资讯关键词</label>
+                <input v-model="autoKeywords" type="text" class="form-control" placeholder="例如：工业内窥镜技术发展趋势">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">所属行业</label>
+                <select v-model="autoIndustry" class="form-select">
+                  <option value="">自动识别</option>
+                  <option value="无损检测">无损检测</option>
+                  <option value="工业制造">工业制造</option>
+                  <option value="能源动力">能源动力</option>
+                  <option value="仪器仪表">仪器仪表</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <button type="button" class="btn btn-primary" @click="autoCreateContent" :disabled="isLoading">
+                  <i class="bi bi-magic" v-if="!isLoading"></i>
+                  <i class="bi bi-hourglass-split" v-if="isLoading"></i>
+                  {{ isLoading ? '正在生成内容...' : '开始自动创作' }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 指定网页获取 -->
+          <div v-if="contentMode === 'url'" class="url-fetch-section">
+            <div class="row g-3">
+              <div class="col-md-8">
+                <label class="form-label">资讯来源网页URL</label>
+                <input v-model="sourceUrl" type="url" class="form-control" placeholder="https://www.example.com/news">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">内容提取模式</label>
+                <select v-model="extractMode" class="form-select">
+                  <option value="smart">智能提取</option>
+                  <option value="full">完整内容</option>
+                  <option value="basic">基本信息</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <button type="button" class="btn btn-primary" @click="fetchFromUrl" :disabled="isLoading">
+                  <i class="bi bi-download" v-if="!isLoading"></i>
+                  <i class="bi bi-hourglass-split" v-if="isLoading"></i>
+                  {{ isLoading ? '正在获取内容...' : '获取网页内容' }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 操作结果提示 -->
+          <div v-if="operationResult" class="alert" :class="'alert-' + operationResult.type" style="margin-top: 1rem;">
+            <i class="bi" :class="operationResult.type === 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'"></i>
+            {{ operationResult.message }}
+          </div>
+        </div>
+
+        <!-- 基本信息 -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="bi bi-info-circle"></i>
+            基本信息
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-8">
+              <label class="form-label">资讯标题 *</label>
+              <input v-model="newsData.title" type="text" class="form-control" placeholder="请输入资讯标题" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">发布状态</label>
+              <select v-model="newsData.draft" class="form-select">
+                <option :value="false">立即发布</option>
+                <option :value="true">保存为草稿</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label">资讯摘要</label>
+              <textarea v-model="newsData.summary" class="form-control" rows="3" placeholder="请输入资讯摘要，建议100-200字"></textarea>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">发布日期</label>
+              <input v-model="newsData.date" type="datetime-local" class="form-control">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">特色图片URL</label>
+              <input v-model="newsData.featured_image" type="url" class="form-control" placeholder="https://example.com/image.jpg">
+            </div>
+          </div>
+        </div>
+
+        <!-- 分类和标签 -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="bi bi-tags"></i>
+            分类和标签
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">主分类</label>
+              <select v-model="newsData.category" class="form-select">
+                <option value="行业资讯">行业资讯</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">二级分类</label>
+              <select v-model="newsData.subcategory" class="form-select">
+                <option value="">请选择</option>
+                <option value="无损检测">无损检测</option>
+                <option value="工业制造">工业制造</option>
+                <option value="能源动力">能源动力</option>
+                <option value="仪器仪表">仪器仪表</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label">标签</label>
+              <div class="input-group">
+                <input v-model="newTag" type="text" class="form-control" placeholder="输入标签后按回车添加" @keyup.enter="addTag">
+                <button type="button" class="btn btn-outline-secondary" @click="addTag">
+                  <i class="bi bi-plus"></i>
+                </button>
+              </div>
+              <div class="tag-input-container">
+                <span v-for="(tag, index) in newsData.tags" :key="index" class="tag-item">
+                  {{ tag }}
+                  <span class="tag-remove" @click="removeTag(index)">&times;</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 资讯内容 -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="bi bi-file-text"></i>
+            资讯内容
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">正文内容 (Markdown格式)</label>
+            <textarea v-model="newsData.content" class="form-control" rows="20" placeholder="请输入资讯正文内容，支持Markdown格式"></textarea>
+            <div class="form-text">
+              支持Markdown语法：**粗体**、*斜体*、`代码`、[链接](URL)、![图片](URL)等
+            </div>
+          </div>
+        </div>
+
+        <!-- SEO设置 -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="bi bi-search"></i>
+            SEO设置
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">浏览量</label>
+              <input v-model.number="newsData.views" type="number" class="form-control" min="0" placeholder="0">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">来源网站</label>
+              <input v-model="newsData.source" type="text" class="form-control" placeholder="例如：行业网站、官方发布">
+            </div>
+            <div class="col-12">
+              <label class="form-label">关键词</label>
+              <input v-model="newsData.keywords" type="text" class="form-control" placeholder="用逗号分隔多个关键词">
+            </div>
+          </div>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="form-section">
+          <div class="d-flex gap-3">
+            <button type="button" class="btn btn-success" @click="generateMarkdown">
+              <i class="bi bi-file-earmark-code"></i>
+              生成Markdown文件
+            </button>
+            <button type="button" class="btn btn-outline-secondary" @click="resetForm">
+              <i class="bi bi-arrow-clockwise"></i>
+              重置表单
+            </button>
+            <button type="button" class="btn btn-outline-secondary" @click="loadTemplate">
+              <i class="bi bi-file-earmark-text"></i>
+              加载模板
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右侧预览面板 -->
+    <div class="preview-panel">
+      <div class="preview-header">
+        <h5 class="mb-0">
+          <i class="bi bi-eye"></i>
+          实时预览
+        </h5>
+        <div>
+          <button type="button" class="btn btn-sm btn-outline-light" @click="refreshPreview">
+            <i class="bi bi-arrow-clockwise"></i>
+            刷新
+          </button>
+        </div>
+      </div>
+
+      <div class="preview-content">
+        <div class="markdown-preview" v-html="markdownPreview"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vue.js 和相关库 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          contentMode: 'manual',
+          isLoading: false,
+          operationResult: null,
+
+          // 自动创作参数
+          autoKeywords: '',
+          autoIndustry: '',
+
+          // URL获取参数
+          sourceUrl: '',
+          extractMode: 'smart',
+
+          // 标签输入
+          newTag: '',
+
+          // 资讯数据
+          newsData: {
+            title: '',
+            summary: '',
+            date: this.getCurrentDateTime(),
+            featured_image: '',
+            category: '行业资讯',
+            subcategory: '',
+            tags: [],
+            content: '',
+            views: 0,
+            source: '',
+            keywords: '',
+            draft: false
+          }
+        }
+      },
+
+      computed: {
+        markdownPreview() {
+          if (!this.newsData.content) {
+            return '<p class="text-muted">请在左侧编辑器中输入内容...</p>';
+          }
+
+          try {
+            return marked.parse(this.newsData.content);
+          } catch (error) {
+            return '<p class="text-danger">Markdown解析错误: ' + error.message + '</p>';
+          }
+        }
+      },
+
+      methods: {
+        getCurrentDateTime() {
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = String(now.getMonth() + 1).padStart(2, '0');
+          const day = String(now.getDate()).padStart(2, '0');
+          const hours = String(now.getHours()).padStart(2, '0');
+          const minutes = String(now.getMinutes()).padStart(2, '0');
+          return `${year}-${month}-${day}T${hours}:${minutes}`;
+        },
+
+        addTag() {
+          if (this.newTag.trim() && !this.newsData.tags.includes(this.newTag.trim())) {
+            this.newsData.tags.push(this.newTag.trim());
+            this.newTag = '';
+          }
+        },
+
+        removeTag(index) {
+          this.newsData.tags.splice(index, 1);
+        },
+
+        async autoCreateContent() {
+          if (!this.autoKeywords.trim()) {
+            this.showResult('warning', '请输入资讯关键词');
+            return;
+          }
+
+          this.isLoading = true;
+
+          try {
+            // 模拟AI生成内容
+            await this.simulateAIGeneration();
+            this.showResult('success', '内容生成成功！请查看右侧预览并根据需要调整。');
+          } catch (error) {
+            this.showResult('warning', '内容生成失败: ' + error.message);
+          } finally {
+            this.isLoading = false;
+          }
+        },
+
+        async fetchFromUrl() {
+          if (!this.sourceUrl.trim()) {
+            this.showResult('warning', '请输入有效的网页URL');
+            return;
+          }
+
+          this.isLoading = true;
+
+          try {
+            // 模拟从URL获取内容
+            await this.simulateUrlFetch();
+            this.showResult('success', '网页内容获取成功！请查看右侧预览并根据需要调整。');
+          } catch (error) {
+            this.showResult('warning', '网页内容获取失败: ' + error.message);
+          } finally {
+            this.isLoading = false;
+          }
+        },
+
+        async simulateAIGeneration() {
+          // 模拟AI生成延迟
+          await new Promise(resolve => setTimeout(resolve, 2000));
+
+          const keywords = this.autoKeywords;
+          const industry = this.autoIndustry || '无损检测';
+
+          // 生成标题
+          this.newsData.title = `${keywords} - ${industry}行业最新发展动态`;
+
+          // 生成摘要
+          this.newsData.summary = `本文深入分析了${keywords}在${industry}领域的最新发展趋势，探讨了相关技术创新、市场动态和未来发展方向，为行业从业者提供有价值的参考信息。`;
+
+          // 设置分类
+          this.newsData.subcategory = industry;
+
+          // 生成标签
+          this.newsData.tags = [keywords, industry, '技术创新', '市场分析', '发展趋势'];
+
+          // 生成内容
+          this.newsData.content = this.generateNewsContent(keywords, industry);
+
+          // 设置其他信息
+          this.newsData.views = Math.floor(Math.random() * 1000) + 100;
+          this.newsData.source = 'AI智能生成';
+          this.newsData.keywords = this.newsData.tags.join(', ');
+        },
+
+        async simulateUrlFetch() {
+          // 模拟网页获取延迟
+          await new Promise(resolve => setTimeout(resolve, 1500));
+
+          const url = new URL(this.sourceUrl);
+          const domain = url.hostname;
+
+          // 生成基于URL的内容
+          this.newsData.title = `来自${domain}的行业资讯`;
+          this.newsData.summary = `本文转载自${domain}，提供了行业内的重要资讯和深度分析。`;
+          this.newsData.source = domain;
+          this.newsData.content = this.generateUrlBasedContent(domain);
+          this.newsData.tags = ['行业资讯', '转载', '分析报告'];
+          this.newsData.keywords = this.newsData.tags.join(', ');
+        },
+
+        generateNewsContent(keywords, industry) {
+          return `# ${keywords} - ${industry}行业深度分析
+
+## 概述
+
+${keywords}作为${industry}领域的重要发展方向，正在推动整个行业的技术革新和市场变革。本文将从多个维度深入分析当前的发展状况和未来趋势。
+
+## 技术发展现状
+
+### 核心技术突破
+
+在${industry}领域，${keywords}相关技术取得了显著进展：
+
+- **技术创新**：新一代技术方案不断涌现，提升了整体性能和可靠性
+- **应用拓展**：应用场景从传统领域扩展到新兴市场
+- **标准化进程**：行业标准逐步完善，促进了技术的规范化发展
+
+### 关键技术指标
+
+| 技术指标 | 传统方案 | 新技术方案 | 提升幅度 |
+|---------|---------|-----------|---------|
+| 检测精度 | 标准级 | 高精度级 | 30-50% |
+| 处理速度 | 常规速度 | 高速处理 | 2-3倍 |
+| 成本效益 | 基准成本 | 优化成本 | 降低20-30% |
+
+## 市场发展趋势
+
+### 市场规模分析
+
+${industry}市场呈现稳步增长态势：
+
+1. **市场容量**：预计未来5年年均增长率将达到15-20%
+2. **区域分布**：亚太地区成为主要增长引擎
+3. **应用领域**：从传统制造业向高端装备制造扩展
+
+### 竞争格局
+
+- **技术领先企业**：掌握核心技术的企业占据市场主导地位
+- **新兴企业**：创新型企业通过差异化竞争获得市场份额
+- **国际合作**：跨国合作成为技术发展的重要推动力
+
+## 应用案例分析
+
+### 典型应用场景
+
+${keywords}在${industry}中的典型应用包括：
+
+- **质量检测**：提升产品质量控制水平
+- **设备维护**：实现预防性维护和故障诊断
+- **工艺优化**：优化生产工艺和流程
+
+### 成功案例
+
+某知名制造企业通过引入${keywords}技术，实现了：
+- 检测效率提升60%
+- 质量缺陷率降低40%
+- 维护成本减少30%
+
+## 发展挑战与机遇
+
+### 主要挑战
+
+1. **技术标准化**：需要建立统一的行业标准
+2. **人才培养**：专业技术人才相对稀缺
+3. **成本控制**：需要在性能和成本之间找到平衡
+
+### 发展机遇
+
+1. **政策支持**：国家政策大力支持相关技术发展
+2. **市场需求**：下游应用市场需求持续增长
+3. **技术融合**：与AI、IoT等新技术的融合创造新机遇
+
+## 未来发展展望
+
+### 技术发展方向
+
+- **智能化**：结合人工智能技术，实现智能化检测和分析
+- **自动化**：提高自动化程度，减少人工干预
+- **集成化**：与其他系统深度集成，形成完整解决方案
+
+### 市场预测
+
+预计到2030年，${keywords}在${industry}领域的应用将更加广泛，市场规模有望达到新的高度。
+
+## 结论
+
+${keywords}作为${industry}领域的重要技术发展方向，具有广阔的发展前景。企业应抓住机遇，加大技术投入，提升核心竞争力，在激烈的市场竞争中占据有利地位。
+
+---
+
+*本文基于公开资料和行业分析，仅供参考。具体应用请结合实际情况进行评估。*`;
+        },
+
+        generateUrlBasedContent(domain) {
+          return `# 来自${domain}的行业资讯
+
+## 资讯来源
+
+本文内容来源于${domain}，该网站是行业内知名的信息发布平台，提供及时、准确的行业动态和深度分析。
+
+## 主要内容
+
+### 行业动态
+
+根据${domain}发布的最新信息，行业内出现了以下重要动态：
+
+- **技术创新**：新技术方案的推出引起了业界关注
+- **市场变化**：市场格局出现新的变化趋势
+- **政策影响**：相关政策对行业发展产生积极影响
+
+### 深度分析
+
+${domain}的专业分析师认为，当前行业发展呈现以下特点：
+
+1. **技术驱动**：技术创新成为行业发展的主要推动力
+2. **市场细分**：市场需求日趋细分化和专业化
+3. **国际化趋势**：国际合作与竞争并存
+
+### 专家观点
+
+业内专家表示，未来行业发展需要关注以下几个方面：
+
+- 加强技术研发投入
+- 完善产业链布局
+- 提升服务质量
+
+## 行业影响
+
+这些资讯对行业发展具有重要的指导意义，相关企业应密切关注并及时调整发展策略。
+
+## 参考价值
+
+${domain}提供的信息具有较高的参考价值，建议行业从业者定期关注相关资讯，以便及时了解行业动态。
+
+---
+
+*内容来源：${domain}，仅供参考*`;
+        },
+
+        showResult(type, message) {
+          this.operationResult = { type, message };
+          setTimeout(() => {
+            this.operationResult = null;
+          }, 5000);
+        },
+
+        generateMarkdown() {
+          if (!this.newsData.title.trim()) {
+            this.showResult('warning', '请先填写资讯标题');
+            return;
+          }
+
+          const frontMatter = this.generateFrontMatter();
+          const fullContent = frontMatter + '\n\n' + (this.newsData.content || '');
+
+          // 创建下载链接
+          const blob = new Blob([fullContent], { type: 'text/markdown' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = this.generateFileName();
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+
+          this.showResult('success', 'Markdown文件已生成并下载');
+        },
+
+        generateFrontMatter() {
+          const date = new Date(this.newsData.date);
+          const formattedDate = date.toISOString();
+
+          return `---
+title: "${this.newsData.title}"
+summary: "${this.newsData.summary}"
+date: ${formattedDate}
+publishDate: ${formattedDate}
+draft: ${this.newsData.draft}
+categories:
+- ${this.newsData.category}${this.newsData.subcategory ? `
+subcategories:
+- ${this.newsData.subcategory}` : ''}${this.newsData.tags.length > 0 ? `
+tags:
+${this.newsData.tags.map(tag => `- ${tag}`).join('\n')}` : ''}${this.newsData.featured_image ? `
+featured_image: "${this.newsData.featured_image}"` : ''}${this.newsData.views > 0 ? `
+views: ${this.newsData.views}` : ''}${this.newsData.source ? `
+source: "${this.newsData.source}"` : ''}${this.newsData.keywords ? `
+keywords: "${this.newsData.keywords}"` : ''}
+---`;
+        },
+
+        generateFileName() {
+          const title = this.newsData.title
+            .toLowerCase()
+            .replace(/[^a-z0-9\u4e00-\u9fa5]/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '');
+
+          const date = new Date(this.newsData.date);
+          const dateStr = date.toISOString().split('T')[0];
+
+          return `${dateStr}-${title}.md`;
+        },
+
+        resetForm() {
+          this.newsData = {
+            title: '',
+            summary: '',
+            date: this.getCurrentDateTime(),
+            featured_image: '',
+            category: '行业资讯',
+            subcategory: '',
+            tags: [],
+            content: '',
+            views: 0,
+            source: '',
+            keywords: '',
+            draft: false
+          };
+          this.autoKeywords = '';
+          this.autoIndustry = '';
+          this.sourceUrl = '';
+          this.newTag = '';
+          this.operationResult = null;
+          this.showResult('success', '表单已重置');
+        },
+
+        loadTemplate() {
+          this.newsData.title = '行业资讯标题示例';
+          this.newsData.summary = '这是一个行业资讯摘要示例，简要介绍了资讯的主要内容和价值。';
+          this.newsData.subcategory = '无损检测';
+          this.newsData.tags = ['行业动态', '技术发展', '市场分析'];
+          this.newsData.content = `# 行业资讯标题
+
+## 概述
+
+这里是资讯的概述部分，简要介绍资讯的背景和重要性。
+
+## 主要内容
+
+### 技术发展
+
+描述相关技术的最新发展情况。
+
+### 市场动态
+
+分析市场的变化趋势和影响因素。
+
+### 行业影响
+
+评估对行业发展的影响和意义。
+
+## 结论
+
+总结资讯的要点和对行业的启示。`;
+
+          this.showResult('success', '模板已加载，请根据需要修改内容');
+        },
+
+        refreshPreview() {
+          // 强制刷新预览
+          this.$forceUpdate();
+        }
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

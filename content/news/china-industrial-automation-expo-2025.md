@@ -5,6 +5,7 @@ date: 2025-07-13T14:00:00+08:00
 publishDate: 2025-07-13T14:00:00+08:00
 draft: false
 categories: ["展会信息"]
+subcategories: ["工业制造"]
 tags: ["工业自动化", "工业机器人", "PLC控制", "传感器", "工业软件"]
 layout: "exhibition-universal"
 

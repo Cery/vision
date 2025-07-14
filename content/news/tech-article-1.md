@@ -4,6 +4,8 @@ date: 2024-03-22
 summary: 深入探讨工业内窥镜图像处理算法的优化方法，提升检测精度和效率
 categories:
 - 技术文章
+subcategories:
+- 无损检测
 tags:
 - 图像处理
 - 算法优化

@@ -61,6 +61,15 @@
             color: white;
             background-color: rgba(255,255,255,0.1);
         }
+
+        .nav-section-title {
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
         
         .nav-link i {
             width: 20px;
@@ -238,6 +247,26 @@
                 <button class="nav-link" onclick="showSection('suppliers')">
                     <i class="fas fa-truck"></i>供应商统计
                 </button>
+
+                <!-- 分隔线 -->
+                <hr style="border-color: rgba(255,255,255,0.2); margin: 1rem 0;">
+
+                <!-- 内容编辑器 -->
+                <div class="nav-section-title">
+                    <i class="fas fa-edit me-2"></i>内容编辑器
+                </div>
+                <a class="nav-link" href="../tools/exhibition-editor.html" target="_blank">
+                    <i class="fas fa-calendar-alt"></i>展会信息编辑器
+                </a>
+                <a class="nav-link" href="../tools/industry-news-editor.html" target="_blank">
+                    <i class="fas fa-newspaper"></i>行业资讯编辑器
+                </a>
+                <a class="nav-link" href="../tools/tech-article-editor.html" target="_blank">
+                    <i class="fas fa-file-alt"></i>技术文章编辑器
+                </a>
+                <a class="nav-link" href="../tools/case-study-editor.html" target="_blank">
+                    <i class="fas fa-lightbulb"></i>应用案例编辑器
+                </a>
             </div>
         </nav>
 

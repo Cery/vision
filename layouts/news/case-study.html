@@ -1,0 +1,806 @@
+{{ define "main" }}
+<div class="case-study-container">
+  <!-- 案例头部 -->
+  <div class="case-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <!-- 面包屑导航 -->
+          <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{{ .Site.BaseURL }}">首页</a></li>
+              <li class="breadcrumb-item"><a href="{{ .Site.BaseURL }}news/">资讯中心</a></li>
+              <li class="breadcrumb-item"><a href="{{ .Site.BaseURL }}news/?category=应用案例">应用案例</a></li>
+              {{ if .Params.industry }}
+              <li class="breadcrumb-item"><a href="{{ .Site.BaseURL }}news/?industry={{ .Params.industry }}">{{ .Params.industry }}</a></li>
+              {{ end }}
+              <li class="breadcrumb-item active" aria-current="page">{{ .Title }}</li>
+            </ol>
+          </nav>
+
+          <!-- 案例标题区域 -->
+          <div class="case-title-section">
+            <div class="case-category">
+              <span class="category-badge case-study">
+                <i class="fas fa-lightbulb"></i>
+                应用案例
+              </span>
+              {{ if .Params.industry }}
+              <span class="industry-badge">{{ .Params.industry }}</span>
+              {{ end }}
+              {{ if .Params.caseType }}
+              <span class="case-type-badge {{ .Params.caseType }}">
+                {{ if eq .Params.caseType "success" }}
+                  <i class="fas fa-check-circle"></i> 成功案例
+                {{ else if eq .Params.caseType "innovation" }}
+                  <i class="fas fa-star"></i> 创新案例
+                {{ else if eq .Params.caseType "optimization" }}
+                  <i class="fas fa-chart-line"></i> 优化案例
+                {{ end }}
+              </span>
+              {{ end }}
+            </div>
+            
+            <h1 class="case-title">{{ .Title }}</h1>
+            
+            {{ if .Params.summary }}
+            <div class="case-summary">
+              {{ .Params.summary }}
+            </div>
+            {{ end }}
+            
+            <!-- 案例元信息 -->
+            <div class="case-meta">
+              <div class="meta-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>{{ .Date.Format "2006年01月02日" }}</span>
+              </div>
+              {{ if .Params.client }}
+              <div class="meta-item">
+                <i class="fas fa-building"></i>
+                <span>客户：{{ .Params.client }}</span>
+              </div>
+              {{ end }}
+              {{ if .Params.projectDuration }}
+              <div class="meta-item">
+                <i class="fas fa-clock"></i>
+                <span>项目周期：{{ .Params.projectDuration }}</span>
+              </div>
+              {{ end }}
+              {{ if .Params.views }}
+              <div class="meta-item">
+                <i class="fas fa-eye"></i>
+                <span>{{ .Params.views }} 次浏览</span>
+              </div>
+              {{ end }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 案例内容 -->
+  <div class="case-content-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8">
+          <!-- 特色图片 -->
+          {{ if .Params.featured_image }}
+          <div class="featured-image">
+            <img src="{{ .Params.featured_image | relURL }}" alt="{{ .Title }}" class="img-fluid rounded">
+          </div>
+          {{ end }}
+
+          <!-- 案例概览 -->
+          {{ if or .Params.challenge .Params.solution .Params.results }}
+          <div class="case-overview">
+            <h3><i class="fas fa-info-circle"></i> 案例概览</h3>
+            <div class="row">
+              {{ if .Params.challenge }}
+              <div class="col-md-4">
+                <div class="overview-item challenge">
+                  <div class="overview-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                  </div>
+                  <h5>面临挑战</h5>
+                  <p>{{ .Params.challenge }}</p>
+                </div>
+              </div>
+              {{ end }}
+              {{ if .Params.solution }}
+              <div class="col-md-4">
+                <div class="overview-item solution">
+                  <div class="overview-icon">
+                    <i class="fas fa-cogs"></i>
+                  </div>
+                  <h5>解决方案</h5>
+                  <p>{{ .Params.solution }}</p>
+                </div>
+              </div>
+              {{ end }}
+              {{ if .Params.results }}
+              <div class="col-md-4">
+                <div class="overview-item results">
+                  <div class="overview-icon">
+                    <i class="fas fa-chart-bar"></i>
+                  </div>
+                  <h5>实施效果</h5>
+                  <p>{{ .Params.results }}</p>
+                </div>
+              </div>
+              {{ end }}
+            </div>
+          </div>
+          {{ end }}
+
+          <!-- 正文内容 -->
+          <div class="case-content">
+            {{ .Content }}
+          </div>
+
+          <!-- 关键数据 -->
+          {{ if .Params.keyMetrics }}
+          <div class="key-metrics">
+            <h3><i class="fas fa-chart-pie"></i> 关键数据</h3>
+            <div class="metrics-grid">
+              {{ range .Params.keyMetrics }}
+              <div class="metric-item">
+                <div class="metric-value">{{ .value }}</div>
+                <div class="metric-label">{{ .label }}</div>
+                {{ if .description }}
+                <div class="metric-description">{{ .description }}</div>
+                {{ end }}
+              </div>
+              {{ end }}
+            </div>
+          </div>
+          {{ end }}
+
+          <!-- 标签 -->
+          {{ if .Params.tags }}
+          <div class="case-tags">
+            <h6><i class="fas fa-tags"></i> 相关标签</h6>
+            <div class="tags-container">
+              {{ range .Params.tags }}
+              <a href="{{ $.Site.BaseURL }}news/?tag={{ . }}" class="tag-link case-tag">{{ . }}</a>
+              {{ end }}
+            </div>
+          </div>
+          {{ end }}
+
+          <!-- 分享按钮 -->
+          <div class="case-share">
+            <h6><i class="fas fa-share-alt"></i> 分享案例</h6>
+            <div class="share-buttons">
+              <a href="#" class="share-btn linkedin" onclick="shareToLinkedIn()">
+                <i class="fab fa-linkedin"></i> LinkedIn
+              </a>
+              <a href="#" class="share-btn weixin" onclick="shareToWeixin()">
+                <i class="fab fa-weixin"></i> 微信
+              </a>
+              <a href="#" class="share-btn copy" onclick="copyLink()">
+                <i class="fas fa-link"></i> 复制链接
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 侧边栏 -->
+        <div class="col-lg-4">
+          <div class="sidebar">
+            <!-- 案例信息卡片 -->
+            <div class="sidebar-widget case-info-card">
+              <h5 class="widget-title">案例信息</h5>
+              <div class="case-info-details">
+                {{ if .Params.industry }}
+                <div class="info-item">
+                  <strong>所属行业：</strong> {{ .Params.industry }}
+                </div>
+                {{ end }}
+                {{ if .Params.client }}
+                <div class="info-item">
+                  <strong>客户名称：</strong> {{ .Params.client }}
+                </div>
+                {{ end }}
+                {{ if .Params.projectDuration }}
+                <div class="info-item">
+                  <strong>项目周期：</strong> {{ .Params.projectDuration }}
+                </div>
+                {{ end }}
+                {{ if .Params.teamSize }}
+                <div class="info-item">
+                  <strong>团队规模：</strong> {{ .Params.teamSize }}
+                </div>
+                {{ end }}
+                {{ if .Params.budget }}
+                <div class="info-item">
+                  <strong>项目预算：</strong> {{ .Params.budget }}
+                </div>
+                {{ end }}
+                <div class="info-item">
+                  <strong>发布日期：</strong> {{ .Date.Format "2006年01月02日" }}
+                </div>
+              </div>
+            </div>
+
+            <!-- 相关案例 -->
+            <div class="sidebar-widget">
+              <h5 class="widget-title">相关案例</h5>
+              <div class="related-cases">
+                {{ $related := where (where .Site.RegularPages "Type" "news") "Params.categories" "intersect" .Params.categories }}
+                {{ $related = where $related "Permalink" "ne" .Permalink }}
+                {{ range first 5 $related }}
+                <div class="related-item">
+                  <div class="related-image">
+                    {{ if .Params.featured_image }}
+                    <img src="{{ .Params.featured_image | relURL }}" alt="{{ .Title }}">
+                    {{ else }}
+                    <img src="https://via.placeholder.com/80x60/f3e5f5/6f42c1?text=案例" alt="{{ .Title }}">
+                    {{ end }}
+                  </div>
+                  <div class="related-content">
+                    <h6><a href="{{ .Permalink }}">{{ .Title | truncate 50 }}</a></h6>
+                    <small class="text-muted">{{ .Date.Format "01-02" }}</small>
+                    {{ if .Params.industry }}
+                    <span class="industry-mini">{{ .Params.industry }}</span>
+                    {{ end }}
+                  </div>
+                </div>
+                {{ end }}
+              </div>
+            </div>
+
+            <!-- 行业案例 -->
+            {{ if .Params.industry }}
+            <div class="sidebar-widget">
+              <h5 class="widget-title">{{ .Params.industry }}案例</h5>
+              <div class="industry-cases">
+                {{ $industryCases := where (where .Site.RegularPages "Type" "news") "Params.industry" .Params.industry }}
+                {{ $industryCases = where $industryCases "Permalink" "ne" .Permalink }}
+                {{ range first 5 (sort $industryCases "Date" "desc") }}
+                <div class="industry-case-item">
+                  <h6><a href="{{ .Permalink }}">{{ .Title | truncate 40 }}</a></h6>
+                  <small class="text-muted">{{ .Date.Format "01月02日" }}</small>
+                  {{ if .Params.caseType }}
+                  <span class="case-type-mini {{ .Params.caseType }}">
+                    {{ if eq .Params.caseType "success" }}成功
+                    {{ else if eq .Params.caseType "innovation" }}创新
+                    {{ else if eq .Params.caseType "optimization" }}优化
+                    {{ end }}
+                  </span>
+                  {{ end }}
+                </div>
+                {{ end }}
+              </div>
+            </div>
+            {{ end }}
+
+            <!-- 最新案例 -->
+            <div class="sidebar-widget">
+              <h5 class="widget-title">最新案例</h5>
+              <div class="latest-cases">
+                {{ $latest := where (where .Site.RegularPages "Type" "news") "Params.categories" "intersect" (slice "应用案例") }}
+                {{ $latest = where $latest "Permalink" "ne" .Permalink }}
+                {{ range first 5 (sort $latest "Date" "desc") }}
+                <div class="latest-item">
+                  <h6><a href="{{ .Permalink }}">{{ .Title | truncate 40 }}</a></h6>
+                  <small class="text-muted">{{ .Date.Format "01月02日" }}</small>
+                </div>
+                {{ end }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* 应用案例样式 */
+.case-study-container {
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+.case-header {
+  background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%);
+  color: white;
+  padding: 2rem 0;
+}
+
+.breadcrumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+}
+
+.breadcrumb-item a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+  color: white;
+}
+
+.breadcrumb-item.active {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.case-title-section {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.category-badge.case-study {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.industry-badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
+
+.case-type-badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+  font-weight: 600;
+}
+
+.case-type-badge.success {
+  background: rgba(40, 167, 69, 0.3);
+  color: white;
+}
+
+.case-type-badge.innovation {
+  background: rgba(255, 193, 7, 0.3);
+  color: white;
+}
+
+.case-type-badge.optimization {
+  background: rgba(23, 162, 184, 0.3);
+  color: white;
+}
+
+.case-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 1rem 0;
+  line-height: 1.2;
+}
+
+.case-summary {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  margin: 1.5rem 0;
+  line-height: 1.6;
+}
+
+.case-meta {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.case-content-section {
+  padding: 3rem 0;
+}
+
+.featured-image {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.featured-image img {
+  max-height: 400px;
+  object-fit: cover;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.case-overview {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  margin-bottom: 2rem;
+}
+
+.case-overview h3 {
+  color: #6f42c1;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.overview-item {
+  text-align: center;
+  padding: 1.5rem;
+  border-radius: 8px;
+  height: 100%;
+}
+
+.overview-item.challenge {
+  background: linear-gradient(135deg, rgba(220, 53, 69, 0.1) 0%, rgba(220, 53, 69, 0.05) 100%);
+  border-left: 4px solid #dc3545;
+}
+
+.overview-item.solution {
+  background: linear-gradient(135deg, rgba(111, 66, 193, 0.1) 0%, rgba(111, 66, 193, 0.05) 100%);
+  border-left: 4px solid #6f42c1;
+}
+
+.overview-item.results {
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(40, 167, 69, 0.05) 100%);
+  border-left: 4px solid #28a745;
+}
+
+.overview-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.overview-item.challenge .overview-icon { color: #dc3545; }
+.overview-item.solution .overview-icon { color: #6f42c1; }
+.overview-item.results .overview-icon { color: #28a745; }
+
+.overview-item h5 {
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.case-content {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  line-height: 1.8;
+}
+
+.case-content h1, .case-content h2, .case-content h3 {
+  color: #6f42c1;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.case-content h1 {
+  border-bottom: 2px solid #6f42c1;
+  padding-bottom: 0.5rem;
+}
+
+.case-content h2 {
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 0.3rem;
+}
+
+.case-content blockquote {
+  border-left: 4px solid #6f42c1;
+  padding-left: 1.5rem;
+  margin: 1.5rem 0;
+  color: #6c757d;
+  font-style: italic;
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 0 8px 8px 0;
+}
+
+.case-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+.case-content th, .case-content td {
+  border: 1px solid #dee2e6;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.case-content th {
+  background: #6f42c1;
+  color: white;
+  font-weight: 600;
+}
+
+.key-metrics {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  margin-bottom: 2rem;
+}
+
+.key-metrics h3 {
+  color: #6f42c1;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.metric-item {
+  text-align: center;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(111, 66, 193, 0.1) 0%, rgba(232, 62, 140, 0.1) 100%);
+  border-radius: 8px;
+  border: 1px solid rgba(111, 66, 193, 0.2);
+}
+
+.metric-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #6f42c1;
+  margin-bottom: 0.5rem;
+}
+
+.metric-label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.metric-description {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.case-tags, .case-share {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  margin-bottom: 1.5rem;
+}
+
+.case-tags h6, .case-share h6 {
+  color: #6f42c1;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag-link.case-tag {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  background: #6f42c1;
+  color: white;
+  text-decoration: none;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.tag-link.case-tag:hover {
+  background: #e83e8c;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.share-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.share-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.share-btn.linkedin { background: #0077b5; color: white; }
+.share-btn.weixin { background: #1aad19; color: white; }
+.share-btn.copy { background: #6c757d; color: white; }
+
+.share-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  color: white;
+}
+
+.sidebar {
+  position: sticky;
+  top: 2rem;
+}
+
+.sidebar-widget {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  margin-bottom: 1.5rem;
+}
+
+.widget-title {
+  color: #6f42c1;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.case-info-card {
+  background: linear-gradient(135deg, rgba(111, 66, 193, 0.05) 0%, rgba(232, 62, 140, 0.05) 100%);
+  border: 1px solid rgba(111, 66, 193, 0.1);
+}
+
+.case-info-details {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.info-item {
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.info-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.related-item, .industry-case-item, .latest-item {
+  display: flex;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.related-item:last-child, .industry-case-item:last-child, .latest-item:last-child {
+  border-bottom: none;
+}
+
+.related-image {
+  flex-shrink: 0;
+}
+
+.related-image img {
+  width: 60px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.related-content h6, .industry-case-item h6, .latest-item h6 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+
+.related-content a, .industry-case-item a, .latest-item a {
+  color: #333;
+  text-decoration: none;
+}
+
+.related-content a:hover, .industry-case-item a:hover, .latest-item a:hover {
+  color: #6f42c1;
+}
+
+.industry-mini, .case-type-mini {
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+.industry-mini {
+  background: #6f42c1;
+  color: white;
+}
+
+.case-type-mini.success {
+  background: #28a745;
+  color: white;
+}
+
+.case-type-mini.innovation {
+  background: #ffc107;
+  color: #333;
+}
+
+.case-type-mini.optimization {
+  background: #17a2b8;
+  color: white;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .case-title {
+    font-size: 1.8rem;
+  }
+  
+  .case-meta {
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+  .case-content {
+    padding: 1.5rem;
+    font-size: 1rem;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .share-buttons {
+    justify-content: center;
+  }
+  
+  .sidebar {
+    position: static;
+    margin-top: 2rem;
+  }
+}
+</style>
+
+<script>
+// 分享功能
+function shareToLinkedIn() {
+  const url = encodeURIComponent(window.location.href);
+  const title = encodeURIComponent(document.title);
+  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}&title=${title}`);
+}
+
+function shareToWeixin() {
+  alert('请使用微信扫一扫分享');
+}
+
+function copyLink() {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    alert('链接已复制到剪贴板');
+  });
+}
+</script>
+{{ end }}

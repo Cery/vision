@@ -4,6 +4,8 @@ date: 2024-03-20
 summary: 探讨最新内窥镜技术在工业检测领域的创新应用，提高检测效率和精度
 categories:
 - 行业资讯
+subcategories:
+- 无损检测
 tags:
 - 技术创新
 - 工业检测

@@ -1,0 +1,752 @@
+{{ define "main" }}
+<div class="tech-article-container">
+  <!-- 文章头部 -->
+  <div class="article-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <!-- 面包屑导航 -->
+          <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{{ .Site.BaseURL }}">首页</a></li>
+              <li class="breadcrumb-item"><a href="{{ .Site.BaseURL }}news/">资讯中心</a></li>
+              <li class="breadcrumb-item"><a href="{{ .Site.BaseURL }}news/?category=技术文章">技术文章</a></li>
+              {{ if .Params.subcategories }}
+                {{ range .Params.subcategories }}
+                <li class="breadcrumb-item"><a href="{{ $.Site.BaseURL }}news/?subcategory={{ . }}">{{ . }}</a></li>
+                {{ end }}
+              {{ end }}
+              <li class="breadcrumb-item active" aria-current="page">{{ .Title }}</li>
+            </ol>
+          </nav>
+
+          <!-- 文章标题区域 -->
+          <div class="article-title-section">
+            <div class="article-category">
+              <span class="category-badge tech-article">
+                <i class="fas fa-code"></i>
+                技术文章
+              </span>
+              {{ if .Params.subcategories }}
+                {{ range .Params.subcategories }}
+                <span class="subcategory-badge">{{ . }}</span>
+                {{ end }}
+              {{ end }}
+              {{ if .Params.difficulty }}
+              <span class="difficulty-badge {{ .Params.difficulty }}">
+                {{ if eq .Params.difficulty "beginner" }}
+                  <i class="fas fa-star"></i> 入门级
+                {{ else if eq .Params.difficulty "intermediate" }}
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i> 中级
+                {{ else if eq .Params.difficulty "advanced" }}
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> 高级
+                {{ end }}
+              </span>
+              {{ end }}
+            </div>
+            
+            <h1 class="article-title">{{ .Title }}</h1>
+            
+            {{ if .Params.summary }}
+            <div class="article-summary">
+              {{ .Params.summary }}
+            </div>
+            {{ end }}
+            
+            <!-- 文章元信息 -->
+            <div class="article-meta">
+              <div class="meta-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>{{ .Date.Format "2006年01月02日" }}</span>
+              </div>
+              {{ if .Params.readingTime }}
+              <div class="meta-item">
+                <i class="fas fa-clock"></i>
+                <span>阅读时间 {{ .Params.readingTime }} 分钟</span>
+              </div>
+              {{ else }}
+              <div class="meta-item">
+                <i class="fas fa-clock"></i>
+                <span>阅读时间约 {{ div (countwords .Content) 200 }} 分钟</span>
+              </div>
+              {{ end }}
+              {{ if .Params.views }}
+              <div class="meta-item">
+                <i class="fas fa-eye"></i>
+                <span>{{ .Params.views }} 次浏览</span>
+              </div>
+              {{ end }}
+              {{ if .Params.author }}
+              <div class="meta-item">
+                <i class="fas fa-user"></i>
+                <span>作者：{{ .Params.author }}</span>
+              </div>
+              {{ end }}
+              {{ if .Params.version }}
+              <div class="meta-item">
+                <i class="fas fa-code-branch"></i>
+                <span>版本：{{ .Params.version }}</span>
+              </div>
+              {{ end }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 文章内容 -->
+  <div class="article-content-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8">
+          <!-- 特色图片 -->
+          {{ if .Params.featured_image }}
+          <div class="featured-image">
+            <img src="{{ .Params.featured_image | relURL }}" alt="{{ .Title }}" class="img-fluid rounded">
+          </div>
+          {{ end }}
+
+          <!-- 正文内容 -->
+          <div class="article-content">
+            {{ .Content }}
+          </div>
+
+          <!-- 标签 -->
+          {{ if .Params.tags }}
+          <div class="article-tags">
+            <h6><i class="fas fa-tags"></i> 技术标签</h6>
+            <div class="tags-container">
+              {{ range .Params.tags }}
+              <a href="{{ $.Site.BaseURL }}news/?tag={{ . }}" class="tag-link tech-tag">{{ . }}</a>
+              {{ end }}
+            </div>
+          </div>
+          {{ end }}
+
+          <!-- 版本信息 -->
+          {{ if or .Params.version .Params.lastUpdated }}
+          <div class="version-info">
+            <h6><i class="fas fa-info-circle"></i> 版本信息</h6>
+            <div class="version-details">
+              {{ if .Params.version }}
+              <div class="version-item">
+                <strong>当前版本：</strong> {{ .Params.version }}
+              </div>
+              {{ end }}
+              {{ if .Params.lastUpdated }}
+              <div class="version-item">
+                <strong>最后更新：</strong> {{ .Params.lastUpdated }}
+              </div>
+              {{ end }}
+              <div class="version-item">
+                <strong>发布日期：</strong> {{ .Date.Format "2006-01-02" }}
+              </div>
+            </div>
+          </div>
+          {{ end }}
+
+          <!-- 分享按钮 -->
+          <div class="article-share">
+            <h6><i class="fas fa-share-alt"></i> 分享文章</h6>
+            <div class="share-buttons">
+              <a href="#" class="share-btn github" onclick="shareToGitHub()">
+                <i class="fab fa-github"></i> GitHub
+              </a>
+              <a href="#" class="share-btn weixin" onclick="shareToWeixin()">
+                <i class="fab fa-weixin"></i> 微信
+              </a>
+              <a href="#" class="share-btn copy" onclick="copyLink()">
+                <i class="fas fa-link"></i> 复制链接
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 侧边栏 -->
+        <div class="col-lg-4">
+          <div class="sidebar">
+            <!-- 文章目录 -->
+            <div class="sidebar-widget">
+              <h5 class="widget-title">文章目录</h5>
+              <div class="toc-container" id="toc">
+                <!-- 目录将通过JavaScript生成 -->
+              </div>
+            </div>
+
+            <!-- 相关技术文章 -->
+            <div class="sidebar-widget">
+              <h5 class="widget-title">相关技术文章</h5>
+              <div class="related-articles">
+                {{ $related := where (where .Site.RegularPages "Type" "news") "Params.categories" "intersect" .Params.categories }}
+                {{ $related = where $related "Permalink" "ne" .Permalink }}
+                {{ range first 5 $related }}
+                <div class="related-item">
+                  <div class="related-image">
+                    {{ if .Params.featured_image }}
+                    <img src="{{ .Params.featured_image | relURL }}" alt="{{ .Title }}">
+                    {{ else }}
+                    <img src="https://via.placeholder.com/80x60/e8f5e8/28a745?text=技术" alt="{{ .Title }}">
+                    {{ end }}
+                  </div>
+                  <div class="related-content">
+                    <h6><a href="{{ .Permalink }}">{{ .Title | truncate 50 }}</a></h6>
+                    <small class="text-muted">{{ .Date.Format "01-02" }}</small>
+                    {{ if .Params.difficulty }}
+                    <span class="difficulty-mini {{ .Params.difficulty }}">
+                      {{ if eq .Params.difficulty "beginner" }}入门
+                      {{ else if eq .Params.difficulty "intermediate" }}中级
+                      {{ else if eq .Params.difficulty "advanced" }}高级
+                      {{ end }}
+                    </span>
+                    {{ end }}
+                  </div>
+                </div>
+                {{ end }}
+              </div>
+            </div>
+
+            <!-- 技术标签云 -->
+            {{ if .Site.Taxonomies.tags }}
+            <div class="sidebar-widget">
+              <h5 class="widget-title">技术标签</h5>
+              <div class="tag-cloud">
+                {{ range first 20 .Site.Taxonomies.tags.ByCount }}
+                <a href="{{ .Page.Permalink }}" class="tag-cloud-item tech-tag" style="font-size: {{ add 0.8 (mul 0.4 (div .Count 10)) }}rem;">
+                  {{ .Page.Title }}
+                </a>
+                {{ end }}
+              </div>
+            </div>
+            {{ end }}
+
+            <!-- 最新技术文章 -->
+            <div class="sidebar-widget">
+              <h5 class="widget-title">最新技术文章</h5>
+              <div class="latest-articles">
+                {{ $latest := where (where .Site.RegularPages "Type" "news") "Params.categories" "intersect" (slice "技术文章") }}
+                {{ $latest = where $latest "Permalink" "ne" .Permalink }}
+                {{ range first 5 (sort $latest "Date" "desc") }}
+                <div class="latest-item">
+                  <h6><a href="{{ .Permalink }}">{{ .Title | truncate 40 }}</a></h6>
+                  <small class="text-muted">{{ .Date.Format "01月02日" }}</small>
+                  {{ if .Params.difficulty }}
+                  <span class="difficulty-mini {{ .Params.difficulty }}">
+                    {{ if eq .Params.difficulty "beginner" }}入门
+                    {{ else if eq .Params.difficulty "intermediate" }}中级
+                    {{ else if eq .Params.difficulty "advanced" }}高级
+                    {{ end }}
+                  </span>
+                  {{ end }}
+                </div>
+                {{ end }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* 技术文章样式 */
+.tech-article-container {
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+.article-header {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  padding: 2rem 0;
+}
+
+.breadcrumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+}
+
+.breadcrumb-item a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+  color: white;
+}
+
+.breadcrumb-item.active {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.article-title-section {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.category-badge.tech-article {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.subcategory-badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
+
+.difficulty-badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+  font-weight: 600;
+}
+
+.difficulty-badge.beginner {
+  background: rgba(40, 167, 69, 0.3);
+  color: white;
+}
+
+.difficulty-badge.intermediate {
+  background: rgba(255, 193, 7, 0.3);
+  color: white;
+}
+
+.difficulty-badge.advanced {
+  background: rgba(220, 53, 69, 0.3);
+  color: white;
+}
+
+.article-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 1rem 0;
+  line-height: 1.2;
+}
+
+.article-summary {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  margin: 1.5rem 0;
+  line-height: 1.6;
+}
+
+.article-meta {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.article-content-section {
+  padding: 3rem 0;
+}
+
+.featured-image {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.featured-image img {
+  max-height: 400px;
+  object-fit: cover;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.article-content {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  line-height: 1.8;
+}
+
+.article-content h1, .article-content h2, .article-content h3 {
+  color: #28a745;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.article-content h1 {
+  border-bottom: 2px solid #28a745;
+  padding-bottom: 0.5rem;
+}
+
+.article-content h2 {
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 0.3rem;
+}
+
+.article-content code {
+  background: #f8f9fa;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #e83e8c;
+  font-family: 'Courier New', monospace;
+}
+
+.article-content pre {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  border-left: 4px solid #28a745;
+  font-family: 'Courier New', monospace;
+}
+
+.article-content pre code {
+  background: none;
+  padding: 0;
+  color: #333;
+}
+
+.article-content blockquote {
+  border-left: 4px solid #28a745;
+  padding-left: 1.5rem;
+  margin: 1.5rem 0;
+  color: #6c757d;
+  font-style: italic;
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 0 8px 8px 0;
+}
+
+.article-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+.article-content th, .article-content td {
+  border: 1px solid #dee2e6;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.article-content th {
+  background: #28a745;
+  color: white;
+  font-weight: 600;
+}
+
+.article-tags, .article-share, .version-info {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  margin-bottom: 1.5rem;
+}
+
+.article-tags h6, .article-share h6, .version-info h6 {
+  color: #28a745;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag-link.tech-tag {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  background: #28a745;
+  color: white;
+  text-decoration: none;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.tag-link.tech-tag:hover {
+  background: #20c997;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.version-details {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #28a745;
+}
+
+.version-item {
+  margin-bottom: 0.5rem;
+}
+
+.version-item:last-child {
+  margin-bottom: 0;
+}
+
+.share-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.share-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.share-btn.github { background: #333; color: white; }
+.share-btn.weixin { background: #1aad19; color: white; }
+.share-btn.copy { background: #6c757d; color: white; }
+
+.share-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  color: white;
+}
+
+.sidebar {
+  position: sticky;
+  top: 2rem;
+}
+
+.sidebar-widget {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  margin-bottom: 1.5rem;
+}
+
+.widget-title {
+  color: #28a745;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.toc-container {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.toc-container ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.toc-container ul ul {
+  padding-left: 1rem;
+}
+
+.toc-container a {
+  color: #333;
+  text-decoration: none;
+  display: block;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.toc-container a:hover {
+  color: #28a745;
+}
+
+.related-item, .latest-item {
+  display: flex;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f1f3f4;
+}
+
+.related-item:last-child, .latest-item:last-child {
+  border-bottom: none;
+}
+
+.related-image {
+  flex-shrink: 0;
+}
+
+.related-image img {
+  width: 60px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.related-content h6, .latest-item h6 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+
+.related-content a, .latest-item a {
+  color: #333;
+  text-decoration: none;
+}
+
+.related-content a:hover, .latest-item a:hover {
+  color: #28a745;
+}
+
+.difficulty-mini {
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+.difficulty-mini.beginner {
+  background: #28a745;
+  color: white;
+}
+
+.difficulty-mini.intermediate {
+  background: #ffc107;
+  color: #333;
+}
+
+.difficulty-mini.advanced {
+  background: #dc3545;
+  color: white;
+}
+
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag-cloud-item.tech-tag {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  background: #f8f9fa;
+  color: #6c757d;
+  text-decoration: none;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+}
+
+.tag-cloud-item.tech-tag:hover {
+  background: #28a745;
+  color: white;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .article-title {
+    font-size: 1.8rem;
+  }
+  
+  .article-meta {
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+  .article-content {
+    padding: 1.5rem;
+    font-size: 1rem;
+  }
+  
+  .share-buttons {
+    justify-content: center;
+  }
+  
+  .sidebar {
+    position: static;
+    margin-top: 2rem;
+  }
+}
+</style>
+
+<script>
+// 生成文章目录
+document.addEventListener('DOMContentLoaded', function() {
+  generateTOC();
+});
+
+function generateTOC() {
+  const tocContainer = document.getElementById('toc');
+  const headings = document.querySelectorAll('.article-content h1, .article-content h2, .article-content h3');
+  
+  if (headings.length === 0) {
+    tocContainer.innerHTML = '<p class="text-muted">本文暂无目录</p>';
+    return;
+  }
+  
+  let tocHTML = '<ul>';
+  let currentLevel = 1;
+  
+  headings.forEach((heading, index) => {
+    const level = parseInt(heading.tagName.charAt(1));
+    const id = `heading-${index}`;
+    heading.id = id;
+    
+    if (level > currentLevel) {
+      tocHTML += '<ul>'.repeat(level - currentLevel);
+    } else if (level < currentLevel) {
+      tocHTML += '</ul>'.repeat(currentLevel - level);
+    }
+    
+    tocHTML += `<li><a href="#${id}">${heading.textContent}</a></li>`;
+    currentLevel = level;
+  });
+  
+  tocHTML += '</ul>'.repeat(currentLevel);
+  tocContainer.innerHTML = tocHTML;
+}
+
+// 分享功能
+function shareToGitHub() {
+  const url = encodeURIComponent(window.location.href);
+  const title = encodeURIComponent(document.title);
+  window.open(`https://github.com/share?url=${url}&title=${title}`);
+}
+
+function shareToWeixin() {
+  alert('请使用微信扫一扫分享');
+}
+
+function copyLink() {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    alert('链接已复制到剪贴板');
+  });
+}
+</script>
+{{ end }}

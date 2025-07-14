@@ -5,6 +5,7 @@ date: 2025-07-13T11:30:00+08:00
 publishDate: 2025-07-13T11:30:00+08:00
 draft: false
 categories: ["展会信息"]
+subcategories: ["工业制造"]
 tags: ["铸造技术", "铸造设备", "铸造材料", "3D打印", "智能铸造"]
 layout: "exhibition-universal"
 

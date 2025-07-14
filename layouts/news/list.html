@@ -10,28 +10,116 @@
                     <h5 class="mb-0"><i class="fas fa-filter me-2"></i>筛选条件</h5>
                 </div>
                 <div class="card-body">
-                    <!-- 资讯分类筛选 -->
+                    <!-- 资讯分类筛选 - 展开收缩菜单 -->
                     <div class="mb-4">
                         <h6 class="filter-section-title">
-                            <i class="fas fa-folder-open me-2"></i>资讯分类
+                            <i class="fas fa-sitemap me-2"></i>资讯分类
                         </h6>
-                        <div class="filter-buttons-container" id="category-filters">
-                            <a href="javascript:void(0)" class="filter-btn active" data-filter-type="category" data-filter-value="">
-                                全部
-                            </a>
-                            {{ $newsPages := where .Site.RegularPages "Type" "news" }}
-                            {{ $newsCategories := dict }}
-                            {{ range $newsPages }}
-                                {{ range .Params.categories }}
-                                    {{ $newsCategories = merge $newsCategories (dict . (add (index $newsCategories . | default 0) 1)) }}
+
+                        <!-- 全部选项 -->
+                        <div class="category-menu-item mb-2">
+                            <div class="category-main-item active" data-filter-type="category" data-filter-value="">
+                                <i class="fas fa-globe me-2"></i>
+                                <span>全部资讯</span>
+                                <span class="category-count">{{ len (where .Site.RegularPages "Type" "news") }}</span>
+                            </div>
+                        </div>
+
+                        {{ $newsPages := where .Site.RegularPages "Type" "news" }}
+                        {{ $newsCategories := dict }}
+                        {{ $categorySubcategories := dict }}
+
+                        <!-- 统计分类和二级分类 -->
+                        {{ range $newsPages }}
+                            {{ range .Params.categories }}
+                                {{ $newsCategories = merge $newsCategories (dict . (add (index $newsCategories . | default 0) 1)) }}
+                            {{ end }}
+                            {{ $category := index .Params.categories 0 }}
+                            {{ if $category }}
+                                {{ range .Params.subcategories }}
+                                    {{ $key := printf "%s|%s" $category . }}
+                                    {{ $categorySubcategories = merge $categorySubcategories (dict $key (add (index $categorySubcategories $key | default 0) 1)) }}
                                 {{ end }}
                             {{ end }}
-                            {{ range $category, $count := $newsCategories }}
-                            <a href="javascript:void(0)" class="filter-btn" data-filter-type="category" data-filter-value="{{ $category }}">
-                                {{ $category }} <span class="badge bg-light text-dark">{{ $count }}</span>
-                            </a>
-                            {{ end }}
+                        {{ end }}
+
+                        <!-- 展会信息分类 -->
+                        {{ if index $newsCategories "展会信息" }}
+                        <div class="category-menu-item mb-2">
+                            <div class="category-main-item" data-filter-type="category" data-filter-value="展会信息">
+                                <i class="fas fa-calendar-alt me-2"></i>
+                                <span>展会信息</span>
+                                <span class="category-count">{{ index $newsCategories "展会信息" }}</span>
+                                <i class="fas fa-chevron-right category-arrow"></i>
+                            </div>
+                            <div class="category-sub-menu">
+                                <div class="subcategory-item" data-filter-type="subcategory" data-filter-value="" data-parent-category="展会信息">
+                                    <span>全部展会</span>
+                                    <span class="subcategory-count">{{ index $newsCategories "展会信息" }}</span>
+                                </div>
+                                {{ $subcategories := slice "工业制造" "能源动力" "仪器仪表" "无损检测" }}
+                                {{ range $subcategories }}
+                                    {{ $key := printf "展会信息|%s" . }}
+                                    {{ if index $categorySubcategories $key }}
+                                    <div class="subcategory-item" data-filter-type="subcategory" data-filter-value="{{ . }}" data-parent-category="展会信息">
+                                        <span>{{ . }}</span>
+                                        <span class="subcategory-count">{{ index $categorySubcategories $key }}</span>
+                                    </div>
+                                    {{ end }}
+                                {{ end }}
+                            </div>
                         </div>
+                        {{ end }}
+
+                        <!-- 技术文章分类 -->
+                        {{ if index $newsCategories "技术文章" }}
+                        <div class="category-menu-item mb-2">
+                            <div class="category-main-item" data-filter-type="category" data-filter-value="技术文章">
+                                <i class="fas fa-file-alt me-2"></i>
+                                <span>技术文章</span>
+                                <span class="category-count">{{ index $newsCategories "技术文章" }}</span>
+                                <i class="fas fa-chevron-right category-arrow"></i>
+                            </div>
+                            <div class="category-sub-menu">
+                                <div class="subcategory-item" data-filter-type="subcategory" data-filter-value="" data-parent-category="技术文章">
+                                    <span>全部文章</span>
+                                    <span class="subcategory-count">{{ index $newsCategories "技术文章" }}</span>
+                                </div>
+                                {{ $key := "技术文章|无损检测" }}
+                                {{ if index $categorySubcategories $key }}
+                                <div class="subcategory-item" data-filter-type="subcategory" data-filter-value="无损检测" data-parent-category="技术文章">
+                                    <span>无损检测</span>
+                                    <span class="subcategory-count">{{ index $categorySubcategories $key }}</span>
+                                </div>
+                                {{ end }}
+                            </div>
+                        </div>
+                        {{ end }}
+
+                        <!-- 行业资讯分类 -->
+                        {{ if index $newsCategories "行业资讯" }}
+                        <div class="category-menu-item mb-2">
+                            <div class="category-main-item" data-filter-type="category" data-filter-value="行业资讯">
+                                <i class="fas fa-newspaper me-2"></i>
+                                <span>行业资讯</span>
+                                <span class="category-count">{{ index $newsCategories "行业资讯" }}</span>
+                                <i class="fas fa-chevron-right category-arrow"></i>
+                            </div>
+                            <div class="category-sub-menu">
+                                <div class="subcategory-item" data-filter-type="subcategory" data-filter-value="" data-parent-category="行业资讯">
+                                    <span>全部资讯</span>
+                                    <span class="subcategory-count">{{ index $newsCategories "行业资讯" }}</span>
+                                </div>
+                                {{ $key := "行业资讯|无损检测" }}
+                                {{ if index $categorySubcategories $key }}
+                                <div class="subcategory-item" data-filter-type="subcategory" data-filter-value="无损检测" data-parent-category="行业资讯">
+                                    <span>无损检测</span>
+                                    <span class="subcategory-count">{{ index $categorySubcategories $key }}</span>
+                                </div>
+                                {{ end }}
+                            </div>
+                        </div>
+                        {{ end }}
                     </div>
 
                     <!-- 标签筛选 -->
@@ -60,9 +148,9 @@
                     </div>
 
                     <!-- 清除筛选 -->
-                    <div class="text-center">
-                        <button class="btn btn-outline-secondary btn-sm" id="clearAllFilters">
-                            <i class="fas fa-times me-1"></i>清除全部
+                    <div class="text-center mt-3">
+                        <button class="btn btn-clear-all" id="clearAllFilters">
+                            <i class="fas fa-refresh me-2"></i>清除全部筛选
                         </button>
                     </div>
                 </div>
@@ -104,6 +192,7 @@
                 {{ range $index, $page := $allNews }}
                 <div class="col-12 col-sm-6 col-lg-6 col-xl-4 mb-3 mb-md-4 news-item"
                      data-categories="{{ delimit (.Params.categories | default (slice)) "," }}"
+                     data-subcategories="{{ delimit (.Params.subcategories | default (slice)) "," }}"
                      data-tags="{{ delimit (.Params.tags | default (slice)) "," | safeHTMLAttr }}"
                      data-date="{{ .Date.Format "2006-01-02" }}"
                      data-views="{{ .Params.views | default 0 }}"
@@ -269,26 +358,45 @@ body {
 }
 
 .selected-filter-tag {
-    background-color: #e3f2fd;
-    color: #1976d2;
-    border: 1px solid #1976d2;
-    padding: 0.25rem 0.5rem;
-    border-radius: 6px;
-    font-size: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
     font-weight: 500;
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.5rem;
+    margin: 0.2rem;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+}
+
+.selected-filter-tag:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 .selected-filter-tag .remove-filter {
     cursor: pointer;
     font-weight: bold;
-    margin-left: 0.25rem;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.3s ease;
 }
 
 .selected-filter-tag .remove-filter:hover {
-    color: #d32f2f;
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+    transform: scale(1.1);
 }
 
 /* 新闻卡片样式 */
@@ -465,6 +573,189 @@ small.text-muted i {
 .btn-outline-secondary.active {
     background-color: #616161;
     border-color: #616161;
+}
+
+/* 展开收缩菜单样式 */
+.category-menu-item {
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+}
+
+.category-menu-item:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    transform: translateY(-1px);
+}
+
+.category-main-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    transition: all 0.3s ease;
+    border: none;
+    text-decoration: none;
+    color: #495057;
+    font-weight: 500;
+}
+
+.category-main-item:hover {
+    background: #f8f9fa;
+    color: #1976d2;
+}
+
+.category-main-item.active {
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+    color: white;
+    font-weight: 600;
+}
+
+.category-main-item.expanded {
+    background: #e3f2fd;
+    color: #1976d2;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.category-main-item .fas {
+    width: 16px;
+    text-align: center;
+}
+
+.category-count {
+    background: rgba(0,0,0,0.1);
+    color: inherit;
+    padding: 0.2rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-left: auto;
+    margin-right: 0.5rem;
+}
+
+.category-main-item.active .category-count {
+    background: rgba(255,255,255,0.2);
+    color: white;
+}
+
+.category-arrow {
+    transition: transform 0.3s ease;
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.category-main-item.expanded .category-arrow {
+    transform: rotate(90deg);
+    color: #1976d2;
+}
+
+.category-sub-menu {
+    display: none;
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+}
+
+.category-sub-menu.show {
+    display: block;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 300px;
+    }
+}
+
+.subcategory-item {
+    padding: 0.6rem 1rem 0.6rem 2.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+    color: #6c757d;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.subcategory-item:last-child {
+    border-bottom: none;
+}
+
+.subcategory-item:hover {
+    background: #e9ecef;
+    color: #495057;
+    padding-left: 2.75rem;
+}
+
+.subcategory-item.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+    padding-left: 2.75rem;
+}
+
+.subcategory-count {
+    background: rgba(0,0,0,0.1);
+    color: inherit;
+    padding: 0.15rem 0.4rem;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.subcategory-item.active .subcategory-count {
+    background: rgba(255,255,255,0.2);
+    color: white;
+}
+
+/* 清除全部按钮样式 */
+.btn-clear-all {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    border: none;
+    color: white;
+    padding: 0.6rem 1.5rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 12px rgba(255, 107, 107, 0.3);
+    text-transform: none;
+    letter-spacing: 0.5px;
+}
+
+.btn-clear-all:hover {
+    background: linear-gradient(135deg, #ff5252 0%, #d32f2f 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+    color: white;
+}
+
+.btn-clear-all:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+}
+
+.btn-clear-all i {
+    animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.btn-clear-all:hover i {
+    animation-duration: 0.5s;
 }
 
 /* 单选按钮样式 */
@@ -719,10 +1010,29 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeFilters() {
-    // 分类筛选
-    document.querySelectorAll('#category-filters .filter-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            toggleFilter(this, 'category');
+    // 主分类点击事件
+    document.querySelectorAll('.category-main-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const filterValue = this.dataset.filterValue;
+            const filterType = this.dataset.filterType;
+
+            if (filterType === 'category') {
+                // 处理分类选择
+                handleCategorySelection(this, filterValue);
+            }
+        });
+    });
+
+    // 二级分类点击事件
+    document.querySelectorAll('.subcategory-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const filterValue = this.dataset.filterValue;
+            const filterType = this.dataset.filterType;
+            const parentCategory = this.dataset.parentCategory;
+
+            if (filterType === 'subcategory') {
+                handleSubcategorySelection(this, filterValue, parentCategory);
+            }
         });
     });
 
@@ -757,6 +1067,82 @@ function hideLoading() {
     }
 }
 
+function handleCategorySelection(element, filterValue) {
+    // 清除所有主分类的选中状态
+    document.querySelectorAll('.category-main-item').forEach(item => {
+        item.classList.remove('active', 'expanded');
+    });
+
+    // 隐藏所有二级菜单
+    document.querySelectorAll('.category-sub-menu').forEach(menu => {
+        menu.classList.remove('show');
+    });
+
+    // 清除所有二级分类的选中状态
+    document.querySelectorAll('.subcategory-item').forEach(item => {
+        item.classList.remove('active');
+    });
+
+    if (filterValue === '') {
+        // 选择"全部"
+        element.classList.add('active');
+        currentFilters.category = '';
+        currentFilters.subcategory = '';
+    } else {
+        // 选择特定分类
+        element.classList.add('active', 'expanded');
+
+        // 显示对应的二级菜单
+        const subMenu = element.nextElementSibling;
+        if (subMenu && subMenu.classList.contains('category-sub-menu')) {
+            subMenu.classList.add('show');
+
+            // 默认选中"全部"二级分类
+            const allSubcategoryItem = subMenu.querySelector('.subcategory-item[data-filter-value=""]');
+            if (allSubcategoryItem) {
+                allSubcategoryItem.classList.add('active');
+            }
+        }
+
+        currentFilters.category = filterValue;
+        currentFilters.subcategory = '';
+    }
+
+    applyFiltersAndSort();
+}
+
+function handleSubcategorySelection(element, filterValue, parentCategory) {
+    // 清除同级二级分类的选中状态
+    const parentMenu = element.parentElement;
+    parentMenu.querySelectorAll('.subcategory-item').forEach(item => {
+        item.classList.remove('active');
+    });
+
+    // 选中当前二级分类
+    element.classList.add('active');
+
+    // 确保父分类也是选中状态
+    const parentCategoryElement = parentMenu.previousElementSibling;
+    if (parentCategoryElement) {
+        document.querySelectorAll('.category-main-item').forEach(item => {
+            item.classList.remove('active', 'expanded');
+        });
+        parentCategoryElement.classList.add('active', 'expanded');
+    }
+
+    currentFilters.category = parentCategory;
+    currentFilters.subcategory = filterValue;
+
+    applyFiltersAndSort();
+}
+
+// 全局筛选状态
+let currentFilters = {
+    category: '',
+    subcategory: '',
+    tags: []
+};
+
 function toggleFilter(button, filterType) {
     const value = button.dataset.filterValue;
 
@@ -790,15 +1176,44 @@ function toggleFilter(button, filterType) {
 }
 
 function clearAllFilters() {
-    // 清除所有筛选按钮的选中状态
-    document.querySelectorAll('.filter-btn').forEach(btn => {
+    // 清除所有主分类的选中状态
+    document.querySelectorAll('.category-main-item').forEach(item => {
+        item.classList.remove('active', 'expanded');
+    });
+
+    // 隐藏所有二级菜单
+    document.querySelectorAll('.category-sub-menu').forEach(menu => {
+        menu.classList.remove('show');
+    });
+
+    // 清除所有二级分类的选中状态
+    document.querySelectorAll('.subcategory-item').forEach(item => {
+        item.classList.remove('active');
+    });
+
+    // 选中"全部资讯"
+    const allCategoryItem = document.querySelector('.category-main-item[data-filter-value=""]');
+    if (allCategoryItem) {
+        allCategoryItem.classList.add('active');
+    }
+
+    // 清除标签筛选
+    document.querySelectorAll('#tag-filters .filter-btn').forEach(btn => {
         btn.classList.remove('active');
     });
 
-    // 选中所有"全部"按钮
-    document.querySelectorAll('[data-filter-value=""]').forEach(btn => {
-        btn.classList.add('active');
-    });
+    // 选中"全部标签"
+    const allTagBtn = document.querySelector('#tag-filters .filter-btn[data-filter-value=""]');
+    if (allTagBtn) {
+        allTagBtn.classList.add('active');
+    }
+
+    // 重置筛选状态
+    currentFilters = {
+        category: '',
+        subcategory: '',
+        tags: []
+    };
 
     // 重置排序
     document.getElementById('sortOrder').value = 'date-desc';
@@ -855,12 +1270,12 @@ function applyFiltersAndSort() {
     console.log('🔄 应用筛选和排序');
 
     // 获取选中的筛选条件
-    const selectedCategories = getSelectedFilters('#category-filters');
     const selectedTags = getSelectedFilters('#tag-filters');
     const sortOrder = document.getElementById('sortOrder').value;
 
     console.log('筛选条件:', {
-        categories: selectedCategories,
+        category: currentFilters.category,
+        subcategory: currentFilters.subcategory,
         tags: selectedTags,
         sortOrder: sortOrder
     });
@@ -869,18 +1284,24 @@ function applyFiltersAndSort() {
     filteredNews = allNews.filter(newsItem => {
         const categories = newsItem.dataset.categories ?
             newsItem.dataset.categories.split(',').map(c => c.trim()) : [];
+        const subcategories = newsItem.dataset.subcategories ?
+            newsItem.dataset.subcategories.split(',').map(c => c.trim()) : [];
         const tags = newsItem.dataset.tags ?
             newsItem.dataset.tags.split(',').map(t => t.trim()) : [];
 
         // 检查分类匹配
-        let categoryMatch = selectedCategories.length === 0 ||
-            selectedCategories.some(cat => categories.includes(cat));
+        let categoryMatch = !currentFilters.category ||
+            categories.includes(currentFilters.category);
+
+        // 检查二级分类匹配
+        let subcategoryMatch = !currentFilters.subcategory ||
+            subcategories.includes(currentFilters.subcategory);
 
         // 检查标签匹配
         let tagMatch = selectedTags.length === 0 ||
             selectedTags.some(tag => tags.includes(tag));
 
-        return categoryMatch && tagMatch;
+        return categoryMatch && subcategoryMatch && tagMatch;
     });
 
     // 排序
@@ -961,23 +1382,29 @@ function updateNewsCount() {
 }
 
 function updateSelectedFilters() {
-    const selectedCategories = getSelectedFilters('#category-filters');
     const selectedTags = getSelectedFilters('#tag-filters');
     const selectedFiltersCard = document.getElementById('selected-filters-card');
     const selectedFiltersContainer = document.getElementById('selected-filters-container');
 
-    const hasFilters = selectedCategories.length > 0 || selectedTags.length > 0;
+    const hasFilters = currentFilters.category || currentFilters.subcategory || selectedTags.length > 0;
 
     if (hasFilters) {
         selectedFiltersCard.style.display = 'block';
         let filtersHTML = '';
 
-        selectedCategories.forEach(category => {
+        if (currentFilters.category) {
             filtersHTML += `<span class="selected-filter-tag">
-                分类: ${category}
-                <span class="remove-filter" onclick="removeFilter('category', '${category}')">&times;</span>
+                分类: ${currentFilters.category}
+                <span class="remove-filter" onclick="removeFilter('category', '${currentFilters.category}')">&times;</span>
             </span>`;
-        });
+        }
+
+        if (currentFilters.subcategory) {
+            filtersHTML += `<span class="selected-filter-tag">
+                领域: ${currentFilters.subcategory}
+                <span class="remove-filter" onclick="removeFilter('subcategory', '${currentFilters.subcategory}')">&times;</span>
+            </span>`;
+        }
 
         selectedTags.forEach(tag => {
             filtersHTML += `<span class="selected-filter-tag">
@@ -993,16 +1420,56 @@ function updateSelectedFilters() {
 }
 
 function removeFilter(filterType, value) {
-    const selector = filterType === 'category' ? '#category-filters' : '#tag-filters';
-    const button = document.querySelector(`${selector} [data-filter-value="${value}"]`);
-    if (button) {
-        button.classList.remove('active');
+    if (filterType === 'category') {
+        // 重置分类选择
+        currentFilters.category = '';
+        currentFilters.subcategory = '';
 
-        // 检查是否需要激活"全部"按钮
-        const activeButtons = button.parentElement.querySelectorAll('.filter-btn.active');
-        if (activeButtons.length === 0) {
-            const allBtn = button.parentElement.querySelector('[data-filter-value=""]');
-            if (allBtn) allBtn.classList.add('active');
+        // 清除所有主分类选中状态
+        document.querySelectorAll('.category-main-item').forEach(item => {
+            item.classList.remove('active', 'expanded');
+        });
+
+        // 隐藏所有二级菜单
+        document.querySelectorAll('.category-sub-menu').forEach(menu => {
+            menu.classList.remove('show');
+        });
+
+        // 选中"全部资讯"
+        const allCategoryItem = document.querySelector('.category-main-item[data-filter-value=""]');
+        if (allCategoryItem) {
+            allCategoryItem.classList.add('active');
+        }
+
+    } else if (filterType === 'subcategory') {
+        // 重置二级分类选择
+        currentFilters.subcategory = '';
+
+        // 清除二级分类选中状态
+        document.querySelectorAll('.subcategory-item').forEach(item => {
+            item.classList.remove('active');
+        });
+
+        // 选中对应的"全部"二级分类
+        if (currentFilters.category) {
+            const allSubcategoryItem = document.querySelector(`.subcategory-item[data-filter-value=""][data-parent-category="${currentFilters.category}"]`);
+            if (allSubcategoryItem) {
+                allSubcategoryItem.classList.add('active');
+            }
+        }
+
+    } else if (filterType === 'tag') {
+        // 处理标签移除
+        const button = document.querySelector(`#tag-filters [data-filter-value="${value}"]`);
+        if (button) {
+            button.classList.remove('active');
+
+            // 检查是否需要激活"全部"按钮
+            const activeButtons = button.parentElement.querySelectorAll('.filter-btn.active');
+            if (activeButtons.length === 0) {
+                const allBtn = button.parentElement.querySelector('[data-filter-value=""]');
+                if (allBtn) allBtn.classList.add('active');
+            }
         }
     }
 

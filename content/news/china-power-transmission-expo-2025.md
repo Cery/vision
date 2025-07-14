@@ -5,6 +5,7 @@ date: 2025-07-13T10:00:00+08:00
 publishDate: 2025-07-13T10:00:00+08:00
 draft: false
 categories: ["展会信息"]
+subcategories: ["能源动力"]
 tags: ["动力传动", "液压气动", "工业自动化", "制造业", "传动技术"]
 layout: "exhibition-universal"
 

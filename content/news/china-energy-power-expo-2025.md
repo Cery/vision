@@ -5,6 +5,7 @@ date: 2025-07-13T10:30:00+08:00
 publishDate: 2025-07-13T10:30:00+08:00
 draft: false
 categories: ["展会信息"]
+subcategories: ["能源动力"]
 tags: ["电力电工", "新能源", "智能电网", "储能技术", "能源装备"]
 layout: "exhibition-universal"
 

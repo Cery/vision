@@ -5,6 +5,7 @@ date: 2025-07-11T10:00:00+08:00
 publishDate: 2025-07-11T10:00:00+08:00
 draft: false
 categories: ["展会信息"]
+subcategories: ["工业制造"]
 tags: ["航空航天", "国际展会", "珠海航展", "飞行表演"]
 layout: "exhibition-universal"
 

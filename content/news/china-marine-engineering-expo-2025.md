@@ -5,6 +5,7 @@ date: 2025-07-13T15:30:00+08:00
 publishDate: 2025-07-13T15:30:00+08:00
 draft: false
 categories: ["展会信息"]
+subcategories: ["能源动力"]
 tags: ["海洋工程", "海洋平台", "深海装备", "海洋能源", "海底管道"]
 layout: "exhibition-universal"
 

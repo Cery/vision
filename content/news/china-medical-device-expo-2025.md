@@ -5,6 +5,7 @@ date: 2025-07-13T17:00:00+08:00
 publishDate: 2025-07-13T17:00:00+08:00
 draft: false
 categories: ["展会信息"]
+subcategories: ["仪器仪表"]
 tags: ["医疗器械", "医学影像", "体外诊断", "手术器械", "康复设备"]
 layout: "exhibition-universal"
 

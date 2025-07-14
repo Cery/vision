@@ -5,6 +5,7 @@ date: 2025-07-13T16:00:00+08:00
 publishDate: 2025-07-13T16:00:00+08:00
 draft: false
 categories: ["展会信息"]
+subcategories: ["仪器仪表"]
 tags: ["环保技术", "大气治理", "水处理", "固废处理", "土壤修复"]
 layout: "exhibition-universal"
 

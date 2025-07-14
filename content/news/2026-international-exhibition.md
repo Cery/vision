@@ -5,6 +5,7 @@ date: 2025-07-13T08:22:49.847Z
 publishDate: 2025-07-13T08:22:49.847Z
 draft: false
 categories: ["展会信息"]
+subcategories: ["工业制造"]
 tags: ["铸造", "国际展会", "专业展会", "技术展示"]
 layout: "exhibition-universal"
 

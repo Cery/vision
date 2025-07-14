@@ -5,6 +5,7 @@ date: 2025-07-13T14:30:00+08:00
 publishDate: 2025-07-13T14:30:00+08:00
 draft: false
 categories: ["展会信息"]
+subcategories: ["仪器仪表"]
 tags: ["新材料", "复合材料", "高性能金属", "功能陶瓷", "纳米材料"]
 layout: "exhibition-universal"
 

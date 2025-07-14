@@ -74,3 +74,6 @@ build/
 static/tools/python-crawler/venv/
 static/tools/python-crawler/__pycache__/
 static/tools/python-crawler/*.pyc
+
+# Git 凭据文件
+.git-credentials

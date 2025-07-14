@@ -5,6 +5,7 @@ date: 2025-07-13T15:00:00+08:00
 publishDate: 2025-07-13T15:00:00+08:00
 draft: false
 categories: ["展会信息"]
+subcategories: ["工业制造"]
 tags: ["轨道交通", "高速铁路", "城市轨道", "信号控制", "牵引供电"]
 layout: "exhibition-universal"
 

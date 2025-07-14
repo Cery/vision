@@ -5,6 +5,7 @@ date: 2025-07-13T12:30:00+08:00
 publishDate: 2025-07-13T12:30:00+08:00
 draft: false
 categories: ["展会信息"]
+subcategories: ["工业制造"]
 tags: ["机械制造", "数控机床", "工业机器人", "智能制造", "3D打印"]
 layout: "exhibition-universal"
 

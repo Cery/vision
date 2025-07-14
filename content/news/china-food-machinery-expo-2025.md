@@ -5,6 +5,7 @@ date: 2025-07-13T16:30:00+08:00
 publishDate: 2025-07-13T16:30:00+08:00
 draft: false
 categories: ["展会信息"]
+subcategories: ["工业制造"]
 tags: ["食品机械", "食品加工", "包装机械", "检测设备", "冷链物流"]
 layout: "exhibition-universal"
 
