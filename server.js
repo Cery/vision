@@ -37,7 +37,6 @@ ensureDirectoryExists('./media-library/files');
 // 按供应商分组的媒体库目录
 const defaultSuppliers = [
     '天津维森科技有限公司',
-    '上海尚品科技有限公司',
     '北京华科仪科技股份有限公司',
     'default'
 ];

@@ -12,9 +12,9 @@ models:
   - "3.9mm"
   - "6mm"
 gallery:
-  - "HTTPS://PICSUM.PHOTOS/300/200"
-  - "HTTPS://PICSUM.PHOTOS/300/200"
-  - "HTTPS://PICSUM.PHOTOS/300/200"
+  - "https://picsum.photos/300/200?random=1"
+  - "https://picsum.photos/300/200?random=2"
+  - "https://picsum.photos/300/200?random=3"
 contact_person: "张经理"
 position: "市场经理"
 phone: "13000000000"

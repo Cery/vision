@@ -848,7 +848,46 @@
 
         async function loadSuppliers() {
             try {
-                // 方法1: 尝试从数据文件加载供应商信息
+                // 方法1: 直接从供应商页面加载
+                try {
+                    const supplierPages = [
+                        '/suppliers/vsndt/',
+                        '/suppliers/vis/'
+                    ];
+
+                    const supplierPromises = supplierPages.map(async (url) => {
+                        try {
+                            const response = await fetch(url);
+                            if (response.ok) {
+                                const html = await response.text();
+                                return extractSupplierFromHTML(html, url);
+                            }
+                        } catch (error) {
+                            console.log(`无法加载供应商页面: ${url}`);
+                        }
+                        return null;
+                    });
+
+                    const supplierResults = await Promise.all(supplierPromises);
+                    const validSuppliers = supplierResults.filter(s => s !== null);
+
+                    if (validSuppliers.length > 0) {
+                        // 统计每个供应商的产品数量
+                        validSuppliers.forEach(supplier => {
+                            const productCount = dashboardData.products ?
+                                dashboardData.products.filter(p => p.supplier === supplier.name).length : 0;
+                            supplier.products = productCount;
+                        });
+
+                        dashboardData.suppliers = validSuppliers;
+                        console.log('✅ 从供应商页面加载了', dashboardData.suppliers.length, '个供应商');
+                        return;
+                    }
+                } catch (error) {
+                    console.log('从供应商页面加载失败:', error);
+                }
+
+                // 方法2: 尝试从数据文件加载供应商信息
                 try {
                     const response = await fetch('/data/suppliers.json');
                     if (response.ok) {
@@ -962,7 +1001,7 @@
                 // 默认供应商数据
                 dashboardData.suppliers = [
                     {
-                        name: 'VisNDT',
+                        name: '深圳市微视光电科技有限公司',
                         products: dashboardData.products ? dashboardData.products.length : 0,
                         status: 'active',
                         description: '专业的无损检测设备供应商，提供工业内窥镜、超声波检测等设备',
@@ -987,15 +1026,62 @@
 
             // 从产品标题或型号推断供应商
             if (product.model && product.model.startsWith('WS-')) {
-                return 'VisNDT';
+                return '深圳市微视光电科技有限公司';
+            }
+            if (product.model && product.model.startsWith('VIS-')) {
+                return '天津维森科技有限公司';
             }
 
-            return 'VisNDT'; // 默认供应商
+            return '深圳市微视光电科技有限公司'; // 默认供应商
+        }
+
+        // 从HTML页面提取供应商信息
+        function extractSupplierFromHTML(html, url) {
+            try {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                // 提取供应商名称
+                const titleElement = doc.querySelector('h1, .supplier-title, .page-title');
+                let name = titleElement ? titleElement.textContent.trim() : '';
+
+                // 如果没有找到标题，从URL推断
+                if (!name) {
+                    const urlParts = url.split('/');
+                    const supplierCode = urlParts[urlParts.length - 2];
+                    const supplierNames = {
+                        'vsndt': '深圳市微视光电科技有限公司',
+                        'vis': '天津维森科技有限公司'
+                    };
+                    name = supplierNames[supplierCode] || supplierCode;
+                }
+
+                // 提取描述信息
+                const descElement = doc.querySelector('.supplier-description, .description, p');
+                const description = descElement ? descElement.textContent.trim() : `专业的工业检测设备供应商`;
+
+                // 提取联系信息
+                const contactElement = doc.querySelector('.contact-info, .supplier-contact');
+                const contact = contactElement ? contactElement.textContent.trim() : '';
+
+                return {
+                    name: name,
+                    products: 0, // 将在后面统计
+                    status: 'active',
+                    description: description.substring(0, 100) + (description.length > 100 ? '...' : ''),
+                    website: getSupplierWebsite(name),
+                    contact: contact || getSupplierContact(name),
+                    source: 'html_page'
+                };
+            } catch (error) {
+                console.error('解析供应商HTML失败:', error);
+                return null;
+            }
         }
 
         // 从搜索项中提取供应商信息
         function extractSupplierFromSearchItem(item) {
-            let supplierName = 'VisNDT'; // 默认供应商
+            let supplierName = '深圳市微视光电科技有限公司'; // 默认供应商
             let category = '工业检测设备';
             let description = '';
 
@@ -1021,7 +1107,9 @@
 
             // 从标题推断供应商
             if (item.title && item.title.includes('WS-')) {
-                supplierName = 'VisNDT';
+                supplierName = '深圳市微视光电科技有限公司';
+            } else if (item.title && item.title.includes('VIS-')) {
+                supplierName = '天津维森科技有限公司';
             }
 
             return {
@@ -1036,6 +1124,9 @@
         // 获取供应商网站
         function getSupplierWebsite(supplierName) {
             const websites = {
+                '深圳市微视光电科技有限公司': 'https://www.visndt.com',
+                '天津维森科技有限公司': 'https://www.vis-tech.com',
+                // 兼容旧的简称
                 'VisNDT': 'https://www.visndt.com',
                 'VISNDT': 'https://www.visndt.com'
             };
@@ -1045,8 +1136,11 @@
         // 获取供应商联系方式
         function getSupplierContact(supplierName) {
             const contacts = {
-                'VisNDT': 'info@visndt.com',
-                'VISNDT': 'info@visndt.com'
+                '深圳市微视光电科技有限公司': 'wangxuan@sz-wise.cn',
+                '天津维森科技有限公司': 'contact@vis-tech.com',
+                // 兼容旧的简称
+                'VisNDT': 'wangxuan@sz-wise.cn',
+                'VISNDT': 'wangxuan@sz-wise.cn'
             };
             return contacts[supplierName] || '';
         }

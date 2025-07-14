@@ -492,6 +492,15 @@
     z-index: 1;
 }
 
+/* 移动端容器优化 */
+@media (max-width: 576px) {
+    .banner-overlay .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        max-width: 100%;
+    }
+}
+
 .banner-content {
     position: relative;
     z-index: 2;
@@ -821,6 +830,29 @@
     color: white;
 }
 
+/* 修复文章元信息在block-header中的颜色问题 */
+.block-header .article-meta {
+    color: rgba(255, 255, 255, 0.9) !important;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.block-header .article-meta span {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.block-header .article-meta i {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.block-header .article-meta #view-count {
+    color: rgba(255, 255, 255, 0.95) !important;
+    font-weight: 600;
+}
+
 .block-header::before {
     content: '';
     position: absolute;
@@ -850,7 +882,7 @@
 }
 
 .article-meta {
-    color: #6b7280;
+    color: #374151 !important; /* 强制深灰色，确保可读性 */
     font-size: 0.85rem;
     font-weight: 500;
     display: flex;
@@ -862,11 +894,18 @@
     display: flex;
     align-items: center;
     gap: 0.25rem;
+    color: #374151 !important; /* 确保span元素也是深色 */
 }
 
 .article-meta i {
-    color: #6366f1;
+    color: #6366f1 !important; /* 图标保持蓝色 */
     font-size: 0.9rem;
+}
+
+/* 确保浏览量数字也是深色 */
+.article-meta #view-count {
+    color: #374151 !important;
+    font-weight: 600;
 }
 
 .block-content {
@@ -1641,82 +1680,163 @@
         padding: 0 0.75rem;
     }
 
+    /* 移动端看板优化 - 确保所有信息都能正确显示 */
     .exhibition-compact-banner {
         height: auto;
-        min-height: 220px;
+        min-height: 400px; /* 进一步增加最小高度 */
+        padding: 1.5rem 0; /* 增加上下内边距 */
+        overflow: visible; /* 确保内容不被截断 */
     }
 
     .banner-content {
-        padding: 0.75rem 0;
+        padding: 1.5rem 0;
+        flex-direction: column; /* 改为垂直布局 */
+        gap: 2rem;
+        align-items: stretch;
+        height: auto; /* 自动高度 */
+        min-height: auto; /* 移除固定高度限制 */
     }
 
+    /* 移动端左侧区域优化 */
     .banner-left {
-        gap: 0.75rem;
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
     }
 
+    /* LOGO区域优化 */
     .exhibition-logo {
-        width: 120px;
-        height: 90px;
-        margin: 5px;
+        width: 100px;
+        height: 75px;
+        margin: 0 auto; /* 居中显示 */
+        flex-shrink: 0;
     }
 
     .logo-placeholder {
         font-size: 1.5rem;
     }
 
-    .exhibition-title {
-        font-size: 1.3rem;
+    /* 基本信息区域优化 */
+    .exhibition-basic-info {
+        width: 100%;
+        text-align: center; /* 移动端居中显示 */
     }
 
+    .exhibition-category {
+        margin-bottom: 1rem;
+        justify-content: center;
+    }
+
+    .exhibition-title {
+        font-size: 1.4rem;
+        line-height: 1.3;
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+
+    /* 详细信息优化 */
     .exhibition-details {
-        gap: 0.4rem;
+        gap: 0.8rem; /* 增加间距 */
+        text-align: left; /* 详细信息左对齐 */
     }
 
     .detail-row {
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.2rem;
+        gap: 0.3rem;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .detail-row:last-child {
+        border-bottom: none;
     }
 
     .detail-label {
         min-width: auto;
-        font-size: 0.75rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.9);
     }
 
     .detail-value {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        line-height: 1.4;
+        word-wrap: break-word;
+        word-break: break-all;
+        white-space: normal;
     }
 
     .detail-extra {
-        font-size: 0.75rem;
+        font-size: 0.8rem;
+        margin-top: 0.2rem;
+        line-height: 1.3;
+        word-wrap: break-word;
+        word-break: break-all;
+        white-space: normal;
     }
 
+    /* 行业标签优化 */
     .industry-tags {
-        margin-top: 0.75rem;
-        gap: 0.3rem;
+        margin-top: 1rem;
+        gap: 0.5rem;
+        justify-content: center;
+        flex-wrap: wrap;
     }
 
     .industry-tag {
-        font-size: 0.7rem;
-        padding: 0.2rem 0.5rem;
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem;
+        margin: 0.2rem;
+    }
+
+    /* 移动端右侧倒计时区域优化 */
+    .banner-right {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 1rem;
     }
 
     .countdown-compact {
-        padding: 0.8rem;
-        min-width: 120px;
+        padding: 1rem;
+        min-width: 150px;
+        width: auto;
+        max-width: 200px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.15);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
     }
 
     .countdown-label {
-        font-size: 0.7rem;
+        font-size: 0.8rem;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
     }
 
     .countdown-number {
-        font-size: 1.7rem;
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0.3rem 0;
     }
 
     .countdown-unit {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .countdown-ended .ended-label {
         font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .countdown-ended .ended-message {
+        font-size: 0.8rem;
+        margin-top: 0.3rem;
     }
 
     .category-items {
@@ -1821,6 +1941,138 @@
     .product-btn {
         padding: 0.5rem 0.75rem;
         font-size: 0.8rem;
+    }
+}
+
+/* 超小屏幕优化 (320px-480px) */
+@media (max-width: 480px) {
+    .exhibition-compact-banner {
+        min-height: 450px; /* 增加超小屏幕的最小高度 */
+        padding: 1rem 0;
+        overflow: visible;
+    }
+
+    .banner-content {
+        padding: 1rem 0;
+        gap: 1.5rem;
+        height: auto;
+    }
+
+    .exhibition-title {
+        font-size: 1.2rem;
+        line-height: 1.2;
+    }
+
+    .detail-row {
+        font-size: 0.8rem;
+        padding: 0.4rem 0;
+    }
+
+    .detail-label {
+        font-size: 0.75rem;
+    }
+
+    .detail-value {
+        font-size: 0.85rem;
+    }
+
+    .detail-extra {
+        font-size: 0.75rem;
+    }
+
+    .countdown-compact {
+        min-width: 130px;
+        padding: 0.8rem;
+    }
+
+    .countdown-number {
+        font-size: 1.8rem;
+    }
+
+    .industry-tag {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+    }
+}
+
+/* 横屏手机优化 */
+@media (max-width: 768px) and (orientation: landscape) {
+    .exhibition-compact-banner {
+        min-height: 250px;
+    }
+
+    .banner-content {
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .banner-left {
+        flex-direction: row;
+        flex: 1;
+        gap: 1rem;
+    }
+
+    .exhibition-basic-info {
+        text-align: left;
+    }
+
+    .exhibition-category {
+        justify-content: flex-start;
+    }
+
+    .exhibition-title {
+        text-align: left;
+        font-size: 1.1rem;
+    }
+
+    .banner-right {
+        width: auto;
+        margin-top: 0;
+    }
+
+    .countdown-compact {
+        min-width: 120px;
+    }
+}
+
+/* 平板竖屏优化 */
+@media (min-width: 577px) and (max-width: 768px) {
+    .exhibition-compact-banner {
+        min-height: 280px;
+    }
+
+    .banner-content {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+
+    .banner-left {
+        flex-direction: row;
+        flex: 1;
+        gap: 1rem;
+    }
+
+    .exhibition-logo {
+        width: 120px;
+        height: 90px;
+        margin: 0;
+    }
+
+    .exhibition-basic-info {
+        text-align: left;
+        flex: 1;
+    }
+
+    .exhibition-title {
+        font-size: 1.5rem;
+        text-align: left;
+    }
+
+    .banner-right {
+        width: auto;
+        margin-top: 0;
     }
 }
 </style>

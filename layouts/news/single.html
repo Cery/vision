@@ -254,20 +254,41 @@
                 <div class="card-body p-0">
                     {{ $currentPage := . }}
                     {{ $relatedPages := where (where .Site.RegularPages "Type" "news") "Permalink" "ne" .Permalink }}
-                    {{ $relatedByCategory := where $relatedPages "Params.category" .Params.category }}
-                    {{ range first 5 $relatedByCategory }}
+
+                    <!-- 优先按分类匹配 -->
+                    {{ $relatedByCategories := slice }}
+                    {{ range .Params.categories }}
+                        {{ $categoryPages := where $relatedPages "Params.categories" "intersect" (slice .) }}
+                        {{ $relatedByCategories = $relatedByCategories | append $categoryPages }}
+                    {{ end }}
+
+                    <!-- 如果没有categories，则按旧的category字段匹配 -->
+                    {{ if not .Params.categories }}
+                        {{ $relatedByCategories = where $relatedPages "Params.category" .Params.category }}
+                    {{ end }}
+
+                    <!-- 去重并限制数量 -->
+                    {{ $uniqueRelated := $relatedByCategories | uniq }}
+                    {{ range first 5 $uniqueRelated }}
                     <div class="related-article p-3 border-bottom">
                         <div class="d-flex">
                             {{ with .Params.featured_image }}
-                            <img src="{{ . | relURL }}" class="me-3 rounded" alt="{{ $.Title }}" style="width: 80px; height: 60px; object-fit: cover;">
+                            <img src="{{ . | relURL }}" class="me-3 rounded" alt="{{ $.Title }}" style="width: 80px; height: 60px; object-fit: cover;" onerror="this.src='https://via.placeholder.com/80x60/f8f9fa/6c757d?text=图片'">
                             {{ else }}
-                            <img src="https://picsum.photos/160/120?random={{ .File.UniqueID }}" class="me-3 rounded" alt="{{ .Title }}" style="width: 80px; height: 60px; object-fit: cover;">
+                            <img src="https://via.placeholder.com/80x60/f8f9fa/6c757d?text=图片" class="me-3 rounded" alt="{{ .Title }}" style="width: 80px; height: 60px; object-fit: cover;">
                             {{ end }}
                             <div>
-                                <h6 class="mb-1"><a href="{{ .Permalink }}" class="text-dark text-decoration-none hover-primary">{{ .Title }}</a></h6>
+                                <h6 class="mb-1"><a href="{{ .Permalink }}" class="text-dark text-decoration-none hover-primary">{{ .Title | truncate 50 }}</a></h6>
                                 <small class="text-muted">{{ .Date.Format "2006-01-02" }}</small>
                             </div>
                         </div>
+                    </div>
+                    {{ end }}
+
+                    <!-- 如果没有相关文章，显示提示 -->
+                    {{ if eq (len $uniqueRelated) 0 }}
+                    <div class="p-3 text-center text-muted">
+                        <i class="bi bi-info-circle me-1"></i>暂无相关文章
                     </div>
                     {{ end }}
                 </div>
@@ -279,35 +300,55 @@
                     <h5 class="card-title mb-0">热门文章</h5>
                 </div>
                 <div class="card-body p-0">
-                    {{ $popularPages := where .Site.RegularPages "Type" "news" }}
-                    {{ $sortedPages := first 5 (sort $popularPages "Date" "desc") }}
-                    {{ range $sortedPages }}
+                    {{ $currentPage := . }}
+                    {{ $allNewsPages := where .Site.RegularPages "Type" "news" }}
+                    {{ $otherPages := where $allNewsPages "Permalink" "ne" .Permalink }}
+
+                    <!-- 按浏览量排序，如果没有浏览量则按日期排序 -->
+                    {{ $sortedByViews := sort $otherPages "Params.views" "desc" }}
+                    {{ $sortedByDate := sort $otherPages "Date" "desc" }}
+
+                    <!-- 合并排序结果，优先显示有浏览量的文章 -->
+                    {{ $popularPages := slice }}
+                    {{ range first 3 $sortedByViews }}
+                        {{ if .Params.views }}
+                            {{ $popularPages = $popularPages | append . }}
+                        {{ end }}
+                    {{ end }}
+
+                    <!-- 补充最新文章 -->
+                    {{ $remainingCount := sub 5 (len $popularPages) }}
+                    {{ range first $remainingCount $sortedByDate }}
+                        {{ if not (in $popularPages .) }}
+                            {{ $popularPages = $popularPages | append . }}
+                        {{ end }}
+                    {{ end }}
+
+                    {{ range $popularPages }}
                     <div class="popular-article p-3 border-bottom">
                         <div class="d-flex">
                             {{ with .Params.featured_image }}
-                            {{ partial "smart-image.html" (dict
-                                "image" .
-                                "alt" $.Title
-                                "class" "me-3 rounded"
-                                "category" "news"
-                                "type" "covers"
-                                "style" "width: 80px; height: 60px; object-fit: cover;"
-                            ) }}
+                            <img src="{{ . | relURL }}" class="me-3 rounded" alt="{{ $.Title }}" style="width: 80px; height: 60px; object-fit: cover;" onerror="this.src='https://via.placeholder.com/80x60/e3f2fd/2196f3?text=热门'">
                             {{ else }}
-                            {{ partial "smart-image.html" (dict
-                                "image" "default-news.jpg"
-                                "alt" .Title
-                                "class" "me-3 rounded"
-                                "category" "news"
-                                "type" "covers"
-                                "style" "width: 80px; height: 60px; object-fit: cover;"
-                            ) }}
+                            <img src="https://via.placeholder.com/80x60/e3f2fd/2196f3?text=热门" class="me-3 rounded" alt="{{ .Title }}" style="width: 80px; height: 60px; object-fit: cover;">
                             {{ end }}
-                            <div>
-                                <h6 class="mb-1"><a href="{{ .Permalink }}" class="text-dark text-decoration-none hover-primary">{{ .Title }}</a></h6>
-                                <small class="text-muted">{{ .Date.Format "2006-01-02" }}</small>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1"><a href="{{ .Permalink }}" class="text-dark text-decoration-none hover-primary">{{ .Title | truncate 50 }}</a></h6>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">{{ .Date.Format "2006-01-02" }}</small>
+                                    {{ with .Params.views }}
+                                    <small class="text-primary"><i class="bi bi-eye me-1"></i>{{ . }}</small>
+                                    {{ end }}
+                                </div>
                             </div>
                         </div>
+                    </div>
+                    {{ end }}
+
+                    <!-- 如果没有热门文章，显示提示 -->
+                    {{ if eq (len $popularPages) 0 }}
+                    <div class="p-3 text-center text-muted">
+                        <i class="bi bi-info-circle me-1"></i>暂无热门文章
                     </div>
                     {{ end }}
                 </div>
@@ -366,6 +407,92 @@
 .related-article:last-child,
 .popular-article:last-child {
     border-bottom: none !important;
+}
+
+/* 侧边栏文章项优化 */
+.related-article,
+.popular-article {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.related-article:hover,
+.popular-article:hover {
+    background-color: #f8f9fa;
+    transform: translateX(2px);
+}
+
+.related-article h6,
+.popular-article h6 {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+}
+
+.related-article img,
+.popular-article img {
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+    object-fit: cover;
+}
+
+.related-article:hover img,
+.popular-article:hover img {
+    transform: scale(1.05);
+}
+
+/* 移动端侧边栏优化 */
+@media (max-width: 991.98px) {
+    .col-lg-4 {
+        margin-top: 2rem;
+    }
+
+    .related-article,
+    .popular-article {
+        padding: 1rem !important;
+    }
+
+    .related-article img,
+    .popular-article img {
+        width: 70px !important;
+        height: 52px !important;
+    }
+
+    .related-article h6,
+    .popular-article h6 {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .related-article,
+    .popular-article {
+        padding: 0.75rem !important;
+    }
+
+    .related-article .d-flex,
+    .popular-article .d-flex {
+        align-items: flex-start;
+    }
+
+    .related-article img,
+    .popular-article img {
+        width: 60px !important;
+        height: 45px !important;
+        margin-right: 0.75rem !important;
+    }
+
+    .related-article h6,
+    .popular-article h6 {
+        font-size: 0.8rem;
+        line-height: 1.3;
+    }
+
+    .related-article small,
+    .popular-article small {
+        font-size: 0.7rem;
+    }
 }
 
 .badge {
