@@ -6,7 +6,7 @@
     <description>Recent content in 首页 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 13 Jul 2025 08:22:49 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 13 Jul 2025 17:00:00 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>航空航天</title>
@@ -142,11 +142,116 @@
       <description>科研实验检测分析专业解决方案，支持科学研究和技术创新</description>
     </item>
     <item>
+      <title>2025中国国际医疗器械技术展览会</title>
+      <link>http://localhost:1313/news/china-medical-device-expo-2025/</link>
+      <pubDate>Sun, 13 Jul 2025 17:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/news/china-medical-device-expo-2025/</guid>
+      <description>中国医疗器械领域最具影响力的专业展会，展示医学影像、体外诊断、手术器械、康复设备等先进技术，推动医疗健康产业发展。</description>
+    </item>
+    <item>
+      <title>2025中国国际食品加工机械展览会</title>
+      <link>http://localhost:1313/news/china-food-machinery-expo-2025/</link>
+      <pubDate>Sun, 13 Jul 2025 16:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/news/china-food-machinery-expo-2025/</guid>
+      <description>中国食品机械领域最权威的专业展会，展示食品加工设备、包装机械、检测设备、冷链物流等先进技术，推动食品工业现代化发展。</description>
+    </item>
+    <item>
       <title>中国国际国际铸造展览会</title>
       <link>http://localhost:1313/news/2026-international-exhibition/</link>
       <pubDate>Sun, 13 Jul 2025 08:22:49 +0000</pubDate>
       <guid>http://localhost:1313/news/2026-international-exhibition/</guid>
       <description>中国国际国际铸造展览会是中国铸造行业最具影响力的专业展览会，展示铸造领域的最新技术、设备和解决方案。</description>
+    </item>
+    <item>
+      <title>2025中国国际环保技术装备展览会</title>
+      <link>http://localhost:1313/news/china-environmental-tech-expo-2025/</link>
+      <pubDate>Sun, 13 Jul 2025 16:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/news/china-environmental-tech-expo-2025/</guid>
+      <description>中国环保领域最具规模的专业展会，展示大气治理、水处理、固废处理、土壤修复等环保技术，推动绿色发展和生态文明建设。</description>
+    </item>
+    <item>
+      <title>2025中国国际海洋工程技术装备展览会</title>
+      <link>http://localhost:1313/news/china-marine-engineering-expo-2025/</link>
+      <pubDate>Sun, 13 Jul 2025 15:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/news/china-marine-engineering-expo-2025/</guid>
+      <description>中国海洋工程领域最专业的技术展会，展示海洋平台、海底管道、深海装备、海洋能源等前沿技术，推动海洋经济高质量发展。</description>
+    </item>
+    <item>
+      <title>2025中国国际轨道交通技术装备展览会</title>
+      <link>http://localhost:1313/news/china-rail-transit-expo-2025/</link>
+      <pubDate>Sun, 13 Jul 2025 15:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/news/china-rail-transit-expo-2025/</guid>
+      <description>中国轨道交通领域最具影响力的专业展会，展示高速铁路、城市轨道、信号控制、牵引供电等先进技术，推动轨道交通产业发展。</description>
+    </item>
+    <item>
+      <title>2025中国国际先进材料技术展览会</title>
+      <link>http://localhost:1313/news/china-advanced-materials-expo-2025/</link>
+      <pubDate>Sun, 13 Jul 2025 14:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/news/china-advanced-materials-expo-2025/</guid>
+      <description>中国新材料领域最权威的专业展会，展示碳纤维复合材料、高性能金属材料、功能陶瓷、纳米材料等前沿技术，推动材料产业创新发展。</description>
+    </item>
+    <item>
+      <title>2025中国国际工业自动化技术装备展览会</title>
+      <link>http://localhost:1313/news/china-industrial-automation-expo-2025/</link>
+      <pubDate>Sun, 13 Jul 2025 14:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/news/china-industrial-automation-expo-2025/</guid>
+      <description>中国工业自动化领域最具规模的专业展会，展示工业机器人、PLC控制系统、传感器技术、工业软件等智能制造核心技术。</description>
+    </item>
+    <item>
+      <title>2025中国国际精密制造技术展览会</title>
+      <link>http://localhost:1313/news/china-precision-manufacturing-expo-2025/</link>
+      <pubDate>Sun, 13 Jul 2025 13:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/news/china-precision-manufacturing-expo-2025/</guid>
+      <description>中国精密制造领域最专业的技术展会，展示精密加工、微纳制造、激光技术、精密测量等前沿技术，推动高端制造业发展。</description>
+    </item>
+    <item>
+      <title>2025中国国际石油化工技术装备展览会</title>
+      <link>http://localhost:1313/news/china-petrochemical-expo-2025/</link>
+      <pubDate>Sun, 13 Jul 2025 13:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/news/china-petrochemical-expo-2025/</guid>
+      <description>亚洲最具影响力的石化行业专业展会，展示炼油技术、化工设备、管道阀门、安全环保等先进技术，推动石化行业绿色发展。</description>
+    </item>
+    <item>
+      <title>2025中国国际机械制造技术装备展览会</title>
+      <link>http://localhost:1313/news/china-machinery-expo-2025/</link>
+      <pubDate>Sun, 13 Jul 2025 12:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/news/china-machinery-expo-2025/</guid>
+      <description>中国最大规模的机械制造专业展会，展示数控机床、工业机器人、智能制造、3D打印等先进制造技术，推动制造业数字化转型。</description>
+    </item>
+    <item>
+      <title>2025中国国际航空航天技术与装备展览会</title>
+      <link>http://localhost:1313/news/china-aerospace-expo-2025/</link>
+      <pubDate>Sun, 13 Jul 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/news/china-aerospace-expo-2025/</guid>
+      <description>中国航空航天领域最权威的专业展会，展示航空发动机、航天器、卫星技术、无人机系统等前沿技术，推动航空航天产业创新发展。</description>
+    </item>
+    <item>
+      <title>2025中国国际铸造博览会</title>
+      <link>http://localhost:1313/news/china-foundry-expo-2025/</link>
+      <pubDate>Sun, 13 Jul 2025 11:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/news/china-foundry-expo-2025/</guid>
+      <description>中国最具影响力的铸造行业专业展会，展示铸造设备、铸造材料、铸造工艺、3D打印铸造等前沿技术，推动铸造行业智能化发展。</description>
+    </item>
+    <item>
+      <title>2025中国国际无损检测技术展览会</title>
+      <link>http://localhost:1313/news/china-ndt-expo-2025/</link>
+      <pubDate>Sun, 13 Jul 2025 11:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/news/china-ndt-expo-2025/</guid>
+      <description>亚洲最专业的无损检测技术展会，汇聚全球NDT技术精英，展示超声检测、射线检测、磁粉检测、渗透检测等先进技术装备。</description>
+    </item>
+    <item>
+      <title>2025中国国际电力电工及能源装备展览会</title>
+      <link>http://localhost:1313/news/china-energy-power-expo-2025/</link>
+      <pubDate>Sun, 13 Jul 2025 10:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/news/china-energy-power-expo-2025/</guid>
+      <description>中国最具规模的电力能源专业展会，展示智能电网、新能源发电、储能技术、电力设备等前沿技术，推动能源行业数字化转型。</description>
+    </item>
+    <item>
+      <title>2025中国国际动力传动与控制技术展览会</title>
+      <link>http://localhost:1313/news/china-power-transmission-expo-2025/</link>
+      <pubDate>Sun, 13 Jul 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/news/china-power-transmission-expo-2025/</guid>
+      <description>亚洲最大的动力传动专业展会，汇聚全球领先的传动技术、液压气动、工业自动化解决方案，为制造业转型升级提供技术支撑。</description>
     </item>
     <item>
       <title>中国（珠海）国际航空航天展览会</title>
@@ -161,6 +266,34 @@
       <pubDate>Sun, 15 Jun 2025 12:00:00 +0800</pubDate>
       <guid>http://localhost:1313/products/model/</guid>
       <description>WS-K1010是一款具备1.0mm超细直径和高亮光纤照明的工业视频内窥镜，广泛应用于航空维修、电子制造、医疗检测等狭小空间可视化场景。</description>
+    </item>
+    <item>
+      <title>WS-F2815柔性光纤内窥镜 - 2.8mm直视型</title>
+      <link>http://localhost:1313/products/ws-f2815/</link>
+      <pubDate>Wed, 15 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-f2815/</guid>
+      <description>高性能柔性光纤内窥镜，2.8mm直径，直视型，适用于复杂管道检测和精密设备检查</description>
+    </item>
+    <item>
+      <title>WS-O2510硬性光学内窥镜 - 2.5mm直视型</title>
+      <link>http://localhost:1313/products/ws-o2510/</link>
+      <pubDate>Wed, 15 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-o2510/</guid>
+      <description>高品质硬性光学内窥镜，2.5mm直径，适用于精密机械检测和医疗器械检查</description>
+    </item>
+    <item>
+      <title>WS-O3020硬性光学内窥镜 - 3.0mm斜视型</title>
+      <link>http://localhost:1313/products/ws-o3020/</link>
+      <pubDate>Wed, 15 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-o3020/</guid>
+      <description>高性能硬性光学内窥镜，3.0mm直径，20°斜视角度，适用于精密检测和质量控制</description>
+    </item>
+    <item>
+      <title>WS-O4030硬性光学内窥镜 - 4.0mm侧视型</title>
+      <link>http://localhost:1313/products/ws-o4030/</link>
+      <pubDate>Wed, 15 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/products/ws-o4030/</guid>
+      <description>专业硬性光学内窥镜，4.0mm直径，30°侧视角度，适用于管道检测和设备维护</description>
     </item>
     <item>
       <title>WS-K08510工业内窥镜 - 0.85mm超细探头 极限精密检测</title>

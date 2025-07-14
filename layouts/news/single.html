@@ -149,10 +149,35 @@
                                 <div class="card h-100 border-0 shadow-sm">
                                     <div class="card-body p-3">
                                         <div class="d-flex align-items-start">
-                                            {{ with $product.Params.gallery }}
-                                            {{ range first 1 . }}
-                                            <img src="{{ .image }}" alt="{{ .alt }}" class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                                            <!-- 产品图片 -->
+                                            {{ $productImage := "" }}
+                                            {{ if $product.Params.gallery }}
+                                                {{ range $product.Params.gallery }}
+                                                    {{ if and (reflect.IsMap .) .is_main }}
+                                                        {{ $productImage = .image }}
+                                                        {{ break }}
+                                                    {{ end }}
+                                                {{ end }}
+                                                {{ if not $productImage }}
+                                                    {{ with index $product.Params.gallery 0 }}
+                                                        {{ if reflect.IsMap . }}
+                                                            {{ $productImage = .image }}
+                                                        {{ else }}
+                                                            {{ $productImage = . }}
+                                                        {{ end }}
+                                                    {{ end }}
+                                                {{ end }}
                                             {{ end }}
+
+                                            {{ if $productImage }}
+                                            <img src="{{ $productImage }}" alt="{{ $product.Title }}" class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                            <div class="rounded me-3 align-items-center justify-content-center bg-light" style="width: 60px; height: 60px; display: none;">
+                                                <i class="fas fa-image text-muted"></i>
+                                            </div>
+                                            {{ else }}
+                                            <div class="rounded me-3 d-flex align-items-center justify-content-center bg-light" style="width: 60px; height: 60px;">
+                                                <i class="fas fa-image text-muted"></i>
+                                            </div>
                                             {{ end }}
                                             <div class="flex-grow-1">
                                                 <h6 class="card-title mb-1">

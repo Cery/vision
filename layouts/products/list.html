@@ -108,6 +108,8 @@
                             {{ $viewingAngle := slice }}
                             {{ $lightSource := slice }}
                             {{ $guidance := slice }}
+                            {{ $workingLength := slice }}
+                            {{ $fieldOfView := slice }}
 
                             {{ range $allProducts }}
                                 {{ range .Params.parameters }}
@@ -118,11 +120,13 @@
                                     {{ if eq .name "视向" }}{{ $viewingAngle = $viewingAngle | append .value }}{{ end }}
                                     {{ if eq .name "光源" }}{{ $lightSource = $lightSource | append .value }}{{ end }}
                                     {{ if eq .name "导向" }}{{ $guidance = $guidance | append .value }}{{ end }}
+                                    {{ if eq .name "工作长度" }}{{ $workingLength = $workingLength | append .value }}{{ end }}
+                                    {{ if eq .name "视野" }}{{ $fieldOfView = $fieldOfView | append .value }}{{ end }}
                                 {{ end }}
                             {{ end }}
 
                             <!-- 主机屏幕 -->
-                            <div class="col-md-3">
+                            <div class="col-md-3 electronic-only-filter">
                                 <div class="filter-group">
                                     <label class="form-label">主机屏幕</label>
                                     <select class="form-select" id="screenSize" onchange="updateFilters()">
@@ -135,7 +139,7 @@
                             </div>
 
                             <!-- 待机时长 -->
-                            <div class="col-md-3">
+                            <div class="col-md-3 electronic-only-filter">
                                 <div class="filter-group">
                                     <label class="form-label">待机时长</label>
                                     <select class="form-select" id="batteryLife" onchange="updateFilters()">
@@ -161,7 +165,7 @@
                             </div>
 
                             <!-- 像素 -->
-                            <div class="col-md-3">
+                            <div class="col-md-3 electronic-only-filter">
                                 <div class="filter-group">
                                     <label class="form-label">像素</label>
                                     <select class="form-select" id="resolution" onchange="updateFilters()">
@@ -187,7 +191,7 @@
                             </div>
 
                             <!-- 光源 -->
-                            <div class="col-md-3">
+                            <div class="col-md-3 electronic-optical-filter">
                                 <div class="filter-group">
                                     <label class="form-label">光源</label>
                                     <select class="form-select" id="lightSource" onchange="updateFilters()">
@@ -200,10 +204,49 @@
                             </div>
 
                             <!-- 导向 -->
-                            <div class="col-md-3">
+                            <div class="col-md-3 electronic-only-filter">
                                 <div class="filter-group">
                                     <label class="form-label">导向</label>
                                     <select class="form-select" id="guidance" onchange="updateFilters()">
+                                        <option value="">全部</option>
+                                        {{ range (uniq $guidance) }}
+                                        <option value="{{ . }}">{{ . }}</option>
+                                        {{ end }}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- 工作长度 -->
+                            <div class="col-md-3 optical-fiber-filter" style="display: none;">
+                                <div class="filter-group">
+                                    <label class="form-label">工作长度</label>
+                                    <select class="form-select" id="workingLength" onchange="updateFilters()">
+                                        <option value="">全部</option>
+                                        {{ range (uniq $workingLength) }}
+                                        <option value="{{ . }}">{{ . }}</option>
+                                        {{ end }}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- 视野 -->
+                            <div class="col-md-3 optical-fiber-filter" style="display: none;">
+                                <div class="filter-group">
+                                    <label class="form-label">视野</label>
+                                    <select class="form-select" id="fieldOfView" onchange="updateFilters()">
+                                        <option value="">全部</option>
+                                        {{ range (uniq $fieldOfView) }}
+                                        <option value="{{ . }}">{{ . }}</option>
+                                        {{ end }}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- 导向 (光纤内窥镜专用) -->
+                            <div class="col-md-3 fiber-only-filter" style="display: none;">
+                                <div class="filter-group">
+                                    <label class="form-label">导向</label>
+                                    <select class="form-select" id="fiberGuidance" onchange="updateFilters()">
                                         <option value="">全部</option>
                                         {{ range (uniq $guidance) }}
                                         <option value="{{ . }}">{{ . }}</option>
@@ -241,7 +284,9 @@
         {{ $viewingAngle := "" }}
         {{ $lightSource := "" }}
         {{ $guidance := "" }}
-        
+        {{ $workingLength := "" }}
+        {{ $fieldOfView := "" }}
+
         {{ range .Params.parameters }}
             {{ if eq .name "主机屏幕" }}{{ $screenSize = .value }}{{ end }}
             {{ if eq .name "待机时长" }}{{ $batteryLife = .value }}{{ end }}
@@ -250,6 +295,8 @@
             {{ if eq .name "视向" }}{{ $viewingAngle = .value }}{{ end }}
             {{ if eq .name "光源" }}{{ $lightSource = .value }}{{ end }}
             {{ if eq .name "导向" }}{{ $guidance = .value }}{{ end }}
+            {{ if eq .name "工作长度" }}{{ $workingLength = .value }}{{ end }}
+            {{ if eq .name "视野" }}{{ $fieldOfView = .value }}{{ end }}
         {{ end }}
 
         <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
@@ -261,7 +308,9 @@
              data-resolution="{{ $resolution }}"
              data-viewing-angle="{{ $viewingAngle }}"
              data-light-source="{{ $lightSource }}"
-             data-guidance="{{ $guidance }}">
+             data-guidance="{{ $guidance }}"
+             data-working-length="{{ $workingLength }}"
+             data-field-of-view="{{ $fieldOfView }}">
             <div class="card h-100 shadow-sm hover-shadow">
                 <!-- 产品图片 -->
                 {{ $mainImage := "" }}
@@ -802,6 +851,9 @@ function applyAllFilters() {
     const viewingAngle = document.getElementById('viewingAngle').value;
     const lightSource = document.getElementById('lightSource').value;
     const guidance = document.getElementById('guidance').value;
+    const workingLength = document.getElementById('workingLength').value;
+    const fieldOfView = document.getElementById('fieldOfView').value;
+    const fiberGuidance = document.getElementById('fiberGuidance') ? document.getElementById('fiberGuidance').value : '';
 
     // 获取所有产品并应用筛选
     const products = document.querySelectorAll('.product-item');
@@ -829,6 +881,9 @@ function applyAllFilters() {
         if (viewingAngle && product.dataset.viewingAngle !== viewingAngle) show = false;
         if (lightSource && product.dataset.lightSource !== lightSource) show = false;
         if (guidance && product.dataset.guidance !== guidance) show = false;
+        if (workingLength && product.dataset.workingLength !== workingLength) show = false;
+        if (fieldOfView && product.dataset.fieldOfView !== fieldOfView) show = false;
+        if (fiberGuidance && product.dataset.guidance !== fiberGuidance) show = false;
 
         if (show) {
             filteredProducts.push(product);
@@ -844,6 +899,9 @@ function applyAllFilters() {
     if (viewingAngle) params.set('viewing_angle', viewingAngle); else params.delete('viewing_angle');
     if (lightSource) params.set('light_source', lightSource); else params.delete('light_source');
     if (guidance) params.set('guidance', guidance); else params.delete('guidance');
+    if (workingLength) params.set('working_length', workingLength); else params.delete('working_length');
+    if (fieldOfView) params.set('field_of_view', fieldOfView); else params.delete('field_of_view');
+    if (fiberGuidance) params.set('fiber_guidance', fiberGuidance); else params.delete('fiber_guidance');
 
     const newUrl = `${window.location.pathname}?${params.toString()}`;
     window.history.replaceState({}, '', newUrl);
@@ -857,6 +915,9 @@ function applyAllFilters() {
 
     // 更新分类按钮状态
     updateCategoryButtons(currentPrimaryCategory, currentSecondaryCategory);
+
+    // 更新筛选器显示
+    updateFilterVisibility(currentPrimaryCategory, currentSecondaryCategory);
 }
 
 function resetFilters() {
@@ -877,7 +938,10 @@ function setFiltersFromURL() {
         'resolution': urlParams.get('resolution'),
         'viewingAngle': urlParams.get('viewing_angle'),
         'lightSource': urlParams.get('light_source'),
-        'guidance': urlParams.get('guidance')
+        'guidance': urlParams.get('guidance'),
+        'workingLength': urlParams.get('working_length'),
+        'fieldOfView': urlParams.get('field_of_view'),
+        'fiberGuidance': urlParams.get('fiber_guidance')
     };
 
     Object.entries(filters).forEach(([id, value]) => {
@@ -896,6 +960,52 @@ function setFiltersFromURL() {
 function handleCategoryFilter() {
     // 使用统一的筛选系统
     applyAllFilters();
+}
+
+// 根据分类切换筛选器显示
+function updateFilterVisibility(currentPrimary, currentSecondary) {
+    const opticalFilters = document.querySelectorAll('.optical-only-filter');
+    const fiberFilters = document.querySelectorAll('.fiber-only-filter');
+    const electronicFilters = document.querySelectorAll('.electronic-only-filter');
+    const opticalFiberFilters = document.querySelectorAll('.optical-fiber-filter');
+    const electronicOpticalFilters = document.querySelectorAll('.electronic-optical-filter');
+
+    const isOpticalCategory = currentPrimary === '光学内窥镜' || currentSecondary === '硬性光学内窥镜';
+    const isFiberCategory = currentPrimary === '光纤内窥镜' || currentSecondary === '柔性光纤内窥镜' || currentSecondary === '硬性光纤内窥镜';
+
+    // 清空所有筛选器
+    [opticalFilters, fiberFilters, electronicFilters, opticalFiberFilters, electronicOpticalFilters].forEach(filterGroup => {
+        filterGroup.forEach(filter => {
+            filter.style.display = 'none';
+            const select = filter.querySelector('select');
+            if (select) {
+                select.value = '';
+            }
+        });
+    });
+
+    // 通用参数：探头直径、视向 - 所有分类都显示
+    document.querySelectorAll('#probeDiameter, #viewingAngle').forEach(element => {
+        if (element && element.closest('.col-md-3')) {
+            element.closest('.col-md-3').style.display = 'block';
+        }
+    });
+
+    if (isOpticalCategory) {
+        // 光学内窥镜：探头直径、工作长度、视向、光源、视野 (5个)
+        opticalFilters.forEach(filter => filter.style.display = 'block');
+        opticalFiberFilters.forEach(filter => filter.style.display = 'block');
+        electronicOpticalFilters.forEach(filter => filter.style.display = 'block');
+    } else if (isFiberCategory) {
+        // 光纤内窥镜：探头直径、工作长度、视向、视野、导向 (5个，无光源)
+        fiberFilters.forEach(filter => filter.style.display = 'block');
+        opticalFiberFilters.forEach(filter => filter.style.display = 'block');
+        // 光纤内窥镜不显示光源
+    } else {
+        // 电子内窥镜：主机屏幕、待机时长、探头直径、像素、视向、光源、导向 (7个)
+        electronicFilters.forEach(filter => filter.style.display = 'block');
+        electronicOpticalFilters.forEach(filter => filter.style.display = 'block');
+    }
 }
 
 function updateCategoryButtons(currentPrimary, currentSecondary) {
@@ -1044,6 +1154,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     setFiltersFromURL();
     handleCategoryFilter();
+
+    // 初始化筛选器显示状态
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentPrimaryCategory = urlParams.get('primary_category');
+    const currentSecondaryCategory = urlParams.get('secondary_category');
+    updateFilterVisibility(currentPrimaryCategory, currentSecondaryCategory);
 });
 </script>
 {{ end }}

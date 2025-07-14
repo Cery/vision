@@ -1,0 +1,42 @@
+{{/* Smart Image Partial - Simplified Version */}}
+
+{{/* 获取参数 */}}
+{{ $image := .image }}
+{{ $alt := .alt | default "Image" }}
+{{ $class := .class | default "" }}
+{{ $style := .style | default "" }}
+{{ $loading := .loading | default "lazy" }}
+{{ $sizes := .sizes }}
+{{ $category := .category | default "" }}
+{{ $type := .type | default "" }}
+{{ $fallback := .fallback | default "/images/placeholder.jpg" }}
+
+{{/* 初始化最终图片路径 */}}
+{{ $finalImagePath := "" }}
+
+{{/* 处理外部URL */}}
+{{ if or (hasPrefix $image "http://") (hasPrefix $image "https://") }}
+  {{ $finalImagePath = $image }}
+{{ else }}
+  {{/* 处理本地图片路径 */}}
+  {{ if hasPrefix $image "/" }}
+    {{ $finalImagePath = $image }}
+  {{ else }}
+    {{ $finalImagePath = printf "/images/%s" $image }}
+  {{ end }}
+{{ end }}
+
+{{/* 生成图片HTML */}}
+<img
+  src="{{ $finalImagePath }}"
+  alt="{{ $alt }}"
+  loading="{{ $loading }}"
+  class="{{ $class }}"
+  {{ with $sizes }}sizes="{{ . }}"{{ end }}
+  {{ with $style }}style="{{ . }}"{{ end }}
+  data-original-src="{{ $image }}"
+  data-category="{{ $category }}"
+  data-type="{{ $type }}"
+  data-fallback="{{ $fallback }}"
+  decoding="async"
+>

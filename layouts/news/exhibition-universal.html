@@ -347,7 +347,23 @@
                                 <div class="product-card">
                                     <div class="product-image">
                                         {{ $productImage := "" }}
-                                        {{ if $product.Params.featured_image }}
+                                        {{ if $product.Params.gallery }}
+                                            {{ range $product.Params.gallery }}
+                                                {{ if and (reflect.IsMap .) .is_main }}
+                                                    {{ $productImage = .image }}
+                                                    {{ break }}
+                                                {{ end }}
+                                            {{ end }}
+                                            {{ if not $productImage }}
+                                                {{ with index $product.Params.gallery 0 }}
+                                                    {{ if reflect.IsMap . }}
+                                                        {{ $productImage = .image }}
+                                                    {{ else }}
+                                                        {{ $productImage = . }}
+                                                    {{ end }}
+                                                {{ end }}
+                                            {{ end }}
+                                        {{ else if $product.Params.featured_image }}
                                             {{ $productImage = $product.Params.featured_image }}
                                         {{ else if $product.Params.cover }}
                                             {{ $productImage = $product.Params.cover }}
@@ -356,7 +372,10 @@
                                         {{ end }}
 
                                         {{ if $productImage }}
-                                        <img src="{{ $productImage | relURL }}" alt="{{ $product.Title }}" loading="lazy">
+                                        <img src="{{ $productImage | relURL }}" alt="{{ $product.Title }}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                        <div class="product-placeholder" style="display: none;">
+                                            <i class="bi bi-box-seam"></i>
+                                        </div>
                                         {{ else }}
                                         <div class="product-placeholder">
                                             <i class="bi bi-box-seam"></i>
