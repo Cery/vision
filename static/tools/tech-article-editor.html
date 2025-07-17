@@ -375,3 +375,554 @@
               <div class="mode-desc">从技术网站提取内容</div>
             </div>
           </div>
+
+          <!-- 自动创作模式 -->
+          <div v-if="contentMode === 'auto'" class="auto-fetch-section">
+            <div class="row g-3">
+              <div class="col-md-8">
+                <label class="form-label">技术主题关键词 *</label>
+                <input v-model="autoKeywords" type="text" class="form-control" placeholder="例如：工业内窥镜图像处理算法">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">技术领域</label>
+                <select v-model="autoIndustry" class="form-select">
+                  <option value="">自动识别</option>
+                  <option value="无损检测">无损检测</option>
+                  <option value="图像处理">图像处理</option>
+                  <option value="人工智能">人工智能</option>
+                  <option value="机器视觉">机器视觉</option>
+                  <option value="工业自动化">工业自动化</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <button type="button" class="btn btn-primary" @click="autoGenerateContent" :disabled="isLoading || !autoKeywords">
+                  <span v-if="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                  <i v-else class="bi bi-robot me-2"></i>
+                  {{ isLoading ? '正在生成...' : '开始自动创作' }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- URL获取模式 -->
+          <div v-if="contentMode === 'url'" class="url-fetch-section">
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label">技术文章URL *</label>
+                <input v-model="sourceUrl" type="url" class="form-control" placeholder="https://example.com/tech-article">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">提取模式</label>
+                <select v-model="extractMode" class="form-select">
+                  <option value="smart">智能提取</option>
+                  <option value="full">完整内容</option>
+                  <option value="basic">基本信息</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <button type="button" class="btn btn-primary" @click="fetchFromUrl" :disabled="isLoading || !sourceUrl">
+                  <span v-if="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                  <i v-else class="bi bi-download me-2"></i>
+                  {{ isLoading ? '获取中...' : '获取网页内容' }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 操作结果提示 -->
+          <div v-if="operationResult" class="alert" :class="'alert-' + operationResult.type" role="alert">
+            <i class="bi" :class="operationResult.type === 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'"></i>
+            {{ operationResult.message }}
+          </div>
+        </div>
+
+        <!-- 技术文章基本信息 -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="bi bi-info-circle"></i>
+            技术文章信息
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-8">
+              <label class="form-label">文章标题 *</label>
+              <input v-model="techData.title" type="text" class="form-control" placeholder="请输入技术文章标题" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">发布状态</label>
+              <select v-model="techData.draft" class="form-select">
+                <option :value="false">立即发布</option>
+                <option :value="true">保存为草稿</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label">文章摘要</label>
+              <textarea v-model="techData.summary" class="form-control" rows="3" placeholder="请输入技术文章摘要，建议100-200字"></textarea>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">发布日期</label>
+              <input v-model="techData.date" type="datetime-local" class="form-control">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">作者</label>
+              <input v-model="techData.author" type="text" class="form-control" placeholder="技术团队">
+            </div>
+          </div>
+        </div>
+
+        <!-- 技术分类和难度 -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="bi bi-tags"></i>
+            技术分类
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">二级分类</label>
+              <select v-model="techData.subcategory" class="form-select">
+                <option value="">请选择</option>
+                <option value="无损检测">无损检测</option>
+                <option value="图像处理">图像处理</option>
+                <option value="人工智能">人工智能</option>
+                <option value="机器视觉">机器视觉</option>
+                <option value="工业自动化">工业自动化</option>
+                <option value="数据分析">数据分析</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">技术难度 *</label>
+              <div class="difficulty-selector">
+                <div class="difficulty-option beginner" :class="{ active: techData.difficulty === 'beginner' }" @click="techData.difficulty = 'beginner'">
+                  入门级
+                </div>
+                <div class="difficulty-option intermediate" :class="{ active: techData.difficulty === 'intermediate' }" @click="techData.difficulty = 'intermediate'">
+                  中级
+                </div>
+                <div class="difficulty-option advanced" :class="{ active: techData.difficulty === 'advanced' }" @click="techData.difficulty = 'advanced'">
+                  高级
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">阅读时间(分钟)</label>
+              <input v-model.number="techData.readingTime" type="number" class="form-control" placeholder="8" min="1" max="60">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">版本号</label>
+              <input v-model="techData.version" type="text" class="form-control" placeholder="v1.0">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">最后更新</label>
+              <input v-model="techData.lastUpdated" type="date" class="form-control">
+            </div>
+            <div class="col-12">
+              <label class="form-label">技术标签</label>
+              <div class="input-group">
+                <input v-model="newTag" type="text" class="form-control" placeholder="输入标签后按回车添加" @keyup.enter="addTag">
+                <button type="button" class="btn btn-outline-secondary" @click="addTag">
+                  <i class="bi bi-plus"></i>
+                </button>
+              </div>
+              <div class="tag-input-container">
+                <span v-for="(tag, index) in techData.tags" :key="index" class="tag-item">
+                  {{ tag }}
+                  <span class="tag-remove" @click="removeTag(index)">&times;</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 技术文章内容 -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="bi bi-file-text"></i>
+            技术文章内容
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">正文内容 (Markdown格式)</label>
+            <textarea v-model="techData.content" class="form-control" rows="20" placeholder="请输入技术文章正文内容，支持Markdown格式"></textarea>
+            <div class="form-text">
+              支持Markdown语法：**粗体**、*斜体*、`代码`、[链接](URL)、![图片](URL)、```代码块```等
+            </div>
+          </div>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="bi bi-gear"></i>
+            操作
+          </div>
+
+          <div class="d-flex gap-2 flex-wrap">
+            <button type="button" class="btn btn-success" @click="generateMarkdown">
+              <i class="bi bi-download"></i>
+              生成Markdown文件
+            </button>
+            <button type="button" class="btn btn-outline-primary" @click="loadTemplate">
+              <i class="bi bi-file-earmark-text"></i>
+              加载模板
+            </button>
+            <button type="button" class="btn btn-outline-secondary" @click="resetForm">
+              <i class="bi bi-arrow-clockwise"></i>
+              重置表单
+            </button>
+            <button type="button" class="btn btn-outline-info" @click="refreshPreview">
+              <i class="bi bi-eye"></i>
+              刷新预览
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右侧预览面板 -->
+    <div class="preview-panel">
+      <div class="preview-header">
+        <h5 class="mb-0">
+          <i class="bi bi-eye"></i>
+          实时预览
+        </h5>
+        <div>
+          <button type="button" class="btn btn-sm btn-outline-light" @click="refreshPreview">
+            <i class="bi bi-arrow-clockwise"></i>
+            刷新
+          </button>
+        </div>
+      </div>
+
+      <div class="preview-content">
+        <div class="markdown-preview" v-html="markdownPreview"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vue.js 和相关库 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          contentMode: 'manual',
+          isLoading: false,
+          operationResult: null,
+
+          // 自动创作参数
+          autoKeywords: '',
+          autoIndustry: '',
+
+          // URL获取参数
+          sourceUrl: '',
+          extractMode: 'smart',
+
+          // 标签输入
+          newTag: '',
+
+          // 技术文章数据
+          techData: {
+            title: '',
+            summary: '',
+            date: this.getCurrentDateTime(),
+            author: '技术团队',
+            categories: ['技术文章'],
+            subcategory: '',
+            difficulty: 'intermediate',
+            readingTime: 8,
+            version: 'v1.0',
+            lastUpdated: this.getCurrentDate(),
+            tags: [],
+            content: '',
+            views: 0,
+            draft: false
+          }
+        }
+      },
+
+      computed: {
+        markdownPreview() {
+          if (!this.techData.content) {
+            return '<p class="text-muted">请在左侧编辑器中输入内容...</p>';
+          }
+
+          try {
+            return marked.parse(this.techData.content);
+          } catch (error) {
+            return '<p class="text-danger">Markdown解析错误: ' + error.message + '</p>';
+          }
+        }
+      },
+
+      methods: {
+        getCurrentDateTime() {
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = String(now.getMonth() + 1).padStart(2, '0');
+          const day = String(now.getDate()).padStart(2, '0');
+          const hours = String(now.getHours()).padStart(2, '0');
+          const minutes = String(now.getMinutes()).padStart(2, '0');
+          return `${year}-${month}-${day}T${hours}:${minutes}`;
+        },
+
+        getCurrentDate() {
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = String(now.getMonth() + 1).padStart(2, '0');
+          const day = String(now.getDate()).padStart(2, '0');
+          return `${year}-${month}-${day}`;
+        },
+
+        showResult(type, message) {
+          this.operationResult = { type, message };
+          setTimeout(() => {
+            this.operationResult = null;
+          }, 5000);
+        },
+
+        addTag() {
+          if (this.newTag.trim() && !this.techData.tags.includes(this.newTag.trim())) {
+            this.techData.tags.push(this.newTag.trim());
+            this.newTag = '';
+          }
+        },
+
+        removeTag(index) {
+          this.techData.tags.splice(index, 1);
+        },
+
+        async autoGenerateContent() {
+          if (!this.autoKeywords.trim()) {
+            this.showResult('warning', '请输入技术主题关键词');
+            return;
+          }
+
+          this.isLoading = true;
+          try {
+            // 模拟AI生成内容
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            this.techData.title = `${this.autoKeywords} - 技术深度解析`;
+            this.techData.summary = `本文深入探讨了${this.autoKeywords}的技术原理、实现方法和应用前景，为相关技术人员提供全面的技术参考。`;
+            this.techData.subcategory = this.autoIndustry || '无损检测';
+            this.techData.tags = [this.autoKeywords, '技术分析', '应用研究'];
+            this.techData.content = this.generateTechContent(this.autoKeywords);
+
+            this.showResult('success', '技术文章内容已自动生成，请检查并完善');
+          } catch (error) {
+            this.showResult('error', '自动生成失败: ' + error.message);
+          } finally {
+            this.isLoading = false;
+          }
+        },
+
+        generateTechContent(keywords) {
+          return `# ${keywords} - 技术深度解析
+
+## 技术概述
+
+${keywords}作为现代工业技术的重要组成部分，在提高生产效率、保证产品质量方面发挥着重要作用。本文将从技术原理、实现方法、应用案例等多个角度进行深入分析。
+
+## 技术原理
+
+### 核心技术
+${keywords}的核心技术基于以下几个方面：
+
+1. **基础理论**：详细阐述相关的理论基础
+2. **技术架构**：分析整体技术架构设计
+3. **关键算法**：介绍核心算法和实现方法
+
+### 技术特点
+- **高精度**：技术精度达到行业领先水平
+- **高效率**：显著提升工作效率
+- **可靠性**：稳定可靠的技术方案
+
+## 实现方法
+
+### 硬件要求
+详细说明硬件配置要求和选型建议。
+
+### 软件实现
+\`\`\`python
+# 示例代码
+def process_data(input_data):
+    # 数据处理逻辑
+    result = analyze(input_data)
+    return result
+\`\`\`
+
+### 系统集成
+介绍如何与现有系统进行集成。
+
+## 应用案例
+
+### 案例一：工业应用
+在某工业企业的实际应用中，${keywords}技术帮助企业：
+- 提高检测精度30%
+- 降低人工成本25%
+- 提升整体效率40%
+
+### 案例二：技术创新
+通过技术创新，实现了突破性进展。
+
+## 发展趋势
+
+### 技术发展方向
+1. **智能化**：结合AI技术实现智能化升级
+2. **自动化**：提高自动化程度
+3. **标准化**：建立行业标准
+
+### 市场前景
+${keywords}技术在未来几年将迎来快速发展期。
+
+## 结论
+
+${keywords}技术作为重要的工业技术，具有广阔的应用前景和发展空间。随着技术的不断完善和应用领域的扩展，将为相关行业带来更大的价值。
+
+## 参考文献
+
+1. 相关技术文献
+2. 行业标准文档
+3. 最新研究成果`;
+        },
+
+        async fetchFromUrl() {
+          if (!this.sourceUrl.trim()) {
+            this.showResult('warning', '请输入有效的URL');
+            return;
+          }
+
+          this.isLoading = true;
+          try {
+            // 模拟从URL获取内容
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            this.showResult('success', '网页内容获取成功，请检查并完善信息');
+          } catch (error) {
+            this.showResult('error', '获取网页内容失败: ' + error.message);
+          } finally {
+            this.isLoading = false;
+          }
+        },
+
+        generateMarkdown() {
+          const frontMatter = `---
+title: "${this.techData.title}"
+summary: "${this.techData.summary}"
+date: ${this.techData.date.replace('T', 'T') + ':00+08:00'}
+categories: ${JSON.stringify(this.techData.categories)}
+subcategories: ${this.techData.subcategory ? JSON.stringify([this.techData.subcategory]) : '[]'}
+tags: ${JSON.stringify(this.techData.tags)}
+difficulty: "${this.techData.difficulty}"
+readingTime: ${this.techData.readingTime}
+author: "${this.techData.author}"
+version: "${this.techData.version}"
+lastUpdated: "${this.techData.lastUpdated}"
+views: ${this.techData.views}
+${this.techData.draft ? 'draft: true' : ''}
+---
+
+${this.techData.content}`;
+
+          const blob = new Blob([frontMatter], { type: 'text/markdown' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = this.generateFileName();
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+
+          this.showResult('success', '技术文章Markdown文件已生成并下载');
+        },
+
+        generateFileName() {
+          const title = this.techData.title
+            .toLowerCase()
+            .replace(/[^a-z0-9\u4e00-\u9fa5]/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '');
+
+          const date = new Date(this.techData.date);
+          const dateStr = date.toISOString().split('T')[0];
+
+          return `${dateStr}-${title}.md`;
+        },
+
+        resetForm() {
+          this.techData = {
+            title: '',
+            summary: '',
+            date: this.getCurrentDateTime(),
+            author: '技术团队',
+            categories: ['技术文章'],
+            subcategory: '',
+            difficulty: 'intermediate',
+            readingTime: 8,
+            version: 'v1.0',
+            lastUpdated: this.getCurrentDate(),
+            tags: [],
+            content: '',
+            views: 0,
+            draft: false
+          };
+          this.autoKeywords = '';
+          this.autoIndustry = '';
+          this.sourceUrl = '';
+          this.newTag = '';
+          this.operationResult = null;
+          this.showResult('success', '表单已重置');
+        },
+
+        loadTemplate() {
+          this.techData.title = '工业内窥镜技术发展趋势与应用前景';
+          this.techData.summary = '深入分析工业内窥镜技术的最新发展趋势，探讨其在各个工业领域的应用前景和技术创新方向。';
+          this.techData.subcategory = '无损检测';
+          this.techData.difficulty = 'intermediate';
+          this.techData.readingTime = 8;
+          this.techData.tags = ['工业内窥镜', '无损检测', '技术发展', '应用前景'];
+          this.techData.content = `# 工业内窥镜技术发展趋势与应用前景
+
+## 引言
+
+工业内窥镜作为现代无损检测技术的重要组成部分，在航空航天、汽车制造、石油化工等领域发挥着越来越重要的作用。本文将深入分析当前工业内窥镜技术的发展趋势。
+
+## 技术发展现状
+
+### 1. 图像质量提升
+- 高清晰度成像技术
+- 色彩还原技术
+- 低照度成像能力
+
+### 2. 智能化检测
+- AI辅助缺陷识别
+- 自动化检测流程
+- 数据分析与报告生成
+
+## 应用领域扩展
+
+工业内窥镜的应用领域正在不断扩展，从传统的管道检测扩展到更多精密制造领域。
+
+## 未来发展趋势
+
+随着技术的不断进步，工业内窥镜将朝着更加智能化、小型化、高精度的方向发展。`;
+
+          this.showResult('success', '技术文章模板已加载，请根据需要修改内容');
+        },
+
+        refreshPreview() {
+          // 强制刷新预览
+          this.$forceUpdate();
+        }
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

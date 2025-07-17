@@ -2,892 +2,1116 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on 维森视觉检测仪器</title>
-    <link>http://localhost:1315/tags/</link>
+    <link>http://localhost:1313/tags/</link>
     <description>Recent content in Tags on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 13 Jul 2025 17:00:00 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1315/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 14 Jul 2025 16:45:00 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>康复设备</title>
-      <link>http://localhost:1315/tags/%E5%BA%B7%E5%A4%8D%E8%AE%BE%E5%A4%87/</link>
-      <pubDate>Sun, 13 Jul 2025 17:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%BA%B7%E5%A4%8D%E8%AE%BE%E5%A4%87/</guid>
+      <title>AI图像识别</title>
+      <link>http://localhost:1313/tags/ai%E5%9B%BE%E5%83%8F%E8%AF%86%E5%88%AB/</link>
+      <pubDate>Mon, 14 Jul 2025 16:45:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/ai%E5%9B%BE%E5%83%8F%E8%AF%86%E5%88%AB/</guid>
       <description></description>
     </item>
     <item>
-      <title>手术器械</title>
-      <link>http://localhost:1315/tags/%E6%89%8B%E6%9C%AF%E5%99%A8%E6%A2%B0/</link>
-      <pubDate>Sun, 13 Jul 2025 17:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%89%8B%E6%9C%AF%E5%99%A8%E6%A2%B0/</guid>
+      <title>齿轮箱检测</title>
+      <link>http://localhost:1313/tags/%E9%BD%BF%E8%BD%AE%E7%AE%B1%E6%A3%80%E6%B5%8B/</link>
+      <pubDate>Mon, 14 Jul 2025 16:45:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E9%BD%BF%E8%BD%AE%E7%AE%B1%E6%A3%80%E6%B5%8B/</guid>
       <description></description>
     </item>
     <item>
-      <title>体外诊断</title>
-      <link>http://localhost:1315/tags/%E4%BD%93%E5%A4%96%E8%AF%8A%E6%96%AD/</link>
-      <pubDate>Sun, 13 Jul 2025 17:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E4%BD%93%E5%A4%96%E8%AF%8A%E6%96%AD/</guid>
+      <title>风力发电</title>
+      <link>http://localhost:1313/tags/%E9%A3%8E%E5%8A%9B%E5%8F%91%E7%94%B5/</link>
+      <pubDate>Mon, 14 Jul 2025 16:45:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E9%A3%8E%E5%8A%9B%E5%8F%91%E7%94%B5/</guid>
       <description></description>
     </item>
     <item>
-      <title>医疗器械</title>
-      <link>http://localhost:1315/tags/%E5%8C%BB%E7%96%97%E5%99%A8%E6%A2%B0/</link>
-      <pubDate>Sun, 13 Jul 2025 17:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%8C%BB%E7%96%97%E5%99%A8%E6%A2%B0/</guid>
+      <title>工业内窥镜</title>
+      <link>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C/</link>
+      <pubDate>Mon, 14 Jul 2025 16:45:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C/</guid>
       <description></description>
     </item>
     <item>
-      <title>医学影像</title>
-      <link>http://localhost:1315/tags/%E5%8C%BB%E5%AD%A6%E5%BD%B1%E5%83%8F/</link>
-      <pubDate>Sun, 13 Jul 2025 17:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%8C%BB%E5%AD%A6%E5%BD%B1%E5%83%8F/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>包装机械</title>
-      <link>http://localhost:1315/tags/%E5%8C%85%E8%A3%85%E6%9C%BA%E6%A2%B0/</link>
-      <pubDate>Sun, 13 Jul 2025 16:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%8C%85%E8%A3%85%E6%9C%BA%E6%A2%B0/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>检测设备</title>
-      <link>http://localhost:1315/tags/%E6%A3%80%E6%B5%8B%E8%AE%BE%E5%A4%87/</link>
-      <pubDate>Sun, 13 Jul 2025 16:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%A3%80%E6%B5%8B%E8%AE%BE%E5%A4%87/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>冷链物流</title>
-      <link>http://localhost:1315/tags/%E5%86%B7%E9%93%BE%E7%89%A9%E6%B5%81/</link>
-      <pubDate>Sun, 13 Jul 2025 16:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%86%B7%E9%93%BE%E7%89%A9%E6%B5%81/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>食品机械</title>
-      <link>http://localhost:1315/tags/%E9%A3%9F%E5%93%81%E6%9C%BA%E6%A2%B0/</link>
-      <pubDate>Sun, 13 Jul 2025 16:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E9%A3%9F%E5%93%81%E6%9C%BA%E6%A2%B0/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>食品加工</title>
-      <link>http://localhost:1315/tags/%E9%A3%9F%E5%93%81%E5%8A%A0%E5%B7%A5/</link>
-      <pubDate>Sun, 13 Jul 2025 16:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E9%A3%9F%E5%93%81%E5%8A%A0%E5%B7%A5/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>国际展会</title>
-      <link>http://localhost:1315/tags/%E5%9B%BD%E9%99%85%E5%B1%95%E4%BC%9A/</link>
-      <pubDate>Sun, 13 Jul 2025 08:22:49 +0000</pubDate>
-      <guid>http://localhost:1315/tags/%E5%9B%BD%E9%99%85%E5%B1%95%E4%BC%9A/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>技术展示</title>
-      <link>http://localhost:1315/tags/%E6%8A%80%E6%9C%AF%E5%B1%95%E7%A4%BA/</link>
-      <pubDate>Sun, 13 Jul 2025 08:22:49 +0000</pubDate>
-      <guid>http://localhost:1315/tags/%E6%8A%80%E6%9C%AF%E5%B1%95%E7%A4%BA/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>铸造</title>
-      <link>http://localhost:1315/tags/%E9%93%B8%E9%80%A0/</link>
-      <pubDate>Sun, 13 Jul 2025 08:22:49 +0000</pubDate>
-      <guid>http://localhost:1315/tags/%E9%93%B8%E9%80%A0/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>专业展会</title>
-      <link>http://localhost:1315/tags/%E4%B8%93%E4%B8%9A%E5%B1%95%E4%BC%9A/</link>
-      <pubDate>Sun, 13 Jul 2025 08:22:49 +0000</pubDate>
-      <guid>http://localhost:1315/tags/%E4%B8%93%E4%B8%9A%E5%B1%95%E4%BC%9A/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>大气治理</title>
-      <link>http://localhost:1315/tags/%E5%A4%A7%E6%B0%94%E6%B2%BB%E7%90%86/</link>
-      <pubDate>Sun, 13 Jul 2025 16:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%A4%A7%E6%B0%94%E6%B2%BB%E7%90%86/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>固废处理</title>
-      <link>http://localhost:1315/tags/%E5%9B%BA%E5%BA%9F%E5%A4%84%E7%90%86/</link>
-      <pubDate>Sun, 13 Jul 2025 16:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%9B%BA%E5%BA%9F%E5%A4%84%E7%90%86/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>环保技术</title>
-      <link>http://localhost:1315/tags/%E7%8E%AF%E4%BF%9D%E6%8A%80%E6%9C%AF/</link>
-      <pubDate>Sun, 13 Jul 2025 16:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%8E%AF%E4%BF%9D%E6%8A%80%E6%9C%AF/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>水处理</title>
-      <link>http://localhost:1315/tags/%E6%B0%B4%E5%A4%84%E7%90%86/</link>
-      <pubDate>Sun, 13 Jul 2025 16:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%B0%B4%E5%A4%84%E7%90%86/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>土壤修复</title>
-      <link>http://localhost:1315/tags/%E5%9C%9F%E5%A3%A4%E4%BF%AE%E5%A4%8D/</link>
-      <pubDate>Sun, 13 Jul 2025 16:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%9C%9F%E5%A3%A4%E4%BF%AE%E5%A4%8D/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>海底管道</title>
-      <link>http://localhost:1315/tags/%E6%B5%B7%E5%BA%95%E7%AE%A1%E9%81%93/</link>
-      <pubDate>Sun, 13 Jul 2025 15:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%B5%B7%E5%BA%95%E7%AE%A1%E9%81%93/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>海洋工程</title>
-      <link>http://localhost:1315/tags/%E6%B5%B7%E6%B4%8B%E5%B7%A5%E7%A8%8B/</link>
-      <pubDate>Sun, 13 Jul 2025 15:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%B5%B7%E6%B4%8B%E5%B7%A5%E7%A8%8B/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>海洋能源</title>
-      <link>http://localhost:1315/tags/%E6%B5%B7%E6%B4%8B%E8%83%BD%E6%BA%90/</link>
-      <pubDate>Sun, 13 Jul 2025 15:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%B5%B7%E6%B4%8B%E8%83%BD%E6%BA%90/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>海洋平台</title>
-      <link>http://localhost:1315/tags/%E6%B5%B7%E6%B4%8B%E5%B9%B3%E5%8F%B0/</link>
-      <pubDate>Sun, 13 Jul 2025 15:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%B5%B7%E6%B4%8B%E5%B9%B3%E5%8F%B0/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>深海装备</title>
-      <link>http://localhost:1315/tags/%E6%B7%B1%E6%B5%B7%E8%A3%85%E5%A4%87/</link>
-      <pubDate>Sun, 13 Jul 2025 15:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%B7%B1%E6%B5%B7%E8%A3%85%E5%A4%87/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>城市轨道</title>
-      <link>http://localhost:1315/tags/%E5%9F%8E%E5%B8%82%E8%BD%A8%E9%81%93/</link>
-      <pubDate>Sun, 13 Jul 2025 15:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%9F%8E%E5%B8%82%E8%BD%A8%E9%81%93/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>高速铁路</title>
-      <link>http://localhost:1315/tags/%E9%AB%98%E9%80%9F%E9%93%81%E8%B7%AF/</link>
-      <pubDate>Sun, 13 Jul 2025 15:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E9%AB%98%E9%80%9F%E9%93%81%E8%B7%AF/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>轨道交通</title>
-      <link>http://localhost:1315/tags/%E8%BD%A8%E9%81%93%E4%BA%A4%E9%80%9A/</link>
-      <pubDate>Sun, 13 Jul 2025 15:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E8%BD%A8%E9%81%93%E4%BA%A4%E9%80%9A/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>牵引供电</title>
-      <link>http://localhost:1315/tags/%E7%89%B5%E5%BC%95%E4%BE%9B%E7%94%B5/</link>
-      <pubDate>Sun, 13 Jul 2025 15:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%89%B5%E5%BC%95%E4%BE%9B%E7%94%B5/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>信号控制</title>
-      <link>http://localhost:1315/tags/%E4%BF%A1%E5%8F%B7%E6%8E%A7%E5%88%B6/</link>
-      <pubDate>Sun, 13 Jul 2025 15:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E4%BF%A1%E5%8F%B7%E6%8E%A7%E5%88%B6/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>复合材料</title>
-      <link>http://localhost:1315/tags/%E5%A4%8D%E5%90%88%E6%9D%90%E6%96%99/</link>
-      <pubDate>Sun, 13 Jul 2025 14:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%A4%8D%E5%90%88%E6%9D%90%E6%96%99/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>高性能金属</title>
-      <link>http://localhost:1315/tags/%E9%AB%98%E6%80%A7%E8%83%BD%E9%87%91%E5%B1%9E/</link>
-      <pubDate>Sun, 13 Jul 2025 14:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E9%AB%98%E6%80%A7%E8%83%BD%E9%87%91%E5%B1%9E/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>功能陶瓷</title>
-      <link>http://localhost:1315/tags/%E5%8A%9F%E8%83%BD%E9%99%B6%E7%93%B7/</link>
-      <pubDate>Sun, 13 Jul 2025 14:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%8A%9F%E8%83%BD%E9%99%B6%E7%93%B7/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>纳米材料</title>
-      <link>http://localhost:1315/tags/%E7%BA%B3%E7%B1%B3%E6%9D%90%E6%96%99/</link>
-      <pubDate>Sun, 13 Jul 2025 14:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%BA%B3%E7%B1%B3%E6%9D%90%E6%96%99/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>新材料</title>
-      <link>http://localhost:1315/tags/%E6%96%B0%E6%9D%90%E6%96%99/</link>
-      <pubDate>Sun, 13 Jul 2025 14:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%96%B0%E6%9D%90%E6%96%99/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>PLC控制</title>
-      <link>http://localhost:1315/tags/plc%E6%8E%A7%E5%88%B6/</link>
-      <pubDate>Sun, 13 Jul 2025 14:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/plc%E6%8E%A7%E5%88%B6/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>传感器</title>
-      <link>http://localhost:1315/tags/%E4%BC%A0%E6%84%9F%E5%99%A8/</link>
-      <pubDate>Sun, 13 Jul 2025 14:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E4%BC%A0%E6%84%9F%E5%99%A8/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>工业机器人</title>
-      <link>http://localhost:1315/tags/%E5%B7%A5%E4%B8%9A%E6%9C%BA%E5%99%A8%E4%BA%BA/</link>
-      <pubDate>Sun, 13 Jul 2025 14:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%B7%A5%E4%B8%9A%E6%9C%BA%E5%99%A8%E4%BA%BA/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>工业软件</title>
-      <link>http://localhost:1315/tags/%E5%B7%A5%E4%B8%9A%E8%BD%AF%E4%BB%B6/</link>
-      <pubDate>Sun, 13 Jul 2025 14:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%B7%A5%E4%B8%9A%E8%BD%AF%E4%BB%B6/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>工业自动化</title>
-      <link>http://localhost:1315/tags/%E5%B7%A5%E4%B8%9A%E8%87%AA%E5%8A%A8%E5%8C%96/</link>
-      <pubDate>Sun, 13 Jul 2025 14:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%B7%A5%E4%B8%9A%E8%87%AA%E5%8A%A8%E5%8C%96/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>激光技术</title>
-      <link>http://localhost:1315/tags/%E6%BF%80%E5%85%89%E6%8A%80%E6%9C%AF/</link>
-      <pubDate>Sun, 13 Jul 2025 13:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%BF%80%E5%85%89%E6%8A%80%E6%9C%AF/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>精密测量</title>
-      <link>http://localhost:1315/tags/%E7%B2%BE%E5%AF%86%E6%B5%8B%E9%87%8F/</link>
-      <pubDate>Sun, 13 Jul 2025 13:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%B2%BE%E5%AF%86%E6%B5%8B%E9%87%8F/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>精密加工</title>
-      <link>http://localhost:1315/tags/%E7%B2%BE%E5%AF%86%E5%8A%A0%E5%B7%A5/</link>
-      <pubDate>Sun, 13 Jul 2025 13:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%B2%BE%E5%AF%86%E5%8A%A0%E5%B7%A5/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>精密制造</title>
-      <link>http://localhost:1315/tags/%E7%B2%BE%E5%AF%86%E5%88%B6%E9%80%A0/</link>
-      <pubDate>Sun, 13 Jul 2025 13:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%B2%BE%E5%AF%86%E5%88%B6%E9%80%A0/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>微纳制造</title>
-      <link>http://localhost:1315/tags/%E5%BE%AE%E7%BA%B3%E5%88%B6%E9%80%A0/</link>
-      <pubDate>Sun, 13 Jul 2025 13:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%BE%AE%E7%BA%B3%E5%88%B6%E9%80%A0/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>安全环保</title>
-      <link>http://localhost:1315/tags/%E5%AE%89%E5%85%A8%E7%8E%AF%E4%BF%9D/</link>
-      <pubDate>Sun, 13 Jul 2025 13:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%AE%89%E5%85%A8%E7%8E%AF%E4%BF%9D/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>管道阀门</title>
-      <link>http://localhost:1315/tags/%E7%AE%A1%E9%81%93%E9%98%80%E9%97%A8/</link>
-      <pubDate>Sun, 13 Jul 2025 13:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%AE%A1%E9%81%93%E9%98%80%E9%97%A8/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>化工设备</title>
-      <link>http://localhost:1315/tags/%E5%8C%96%E5%B7%A5%E8%AE%BE%E5%A4%87/</link>
-      <pubDate>Sun, 13 Jul 2025 13:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%8C%96%E5%B7%A5%E8%AE%BE%E5%A4%87/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>炼油技术</title>
-      <link>http://localhost:1315/tags/%E7%82%BC%E6%B2%B9%E6%8A%80%E6%9C%AF/</link>
-      <pubDate>Sun, 13 Jul 2025 13:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%82%BC%E6%B2%B9%E6%8A%80%E6%9C%AF/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>石油化工</title>
-      <link>http://localhost:1315/tags/%E7%9F%B3%E6%B2%B9%E5%8C%96%E5%B7%A5/</link>
-      <pubDate>Sun, 13 Jul 2025 13:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%9F%B3%E6%B2%B9%E5%8C%96%E5%B7%A5/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>3D打印</title>
-      <link>http://localhost:1315/tags/3d%E6%89%93%E5%8D%B0/</link>
-      <pubDate>Sun, 13 Jul 2025 12:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/3d%E6%89%93%E5%8D%B0/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>机械制造</title>
-      <link>http://localhost:1315/tags/%E6%9C%BA%E6%A2%B0%E5%88%B6%E9%80%A0/</link>
-      <pubDate>Sun, 13 Jul 2025 12:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%9C%BA%E6%A2%B0%E5%88%B6%E9%80%A0/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>数控机床</title>
-      <link>http://localhost:1315/tags/%E6%95%B0%E6%8E%A7%E6%9C%BA%E5%BA%8A/</link>
-      <pubDate>Sun, 13 Jul 2025 12:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%95%B0%E6%8E%A7%E6%9C%BA%E5%BA%8A/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>智能制造</title>
-      <link>http://localhost:1315/tags/%E6%99%BA%E8%83%BD%E5%88%B6%E9%80%A0/</link>
-      <pubDate>Sun, 13 Jul 2025 12:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%99%BA%E8%83%BD%E5%88%B6%E9%80%A0/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>航空发动机</title>
-      <link>http://localhost:1315/tags/%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA/</link>
-      <pubDate>Sun, 13 Jul 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>航空航天</title>
-      <link>http://localhost:1315/tags/%E8%88%AA%E7%A9%BA%E8%88%AA%E5%A4%A9/</link>
-      <pubDate>Sun, 13 Jul 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E8%88%AA%E7%A9%BA%E8%88%AA%E5%A4%A9/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>航天器</title>
-      <link>http://localhost:1315/tags/%E8%88%AA%E5%A4%A9%E5%99%A8/</link>
-      <pubDate>Sun, 13 Jul 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E8%88%AA%E5%A4%A9%E5%99%A8/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>卫星技术</title>
-      <link>http://localhost:1315/tags/%E5%8D%AB%E6%98%9F%E6%8A%80%E6%9C%AF/</link>
-      <pubDate>Sun, 13 Jul 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%8D%AB%E6%98%9F%E6%8A%80%E6%9C%AF/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>无人机</title>
-      <link>http://localhost:1315/tags/%E6%97%A0%E4%BA%BA%E6%9C%BA/</link>
-      <pubDate>Sun, 13 Jul 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%97%A0%E4%BA%BA%E6%9C%BA/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>智能铸造</title>
-      <link>http://localhost:1315/tags/%E6%99%BA%E8%83%BD%E9%93%B8%E9%80%A0/</link>
-      <pubDate>Sun, 13 Jul 2025 11:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%99%BA%E8%83%BD%E9%93%B8%E9%80%A0/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>铸造材料</title>
-      <link>http://localhost:1315/tags/%E9%93%B8%E9%80%A0%E6%9D%90%E6%96%99/</link>
-      <pubDate>Sun, 13 Jul 2025 11:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E9%93%B8%E9%80%A0%E6%9D%90%E6%96%99/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>铸造技术</title>
-      <link>http://localhost:1315/tags/%E9%93%B8%E9%80%A0%E6%8A%80%E6%9C%AF/</link>
-      <pubDate>Sun, 13 Jul 2025 11:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E9%93%B8%E9%80%A0%E6%8A%80%E6%9C%AF/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>铸造设备</title>
-      <link>http://localhost:1315/tags/%E9%93%B8%E9%80%A0%E8%AE%BE%E5%A4%87/</link>
-      <pubDate>Sun, 13 Jul 2025 11:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E9%93%B8%E9%80%A0%E8%AE%BE%E5%A4%87/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>NDT技术</title>
-      <link>http://localhost:1315/tags/ndt%E6%8A%80%E6%9C%AF/</link>
-      <pubDate>Sun, 13 Jul 2025 11:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/ndt%E6%8A%80%E6%9C%AF/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>超声检测</title>
-      <link>http://localhost:1315/tags/%E8%B6%85%E5%A3%B0%E6%A3%80%E6%B5%8B/</link>
-      <pubDate>Sun, 13 Jul 2025 11:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E8%B6%85%E5%A3%B0%E6%A3%80%E6%B5%8B/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>射线检测</title>
-      <link>http://localhost:1315/tags/%E5%B0%84%E7%BA%BF%E6%A3%80%E6%B5%8B/</link>
-      <pubDate>Sun, 13 Jul 2025 11:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%B0%84%E7%BA%BF%E6%A3%80%E6%B5%8B/</guid>
+      <title>海上风电</title>
+      <link>http://localhost:1313/tags/%E6%B5%B7%E4%B8%8A%E9%A3%8E%E7%94%B5/</link>
+      <pubDate>Mon, 14 Jul 2025 16:45:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%B5%B7%E4%B8%8A%E9%A3%8E%E7%94%B5/</guid>
       <description></description>
     </item>
     <item>
       <title>无损检测</title>
-      <link>http://localhost:1315/tags/%E6%97%A0%E6%8D%9F%E6%A3%80%E6%B5%8B/</link>
-      <pubDate>Sun, 13 Jul 2025 11:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%97%A0%E6%8D%9F%E6%A3%80%E6%B5%8B/</guid>
+      <link>http://localhost:1313/tags/%E6%97%A0%E6%8D%9F%E6%A3%80%E6%B5%8B/</link>
+      <pubDate>Mon, 14 Jul 2025 16:45:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%97%A0%E6%8D%9F%E6%A3%80%E6%B5%8B/</guid>
       <description></description>
     </item>
     <item>
-      <title>质量控制</title>
-      <link>http://localhost:1315/tags/%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6/</link>
-      <pubDate>Sun, 13 Jul 2025 11:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6/</guid>
+      <title>预防性维护</title>
+      <link>http://localhost:1313/tags/%E9%A2%84%E9%98%B2%E6%80%A7%E7%BB%B4%E6%8A%A4/</link>
+      <pubDate>Mon, 14 Jul 2025 16:45:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E9%A2%84%E9%98%B2%E6%80%A7%E7%BB%B4%E6%8A%A4/</guid>
       <description></description>
     </item>
     <item>
-      <title>储能技术</title>
-      <link>http://localhost:1315/tags/%E5%82%A8%E8%83%BD%E6%8A%80%E6%9C%AF/</link>
-      <pubDate>Sun, 13 Jul 2025 10:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%82%A8%E8%83%BD%E6%8A%80%E6%9C%AF/</guid>
+      <title>OpenCV</title>
+      <link>http://localhost:1313/tags/opencv/</link>
+      <pubDate>Mon, 14 Jul 2025 14:20:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/opencv/</guid>
       <description></description>
     </item>
     <item>
-      <title>电力电工</title>
-      <link>http://localhost:1315/tags/%E7%94%B5%E5%8A%9B%E7%94%B5%E5%B7%A5/</link>
-      <pubDate>Sun, 13 Jul 2025 10:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%94%B5%E5%8A%9B%E7%94%B5%E5%B7%A5/</guid>
+      <title>计算机视觉</title>
+      <link>http://localhost:1313/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/</link>
+      <pubDate>Mon, 14 Jul 2025 14:20:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/</guid>
       <description></description>
     </item>
     <item>
-      <title>能源装备</title>
-      <link>http://localhost:1315/tags/%E8%83%BD%E6%BA%90%E8%A3%85%E5%A4%87/</link>
-      <pubDate>Sun, 13 Jul 2025 10:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E8%83%BD%E6%BA%90%E8%A3%85%E5%A4%87/</guid>
+      <title>缺陷检测</title>
+      <link>http://localhost:1313/tags/%E7%BC%BA%E9%99%B7%E6%A3%80%E6%B5%8B/</link>
+      <pubDate>Mon, 14 Jul 2025 14:20:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%BC%BA%E9%99%B7%E6%A3%80%E6%B5%8B/</guid>
       <description></description>
     </item>
     <item>
-      <title>新能源</title>
-      <link>http://localhost:1315/tags/%E6%96%B0%E8%83%BD%E6%BA%90/</link>
-      <pubDate>Sun, 13 Jul 2025 10:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%96%B0%E8%83%BD%E6%BA%90/</guid>
+      <title>深度学习</title>
+      <link>http://localhost:1313/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</link>
+      <pubDate>Mon, 14 Jul 2025 14:20:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</guid>
       <description></description>
     </item>
     <item>
-      <title>智能电网</title>
-      <link>http://localhost:1315/tags/%E6%99%BA%E8%83%BD%E7%94%B5%E7%BD%91/</link>
-      <pubDate>Sun, 13 Jul 2025 10:30:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%99%BA%E8%83%BD%E7%94%B5%E7%BD%91/</guid>
+      <title>图像处理算法</title>
+      <link>http://localhost:1313/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Mon, 14 Jul 2025 14:20:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95/</guid>
       <description></description>
     </item>
     <item>
-      <title>传动技术</title>
-      <link>http://localhost:1315/tags/%E4%BC%A0%E5%8A%A8%E6%8A%80%E6%9C%AF/</link>
-      <pubDate>Sun, 13 Jul 2025 10:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E4%BC%A0%E5%8A%A8%E6%8A%80%E6%9C%AF/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>动力传动</title>
-      <link>http://localhost:1315/tags/%E5%8A%A8%E5%8A%9B%E4%BC%A0%E5%8A%A8/</link>
-      <pubDate>Sun, 13 Jul 2025 10:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%8A%A8%E5%8A%9B%E4%BC%A0%E5%8A%A8/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>液压气动</title>
-      <link>http://localhost:1315/tags/%E6%B6%B2%E5%8E%8B%E6%B0%94%E5%8A%A8/</link>
-      <pubDate>Sun, 13 Jul 2025 10:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%B6%B2%E5%8E%8B%E6%B0%94%E5%8A%A8/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>制造业</title>
-      <link>http://localhost:1315/tags/%E5%88%B6%E9%80%A0%E4%B8%9A/</link>
-      <pubDate>Sun, 13 Jul 2025 10:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%88%B6%E9%80%A0%E4%B8%9A/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>飞行表演</title>
-      <link>http://localhost:1315/tags/%E9%A3%9E%E8%A1%8C%E8%A1%A8%E6%BC%94/</link>
-      <pubDate>Fri, 11 Jul 2025 10:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E9%A3%9E%E8%A1%8C%E8%A1%A8%E6%BC%94/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>珠海航展</title>
-      <link>http://localhost:1315/tags/%E7%8F%A0%E6%B5%B7%E8%88%AA%E5%B1%95/</link>
-      <pubDate>Fri, 11 Jul 2025 10:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%8F%A0%E6%B5%B7%E8%88%AA%E5%B1%95/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>高清成像</title>
-      <link>http://localhost:1315/tags/%E9%AB%98%E6%B8%85%E6%88%90%E5%83%8F/</link>
-      <pubDate>Sun, 15 Jun 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E9%AB%98%E6%B8%85%E6%88%90%E5%83%8F/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>航空检测</title>
-      <link>http://localhost:1315/tags/%E8%88%AA%E7%A9%BA%E6%A3%80%E6%B5%8B/</link>
-      <pubDate>Sun, 15 Jun 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E8%88%AA%E7%A9%BA%E6%A3%80%E6%B5%8B/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>可视化检测</title>
-      <link>http://localhost:1315/tags/%E5%8F%AF%E8%A7%86%E5%8C%96%E6%A3%80%E6%B5%8B/</link>
-      <pubDate>Sun, 15 Jun 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%8F%AF%E8%A7%86%E5%8C%96%E6%A3%80%E6%B5%8B/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>微型探头</title>
-      <link>http://localhost:1315/tags/%E5%BE%AE%E5%9E%8B%E6%8E%A2%E5%A4%B4/</link>
-      <pubDate>Sun, 15 Jun 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%BE%AE%E5%9E%8B%E6%8E%A2%E5%A4%B4/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>标准探头</title>
-      <link>http://localhost:1315/tags/%E6%A0%87%E5%87%86%E6%8E%A2%E5%A4%B4/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%A0%87%E5%87%86%E6%8E%A2%E5%A4%B4/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>产品验证</title>
-      <link>http://localhost:1315/tags/%E4%BA%A7%E5%93%81%E9%AA%8C%E8%AF%81/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E4%BA%A7%E5%93%81%E9%AA%8C%E8%AF%81/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>超细探头</title>
-      <link>http://localhost:1315/tags/%E8%B6%85%E7%BB%86%E6%8E%A2%E5%A4%B4/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E8%B6%85%E7%BB%86%E6%8E%A2%E5%A4%B4/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>超远景深</title>
-      <link>http://localhost:1315/tags/%E8%B6%85%E8%BF%9C%E6%99%AF%E6%B7%B1/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E8%B6%85%E8%BF%9C%E6%99%AF%E6%B7%B1/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>船舶检查</title>
-      <link>http://localhost:1315/tags/%E8%88%B9%E8%88%B6%E6%A3%80%E6%9F%A5/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E8%88%B9%E8%88%B6%E6%A3%80%E6%9F%A5/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>大型设备</title>
-      <link>http://localhost:1315/tags/%E5%A4%A7%E5%9E%8B%E8%AE%BE%E5%A4%87/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%A4%A7%E5%9E%8B%E8%AE%BE%E5%A4%87/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>大直径探头</title>
-      <link>http://localhost:1315/tags/%E5%A4%A7%E7%9B%B4%E5%BE%84%E6%8E%A2%E5%A4%B4/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%A4%A7%E7%9B%B4%E5%BE%84%E6%8E%A2%E5%A4%B4/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>电力检测</title>
-      <link>http://localhost:1315/tags/%E7%94%B5%E5%8A%9B%E6%A3%80%E6%B5%8B/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%94%B5%E5%8A%9B%E6%A3%80%E6%B5%8B/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>电子检测</title>
-      <link>http://localhost:1315/tags/%E7%94%B5%E5%AD%90%E6%A3%80%E6%B5%8B/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%94%B5%E5%AD%90%E6%A3%80%E6%B5%8B/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>高端制造</title>
-      <link>http://localhost:1315/tags/%E9%AB%98%E7%AB%AF%E5%88%B6%E9%80%A0/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E9%AB%98%E7%AB%AF%E5%88%B6%E9%80%A0/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>高精度检测</title>
-      <link>http://localhost:1315/tags/%E9%AB%98%E7%B2%BE%E5%BA%A6%E6%A3%80%E6%B5%8B/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E9%AB%98%E7%B2%BE%E5%BA%A6%E6%A3%80%E6%B5%8B/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>工业检修</title>
-      <link>http://localhost:1315/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E4%BF%AE/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E4%BF%AE/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>工业制造</title>
-      <link>http://localhost:1315/tags/%E5%B7%A5%E4%B8%9A%E5%88%B6%E9%80%A0/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%B7%A5%E4%B8%9A%E5%88%B6%E9%80%A0/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>管道检测</title>
-      <link>http://localhost:1315/tags/%E7%AE%A1%E9%81%93%E6%A3%80%E6%B5%8B/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%AE%A1%E9%81%93%E6%A3%80%E6%B5%8B/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>管道检查</title>
-      <link>http://localhost:1315/tags/%E7%AE%A1%E9%81%93%E6%A3%80%E6%9F%A5/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%AE%A1%E9%81%93%E6%A3%80%E6%9F%A5/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>光学仪器</title>
-      <link>http://localhost:1315/tags/%E5%85%89%E5%AD%A6%E4%BB%AA%E5%99%A8/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%85%89%E5%AD%A6%E4%BB%AA%E5%99%A8/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>航空制造</title>
-      <link>http://localhost:1315/tags/%E8%88%AA%E7%A9%BA%E5%88%B6%E9%80%A0/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E8%88%AA%E7%A9%BA%E5%88%B6%E9%80%A0/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>基础设施</title>
-      <link>http://localhost:1315/tags/%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>精密电子</title>
-      <link>http://localhost:1315/tags/%E7%B2%BE%E5%AF%86%E7%94%B5%E5%AD%90/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%B2%BE%E5%AF%86%E7%94%B5%E5%AD%90/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>精密机械</title>
-      <link>http://localhost:1315/tags/%E7%B2%BE%E5%AF%86%E6%9C%BA%E6%A2%B0/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%B2%BE%E5%AF%86%E6%9C%BA%E6%A2%B0/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>精密检测</title>
-      <link>http://localhost:1315/tags/%E7%B2%BE%E5%AF%86%E6%A3%80%E6%B5%8B/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%B2%BE%E5%AF%86%E6%A3%80%E6%B5%8B/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>汽车检测</title>
-      <link>http://localhost:1315/tags/%E6%B1%BD%E8%BD%A6%E6%A3%80%E6%B5%8B/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%B1%BD%E8%BD%A6%E6%A3%80%E6%B5%8B/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>汽车制造</title>
-      <link>http://localhost:1315/tags/%E6%B1%BD%E8%BD%A6%E5%88%B6%E9%80%A0/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%B1%BD%E8%BD%A6%E5%88%B6%E9%80%A0/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>设备检测</title>
-      <link>http://localhost:1315/tags/%E8%AE%BE%E5%A4%87%E6%A3%80%E6%B5%8B/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E8%AE%BE%E5%A4%87%E6%A3%80%E6%B5%8B/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>设备维护</title>
-      <link>http://localhost:1315/tags/%E8%AE%BE%E5%A4%87%E7%BB%B4%E6%8A%A4/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E8%AE%BE%E5%A4%87%E7%BB%B4%E6%8A%A4/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>深度检测</title>
-      <link>http://localhost:1315/tags/%E6%B7%B1%E5%BA%A6%E6%A3%80%E6%B5%8B/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%B7%B1%E5%BA%A6%E6%A3%80%E6%B5%8B/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>石化检测</title>
-      <link>http://localhost:1315/tags/%E7%9F%B3%E5%8C%96%E6%A3%80%E6%B5%8B/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%9F%B3%E5%8C%96%E6%A3%80%E6%B5%8B/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>双向导向</title>
-      <link>http://localhost:1315/tags/%E5%8F%8C%E5%90%91%E5%AF%BC%E5%90%91/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%8F%8C%E5%90%91%E5%AF%BC%E5%90%91/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>四方向导向</title>
-      <link>http://localhost:1315/tags/%E5%9B%9B%E6%96%B9%E5%90%91%E5%AF%BC%E5%90%91/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%9B%9B%E6%96%B9%E5%90%91%E5%AF%BC%E5%90%91/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>特种检测</title>
-      <link>http://localhost:1315/tags/%E7%89%B9%E7%A7%8D%E6%A3%80%E6%B5%8B/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%89%B9%E7%A7%8D%E6%A3%80%E6%B5%8B/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>通用工业</title>
-      <link>http://localhost:1315/tags/%E9%80%9A%E7%94%A8%E5%B7%A5%E4%B8%9A/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E9%80%9A%E7%94%A8%E5%B7%A5%E4%B8%9A/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>微电子检查</title>
-      <link>http://localhost:1315/tags/%E5%BE%AE%E7%94%B5%E5%AD%90%E6%A3%80%E6%9F%A5/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%BE%AE%E7%94%B5%E5%AD%90%E6%A3%80%E6%9F%A5/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>微型机械</title>
-      <link>http://localhost:1315/tags/%E5%BE%AE%E5%9E%8B%E6%9C%BA%E6%A2%B0/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%BE%AE%E5%9E%8B%E6%9C%BA%E6%A2%B0/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>微型检测</title>
-      <link>http://localhost:1315/tags/%E5%BE%AE%E5%9E%8B%E6%A3%80%E6%B5%8B/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%BE%AE%E5%9E%8B%E6%A3%80%E6%B5%8B/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>无导向</title>
-      <link>http://localhost:1315/tags/%E6%97%A0%E5%AF%BC%E5%90%91/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E6%97%A0%E5%AF%BC%E5%90%91/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>细径探头</title>
-      <link>http://localhost:1315/tags/%E7%BB%86%E5%BE%84%E6%8E%A2%E5%A4%B4/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%BB%86%E5%BE%84%E6%8E%A2%E5%A4%B4/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>医疗设备</title>
-      <link>http://localhost:1315/tags/%E5%8C%BB%E7%96%97%E8%AE%BE%E5%A4%87/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E5%8C%BB%E7%96%97%E8%AE%BE%E5%A4%87/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>直视检测</title>
-      <link>http://localhost:1315/tags/%E7%9B%B4%E8%A7%86%E6%A3%80%E6%B5%8B/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%9B%B4%E8%A7%86%E6%A3%80%E6%B5%8B/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>重型机械</title>
-      <link>http://localhost:1315/tags/%E9%87%8D%E5%9E%8B%E6%9C%BA%E6%A2%B0/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E9%87%8D%E5%9E%8B%E6%9C%BA%E6%A2%B0/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>精密医疗</title>
-      <link>http://localhost:1315/tags/%E7%B2%BE%E5%AF%86%E5%8C%BB%E7%96%97/</link>
-      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1315/tags/%E7%B2%BE%E5%AF%86%E5%8C%BB%E7%96%97/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>算法优化</title>
-      <link>http://localhost:1315/tags/%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96/</link>
-      <pubDate>Fri, 22 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1315/tags/%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>图像处理</title>
-      <link>http://localhost:1315/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/</link>
-      <pubDate>Fri, 22 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1315/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>工业检测</title>
-      <link>http://localhost:1315/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/</link>
-      <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1315/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/</guid>
+      <title>发展趋势</title>
+      <link>http://localhost:1313/tags/%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF/</link>
+      <pubDate>Mon, 14 Jul 2025 10:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF/</guid>
       <description></description>
     </item>
     <item>
       <title>技术创新</title>
-      <link>http://localhost:1315/tags/%E6%8A%80%E6%9C%AF%E5%88%9B%E6%96%B0/</link>
-      <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1315/tags/%E6%8A%80%E6%9C%AF%E5%88%9B%E6%96%B0/</guid>
+      <link>http://localhost:1313/tags/%E6%8A%80%E6%9C%AF%E5%88%9B%E6%96%B0/</link>
+      <pubDate>Mon, 14 Jul 2025 10:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%8A%80%E6%9C%AF%E5%88%9B%E6%96%B0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>市场分析</title>
+      <link>http://localhost:1313/tags/%E5%B8%82%E5%9C%BA%E5%88%86%E6%9E%90/</link>
+      <pubDate>Mon, 14 Jul 2025 10:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%B8%82%E5%9C%BA%E5%88%86%E6%9E%90/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>测试</title>
+      <link>http://localhost:1313/tags/%E6%B5%8B%E8%AF%95/</link>
+      <pubDate>Mon, 14 Jul 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%B5%8B%E8%AF%95/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>二级分类</title>
+      <link>http://localhost:1313/tags/%E4%BA%8C%E7%BA%A7%E5%88%86%E7%B1%BB/</link>
+      <pubDate>Mon, 14 Jul 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E4%BA%8C%E7%BA%A7%E5%88%86%E7%B1%BB/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>功能验证</title>
+      <link>http://localhost:1313/tags/%E5%8A%9F%E8%83%BD%E9%AA%8C%E8%AF%81/</link>
+      <pubDate>Mon, 14 Jul 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%8A%9F%E8%83%BD%E9%AA%8C%E8%AF%81/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>康复设备</title>
+      <link>http://localhost:1313/tags/%E5%BA%B7%E5%A4%8D%E8%AE%BE%E5%A4%87/</link>
+      <pubDate>Sun, 13 Jul 2025 17:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%BA%B7%E5%A4%8D%E8%AE%BE%E5%A4%87/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>手术器械</title>
+      <link>http://localhost:1313/tags/%E6%89%8B%E6%9C%AF%E5%99%A8%E6%A2%B0/</link>
+      <pubDate>Sun, 13 Jul 2025 17:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%89%8B%E6%9C%AF%E5%99%A8%E6%A2%B0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>体外诊断</title>
+      <link>http://localhost:1313/tags/%E4%BD%93%E5%A4%96%E8%AF%8A%E6%96%AD/</link>
+      <pubDate>Sun, 13 Jul 2025 17:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E4%BD%93%E5%A4%96%E8%AF%8A%E6%96%AD/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>医疗器械</title>
+      <link>http://localhost:1313/tags/%E5%8C%BB%E7%96%97%E5%99%A8%E6%A2%B0/</link>
+      <pubDate>Sun, 13 Jul 2025 17:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%8C%BB%E7%96%97%E5%99%A8%E6%A2%B0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>医学影像</title>
+      <link>http://localhost:1313/tags/%E5%8C%BB%E5%AD%A6%E5%BD%B1%E5%83%8F/</link>
+      <pubDate>Sun, 13 Jul 2025 17:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%8C%BB%E5%AD%A6%E5%BD%B1%E5%83%8F/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>包装机械</title>
+      <link>http://localhost:1313/tags/%E5%8C%85%E8%A3%85%E6%9C%BA%E6%A2%B0/</link>
+      <pubDate>Sun, 13 Jul 2025 16:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%8C%85%E8%A3%85%E6%9C%BA%E6%A2%B0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>检测设备</title>
+      <link>http://localhost:1313/tags/%E6%A3%80%E6%B5%8B%E8%AE%BE%E5%A4%87/</link>
+      <pubDate>Sun, 13 Jul 2025 16:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%A3%80%E6%B5%8B%E8%AE%BE%E5%A4%87/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>冷链物流</title>
+      <link>http://localhost:1313/tags/%E5%86%B7%E9%93%BE%E7%89%A9%E6%B5%81/</link>
+      <pubDate>Sun, 13 Jul 2025 16:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%86%B7%E9%93%BE%E7%89%A9%E6%B5%81/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>食品机械</title>
+      <link>http://localhost:1313/tags/%E9%A3%9F%E5%93%81%E6%9C%BA%E6%A2%B0/</link>
+      <pubDate>Sun, 13 Jul 2025 16:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E9%A3%9F%E5%93%81%E6%9C%BA%E6%A2%B0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>食品加工</title>
+      <link>http://localhost:1313/tags/%E9%A3%9F%E5%93%81%E5%8A%A0%E5%B7%A5/</link>
+      <pubDate>Sun, 13 Jul 2025 16:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E9%A3%9F%E5%93%81%E5%8A%A0%E5%B7%A5/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>国际展会</title>
+      <link>http://localhost:1313/tags/%E5%9B%BD%E9%99%85%E5%B1%95%E4%BC%9A/</link>
+      <pubDate>Sun, 13 Jul 2025 08:22:49 +0000</pubDate>
+      <guid>http://localhost:1313/tags/%E5%9B%BD%E9%99%85%E5%B1%95%E4%BC%9A/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>技术展示</title>
+      <link>http://localhost:1313/tags/%E6%8A%80%E6%9C%AF%E5%B1%95%E7%A4%BA/</link>
+      <pubDate>Sun, 13 Jul 2025 08:22:49 +0000</pubDate>
+      <guid>http://localhost:1313/tags/%E6%8A%80%E6%9C%AF%E5%B1%95%E7%A4%BA/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>铸造</title>
+      <link>http://localhost:1313/tags/%E9%93%B8%E9%80%A0/</link>
+      <pubDate>Sun, 13 Jul 2025 08:22:49 +0000</pubDate>
+      <guid>http://localhost:1313/tags/%E9%93%B8%E9%80%A0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>专业展会</title>
+      <link>http://localhost:1313/tags/%E4%B8%93%E4%B8%9A%E5%B1%95%E4%BC%9A/</link>
+      <pubDate>Sun, 13 Jul 2025 08:22:49 +0000</pubDate>
+      <guid>http://localhost:1313/tags/%E4%B8%93%E4%B8%9A%E5%B1%95%E4%BC%9A/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>大气治理</title>
+      <link>http://localhost:1313/tags/%E5%A4%A7%E6%B0%94%E6%B2%BB%E7%90%86/</link>
+      <pubDate>Sun, 13 Jul 2025 16:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%A4%A7%E6%B0%94%E6%B2%BB%E7%90%86/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>固废处理</title>
+      <link>http://localhost:1313/tags/%E5%9B%BA%E5%BA%9F%E5%A4%84%E7%90%86/</link>
+      <pubDate>Sun, 13 Jul 2025 16:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%9B%BA%E5%BA%9F%E5%A4%84%E7%90%86/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>环保技术</title>
+      <link>http://localhost:1313/tags/%E7%8E%AF%E4%BF%9D%E6%8A%80%E6%9C%AF/</link>
+      <pubDate>Sun, 13 Jul 2025 16:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%8E%AF%E4%BF%9D%E6%8A%80%E6%9C%AF/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>水处理</title>
+      <link>http://localhost:1313/tags/%E6%B0%B4%E5%A4%84%E7%90%86/</link>
+      <pubDate>Sun, 13 Jul 2025 16:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%B0%B4%E5%A4%84%E7%90%86/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>土壤修复</title>
+      <link>http://localhost:1313/tags/%E5%9C%9F%E5%A3%A4%E4%BF%AE%E5%A4%8D/</link>
+      <pubDate>Sun, 13 Jul 2025 16:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%9C%9F%E5%A3%A4%E4%BF%AE%E5%A4%8D/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>海底管道</title>
+      <link>http://localhost:1313/tags/%E6%B5%B7%E5%BA%95%E7%AE%A1%E9%81%93/</link>
+      <pubDate>Sun, 13 Jul 2025 15:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%B5%B7%E5%BA%95%E7%AE%A1%E9%81%93/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>海洋工程</title>
+      <link>http://localhost:1313/tags/%E6%B5%B7%E6%B4%8B%E5%B7%A5%E7%A8%8B/</link>
+      <pubDate>Sun, 13 Jul 2025 15:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%B5%B7%E6%B4%8B%E5%B7%A5%E7%A8%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>海洋能源</title>
+      <link>http://localhost:1313/tags/%E6%B5%B7%E6%B4%8B%E8%83%BD%E6%BA%90/</link>
+      <pubDate>Sun, 13 Jul 2025 15:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%B5%B7%E6%B4%8B%E8%83%BD%E6%BA%90/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>海洋平台</title>
+      <link>http://localhost:1313/tags/%E6%B5%B7%E6%B4%8B%E5%B9%B3%E5%8F%B0/</link>
+      <pubDate>Sun, 13 Jul 2025 15:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%B5%B7%E6%B4%8B%E5%B9%B3%E5%8F%B0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>深海装备</title>
+      <link>http://localhost:1313/tags/%E6%B7%B1%E6%B5%B7%E8%A3%85%E5%A4%87/</link>
+      <pubDate>Sun, 13 Jul 2025 15:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%B7%B1%E6%B5%B7%E8%A3%85%E5%A4%87/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>城市轨道</title>
+      <link>http://localhost:1313/tags/%E5%9F%8E%E5%B8%82%E8%BD%A8%E9%81%93/</link>
+      <pubDate>Sun, 13 Jul 2025 15:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%9F%8E%E5%B8%82%E8%BD%A8%E9%81%93/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>高速铁路</title>
+      <link>http://localhost:1313/tags/%E9%AB%98%E9%80%9F%E9%93%81%E8%B7%AF/</link>
+      <pubDate>Sun, 13 Jul 2025 15:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E9%AB%98%E9%80%9F%E9%93%81%E8%B7%AF/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>轨道交通</title>
+      <link>http://localhost:1313/tags/%E8%BD%A8%E9%81%93%E4%BA%A4%E9%80%9A/</link>
+      <pubDate>Sun, 13 Jul 2025 15:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E8%BD%A8%E9%81%93%E4%BA%A4%E9%80%9A/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>牵引供电</title>
+      <link>http://localhost:1313/tags/%E7%89%B5%E5%BC%95%E4%BE%9B%E7%94%B5/</link>
+      <pubDate>Sun, 13 Jul 2025 15:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%89%B5%E5%BC%95%E4%BE%9B%E7%94%B5/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>信号控制</title>
+      <link>http://localhost:1313/tags/%E4%BF%A1%E5%8F%B7%E6%8E%A7%E5%88%B6/</link>
+      <pubDate>Sun, 13 Jul 2025 15:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E4%BF%A1%E5%8F%B7%E6%8E%A7%E5%88%B6/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>复合材料</title>
+      <link>http://localhost:1313/tags/%E5%A4%8D%E5%90%88%E6%9D%90%E6%96%99/</link>
+      <pubDate>Sun, 13 Jul 2025 14:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%A4%8D%E5%90%88%E6%9D%90%E6%96%99/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>高性能金属</title>
+      <link>http://localhost:1313/tags/%E9%AB%98%E6%80%A7%E8%83%BD%E9%87%91%E5%B1%9E/</link>
+      <pubDate>Sun, 13 Jul 2025 14:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E9%AB%98%E6%80%A7%E8%83%BD%E9%87%91%E5%B1%9E/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>功能陶瓷</title>
+      <link>http://localhost:1313/tags/%E5%8A%9F%E8%83%BD%E9%99%B6%E7%93%B7/</link>
+      <pubDate>Sun, 13 Jul 2025 14:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%8A%9F%E8%83%BD%E9%99%B6%E7%93%B7/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>纳米材料</title>
+      <link>http://localhost:1313/tags/%E7%BA%B3%E7%B1%B3%E6%9D%90%E6%96%99/</link>
+      <pubDate>Sun, 13 Jul 2025 14:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%BA%B3%E7%B1%B3%E6%9D%90%E6%96%99/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>新材料</title>
+      <link>http://localhost:1313/tags/%E6%96%B0%E6%9D%90%E6%96%99/</link>
+      <pubDate>Sun, 13 Jul 2025 14:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%96%B0%E6%9D%90%E6%96%99/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>PLC控制</title>
+      <link>http://localhost:1313/tags/plc%E6%8E%A7%E5%88%B6/</link>
+      <pubDate>Sun, 13 Jul 2025 14:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/plc%E6%8E%A7%E5%88%B6/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>传感器</title>
+      <link>http://localhost:1313/tags/%E4%BC%A0%E6%84%9F%E5%99%A8/</link>
+      <pubDate>Sun, 13 Jul 2025 14:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E4%BC%A0%E6%84%9F%E5%99%A8/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>工业机器人</title>
+      <link>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E6%9C%BA%E5%99%A8%E4%BA%BA/</link>
+      <pubDate>Sun, 13 Jul 2025 14:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E6%9C%BA%E5%99%A8%E4%BA%BA/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>工业软件</title>
+      <link>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E8%BD%AF%E4%BB%B6/</link>
+      <pubDate>Sun, 13 Jul 2025 14:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E8%BD%AF%E4%BB%B6/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>工业自动化</title>
+      <link>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E8%87%AA%E5%8A%A8%E5%8C%96/</link>
+      <pubDate>Sun, 13 Jul 2025 14:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E8%87%AA%E5%8A%A8%E5%8C%96/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>激光技术</title>
+      <link>http://localhost:1313/tags/%E6%BF%80%E5%85%89%E6%8A%80%E6%9C%AF/</link>
+      <pubDate>Sun, 13 Jul 2025 13:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%BF%80%E5%85%89%E6%8A%80%E6%9C%AF/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>精密测量</title>
+      <link>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E6%B5%8B%E9%87%8F/</link>
+      <pubDate>Sun, 13 Jul 2025 13:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E6%B5%8B%E9%87%8F/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>精密加工</title>
+      <link>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E5%8A%A0%E5%B7%A5/</link>
+      <pubDate>Sun, 13 Jul 2025 13:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E5%8A%A0%E5%B7%A5/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>精密制造</title>
+      <link>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E5%88%B6%E9%80%A0/</link>
+      <pubDate>Sun, 13 Jul 2025 13:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E5%88%B6%E9%80%A0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>微纳制造</title>
+      <link>http://localhost:1313/tags/%E5%BE%AE%E7%BA%B3%E5%88%B6%E9%80%A0/</link>
+      <pubDate>Sun, 13 Jul 2025 13:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%BE%AE%E7%BA%B3%E5%88%B6%E9%80%A0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>安全环保</title>
+      <link>http://localhost:1313/tags/%E5%AE%89%E5%85%A8%E7%8E%AF%E4%BF%9D/</link>
+      <pubDate>Sun, 13 Jul 2025 13:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%AE%89%E5%85%A8%E7%8E%AF%E4%BF%9D/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>管道阀门</title>
+      <link>http://localhost:1313/tags/%E7%AE%A1%E9%81%93%E9%98%80%E9%97%A8/</link>
+      <pubDate>Sun, 13 Jul 2025 13:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%AE%A1%E9%81%93%E9%98%80%E9%97%A8/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>化工设备</title>
+      <link>http://localhost:1313/tags/%E5%8C%96%E5%B7%A5%E8%AE%BE%E5%A4%87/</link>
+      <pubDate>Sun, 13 Jul 2025 13:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%8C%96%E5%B7%A5%E8%AE%BE%E5%A4%87/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>炼油技术</title>
+      <link>http://localhost:1313/tags/%E7%82%BC%E6%B2%B9%E6%8A%80%E6%9C%AF/</link>
+      <pubDate>Sun, 13 Jul 2025 13:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%82%BC%E6%B2%B9%E6%8A%80%E6%9C%AF/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>石油化工</title>
+      <link>http://localhost:1313/tags/%E7%9F%B3%E6%B2%B9%E5%8C%96%E5%B7%A5/</link>
+      <pubDate>Sun, 13 Jul 2025 13:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%9F%B3%E6%B2%B9%E5%8C%96%E5%B7%A5/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>3D打印</title>
+      <link>http://localhost:1313/tags/3d%E6%89%93%E5%8D%B0/</link>
+      <pubDate>Sun, 13 Jul 2025 12:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/3d%E6%89%93%E5%8D%B0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>机械制造</title>
+      <link>http://localhost:1313/tags/%E6%9C%BA%E6%A2%B0%E5%88%B6%E9%80%A0/</link>
+      <pubDate>Sun, 13 Jul 2025 12:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%9C%BA%E6%A2%B0%E5%88%B6%E9%80%A0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>数控机床</title>
+      <link>http://localhost:1313/tags/%E6%95%B0%E6%8E%A7%E6%9C%BA%E5%BA%8A/</link>
+      <pubDate>Sun, 13 Jul 2025 12:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%95%B0%E6%8E%A7%E6%9C%BA%E5%BA%8A/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>智能制造</title>
+      <link>http://localhost:1313/tags/%E6%99%BA%E8%83%BD%E5%88%B6%E9%80%A0/</link>
+      <pubDate>Sun, 13 Jul 2025 12:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%99%BA%E8%83%BD%E5%88%B6%E9%80%A0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>航空发动机</title>
+      <link>http://localhost:1313/tags/%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA/</link>
+      <pubDate>Sun, 13 Jul 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>航空航天</title>
+      <link>http://localhost:1313/tags/%E8%88%AA%E7%A9%BA%E8%88%AA%E5%A4%A9/</link>
+      <pubDate>Sun, 13 Jul 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E8%88%AA%E7%A9%BA%E8%88%AA%E5%A4%A9/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>航天器</title>
+      <link>http://localhost:1313/tags/%E8%88%AA%E5%A4%A9%E5%99%A8/</link>
+      <pubDate>Sun, 13 Jul 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E8%88%AA%E5%A4%A9%E5%99%A8/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>卫星技术</title>
+      <link>http://localhost:1313/tags/%E5%8D%AB%E6%98%9F%E6%8A%80%E6%9C%AF/</link>
+      <pubDate>Sun, 13 Jul 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%8D%AB%E6%98%9F%E6%8A%80%E6%9C%AF/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>无人机</title>
+      <link>http://localhost:1313/tags/%E6%97%A0%E4%BA%BA%E6%9C%BA/</link>
+      <pubDate>Sun, 13 Jul 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%97%A0%E4%BA%BA%E6%9C%BA/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>智能铸造</title>
+      <link>http://localhost:1313/tags/%E6%99%BA%E8%83%BD%E9%93%B8%E9%80%A0/</link>
+      <pubDate>Sun, 13 Jul 2025 11:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%99%BA%E8%83%BD%E9%93%B8%E9%80%A0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>铸造材料</title>
+      <link>http://localhost:1313/tags/%E9%93%B8%E9%80%A0%E6%9D%90%E6%96%99/</link>
+      <pubDate>Sun, 13 Jul 2025 11:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E9%93%B8%E9%80%A0%E6%9D%90%E6%96%99/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>铸造技术</title>
+      <link>http://localhost:1313/tags/%E9%93%B8%E9%80%A0%E6%8A%80%E6%9C%AF/</link>
+      <pubDate>Sun, 13 Jul 2025 11:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E9%93%B8%E9%80%A0%E6%8A%80%E6%9C%AF/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>铸造设备</title>
+      <link>http://localhost:1313/tags/%E9%93%B8%E9%80%A0%E8%AE%BE%E5%A4%87/</link>
+      <pubDate>Sun, 13 Jul 2025 11:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E9%93%B8%E9%80%A0%E8%AE%BE%E5%A4%87/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>NDT技术</title>
+      <link>http://localhost:1313/tags/ndt%E6%8A%80%E6%9C%AF/</link>
+      <pubDate>Sun, 13 Jul 2025 11:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/ndt%E6%8A%80%E6%9C%AF/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>超声检测</title>
+      <link>http://localhost:1313/tags/%E8%B6%85%E5%A3%B0%E6%A3%80%E6%B5%8B/</link>
+      <pubDate>Sun, 13 Jul 2025 11:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E8%B6%85%E5%A3%B0%E6%A3%80%E6%B5%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>射线检测</title>
+      <link>http://localhost:1313/tags/%E5%B0%84%E7%BA%BF%E6%A3%80%E6%B5%8B/</link>
+      <pubDate>Sun, 13 Jul 2025 11:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%B0%84%E7%BA%BF%E6%A3%80%E6%B5%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>质量控制</title>
+      <link>http://localhost:1313/tags/%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6/</link>
+      <pubDate>Sun, 13 Jul 2025 11:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>储能技术</title>
+      <link>http://localhost:1313/tags/%E5%82%A8%E8%83%BD%E6%8A%80%E6%9C%AF/</link>
+      <pubDate>Sun, 13 Jul 2025 10:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%82%A8%E8%83%BD%E6%8A%80%E6%9C%AF/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>电力电工</title>
+      <link>http://localhost:1313/tags/%E7%94%B5%E5%8A%9B%E7%94%B5%E5%B7%A5/</link>
+      <pubDate>Sun, 13 Jul 2025 10:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%94%B5%E5%8A%9B%E7%94%B5%E5%B7%A5/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>能源装备</title>
+      <link>http://localhost:1313/tags/%E8%83%BD%E6%BA%90%E8%A3%85%E5%A4%87/</link>
+      <pubDate>Sun, 13 Jul 2025 10:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E8%83%BD%E6%BA%90%E8%A3%85%E5%A4%87/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>新能源</title>
+      <link>http://localhost:1313/tags/%E6%96%B0%E8%83%BD%E6%BA%90/</link>
+      <pubDate>Sun, 13 Jul 2025 10:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%96%B0%E8%83%BD%E6%BA%90/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>智能电网</title>
+      <link>http://localhost:1313/tags/%E6%99%BA%E8%83%BD%E7%94%B5%E7%BD%91/</link>
+      <pubDate>Sun, 13 Jul 2025 10:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%99%BA%E8%83%BD%E7%94%B5%E7%BD%91/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>传动技术</title>
+      <link>http://localhost:1313/tags/%E4%BC%A0%E5%8A%A8%E6%8A%80%E6%9C%AF/</link>
+      <pubDate>Sun, 13 Jul 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E4%BC%A0%E5%8A%A8%E6%8A%80%E6%9C%AF/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>动力传动</title>
+      <link>http://localhost:1313/tags/%E5%8A%A8%E5%8A%9B%E4%BC%A0%E5%8A%A8/</link>
+      <pubDate>Sun, 13 Jul 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%8A%A8%E5%8A%9B%E4%BC%A0%E5%8A%A8/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>液压气动</title>
+      <link>http://localhost:1313/tags/%E6%B6%B2%E5%8E%8B%E6%B0%94%E5%8A%A8/</link>
+      <pubDate>Sun, 13 Jul 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%B6%B2%E5%8E%8B%E6%B0%94%E5%8A%A8/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>制造业</title>
+      <link>http://localhost:1313/tags/%E5%88%B6%E9%80%A0%E4%B8%9A/</link>
+      <pubDate>Sun, 13 Jul 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%88%B6%E9%80%A0%E4%B8%9A/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>飞行表演</title>
+      <link>http://localhost:1313/tags/%E9%A3%9E%E8%A1%8C%E8%A1%A8%E6%BC%94/</link>
+      <pubDate>Fri, 11 Jul 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E9%A3%9E%E8%A1%8C%E8%A1%A8%E6%BC%94/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>珠海航展</title>
+      <link>http://localhost:1313/tags/%E7%8F%A0%E6%B5%B7%E8%88%AA%E5%B1%95/</link>
+      <pubDate>Fri, 11 Jul 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%8F%A0%E6%B5%B7%E8%88%AA%E5%B1%95/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>高清成像</title>
+      <link>http://localhost:1313/tags/%E9%AB%98%E6%B8%85%E6%88%90%E5%83%8F/</link>
+      <pubDate>Sun, 15 Jun 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E9%AB%98%E6%B8%85%E6%88%90%E5%83%8F/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>航空检测</title>
+      <link>http://localhost:1313/tags/%E8%88%AA%E7%A9%BA%E6%A3%80%E6%B5%8B/</link>
+      <pubDate>Sun, 15 Jun 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E8%88%AA%E7%A9%BA%E6%A3%80%E6%B5%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>可视化检测</title>
+      <link>http://localhost:1313/tags/%E5%8F%AF%E8%A7%86%E5%8C%96%E6%A3%80%E6%B5%8B/</link>
+      <pubDate>Sun, 15 Jun 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%8F%AF%E8%A7%86%E5%8C%96%E6%A3%80%E6%B5%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>微型探头</title>
+      <link>http://localhost:1313/tags/%E5%BE%AE%E5%9E%8B%E6%8E%A2%E5%A4%B4/</link>
+      <pubDate>Sun, 15 Jun 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%BE%AE%E5%9E%8B%E6%8E%A2%E5%A4%B4/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>LED光源</title>
+      <link>http://localhost:1313/tags/led%E5%85%89%E6%BA%90/</link>
+      <pubDate>Wed, 15 Jan 2025 14:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/led%E5%85%89%E6%BA%90/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>工业检测</title>
+      <link>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/</link>
+      <pubDate>Wed, 15 Jan 2025 14:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>机械维修</title>
+      <link>http://localhost:1313/tags/%E6%9C%BA%E6%A2%B0%E7%BB%B4%E4%BF%AE/</link>
+      <pubDate>Wed, 15 Jan 2025 14:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%9C%BA%E6%A2%B0%E7%BB%B4%E4%BF%AE/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>汽车制造</title>
+      <link>http://localhost:1313/tags/%E6%B1%BD%E8%BD%A6%E5%88%B6%E9%80%A0/</link>
+      <pubDate>Wed, 15 Jan 2025 14:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%B1%BD%E8%BD%A6%E5%88%B6%E9%80%A0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>20度视角</title>
+      <link>http://localhost:1313/tags/20%E5%BA%A6%E8%A7%86%E8%A7%92/</link>
+      <pubDate>Wed, 15 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/20%E5%BA%A6%E8%A7%86%E8%A7%92/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>30度视角</title>
+      <link>http://localhost:1313/tags/30%E5%BA%A6%E8%A7%86%E8%A7%92/</link>
+      <pubDate>Wed, 15 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/30%E5%BA%A6%E8%A7%86%E8%A7%92/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>侧视型</title>
+      <link>http://localhost:1313/tags/%E4%BE%A7%E8%A7%86%E5%9E%8B/</link>
+      <pubDate>Wed, 15 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E4%BE%A7%E8%A7%86%E5%9E%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>大型设备</title>
+      <link>http://localhost:1313/tags/%E5%A4%A7%E5%9E%8B%E8%AE%BE%E5%A4%87/</link>
+      <pubDate>Wed, 15 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%A4%A7%E5%9E%8B%E8%AE%BE%E5%A4%87/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>工业维护</title>
+      <link>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E7%BB%B4%E6%8A%A4/</link>
+      <pubDate>Wed, 15 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E7%BB%B4%E6%8A%A4/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>管道检测</title>
+      <link>http://localhost:1313/tags/%E7%AE%A1%E9%81%93%E6%A3%80%E6%B5%8B/</link>
+      <pubDate>Wed, 15 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%AE%A1%E9%81%93%E6%A3%80%E6%B5%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>光纤成像</title>
+      <link>http://localhost:1313/tags/%E5%85%89%E7%BA%A4%E6%88%90%E5%83%8F/</link>
+      <pubDate>Wed, 15 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%85%89%E7%BA%A4%E6%88%90%E5%83%8F/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>光学成像</title>
+      <link>http://localhost:1313/tags/%E5%85%89%E5%AD%A6%E6%88%90%E5%83%8F/</link>
+      <pubDate>Wed, 15 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%85%89%E5%AD%A6%E6%88%90%E5%83%8F/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>精密检测</title>
+      <link>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E6%A3%80%E6%B5%8B/</link>
+      <pubDate>Wed, 15 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E6%A3%80%E6%B5%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>汽车维修</title>
+      <link>http://localhost:1313/tags/%E6%B1%BD%E8%BD%A6%E7%BB%B4%E4%BF%AE/</link>
+      <pubDate>Wed, 15 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%B1%BD%E8%BD%A6%E7%BB%B4%E4%BF%AE/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>柔性探头</title>
+      <link>http://localhost:1313/tags/%E6%9F%94%E6%80%A7%E6%8E%A2%E5%A4%B4/</link>
+      <pubDate>Wed, 15 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%9F%94%E6%80%A7%E6%8E%A2%E5%A4%B4/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>深孔检测</title>
+      <link>http://localhost:1313/tags/%E6%B7%B1%E5%AD%94%E6%A3%80%E6%B5%8B/</link>
+      <pubDate>Wed, 15 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%B7%B1%E5%AD%94%E6%A3%80%E6%B5%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>斜视型</title>
+      <link>http://localhost:1313/tags/%E6%96%9C%E8%A7%86%E5%9E%8B/</link>
+      <pubDate>Wed, 15 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%96%9C%E8%A7%86%E5%9E%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>医疗级</title>
+      <link>http://localhost:1313/tags/%E5%8C%BB%E7%96%97%E7%BA%A7/</link>
+      <pubDate>Wed, 15 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%8C%BB%E7%96%97%E7%BA%A7/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>硬性探头</title>
+      <link>http://localhost:1313/tags/%E7%A1%AC%E6%80%A7%E6%8E%A2%E5%A4%B4/</link>
+      <pubDate>Wed, 15 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%A1%AC%E6%80%A7%E6%8E%A2%E5%A4%B4/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>直视型</title>
+      <link>http://localhost:1313/tags/%E7%9B%B4%E8%A7%86%E5%9E%8B/</link>
+      <pubDate>Wed, 15 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%9B%B4%E8%A7%86%E5%9E%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>重型设备</title>
+      <link>http://localhost:1313/tags/%E9%87%8D%E5%9E%8B%E8%AE%BE%E5%A4%87/</link>
+      <pubDate>Wed, 15 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E9%87%8D%E5%9E%8B%E8%AE%BE%E5%A4%87/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>标准探头</title>
+      <link>http://localhost:1313/tags/%E6%A0%87%E5%87%86%E6%8E%A2%E5%A4%B4/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%A0%87%E5%87%86%E6%8E%A2%E5%A4%B4/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>产品验证</title>
+      <link>http://localhost:1313/tags/%E4%BA%A7%E5%93%81%E9%AA%8C%E8%AF%81/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E4%BA%A7%E5%93%81%E9%AA%8C%E8%AF%81/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>超细探头</title>
+      <link>http://localhost:1313/tags/%E8%B6%85%E7%BB%86%E6%8E%A2%E5%A4%B4/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E8%B6%85%E7%BB%86%E6%8E%A2%E5%A4%B4/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>超远景深</title>
+      <link>http://localhost:1313/tags/%E8%B6%85%E8%BF%9C%E6%99%AF%E6%B7%B1/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E8%B6%85%E8%BF%9C%E6%99%AF%E6%B7%B1/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>船舶检查</title>
+      <link>http://localhost:1313/tags/%E8%88%B9%E8%88%B6%E6%A3%80%E6%9F%A5/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E8%88%B9%E8%88%B6%E6%A3%80%E6%9F%A5/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>大直径探头</title>
+      <link>http://localhost:1313/tags/%E5%A4%A7%E7%9B%B4%E5%BE%84%E6%8E%A2%E5%A4%B4/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%A4%A7%E7%9B%B4%E5%BE%84%E6%8E%A2%E5%A4%B4/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>电力检测</title>
+      <link>http://localhost:1313/tags/%E7%94%B5%E5%8A%9B%E6%A3%80%E6%B5%8B/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%94%B5%E5%8A%9B%E6%A3%80%E6%B5%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>电子检测</title>
+      <link>http://localhost:1313/tags/%E7%94%B5%E5%AD%90%E6%A3%80%E6%B5%8B/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%94%B5%E5%AD%90%E6%A3%80%E6%B5%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>高端制造</title>
+      <link>http://localhost:1313/tags/%E9%AB%98%E7%AB%AF%E5%88%B6%E9%80%A0/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E9%AB%98%E7%AB%AF%E5%88%B6%E9%80%A0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>高精度检测</title>
+      <link>http://localhost:1313/tags/%E9%AB%98%E7%B2%BE%E5%BA%A6%E6%A3%80%E6%B5%8B/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E9%AB%98%E7%B2%BE%E5%BA%A6%E6%A3%80%E6%B5%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>工业检修</title>
+      <link>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E4%BF%AE/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E4%BF%AE/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>工业制造</title>
+      <link>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E5%88%B6%E9%80%A0/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E5%88%B6%E9%80%A0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>管道检查</title>
+      <link>http://localhost:1313/tags/%E7%AE%A1%E9%81%93%E6%A3%80%E6%9F%A5/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%AE%A1%E9%81%93%E6%A3%80%E6%9F%A5/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>光学仪器</title>
+      <link>http://localhost:1313/tags/%E5%85%89%E5%AD%A6%E4%BB%AA%E5%99%A8/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%85%89%E5%AD%A6%E4%BB%AA%E5%99%A8/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>航空制造</title>
+      <link>http://localhost:1313/tags/%E8%88%AA%E7%A9%BA%E5%88%B6%E9%80%A0/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E8%88%AA%E7%A9%BA%E5%88%B6%E9%80%A0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>基础设施</title>
+      <link>http://localhost:1313/tags/%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>精密电子</title>
+      <link>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E7%94%B5%E5%AD%90/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E7%94%B5%E5%AD%90/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>精密机械</title>
+      <link>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E6%9C%BA%E6%A2%B0/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E6%9C%BA%E6%A2%B0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>汽车检测</title>
+      <link>http://localhost:1313/tags/%E6%B1%BD%E8%BD%A6%E6%A3%80%E6%B5%8B/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%B1%BD%E8%BD%A6%E6%A3%80%E6%B5%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>设备检测</title>
+      <link>http://localhost:1313/tags/%E8%AE%BE%E5%A4%87%E6%A3%80%E6%B5%8B/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E8%AE%BE%E5%A4%87%E6%A3%80%E6%B5%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>设备维护</title>
+      <link>http://localhost:1313/tags/%E8%AE%BE%E5%A4%87%E7%BB%B4%E6%8A%A4/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E8%AE%BE%E5%A4%87%E7%BB%B4%E6%8A%A4/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>深度检测</title>
+      <link>http://localhost:1313/tags/%E6%B7%B1%E5%BA%A6%E6%A3%80%E6%B5%8B/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%B7%B1%E5%BA%A6%E6%A3%80%E6%B5%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>石化检测</title>
+      <link>http://localhost:1313/tags/%E7%9F%B3%E5%8C%96%E6%A3%80%E6%B5%8B/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%9F%B3%E5%8C%96%E6%A3%80%E6%B5%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>双向导向</title>
+      <link>http://localhost:1313/tags/%E5%8F%8C%E5%90%91%E5%AF%BC%E5%90%91/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%8F%8C%E5%90%91%E5%AF%BC%E5%90%91/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>四方向导向</title>
+      <link>http://localhost:1313/tags/%E5%9B%9B%E6%96%B9%E5%90%91%E5%AF%BC%E5%90%91/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%9B%9B%E6%96%B9%E5%90%91%E5%AF%BC%E5%90%91/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>特种检测</title>
+      <link>http://localhost:1313/tags/%E7%89%B9%E7%A7%8D%E6%A3%80%E6%B5%8B/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%89%B9%E7%A7%8D%E6%A3%80%E6%B5%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>通用工业</title>
+      <link>http://localhost:1313/tags/%E9%80%9A%E7%94%A8%E5%B7%A5%E4%B8%9A/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E9%80%9A%E7%94%A8%E5%B7%A5%E4%B8%9A/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>微电子检查</title>
+      <link>http://localhost:1313/tags/%E5%BE%AE%E7%94%B5%E5%AD%90%E6%A3%80%E6%9F%A5/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%BE%AE%E7%94%B5%E5%AD%90%E6%A3%80%E6%9F%A5/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>微型机械</title>
+      <link>http://localhost:1313/tags/%E5%BE%AE%E5%9E%8B%E6%9C%BA%E6%A2%B0/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%BE%AE%E5%9E%8B%E6%9C%BA%E6%A2%B0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>微型检测</title>
+      <link>http://localhost:1313/tags/%E5%BE%AE%E5%9E%8B%E6%A3%80%E6%B5%8B/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%BE%AE%E5%9E%8B%E6%A3%80%E6%B5%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>无导向</title>
+      <link>http://localhost:1313/tags/%E6%97%A0%E5%AF%BC%E5%90%91/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E6%97%A0%E5%AF%BC%E5%90%91/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>细径探头</title>
+      <link>http://localhost:1313/tags/%E7%BB%86%E5%BE%84%E6%8E%A2%E5%A4%B4/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%BB%86%E5%BE%84%E6%8E%A2%E5%A4%B4/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>医疗设备</title>
+      <link>http://localhost:1313/tags/%E5%8C%BB%E7%96%97%E8%AE%BE%E5%A4%87/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E5%8C%BB%E7%96%97%E8%AE%BE%E5%A4%87/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>直视检测</title>
+      <link>http://localhost:1313/tags/%E7%9B%B4%E8%A7%86%E6%A3%80%E6%B5%8B/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%9B%B4%E8%A7%86%E6%A3%80%E6%B5%8B/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>重型机械</title>
+      <link>http://localhost:1313/tags/%E9%87%8D%E5%9E%8B%E6%9C%BA%E6%A2%B0/</link>
+      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E9%87%8D%E5%9E%8B%E6%9C%BA%E6%A2%B0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>精密医疗</title>
+      <link>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E5%8C%BB%E7%96%97/</link>
+      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/tags/%E7%B2%BE%E5%AF%86%E5%8C%BB%E7%96%97/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>算法优化</title>
+      <link>http://localhost:1313/tags/%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96/</link>
+      <pubDate>Fri, 22 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>图像处理</title>
+      <link>http://localhost:1313/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/</link>
+      <pubDate>Fri, 22 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/</guid>
       <description></description>
     </item>
   </channel>

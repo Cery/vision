@@ -11,8 +11,10 @@
                 {{ with .Params.author }}
                 <span class="me-3"><i class="bi bi-person"></i> {{ . }}</span>
                 {{ end }}
-                <span><i class="bi bi-eye"></i> <span id="page-views">加载中...</span>次浏览
-                    <span id="busuanzi_container_page_pv" style="display:none;">
+                <span class="view-count-container">
+                    <i class="bi bi-eye"></i>
+                    <span id="page-views" class="view-count-number">加载中...</span>次浏览
+                    <span id="busuanzi_container_page_pv" class="busuanzi-backup" style="display:none;">
                         (<span id="busuanzi_value_page_pv"></span>次)
                     </span>
                 </span>
@@ -326,6 +328,40 @@
 .tags-cloud .btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* 浏览次数样式优化 */
+.view-count-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    background: rgba(25, 118, 210, 0.1);
+    border-radius: 0.375rem;
+    transition: all 0.15s ease-in-out;
+}
+
+.view-count-container:hover {
+    background: rgba(25, 118, 210, 0.15);
+}
+
+.view-count-container i {
+    color: #1976d2;
+    font-size: 0.875rem;
+}
+
+.view-count-number {
+    color: #1976d2;
+    font-weight: 600;
+    font-size: 0.875rem;
+    min-width: 1.5rem;
+    text-align: center;
+}
+
+.busuanzi-backup {
+    color: #6c757d;
+    font-size: 0.75rem;
+    margin-left: 0.25rem;
 }
 
 .related-case-item .card {

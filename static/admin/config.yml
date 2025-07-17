@@ -71,17 +71,56 @@ collections:
     fields:
       - {label: "标题", name: "title", widget: "string"}
       - {label: "发布日期", name: "date", widget: "datetime", format: "YYYY-MM-DD"}
-      - {label: "特色图片", name: "thumbnail", widget: "image", required: false}
+      - {label: "摘要", name: "summary", widget: "text"}
+      - {label: "特色图片", name: "featured_image", widget: "image", required: false}
       - label: "分类"
         name: "categories"
         widget: "select"
         multiple: true
-        options: ["行业资讯", "展会资讯", "技术动态", "公司新闻"]
+        options: ["行业资讯", "展会信息", "技术文章", "应用案例", "公司新闻"]
+      - label: "二级分类"
+        name: "subcategories"
+        widget: "select"
+        multiple: true
+        required: false
+        options: ["工业制造", "能源动力", "仪器仪表", "无损检测", "航空航天", "汽车制造", "石油化工", "精密制造"]
       - label: "标签"
         name: "tags"
         widget: "list"
         required: false
-      - {label: "摘要", name: "summary", widget: "text"}
+
+      # 技术文章专用字段
+      - label: "技术难度"
+        name: "difficulty"
+        widget: "select"
+        required: false
+        options: ["beginner", "intermediate", "advanced"]
+        hint: "仅技术文章需要填写"
+      - {label: "阅读时间(分钟)", name: "readingTime", widget: "number", required: false, hint: "仅技术文章需要填写"}
+      - {label: "作者", name: "author", widget: "string", required: false}
+      - {label: "版本", name: "version", widget: "string", required: false, hint: "仅技术文章需要填写"}
+      - {label: "最后更新", name: "lastUpdated", widget: "date", required: false, hint: "仅技术文章需要填写"}
+
+      # 展会信息专用字段
+      - {label: "展会日期", name: "event_date", widget: "string", required: false, hint: "仅展会信息需要填写"}
+      - {label: "展会地点", name: "location", widget: "string", required: false, hint: "仅展会信息需要填写"}
+      - {label: "主办方", name: "organizer", widget: "string", required: false, hint: "仅展会信息需要填写"}
+
+      # 应用案例专用字段
+      - {label: "所属行业", name: "industry", widget: "string", required: false, hint: "仅应用案例需要填写"}
+      - label: "案例类型"
+        name: "caseType"
+        widget: "select"
+        required: false
+        options: ["success", "innovation", "optimization"]
+        hint: "仅应用案例需要填写"
+      - {label: "客户名称", name: "client", widget: "string", required: false, hint: "仅应用案例需要填写"}
+      - {label: "项目周期", name: "projectDuration", widget: "string", required: false, hint: "仅应用案例需要填写"}
+      - {label: "面临挑战", name: "challenge", widget: "text", required: false, hint: "仅应用案例需要填写"}
+      - {label: "解决方案", name: "solution", widget: "text", required: false, hint: "仅应用案例需要填写"}
+      - {label: "实施效果", name: "results", widget: "text", required: false, hint: "仅应用案例需要填写"}
+
+      # 通用字段
       - {label: "正文", name: "body", widget: "markdown"}
       - {label: "相关技术", name: "related_tech", widget: "list", required: false}
       - {label: "浏览量", name: "views", widget: "number", default: 0, required: false}
@@ -206,8 +245,44 @@ collections:
     slug: "{{slug}}"
     fields:
       - {label: "标题", name: "title", widget: "string"}
-      - {label: "描述", name: "body", widget: "markdown"}
-      - {label: "特色图片", name: "thumbnail", widget: "image", required: false}
+      - {label: "发布日期", name: "date", widget: "datetime", format: "YYYY-MM-DD"}
+      - {label: "摘要", name: "summary", widget: "text"}
+      - {label: "特色图片", name: "featured_image", widget: "image", required: false}
+      - label: "产品一级分类"
+        name: "primary_category"
+        widget: "select"
+        multiple: true
+        options: ["光学内窥镜", "纤维内窥镜", "视频内窥镜", "工业CT", "超声检测", "磁粉检测", "渗透检测", "涡流检测"]
+      - label: "应用领域"
+        name: "application_field"
+        widget: "select"
+        multiple: true
+        options: ["航空航天", "汽车制造", "石油化工", "电力能源", "船舶海工", "轨道交通", "核电工业", "精密制造"]
+      - label: "应用场景"
+        name: "application_scenario"
+        widget: "select"
+        multiple: true
+        options: ["发动机检测", "管道检测", "焊缝检测", "铸件检测", "压力容器检测", "热交换器检测", "涡轮叶片检测", "精密零件检测"]
+      - {label: "所属行业", name: "industry", widget: "string", required: false}
+      - label: "案例类型"
+        name: "caseType"
+        widget: "select"
+        required: false
+        options: ["success", "innovation", "optimization"]
+      - {label: "客户名称", name: "client", widget: "string", required: false}
+      - {label: "项目周期", name: "projectDuration", widget: "string", required: false}
+      - {label: "面临挑战", name: "challenge", widget: "text", required: false}
+      - {label: "解决方案", name: "solution", widget: "text", required: false}
+      - {label: "实施效果", name: "results", widget: "text", required: false}
+      - label: "关键指标"
+        name: "keyMetrics"
+        widget: "list"
+        required: false
+        fields:
+          - {label: "指标名称", name: "label", widget: "string"}
+          - {label: "指标值", name: "value", widget: "string"}
+          - {label: "指标描述", name: "description", widget: "string"}
+      - {label: "案例详情", name: "body", widget: "markdown"}
       - label: "相关产品"
         name: "related_products"
         widget: "relation"
@@ -217,6 +292,7 @@ collections:
         display_fields: ["title"]
         multiple: true
         required: false
+      - {label: "浏览量", name: "views", widget: "number", default: 0, required: false}
 
   - name: "customs"
     label: "定制中心"
