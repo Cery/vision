@@ -588,6 +588,7 @@
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/openrouter-api.js"></script>
 
   <script>
     const { createApp } = Vue;
@@ -609,6 +610,9 @@
 
           // 标签输入
           newTag: '',
+
+          // AI API配置
+          openRouterAPI: null,
 
           // 资讯数据
           newsData: {
@@ -642,7 +646,19 @@
         }
       },
 
+      mounted() {
+        this.initializeOpenRouterAPI();
+      },
+
       methods: {
+        // 初始化OpenRouter API
+        initializeOpenRouterAPI() {
+          if (typeof OpenRouterAPI !== 'undefined') {
+            this.openRouterAPI = new OpenRouterAPI();
+          } else {
+            console.warn('OpenRouter API未加载');
+          }
+        },
         getCurrentDateTime() {
           const now = new Date();
           const year = now.getFullYear();
@@ -673,14 +689,62 @@
           this.isLoading = true;
 
           try {
-            // 模拟AI生成内容
-            await this.simulateAIGeneration();
-            this.showResult('success', '内容生成成功！请查看右侧预览并根据需要调整。');
+            if (this.openRouterAPI && this.openRouterAPI.isConfigured()) {
+              // 使用真实的OpenRouter API
+              await this.generateWithOpenRouter();
+            } else {
+              // 回退到模拟生成
+              await this.simulateAIGeneration();
+              this.showResult('warning', '使用模拟数据（请配置OpenRouter API以使用真实AI功能）');
+            }
           } catch (error) {
             this.showResult('warning', '内容生成失败: ' + error.message);
           } finally {
             this.isLoading = false;
           }
+        },
+
+        // 使用OpenRouter API生成行业资讯
+        async generateWithOpenRouter() {
+          const result = await this.openRouterAPI.generateIndustryNews(
+            this.autoKeywords,
+            this.autoIndustry || '工业制造'
+          );
+
+          if (result.success) {
+            // 解析AI生成的内容
+            this.parseAIGeneratedContent(result.content);
+            this.showResult('success', '✨ AI行业资讯生成完成！');
+          } else {
+            throw new Error(result.error || '生成失败');
+          }
+        },
+
+        // 解析AI生成的内容
+        parseAIGeneratedContent(content) {
+          // 提取标题
+          const titleMatch = content.match(/^#\s+(.+)$/m);
+          if (titleMatch) {
+            this.newsData.title = titleMatch[1];
+          } else {
+            this.newsData.title = `${this.autoKeywords} - 行业最新发展动态`;
+          }
+
+          // 生成摘要（取前150字）
+          const cleanContent = content.replace(/^#.*$/gm, '').replace(/\n+/g, ' ').trim();
+          this.newsData.summary = cleanContent.substring(0, 150) + '...';
+
+          // 设置内容
+          this.newsData.content = content;
+
+          // 根据关键词生成标签
+          this.newsData.tags = [this.autoKeywords, '行业资讯', '发展趋势'];
+          if (this.autoIndustry) {
+            this.newsData.tags.push(this.autoIndustry);
+          }
+
+          // 设置子分类
+          this.newsData.subcategory = this.autoIndustry || '工业制造';
         },
 
         async fetchFromUrl() {

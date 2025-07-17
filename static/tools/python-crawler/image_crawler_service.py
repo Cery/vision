@@ -281,12 +281,187 @@ def health_check():
     """健康检查"""
     return jsonify({'status': 'ok', 'service': 'image-crawler'})
 
+# 新增：单张图片下载到项目目录API
+@app.route('/api/download-image', methods=['POST'])
+def download_image_to_project():
+    """下载单张图片到项目指定目录"""
+    try:
+        data = request.get_json()
+        image_url = data.get('url')
+        filename = data.get('filename')
+        target_dir = data.get('targetDir', 'static/images/content')
+
+        if not image_url or not filename:
+            return jsonify({
+                'success': False,
+                'error': '缺少必要参数: url 和 filename'
+            }), 400
+
+        # 智能路径处理
+        project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+
+        # 如果target_dir已经包含static，直接使用；否则相对于项目根目录
+        if target_dir.startswith('static/'):
+            full_target_dir = os.path.join(project_root, target_dir)
+        elif os.path.isabs(target_dir):
+            full_target_dir = target_dir
+        else:
+            full_target_dir = os.path.join(project_root, 'static', target_dir)
+
+        # 确保目标目录存在
+        os.makedirs(full_target_dir, exist_ok=True)
+
+        # 下载图片
+        crawler = ImageCrawler()
+        response = crawler.session.get(image_url, timeout=30)
+        response.raise_for_status()
+
+        # 验证是否为图片
+        content_type = response.headers.get('content-type', '')
+        if not content_type.startswith('image/'):
+            return jsonify({
+                'success': False,
+                'error': f'URL不是有效的图片: {content_type}'
+            }), 400
+
+        # 保存图片
+        file_path = os.path.join(full_target_dir, filename)
+        with open(file_path, 'wb') as f:
+            f.write(response.content)
+
+        # 智能生成Markdown路径
+        if target_dir.startswith('static/'):
+            # 如果是static目录，生成相对于网站根目录的路径
+            relative_path = f"/{target_dir.replace('static/', '')}/{filename}"
+        else:
+            # 其他情况，保持原有逻辑
+            relative_path = f"/{target_dir}/{filename}".replace('static/', '/')
+
+        return jsonify({
+            'success': True,
+            'message': '图片下载成功',
+            'localPath': relative_path,
+            'filename': filename,
+            'fullPath': file_path,
+            'targetDir': full_target_dir,
+            'size': len(response.content)
+        })
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+# 新增：批量图片处理API
+@app.route('/api/process-content-images', methods=['POST'])
+def process_content_images():
+    """处理内容中的所有图片"""
+    try:
+        data = request.get_json()
+        content = data.get('content', '')
+        content_type = data.get('contentType', 'article')
+        content_id = data.get('contentId', 'default')
+
+        # 提取图片URL
+        import re
+        image_pattern = r'!\[([^\]]*)\]\(([^)]+)\)'
+        images = re.findall(image_pattern, content)
+
+        if not images:
+            return jsonify({
+                'success': True,
+                'message': '没有找到需要处理的图片',
+                'processedContent': content,
+                'processedImages': []
+            })
+
+        processed_images = []
+        processed_content = content
+
+        # 确保目标目录存在
+        target_dir = f'static/images/content/{content_type}'
+        project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        full_target_dir = os.path.join(project_root, target_dir)
+        os.makedirs(full_target_dir, exist_ok=True)
+
+        crawler = ImageCrawler()
+
+        for i, (alt_text, image_url) in enumerate(images):
+            try:
+                # 生成新文件名
+                extension = os.path.splitext(urlparse(image_url).path)[1] or '.jpg'
+                new_filename = f"{content_type}-{content_id}-{str(i+1).zfill(2)}{extension}"
+
+                # 下载图片
+                response = crawler.session.get(image_url, timeout=30)
+                response.raise_for_status()
+
+                # 保存图片
+                file_path = os.path.join(full_target_dir, new_filename)
+                with open(file_path, 'wb') as f:
+                    f.write(response.content)
+
+                # 生成新的Markdown路径
+                new_path = f"/{target_dir}/{new_filename}".replace('static/', '/')
+
+                # 替换内容中的图片路径
+                old_markdown = f"![{alt_text}]({image_url})"
+                new_markdown = f"![{alt_text}]({new_path})"
+                processed_content = processed_content.replace(old_markdown, new_markdown)
+
+                processed_images.append({
+                    'originalUrl': image_url,
+                    'newPath': new_path,
+                    'filename': new_filename,
+                    'alt': alt_text,
+                    'size': len(response.content)
+                })
+
+            except Exception as e:
+                print(f"处理图片失败 {image_url}: {e}")
+                # 保持原始URL
+                processed_images.append({
+                    'originalUrl': image_url,
+                    'newPath': image_url,
+                    'filename': None,
+                    'alt': alt_text,
+                    'error': str(e)
+                })
+
+        return jsonify({
+            'success': True,
+            'message': f'成功处理 {len([img for img in processed_images if not img.get("error")])} 张图片',
+            'processedContent': processed_content,
+            'processedImages': processed_images,
+            'totalImages': len(images)
+        })
+
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 if __name__ == '__main__':
-    print("启动图片抓取服务...")
-    print("服务地址: http://localhost:5000")
-    print("API文档:")
-    print("  POST /api/crawl - 抓取图片")
-    print("  POST /api/download - 下载图片")
-    print("  GET /api/health - 健康检查")
-    
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    try:
+        print("🚀 图片抓取服务启动中...")
+        print("📍 服务地址: http://localhost:5000")
+        print("📖 API文档:")
+        print("  POST /api/crawl - 抓取图片")
+        print("  POST /api/download - 下载图片")
+        print("  POST /api/download-image - 下载单张图片到项目")
+        print("  POST /api/process-content-images - 批量处理内容图片")
+        print("  GET /api/health - 健康检查")
+        print("🖼️  新增功能: 内容图片自动处理")
+        print("⏹️  按 Ctrl+C 停止服务")
+        print("")
+
+        app.run(host='0.0.0.0', port=5000, debug=False)
+    except Exception as e:
+        print(f"❌ 服务启动失败: {e}")
+        print("请检查:")
+        print("1. 端口5000是否被占用")
+        print("2. Python依赖是否完整安装")
+        print("3. 防火墙设置")
+        input("按回车键退出...")

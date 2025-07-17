@@ -816,6 +816,9 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+  <script src="js/image-path-manager.js"></script>
+  <script src="js/dual-mode-image-processor.js"></script>
+  <script src="js/openrouter-api.js"></script>
   <script>
     const { createApp } = Vue;
     createApp({
@@ -843,6 +846,16 @@
             cover: null,
             historical: []
           },
+
+          // 图片处理配置
+          imageProcessingMode: 'semi-auto', // 'auto' 或 'semi-auto'
+          imageProcessor: null,
+          detectedImages: [],
+          showImageModal: false,
+          imageProcessingResult: null,
+
+          // AI API配置
+          openRouterAPI: null,
           formData: {
             title: "",
             summary: "",
@@ -882,6 +895,8 @@
       },
       mounted() {
         this.loadTemplate();
+        this.initializeImageProcessor();
+        this.initializeOpenRouterAPI();
       },
       methods: {
         loadTemplate() {
@@ -958,6 +973,15 @@
             description: "中国国际航空航天博览会是唯一由中央政府批准举办的国际性专业航空航天展览，创办于1996年，每两年举办一届。展会以实物展示、贸易洽谈、学术交流和飞行表演为主要特征，吸引来自全球40多个国家和地区的参展商，已发展成为世界五大航展之一。展会设有军用航空、民用航空、航天技术、航空服务等专业展区，同期举办多场专业论坛和飞行表演活动。"
           };
         },
+        // 初始化OpenRouter API
+        initializeOpenRouterAPI() {
+          if (typeof OpenRouterAPI !== 'undefined') {
+            this.openRouterAPI = new OpenRouterAPI();
+          } else {
+            console.warn('OpenRouter API未加载');
+          }
+        },
+
         async autoCreateContent() {
           if (!this.autoKeywords.trim()) {
             this.showResult('warning', '请输入展会关键词');
@@ -968,14 +992,77 @@
           this.operationResult = null;
 
           try {
-            // 模拟AI自动创作过程
-            await this.simulateAutoCreation();
-            this.showResult('success', '自动创作完成！已根据关键词生成展会信息');
+            if (this.openRouterAPI && this.openRouterAPI.isConfigured()) {
+              // 使用真实的OpenRouter API
+              await this.generateWithOpenRouter();
+            } else {
+              // 回退到模拟创作
+              await this.simulateAutoCreation();
+              this.showResult('warning', '使用模拟数据（请配置OpenRouter API以使用真实AI功能）');
+            }
           } catch (error) {
-            this.showResult('warning', '自动创作失败：' + error.message);
+            this.showResult('error', '自动创作失败：' + error.message);
           } finally {
             this.isLoading = false;
           }
+        },
+
+        // 使用OpenRouter API生成内容
+        async generateWithOpenRouter() {
+          const result = await this.openRouterAPI.generateExhibitionContent(
+            this.autoKeywords,
+            this.autoIndustry || '综合'
+          );
+
+          if (result.success) {
+            // 将AI生成的数据映射到表单
+            this.mapAIDataToForm(result.data);
+            this.showResult('success', '✨ AI创作完成！已生成专业展会信息');
+          } else {
+            throw new Error(result.error || '生成失败');
+          }
+        },
+
+        // 将AI数据映射到表单
+        mapAIDataToForm(aiData) {
+          // 基本信息映射
+          if (aiData.title) this.formData.title = aiData.title;
+          if (aiData.summary) this.formData.summary = aiData.summary;
+          if (aiData.event_date) this.formData.event_date = aiData.event_date;
+          if (aiData.location) this.formData.location = aiData.location;
+          if (aiData.detailed_location) this.formData.detailed_location = aiData.detailed_location;
+          if (aiData.organizer) this.formData.organizer = aiData.organizer;
+          if (aiData.exhibition_industry) this.formData.exhibition_industry = aiData.exhibition_industry;
+          if (aiData.exhibition_area) this.formData.exhibition_area = aiData.exhibition_area;
+          if (aiData.exhibitor_count) this.formData.exhibitor_count = aiData.exhibitor_count;
+          if (aiData.visitor_count) this.formData.visitor_count = aiData.visitor_count;
+
+          // 展品范围映射
+          if (aiData.exhibition_scope && Array.isArray(aiData.exhibition_scope)) {
+            this.formData.exhibition_scope = aiData.exhibition_scope.map(item => ({
+              category: item.category || '',
+              itemsText: item.items ? item.items.join(', ') : (item.itemsText || '')
+            }));
+          }
+
+          // 往届参展商映射
+          if (aiData.previous_exhibitors && Array.isArray(aiData.previous_exhibitors)) {
+            this.formData.previous_exhibitors = aiData.previous_exhibitors.map(item => ({
+              name: item.name || '',
+              category: item.category || ''
+            }));
+          }
+
+          // 联系信息映射
+          if (aiData.contact_phone) this.formData.contact_phone = aiData.contact_phone;
+          if (aiData.contact_email) this.formData.contact_email = aiData.contact_email;
+          if (aiData.contact_website) this.formData.contact_website = aiData.contact_website;
+          if (aiData.registration_deadline) this.formData.registration_deadline = aiData.registration_deadline;
+
+          // SEO信息映射
+          if (aiData.seo_title) this.formData.seo_title = aiData.seo_title;
+          if (aiData.seo_description) this.formData.seo_description = aiData.seo_description;
+          if (aiData.seo_keywords) this.formData.seo_keywords = aiData.seo_keywords;
         },
 
         async fetchFromUrl() {

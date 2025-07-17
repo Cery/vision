@@ -550,6 +550,35 @@
           </div>
         </div>
 
+        <!-- 图片处理设置 -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="bi bi-images"></i>
+            图片处理设置
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">处理模式</label>
+            <div class="d-flex gap-3 align-items-center">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" value="auto" v-model="imageProcessingMode" id="modeAuto">
+                <label class="form-check-label" for="modeAuto">
+                  <i class="bi bi-magic"></i> 完全自动化
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" value="semi-auto" v-model="imageProcessingMode" id="modeSemiAuto">
+                <label class="form-check-label" for="modeSemiAuto">
+                  <i class="bi bi-check-square"></i> 半自动确认
+                </label>
+              </div>
+            </div>
+            <small class="text-muted">
+              {{ imageProcessingMode === 'auto' ? '自动下载并重命名所有图片' : '手动选择要处理的图片' }}
+            </small>
+          </div>
+        </div>
+
         <!-- 操作按钮 -->
         <div class="form-section">
           <div class="section-title">
@@ -600,10 +629,72 @@
     </div>
   </div>
 
+  <!-- 图片确认对话框 -->
+  <div class="modal fade" id="imageConfirmModal" tabindex="-1" v-if="showImageModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <i class="bi bi-images"></i> 图片处理确认
+          </h5>
+          <button type="button" class="btn-close" @click="showImageModal = false"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted">检测到 {{ detectedImages.length }} 张图片，请选择要处理的图片：</p>
+
+          <div class="row">
+            <div v-for="(image, index) in detectedImages" :key="index" class="col-md-6 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" v-model="image.selected" :id="'img-' + index">
+                    <label class="form-check-label" :for="'img-' + index">
+                      <strong>{{ image.alt || '图片 ' + (index + 1) }}</strong>
+                    </label>
+                  </div>
+
+                  <img :src="image.originalUrl" :alt="image.alt" class="img-thumbnail mb-2"
+                       style="max-width: 100%; max-height: 120px; object-fit: cover;">
+
+                  <div class="mb-2">
+                    <small class="text-muted">原始URL:</small><br>
+                    <small class="text-break">{{ image.originalUrl }}</small>
+                  </div>
+
+                  <div class="mb-2">
+                    <small class="text-muted">建议文件名:</small><br>
+                    <small class="text-primary">{{ image.suggestedFileName }}</small>
+                  </div>
+
+                  <div>
+                    <label class="form-label">自定义文件名 (可选):</label>
+                    <input type="text" class="form-control form-control-sm" v-model="image.customName"
+                           :placeholder="image.suggestedFileName">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" @click="showImageModal = false">取消</button>
+          <button type="button" class="btn btn-primary" @click="confirmSelectedImages">
+            <i class="bi bi-download"></i> 处理选中的图片
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Vue.js 和相关库 -->
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- 图片处理组件 -->
+  <script src="js/image-path-manager.js"></script>
+  <script src="js/dual-mode-image-processor.js"></script>
+  <script src="js/openrouter-api.js"></script>
 
   <script>
     const { createApp } = Vue;
@@ -626,6 +717,16 @@
           // 标签输入
           newTag: '',
 
+          // 图片处理配置
+          imageProcessingMode: 'semi-auto', // 'auto' 或 'semi-auto'
+          imageProcessor: null,
+          detectedImages: [],
+          showImageModal: false,
+          imageProcessingResult: null,
+
+          // AI API配置
+          openRouterAPI: null,
+
           // 技术文章数据
           techData: {
             title: '',
@@ -644,6 +745,13 @@
             draft: false
           }
         }
+      },
+
+      mounted() {
+        // 初始化图片处理器
+        this.initializeImageProcessor();
+        // 初始化AI API
+        this.initializeOpenRouterAPI();
       },
 
       computed: {
@@ -697,6 +805,15 @@
           this.techData.tags.splice(index, 1);
         },
 
+        // 初始化OpenRouter API
+        initializeOpenRouterAPI() {
+          if (typeof OpenRouterAPI !== 'undefined') {
+            this.openRouterAPI = new OpenRouterAPI();
+          } else {
+            console.warn('OpenRouter API未加载');
+          }
+        },
+
         async autoGenerateContent() {
           if (!this.autoKeywords.trim()) {
             this.showResult('warning', '请输入技术主题关键词');
@@ -705,21 +822,73 @@
 
           this.isLoading = true;
           try {
-            // 模拟AI生成内容
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            this.techData.title = `${this.autoKeywords} - 技术深度解析`;
-            this.techData.summary = `本文深入探讨了${this.autoKeywords}的技术原理、实现方法和应用前景，为相关技术人员提供全面的技术参考。`;
-            this.techData.subcategory = this.autoIndustry || '无损检测';
-            this.techData.tags = [this.autoKeywords, '技术分析', '应用研究'];
-            this.techData.content = this.generateTechContent(this.autoKeywords);
-
-            this.showResult('success', '技术文章内容已自动生成，请检查并完善');
+            if (this.openRouterAPI && this.openRouterAPI.isConfigured()) {
+              // 使用真实的OpenRouter API
+              await this.generateWithOpenRouter();
+            } else {
+              // 回退到模拟生成
+              await this.simulateContentGeneration();
+              this.showResult('warning', '使用模拟数据（请配置OpenRouter API以使用真实AI功能）');
+            }
           } catch (error) {
             this.showResult('error', '自动生成失败: ' + error.message);
           } finally {
             this.isLoading = false;
           }
+        },
+
+        // 使用OpenRouter API生成技术文章
+        async generateWithOpenRouter() {
+          const result = await this.openRouterAPI.generateTechArticle(
+            this.autoKeywords,
+            this.techData.difficulty || 'intermediate'
+          );
+
+          if (result.success) {
+            // 解析AI生成的内容
+            this.parseAIGeneratedContent(result.content);
+            this.showResult('success', '✨ AI技术文章生成完成！');
+          } else {
+            throw new Error(result.error || '生成失败');
+          }
+        },
+
+        // 解析AI生成的内容
+        parseAIGeneratedContent(content) {
+          // 提取标题
+          const titleMatch = content.match(/^#\s+(.+)$/m);
+          if (titleMatch) {
+            this.techData.title = titleMatch[1];
+          } else {
+            this.techData.title = `${this.autoKeywords} - 技术深度解析`;
+          }
+
+          // 生成摘要（取前150字）
+          const cleanContent = content.replace(/^#.*$/gm, '').replace(/\n+/g, ' ').trim();
+          this.techData.summary = cleanContent.substring(0, 150) + '...';
+
+          // 设置内容
+          this.techData.content = content;
+
+          // 根据关键词生成标签
+          this.techData.tags = [this.autoKeywords, '技术分析', '应用研究'];
+          if (this.autoIndustry) {
+            this.techData.tags.push(this.autoIndustry);
+          }
+
+          // 设置子分类
+          this.techData.subcategory = this.autoIndustry || '无损检测';
+        },
+
+        // 模拟内容生成（备用方案）
+        async simulateContentGeneration() {
+          await new Promise(resolve => setTimeout(resolve, 2000));
+
+          this.techData.title = `${this.autoKeywords} - 技术深度解析`;
+          this.techData.summary = `本文深入探讨了${this.autoKeywords}的技术原理、实现方法和应用前景，为相关技术人员提供全面的技术参考。`;
+          this.techData.subcategory = this.autoIndustry || '无损检测';
+          this.techData.tags = [this.autoKeywords, '技术分析', '应用研究'];
+          this.techData.content = this.generateTechContent(this.autoKeywords);
         },
 
         generateTechContent(keywords) {
@@ -811,7 +980,12 @@ ${keywords}技术作为重要的工业技术，具有广阔的应用前景和发
           }
         },
 
-        generateMarkdown() {
+        async generateMarkdown() {
+          // 使用新的双模式图片处理器
+          const result = await this.processImagesWithDualMode();
+
+          const processedContent = result.success ? result.processedContent : this.techData.content;
+
           const frontMatter = `---
 title: "${this.techData.title}"
 summary: "${this.techData.summary}"
@@ -828,7 +1002,7 @@ views: ${this.techData.views}
 ${this.techData.draft ? 'draft: true' : ''}
 ---
 
-${this.techData.content}`;
+${processedContent}`;
 
           const blob = new Blob([frontMatter], { type: 'text/markdown' });
           const url = URL.createObjectURL(blob);
@@ -840,7 +1014,182 @@ ${this.techData.content}`;
           document.body.removeChild(a);
           URL.revokeObjectURL(url);
 
-          this.showResult('success', '技术文章Markdown文件已生成并下载');
+          const message = result.success ?
+            `技术文章Markdown文件已生成并下载，${result.images ? result.images.length : 0}张图片已处理` :
+            '技术文章Markdown文件已生成并下载（图片处理可能有问题）';
+
+          this.showResult('success', message);
+        },
+
+        // 初始化图片处理器
+        initializeImageProcessor() {
+          if (typeof DualModeImageProcessor === 'undefined') {
+            console.warn('图片处理器未加载，图片处理功能将不可用');
+            return;
+          }
+
+          this.imageProcessor = new DualModeImageProcessor({
+            mode: this.imageProcessingMode,
+            editorType: 'tech-article',
+            contentInfo: this.techData,
+            onProgress: (progress) => {
+              console.log('图片处理进度:', progress);
+              if (progress.stage === 'confirmation') {
+                this.detectedImages = progress.images || [];
+                this.showImageModal = true;
+              }
+            },
+            onComplete: (result) => {
+              this.imageProcessingResult = result;
+              this.showImageModal = false;
+            },
+            onError: (error) => {
+              console.error('图片处理错误:', error);
+              this.showResult('error', '图片处理失败: ' + error.message);
+            }
+          });
+        },
+
+        // 使用双模式处理器处理图片
+        async processImagesWithDualMode() {
+          if (!this.imageProcessor) {
+            this.initializeImageProcessor();
+          }
+
+          if (!this.imageProcessor) {
+            return { success: false, error: '图片处理器不可用' };
+          }
+
+          // 更新处理器配置
+          this.imageProcessor.initialize('tech-article', this.techData);
+          this.imageProcessor.setMode(this.imageProcessingMode);
+
+          try {
+            const result = await this.imageProcessor.processImages(this.techData.content);
+
+            if (result.needsConfirmation) {
+              // 半自动模式需要用户确认
+              return new Promise((resolve) => {
+                this.imageConfirmationResolve = resolve;
+              });
+            }
+
+            return result;
+          } catch (error) {
+            return { success: false, error: error.message };
+          }
+        },
+
+        // 确认处理选中的图片
+        async confirmSelectedImages() {
+          const selectedImages = this.detectedImages.filter(img => img.selected);
+
+          try {
+            const result = await this.imageProcessor.processSelectedImages(
+              this.techData.content,
+              selectedImages
+            );
+
+            this.showImageModal = false;
+
+            if (this.imageConfirmationResolve) {
+              this.imageConfirmationResolve(result);
+              this.imageConfirmationResolve = null;
+            }
+
+            return result;
+          } catch (error) {
+            this.showResult('error', '图片处理失败: ' + error.message);
+            return { success: false, error: error.message };
+          }
+        },
+
+        // 切换图片处理模式
+        toggleImageProcessingMode() {
+          this.imageProcessingMode = this.imageProcessingMode === 'auto' ? 'semi-auto' : 'auto';
+          if (this.imageProcessor) {
+            this.imageProcessor.setMode(this.imageProcessingMode);
+          }
+        },
+
+        // 确认图片处理
+        async confirmImageProcessing(images) {
+          return new Promise((resolve) => {
+            const message = `检测到 ${images.length} 张图片，是否自动下载并重命名？\n\n` +
+              images.map((img, i) => `${i + 1}. ${img.alt || '无标题'}: ${img.url}`).join('\n');
+
+            resolve(confirm(message));
+          });
+        },
+
+        // 生成内容ID
+        generateContentId() {
+          const title = this.techData.title
+            .toLowerCase()
+            .replace(/[^a-z0-9\u4e00-\u9fa5]/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '');
+
+          const date = new Date(this.techData.date);
+          const dateStr = date.toISOString().split('T')[0];
+
+          return `${dateStr}-${title}`;
+        },
+
+        // 生成图片文件名
+        generateImageFilename(contentType, contentId, index, originalUrl) {
+          const extension = this.getImageExtension(originalUrl);
+          return `${contentType}-${contentId}-${String(index + 1).padStart(2, '0')}${extension}`;
+        },
+
+        // 获取图片扩展名
+        getImageExtension(url) {
+          const urlPath = new URL(url).pathname;
+          const extension = urlPath.split('.').pop().toLowerCase();
+
+          // 支持的图片格式
+          const supportedFormats = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'];
+
+          if (supportedFormats.includes(extension)) {
+            return `.${extension}`;
+          }
+
+          return '.jpg'; // 默认格式
+        },
+
+        // 下载图片到项目目录
+        async downloadImageToProject(imageUrl, filename) {
+          try {
+            // 通过Python服务下载图片
+            const response = await fetch('http://localhost:5000/api/download-image', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                url: imageUrl,
+                filename: filename,
+                targetDir: 'static/images/content/tech-articles'
+              })
+            });
+
+            if (!response.ok) {
+              throw new Error(`下载失败: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+
+            if (result.success) {
+              return result.localPath;
+            } else {
+              throw new Error(result.error || '下载失败');
+            }
+
+          } catch (error) {
+            // 如果Python服务不可用，回退到原始URL
+            console.warn('图片下载服务不可用，保持原始URL:', error);
+            return imageUrl;
+          }
         },
 
         generateFileName() {
