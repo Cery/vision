@@ -2,14 +2,66 @@ const express = require('express');
 const fs = require('fs').promises;
 const path = require('path');
 const cors = require('cors');
+const compression = require('compression');
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.CONTENT_SERVER_PORT || 3001;
+
+// 性能优化中间件
+app.use(compression()); // 启用gzip压缩
 
 // 中间件
-app.use(cors());
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+app.use(cors({
+    origin: process.env.NODE_ENV === 'production' ? 'https://visndt.com' : true,
+    credentials: true
+}));
+app.use(express.json({
+    limit: '10mb',
+    parameterLimit: 1000
+}));
+app.use(express.urlencoded({
+    extended: true,
+    limit: '10mb',
+    parameterLimit: 1000
+}));
+
+// 设置请求超时
+app.use((req, res, next) => {
+    req.setTimeout(30000); // 30秒超时
+    res.setTimeout(30000);
+    next();
+});
+
+// 内存缓存
+const cache = new Map();
+const CACHE_TTL = 5 * 60 * 1000; // 5分钟缓存
+
+// 缓存辅助函数
+const getCacheKey = (type, params) => `${type}:${JSON.stringify(params)}`;
+const setCache = (key, data) => {
+    cache.set(key, {
+        data,
+        timestamp: Date.now()
+    });
+};
+const getCache = (key) => {
+    const cached = cache.get(key);
+    if (cached && (Date.now() - cached.timestamp) < CACHE_TTL) {
+        return cached.data;
+    }
+    cache.delete(key);
+    return null;
+};
+
+// 定期清理过期缓存
+setInterval(() => {
+    const now = Date.now();
+    for (const [key, value] of cache.entries()) {
+        if (now - value.timestamp > CACHE_TTL) {
+            cache.delete(key);
+        }
+    }
+}, 60000); // 每分钟清理一次
 
 // 项目根目录
 const PROJECT_ROOT = __dirname;

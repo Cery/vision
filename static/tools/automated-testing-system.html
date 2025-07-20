@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision NDT 全面自动化测试系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .test-dashboard {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+        }
+        .test-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+        .test-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        .test-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        .status-pending { background: #ffeaa7; color: #2d3436; }
+        .status-running { background: #74b9ff; color: white; }
+        .status-success { background: #00b894; color: white; }
+        .status-failed { background: #e17055; color: white; }
+        .status-warning { background: #fdcb6e; color: #2d3436; }
+        
+        .progress-ring {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto;
+        }
+        .progress-ring-circle {
+            stroke: #e9ecef;
+            stroke-width: 8;
+            fill: transparent;
+            r: 52;
+            cx: 60;
+            cy: 60;
+        }
+        .progress-ring-progress {
+            stroke: #28a745;
+            stroke-width: 8;
+            stroke-linecap: round;
+            fill: transparent;
+            r: 52;
+            cx: 60;
+            cy: 60;
+            stroke-dasharray: 326.73;
+            stroke-dashoffset: 326.73;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+        
+        .test-log {
+            background: #2d3748;
+            color: #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .log-entry {
+            margin-bottom: 0.5rem;
+            padding: 0.25rem 0;
+        }
+        .log-info { color: #63b3ed; }
+        .log-success { color: #68d391; }
+        .log-warning { color: #fbd38d; }
+        .log-error { color: #fc8181; }
+        
+        .metric-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .test-category {
+            border-left: 4px solid #007bff;
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .btn-test {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-test:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- 顶部导航 -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <i class="bi bi-shield-check"></i> Vision NDT 测试系统
+                </a>
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link" href="/tools/">
+                        <i class="bi bi-arrow-left"></i> 返回工具首页
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 测试仪表板 -->
+        <div class="test-dashboard">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <h1 class="display-4 fw-bold mb-3">
+                            <i class="bi bi-cpu"></i> 全面自动化测试系统
+                        </h1>
+                        <p class="lead mb-4">
+                            对Vision NDT网站的所有功能模块进行全面自动化测试，包括前端页面、后端服务、开发工具等
+                        </p>
+                        <div class="d-flex gap-3">
+                            <button class="btn btn-light btn-lg" @click="startFullTest" :disabled="isTestingAll">
+                                <i class="bi bi-play-circle"></i> 
+                                {{ isTestingAll ? '测试进行中...' : '开始全面测试' }}
+                            </button>
+                            <button class="btn btn-outline-light" @click="generateReport" :disabled="!hasTestResults">
+                                <i class="bi bi-file-earmark-text"></i> 生成测试报告
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 text-center">
+                        <div class="progress-ring">
+                            <svg class="progress-ring">
+                                <circle class="progress-ring-circle"></circle>
+                                <circle class="progress-ring-progress" :style="progressStyle"></circle>
+                            </svg>
+                            <div class="position-absolute top-50 start-50 translate-middle text-center">
+                                <div class="h3 mb-0">{{ overallProgress }}%</div>
+                                <small>总体进度</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 测试概览 -->
+        <div class="container py-5">
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <div class="metric-value text-primary">{{ testStats.total }}</div>
+                        <div class="text-muted">总测试项</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <div class="metric-value text-success">{{ testStats.passed }}</div>
+                        <div class="text-muted">通过</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <div class="metric-value text-danger">{{ testStats.failed }}</div>
+                        <div class="text-muted">失败</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric-card">
+                        <div class="metric-value text-warning">{{ testStats.warnings }}</div>
+                        <div class="text-muted">警告</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 测试分类 -->
+            <div class="test-grid">
+                <!-- 前端功能测试 -->
+                <div class="test-card card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="bi bi-browser-chrome text-primary"></i> 前端功能测试
+                        </h5>
+                        <span class="test-status" :class="getStatusClass(frontendTests.status)">
+                            {{ getStatusText(frontendTests.status) }}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">测试Hugo网站的所有页面、导航、搜索、筛选等前端功能</p>
+                        <div class="progress mb-3">
+                            <div class="progress-bar" :style="{width: frontendTests.progress + '%'}"></div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-test btn-sm" @click="testFrontend" :disabled="frontendTests.running">
+                                <i class="bi bi-play"></i> 开始测试
+                            </button>
+                            <small class="text-muted">{{ frontendTests.lastRun }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 后端服务测试 -->
+                <div class="test-card card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="bi bi-server text-success"></i> 后端服务测试
+                        </h5>
+                        <span class="test-status" :class="getStatusClass(backendTests.status)">
+                            {{ getStatusText(backendTests.status) }}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">测试Python服务器的所有API接口、文件处理、工具功能等</p>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-success" :style="{width: backendTests.progress + '%'}"></div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-test btn-sm" @click="testBackend" :disabled="backendTests.running">
+                                <i class="bi bi-play"></i> 开始测试
+                            </button>
+                            <small class="text-muted">{{ backendTests.lastRun }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 开发工具测试 -->
+                <div class="test-card card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="bi bi-tools text-warning"></i> 开发工具测试
+                        </h5>
+                        <span class="test-status" :class="getStatusClass(toolsTests.status)">
+                            {{ getStatusText(toolsTests.status) }}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">测试所有开发工具的功能，包括内容编辑器、图片处理器等</p>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-warning" :style="{width: toolsTests.progress + '%'}"></div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-test btn-sm" @click="testTools" :disabled="toolsTests.running">
+                                <i class="bi bi-play"></i> 开始测试
+                            </button>
+                            <small class="text-muted">{{ toolsTests.lastRun }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 性能测试 -->
+                <div class="test-card card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="bi bi-speedometer2 text-info"></i> 性能测试
+                        </h5>
+                        <span class="test-status" :class="getStatusClass(performanceTests.status)">
+                            {{ getStatusText(performanceTests.status) }}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">测试网站和服务的性能指标，包括响应时间、内存使用等</p>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-info" :style="{width: performanceTests.progress + '%'}"></div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-test btn-sm" @click="testPerformance" :disabled="performanceTests.running">
+                                <i class="bi bi-play"></i> 开始测试
+                            </button>
+                            <small class="text-muted">{{ performanceTests.lastRun }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 安全测试 -->
+                <div class="test-card card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="bi bi-shield-lock text-danger"></i> 安全测试
+                        </h5>
+                        <span class="test-status" :class="getStatusClass(securityTests.status)">
+                            {{ getStatusText(securityTests.status) }}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">测试网站和服务的安全性，包括输入验证、文件上传安全等</p>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-danger" :style="{width: securityTests.progress + '%'}"></div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-test btn-sm" @click="testSecurity" :disabled="securityTests.running">
+                                <i class="bi bi-play"></i> 开始测试
+                            </button>
+                            <small class="text-muted">{{ securityTests.lastRun }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 集成测试 -->
+                <div class="test-card card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="bi bi-diagram-3 text-secondary"></i> 集成测试
+                        </h5>
+                        <span class="test-status" :class="getStatusClass(integrationTests.status)">
+                            {{ getStatusText(integrationTests.status) }}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">测试各个模块之间的集成和数据流</p>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-secondary" :style="{width: integrationTests.progress + '%'}"></div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-test btn-sm" @click="testIntegration" :disabled="integrationTests.running">
+                                <i class="bi bi-play"></i> 开始测试
+                            </button>
+                            <small class="text-muted">{{ integrationTests.lastRun }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 测试日志 -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="bi bi-terminal"></i> 测试日志
+                            </h5>
+                            <button class="btn btn-sm btn-outline-secondary" @click="clearLogs">
+                                <i class="bi bi-trash"></i> 清空日志
+                            </button>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="test-log" ref="testLog">
+                                <div v-for="log in testLogs" :key="log.id" class="log-entry" :class="'log-' + log.level">
+                                    <span class="text-muted">[{{ log.timestamp }}]</span>
+                                    <span class="fw-bold">[{{ log.category }}]</span>
+                                    {{ log.message }}
+                                </div>
+                                <div v-if="testLogs.length === 0" class="text-center text-muted py-4">
+                                    暂无测试日志
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="js/automated-testing-system.js"></script>
+</body>
+</html>

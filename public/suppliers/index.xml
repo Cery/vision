@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>供应商 on 维森视觉检测仪器</title>
-    <link>http://localhost:52117/suppliers/</link>
-    <description>Recent content in 供应商 on 维森视觉检测仪器</description>
+    <title>供应商目录 on 维森视觉检测仪器</title>
+    <link>http://localhost:1313/suppliers/</link>
+    <description>Recent content in 供应商目录 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <atom:link href="http://localhost:52117/suppliers/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/suppliers/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>深圳市微视光电科技有限公司</title>
-      <link>http://localhost:52117/suppliers/vsndt/</link>
+      <title></title>
+      <link>http://localhost:1313/suppliers/beijing-huake/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:52117/suppliers/vsndt/</guid>
-      <description></description>
+      <guid>http://localhost:1313/suppliers/beijing-huake/</guid>
+      <description>&lt;h1 id=&#34;北京华科检测科技有限公司&#34;&gt;北京华科检测科技有限公司&lt;/h1&gt;&#xA;&lt;h2 id=&#34;公司简介&#34;&gt;公司简介&lt;/h2&gt;&#xA;&lt;p&gt;北京华科检测科技有限公司成立于2008年，是一家专业从事无损检测设备和工业检测仪器研发生产的国家高新技术企业。公司位于北京市海淀区中关村科技园，拥有完善的研发体系和生产基地。&lt;/p&gt;</description>
     </item>
     <item>
-      <title>天津维森科技有限公司</title>
-      <link>http://localhost:52117/suppliers/vis/</link>
+      <title></title>
+      <link>http://localhost:1313/suppliers/shenzhen-weishi/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:52117/suppliers/vis/</guid>
-      <description></description>
+      <guid>http://localhost:1313/suppliers/shenzhen-weishi/</guid>
+      <description>&lt;h1 id=&#34;深圳市微视光电科技有限公司&#34;&gt;深圳市微视光电科技有限公司&lt;/h1&gt;&#xA;&lt;h2 id=&#34;公司简介&#34;&gt;公司简介&lt;/h2&gt;&#xA;&lt;p&gt;深圳市微视光电科技有限公司成立于2015年，是一家专注于光电检测设备和精密测量仪器研发制造的高新技术企业。公司位于深圳市南山区科技园，拥有先进的生产设备和专业的技术团队。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title></title>
+      <link>http://localhost:1313/suppliers/tianjin-vision/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/suppliers/tianjin-vision/</guid>
+      <description>&lt;h1 id=&#34;天津维森科技有限公司&#34;&gt;天津维森科技有限公司&lt;/h1&gt;&#xA;&lt;h2 id=&#34;公司简介&#34;&gt;公司简介&lt;/h2&gt;&#xA;&lt;p&gt;天津维森科技有限公司成立于2010年，是一家专业从事工业内窥镜、视频内窥镜、光纤内窥镜等无损检测设备的研发、生产和销售的高新技术企业。公司拥有完善的质量管理体系和专业的技术团队，产品广泛应用于航空航天、汽车制造、石油化工、电力等行业。&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

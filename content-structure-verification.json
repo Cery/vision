@@ -1,0 +1,377 @@
+{
+  "timestamp": "2025-07-20T03:28:03.179Z",
+  "summary": {
+    "totalNewsFiles": 24,
+    "totalProductFiles": 34,
+    "totalErrors": 0,
+    "missingFiles": 0
+  },
+  "details": {
+    "news": {
+      "tech-article": [
+        {
+          "name": "2025-07-14-endoscope-image-processing-algorithm.md",
+          "path": "content\\news\\tech-article\\2025-07-14-endoscope-image-processing-algorithm.md",
+          "size": 14403,
+          "modified": "2025-07-19T18:11:38.796Z"
+        },
+        {
+          "name": "2025-07-16-工业内窥镜技术发展趋势.md",
+          "path": "content\\news\\tech-article\\2025-07-16-工业内窥镜技术发展趋势.md",
+          "size": 1220,
+          "modified": "2025-07-19T18:11:38.800Z"
+        },
+        {
+          "name": "tech-article-1.md",
+          "path": "content\\news\\tech-article\\tech-article-1.md",
+          "size": 1069,
+          "modified": "2025-07-19T18:11:38.840Z"
+        },
+        {
+          "name": "test-subcategory.md",
+          "path": "content\\news\\tech-article\\test-subcategory.md",
+          "size": 1128,
+          "modified": "2025-07-19T18:11:38.842Z"
+        }
+      ],
+      "industry": [
+        {
+          "name": "2025-07-14-industrial-endoscope-market-growth.md",
+          "path": "content\\news\\industry\\2025-07-14-industrial-endoscope-market-growth.md",
+          "size": 5412,
+          "modified": "2025-07-19T18:11:38.797Z"
+        },
+        {
+          "name": "industry-news-1.md",
+          "path": "content\\news\\industry\\industry-news-1.md",
+          "size": 3091,
+          "modified": "2025-07-19T18:11:38.839Z"
+        }
+      ],
+      "exhibition": [
+        {
+          "name": "2025-07-16-2025中国国际工业博览会.md",
+          "path": "content\\news\\exhibition\\2025-07-16-2025中国国际工业博览会.md",
+          "size": 1076,
+          "modified": "2025-07-19T18:11:38.800Z"
+        },
+        {
+          "name": "2026-international-exhibition.md",
+          "path": "content\\news\\exhibition\\2026-international-exhibition.md",
+          "size": 3585,
+          "modified": "2025-07-19T18:11:38.803Z"
+        },
+        {
+          "name": "china-advanced-materials-expo-2025.md",
+          "path": "content\\news\\exhibition\\china-advanced-materials-expo-2025.md",
+          "size": 4454,
+          "modified": "2025-07-19T18:11:38.808Z"
+        },
+        {
+          "name": "china-aerospace-expo-2025.md",
+          "path": "content\\news\\exhibition\\china-aerospace-expo-2025.md",
+          "size": 4470,
+          "modified": "2025-07-19T18:11:38.813Z"
+        },
+        {
+          "name": "china-energy-power-expo-2025.md",
+          "path": "content\\news\\exhibition\\china-energy-power-expo-2025.md",
+          "size": 4312,
+          "modified": "2025-07-19T18:11:38.814Z"
+        },
+        {
+          "name": "china-environmental-tech-expo-2025.md",
+          "path": "content\\news\\exhibition\\china-environmental-tech-expo-2025.md",
+          "size": 4482,
+          "modified": "2025-07-19T18:11:38.815Z"
+        },
+        {
+          "name": "china-food-machinery-expo-2025.md",
+          "path": "content\\news\\exhibition\\china-food-machinery-expo-2025.md",
+          "size": 4456,
+          "modified": "2025-07-19T18:11:38.817Z"
+        },
+        {
+          "name": "china-foundry-expo-2025.md",
+          "path": "content\\news\\exhibition\\china-foundry-expo-2025.md",
+          "size": 4352,
+          "modified": "2025-07-19T18:11:38.819Z"
+        },
+        {
+          "name": "china-industrial-automation-expo-2025.md",
+          "path": "content\\news\\exhibition\\china-industrial-automation-expo-2025.md",
+          "size": 4499,
+          "modified": "2025-07-19T18:11:38.820Z"
+        },
+        {
+          "name": "china-machinery-expo-2025.md",
+          "path": "content\\news\\exhibition\\china-machinery-expo-2025.md",
+          "size": 4465,
+          "modified": "2025-07-19T18:11:38.821Z"
+        },
+        {
+          "name": "china-marine-engineering-expo-2025.md",
+          "path": "content\\news\\exhibition\\china-marine-engineering-expo-2025.md",
+          "size": 4544,
+          "modified": "2025-07-19T18:11:38.822Z"
+        },
+        {
+          "name": "china-medical-device-expo-2025.md",
+          "path": "content\\news\\exhibition\\china-medical-device-expo-2025.md",
+          "size": 4478,
+          "modified": "2025-07-19T18:11:38.823Z"
+        },
+        {
+          "name": "china-ndt-expo-2025.md",
+          "path": "content\\news\\exhibition\\china-ndt-expo-2025.md",
+          "size": 4509,
+          "modified": "2025-07-19T18:11:38.825Z"
+        },
+        {
+          "name": "china-petrochemical-expo-2025.md",
+          "path": "content\\news\\exhibition\\china-petrochemical-expo-2025.md",
+          "size": 4441,
+          "modified": "2025-07-19T18:11:38.826Z"
+        },
+        {
+          "name": "china-power-transmission-expo-2025.md",
+          "path": "content\\news\\exhibition\\china-power-transmission-expo-2025.md",
+          "size": 4196,
+          "modified": "2025-07-19T18:11:38.828Z"
+        },
+        {
+          "name": "china-precision-manufacturing-expo-2025.md",
+          "path": "content\\news\\exhibition\\china-precision-manufacturing-expo-2025.md",
+          "size": 4530,
+          "modified": "2025-07-19T18:11:38.830Z"
+        },
+        {
+          "name": "china-rail-transit-expo-2025.md",
+          "path": "content\\news\\exhibition\\china-rail-transit-expo-2025.md",
+          "size": 4478,
+          "modified": "2025-07-19T18:11:38.834Z"
+        },
+        {
+          "name": "exhibition-template-example.md",
+          "path": "content\\news\\exhibition\\exhibition-template-example.md",
+          "size": 4361,
+          "modified": "2025-07-19T18:11:38.837Z"
+        }
+      ]
+    },
+    "products": {
+      "vis": [
+        {
+          "name": "VIS-T2815.md",
+          "path": "content\\products\\vis\\VIS-T2815.md",
+          "size": 3366,
+          "modified": "2025-07-19T18:11:38.859Z"
+        }
+      ],
+      "vs": [
+        {
+          "name": "WS-F2815.md",
+          "path": "content\\products\\vs\\WS-F2815.md",
+          "size": 3505,
+          "modified": "2025-07-19T18:11:38.860Z"
+        },
+        {
+          "name": "WS-F4020.md",
+          "path": "content\\products\\vs\\WS-F4020.md",
+          "size": 3546,
+          "modified": "2025-07-19T18:11:38.861Z"
+        },
+        {
+          "name": "WS-F6030.md",
+          "path": "content\\products\\vs\\WS-F6030.md",
+          "size": 3546,
+          "modified": "2025-07-19T18:11:38.863Z"
+        },
+        {
+          "name": "WS-K08510.md",
+          "path": "content\\products\\vs\\WS-K08510.md",
+          "size": 4315,
+          "modified": "2025-07-19T18:11:38.864Z"
+        },
+        {
+          "name": "WS-K09510.md",
+          "path": "content\\products\\vs\\WS-K09510.md",
+          "size": 3115,
+          "modified": "2025-07-19T18:11:38.864Z"
+        },
+        {
+          "name": "WS-K1010.md",
+          "path": "content\\products\\vs\\WS-K1010.md",
+          "size": 3084,
+          "modified": "2025-07-19T18:11:38.865Z"
+        },
+        {
+          "name": "WS-K1210-a.md",
+          "path": "content\\products\\vs\\WS-K1210-a.md",
+          "size": 3510,
+          "modified": "2025-07-19T18:11:38.865Z"
+        },
+        {
+          "name": "WS-K1210.md",
+          "path": "content\\products\\vs\\WS-K1210.md",
+          "size": 3099,
+          "modified": "2025-07-19T18:11:38.869Z"
+        },
+        {
+          "name": "WS-K1510.md",
+          "path": "content\\products\\vs\\WS-K1510.md",
+          "size": 3162,
+          "modified": "2025-07-19T18:11:38.873Z"
+        },
+        {
+          "name": "WS-K1810.md",
+          "path": "content\\products\\vs\\WS-K1810.md",
+          "size": 4480,
+          "modified": "2025-07-19T18:11:38.882Z"
+        },
+        {
+          "name": "WS-K2010.md",
+          "path": "content\\products\\vs\\WS-K2010.md",
+          "size": 4306,
+          "modified": "2025-07-19T18:11:38.885Z"
+        },
+        {
+          "name": "WS-K2210.md",
+          "path": "content\\products\\vs\\WS-K2210.md",
+          "size": 3135,
+          "modified": "2025-07-19T18:11:38.886Z"
+        },
+        {
+          "name": "WS-K2410.md",
+          "path": "content\\products\\vs\\WS-K2410.md",
+          "size": 3093,
+          "modified": "2025-07-19T18:11:38.886Z"
+        },
+        {
+          "name": "WS-K2810.md",
+          "path": "content\\products\\vs\\WS-K2810.md",
+          "size": 3063,
+          "modified": "2025-07-19T18:11:38.886Z"
+        },
+        {
+          "name": "WS-K3915.md",
+          "path": "content\\products\\vs\\WS-K3915.md",
+          "size": 4860,
+          "modified": "2025-07-19T18:11:38.888Z"
+        },
+        {
+          "name": "WS-K6020.md",
+          "path": "content\\products\\vs\\WS-K6020.md",
+          "size": 5055,
+          "modified": "2025-07-19T18:11:38.888Z"
+        },
+        {
+          "name": "WS-K6030.md",
+          "path": "content\\products\\vs\\WS-K6030.md",
+          "size": 3206,
+          "modified": "2025-07-19T18:11:38.889Z"
+        },
+        {
+          "name": "WS-O2510.md",
+          "path": "content\\products\\vs\\WS-O2510.md",
+          "size": 3499,
+          "modified": "2025-07-19T18:11:38.890Z"
+        },
+        {
+          "name": "WS-O3020.md",
+          "path": "content\\products\\vs\\WS-O3020.md",
+          "size": 3448,
+          "modified": "2025-07-19T18:11:38.892Z"
+        },
+        {
+          "name": "WS-O4030.md",
+          "path": "content\\products\\vs\\WS-O4030.md",
+          "size": 3469,
+          "modified": "2025-07-19T18:11:38.894Z"
+        },
+        {
+          "name": "WS-P08510.md",
+          "path": "content\\products\\vs\\WS-P08510.md",
+          "size": 3804,
+          "modified": "2025-07-19T18:11:38.895Z"
+        },
+        {
+          "name": "WS-P1010.md",
+          "path": "content\\products\\vs\\WS-P1010.md",
+          "size": 3081,
+          "modified": "2025-07-19T18:11:38.899Z"
+        },
+        {
+          "name": "WS-P1210.md",
+          "path": "content\\products\\vs\\WS-P1210.md",
+          "size": 3079,
+          "modified": "2025-07-19T18:11:38.900Z"
+        },
+        {
+          "name": "WS-P1510.md",
+          "path": "content\\products\\vs\\WS-P1510.md",
+          "size": 3162,
+          "modified": "2025-07-19T18:11:38.901Z"
+        },
+        {
+          "name": "WS-P1810.md",
+          "path": "content\\products\\vs\\WS-P1810.md",
+          "size": 3126,
+          "modified": "2025-07-19T18:11:38.902Z"
+        },
+        {
+          "name": "WS-P2010.md",
+          "path": "content\\products\\vs\\WS-P2010.md",
+          "size": 3054,
+          "modified": "2025-07-19T18:11:38.902Z"
+        },
+        {
+          "name": "WS-P2210.md",
+          "path": "content\\products\\vs\\WS-P2210.md",
+          "size": 3117,
+          "modified": "2025-07-19T18:11:38.903Z"
+        },
+        {
+          "name": "WS-P2410.md",
+          "path": "content\\products\\vs\\WS-P2410.md",
+          "size": 3087,
+          "modified": "2025-07-19T18:11:38.904Z"
+        },
+        {
+          "name": "WS-P2810.md",
+          "path": "content\\products\\vs\\WS-P2810.md",
+          "size": 3093,
+          "modified": "2025-07-19T18:11:38.905Z"
+        },
+        {
+          "name": "WS-P3915.md",
+          "path": "content\\products\\vs\\WS-P3915.md",
+          "size": 3133,
+          "modified": "2025-07-19T18:11:38.906Z"
+        },
+        {
+          "name": "WS-P6020.md",
+          "path": "content\\products\\vs\\WS-P6020.md",
+          "size": 3160,
+          "modified": "2025-07-19T18:11:38.906Z"
+        },
+        {
+          "name": "WS-P6030.md",
+          "path": "content\\products\\vs\\WS-P6030.md",
+          "size": 3118,
+          "modified": "2025-07-19T18:11:38.907Z"
+        }
+      ],
+      "hk": [
+        {
+          "name": "WS-P09510.md",
+          "path": "content\\products\\hk\\WS-P09510.md",
+          "size": 3104,
+          "modified": "2025-07-20T03:07:08.026Z"
+        }
+      ]
+    },
+    "errors": [],
+    "missing": []
+  }
+}

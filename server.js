@@ -3,18 +3,85 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
+const compression = require('compression');
 
 const app = express();
-const PORT = 3002;
+const PORT = process.env.SERVER_PORT || 3002;
+
+// 内存缓存
+const cache = new Map();
+const CACHE_TTL = 5 * 60 * 1000; // 5分钟缓存
+
+// 缓存辅助函数
+const getCacheKey = (type, params) => `${type}:${JSON.stringify(params)}`;
+const setCache = (key, data) => {
+    cache.set(key, {
+        data,
+        timestamp: Date.now()
+    });
+};
+const getCache = (key) => {
+    const cached = cache.get(key);
+    if (cached && (Date.now() - cached.timestamp) < CACHE_TTL) {
+        return cached.data;
+    }
+    cache.delete(key);
+    return null;
+};
+
+// 定期清理过期缓存
+setInterval(() => {
+    const now = Date.now();
+    for (const [key, value] of cache.entries()) {
+        if (now - value.timestamp > CACHE_TTL) {
+            cache.delete(key);
+        }
+    }
+}, 60000); // 每分钟清理一次
+
+// 性能优化中间件
+app.use(compression()); // 启用gzip压缩
 
 // 启用CORS
-app.use(cors());
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(cors({
+    origin: process.env.NODE_ENV === 'production' ? 'https://visndt.com' : true,
+    credentials: true
+}));
 
-// 静态文件服务 - 提供项目文件访问
-app.use('/images', express.static('./static/images'));
-app.use('/uploads', express.static('./static/uploads'));
+// 优化请求体大小限制
+app.use(express.json({
+    limit: '10mb',
+    parameterLimit: 1000
+}));
+app.use(express.urlencoded({
+    limit: '10mb',
+    extended: true,
+    parameterLimit: 1000
+}));
+
+// 设置请求超时
+app.use((req, res, next) => {
+    req.setTimeout(30000); // 30秒超时
+    res.setTimeout(30000);
+    next();
+});
+
+// 静态文件服务 - 提供项目文件访问（带缓存优化）
+app.use('/images', express.static('./static/images', {
+    maxAge: '1d', // 1天缓存
+    etag: true,
+    lastModified: true,
+    setHeaders: (res, path) => {
+        if (path.endsWith('.jpg') || path.endsWith('.png') || path.endsWith('.gif') || path.endsWith('.webp')) {
+            res.setHeader('Cache-Control', 'public, max-age=86400'); // 图片缓存1天
+        }
+    }
+}));
+app.use('/uploads', express.static('./static/uploads', {
+    maxAge: '1h', // 1小时缓存
+    etag: true,
+    lastModified: true
+}));
 
 // 确保必要的目录存在
 const ensureDirectoryExists = (dirPath) => {
@@ -186,11 +253,11 @@ app.post('/api/upload/file', upload.single('file'), (req, res) => {
     }
 });
 
-// Base64图片保存接口
-app.post('/api/upload/base64', (req, res) => {
+// Base64图片保存接口（异步优化版）
+app.post('/api/upload/base64', async (req, res) => {
     try {
         const { imageData, filename, uploadType = 'products' } = req.body;
-        
+
         if (!imageData || !filename) {
             return res.status(400).json({ success: false, message: '缺少必要参数' });
         }
@@ -205,7 +272,7 @@ app.post('/api/upload/base64', (req, res) => {
         const data = matches[2];
         const timestamp = Date.now();
         const finalFilename = `${path.basename(filename, path.extname(filename))}-${timestamp}.${ext}`;
-        
+
         let uploadPath, relativePath;
         if (uploadType === 'content') {
             uploadPath = `./static/images/content/products/${finalFilename}`;
@@ -217,12 +284,12 @@ app.post('/api/upload/base64', (req, res) => {
 
         // 确保目录存在
         ensureDirectoryExists(path.dirname(uploadPath));
-        
-        // 保存文件
-        fs.writeFileSync(uploadPath, data, 'base64');
-        
+
+        // 异步保存文件
+        await fs.promises.writeFile(uploadPath, data, 'base64');
+
         console.log(`💾 Base64图片保存成功: ${relativePath}`);
-        
+
         res.json({
             success: true,
             message: 'Base64图片保存成功',
@@ -235,26 +302,30 @@ app.post('/api/upload/base64', (req, res) => {
     }
 });
 
-// 保存MD文件接口
-app.post('/api/products/save', (req, res) => {
+// 保存MD文件接口（异步优化版）
+app.post('/api/products/save', async (req, res) => {
     try {
         const { id, content, filename } = req.body;
-        
+
         if (!content) {
             return res.status(400).json({ success: false, message: '缺少文件内容' });
         }
 
         const finalFilename = filename || `${id || 'product'}.md`;
         const filePath = `./content/products/${finalFilename}`;
-        
+
         // 确保目录存在
         ensureDirectoryExists('./content/products');
-        
-        // 保存MD文件
-        fs.writeFileSync(filePath, content, 'utf8');
-        
+
+        // 异步保存MD文件
+        await fs.promises.writeFile(filePath, content, 'utf8');
+
+        // 清除相关缓存
+        const cacheKey = getCacheKey('products', {});
+        cache.delete(cacheKey);
+
         console.log(`📝 MD文件保存成功: ${filePath}`);
-        
+
         res.json({
             success: true,
             message: 'MD文件保存成功',
@@ -267,26 +338,36 @@ app.post('/api/products/save', (req, res) => {
     }
 });
 
-// 获取产品列表接口
-app.get('/api/products/list', (req, res) => {
+// 获取产品列表接口（缓存优化版）
+app.get('/api/products/list', async (req, res) => {
     try {
-        const productsDir = './content/products';
-        if (!fs.existsSync(productsDir)) {
-            return res.json({ success: true, products: [] });
+        const cacheKey = getCacheKey('products', req.query);
+        const cached = getCache(cacheKey);
+
+        if (cached) {
+            return res.json(cached);
         }
 
-        const files = fs.readdirSync(productsDir)
-            .filter(file => file.endsWith('.md') && file !== '_index.md')
-            .map(file => {
+        const productsDir = './content/products';
+        if (!fs.existsSync(productsDir)) {
+            const result = { success: true, products: [] };
+            setCache(cacheKey, result);
+            return res.json(result);
+        }
+
+        const files = await fs.promises.readdir(productsDir);
+        const productFiles = files.filter(file => file.endsWith('.md') && file !== '_index.md');
+
+        const products = await Promise.all(productFiles.map(async (file) => {
+            try {
                 const filePath = path.join(productsDir, file);
-                const content = fs.readFileSync(filePath, 'utf8');
+                const content = await fs.promises.readFile(filePath, 'utf8');
                 const id = path.basename(file, '.md');
-                
+
                 // 简单解析front matter
                 const frontMatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
                 let frontMatter = {};
                 if (frontMatterMatch) {
-                    // 这里可以添加更复杂的YAML解析
                     const lines = frontMatterMatch[1].split('\n');
                     lines.forEach(line => {
                         const match = line.match(/^(\w+):\s*"?([^"]*)"?$/);
@@ -295,7 +376,7 @@ app.get('/api/products/list', (req, res) => {
                         }
                     });
                 }
-                
+
                 return {
                     id,
                     filename: file,
@@ -304,21 +385,37 @@ app.get('/api/products/list', (req, res) => {
                     summary: frontMatter.summary || '',
                     ...frontMatter
                 };
-            });
+            } catch (error) {
+                console.error(`处理产品文件 ${file} 失败:`, error);
+                return null;
+            }
+        }));
 
-        res.json({ success: true, products: files });
+        const result = {
+            success: true,
+            products: products.filter(p => p !== null)
+        };
+
+        setCache(cacheKey, result);
+        res.json(result);
     } catch (error) {
         console.error('获取产品列表失败:', error);
         res.status(500).json({ success: false, message: '获取产品列表失败: ' + error.message });
     }
 });
 
-// 获取媒体库列表接口 - 扫描现有项目文件夹
-app.get('/api/media/list', (req, res) => {
+// 获取媒体库列表接口 - 扫描现有项目文件夹（性能优化版）
+app.get('/api/media/list', async (req, res) => {
     try {
-        const mediaLibrary = [];
         const { category, type, search, supplier } = req.query;
+        const cacheKey = getCacheKey('media-list', { category, type, search, supplier });
+        const cached = getCache(cacheKey);
 
+        if (cached) {
+            return res.json(cached);
+        }
+
+        const mediaLibrary = [];
         console.log('📂 扫描项目媒体文件夹...');
 
         // 定义图片文件夹映射
@@ -341,21 +438,21 @@ app.get('/api/media/list', (req, res) => {
             'certificates': './static/uploads/certificates'
         };
 
-        // 扫描图片文件夹
-        Object.keys(imageFolders).forEach(categoryKey => {
+        // 异步扫描图片文件夹
+        await Promise.all(Object.keys(imageFolders).map(async (categoryKey) => {
             const folderPath = imageFolders[categoryKey];
             if (fs.existsSync(folderPath)) {
-                scanFolder(folderPath, categoryKey, 'image', mediaLibrary);
+                await scanFolderAsync(folderPath, categoryKey, 'image', mediaLibrary);
             }
-        });
+        }));
 
-        // 扫描文件文件夹
-        Object.keys(fileFolders).forEach(categoryKey => {
+        // 异步扫描文件文件夹
+        await Promise.all(Object.keys(fileFolders).map(async (categoryKey) => {
             const folderPath = fileFolders[categoryKey];
             if (fs.existsSync(folderPath)) {
-                scanFolder(folderPath, categoryKey, 'file', mediaLibrary);
+                await scanFolderAsync(folderPath, categoryKey, 'file', mediaLibrary);
             }
-        });
+        }));
 
         // 应用筛选条件
         let filteredMedia = mediaLibrary;
@@ -379,8 +476,15 @@ app.get('/api/media/list', (req, res) => {
             );
         }
 
+        const result = {
+            success: true,
+            media: filteredMedia,
+            total: mediaLibrary.length
+        };
+
+        setCache(cacheKey, result);
         console.log(`✅ 项目媒体库扫描完成，共找到 ${mediaLibrary.length} 个文件，筛选后 ${filteredMedia.length} 个`);
-        res.json({ success: true, media: filteredMedia, total: mediaLibrary.length });
+        res.json(result);
     } catch (error) {
         console.error('获取媒体库列表失败:', error);
         res.status(500).json({ success: false, message: '获取媒体库列表失败: ' + error.message });
@@ -508,7 +612,85 @@ app.delete('/api/media/batch', (req, res) => {
     }
 });
 
-// 扫描文件夹的辅助函数
+// 异步扫描文件夹的辅助函数
+async function scanFolderAsync(folderPath, category, type, mediaLibrary) {
+    try {
+        const items = await fs.promises.readdir(folderPath);
+
+        await Promise.all(items.map(async (item) => {
+            try {
+                const itemPath = path.join(folderPath, item);
+                const stats = await fs.promises.stat(itemPath);
+
+                if (stats.isFile()) {
+                    // 检查文件类型
+                    const ext = path.extname(item).toLowerCase();
+                    const isImage = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'].includes(ext);
+                    const isFile = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt', '.zip', '.rar', '.7z'].includes(ext);
+
+                    if ((type === 'image' && isImage) || (type === 'file' && (isFile || !isImage))) {
+                        const relativePath = type === 'image' ?
+                            `/images/${category}/${item}` :
+                            `/uploads/${category}/${item}`;
+
+                        mediaLibrary.push({
+                            id: `${type}-${category}-${item}`,
+                            name: item,
+                            type: type,
+                            supplier: category,
+                            category: category,
+                            path: relativePath,
+                            size: stats.size,
+                            uploadDate: stats.mtime.toISOString().split('T')[0]
+                        });
+                    }
+                } else if (stats.isDirectory()) {
+                    // 递归扫描子文件夹
+                    const subItems = await fs.promises.readdir(itemPath);
+
+                    await Promise.all(subItems.map(async (subItem) => {
+                        try {
+                            const subItemPath = path.join(itemPath, subItem);
+                            const subStats = await fs.promises.stat(subItemPath);
+
+                            if (subStats.isFile()) {
+                                const ext = path.extname(subItem).toLowerCase();
+                                const isImage = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'].includes(ext);
+                                const isFile = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt', '.zip', '.rar', '.7z'].includes(ext);
+
+                                if ((type === 'image' && isImage) || (type === 'file' && (isFile || !isImage))) {
+                                    const relativePath = type === 'image' ?
+                                        `/images/${category}/${item}/${subItem}` :
+                                        `/uploads/${category}/${item}/${subItem}`;
+
+                                    mediaLibrary.push({
+                                        id: `${type}-${category}-${item}-${subItem}`,
+                                        name: subItem,
+                                        type: type,
+                                        supplier: `${category}/${item}`,
+                                        category: category,
+                                        subfolder: item,
+                                        path: relativePath,
+                                        size: subStats.size,
+                                        uploadDate: subStats.mtime.toISOString().split('T')[0]
+                                    });
+                                }
+                            }
+                        } catch (error) {
+                            console.error(`处理子文件 ${subItem} 失败:`, error);
+                        }
+                    }));
+                }
+            } catch (error) {
+                console.error(`处理文件 ${item} 失败:`, error);
+            }
+        }));
+    } catch (error) {
+        console.error(`扫描文件夹 ${folderPath} 失败:`, error);
+    }
+}
+
+// 扫描文件夹的辅助函数（保留同步版本用于兼容）
 function scanFolder(folderPath, category, type, mediaLibrary) {
     try {
         const items = fs.readdirSync(folderPath);

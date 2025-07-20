@@ -44,6 +44,37 @@
       color: white;
       padding: 2rem;
       text-align: center;
+      position: relative;
+    }
+
+    .service-status {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.875rem;
+    }
+
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+      animation: pulse 2s infinite;
+    }
+
+    .status-indicator.online {
+      background: #10b981;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
     }
 
     .content {
@@ -354,6 +385,10 @@
   <div id="app" class="container">
     <div class="main-card">
       <div class="header">
+        <div class="service-status">
+          <div class="status-indicator" :class="{ online: serviceOnline }"></div>
+          <span>{{ serviceOnline ? 'Python服务在线' : 'Python服务离线' }}</span>
+        </div>
         <h1><i class="bi bi-image"></i> 图片处理工具</h1>
         <p class="mb-0">专为展会图片优化设计的批量处理工具</p>
       </div>
@@ -770,13 +805,23 @@
 
         async checkServiceStatus() {
           try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000);
+
             const response = await fetch('http://localhost:5000/api/health', {
               method: 'GET',
-              timeout: 3000
+              signal: controller.signal
             });
+
+            clearTimeout(timeoutId);
             this.serviceOnline = response.ok;
+
+            if (this.serviceOnline) {
+              console.log('✅ Python服务连接成功');
+            }
           } catch (error) {
             this.serviceOnline = false;
+            console.log('❌ Python服务连接失败:', error.message);
           }
         },
 
@@ -812,6 +857,9 @@
               max_images: parseInt(this.pythonMaxImages) || 50
             };
 
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 30000); // 30秒超时
+
             const response = await fetch('http://localhost:5000/api/crawl', {
               method: 'POST',
               headers: {
@@ -820,8 +868,11 @@
               body: JSON.stringify({
                 url: url,
                 filters: filters
-              })
+              }),
+              signal: controller.signal
             });
+
+            clearTimeout(timeoutId);
 
             const result = await response.json();
 
@@ -1176,6 +1227,9 @@
             const urls = selectedImages.map(img => img.src);
             const filenames = selectedImages.map(img => img.customName || img.originalName);
 
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 60000); // 60秒超时
+
             const response = await fetch('http://localhost:5000/api/download', {
               method: 'POST',
               headers: {
@@ -1184,8 +1238,11 @@
               body: JSON.stringify({
                 urls: urls,
                 filenames: filenames
-              })
+              }),
+              signal: controller.signal
             });
+
+            clearTimeout(timeoutId);
 
             if (response.ok) {
               const blob = await response.blob();

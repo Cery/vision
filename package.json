@@ -4,11 +4,15 @@
   "description": "维森视觉检测仪器网站",
   "scripts": {
     "start": "node server.js",
+    "start:optimized": "node --expose-gc start-optimized.js",
+    "start:cluster": "set CLUSTER_MODE=true && node --expose-gc start-optimized.js",
+    "start:production": "set NODE_ENV=production && node --expose-gc start-optimized.js",
     "dev": "npm-run-all --parallel hugo cms product-server",
     "hugo": "hugo server -D --port 1313",
     "cms": "netlify-cms-proxy-server --port 8081 --config static/admin/config.yml",
     "product-server": "node product-server.js",
     "product-server:dev": "nodemon product-server.js",
+    "content-server": "node content-server.js",
     "build": "hugo --gc --minify",
     "build:css": "postcss static/css/main.css -o static/css/main.min.css",
     "cms:proxy": "netlify-cms-proxy-server --port 8081 --config static/admin/config.yml",
@@ -18,12 +22,15 @@
     "setup": "node scripts/setup-dev-environment.js",
     "images:optimize": "node scripts/optimize-images.js",
     "images:validate": "node scripts/validate-all-images.js",
-    "images:placeholders": "node scripts/create-placeholder-images.js",
-    "images:all": "node scripts/run-image-optimization.js",
+    "images:placeholders": "echo \"Placeholder script moved to archive\"",
+    "images:all": "echo \"Image optimization script moved to archive\"",
+    "monitor": "node scripts/performance-monitor.js",
+    "optimize:filesystem": "node scripts/filesystem-optimizer.js",
     "clean": "rimraf public resources optimization-results",
     "test": "echo \"No tests specified\" && exit 0"
   },
   "dependencies": {
+    "compression": "^1.8.1",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "multer": "^1.4.5-lts.1"

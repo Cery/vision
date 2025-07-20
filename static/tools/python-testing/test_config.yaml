@@ -1,0 +1,246 @@
+# Vision NDT 测试配置文件
+
+# 服务配置
+services:
+  hugo_site:
+    url: "http://localhost:1313"
+    timeout: 30
+  
+  api_server:
+    url: "http://localhost:3000"
+    timeout: 10
+  
+  python_crawler:
+    url: "http://localhost:5000"
+    timeout: 15
+  
+  requirements_api:
+    url: "http://localhost:5001"
+    timeout: 10
+
+# 测试配置
+testing:
+  # 浏览器配置
+  browser:
+    headless: true
+    window_size: [1920, 1080]
+    timeout: 30
+    
+  # 性能阈值
+  performance:
+    page_load_threshold: 5000  # 毫秒
+    api_response_threshold: 2000  # 毫秒
+    image_load_threshold: 1000  # 毫秒
+    
+  # 并发配置
+  concurrency:
+    max_workers: 5
+    batch_size: 10
+    
+  # 重试配置
+  retry:
+    max_attempts: 3
+    delay: 1  # 秒
+
+# 测试页面列表
+test_pages:
+  - name: "首页"
+    url: "/"
+    critical: true
+    elements:
+      - selector: "nav"
+        description: "导航栏"
+      - selector: ".carousel"
+        description: "轮播图"
+      - selector: "footer"
+        description: "页脚"
+        
+  - name: "产品中心"
+    url: "/products"
+    critical: true
+    elements:
+      - selector: ".product-grid"
+        description: "产品网格"
+      - selector: ".filter-sidebar"
+        description: "筛选侧栏"
+        
+  - name: "资讯中心"
+    url: "/news"
+    critical: true
+    elements:
+      - selector: ".news-list"
+        description: "资讯列表"
+      - selector: ".pagination"
+        description: "分页"
+        
+  - name: "需求中心"
+    url: "/requirements"
+    critical: true
+    elements:
+      - selector: "#requirementForm"
+        description: "需求表单"
+      - selector: ".requirements-list"
+        description: "需求列表"
+        
+  - name: "商务服务"
+    url: "/cooperation"
+    critical: false
+    
+  - name: "应用领域"
+    url: "/applications"
+    critical: false
+    
+  - name: "应用案例"
+    url: "/cases"
+    critical: false
+    
+  - name: "搜索页面"
+    url: "/search"
+    critical: false
+
+# API端点测试
+api_endpoints:
+  - name: "健康检查"
+    url: "/api/health"
+    method: "GET"
+    expected_status: 200
+    critical: true
+    
+  - name: "产品列表"
+    url: "/api/products/list"
+    method: "GET"
+    expected_status: 200
+    critical: true
+    response_checks:
+      - type: "json"
+        key: "products"
+        
+  - name: "媒体库"
+    url: "/api/media/list"
+    method: "GET"
+    expected_status: 200
+    critical: true
+    
+  - name: "搜索索引"
+    url: "/index.json"
+    method: "GET"
+    expected_status: 200
+    critical: true
+    response_checks:
+      - type: "json_array"
+        min_length: 1
+
+# 工具页面测试
+tool_pages:
+  - name: "工具首页"
+    url: "/tools/"
+    
+  - name: "展会编辑器"
+    url: "/tools/exhibition-editor.html"
+    
+  - name: "图片处理器"
+    url: "/tools/image-processor.html"
+    
+  - name: "内容管理器"
+    url: "/tools/content-manager.html"
+    
+  - name: "技术文章编辑器"
+    url: "/tools/tech-article-editor.html"
+    
+  - name: "行业资讯编辑器"
+    url: "/tools/industry-news-editor.html"
+    
+  - name: "案例研究编辑器"
+    url: "/tools/case-study-editor.html"
+    
+  - name: "自动化测试系统"
+    url: "/tools/automated-testing-system.html"
+
+# 安全测试配置
+security_tests:
+  - name: "XSS防护"
+    type: "xss"
+    payloads:
+      - "<script>alert('xss')</script>"
+      - "javascript:alert('xss')"
+      - "<img src=x onerror=alert('xss')>"
+      
+  - name: "SQL注入防护"
+    type: "sql_injection"
+    payloads:
+      - "'; DROP TABLE users; --"
+      - "' OR '1'='1"
+      - "UNION SELECT * FROM users"
+      
+  - name: "文件上传安全"
+    type: "file_upload"
+    test_files:
+      - name: "malicious.php"
+        content: "<?php echo 'test'; ?>"
+        type: "text/php"
+      - name: "script.js"
+        content: "alert('test');"
+        type: "application/javascript"
+
+# 性能测试配置
+performance_tests:
+  - name: "首页加载性能"
+    url: "/"
+    threshold: 3000
+    metrics:
+      - "load_time"
+      - "dom_content_loaded"
+      - "first_paint"
+      
+  - name: "产品页面性能"
+    url: "/products"
+    threshold: 5000
+    metrics:
+      - "load_time"
+      - "api_response_time"
+      
+  - name: "API响应性能"
+    url: "/api/products/list"
+    threshold: 2000
+    metrics:
+      - "response_time"
+      - "data_size"
+
+# 报告配置
+reporting:
+  output_dir: "test_reports"
+  formats:
+    - "json"
+    - "html"
+    - "markdown"
+  
+  include_screenshots: true
+  include_logs: true
+  include_metrics: true
+  
+  # 报告保存到content目录
+  save_to_content: true
+  content_path: "content/test-reports"
+
+# 通知配置
+notifications:
+  enabled: false
+  email:
+    smtp_server: ""
+    smtp_port: 587
+    username: ""
+    password: ""
+    recipients: []
+  
+  webhook:
+    url: ""
+    headers: {}
+
+# 日志配置
+logging:
+  level: "INFO"
+  file: "test_service.log"
+  max_size: "10MB"
+  backup_count: 5
+  
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

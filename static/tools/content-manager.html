@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>内容管理系统 - Vision NDT</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --sidebar-width: 300px;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .cms-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-header h4 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 20px;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .content-header {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .filter-section {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .content-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .content-item {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .content-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .content-item.active {
+            background-color: #e3f2fd;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .content-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .content-meta {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .editor-section {
+            display: none;
+        }
+        
+        .editor-section.active {
+            display: block;
+        }
+        
+        .editor-tabs {
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 20px;
+        }
+        
+        .editor-tabs .nav-link {
+            border: none;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .editor-tabs .nav-link.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .form-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .preview-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            min-height: 400px;
+        }
+        
+        .btn-group-custom {
+            gap: 10px;
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .stats-number {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .stats-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 12px 20px;
+            border-radius: 0;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .nav-link.active {
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+        }
+        
+        .CodeMirror {
+            height: 400px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        .badge-category {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+        }
+        
+        .supplier-badge {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .category-badge {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .date-badge {
+            background-color: #e8f5e8;
+            color: #388e3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="cms-layout">
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h4><i class="bi bi-files"></i> 内容管理系统</h4>
+                <small>Vision NDT CMS</small>
+            </div>
+            
+            <!-- 统计信息 -->
+            <div class="p-3">
+                <div class="stats-card">
+                    <div class="stats-number" id="totalContent">0</div>
+                    <div class="stats-label">总内容数</div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="text-center">
+                            <div class="h5 mb-0" id="newsCount">0</div>
+                            <small>新闻</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-center">
+                            <div class="h5 mb-0" id="productsCount">0</div>
+                            <small>产品</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <div class="text-center">
+                            <div class="h5 mb-0" id="casesCount">0</div>
+                            <small>案例</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 导航菜单 -->
+            <nav class="nav flex-column">
+                <a class="nav-link active" href="#" data-section="dashboard">
+                    <i class="bi bi-speedometer2 me-2"></i>数据统计
+                </a>
+                <a class="nav-link" href="#" data-section="news">
+                    <i class="bi bi-newspaper me-2"></i>新闻管理
+                </a>
+                <a class="nav-link" href="#" data-section="products">
+                    <i class="bi bi-box me-2"></i>产品管理
+                </a>
+                <a class="nav-link" href="#" data-section="cases">
+                    <i class="bi bi-lightbulb me-2"></i>案例管理
+                </a>
+                <a class="nav-link" href="#" data-section="suppliers">
+                    <i class="bi bi-building me-2"></i>供应商管理
+                </a>
+                <a class="nav-link" href="#" data-section="requirements">
+                    <i class="bi bi-clipboard-data me-2"></i>需求管理
+                </a>
+                <a class="nav-link" href="#" data-section="settings">
+                    <i class="bi bi-gear me-2"></i>系统设置
+                </a>
+            </nav>
+            
+            <!-- 快速操作 -->
+            <div class="p-3 mt-auto">
+                <button class="btn btn-light btn-sm w-100 mb-2" onclick="refreshContent()">
+                    <i class="bi bi-arrow-clockwise me-1"></i>刷新数据
+                </button>
+                <button class="btn btn-outline-light btn-sm w-100" onclick="exportData()">
+                    <i class="bi bi-download me-1"></i>导出数据
+                </button>
+            </div>
+        </div>
+        
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <!-- 数据统计仪表板 -->
+            <div id="dashboard-section" class="content-section active">
+                <div class="content-card">
+                    <div class="content-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="bi bi-speedometer2 me-2"></i>内容统计仪表板</h5>
+                            <div>
+                                <button class="btn btn-outline-primary btn-sm me-2" onclick="refreshAllData()">
+                                    <i class="bi bi-arrow-clockwise me-1"></i>刷新数据
+                                </button>
+                                <span id="lastUpdateTime" class="text-muted small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 数据源状态 -->
+                    <div class="p-3">
+                        <div id="dataSourceStatus" class="alert alert-info" style="display: none;">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <span id="dataSourceMessage">正在检测数据源...</span>
+                        </div>
+                    </div>
+
+                    <!-- 总览统计 -->
+                    <div class="p-3">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="card text-center border-primary">
+                                    <div class="card-body">
+                                        <i class="bi bi-box text-primary" style="font-size: 2rem;"></i>
+                                        <h3 id="totalProducts" class="mt-2 mb-0">-</h3>
+                                        <p class="text-muted mb-0">产品总数</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center border-success">
+                                    <div class="card-body">
+                                        <i class="bi bi-newspaper text-success" style="font-size: 2rem;"></i>
+                                        <h3 id="totalNews" class="mt-2 mb-0">-</h3>
+                                        <p class="text-muted mb-0">新闻总数</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center border-warning">
+                                    <div class="card-body">
+                                        <i class="bi bi-lightbulb text-warning" style="font-size: 2rem;"></i>
+                                        <h3 id="totalCases" class="mt-2 mb-0">-</h3>
+                                        <p class="text-muted mb-0">案例总数</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center border-info">
+                                    <div class="card-body">
+                                        <i class="bi bi-building text-info" style="font-size: 2rem;"></i>
+                                        <h3 id="totalSuppliers" class="mt-2 mb-0">-</h3>
+                                        <p class="text-muted mb-0">供应商总数</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 详细统计 -->
+                    <div class="p-3">
+                        <div class="row">
+                            <!-- 产品统计 -->
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0"><i class="bi bi-box me-2"></i>产品分类统计</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="productCategoryStats">
+                                            <div class="text-center text-muted">
+                                                <div class="spinner-border spinner-border-sm me-2"></div>
+                                                加载中...
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 内容发布统计 -->
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0"><i class="bi bi-calendar3 me-2"></i>内容发布统计</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="publishStats">
+                                            <div class="text-center text-muted">
+                                                <div class="spinner-border spinner-border-sm me-2"></div>
+                                                加载中...
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 新闻管理 -->
+            <div id="news-section" class="content-section">
+                <div class="content-card">
+                    <div class="content-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="bi bi-newspaper me-2"></i>新闻内容管理</h5>
+                            <button class="btn btn-primary" onclick="createNewContent('news')">
+                                <i class="bi bi-plus-lg me-1"></i>新建新闻
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 筛选器 -->
+                    <div class="p-3">
+                        <div class="filter-section">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <select class="form-select" id="newsCategory">
+                                        <option value="">所有分类</option>
+                                        <option value="tech-article">技术文章</option>
+                                        <option value="industry">行业资讯</option>
+                                        <option value="exhibition">展会信息</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="date" class="form-control" id="newsDate" placeholder="选择日期">
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="newsSearch" placeholder="搜索标题或内容...">
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-outline-primary w-100" onclick="filterNews()">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 内容列表 -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="content-list" id="newsList">
+                                    <div class="loading">
+                                        <i class="bi bi-arrow-clockwise spin"></i>
+                                        <div>加载中...</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="editor-section" id="newsEditor">
+                                    <div class="empty-state">
+                                        <i class="bi bi-file-earmark-text"></i>
+                                        <h5>选择一个新闻进行编辑</h5>
+                                        <p>从左侧列表中选择新闻内容，或创建新的新闻文章</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 产品管理 -->
+            <div id="products-section" class="content-section">
+                <div class="content-card">
+                    <div class="content-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="bi bi-box me-2"></i>产品内容管理</h5>
+                            <button class="btn btn-primary" onclick="createNewContent('products')">
+                                <i class="bi bi-plus-lg me-1"></i>新建产品
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 筛选器 -->
+                    <div class="p-3">
+                        <div class="filter-section">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <select class="form-select" id="productSupplier">
+                                        <option value="">所有供应商</option>
+                                        <option value="vis">天津维森科技</option>
+                                        <option value="vs">深圳微视光电</option>
+                                        <option value="hk">北京华科检测</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="productCategory">
+                                        <option value="">所有类型</option>
+                                        <option value="电子内窥镜">电子内窥镜</option>
+                                        <option value="光纤内窥镜">光纤内窥镜</option>
+                                        <option value="光学内窥镜">光学内窥镜</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="productSearch" placeholder="搜索产品型号或名称...">
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-outline-primary w-100" onclick="filterProducts()">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 内容列表 -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="content-list" id="productsList">
+                                    <div class="loading">
+                                        <i class="bi bi-arrow-clockwise spin"></i>
+                                        <div>加载中...</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="editor-section" id="productsEditor">
+                                    <div class="empty-state">
+                                        <i class="bi bi-box"></i>
+                                        <h5>选择一个产品进行编辑</h5>
+                                        <p>从左侧列表中选择产品信息，或创建新的产品</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 案例管理 -->
+            <div id="cases-section" class="content-section">
+                <div class="content-card">
+                    <div class="content-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="bi bi-lightbulb me-2"></i>案例内容管理</h5>
+                            <button class="btn btn-primary" onclick="createNewContent('cases')">
+                                <i class="bi bi-plus-lg me-1"></i>新建案例
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 筛选器和列表 -->
+                    <div class="p-3">
+                        <div class="filter-section">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <select class="form-select" id="caseIndustry">
+                                        <option value="">所有行业</option>
+                                        <option value="汽车制造">汽车制造</option>
+                                        <option value="航空航天">航空航天</option>
+                                        <option value="机械制造">机械制造</option>
+                                        <option value="电力能源">电力能源</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="caseCategory">
+                                        <option value="">所有类型</option>
+                                        <option value="电子内窥镜">电子内窥镜</option>
+                                        <option value="光纤内窥镜">光纤内窥镜</option>
+                                        <option value="光学内窥镜">光学内窥镜</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="caseSearch" placeholder="搜索案例标题...">
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-outline-primary w-100" onclick="filterCases()">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 内容列表 -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="content-list" id="casesList">
+                                    <div class="loading">
+                                        <i class="bi bi-arrow-clockwise spin"></i>
+                                        <div>加载中...</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="editor-section" id="casesEditor">
+                                    <div class="empty-state">
+                                        <i class="bi bi-lightbulb"></i>
+                                        <h5>选择一个案例进行编辑</h5>
+                                        <p>从左侧列表中选择案例内容，或创建新的应用案例</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 供应商管理 -->
+            <div id="suppliers-section" class="content-section">
+                <div class="content-card">
+                    <div class="content-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="bi bi-building me-2"></i>供应商管理</h5>
+                            <button class="btn btn-primary" onclick="createNewContent('suppliers')">
+                                <i class="bi bi-plus-lg me-1"></i>新建供应商
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 筛选器和列表 -->
+                    <div class="p-3">
+                        <div class="filter-section">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <select class="form-select" id="supplierStatus">
+                                        <option value="">所有状态</option>
+                                        <option value="active">活跃</option>
+                                        <option value="inactive">非活跃</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="supplierCategory">
+                                        <option value="">所有类别</option>
+                                        <option value="设备供应商">设备供应商</option>
+                                        <option value="技术服务商">技术服务商</option>
+                                        <option value="代理商">代理商</option>
+                                        <option value="合作伙伴">合作伙伴</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="supplierSearch" placeholder="搜索供应商名称...">
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-outline-primary w-100" onclick="filterSuppliers()">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 内容列表 -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="content-list" id="suppliersList">
+                                    <div class="loading">
+                                        <i class="bi bi-arrow-clockwise spin"></i>
+                                        <div>加载中...</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="editor-section" id="suppliersEditor">
+                                    <div class="empty-state">
+                                        <i class="bi bi-building"></i>
+                                        <h5>选择一个供应商进行编辑</h5>
+                                        <p>从左侧列表中选择供应商信息，或创建新的供应商档案</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 需求管理 -->
+            <div id="requirements-section" class="content-section">
+                <div class="content-card">
+                    <div class="content-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="bi bi-clipboard-data me-2"></i>需求管理</h5>
+                            <div class="btn-group">
+                                <button class="btn btn-outline-secondary btn-sm" onclick="window.contentManager.manualSync()" title="同步数据">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                </button>
+                                <button class="btn btn-primary" onclick="createNewContent('requirements')">
+                                    <i class="bi bi-plus-lg me-1"></i>新建需求
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 筛选器和列表 -->
+                    <div class="p-3">
+                        <div class="filter-section">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <select class="form-select" id="requirementStatus">
+                                        <option value="">所有状态</option>
+                                        <option value="active">活跃</option>
+                                        <option value="pending">待处理</option>
+                                        <option value="completed">已完成</option>
+                                        <option value="cancelled">已取消</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="requirementType">
+                                        <option value="">所有类型</option>
+                                        <option value="electronic">电子内窥镜</option>
+                                        <option value="fiber">光纤内窥镜</option>
+                                        <option value="rigid">硬性内窥镜</option>
+                                        <option value="other">其他设备</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="requirementUrgency">
+                                        <option value="">所有紧急程度</option>
+                                        <option value="high">高</option>
+                                        <option value="medium">中</option>
+                                        <option value="low">低</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="requirementSearch" placeholder="搜索需求...">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 需求列表 -->
+                        <div class="content-list">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="list-panel">
+                                        <div class="list-header">
+                                            <h6>需求列表 <span class="badge bg-primary" id="requirementCount">0</span></h6>
+                                        </div>
+                                        <div class="list-content" id="requirementList">
+                                            <div class="empty-state">
+                                                <i class="bi bi-clipboard-data"></i>
+                                                <p>暂无需求信息</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="preview-panel">
+                                        <div class="preview-header">
+                                            <h6>需求详情</h6>
+                                        </div>
+                                        <div class="preview-content" id="requirementPreview">
+                                            <div class="empty-state">
+                                                <i class="bi bi-eye"></i>
+                                                <p>从左侧列表中选择需求内容，或创建新的需求信息</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑器模态框 -->
+    <div class="modal fade" id="editorModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editorModalTitle">编辑内容</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- 编辑器标签页 -->
+                    <ul class="nav nav-tabs editor-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#metaTab">基本信息</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#contentTab">内容编辑</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#previewTab">预览</a>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content mt-3">
+                        <!-- 基本信息 -->
+                        <div class="tab-pane fade show active" id="metaTab">
+                            <div id="metaForm">
+                                <!-- 动态生成的表单 -->
+                            </div>
+                        </div>
+                        
+                        <!-- 内容编辑 -->
+                        <div class="tab-pane fade" id="contentTab">
+                            <textarea id="contentEditor"></textarea>
+                        </div>
+                        
+                        <!-- 预览 -->
+                        <div class="tab-pane fade" id="previewTab">
+                            <div class="preview-section" id="contentPreview">
+                                <div class="text-center text-muted">
+                                    <i class="bi bi-eye"></i>
+                                    <p>内容预览将在这里显示</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger" id="deleteBtn" onclick="deleteContent()">删除</button>
+                    <button type="button" class="btn btn-primary" onclick="saveContent()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 脚本 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/markdown/markdown.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="js/content-manager.js"></script>
+</body>
+</html>

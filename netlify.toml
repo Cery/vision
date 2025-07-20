@@ -125,11 +125,7 @@
   status = 200
   force = false
 
-[[redirects]]
-  from = "/customs/*"
-  to = "/customs/:splat"
-  status = 200
-  force = false
+
 
 [[redirects]]
   from = "/cooperation/*"

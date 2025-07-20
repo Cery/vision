@@ -59,7 +59,7 @@ collections:
             name: "partner_companies_display"
             widget: "list"
             fields:
-              - {label: "企业", name: "company", widget: "relation", collection: "suppliers", search_fields: ["title"], value_field: "slug", display_fields: ["title"], multiple: true}
+              - {label: "企业", name: "company", widget: "string"}
           - {label: "行业资讯标题", name: "industry_news_title", widget: "string", default: "行业资讯"}
           - {label: "展会资讯标题", name: "exhibition_news_title", widget: "string", default: "展会资讯"}
 
@@ -135,15 +135,7 @@ collections:
       - {label: "标题", name: "title", widget: "string"}
       - {label: "描述", name: "body", widget: "text"}
 
-  - name: "product_types"
-    label: "产品类型"
-    folder: "content/product_types"
-    create: true
-    slug: "{{slug}}"
-    identifier_field: "title"
-    fields:
-      - {label: "标题", name: "title", widget: "string"}
-      - {label: "描述", name: "body", widget: "text"}
+
 
   - name: "products"
     label: "产品"
@@ -192,41 +184,7 @@ collections:
         required: false
       - {label: "产品介绍", name: "body", widget: "markdown"}
 
-  - name: "suppliers"
-    label: "供应商"
-    folder: "content/suppliers"
-    create: true
-    fields:
-      - {label: "企业名称", name: "title", widget: "string"}
-      - {label: "企业地址", name: "address", widget: "string"}
-      - {label: "企业类型", name: "type", widget: "string"}
-      - label: "产品系列"
-        name: "series"
-        widget: "relation"
-        collection: "product_types"
-        search_fields: ["title"]
-        value_field: "title"
-        display_fields: ["title"]
-        multiple: true
-      - label: "产品型号"
-        name: "models"
-        widget: "relation"
-        collection: "products"
-        search_fields: ["title", "model"]
-        value_field: "title"
-        display_fields: ["title"]
-        multiple: true
-      - label: "企业相册"
-        name: "gallery"
-        widget: "list"
-        fields:
-          - {label: "图片", name: "image", widget: "image"}
-          - {label: "描述", name: "alt", widget: "string"}
-      - {label: "联系人", name: "contact_person", widget: "string"}
-      - {label: "职务", name: "position", widget: "string"}
-      - {label: "电话", name: "phone", widget: "string"}
-      - {label: "邮箱", name: "email", widget: "string"}
-      - {label: "公司简介", name: "body", widget: "markdown"}
+
 
   - name: "applications"
     label: "应用领域"
@@ -294,15 +252,7 @@ collections:
         required: false
       - {label: "浏览量", name: "views", widget: "number", default: 0, required: false}
 
-  - name: "customs"
-    label: "定制中心"
-    folder: "content/customs"
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - {label: "标题", name: "title", widget: "string"}
-      - {label: "描述", name: "body", widget: "markdown"}
-      - {label: "联系方式", name: "contact_info", widget: "string", required: false}
+
 
   - name: "business"
     label: "商务服务"

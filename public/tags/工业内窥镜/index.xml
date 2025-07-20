@@ -2,39 +2,46 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>工业内窥镜 on 维森视觉检测仪器</title>
-    <link>http://localhost:52117/tags/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C/</link>
+    <link>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C/</link>
     <description>Recent content in 工业内窥镜 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Wed, 16 Jul 2025 10:00:00 +0800</lastBuildDate>
-    <atom:link href="http://localhost:52117/tags/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>工业内窥镜技术发展趋势与应用前景</title>
-      <link>http://localhost:52117/news/2025-07-16-%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E6%8A%80%E6%9C%AF%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF/</link>
+      <link>http://localhost:1313/news/tech-article/2025-07-16-%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E6%8A%80%E6%9C%AF%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF/</link>
       <pubDate>Wed, 16 Jul 2025 10:00:00 +0800</pubDate>
-      <guid>http://localhost:52117/news/2025-07-16-%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E6%8A%80%E6%9C%AF%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF/</guid>
+      <guid>http://localhost:1313/news/tech-article/2025-07-16-%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E6%8A%80%E6%9C%AF%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF/</guid>
       <description>深入分析工业内窥镜技术的最新发展趋势，探讨其在各个工业领域的应用前景和技术创新方向。</description>
     </item>
     <item>
       <title>风力发电齿轮箱内窥镜检查应用案例 - 某海上风电场预防性维护项目</title>
-      <link>http://localhost:52117/news/2025-07-14-wind-turbine-gearbox-endoscope-inspection/</link>
+      <link>http://localhost:1313/cases/2025-07-14-wind-turbine-gearbox-endoscope-inspection/</link>
       <pubDate>Mon, 14 Jul 2025 16:45:00 +0800</pubDate>
-      <guid>http://localhost:52117/news/2025-07-14-wind-turbine-gearbox-endoscope-inspection/</guid>
+      <guid>http://localhost:1313/cases/2025-07-14-wind-turbine-gearbox-endoscope-inspection/</guid>
       <description>本案例详细介绍了工业内窥镜在海上风力发电齿轮箱检查中的成功应用，通过先进的内窥镜技术实现了非拆解检测，大幅降低了维护成本，提高了设备可靠性和发电效率。</description>
     </item>
     <item>
       <title>工业内窥镜图像处理算法优化技术研究</title>
-      <link>http://localhost:52117/news/2025-07-14-endoscope-image-processing-algorithm/</link>
+      <link>http://localhost:1313/news/tech-article/2025-07-14-endoscope-image-processing-algorithm/</link>
       <pubDate>Mon, 14 Jul 2025 14:20:00 +0800</pubDate>
-      <guid>http://localhost:52117/news/2025-07-14-endoscope-image-processing-algorithm/</guid>
+      <guid>http://localhost:1313/news/tech-article/2025-07-14-endoscope-image-processing-algorithm/</guid>
       <description>本文详细介绍了工业内窥镜图像处理的核心算法，包括图像增强、缺陷识别、深度学习应用等关键技术，为内窥镜图像处理系统的开发和优化提供技术指导。</description>
     </item>
     <item>
       <title>工业内窥镜市场迎来快速增长期 - 无损检测行业最新发展动态</title>
-      <link>http://localhost:52117/news/2025-07-14-industrial-endoscope-market-growth/</link>
+      <link>http://localhost:1313/news/industry/2025-07-14-industrial-endoscope-market-growth/</link>
       <pubDate>Mon, 14 Jul 2025 10:30:00 +0800</pubDate>
-      <guid>http://localhost:52117/news/2025-07-14-industrial-endoscope-market-growth/</guid>
+      <guid>http://localhost:1313/news/industry/2025-07-14-industrial-endoscope-market-growth/</guid>
       <description>本文深入分析了工业内窥镜在无损检测领域的最新发展趋势，探讨了相关技术创新、市场动态和未来发展方向，为行业从业者提供有价值的参考信息。</description>
+    </item>
+    <item>
+      <title>技术文章</title>
+      <link>http://localhost:1313/news/tech-article/</link>
+      <pubDate>Wed, 15 Jan 2025 10:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/news/tech-article/</guid>
+      <description>&lt;h1 id=&#34;技术文章&#34;&gt;技术文章&lt;/h1&gt;&#xA;&lt;p&gt;欢迎来到技术文章专区，这里汇集了工业内窥镜领域的专业技术内容，包括：&lt;/p&gt;&#xA;&lt;h2 id=&#34;主要内容分类&#34;&gt;主要内容分类&lt;/h2&gt;&#xA;&lt;h3 id=&#34;-图像处理技术&#34;&gt;🔬 图像处理技术&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;图像增强算法&lt;/li&gt;&#xA;&lt;li&gt;缺陷识别技术&lt;/li&gt;&#xA;&lt;li&gt;深度学习应用&lt;/li&gt;&#xA;&lt;li&gt;计算机视觉技术&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;-检测技术原理&#34;&gt;🔧 检测技术原理&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;光学检测原理&lt;/li&gt;&#xA;&lt;li&gt;电子内窥镜技术&lt;/li&gt;&#xA;&lt;li&gt;光纤传输技术&lt;/li&gt;&#xA;&lt;li&gt;传感器技术&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;-数据分析&#34;&gt;📊 数据分析&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;检测数据处理&lt;/li&gt;&#xA;&lt;li&gt;统计分析方法&lt;/li&gt;&#xA;&lt;li&gt;质量评估标准&lt;/li&gt;&#xA;&lt;li&gt;报告生成技术&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;-设备技术&#34;&gt;🛠️ 设备技术&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;硬件设计原理&lt;/li&gt;&#xA;&lt;li&gt;软件架构设计&lt;/li&gt;&#xA;&lt;li&gt;系统集成技术&lt;/li&gt;&#xA;&lt;li&gt;性能优化方法&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;技术特色&#34;&gt;技术特色&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;专业深度&lt;/strong&gt;：由行业专家撰写的深度技术文章&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;实用性强&lt;/strong&gt;：结合实际应用场景的技术解决方案&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;前沿技术&lt;/strong&gt;：跟踪行业最新技术发展趋势&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;案例分析&lt;/strong&gt;：真实项目案例的技术分析&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;适合读者&#34;&gt;适合读者&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;工业检测工程师&lt;/li&gt;&#xA;&lt;li&gt;图像处理算法工程师&lt;/li&gt;&#xA;&lt;li&gt;NDT技术人员&lt;/li&gt;&#xA;&lt;li&gt;质量控制专家&lt;/li&gt;&#xA;&lt;li&gt;技术研发人员&lt;/li&gt;&#xA;&lt;li&gt;高校相关专业师生&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;p&gt;&lt;em&gt;持续更新中，为您提供最新的工业内窥镜技术资讯&lt;/em&gt;&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

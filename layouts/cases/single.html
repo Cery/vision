@@ -146,7 +146,9 @@
                     {{ end }}
 
                     <!-- 显示相关案例 -->
-                    {{ $relatedCases = first 4 $relatedCases }}
+                    {{ if gt (len $relatedCases) 0 }}
+                        {{ $relatedCases = first 4 $relatedCases }}
+                    {{ end }}
                     {{ with $relatedCases }}
                     <div class="related-cases bg-white p-4 rounded shadow-sm mb-4">
                         <h4 class="mb-4">
@@ -165,8 +167,15 @@
                                     <div class="card-body p-3">
                                         <h6 class="card-title text-primary mb-2" style="font-size: 0.9rem;">{{ .Title }}</h6>
                                         <div class="mb-2">
-                                            {{ range first 2 .Params.application_scenario }}
-                                            <span class="badge bg-info text-dark me-1" style="font-size: 0.7rem;">{{ . }}</span>
+                                            {{ if .Params.application_scenario }}
+                                                {{ $scenarios := .Params.application_scenario }}
+                                                {{ if reflect.IsSlice $scenarios }}
+                                                    {{ range first 2 $scenarios }}
+                                                    <span class="badge bg-info text-dark me-1" style="font-size: 0.7rem;">{{ . }}</span>
+                                                    {{ end }}
+                                                {{ else }}
+                                                    <span class="badge bg-info text-dark me-1" style="font-size: 0.7rem;">{{ $scenarios }}</span>
+                                                {{ end }}
                                             {{ end }}
                                         </div>
                                         <small class="text-muted">{{ .Date.Format "2006-01-02" }}</small>

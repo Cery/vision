@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI工具测试 - Vision NDT</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .main-card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .content {
+      padding: 2rem;
+    }
+
+    .test-section {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid #e5e7eb;
+    }
+
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
+
+    .status-online {
+      background: #10b981;
+    }
+
+    .status-offline {
+      background: #ef4444;
+    }
+
+    .status-warning {
+      background: #f59e0b;
+    }
+
+    .test-result {
+      background: white;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+      border-left: 4px solid #e5e7eb;
+    }
+
+    .test-result.success {
+      border-left-color: #10b981;
+      background: #f0fdf4;
+    }
+
+    .test-result.error {
+      border-left-color: #ef4444;
+      background: #fef2f2;
+    }
+
+    .test-result.warning {
+      border-left-color: #f59e0b;
+      background: #fffbeb;
+    }
+
+    .btn-test {
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    pre {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="container">
+    <div class="main-card">
+      <div class="header">
+        <h1><i class="bi bi-robot"></i> AI工具测试</h1>
+        <p class="mb-0">测试各种AI大模型工具的配置和功能</p>
+      </div>
+
+      <div class="content">
+        <!-- OpenRouter API测试 -->
+        <div class="test-section">
+          <h5>
+            <span :class="['status-indicator', openRouterStatus]"></span>
+            OpenRouter API 配置测试
+          </h5>
+          <p class="text-muted">测试OpenRouter API的连接和配置状态</p>
+          
+          <div class="d-flex gap-2 mb-3">
+            <button @click="testOpenRouterConfig" :disabled="isLoading" class="btn btn-primary btn-test">
+              <span v-if="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+              测试配置
+            </button>
+            <button @click="testOpenRouterAPI" :disabled="isLoading" class="btn btn-success btn-test">
+              测试API调用
+            </button>
+            <button @click="testExhibitionGeneration" :disabled="isLoading" class="btn btn-info btn-test">
+              测试展会生成
+            </button>
+          </div>
+
+          <div v-if="openRouterResult" :class="['test-result', openRouterResult.type]">
+            <h6><i :class="['bi', getResultIcon(openRouterResult.type)]"></i> {{ openRouterResult.title }}</h6>
+            <p>{{ openRouterResult.message }}</p>
+            <pre v-if="openRouterResult.details">{{ openRouterResult.details }}</pre>
+          </div>
+        </div>
+
+        <!-- 图片处理服务测试 -->
+        <div class="test-section">
+          <h5>
+            <span :class="['status-indicator', pythonServiceStatus]"></span>
+            Python图片处理服务测试
+          </h5>
+          <p class="text-muted">测试Python后端服务的连接状态</p>
+          
+          <div class="d-flex gap-2 mb-3">
+            <button @click="testPythonService" :disabled="isLoading" class="btn btn-primary btn-test">
+              <span v-if="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+              测试连接
+            </button>
+            <button @click="testImageCrawling" :disabled="isLoading" class="btn btn-success btn-test">
+              测试图片抓取
+            </button>
+          </div>
+
+          <div v-if="pythonServiceResult" :class="['test-result', pythonServiceResult.type]">
+            <h6><i :class="['bi', getResultIcon(pythonServiceResult.type)]"></i> {{ pythonServiceResult.title }}</h6>
+            <p>{{ pythonServiceResult.message }}</p>
+            <pre v-if="pythonServiceResult.details">{{ pythonServiceResult.details }}</pre>
+          </div>
+        </div>
+
+        <!-- 内容管理API测试 -->
+        <div class="test-section">
+          <h5>
+            <span :class="['status-indicator', contentAPIStatus]"></span>
+            内容管理API测试
+          </h5>
+          <p class="text-muted">测试内容管理系统的API功能</p>
+          
+          <div class="d-flex gap-2 mb-3">
+            <button @click="testContentAPI" :disabled="isLoading" class="btn btn-primary btn-test">
+              <span v-if="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+              测试API
+            </button>
+            <button @click="testContentSave" :disabled="isLoading" class="btn btn-success btn-test">
+              测试保存
+            </button>
+            <button @click="testContentRead" :disabled="isLoading" class="btn btn-info btn-test">
+              测试读取
+            </button>
+          </div>
+
+          <div v-if="contentAPIResult" :class="['test-result', contentAPIResult.type]">
+            <h6><i :class="['bi', getResultIcon(contentAPIResult.type)]"></i> {{ contentAPIResult.title }}</h6>
+            <p>{{ contentAPIResult.message }}</p>
+            <pre v-if="contentAPIResult.details">{{ contentAPIResult.details }}</pre>
+          </div>
+        </div>
+
+        <!-- 综合测试结果 -->
+        <div class="test-section">
+          <h5><i class="bi bi-clipboard-check"></i> 综合测试结果</h5>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="card text-center">
+                <div class="card-body">
+                  <h6 class="card-title">AI工具</h6>
+                  <span :class="['status-indicator', openRouterStatus]"></span>
+                  <span>{{ getStatusText(openRouterStatus) }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card text-center">
+                <div class="card-body">
+                  <h6 class="card-title">图片服务</h6>
+                  <span :class="['status-indicator', pythonServiceStatus]"></span>
+                  <span>{{ getStatusText(pythonServiceStatus) }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card text-center">
+                <div class="card-body">
+                  <h6 class="card-title">内容API</h6>
+                  <span :class="['status-indicator', contentAPIStatus]"></span>
+                  <span>{{ getStatusText(contentAPIStatus) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+  <script src="js/openrouter-api.js"></script>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return {
+          isLoading: false,
+          openRouterAPI: null,
+          openRouterStatus: 'status-offline',
+          pythonServiceStatus: 'status-offline',
+          contentAPIStatus: 'status-offline',
+          openRouterResult: null,
+          pythonServiceResult: null,
+          contentAPIResult: null
+        };
+      },
+      mounted() {
+        this.initializeOpenRouterAPI();
+        this.runInitialTests();
+      },
+      methods: {
+        initializeOpenRouterAPI() {
+          if (typeof OpenRouterAPI !== 'undefined') {
+            this.openRouterAPI = new OpenRouterAPI();
+          }
+        },
+
+        async runInitialTests() {
+          await this.testOpenRouterConfig();
+          await this.testPythonService();
+          await this.testContentAPI();
+        },
+
+        async testOpenRouterConfig() {
+          this.isLoading = true;
+          try {
+            if (!this.openRouterAPI) {
+              this.openRouterStatus = 'status-offline';
+              this.openRouterResult = {
+                type: 'error',
+                title: '配置错误',
+                message: 'OpenRouter API未加载',
+                details: null
+              };
+              return;
+            }
+
+            const isConfigured = this.openRouterAPI.isConfigured();
+            if (isConfigured) {
+              this.openRouterStatus = 'status-online';
+              this.openRouterResult = {
+                type: 'success',
+                title: '配置正常',
+                message: 'OpenRouter API已正确配置',
+                details: `API密钥: ${this.openRouterAPI.apiKey.substring(0, 20)}...`
+              };
+            } else {
+              this.openRouterStatus = 'status-warning';
+              this.openRouterResult = {
+                type: 'warning',
+                title: '配置缺失',
+                message: 'OpenRouter API密钥未配置，将使用模拟模式',
+                details: null
+              };
+            }
+          } catch (error) {
+            this.openRouterStatus = 'status-offline';
+            this.openRouterResult = {
+              type: 'error',
+              title: '测试失败',
+              message: error.message,
+              details: null
+            };
+          } finally {
+            this.isLoading = false;
+          }
+        },
+
+        async testOpenRouterAPI() {
+          this.isLoading = true;
+          try {
+            const result = await this.openRouterAPI.request([
+              { role: 'user', content: '请简单介绍一下工业内窥镜的用途' }
+            ]);
+
+            this.openRouterResult = {
+              type: 'success',
+              title: 'API调用成功',
+              message: 'OpenRouter API响应正常',
+              details: JSON.stringify(result, null, 2)
+            };
+          } catch (error) {
+            this.openRouterResult = {
+              type: 'error',
+              title: 'API调用失败',
+              message: error.message,
+              details: null
+            };
+          } finally {
+            this.isLoading = false;
+          }
+        },
+
+        async testExhibitionGeneration() {
+          this.isLoading = true;
+          try {
+            const result = await this.openRouterAPI.generateExhibitionContent(
+              '工业检测设备展会',
+              '制造业'
+            );
+
+            this.openRouterResult = {
+              type: 'success',
+              title: '展会内容生成成功',
+              message: '成功生成展会相关内容',
+              details: JSON.stringify(result, null, 2)
+            };
+          } catch (error) {
+            this.openRouterResult = {
+              type: 'error',
+              title: '展会内容生成失败',
+              message: error.message,
+              details: null
+            };
+          } finally {
+            this.isLoading = false;
+          }
+        },
+
+        async testPythonService() {
+          this.isLoading = true;
+          try {
+            const response = await fetch('http://localhost:5000/api/health', {
+              method: 'GET',
+              timeout: 5000
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+              this.pythonServiceStatus = 'status-online';
+              this.pythonServiceResult = {
+                type: 'success',
+                title: '服务连接成功',
+                message: 'Python图片处理服务运行正常',
+                details: JSON.stringify(data, null, 2)
+              };
+            } else {
+              throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+          } catch (error) {
+            this.pythonServiceStatus = 'status-offline';
+            this.pythonServiceResult = {
+              type: 'error',
+              title: '服务连接失败',
+              message: 'Python图片处理服务无法连接',
+              details: error.message
+            };
+          } finally {
+            this.isLoading = false;
+          }
+        },
+
+        async testImageCrawling() {
+          this.isLoading = true;
+          try {
+            const response = await fetch('http://localhost:5000/api/crawl', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                url: 'https://example.com',
+                filters: { min_size: 100 }
+              })
+            });
+
+            const data = await response.json();
+            this.pythonServiceResult = {
+              type: response.ok ? 'success' : 'error',
+              title: response.ok ? '图片抓取测试成功' : '图片抓取测试失败',
+              message: data.message || (response.ok ? '图片抓取功能正常' : '图片抓取功能异常'),
+              details: JSON.stringify(data, null, 2)
+            };
+          } catch (error) {
+            this.pythonServiceResult = {
+              type: 'error',
+              title: '图片抓取测试失败',
+              message: error.message,
+              details: null
+            };
+          } finally {
+            this.isLoading = false;
+          }
+        },
+
+        async testContentAPI() {
+          this.isLoading = true;
+          try {
+            const response = await fetch('http://localhost:3002/api/suppliers/list');
+            
+            if (response.ok) {
+              const data = await response.json();
+              this.contentAPIStatus = 'status-online';
+              this.contentAPIResult = {
+                type: 'success',
+                title: 'API连接成功',
+                message: '内容管理API运行正常',
+                details: `供应商数量: ${data.count}`
+              };
+            } else {
+              throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+          } catch (error) {
+            this.contentAPIStatus = 'status-offline';
+            this.contentAPIResult = {
+              type: 'error',
+              title: 'API连接失败',
+              message: '内容管理API无法连接',
+              details: error.message
+            };
+          } finally {
+            this.isLoading = false;
+          }
+        },
+
+        async testContentSave() {
+          this.isLoading = true;
+          try {
+            const testContent = `---
+title: "测试文件"
+date: ${new Date().toISOString()}
+draft: false
+---
+
+# 测试内容
+
+这是一个测试文件，用于验证内容管理API的保存功能。
+`;
+
+            const response = await fetch('http://localhost:3002/api/content/save', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                path: 'content/test/api-test.md',
+                content: testContent
+              })
+            });
+
+            const data = await response.json();
+            this.contentAPIResult = {
+              type: response.ok ? 'success' : 'error',
+              title: response.ok ? '文件保存成功' : '文件保存失败',
+              message: data.message || (response.ok ? '内容保存功能正常' : '内容保存功能异常'),
+              details: JSON.stringify(data, null, 2)
+            };
+          } catch (error) {
+            this.contentAPIResult = {
+              type: 'error',
+              title: '文件保存测试失败',
+              message: error.message,
+              details: null
+            };
+          } finally {
+            this.isLoading = false;
+          }
+        },
+
+        async testContentRead() {
+          this.isLoading = true;
+          try {
+            const response = await fetch('http://localhost:3002/api/content/read?path=content/test/api-test.md');
+            
+            const data = await response.json();
+            this.contentAPIResult = {
+              type: response.ok ? 'success' : 'warning',
+              title: response.ok ? '文件读取成功' : '文件读取失败',
+              message: data.message || (response.ok ? '内容读取功能正常' : '测试文件不存在'),
+              details: response.ok ? data.content.substring(0, 200) + '...' : JSON.stringify(data, null, 2)
+            };
+          } catch (error) {
+            this.contentAPIResult = {
+              type: 'error',
+              title: '文件读取测试失败',
+              message: error.message,
+              details: null
+            };
+          } finally {
+            this.isLoading = false;
+          }
+        },
+
+        getResultIcon(type) {
+          switch (type) {
+            case 'success': return 'bi-check-circle';
+            case 'error': return 'bi-x-circle';
+            case 'warning': return 'bi-exclamation-triangle';
+            default: return 'bi-info-circle';
+          }
+        },
+
+        getStatusText(status) {
+          switch (status) {
+            case 'status-online': return '正常';
+            case 'status-offline': return '离线';
+            case 'status-warning': return '警告';
+            default: return '未知';
+          }
+        }
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

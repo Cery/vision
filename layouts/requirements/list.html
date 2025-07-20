@@ -1,0 +1,447 @@
+{{ define "main" }}
+<div class="container py-5">
+    {{ partial "breadcrumbs.html" . }}
+    <div class="row">
+        <!-- 左侧：需求发布表单 -->
+        <div class="col-lg-7 mb-4 mb-lg-0">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="card-title mb-0">
+                            <i class="fas fa-plus-circle text-primary me-2"></i>发布设备需求
+                        </h4>
+                        <span class="badge bg-success">免费发布</span>
+                    </div>
+                    
+                    <form id="requirementForm" class="needs-validation" novalidate>
+                        <!-- 基本信息 -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-user me-2"></i>基本信息
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="contactName" class="form-label">联系人姓名 <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="contactName" name="contactName" placeholder="请输入联系人姓名" required>
+                                        <div class="invalid-feedback">请输入联系人姓名</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="contactPhone" class="form-label">联系电话 <span class="text-danger">*</span></label>
+                                        <input type="tel" class="form-control" id="contactPhone" name="contactPhone" placeholder="请输入11位手机号码" pattern="[0-9]{11}" required>
+                                        <div class="invalid-feedback">请输入正确的11位手机号码</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="companyName" class="form-label">公司名称</label>
+                                        <input type="text" class="form-control" id="companyName" name="companyName" placeholder="请输入公司全称">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="region" class="form-label">所在地区</label>
+                                        <select class="form-select" id="region" name="region">
+                                            <option value="">请选择地区</option>
+                                            <option value="华北">华北地区</option>
+                                            <option value="华东">华东地区</option>
+                                            <option value="华南">华南地区</option>
+                                            <option value="华中">华中地区</option>
+                                            <option value="西南">西南地区</option>
+                                            <option value="西北">西北地区</option>
+                                            <option value="东北">东北地区</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 产品类型 -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-cogs me-2"></i>产品类型 <span class="text-danger">*</span>
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <input type="radio" class="btn-check" name="productType" id="electronic" value="electronic" required>
+                                        <label class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center" for="electronic" style="min-height: 100px;">
+                                            <i class="fas fa-video mb-2" style="font-size: 2rem;"></i>
+                                            <strong>电子内窥镜</strong>
+                                            <small class="text-muted">数字成像，高精度</small>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="radio" class="btn-check" name="productType" id="fiber" value="fiber" required>
+                                        <label class="btn btn-outline-warning w-100 h-100 d-flex flex-column align-items-center justify-content-center" for="fiber" style="min-height: 100px;">
+                                            <i class="fas fa-project-diagram mb-2" style="font-size: 2rem;"></i>
+                                            <strong>光纤内窥镜</strong>
+                                            <small class="text-muted">柔性检测，复杂路径</small>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="radio" class="btn-check" name="productType" id="optical" value="optical" required>
+                                        <label class="btn btn-outline-info w-100 h-100 d-flex flex-column align-items-center justify-content-center" for="optical" style="min-height: 100px;">
+                                            <i class="fas fa-eye mb-2" style="font-size: 2rem;"></i>
+                                            <strong>光学内窥镜</strong>
+                                            <small class="text-muted">直线检测，高清成像</small>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback">请选择产品类型</div>
+                            </div>
+                        </div>
+
+                        <!-- 技术参数（动态显示） -->
+                        <div class="card mb-4" id="technicalParams" style="display: none;">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-sliders-h me-2"></i>技术参数
+                                </h5>
+                            </div>
+                            <div class="card-body" id="parameterFields">
+                                <!-- 动态生成的参数字段 -->
+                            </div>
+                        </div>
+
+                        <!-- 需求描述 -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-file-alt me-2"></i>需求描述 <span class="text-danger">*</span>
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <textarea class="form-control" id="description" name="description" rows="4" 
+                                    placeholder="请详细描述您的检测需求、应用环境、检测对象等..." required></textarea>
+                                <div class="invalid-feedback">请描述您的具体需求</div>
+                            </div>
+                        </div>
+
+                        <!-- 预算和时间 -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-dollar-sign me-2"></i>预算与时间
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="budget" class="form-label">预算范围</label>
+                                        <select class="form-select" id="budget" name="budget">
+                                            <option value="">请选择预算范围</option>
+                                            <option value="1-5万">1-5万元</option>
+                                            <option value="5-10万">5-10万元</option>
+                                            <option value="10-20万">10-20万元</option>
+                                            <option value="20-50万">20-50万元</option>
+                                            <option value="50万以上">50万元以上</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="deliveryTime" class="form-label">期望交付时间</label>
+                                        <select class="form-select" id="deliveryTime" name="deliveryTime">
+                                            <option value="">请选择交付时间</option>
+                                            <option value="1周内">1周内</option>
+                                            <option value="2周内">2周内</option>
+                                            <option value="1个月内">1个月内</option>
+                                            <option value="2个月内">2个月内</option>
+                                            <option value="3个月内">3个月内</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 提交状态显示 -->
+                        <div id="submitStatus" class="alert" style="display: none;" role="alert">
+                            <div id="submitMessage"></div>
+                        </div>
+
+                        <!-- 提交按钮 -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                                <span id="submitText">
+                                    <i class="fas fa-paper-plane me-2"></i>发布需求
+                                </span>
+                                <span id="submitSpinner" class="spinner-border spinner-border-sm ms-2" style="display: none;" role="status" aria-hidden="true"></span>
+                            </button>
+                            <small class="text-muted text-center mt-2">
+                                <i class="fas fa-shield-alt me-1"></i>
+                                您的信息将被严格保密，仅用于需求匹配服务
+                            </small>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧：需求展示列表 -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="card-title mb-0">
+                            <i class="fas fa-list-ul text-primary me-2"></i>最新需求
+                        </h4>
+                        <div class="d-flex align-items-center gap-2">
+                            <select class="form-select form-select-sm" id="typeFilter" style="width: auto;">
+                                <option value="">所有类型</option>
+                                <option value="electronic">电子内窥镜</option>
+                                <option value="fiber">光纤内窥镜</option>
+                                <option value="optical">光学内窥镜</option>
+                            </select>
+                            <span class="badge bg-primary">
+                                <span id="activeRequirements">0</span> 活跃
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- 需求列表 -->
+                    <div id="requirementsList" class="requirements-list">
+                        <div class="loading-state text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">加载中...</span>
+                            </div>
+                            <p class="mt-2 text-muted">正在加载需求信息...</p>
+                        </div>
+                    </div>
+
+                    <!-- 底部提示 -->
+                    <div class="mt-4 text-center">
+                        <div class="alert alert-info">
+                            <small>
+                                <i class="fas fa-info-circle me-1"></i>
+                                需求信息每日更新，供应商可联系平台获取详细信息
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 需求详情模态框 -->
+<div class="modal fade" id="requirementModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-file-alt me-2"></i>需求详情
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="requirementModalBody">
+                <!-- 动态内容 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="contactRequirement()">
+                    <i class="fas fa-phone me-1"></i>联系客户
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 成功提交模态框 -->
+<div class="modal fade" id="successModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-check-circle me-2"></i>需求提交成功
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="successModalBody">
+                <!-- 动态内容 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="window.open('/requirements/my', '_blank')">
+                    <i class="fas fa-search me-1"></i>查询状态
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 需求详情模态框 -->
+<div class="modal fade" id="requirementModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-file-alt me-2"></i>需求详情
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="requirementModalBody">
+                <!-- 动态内容 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="contactRequirement()">
+                    <i class="fas fa-phone me-1"></i>联系客户
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 成功提交模态框 -->
+<div class="modal fade" id="successModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-check-circle me-2"></i>需求提交成功
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="successModalBody">
+                <!-- 动态内容 -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="window.open('/requirements/my', '_blank')">
+                    <i class="fas fa-search me-1"></i>查询状态
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.product-type-btn {
+    min-height: 120px;
+    transition: all 0.3s ease;
+}
+
+.product-type-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.btn-check:checked + .product-type-btn {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+}
+
+.requirements-list {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.requirement-item {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.requirement-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-color: #007bff;
+}
+
+.requirement-item.featured {
+    border-left: 4px solid #ffc107;
+    background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
+}
+
+.requirement-item.urgent {
+    border-left: 4px solid #dc3545;
+    background: linear-gradient(135deg, #ffe6e6 0%, #ffffff 100%);
+}
+
+.requirement-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.requirement-meta {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.requirement-meta .badge {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
+}
+
+.requirement-description {
+    color: #6c757d;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.requirement-footer {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid #f0f0f0;
+}
+
+.requirement-id {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.contact-btn {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+}
+
+/* 滚动条样式 */
+.requirements-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.requirements-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.requirements-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.requirements-list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* 动画效果 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.requirement-item {
+    animation: fadeInUp 0.3s ease;
+}
+</style>
+
+<script src="/js/requirements-center.js"></script>
+
+{{ end }}

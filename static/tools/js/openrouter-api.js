@@ -106,7 +106,15 @@ class OpenRouterAPI {
         let lastError;
         for (let attempt = 1; attempt <= this.retryCount; attempt++) {
             try {
-                const response = await fetch(`${this.baseURL}/chat/completions`, requestOptions);
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), this.timeout);
+
+                const response = await fetch(`${this.baseURL}/chat/completions`, {
+                    ...requestOptions,
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
                 
                 if (!response.ok) {
                     const errorData = await response.json().catch(() => ({}));

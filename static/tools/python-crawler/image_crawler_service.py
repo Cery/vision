@@ -19,9 +19,13 @@ import io
 import tempfile
 import zipfile
 from datetime import datetime
+import sys
 
 app = Flask(__name__)
 CORS(app)  # 允许跨域请求
+
+# 优化启动速度
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 # 配置
 MAX_IMAGE_SIZE = 10 * 1024 * 1024  # 10MB
@@ -456,10 +460,13 @@ if __name__ == '__main__':
         print("🖼️  新增功能: 内容图片自动处理")
         print("⏹️  按 Ctrl+C 停止服务")
         print("")
+        print("正在启动Flask应用...")
 
-        app.run(host='0.0.0.0', port=5000, debug=False)
+        app.run(host='127.0.0.1', port=5000, debug=True, use_reloader=False)
     except Exception as e:
         print(f"❌ 服务启动失败: {e}")
+        import traceback
+        traceback.print_exc()
         print("请检查:")
         print("1. 端口5000是否被占用")
         print("2. Python依赖是否完整安装")

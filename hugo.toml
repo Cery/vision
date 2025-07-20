@@ -30,14 +30,65 @@ paginate = 12
     url = "/products"
     weight = 20
 
+    # 产品中心子菜单（按供应商分类）
+    [[menu.main]]
+      name = "天津维森科技"
+      url = "/products/vis"
+      parent = "产品中心"
+      weight = 21
+    [[menu.main]]
+      name = "深圳微视光电"
+      url = "/products/vs"
+      parent = "产品中心"
+      weight = 22
+    [[menu.main]]
+      name = "北京华科检测"
+      url = "/products/hk"
+      parent = "产品中心"
+      weight = 23
+
   [[menu.main]]
     name = "资讯中心"
     url = "/news"
     weight = 50
+
+    # 资讯中心子菜单
+    [[menu.main]]
+      name = "技术文章"
+      url = "/news/tech-article"
+      parent = "资讯中心"
+      weight = 51
+    [[menu.main]]
+      name = "行业资讯"
+      url = "/news/industry"
+      parent = "资讯中心"
+      weight = 52
+    [[menu.main]]
+      name = "展会信息"
+      url = "/news/exhibition"
+      parent = "资讯中心"
+      weight = 53
   [[menu.main]]
-    name = "定制中心"
-    url = "/customs"
+    name = "需求中心"
+    url = "/requirements"
     weight = 60
+
+    # 需求中心子菜单
+    [[menu.main]]
+      name = "发布需求"
+      url = "/requirements/publish"
+      parent = "需求中心"
+      weight = 61
+    [[menu.main]]
+      name = "需求大厅"
+      url = "/requirements/hall"
+      parent = "需求中心"
+      weight = 62
+    [[menu.main]]
+      name = "我的需求"
+      url = "/requirements/my"
+      parent = "需求中心"
+      weight = 63
   [[menu.main]]
     name = "商务服务"
     url = "/cooperation"
