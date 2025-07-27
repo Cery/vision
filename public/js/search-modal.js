@@ -406,9 +406,6 @@
                             </div>
                         </div>
                         <div class="history-content-wrapper">
-                            <button id="clearHistoryBtn" class="clear-history-btn-top">
-                                <i class="fas fa-trash me-1"></i>清除所有历史
-                            </button>
                             <div class="history-items">
                                 ${history.map(query => `
                                     <div class="search-history-item" data-query="${escapeHTML(query)}">
@@ -418,6 +415,11 @@
                                         </button>
                                     </div>
                                 `).join('')}
+                            </div>
+                            <div class="history-actions">
+                                <button id="clearHistoryBtn" class="clear-history-btn-bottom">
+                                    <i class="fas fa-trash me-1"></i>清除所有历史
+                                </button>
                             </div>
                         </div>
                     </div>
