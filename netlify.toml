@@ -95,10 +95,11 @@
   to = "/admin/index.html"
   status = 200
 
-[[redirects]]
-  from = "/.netlify/git/github"
-  to = "/admin/index.html"
-  status = 200
+# 移除有问题的.netlify路径重定向
+# [[redirects]]
+#   from = "/.netlify/git/github"
+#   to = "/admin/index.html"
+#   status = 200
 
 # 处理动态路由
 [[redirects]]
@@ -139,11 +140,11 @@
   to = "/index.html"
   status = 200
 
-# 身份验证回调处理
-[[redirects]]
-  from = "/.netlify/identity/verify"
-  to = "/identity-callback.html"
-  status = 200
+# 移除有问题的.netlify身份验证重定向
+# [[redirects]]
+#   from = "/.netlify/identity/verify"
+#   to = "/identity-callback.html"
+#   status = 200
 
 # 安全头部配置
 [[headers]]
