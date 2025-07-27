@@ -41,16 +41,18 @@
                                         <input type="text" class="form-control" id="companyName" name="companyName" placeholder="请输入公司全称">
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="region" class="form-label">所在地区</label>
-                                        <select class="form-select" id="region" name="region">
-                                            <option value="">请选择地区</option>
-                                            <option value="华北">华北地区</option>
-                                            <option value="华东">华东地区</option>
-                                            <option value="华南">华南地区</option>
-                                            <option value="华中">华中地区</option>
-                                            <option value="西南">西南地区</option>
-                                            <option value="西北">西北地区</option>
-                                            <option value="东北">东北地区</option>
+                                        <label for="department" class="form-label">所属部门</label>
+                                        <select class="form-select" id="department" name="department">
+                                            <option value="">请选择部门</option>
+                                            <option value="研发部">研发部</option>
+                                            <option value="质量部">质量部</option>
+                                            <option value="生产部">生产部</option>
+                                            <option value="技术部">技术部</option>
+                                            <option value="工程部">工程部</option>
+                                            <option value="检测部">检测部</option>
+                                            <option value="维修部">维修部</option>
+                                            <option value="采购部">采购部</option>
+                                            <option value="其他">其他</option>
                                         </select>
                                     </div>
                                 </div>
@@ -379,6 +381,72 @@
 .requirement-meta .badge {
     font-size: 0.75rem;
     padding: 0.4rem 0.6rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+}
+
+/* 修复标签背景色和文字颜色 */
+.requirement-meta .badge.bg-primary {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+}
+
+.requirement-meta .badge.bg-success {
+    background-color: #198754 !important;
+    color: #ffffff !important;
+}
+
+.requirement-meta .badge.bg-info {
+    background-color: #0dcaf0 !important;
+    color: #000000 !important;
+}
+
+.requirement-meta .badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: #000000 !important;
+}
+
+.requirement-meta .badge.bg-danger {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+}
+
+/* 确保标签文字可见性 */
+.requirement-meta .badge {
+    display: inline-block;
+    min-width: 60px;
+    text-align: center;
+    margin-right: 0.5rem;
+    margin-bottom: 0.25rem;
+    border: 1px solid transparent;
+    transition: all 0.2s ease-in-out;
+}
+
+/* 悬停效果 */
+.requirement-meta .badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 确保在任何背景下都可见 */
+.requirement-meta .badge.bg-primary {
+    border-color: #0a58ca;
+}
+
+.requirement-meta .badge.bg-success {
+    border-color: #146c43;
+}
+
+.requirement-meta .badge.bg-info {
+    border-color: #087990;
+}
+
+.requirement-meta .badge.bg-warning {
+    border-color: #997404;
+}
+
+.requirement-meta .badge.bg-danger {
+    border-color: #b02a37;
 }
 
 .requirement-description {

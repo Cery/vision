@@ -1,0 +1,706 @@
+{{ define "main" }}
+<div class="container py-5">
+    {{ partial "breadcrumbs.html" . }}
+    <div class="row">
+        <!-- 左侧：定制需求表单 -->
+        <div class="col-lg-7 mb-4 mb-lg-0">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="card-title mb-4">发布定制需求</h4>
+                    <form id="customForm" class="needs-validation" name="custom-requirements" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/customs/success/" novalidate>
+                        <!-- Netlify隐藏字段 -->
+                        <input type="hidden" name="form-name" value="custom-requirements">
+                        <div style="display: none;">
+                            <label>Don't fill this out if you're human: <input name="bot-field" /></label>
+                        </div>
+                        <!-- 定制需求参数 -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">需求参数</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="productType" class="form-label">产品类型 <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="productType" name="productType" required>
+                                        <option value="">请选择产品类型</option>
+                                        <optgroup label="内窥镜">
+                                            <option value="电子内窥镜">电子内窥镜</option>
+                                            <option value="光学内窥镜">光学内窥镜</option>
+                                            <option value="光纤内窥镜">光纤内窥镜</option>
+                                            <option value="管道内窥镜">管道内窥镜</option>
+                                            <option value="爬行机器人">爬行机器人</option>
+                                        </optgroup>
+                                    </select>
+                                    <div class="invalid-feedback">请选择产品类型</div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="screenSize" class="form-label">主机屏幕</label>
+                                        <select class="form-select" id="screenSize" name="screenSize">
+                                            <option value="">请选择屏幕尺寸</option>
+                                            <option value='5"'>5英寸</option>
+                                            <option value='7"'>7英寸</option>
+                                            <option value='8"'>8英寸</option>
+                                            <option value='10"'>10英寸</option>
+                                            <option value='15"'>15.6英寸</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="batteryLife" class="form-label">待机时长</label>
+                                        <select class="form-select" id="batteryLife" name="batteryLife">
+                                            <option value="">请选择待机时长</option>
+                                            <option value="2小时">2小时</option>
+                                            <option value="4小时">4小时</option>
+                                            <option value="6小时">6小时</option>
+                                            <option value="8小时">8小时</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="probeDiameter" class="form-label">探头直径</label>
+                                        <select class="form-select" id="probeDiameter" name="probeDiameter">
+                                            <option value="">请选择探头直径</option>
+                                            <option value="0.85mm">0.85mm</option>
+                                            <option value="0.95mm">0.95mm</option>
+                                            <option value="1.0mm">1.0mm</option>
+                                            <option value="1.2mm">1.2mm</option>
+                                            <option value="1.5mm">1.5mm</option>
+                                            <option value="1.8mm">1.8mm</option>
+                                            <option value="2.0mm">2.0mm</option>
+                                            <option value="2.2mm">2.2mm</option>
+                                            <option value="2.4mm">2.4mm</option>
+                                            <option value="2.8mm">2.8mm</option>
+                                            <option value="3.9mm">3.9mm</option>
+                                            <option value="6.0mm">6.0mm</option>
+                                            <option value="其它">其它</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="resolution" class="form-label">像素</label>
+                                        <select class="form-select" id="resolution" name="resolution">
+                                            <option value="">请选择像素</option>
+                                            <option value="16万像素">16万像素</option>
+                                            <option value="30万像素">30万像素</option>
+                                            <option value="52万像素">52万像素</option>
+                                            <option value="100万像素">100万像素</option>
+                                            <option value="其它">其它</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="viewingAngle" class="form-label">视向</label>
+                                        <select class="form-select" id="viewingAngle" name="viewingAngle">
+                                            <option value="">请选择视向</option>
+                                            <option value="0度直视">0度直视</option>
+                                            <option value="90度侧视">90度侧视</option>
+                                            <option value="30度斜视">30度斜视</option>
+                                            <option value="70度斜视">70度斜视</option>
+                                            <option value="其它">其它</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="lightSource" class="form-label">光源</label>
+                                        <select class="form-select" id="lightSource" name="lightSource">
+                                            <option value="">请选择光源</option>
+                                            <option value="LED">LED</option>
+                                            <option value="光纤">光纤</option>
+                                            <option value="红外">红外</option>
+                                            <option value="紫外">紫外</option>
+                                            <option value="激光">激光</option>
+                                            <option value="其它">其它</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="guidance" class="form-label">导向</label>
+                                    <select class="form-select" id="guidance" name="guidance">
+                                        <option value="">请选择导向方式</option>
+                                        <option value="无导向">无导向</option>
+                                        <option value="手动180度">手动180度</option>
+                                        <option value="手动360度">手动360度</option>
+                                        <option value="自动180度">自动180度</option>
+                                        <option value="自动360度">自动360度</option>
+                                        <option value="其它">其它</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="requirements" class="form-label">定制需求描述 <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="requirements" name="requirements" rows="3" placeholder="请详细描述您的具体定制需求和特殊要求" required></textarea>
+                                    <div class="invalid-feedback">请描述您的定制需求</div>
+                                </div>
+
+                                <!-- 附件上传 -->
+                                <div class="mb-3">
+                                    <label for="attachments" class="form-label">上传附件</label>
+                                    <input type="file" class="form-control" id="attachments" name="attachments" multiple accept=".pdf,.doc,.docx,.dwg,.jpg,.png">
+                                    <div class="form-text">支持PDF、Word、CAD图纸、图片等格式，单个文件不超过10MB</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 公司和联系人信息 -->
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">公司联系信息</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="companyName" class="form-label">公司名称 <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="companyName" name="companyName" placeholder="请输入公司全称" required>
+                                    <div class="invalid-feedback">请输入公司名称</div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="department" class="form-label">部门</label>
+                                        <input type="text" class="form-control" id="department" name="department" placeholder="请输入部门名称">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="contact" class="form-label">联系人 <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="contact" name="contact" placeholder="请输入联系人姓名" required>
+                                        <div class="invalid-feedback">请输入联系人姓名</div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="phone" class="form-label">联系电话 <span class="text-danger">*</span></label>
+                                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="请输入11位手机号码" pattern="[0-9]{11}" required>
+                                        <div class="invalid-feedback">请输入正确的11位手机号码</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">电子邮箱 <span class="text-danger">*</span></label>
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="请输入常用邮箱" required>
+                                        <div class="invalid-feedback">请输入正确的邮箱地址</div>
+                                    </div>
+                                </div>
+
+                                <!-- 提交状态显示 -->
+                                <div id="submitStatus" class="alert" style="display: none;" role="alert">
+                                    <div id="submitMessage"></div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary w-100" id="submitBtn">
+                                    <span id="submitText">提交定制需求</span>
+                                    <span id="submitSpinner" class="spinner-border spinner-border-sm ms-2" style="display: none;" role="status" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧：定制产品展示 -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="card-title mb-0">
+                            <i class="fas fa-cogs text-primary me-2"></i>定制产品展示
+                        </h4>
+                        <span class="badge bg-primary">实时更新</span>
+                    </div>
+
+                    <!-- 定制产品列表 -->
+                    <div id="customProductsList" class="custom-products-list">
+                        <!-- 示例定制产品 -->
+                        <div class="custom-product-item">
+                            <div class="product-header">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h6 class="product-title">电子内窥镜定制</h6>
+                                    <span class="status-badge status-available">可对接</span>
+                                </div>
+                                <div class="product-date">
+                                    <i class="fas fa-calendar-alt me-1"></i>2024-12-26
+                                </div>
+                            </div>
+                            <div class="product-specs">
+                                <div class="spec-item">
+                                    <span class="spec-label">探头直径:</span>
+                                    <span class="spec-value">1.2mm - 6.0mm</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">屏幕尺寸:</span>
+                                    <span class="spec-value">5" - 15.6"</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">像素:</span>
+                                    <span class="spec-value">16万 - 100万</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">视向:</span>
+                                    <span class="spec-value">0°-90°可选</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="custom-product-item">
+                            <div class="product-header">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h6 class="product-title">光学内窥镜定制</h6>
+                                    <span class="status-badge status-available">可对接</span>
+                                </div>
+                                <div class="product-date">
+                                    <i class="fas fa-calendar-alt me-1"></i>2024-12-25
+                                </div>
+                            </div>
+                            <div class="product-specs">
+                                <div class="spec-item">
+                                    <span class="spec-label">探头直径:</span>
+                                    <span class="spec-value">0.85mm - 2.8mm</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">光源:</span>
+                                    <span class="spec-value">LED/光纤</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">导向:</span>
+                                    <span class="spec-value">手动/自动</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">视向:</span>
+                                    <span class="spec-value">直视/侧视</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="custom-product-item">
+                            <div class="product-header">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h6 class="product-title">管道内窥镜定制</h6>
+                                    <span class="status-badge status-busy">对接中</span>
+                                </div>
+                                <div class="product-date">
+                                    <i class="fas fa-calendar-alt me-1"></i>2024-12-24
+                                </div>
+                            </div>
+                            <div class="product-specs">
+                                <div class="spec-item">
+                                    <span class="spec-label">探头直径:</span>
+                                    <span class="spec-value">6.0mm - 39mm</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">检测长度:</span>
+                                    <span class="spec-value">1m - 100m</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">防护等级:</span>
+                                    <span class="spec-value">IP67/IP68</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">记录功能:</span>
+                                    <span class="spec-value">视频/图片</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="custom-product-item">
+                            <div class="product-header">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h6 class="product-title">爬行机器人定制</h6>
+                                    <span class="status-badge status-available">可对接</span>
+                                </div>
+                                <div class="product-date">
+                                    <i class="fas fa-calendar-alt me-1"></i>2024-12-23
+                                </div>
+                            </div>
+                            <div class="product-specs">
+                                <div class="spec-item">
+                                    <span class="spec-label">适用管径:</span>
+                                    <span class="spec-value">100mm - 2000mm</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">爬行距离:</span>
+                                    <span class="spec-value">最大500m</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">控制方式:</span>
+                                    <span class="spec-value">有线/无线</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">特殊功能:</span>
+                                    <span class="spec-value">360°旋转</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="custom-product-item">
+                            <div class="product-header">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h6 class="product-title">光纤内窥镜定制</h6>
+                                    <span class="status-badge status-unavailable">暂停对接</span>
+                                </div>
+                                <div class="product-date">
+                                    <i class="fas fa-calendar-alt me-1"></i>2024-12-22
+                                </div>
+                            </div>
+                            <div class="product-specs">
+                                <div class="spec-item">
+                                    <span class="spec-label">探头直径:</span>
+                                    <span class="spec-value">0.35mm - 1.0mm</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">光纤数量:</span>
+                                    <span class="spec-value">3000 - 30000根</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">弯曲半径:</span>
+                                    <span class="spec-value">最小5mm</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">工作温度:</span>
+                                    <span class="spec-value">-20°C ~ 80°C</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 底部提示 -->
+                    <div class="mt-4 text-center">
+                        <div class="alert alert-info">
+                            <small>
+                                <i class="fas fa-info-circle me-1"></i>
+                                以上为定制产品参考规格，具体参数可根据需求调整
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.required:after {
+    content: " *";
+    color: red;
+}
+
+/* 定制产品列表样式 */
+.custom-products-list {
+    max-height: 600px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.custom-products-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-products-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.custom-products-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.custom-products-list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+.custom-product-item {
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    background: #fff;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.custom-product-item:hover {
+    border-color: #007bff;
+    box-shadow: 0 4px 12px rgba(0,123,255,0.15);
+    transform: translateY(-2px);
+}
+
+.custom-product-item:last-child {
+    margin-bottom: 0;
+}
+
+.product-header {
+    margin-bottom: 12px;
+}
+
+.product-title {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+.product-date {
+    color: #6c757d;
+    font-size: 12px;
+}
+
+.status-badge {
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-available {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.status-busy {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.status-unavailable {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.product-specs {
+    display: grid;
+    gap: 6px;
+}
+
+.spec-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    border-bottom: 1px solid #f8f9fa;
+    font-size: 12px;
+}
+
+.spec-item:last-child {
+    border-bottom: none;
+}
+
+.spec-label {
+    color: #6c757d;
+    font-weight: 500;
+    min-width: 70px;
+}
+
+.spec-value {
+    color: #495057;
+    font-weight: 600;
+    text-align: right;
+    flex: 1;
+}
+
+/* 动画效果 */
+.custom-product-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #007bff, transparent);
+    transition: left 0.5s ease;
+}
+
+.custom-product-item:hover::before {
+    left: 100%;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+.pagination .page-link {
+    color: var(--bs-primary);
+    border-radius: 0.25rem;
+    margin: 0 0.25rem;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+.pagination .page-link:hover {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+    color: white;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .custom-products-list {
+        max-height: 400px;
+    }
+
+    .custom-product-item {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+
+    .product-title {
+        font-size: 13px;
+    }
+
+    .spec-item {
+        font-size: 11px;
+    }
+
+    .spec-label {
+        min-width: 60px;
+    }
+}
+</style>
+
+<script>
+// 定制需求管理
+let currentPage = 1;
+const itemsPerPage = 10;
+
+// 表单验证和提交处理
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('customForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitText = document.getElementById('submitText');
+    const submitSpinner = document.getElementById('submitSpinner');
+    const submitStatus = document.getElementById('submitStatus');
+    const submitMessage = document.getElementById('submitMessage');
+
+    // 初始化页面
+    initializePage();
+
+    // 表单提交处理
+    form.addEventListener('submit', function(event) {
+        // 验证表单
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            form.classList.add('was-validated');
+            showStatus('请填写所有必填项', 'danger');
+            return;
+        }
+
+        // 显示提交中状态
+        setSubmitState(true);
+        hideStatus();
+
+        // 显示提交成功提示
+        showStatus('✅ 正在提交定制需求，请稍候...', 'info');
+
+        // 让Netlify处理表单提交
+        // 表单会自动提交到Netlify，并重定向到success页面
+    });
+
+    // 文件上传大小限制
+    const attachments = document.getElementById('attachments');
+    if (attachments) {
+        attachments.addEventListener('change', function() {
+            const files = this.files;
+            const maxSize = 10 * 1024 * 1024; // 10MB
+
+            for (let i = 0; i < files.length; i++) {
+                if (files[i].size > maxSize) {
+                    showStatus('文件 ' + files[i].name + ' 超过10MB限制，请重新选择', 'warning');
+                    this.value = '';
+                    break;
+                }
+            }
+        });
+    }
+
+    // 设置提交状态
+    function setSubmitState(isSubmitting) {
+        if (isSubmitting) {
+            submitBtn.disabled = true;
+            submitText.textContent = '提交中...';
+            submitSpinner.style.display = 'inline-block';
+        } else {
+            submitBtn.disabled = false;
+            submitText.textContent = '提交定制需求';
+            submitSpinner.style.display = 'none';
+        }
+    }
+
+    // 显示状态消息
+    function showStatus(message, type) {
+        submitMessage.innerHTML = message;
+        submitStatus.className = `alert alert-${type}`;
+        submitStatus.style.display = 'block';
+
+        // 滚动到状态消息
+        submitStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        // 成功消息5秒后自动隐藏
+        if (type === 'success') {
+            setTimeout(hideStatus, 5000);
+        }
+    }
+
+    // 隐藏状态消息
+    function hideStatus() {
+        submitStatus.style.display = 'none';
+    }
+
+    // 初始化页面
+    function initializePage() {
+        // 页面加载完成，定制产品列表已静态显示
+        console.log('定制中心页面初始化完成');
+    }
+
+
+
+
+
+    // 实时验证
+    const requiredFields = form.querySelectorAll('[required]');
+    requiredFields.forEach(field => {
+        field.addEventListener('blur', function() {
+            if (this.checkValidity()) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            } else {
+                this.classList.remove('is-valid');
+                this.classList.add('is-invalid');
+            }
+        });
+
+        field.addEventListener('input', function() {
+            if (this.classList.contains('is-invalid') && this.checkValidity()) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            }
+        });
+    });
+});
+
+// 定制产品展示功能
+// 右侧展示定制产品类型、参数要求、日期、对接状态等信息
+
+// 可以通过后台管理系统控制产品的对接状态
+function updateProductStatus(productId, status) {
+    // 这里可以添加后台API调用来更新产品状态
+    console.log(`更新产品 ${productId} 状态为: ${status}`);
+}
+
+// 添加新的定制产品到展示列表
+function addCustomProduct(productData) {
+    // 这里可以添加动态添加产品的功能
+    console.log('添加新定制产品:', productData);
+}
+</script>
+{{ end }}

@@ -1,0 +1,44 @@
+{{ define "main" }}
+<div class="content">
+    <h1>{{ .Title }}</h1>
+    
+    {{ if .Content }}
+    <div class="section-description">
+        {{ .Content }}
+    </div>
+    {{ end }}
+
+    {{ if .Pages }}
+    <div class="page-list">
+        {{ range .Pages }}
+        <article style="background: #f8f9fa; padding: 1.5rem; margin: 1rem 0; border-radius: 8px; border-left: 4px solid #007bff;">
+            <h3><a href="{{ .Permalink }}" style="color: #007bff; text-decoration: none;">{{ .Title }}</a></h3>
+            
+            {{ if .Date }}
+            <p style="color: #666; font-size: 0.9rem; margin: 0.5rem 0;">
+                📅 {{ .Date.Format "2006年01月02日" }}
+            </p>
+            {{ end }}
+            
+            {{ if .Summary }}
+            <p>{{ .Summary }}</p>
+            {{ end }}
+            
+            {{ if .Params.tags }}
+            <div style="margin-top: 1rem;">
+                {{ range .Params.tags }}
+                <span style="background: #e9ecef; padding: 0.25rem 0.5rem; border-radius: 3px; font-size: 0.8rem; margin-right: 0.5rem;">{{ . }}</span>
+                {{ end }}
+            </div>
+            {{ end }}
+        </article>
+        {{ end }}
+    </div>
+    {{ else }}
+    <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 5px; padding: 1rem; margin: 1rem 0;">
+        <p>📝 此分类下暂无内容。</p>
+        <p>您可以在 <code>content/{{ .Section }}/</code> 目录下添加Markdown文件来创建内容。</p>
+    </div>
+    {{ end }}
+</div>
+{{ end }}

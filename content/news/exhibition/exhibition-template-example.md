@@ -6,7 +6,7 @@ publishDate: 2025-07-11T10:00:00+08:00
 draft: false
 categories: ["展会信息"]
 subcategories: ["工业制造"]
-tags: ["航空航天", "国际展会", "珠海航展", "飞行表演"]
+tags: ["航空航天", "珠海航展"]
 layout: "exhibition-universal"
 
 # 展会基本信息
@@ -118,8 +118,8 @@ registration_info:
 
 # 相关产品
 related_products:
-  - "WS-K08510"
-  - "WS-K3915"
+  - "WS-P6020"
+  - "WS-P3915"
 
 # SEO优化
 seo_title: "2026中国珠海国际航空航天展览会 - 全球航空航天盛会"

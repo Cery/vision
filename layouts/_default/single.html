@@ -1,0 +1,74 @@
+{{ define "main" }}
+<article class="content">
+    <header style="border-bottom: 2px solid #eee; padding-bottom: 1rem; margin-bottom: 2rem;">
+        <h1>{{ .Title }}</h1>
+        
+        {{ if .Date }}
+        <p style="color: #666; font-size: 0.9rem;">
+            📅 发布时间: {{ .Date.Format "2006年01月02日 15:04" }}
+            {{ if .Lastmod }}
+            | 📝 更新时间: {{ .Lastmod.Format "2006年01月02日 15:04" }}
+            {{ end }}
+        </p>
+        {{ end }}
+        
+        {{ if .Params.tags }}
+        <div style="margin-top: 1rem;">
+            <strong>标签: </strong>
+            {{ range .Params.tags }}
+            <span style="background: #007bff; color: white; padding: 0.25rem 0.5rem; border-radius: 3px; font-size: 0.8rem; margin-right: 0.5rem;">{{ . }}</span>
+            {{ end }}
+        </div>
+        {{ end }}
+        
+        {{ if .Params.categories }}
+        <div style="margin-top: 0.5rem;">
+            <strong>分类: </strong>
+            {{ range .Params.categories }}
+            <span style="background: #28a745; color: white; padding: 0.25rem 0.5rem; border-radius: 3px; font-size: 0.8rem; margin-right: 0.5rem;">{{ . }}</span>
+            {{ end }}
+        </div>
+        {{ end }}
+    </header>
+
+    <div class="article-content" style="line-height: 1.8;">
+        {{ .Content }}
+    </div>
+
+    {{ if .Params.images }}
+    <div style="margin: 2rem 0;">
+        <h3>相关图片</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            {{ range .Params.images }}
+            <img src="{{ . }}" alt="相关图片" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            {{ end }}
+        </div>
+    </div>
+    {{ end }}
+
+    <footer style="border-top: 1px solid #eee; padding-top: 1rem; margin-top: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <div>
+                {{ if .PrevInSection }}
+                <a href="{{ .PrevInSection.Permalink }}" style="color: #007bff; text-decoration: none;">
+                    ← {{ .PrevInSection.Title }}
+                </a>
+                {{ end }}
+            </div>
+            <div>
+                {{ if .NextInSection }}
+                <a href="{{ .NextInSection.Permalink }}" style="color: #007bff; text-decoration: none;">
+                    {{ .NextInSection.Title }} →
+                </a>
+                {{ end }}
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 1rem;">
+            <a href="{{ .Section | relURL }}" style="background: #6c757d; color: white; padding: 0.5rem 1rem; border-radius: 5px; text-decoration: none;">
+                返回{{ .Section | title }}列表
+            </a>
+        </div>
+    </footer>
+</article>
+{{ end }}

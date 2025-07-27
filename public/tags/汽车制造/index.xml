@@ -15,19 +15,5 @@
       <guid>http://localhost:1313/products/vis/vis-t2815/</guid>
       <description>VIS-T2815是天津维森科技的高性能工业视频内窥镜，2.8mm直径探头，适用于汽车制造、机械检测等工业应用</description>
     </item>
-    <item>
-      <title>WS-K1510工业内窥镜 - 1.5mm细径探头 双向导向检测</title>
-      <link>http://localhost:1313/products/vs/ws-k1510/</link>
-      <pubDate>Fri, 10 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/vs/ws-k1510/</guid>
-      <description>WS-K1510是一款具备1.5mm细径的工业视频内窥镜，配备双向180度导向功能，专为汽车制造和精密检测设计，广泛应用于汽车工业、精密机械、航空制造等复杂结构检测场景。</description>
-    </item>
-    <item>
-      <title>WS-P1510高清工业视频内窥镜 - 1.5mm双向导向探头</title>
-      <link>http://localhost:1313/products/vs/ws-p1510/</link>
-      <pubDate>Wed, 01 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/products/vs/ws-p1510/</guid>
-      <description>高清光纤照明360度旋转镜头内窥镜，1.5mm双向导向探头专为汽车制造检测设计</description>
-    </item>
   </channel>
 </rss>

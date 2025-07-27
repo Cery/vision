@@ -12,8 +12,7 @@
         {{ range .Site.Data.product_categories }}
         <!-- 一级分类 -->
         <div class="primary-category" data-category="{{ .id }}">
-            {{ $primaryTitle := .title }}
-            <div class="primary-category-header" onclick="goToPrimaryCategory('{{ .title }}')">
+            <div class="primary-category-header" onclick="goToProducts('{{ .title }}')">
                 <div class="primary-category-icon">
                     <i class="{{ .icon }}"></i>
                 </div>
@@ -29,7 +28,7 @@
             {{ if .subcategories }}
             <div class="secondary-categories">
                 {{ range .subcategories }}
-                <div class="secondary-category-item" onclick="goToSecondaryCategory('{{ $primaryTitle }}', '{{ .title }}')">
+                <div class="secondary-category-item" onclick="goToProducts('{{ .title }}')">
                     <div class="secondary-category-prefix">
                         <span class="category-divider">----</span>
                     </div>
@@ -317,17 +316,11 @@
 </style>
 
 <script>
-// 跳转到产品页面 - 一级分类
-function goToPrimaryCategory(primaryCategory) {
-    const encodedCategory = encodeURIComponent(primaryCategory);
-    window.location.href = `/products/?primary_category=${encodedCategory}`;
-}
-
-// 跳转到产品页面 - 二级分类
-function goToSecondaryCategory(primaryCategory, secondaryCategory) {
-    const encodedPrimary = encodeURIComponent(primaryCategory);
-    const encodedSecondary = encodeURIComponent(secondaryCategory);
-    window.location.href = `/products/?primary_category=${encodedPrimary}&secondary_category=${encodedSecondary}`;
+// 跳转到产品页面
+function goToProducts(category) {
+    // 构建产品页面URL，带上分类参数
+    const encodedCategory = encodeURIComponent(category);
+    window.location.href = `/products/?category=${encodedCategory}`;
 }
 
 document.addEventListener('DOMContentLoaded', function() {

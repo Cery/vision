@@ -4,122 +4,34 @@
 
     <div class="row">
         <!-- 筛选侧边栏 -->
-        <div class="col-lg-3 col-md-4 mb-3 mb-md-4">
+        <div class="col-lg-3 col-md-4 mb-4">
             <div class="card shadow-sm news-sidebar-card">
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0"><i class="fas fa-filter me-2"></i>筛选条件</h5>
                 </div>
                 <div class="card-body">
-                    <!-- 资讯分类筛选 - 展开收缩菜单 -->
+                    <!-- 资讯分类筛选 -->
                     <div class="mb-4">
                         <h6 class="filter-section-title">
-                            <i class="fas fa-sitemap me-2"></i>资讯分类
+                            <i class="fas fa-folder-open me-2"></i>资讯分类
                         </h6>
-
-                        <!-- 全部选项 -->
-                        <div class="category-menu-item mb-2">
-                            <div class="category-main-item active" data-filter-type="category" data-filter-value="">
-                                <i class="fas fa-globe me-2"></i>
-                                <span>全部资讯</span>
-                                <span class="category-count">{{ len (where .Site.RegularPages "Type" "news") }}</span>
-                            </div>
-                        </div>
-
-                        {{ $newsPages := where .Site.RegularPages "Type" "news" }}
-                        {{ $newsCategories := dict }}
-                        {{ $categorySubcategories := dict }}
-
-                        <!-- 统计分类和二级分类 -->
-                        {{ range $newsPages }}
-                            {{ range .Params.categories }}
-                                {{ $newsCategories = merge $newsCategories (dict . (add (index $newsCategories . | default 0) 1)) }}
-                            {{ end }}
-                            {{ $category := index .Params.categories 0 }}
-                            {{ if $category }}
-                                {{ range .Params.subcategories }}
-                                    {{ $key := printf "%s|%s" $category . }}
-                                    {{ $categorySubcategories = merge $categorySubcategories (dict $key (add (index $categorySubcategories $key | default 0) 1)) }}
+                        <div class="filter-buttons-container" id="category-filters">
+                            <a href="javascript:void(0)" class="filter-btn active" data-filter-type="category" data-filter-value="">
+                                全部
+                            </a>
+                            {{ $newsPages := where .Site.RegularPages "Type" "news" }}
+                            {{ $newsCategories := dict }}
+                            {{ range $newsPages }}
+                                {{ range .Params.categories }}
+                                    {{ $newsCategories = merge $newsCategories (dict . (add (index $newsCategories . | default 0) 1)) }}
                                 {{ end }}
                             {{ end }}
-                        {{ end }}
-
-                        <!-- 展会信息分类 -->
-                        {{ if index $newsCategories "展会信息" }}
-                        <div class="category-menu-item mb-2">
-                            <div class="category-main-item" data-filter-type="category" data-filter-value="展会信息">
-                                <i class="fas fa-calendar-alt me-2"></i>
-                                <span>展会信息</span>
-                                <span class="category-count">{{ index $newsCategories "展会信息" }}</span>
-                                <i class="fas fa-chevron-right category-arrow"></i>
-                            </div>
-                            <div class="category-sub-menu">
-                                <div class="subcategory-item" data-filter-type="subcategory" data-filter-value="" data-parent-category="展会信息">
-                                    <span>全部展会</span>
-                                    <span class="subcategory-count">{{ index $newsCategories "展会信息" }}</span>
-                                </div>
-                                {{ $subcategories := slice "工业制造" "能源动力" "仪器仪表" "无损检测" }}
-                                {{ range $subcategories }}
-                                    {{ $key := printf "展会信息|%s" . }}
-                                    {{ if index $categorySubcategories $key }}
-                                    <div class="subcategory-item" data-filter-type="subcategory" data-filter-value="{{ . }}" data-parent-category="展会信息">
-                                        <span>{{ . }}</span>
-                                        <span class="subcategory-count">{{ index $categorySubcategories $key }}</span>
-                                    </div>
-                                    {{ end }}
-                                {{ end }}
-                            </div>
+                            {{ range $category, $count := $newsCategories }}
+                            <a href="javascript:void(0)" class="filter-btn" data-filter-type="category" data-filter-value="{{ $category }}">
+                                {{ $category }} <span class="badge bg-light text-dark">{{ $count }}</span>
+                            </a>
+                            {{ end }}
                         </div>
-                        {{ end }}
-
-                        <!-- 技术文章分类 -->
-                        {{ if index $newsCategories "技术文章" }}
-                        <div class="category-menu-item mb-2">
-                            <div class="category-main-item" data-filter-type="category" data-filter-value="技术文章">
-                                <i class="fas fa-file-alt me-2"></i>
-                                <span>技术文章</span>
-                                <span class="category-count">{{ index $newsCategories "技术文章" }}</span>
-                                <i class="fas fa-chevron-right category-arrow"></i>
-                            </div>
-                            <div class="category-sub-menu">
-                                <div class="subcategory-item" data-filter-type="subcategory" data-filter-value="" data-parent-category="技术文章">
-                                    <span>全部文章</span>
-                                    <span class="subcategory-count">{{ index $newsCategories "技术文章" }}</span>
-                                </div>
-                                {{ $key := "技术文章|无损检测" }}
-                                {{ if index $categorySubcategories $key }}
-                                <div class="subcategory-item" data-filter-type="subcategory" data-filter-value="无损检测" data-parent-category="技术文章">
-                                    <span>无损检测</span>
-                                    <span class="subcategory-count">{{ index $categorySubcategories $key }}</span>
-                                </div>
-                                {{ end }}
-                            </div>
-                        </div>
-                        {{ end }}
-
-                        <!-- 行业资讯分类 -->
-                        {{ if index $newsCategories "行业资讯" }}
-                        <div class="category-menu-item mb-2">
-                            <div class="category-main-item" data-filter-type="category" data-filter-value="行业资讯">
-                                <i class="fas fa-newspaper me-2"></i>
-                                <span>行业资讯</span>
-                                <span class="category-count">{{ index $newsCategories "行业资讯" }}</span>
-                                <i class="fas fa-chevron-right category-arrow"></i>
-                            </div>
-                            <div class="category-sub-menu">
-                                <div class="subcategory-item" data-filter-type="subcategory" data-filter-value="" data-parent-category="行业资讯">
-                                    <span>全部资讯</span>
-                                    <span class="subcategory-count">{{ index $newsCategories "行业资讯" }}</span>
-                                </div>
-                                {{ $key := "行业资讯|无损检测" }}
-                                {{ if index $categorySubcategories $key }}
-                                <div class="subcategory-item" data-filter-type="subcategory" data-filter-value="无损检测" data-parent-category="行业资讯">
-                                    <span>无损检测</span>
-                                    <span class="subcategory-count">{{ index $categorySubcategories $key }}</span>
-                                </div>
-                                {{ end }}
-                            </div>
-                        </div>
-                        {{ end }}
                     </div>
 
                     <!-- 标签筛选 -->
@@ -148,9 +60,9 @@
                     </div>
 
                     <!-- 清除筛选 -->
-                    <div class="text-center mt-3">
-                        <button class="btn btn-clear-all" id="clearAllFilters">
-                            <i class="fas fa-refresh me-2"></i>清除全部筛选
+                    <div class="text-center">
+                        <button class="btn btn-outline-secondary btn-sm" id="clearAllFilters">
+                            <i class="fas fa-times me-1"></i>清除全部
                         </button>
                     </div>
                 </div>
@@ -174,8 +86,7 @@
             <!-- 筛选结果信息和排序 -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h4 class="mb-0">资讯中心</h4>
-                    <small class="text-muted" id="news-count-info">共 {{ len (where .Site.RegularPages "Type" "news") }} 篇资讯</small>
+                    <small class="text-muted" id="news-count-info">共 {{ len $newsPages }} 篇资讯</small>
                 </div>
                 <div class="d-flex align-items-center">
                     <label for="sortOrder" class="form-label me-2 mb-0">排序：</label>
@@ -191,94 +102,24 @@
             <div class="row" id="newsList">
                 {{ $allNews := where .Site.RegularPages "Type" "news" }}
                 {{ range $index, $page := $allNews }}
-                <div class="col-12 col-sm-6 col-lg-6 col-xl-4 mb-3 mb-md-4 news-item"
+                <div class="col-lg-6 col-xl-4 mb-4 news-item"
                      data-categories="{{ delimit (.Params.categories | default (slice)) "," }}"
-                     data-subcategories="{{ delimit (.Params.subcategories | default (slice)) "," }}"
                      data-tags="{{ delimit (.Params.tags | default (slice)) "," | safeHTMLAttr }}"
                      data-date="{{ .Date.Format "2006-01-02" }}"
                      data-views="{{ .Params.views | default 0 }}"
                      data-permalink="{{ .RelPermalink }}"
                      data-title="{{ .Title }}">
                     <div class="card h-100 shadow-sm news-card">
-                        <div class="card-img-wrapper">
-                            <a href="{{ .RelPermalink | relURL }}" class="image-link">
+                        <a href="{{ .Permalink }}" class="card-img-link">
+                            <div class="card-img-wrapper">
                                 {{ with .Params.featured_image }}
                                 <img src="{{ . | relURL }}" class="card-img-top object-fit-cover" alt="{{ $page.Title }}" style="height: 200px;">
                                 {{ else }}
-                                    {{ if and .Params.categories (in .Params.categories "技术文章") }}
-                                        <!-- 技术文章图标化封面 -->
-                                        <div class="tech-article-cover" style="height: 200px;">
-                                            <div class="tech-cover-content">
-                                                <div class="tech-icon">
-                                                    {{ $difficulty := .Params.difficulty | default "intermediate" }}
-                                                    {{ if eq $difficulty "beginner" }}
-                                                        <i class="fas fa-lightbulb"></i>
-                                                    {{ else if eq $difficulty "advanced" }}
-                                                        <i class="fas fa-cogs"></i>
-                                                    {{ else }}
-                                                        <i class="fas fa-microchip"></i>
-                                                    {{ end }}
-                                                </div>
-                                                <div class="tech-category">技术文章</div>
-                                                <div class="tech-difficulty">
-                                                    {{ if eq $difficulty "beginner" }}入门级
-                                                    {{ else if eq $difficulty "advanced" }}高级
-                                                    {{ else }}中级{{ end }}
-                                                </div>
-                                                {{ with .Params.readingTime }}
-                                                <div class="reading-time">
-                                                    <i class="far fa-clock"></i> {{ . }}分钟阅读
-                                                </div>
-                                                {{ end }}
-                                            </div>
-                                        </div>
-                                    {{ else if and .Params.categories (in .Params.categories "展会信息") }}
-                                        <!-- 展会信息图标化封面 -->
-                                        <div class="exhibition-cover" style="height: 200px;">
-                                            <div class="exhibition-cover-content">
-                                                <div class="exhibition-icon">
-                                                    <i class="fas fa-calendar-check"></i>
-                                                </div>
-                                                <div class="exhibition-category">展会信息</div>
-                                                {{ with .Params.event_date }}
-                                                <div class="exhibition-date">{{ . }}</div>
-                                                {{ end }}
-                                                {{ with .Params.location }}
-                                                <div class="exhibition-location">
-                                                    <i class="fas fa-map-marker-alt"></i> {{ . }}
-                                                </div>
-                                                {{ end }}
-                                            </div>
-                                        </div>
-                                    {{ else if and .Params.categories (in .Params.categories "应用案例") }}
-                                        <!-- 应用案例图标化封面 -->
-                                        <div class="case-study-cover" style="height: 200px;">
-                                            <div class="case-study-cover-content">
-                                                <div class="case-study-icon">
-                                                    <i class="fas fa-chart-line"></i>
-                                                </div>
-                                                <div class="case-study-category">应用案例</div>
-                                                {{ with .Params.industry }}
-                                                <div class="case-study-industry">{{ . }}</div>
-                                                {{ end }}
-                                                {{ with .Params.caseType }}
-                                                <div class="case-study-type">
-                                                    {{ if eq . "success" }}成功案例
-                                                    {{ else if eq . "innovation" }}创新应用
-                                                    {{ else if eq . "optimization" }}优化改进
-                                                    {{ else }}{{ . }}{{ end }}
-                                                </div>
-                                                {{ end }}
-                                            </div>
-                                        </div>
-                                    {{ else }}
-                                        <!-- 其他类型文章使用默认图片 -->
-                                        {{ $newsImages := slice "/images/news/news-1.jpeg" "/images/news/news-2.jpeg" "/images/news/news-3.jpeg" "/images/news/news-4.jpeg" "/images/news/news-5.jpeg" "/images/news/news-6.jpeg" }}
-                                        <img src="{{ index $newsImages (mod $index 6) }}" class="card-img-top object-fit-cover" alt="{{ $page.Title }}" style="height: 200px;">
-                                    {{ end }}
+                                {{ $newsImages := slice "/images/news/news-1.jpeg" "/images/news/news-2.jpeg" "/images/news/news-3.jpeg" "/images/news/news-4.jpeg" "/images/news/news-5.jpeg" "/images/news/news-6.jpeg" }}
+                                <img src="{{ index $newsImages (mod $index 6) }}" class="card-img-top object-fit-cover" alt="{{ $page.Title }}" style="height: 200px;">
                                 {{ end }}
-                            </a>
-                        </div>
+                            </div>
+                        </a>
                         <div class="card-body d-flex flex-column">
                             <div class="mb-2">
                                 {{ range .Params.categories }}
@@ -288,11 +129,11 @@
                                 <span class="badge bg-secondary me-1">{{ . }}</span>
                                 {{ end }}
                             </div>
-                            <h5 class="card-title">
-                                <a href="{{ .RelPermalink | relURL }}" class="text-decoration-none text-dark hover-primary">{{ .Title }}</a>
+                            <h5 class="card-title news-title">
+                                <a href="{{ .Permalink }}" class="text-decoration-none text-dark hover-primary">{{ .Title }}</a>
                             </h5>
                             {{ with .Params.summary }}
-                            <p class="card-text text-muted flex-grow-1">{{ . | truncate 70 "..." }}</p>
+                            <p class="card-text text-muted flex-grow-1 news-summary">{{ . }}</p>
                             {{ end }}
                             <div class="mt-auto">
                                 <div class="d-flex justify-content-between align-items-center">
@@ -333,208 +174,6 @@
 /* 新闻列表页面样式 - 左侧边栏布局 */
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-/* 技术文章图标化封面样式 */
-.tech-article-cover {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-    border-radius: 0.375rem 0.375rem 0 0;
-}
-
-.tech-article-cover::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
-    opacity: 0.3;
-}
-
-.tech-cover-content {
-    text-align: center;
-    color: white;
-    z-index: 1;
-    position: relative;
-}
-
-.tech-icon {
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
-    opacity: 0.9;
-}
-
-.tech-category {
-    font-size: 0.875rem;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.tech-difficulty {
-    font-size: 0.75rem;
-    background: rgba(255, 255, 255, 0.2);
-    padding: 0.25rem 0.75rem;
-    border-radius: 1rem;
-    display: inline-block;
-    margin-bottom: 0.5rem;
-    backdrop-filter: blur(10px);
-}
-
-.reading-time {
-    font-size: 0.7rem;
-    opacity: 0.8;
-}
-
-.reading-time i {
-    margin-right: 0.25rem;
-}
-
-/* 悬停效果 */
-.tech-article-cover:hover {
-    transform: scale(1.02);
-    transition: transform 0.3s ease;
-}
-
-.tech-article-cover:hover .tech-icon {
-    transform: scale(1.1);
-    transition: transform 0.3s ease;
-}
-
-/* 展会信息图标化封面样式 */
-.exhibition-cover {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-    border-radius: 0.375rem 0.375rem 0 0;
-}
-
-.exhibition-cover::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="calendar-grid" width="20" height="20" patternUnits="userSpaceOnUse"><rect width="20" height="20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.2)"/></pattern></defs><rect width="100%" height="100%" fill="url(%23calendar-grid)"/></svg>');
-    opacity: 0.3;
-}
-
-.exhibition-cover-content {
-    text-align: center;
-    color: white;
-    z-index: 1;
-    position: relative;
-}
-
-.exhibition-icon {
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
-    opacity: 0.9;
-}
-
-.exhibition-category {
-    font-size: 0.875rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.exhibition-date {
-    font-size: 0.75rem;
-    background: rgba(255, 255, 255, 0.2);
-    padding: 0.25rem 0.75rem;
-    border-radius: 1rem;
-    display: inline-block;
-    margin-bottom: 0.25rem;
-    backdrop-filter: blur(10px);
-}
-
-.exhibition-location {
-    font-size: 0.7rem;
-    opacity: 0.8;
-}
-
-/* 应用案例图标化封面样式 */
-.case-study-cover {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-    border-radius: 0.375rem 0.375rem 0 0;
-}
-
-.case-study-cover::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="chart-grid" width="25" height="25" patternUnits="userSpaceOnUse"><path d="M 0 25 L 25 0 M 0 0 L 25 25" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(%23chart-grid)"/></svg>');
-    opacity: 0.3;
-}
-
-.case-study-cover-content {
-    text-align: center;
-    color: white;
-    z-index: 1;
-    position: relative;
-}
-
-.case-study-icon {
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
-    opacity: 0.9;
-}
-
-.case-study-category {
-    font-size: 0.875rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.case-study-industry {
-    font-size: 0.75rem;
-    background: rgba(255, 255, 255, 0.2);
-    padding: 0.25rem 0.75rem;
-    border-radius: 1rem;
-    display: inline-block;
-    margin-bottom: 0.25rem;
-    backdrop-filter: blur(10px);
-}
-
-.case-study-type {
-    font-size: 0.7rem;
-    opacity: 0.8;
-}
-
-/* 通用悬停效果 */
-.exhibition-cover:hover,
-.case-study-cover:hover {
-    transform: scale(1.02);
-    transition: transform 0.3s ease;
-}
-
-.exhibition-cover:hover .exhibition-icon,
-.case-study-cover:hover .case-study-icon {
-    transform: scale(1.1);
-    transition: transform 0.3s ease;
 }
 
 /* 侧边栏样式 */
@@ -630,45 +269,26 @@ body {
 }
 
 .selected-filter-tag {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    padding: 0.4rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
+    background-color: #e3f2fd;
+    color: #1976d2;
+    border: 1px solid #1976d2;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    font-size: 12px;
     font-weight: 500;
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    margin: 0.2rem;
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-    transition: all 0.3s ease;
-}
-
-.selected-filter-tag:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    gap: 0.25rem;
 }
 
 .selected-filter-tag .remove-filter {
     cursor: pointer;
     font-weight: bold;
-    color: rgba(255, 255, 255, 0.8);
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    transition: all 0.3s ease;
+    margin-left: 0.25rem;
 }
 
 .selected-filter-tag .remove-filter:hover {
-    background: rgba(255, 255, 255, 0.3);
-    color: white;
-    transform: scale(1.1);
+    color: #d32f2f;
 }
 
 /* 新闻卡片样式 */
@@ -690,40 +310,72 @@ body {
     overflow: hidden;
 }
 
-.card-img-wrapper .image-link {
-    display: block;
-    text-decoration: none;
-    position: relative;
-    overflow: hidden;
-}
-
 .card-img-top {
     transition: all 0.15s ease-in-out;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
 }
 
 .news-card:hover .card-img-top {
-    transform: scale(1.05);
+    transform: scale(1.02);
 }
 
-.card-img-wrapper .image-link::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.3);
+.card-img-overlay {
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
     opacity: 0;
     transition: opacity 0.15s ease-in-out;
 }
 
-.news-card:hover .card-img-wrapper .image-link::after {
+.news-card:hover .card-img-overlay {
     opacity: 1;
+}
+
+/* 图片链接样式 */
+.card-img-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.card-img-link:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* 标题样式 - 限制2行 */
+.news-title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 12px;
+}
+
+.news-title a {
+    color: #212121;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.3s ease;
+}
+
+.news-title a:hover {
+    color: #1976d2 !important;
+    text-decoration: none;
+}
+
+/* 摘要样式 - 限制2行 */
+.news-summary {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #6c757d;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 0;
 }
 
 .card-title {
@@ -732,12 +384,6 @@ body {
     line-height: 1.4;
     color: #212121;
     margin-bottom: 0.75rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    height: 2.8rem; /* 2行的高度 */
 }
 
 .card-title a {
@@ -754,11 +400,6 @@ body {
     font-size: 14px;
     color: #757575;
     line-height: 1.5;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 /* 徽章样式 */
@@ -847,189 +488,6 @@ small.text-muted i {
     border-color: #616161;
 }
 
-/* 展开收缩菜单样式 */
-.category-menu-item {
-    border: 1px solid #e9ecef;
-    border-radius: 12px;
-    overflow: hidden;
-    background: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    transition: all 0.3s ease;
-}
-
-.category-menu-item:hover {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-    transform: translateY(-1px);
-}
-
-.category-main-item {
-    padding: 0.75rem 1rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: white;
-    transition: all 0.3s ease;
-    border: none;
-    text-decoration: none;
-    color: #495057;
-    font-weight: 500;
-}
-
-.category-main-item:hover {
-    background: #f8f9fa;
-    color: #1976d2;
-}
-
-.category-main-item.active {
-    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
-    color: white;
-    font-weight: 600;
-}
-
-.category-main-item.expanded {
-    background: #e3f2fd;
-    color: #1976d2;
-    border-bottom: 1px solid #e9ecef;
-}
-
-.category-main-item .fas {
-    width: 16px;
-    text-align: center;
-}
-
-.category-count {
-    background: rgba(0,0,0,0.1);
-    color: inherit;
-    padding: 0.2rem 0.5rem;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    margin-left: auto;
-    margin-right: 0.5rem;
-}
-
-.category-main-item.active .category-count {
-    background: rgba(255,255,255,0.2);
-    color: white;
-}
-
-.category-arrow {
-    transition: transform 0.3s ease;
-    font-size: 0.8rem;
-    color: #6c757d;
-}
-
-.category-main-item.expanded .category-arrow {
-    transform: rotate(90deg);
-    color: #1976d2;
-}
-
-.category-sub-menu {
-    display: none;
-    background: #f8f9fa;
-    border-top: 1px solid #e9ecef;
-}
-
-.category-sub-menu.show {
-    display: block;
-    animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        max-height: 0;
-    }
-    to {
-        opacity: 1;
-        max-height: 300px;
-    }
-}
-
-.subcategory-item {
-    padding: 0.6rem 1rem 0.6rem 2.5rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transition: all 0.3s ease;
-    color: #6c757d;
-    font-size: 0.9rem;
-    border-bottom: 1px solid #e9ecef;
-}
-
-.subcategory-item:last-child {
-    border-bottom: none;
-}
-
-.subcategory-item:hover {
-    background: #e9ecef;
-    color: #495057;
-    padding-left: 2.75rem;
-}
-
-.subcategory-item.active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    font-weight: 600;
-    padding-left: 2.75rem;
-}
-
-.subcategory-count {
-    background: rgba(0,0,0,0.1);
-    color: inherit;
-    padding: 0.15rem 0.4rem;
-    border-radius: 10px;
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
-.subcategory-item.active .subcategory-count {
-    background: rgba(255,255,255,0.2);
-    color: white;
-}
-
-/* 清除全部按钮样式 */
-.btn-clear-all {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
-    border: none;
-    color: white;
-    padding: 0.6rem 1.5rem;
-    border-radius: 25px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 3px 12px rgba(255, 107, 107, 0.3);
-    text-transform: none;
-    letter-spacing: 0.5px;
-}
-
-.btn-clear-all:hover {
-    background: linear-gradient(135deg, #ff5252 0%, #d32f2f 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-    color: white;
-}
-
-.btn-clear-all:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
-}
-
-.btn-clear-all i {
-    animation: rotate 2s linear infinite;
-}
-
-@keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.btn-clear-all:hover i {
-    animation-duration: 0.5s;
-}
-
 /* 单选按钮样式 */
 .btn-check:checked + .btn-outline-secondary {
     color: white;
@@ -1109,13 +567,10 @@ small.text-muted i {
 
     .card-title {
         font-size: 14px;
-        height: 2.4rem; /* 调整移动端高度 */
     }
 
     .card-text {
         font-size: 13px;
-        height: 2.73rem; /* 调整移动端高度到第三行2/3处 */
-        max-height: 2.73rem;
     }
 
     .badge {
@@ -1169,14 +624,11 @@ small.text-muted i {
     .card-title {
         font-size: 13px;
         line-height: 1.3;
-        height: 2.2rem; /* 小屏幕高度 */
     }
 
     .card-text {
         font-size: 12px;
         line-height: 1.4;
-        height: 2.52rem; /* 小屏幕高度到第三行2/3处 */
-        max-height: 2.52rem;
     }
 
     .news-item .card-img-top {
@@ -1258,9 +710,7 @@ document.addEventListener('DOMContentLoaded', function() {
     filteredNews = [...allNews];
 
     // 初始化增强分页
-    if (typeof initEnhancedPagination === 'function') {
-        initEnhancedPagination('newsList', NEWS_ITEMS_PER_PAGE, '资讯');
-    }
+    initEnhancedPagination('newsList', NEWS_ITEMS_PER_PAGE, '资讯');
 
     // 监听分页变化事件
     document.addEventListener('enhancedPaginationChange', function(event) {
@@ -1284,29 +734,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeFilters() {
-    // 主分类点击事件
-    document.querySelectorAll('.category-main-item').forEach(item => {
-        item.addEventListener('click', function() {
-            const filterValue = this.dataset.filterValue;
-            const filterType = this.dataset.filterType;
-
-            if (filterType === 'category') {
-                // 处理分类选择
-                handleCategorySelection(this, filterValue);
-            }
-        });
-    });
-
-    // 二级分类点击事件
-    document.querySelectorAll('.subcategory-item').forEach(item => {
-        item.addEventListener('click', function() {
-            const filterValue = this.dataset.filterValue;
-            const filterType = this.dataset.filterType;
-            const parentCategory = this.dataset.parentCategory;
-
-            if (filterType === 'subcategory') {
-                handleSubcategorySelection(this, filterValue, parentCategory);
-            }
+    // 分类筛选
+    document.querySelectorAll('#category-filters .filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            toggleFilter(this, 'category');
         });
     });
 
@@ -1341,82 +772,6 @@ function hideLoading() {
     }
 }
 
-function handleCategorySelection(element, filterValue) {
-    // 清除所有主分类的选中状态
-    document.querySelectorAll('.category-main-item').forEach(item => {
-        item.classList.remove('active', 'expanded');
-    });
-
-    // 隐藏所有二级菜单
-    document.querySelectorAll('.category-sub-menu').forEach(menu => {
-        menu.classList.remove('show');
-    });
-
-    // 清除所有二级分类的选中状态
-    document.querySelectorAll('.subcategory-item').forEach(item => {
-        item.classList.remove('active');
-    });
-
-    if (filterValue === '') {
-        // 选择"全部"
-        element.classList.add('active');
-        currentFilters.category = '';
-        currentFilters.subcategory = '';
-    } else {
-        // 选择特定分类
-        element.classList.add('active', 'expanded');
-
-        // 显示对应的二级菜单
-        const subMenu = element.nextElementSibling;
-        if (subMenu && subMenu.classList.contains('category-sub-menu')) {
-            subMenu.classList.add('show');
-
-            // 默认选中"全部"二级分类
-            const allSubcategoryItem = subMenu.querySelector('.subcategory-item[data-filter-value=""]');
-            if (allSubcategoryItem) {
-                allSubcategoryItem.classList.add('active');
-            }
-        }
-
-        currentFilters.category = filterValue;
-        currentFilters.subcategory = '';
-    }
-
-    applyFiltersAndSort();
-}
-
-function handleSubcategorySelection(element, filterValue, parentCategory) {
-    // 清除同级二级分类的选中状态
-    const parentMenu = element.parentElement;
-    parentMenu.querySelectorAll('.subcategory-item').forEach(item => {
-        item.classList.remove('active');
-    });
-
-    // 选中当前二级分类
-    element.classList.add('active');
-
-    // 确保父分类也是选中状态
-    const parentCategoryElement = parentMenu.previousElementSibling;
-    if (parentCategoryElement) {
-        document.querySelectorAll('.category-main-item').forEach(item => {
-            item.classList.remove('active', 'expanded');
-        });
-        parentCategoryElement.classList.add('active', 'expanded');
-    }
-
-    currentFilters.category = parentCategory;
-    currentFilters.subcategory = filterValue;
-
-    applyFiltersAndSort();
-}
-
-// 全局筛选状态
-let currentFilters = {
-    category: '',
-    subcategory: '',
-    tags: []
-};
-
 function toggleFilter(button, filterType) {
     const value = button.dataset.filterValue;
 
@@ -1450,44 +805,15 @@ function toggleFilter(button, filterType) {
 }
 
 function clearAllFilters() {
-    // 清除所有主分类的选中状态
-    document.querySelectorAll('.category-main-item').forEach(item => {
-        item.classList.remove('active', 'expanded');
-    });
-
-    // 隐藏所有二级菜单
-    document.querySelectorAll('.category-sub-menu').forEach(menu => {
-        menu.classList.remove('show');
-    });
-
-    // 清除所有二级分类的选中状态
-    document.querySelectorAll('.subcategory-item').forEach(item => {
-        item.classList.remove('active');
-    });
-
-    // 选中"全部资讯"
-    const allCategoryItem = document.querySelector('.category-main-item[data-filter-value=""]');
-    if (allCategoryItem) {
-        allCategoryItem.classList.add('active');
-    }
-
-    // 清除标签筛选
-    document.querySelectorAll('#tag-filters .filter-btn').forEach(btn => {
+    // 清除所有筛选按钮的选中状态
+    document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.classList.remove('active');
     });
 
-    // 选中"全部标签"
-    const allTagBtn = document.querySelector('#tag-filters .filter-btn[data-filter-value=""]');
-    if (allTagBtn) {
-        allTagBtn.classList.add('active');
-    }
-
-    // 重置筛选状态
-    currentFilters = {
-        category: '',
-        subcategory: '',
-        tags: []
-    };
+    // 选中所有"全部"按钮
+    document.querySelectorAll('[data-filter-value=""]').forEach(btn => {
+        btn.classList.add('active');
+    });
 
     // 重置排序
     document.getElementById('sortOrder').value = 'date-desc';
@@ -1544,12 +870,12 @@ function applyFiltersAndSort() {
     console.log('🔄 应用筛选和排序');
 
     // 获取选中的筛选条件
+    const selectedCategories = getSelectedFilters('#category-filters');
     const selectedTags = getSelectedFilters('#tag-filters');
     const sortOrder = document.getElementById('sortOrder').value;
 
     console.log('筛选条件:', {
-        category: currentFilters.category,
-        subcategory: currentFilters.subcategory,
+        categories: selectedCategories,
         tags: selectedTags,
         sortOrder: sortOrder
     });
@@ -1558,24 +884,18 @@ function applyFiltersAndSort() {
     filteredNews = allNews.filter(newsItem => {
         const categories = newsItem.dataset.categories ?
             newsItem.dataset.categories.split(',').map(c => c.trim()) : [];
-        const subcategories = newsItem.dataset.subcategories ?
-            newsItem.dataset.subcategories.split(',').map(c => c.trim()) : [];
         const tags = newsItem.dataset.tags ?
             newsItem.dataset.tags.split(',').map(t => t.trim()) : [];
 
         // 检查分类匹配
-        let categoryMatch = !currentFilters.category ||
-            categories.includes(currentFilters.category);
-
-        // 检查二级分类匹配
-        let subcategoryMatch = !currentFilters.subcategory ||
-            subcategories.includes(currentFilters.subcategory);
+        let categoryMatch = selectedCategories.length === 0 ||
+            selectedCategories.some(cat => categories.includes(cat));
 
         // 检查标签匹配
         let tagMatch = selectedTags.length === 0 ||
             selectedTags.some(tag => tags.includes(tag));
 
-        return categoryMatch && subcategoryMatch && tagMatch;
+        return categoryMatch && tagMatch;
     });
 
     // 排序
@@ -1656,29 +976,23 @@ function updateNewsCount() {
 }
 
 function updateSelectedFilters() {
+    const selectedCategories = getSelectedFilters('#category-filters');
     const selectedTags = getSelectedFilters('#tag-filters');
     const selectedFiltersCard = document.getElementById('selected-filters-card');
     const selectedFiltersContainer = document.getElementById('selected-filters-container');
 
-    const hasFilters = currentFilters.category || currentFilters.subcategory || selectedTags.length > 0;
+    const hasFilters = selectedCategories.length > 0 || selectedTags.length > 0;
 
     if (hasFilters) {
         selectedFiltersCard.style.display = 'block';
         let filtersHTML = '';
 
-        if (currentFilters.category) {
+        selectedCategories.forEach(category => {
             filtersHTML += `<span class="selected-filter-tag">
-                分类: ${currentFilters.category}
-                <span class="remove-filter" onclick="removeFilter('category', '${currentFilters.category}')">&times;</span>
+                分类: ${category}
+                <span class="remove-filter" onclick="removeFilter('category', '${category}')">&times;</span>
             </span>`;
-        }
-
-        if (currentFilters.subcategory) {
-            filtersHTML += `<span class="selected-filter-tag">
-                领域: ${currentFilters.subcategory}
-                <span class="remove-filter" onclick="removeFilter('subcategory', '${currentFilters.subcategory}')">&times;</span>
-            </span>`;
-        }
+        });
 
         selectedTags.forEach(tag => {
             filtersHTML += `<span class="selected-filter-tag">
@@ -1694,56 +1008,16 @@ function updateSelectedFilters() {
 }
 
 function removeFilter(filterType, value) {
-    if (filterType === 'category') {
-        // 重置分类选择
-        currentFilters.category = '';
-        currentFilters.subcategory = '';
+    const selector = filterType === 'category' ? '#category-filters' : '#tag-filters';
+    const button = document.querySelector(`${selector} [data-filter-value="${value}"]`);
+    if (button) {
+        button.classList.remove('active');
 
-        // 清除所有主分类选中状态
-        document.querySelectorAll('.category-main-item').forEach(item => {
-            item.classList.remove('active', 'expanded');
-        });
-
-        // 隐藏所有二级菜单
-        document.querySelectorAll('.category-sub-menu').forEach(menu => {
-            menu.classList.remove('show');
-        });
-
-        // 选中"全部资讯"
-        const allCategoryItem = document.querySelector('.category-main-item[data-filter-value=""]');
-        if (allCategoryItem) {
-            allCategoryItem.classList.add('active');
-        }
-
-    } else if (filterType === 'subcategory') {
-        // 重置二级分类选择
-        currentFilters.subcategory = '';
-
-        // 清除二级分类选中状态
-        document.querySelectorAll('.subcategory-item').forEach(item => {
-            item.classList.remove('active');
-        });
-
-        // 选中对应的"全部"二级分类
-        if (currentFilters.category) {
-            const allSubcategoryItem = document.querySelector(`.subcategory-item[data-filter-value=""][data-parent-category="${currentFilters.category}"]`);
-            if (allSubcategoryItem) {
-                allSubcategoryItem.classList.add('active');
-            }
-        }
-
-    } else if (filterType === 'tag') {
-        // 处理标签移除
-        const button = document.querySelector(`#tag-filters [data-filter-value="${value}"]`);
-        if (button) {
-            button.classList.remove('active');
-
-            // 检查是否需要激活"全部"按钮
-            const activeButtons = button.parentElement.querySelectorAll('.filter-btn.active');
-            if (activeButtons.length === 0) {
-                const allBtn = button.parentElement.querySelector('[data-filter-value=""]');
-                if (allBtn) allBtn.classList.add('active');
-            }
+        // 检查是否需要激活"全部"按钮
+        const activeButtons = button.parentElement.querySelectorAll('.filter-btn.active');
+        if (activeButtons.length === 0) {
+            const allBtn = button.parentElement.querySelector('[data-filter-value=""]');
+            if (allBtn) allBtn.classList.add('active');
         }
     }
 

@@ -20,13 +20,13 @@
                                 <span class="badge bg-primary me-2">一级分类</span>
                                 <small class="text-muted">选择产品主要类别</small>
                             </div>
-                            <div class="category-primary bg-gradient p-2 p-md-3 rounded-3 border-2 border-primary">
-                                <div class="d-flex flex-wrap gap-1 gap-md-2 align-items-center justify-content-center justify-content-md-start">
+                            <div class="category-primary bg-gradient p-3 rounded-3 border-2 border-primary">
+                                <div class="d-flex flex-wrap gap-2 align-items-center">
                                     {{ $currentPrimaryCategory := "" }}
                                     {{ $currentSecondaryCategory := "" }}
 
-                                    <a href="{{ "products" | absURL }}" class="btn btn-sm btn-md-lg btn-primary fw-bold shadow-sm primary-btn {{ if not $currentPrimaryCategory }}active{{ end }}">
-                                        <i class="fas fa-home me-1"></i><span class="d-none d-sm-inline">全部</span>分类
+                                    <a href="{{ "products" | absURL }}" class="btn btn-lg btn-primary fw-bold shadow-sm primary-btn {{ if not $currentPrimaryCategory }}active{{ end }}">
+                                        <i class="fas fa-home me-1"></i>全部分类
                                     </a>
 
                                     {{ $allProducts := where .Site.RegularPages "Type" "products" }}
@@ -42,9 +42,9 @@
                                         {{ $category := . }}
                                         {{ $productsInCategory := where $allProducts "Params.primary_category" $category }}
                                         {{ if gt (len $productsInCategory) 0 }}
-                                            <a href='{{ printf "products?primary_category=%s" . | absURL }}' class="btn btn-sm btn-md-lg btn-outline-primary fw-bold shadow-sm primary-btn {{ if eq $currentPrimaryCategory . }}active{{ end }}">
-                                                <i class="fas fa-folder me-1"></i><span class="category-text">{{ . }}</span>
-                                                <span class="badge bg-light text-dark ms-1 d-none d-sm-inline">{{ len $productsInCategory }}</span>
+                                            <a href='{{ printf "products?primary_category=%s" . | absURL }}' class="btn btn-lg btn-outline-primary fw-bold shadow-sm primary-btn {{ if eq $currentPrimaryCategory . }}active{{ end }}">
+                                                <i class="fas fa-folder me-1"></i>{{ . }}
+                                                <span class="badge bg-light text-dark ms-1">{{ len $productsInCategory }}</span>
                                             </a>
                                         {{ end }}
                                     {{ end }}
@@ -53,7 +53,7 @@
                         </div>
 
                         <!-- 二级分类 -->
-                        <div class="category-secondary-container" id="secondaryCategoryContainer">
+                        <div class="category-secondary-container">
                             <div class="category-level-label">
                                 <span class="badge bg-secondary me-2">二级分类</span>
                                 <small class="text-muted">选择产品细分类别</small>
@@ -62,33 +62,26 @@
                                 <!-- 连接线 -->
                                 <div class="category-connector"></div>
 
-                                <div class="d-flex flex-wrap gap-1 align-items-center" id="secondaryCategoryButtons">
+                                <div class="d-flex flex-wrap gap-1 align-items-center">
                                     <a href="{{ "products" | absURL }}" class="btn btn-outline-secondary btn-sm secondary-btn {{ if not $currentSecondaryCategory }}active{{ end }}">
                                         <i class="fas fa-list me-1"></i>全部二级分类
                                     </a>
 
-                                    <!-- 二级分类按钮将通过JavaScript动态生成 -->
-                                    {{ range $primaryCategories }}
-                                        {{ $primaryCategory := . }}
-                                        {{ $productsInPrimary := where $allProducts "Params.primary_category" $primaryCategory }}
-                                        {{ $secondaryInPrimary := slice }}
-                                        {{ range $productsInPrimary }}
-                                            {{ with .Params.secondary_category }}
-                                                {{ $secondaryInPrimary = $secondaryInPrimary | append . }}
-                                            {{ end }}
+                                    {{ $allSecondaryCategories := slice }}
+                                    {{ range $allProducts }}
+                                        {{ with .Params.secondary_category }}
+                                            {{ $allSecondaryCategories = $allSecondaryCategories | append . }}
                                         {{ end }}
-                                        {{ $secondaryInPrimary = uniq $secondaryInPrimary }}
+                                    {{ end }}
+                                    {{ $allSecondaryCategories = uniq $allSecondaryCategories }}
 
-                                        {{ range $secondaryInPrimary }}
-                                            {{ $secondaryCategory := . }}
-                                            {{ $productsInSecondary := where $productsInPrimary "Params.secondary_category" $secondaryCategory }}
-                                            <a href='{{ printf "products?primary_category=%s&secondary_category=%s" $primaryCategory . | absURL }}'
-                                               class="btn btn-outline-secondary btn-sm secondary-btn secondary-category-btn"
-                                               data-primary-category="{{ $primaryCategory }}"
-                                               data-secondary-category="{{ . }}"
-                                               style="display: none;">
+                                    {{ range $allSecondaryCategories }}
+                                        {{ $category := . }}
+                                        {{ $productsInCategory := where $allProducts "Params.secondary_category" $category }}
+                                        {{ if gt (len $productsInCategory) 0 }}
+                                            <a href='{{ printf "products?secondary_category=%s" . | absURL }}' class="btn btn-outline-secondary btn-sm secondary-btn {{ if eq $currentSecondaryCategory . }}active{{ end }}">
                                                 <i class="fas fa-tag me-1"></i>{{ . }}
-                                                <span class="badge bg-light text-dark ms-1">{{ len $productsInSecondary }}</span>
+                                                <span class="badge bg-light text-dark ms-1">{{ len $productsInCategory }}</span>
                                             </a>
                                         {{ end }}
                                     {{ end }}
@@ -99,165 +92,375 @@
 
                     <!-- 产品参数筛选 -->
                     <div class="filter-section">
-                        <h5 class="card-title mb-3">产品参数</h5>
-                        <div class="row g-3">
-                            {{ $screenSizes := slice }}
-                            {{ $batteryLife := slice }}
-                            {{ $probeDiameter := slice }}
-                            {{ $resolution := slice }}
-                            {{ $viewingAngle := slice }}
-                            {{ $lightSource := slice }}
-                            {{ $guidance := slice }}
-                            {{ $workingLength := slice }}
-                            {{ $fieldOfView := slice }}
+                        <h5 class="card-title mb-3">
+                            <i class="fas fa-sliders-h me-2 text-success"></i>产品参数
+                            <small class="text-muted ms-2">根据产品类型显示相关参数</small>
+                        </h5>
 
-                            {{ range $allProducts }}
-                                {{ range .Params.parameters }}
-                                    {{ if eq .name "主机屏幕" }}{{ $screenSizes = $screenSizes | append .value }}{{ end }}
-                                    {{ if eq .name "待机时长" }}{{ $batteryLife = $batteryLife | append .value }}{{ end }}
-                                    {{ if eq .name "探头直径" }}{{ $probeDiameter = $probeDiameter | append .value }}{{ end }}
-                                    {{ if eq .name "像素" }}{{ $resolution = $resolution | append .value }}{{ end }}
-                                    {{ if eq .name "视向" }}{{ $viewingAngle = $viewingAngle | append .value }}{{ end }}
-                                    {{ if eq .name "光源" }}{{ $lightSource = $lightSource | append .value }}{{ end }}
-                                    {{ if eq .name "导向" }}{{ $guidance = $guidance | append .value }}{{ end }}
-                                    {{ if eq .name "工作长度" }}{{ $workingLength = $workingLength | append .value }}{{ end }}
-                                    {{ if eq .name "视野" }}{{ $fieldOfView = $fieldOfView | append .value }}{{ end }}
-                                {{ end }}
-                            {{ end }}
+                        <!-- 参数筛选容器 -->
+                        <div id="parameter-filters" class="parameter-filters">
+                            <!-- 通用参数 -->
+                            <div class="parameter-group" id="common-parameters">
+                                <div class="parameter-group-header">
+                                    <span class="badge bg-info me-2">通用参数</span>
+                                    <small class="text-muted">适用于所有产品类型</small>
+                                </div>
+                                <div class="row g-3 mt-2">
+                                    <!-- 探头直径 - 通用参数 -->
+                                    <div class="col-md-4">
+                                        <div class="filter-group">
+                                            <label class="form-label">
+                                                <i class="fas fa-circle me-1 text-primary"></i>探头直径
+                                            </label>
+                                            <select class="form-select" id="probeDiameter" onchange="updateFilters()">
+                                                <option value="">全部直径</option>
+                                                {{ $probeDiameter := slice }}
+                                                {{ range $allProducts }}
+                                                    {{ range .Params.parameters }}
+                                                        {{ if eq .name "探头直径" }}{{ $probeDiameter = $probeDiameter | append .value }}{{ end }}
+                                                    {{ end }}
+                                                {{ end }}
+                                                {{ range (uniq $probeDiameter) }}
+                                                <option value="{{ . }}">{{ . }}</option>
+                                                {{ end }}
+                                            </select>
+                                        </div>
+                                    </div>
 
-                            <!-- 主机屏幕 -->
-                            <div class="col-md-3 electronic-only-filter">
-                                <div class="filter-group">
-                                    <label class="form-label">主机屏幕</label>
-                                    <select class="form-select" id="screenSize" onchange="updateFilters()">
-                                        <option value="">全部</option>
-                                        {{ range (uniq $screenSizes) }}
-                                        <option value="{{ . }}">{{ . }}</option>
-                                        {{ end }}
-                                    </select>
+                                    <!-- 视向 - 通用参数 -->
+                                    <div class="col-md-4">
+                                        <div class="filter-group">
+                                            <label class="form-label">
+                                                <i class="fas fa-eye me-1 text-primary"></i>视向
+                                            </label>
+                                            <select class="form-select" id="viewingAngle" onchange="updateFilters()">
+                                                <option value="">全部视向</option>
+                                                {{ $viewingAngle := slice }}
+                                                {{ range $allProducts }}
+                                                    {{ range .Params.parameters }}
+                                                        {{ if eq .name "视向" }}{{ $viewingAngle = $viewingAngle | append .value }}{{ end }}
+                                                    {{ end }}
+                                                {{ end }}
+                                                {{ range (uniq $viewingAngle) }}
+                                                <option value="{{ . }}">{{ . }}</option>
+                                                {{ end }}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- 光源 - 通用参数 -->
+                                    <div class="col-md-4">
+                                        <div class="filter-group">
+                                            <label class="form-label">
+                                                <i class="fas fa-lightbulb me-1 text-primary"></i>光源
+                                            </label>
+                                            <select class="form-select" id="lightSource" onchange="updateFilters()">
+                                                <option value="">全部光源</option>
+                                                {{ $lightSource := slice }}
+                                                {{ range $allProducts }}
+                                                    {{ range .Params.parameters }}
+                                                        {{ if eq .name "光源" }}{{ $lightSource = $lightSource | append .value }}{{ end }}
+                                                    {{ end }}
+                                                {{ end }}
+                                                {{ range (uniq $lightSource) }}
+                                                <option value="{{ . }}">{{ . }}</option>
+                                                {{ end }}
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- 待机时长 -->
-                            <div class="col-md-3 electronic-only-filter">
-                                <div class="filter-group">
-                                    <label class="form-label">待机时长</label>
-                                    <select class="form-select" id="batteryLife" onchange="updateFilters()">
-                                        <option value="">全部</option>
-                                        {{ range (uniq $batteryLife) }}
-                                        <option value="{{ . }}">{{ . }}</option>
-                                        {{ end }}
-                                    </select>
+                            <!-- 电子内窥镜专用参数 -->
+                            <div class="parameter-group" id="electronic-parameters" style="display: none;">
+                                <div class="parameter-group-header">
+                                    <span class="badge bg-success me-2">电子内窥镜参数</span>
+                                    <small class="text-muted">电子内窥镜专用技术参数</small>
+                                </div>
+                                <div class="row g-3 mt-2">
+                                    <!-- 主机屏幕 -->
+                                    <div class="col-md-3">
+                                        <div class="filter-group">
+                                            <label class="form-label">
+                                                <i class="fas fa-desktop me-1 text-success"></i>主机屏幕
+                                            </label>
+                                            <select class="form-select" id="screenSize" onchange="updateFilters()">
+                                                <option value="">全部屏幕</option>
+                                                {{ $screenSizes := slice }}
+                                                {{ range $allProducts }}
+                                                    {{ if eq .Params.primary_category "电子内窥镜" }}
+                                                        {{ range .Params.parameters }}
+                                                            {{ if eq .name "主机屏幕" }}{{ $screenSizes = $screenSizes | append .value }}{{ end }}
+                                                        {{ end }}
+                                                    {{ end }}
+                                                {{ end }}
+                                                {{ range (uniq $screenSizes) }}
+                                                <option value="{{ . }}">{{ . }}</option>
+                                                {{ end }}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- 待机时长 -->
+                                    <div class="col-md-3">
+                                        <div class="filter-group">
+                                            <label class="form-label">
+                                                <i class="fas fa-battery-three-quarters me-1 text-success"></i>待机时长
+                                            </label>
+                                            <select class="form-select" id="batteryLife" onchange="updateFilters()">
+                                                <option value="">全部时长</option>
+                                                {{ $batteryLife := slice }}
+                                                {{ range $allProducts }}
+                                                    {{ if eq .Params.primary_category "电子内窥镜" }}
+                                                        {{ range .Params.parameters }}
+                                                            {{ if eq .name "待机时长" }}{{ $batteryLife = $batteryLife | append .value }}{{ end }}
+                                                        {{ end }}
+                                                    {{ end }}
+                                                {{ end }}
+                                                {{ range (uniq $batteryLife) }}
+                                                <option value="{{ . }}">{{ . }}</option>
+                                                {{ end }}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- 像素 -->
+                                    <div class="col-md-3">
+                                        <div class="filter-group">
+                                            <label class="form-label">
+                                                <i class="fas fa-camera me-1 text-success"></i>像素
+                                            </label>
+                                            <select class="form-select" id="resolution" onchange="updateFilters()">
+                                                <option value="">全部像素</option>
+                                                {{ $resolution := slice }}
+                                                {{ range $allProducts }}
+                                                    {{ if eq .Params.primary_category "电子内窥镜" }}
+                                                        {{ range .Params.parameters }}
+                                                            {{ if eq .name "像素" }}{{ $resolution = $resolution | append .value }}{{ end }}
+                                                        {{ end }}
+                                                    {{ end }}
+                                                {{ end }}
+                                                {{ range (uniq $resolution) }}
+                                                <option value="{{ . }}">{{ . }}</option>
+                                                {{ end }}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- 导向 -->
+                                    <div class="col-md-3">
+                                        <div class="filter-group">
+                                            <label class="form-label">
+                                                <i class="fas fa-arrows-alt me-1 text-success"></i>导向
+                                            </label>
+                                            <select class="form-select" id="electronicGuidance" onchange="updateFilters()">
+                                                <option value="">全部导向</option>
+                                                {{ $electronicGuidance := slice }}
+                                                {{ range $allProducts }}
+                                                    {{ if eq .Params.primary_category "电子内窥镜" }}
+                                                        {{ range .Params.parameters }}
+                                                            {{ if eq .name "导向" }}{{ $electronicGuidance = $electronicGuidance | append .value }}{{ end }}
+                                                        {{ end }}
+                                                    {{ end }}
+                                                {{ end }}
+                                                {{ range (uniq $electronicGuidance) }}
+                                                <option value="{{ . }}">{{ . }}</option>
+                                                {{ end }}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- 管线材质 -->
+                                    <div class="col-md-3">
+                                        <div class="filter-group">
+                                            <label class="form-label">
+                                                <i class="fas fa-link me-1 text-success"></i>管线材质
+                                            </label>
+                                            <select class="form-select" id="cableMaterial" onchange="updateFilters()">
+                                                <option value="">全部材质</option>
+                                                {{ $cableMaterial := slice }}
+                                                {{ range $allProducts }}
+                                                    {{ if eq .Params.primary_category "电子内窥镜" }}
+                                                        {{ range .Params.parameters }}
+                                                            {{ if eq .name "管线材质" }}{{ $cableMaterial = $cableMaterial | append .value }}{{ end }}
+                                                        {{ end }}
+                                                    {{ end }}
+                                                {{ end }}
+                                                {{ range (uniq $cableMaterial) }}
+                                                <option value="{{ . }}">{{ . }}</option>
+                                                {{ end }}
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- 探头直径 -->
-                            <div class="col-md-3">
-                                <div class="filter-group">
-                                    <label class="form-label">探头直径</label>
-                                    <select class="form-select" id="probeDiameter" onchange="updateFilters()">
-                                        <option value="">全部</option>
-                                        {{ range (uniq $probeDiameter) }}
-                                        <option value="{{ . }}">{{ . }}</option>
-                                        {{ end }}
-                                    </select>
+                            <!-- 光纤内窥镜专用参数 -->
+                            <div class="parameter-group" id="fiber-parameters" style="display: none;">
+                                <div class="parameter-group-header">
+                                    <span class="badge bg-warning me-2">光纤内窥镜参数</span>
+                                    <small class="text-muted">光纤内窥镜专用技术参数</small>
+                                </div>
+                                <div class="row g-3 mt-2">
+                                    <!-- 工作长度 -->
+                                    <div class="col-md-3">
+                                        <div class="filter-group">
+                                            <label class="form-label">
+                                                <i class="fas fa-ruler me-1 text-warning"></i>工作长度
+                                            </label>
+                                            <select class="form-select" id="fiberWorkingLength" onchange="updateFilters()">
+                                                <option value="">全部长度</option>
+                                                {{ $fiberWorkingLength := slice }}
+                                                {{ range $allProducts }}
+                                                    {{ if eq .Params.primary_category "光纤内窥镜" }}
+                                                        {{ range .Params.parameters }}
+                                                            {{ if eq .name "工作长度" }}{{ $fiberWorkingLength = $fiberWorkingLength | append .value }}{{ end }}
+                                                        {{ end }}
+                                                    {{ end }}
+                                                {{ end }}
+                                                {{ range (uniq $fiberWorkingLength) }}
+                                                <option value="{{ . }}">{{ . }}</option>
+                                                {{ end }}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- 视野 -->
+                                    <div class="col-md-3">
+                                        <div class="filter-group">
+                                            <label class="form-label">
+                                                <i class="fas fa-expand me-1 text-warning"></i>视野
+                                            </label>
+                                            <select class="form-select" id="fiberFieldOfView" onchange="updateFilters()">
+                                                <option value="">全部视野</option>
+                                                {{ $fiberFieldOfView := slice }}
+                                                {{ range $allProducts }}
+                                                    {{ if eq .Params.primary_category "光纤内窥镜" }}
+                                                        {{ range .Params.parameters }}
+                                                            {{ if eq .name "视野" }}{{ $fiberFieldOfView = $fiberFieldOfView | append .value }}{{ end }}
+                                                        {{ end }}
+                                                    {{ end }}
+                                                {{ end }}
+                                                {{ range (uniq $fiberFieldOfView) }}
+                                                <option value="{{ . }}">{{ . }}</option>
+                                                {{ end }}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- 焦距 -->
+                                    <div class="col-md-3">
+                                        <div class="filter-group">
+                                            <label class="form-label">
+                                                <i class="fas fa-search me-1 text-warning"></i>焦距
+                                            </label>
+                                            <select class="form-select" id="focalLength" onchange="updateFilters()">
+                                                <option value="">全部焦距</option>
+                                                {{ $focalLength := slice }}
+                                                {{ range $allProducts }}
+                                                    {{ if eq .Params.primary_category "光纤内窥镜" }}
+                                                        {{ range .Params.parameters }}
+                                                            {{ if eq .name "焦距" }}{{ $focalLength = $focalLength | append .value }}{{ end }}
+                                                        {{ end }}
+                                                    {{ end }}
+                                                {{ end }}
+                                                {{ range (uniq $focalLength) }}
+                                                <option value="{{ . }}">{{ . }}</option>
+                                                {{ end }}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- 导向 -->
+                                    <div class="col-md-3">
+                                        <div class="filter-group">
+                                            <label class="form-label">
+                                                <i class="fas fa-arrows-alt me-1 text-warning"></i>导向
+                                            </label>
+                                            <select class="form-select" id="fiberGuidance" onchange="updateFilters()">
+                                                <option value="">全部导向</option>
+                                                {{ $fiberGuidance := slice }}
+                                                {{ range $allProducts }}
+                                                    {{ if eq .Params.primary_category "光纤内窥镜" }}
+                                                        {{ range .Params.parameters }}
+                                                            {{ if eq .name "导向" }}{{ $fiberGuidance = $fiberGuidance | append .value }}{{ end }}
+                                                        {{ end }}
+                                                    {{ end }}
+                                                {{ end }}
+                                                {{ range (uniq $fiberGuidance) }}
+                                                <option value="{{ . }}">{{ . }}</option>
+                                                {{ end }}
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- 像素 -->
-                            <div class="col-md-3 electronic-only-filter">
-                                <div class="filter-group">
-                                    <label class="form-label">像素</label>
-                                    <select class="form-select" id="resolution" onchange="updateFilters()">
-                                        <option value="">全部</option>
-                                        {{ range (uniq $resolution) }}
-                                        <option value="{{ . }}">{{ . }}</option>
-                                        {{ end }}
-                                    </select>
+                            <!-- 光学内窥镜专用参数 -->
+                            <div class="parameter-group" id="optical-parameters" style="display: none;">
+                                <div class="parameter-group-header">
+                                    <span class="badge bg-danger me-2">光学内窥镜参数</span>
+                                    <small class="text-muted">光学内窥镜专用技术参数</small>
                                 </div>
-                            </div>
+                                <div class="row g-3 mt-2">
+                                    <!-- 工作长度 -->
+                                    <div class="col-md-4">
+                                        <div class="filter-group">
+                                            <label class="form-label">
+                                                <i class="fas fa-ruler me-1 text-danger"></i>工作长度
+                                            </label>
+                                            <select class="form-select" id="opticalWorkingLength" onchange="updateFilters()">
+                                                <option value="">全部长度</option>
+                                                {{ $opticalWorkingLength := slice }}
+                                                {{ range $allProducts }}
+                                                    {{ if eq .Params.primary_category "光学内窥镜" }}
+                                                        {{ range .Params.parameters }}
+                                                            {{ if eq .name "工作长度" }}{{ $opticalWorkingLength = $opticalWorkingLength | append .value }}{{ end }}
+                                                        {{ end }}
+                                                    {{ end }}
+                                                {{ end }}
+                                                {{ range (uniq $opticalWorkingLength) }}
+                                                <option value="{{ . }}">{{ . }}</option>
+                                                {{ end }}
+                                            </select>
+                                        </div>
+                                    </div>
 
-                            <!-- 视向 -->
-                            <div class="col-md-3">
-                                <div class="filter-group">
-                                    <label class="form-label">视向</label>
-                                    <select class="form-select" id="viewingAngle" onchange="updateFilters()">
-                                        <option value="">全部</option>
-                                        {{ range (uniq $viewingAngle) }}
-                                        <option value="{{ . }}">{{ . }}</option>
-                                        {{ end }}
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- 光源 -->
-                            <div class="col-md-3 electronic-optical-filter">
-                                <div class="filter-group">
-                                    <label class="form-label">光源</label>
-                                    <select class="form-select" id="lightSource" onchange="updateFilters()">
-                                        <option value="">全部</option>
-                                        {{ range (uniq $lightSource) }}
-                                        <option value="{{ . }}">{{ . }}</option>
-                                        {{ end }}
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- 导向 -->
-                            <div class="col-md-3 electronic-only-filter">
-                                <div class="filter-group">
-                                    <label class="form-label">导向</label>
-                                    <select class="form-select" id="guidance" onchange="updateFilters()">
-                                        <option value="">全部</option>
-                                        {{ range (uniq $guidance) }}
-                                        <option value="{{ . }}">{{ . }}</option>
-                                        {{ end }}
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- 工作长度 -->
-                            <div class="col-md-3 optical-fiber-filter" style="display: none;">
-                                <div class="filter-group">
-                                    <label class="form-label">工作长度</label>
-                                    <select class="form-select" id="workingLength" onchange="updateFilters()">
-                                        <option value="">全部</option>
-                                        {{ range (uniq $workingLength) }}
-                                        <option value="{{ . }}">{{ . }}</option>
-                                        {{ end }}
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- 视野 -->
-                            <div class="col-md-3 optical-fiber-filter" style="display: none;">
-                                <div class="filter-group">
-                                    <label class="form-label">视野</label>
-                                    <select class="form-select" id="fieldOfView" onchange="updateFilters()">
-                                        <option value="">全部</option>
-                                        {{ range (uniq $fieldOfView) }}
-                                        <option value="{{ . }}">{{ . }}</option>
-                                        {{ end }}
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- 导向 (光纤内窥镜专用) -->
-                            <div class="col-md-3 fiber-only-filter" style="display: none;">
-                                <div class="filter-group">
-                                    <label class="form-label">导向</label>
-                                    <select class="form-select" id="fiberGuidance" onchange="updateFilters()">
-                                        <option value="">全部</option>
-                                        {{ range (uniq $guidance) }}
-                                        <option value="{{ . }}">{{ . }}</option>
-                                        {{ end }}
-                                    </select>
+                                    <!-- 视野 -->
+                                    <div class="col-md-4">
+                                        <div class="filter-group">
+                                            <label class="form-label">
+                                                <i class="fas fa-expand me-1 text-danger"></i>视野
+                                            </label>
+                                            <select class="form-select" id="opticalFieldOfView" onchange="updateFilters()">
+                                                <option value="">全部视野</option>
+                                                {{ $opticalFieldOfView := slice }}
+                                                {{ range $allProducts }}
+                                                    {{ if eq .Params.primary_category "光学内窥镜" }}
+                                                        {{ range .Params.parameters }}
+                                                            {{ if eq .name "视野" }}{{ $opticalFieldOfView = $opticalFieldOfView | append .value }}{{ end }}
+                                                        {{ end }}
+                                                    {{ end }}
+                                                {{ end }}
+                                                {{ range (uniq $opticalFieldOfView) }}
+                                                <option value="{{ . }}">{{ . }}</option>
+                                                {{ end }}
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- 重置按钮 -->
-                            <div class="col-md-3 d-flex align-items-end">
-                                <button class="btn btn-outline-secondary w-100" onclick="resetFilters()">重置筛选</button>
+                            <div class="row mt-3">
+                                <div class="col-12 text-center">
+                                    <button class="btn btn-outline-secondary me-2" onclick="resetFilters()">
+                                        <i class="fas fa-undo me-1"></i>重置筛选
+                                    </button>
+                                    <button class="btn btn-primary" onclick="applyFilters()">
+                                        <i class="fas fa-filter me-1"></i>应用筛选
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -284,9 +487,7 @@
         {{ $viewingAngle := "" }}
         {{ $lightSource := "" }}
         {{ $guidance := "" }}
-        {{ $workingLength := "" }}
-        {{ $fieldOfView := "" }}
-
+        
         {{ range .Params.parameters }}
             {{ if eq .name "主机屏幕" }}{{ $screenSize = .value }}{{ end }}
             {{ if eq .name "待机时长" }}{{ $batteryLife = .value }}{{ end }}
@@ -295,11 +496,9 @@
             {{ if eq .name "视向" }}{{ $viewingAngle = .value }}{{ end }}
             {{ if eq .name "光源" }}{{ $lightSource = .value }}{{ end }}
             {{ if eq .name "导向" }}{{ $guidance = .value }}{{ end }}
-            {{ if eq .name "工作长度" }}{{ $workingLength = .value }}{{ end }}
-            {{ if eq .name "视野" }}{{ $fieldOfView = .value }}{{ end }}
         {{ end }}
 
-        <div class="col-12 col-sm-6 col-lg-4 mb-3 mb-md-4 product-item"
+        <div class="col-md-6 col-lg-4 mb-4 product-item"
              data-primary-category="{{ .Params.primary_category }}"
              data-secondary-category="{{ .Params.secondary_category }}"
              data-screen-size="{{ $screenSize }}"
@@ -308,9 +507,7 @@
              data-resolution="{{ $resolution }}"
              data-viewing-angle="{{ $viewingAngle }}"
              data-light-source="{{ $lightSource }}"
-             data-guidance="{{ $guidance }}"
-             data-working-length="{{ $workingLength }}"
-             data-field-of-view="{{ $fieldOfView }}">
+             data-guidance="{{ $guidance }}">
             <div class="card h-100 shadow-sm hover-shadow">
                 <!-- 产品图片 -->
                 {{ $mainImage := "" }}
@@ -332,7 +529,7 @@
                 {{ end }}
                 
                 <a href="{{ .Permalink }}" class="card-img-link">
-                    <img src="{{ $mainImage }}" class="card-img-top" alt="{{ .Title }}" style="height: 240px; object-fit: contain; padding: 8px; background: #fafafa;" onerror="handleImageError(this)">
+                    <img src="{{ $mainImage }}" class="card-img-top" alt="{{ .Title }}" style="height: 240px; object-fit: cover;" onerror="handleImageError(this)">
                     {{ if .Params.tags }}
                     <div class="product-tags">
                         {{ range .Params.tags }}
@@ -823,6 +1020,194 @@ body {
         padding: 0.25rem 0.5rem;
     }
 }
+
+/* 参数组样式 */
+.parameter-filters {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #dee2e6;
+}
+
+.parameter-group {
+    margin-bottom: 25px;
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-left: 4px solid #007bff;
+    transition: all 0.3s ease;
+}
+
+.parameter-group:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+}
+
+.parameter-group-header {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.parameter-group-header .badge {
+    font-size: 0.85rem;
+    padding: 6px 12px;
+}
+
+.parameter-group#electronic-parameters {
+    border-left-color: #28a745;
+}
+
+.parameter-group#fiber-parameters {
+    border-left-color: #ffc107;
+}
+
+.parameter-group#optical-parameters {
+    border-left-color: #dc3545;
+}
+
+.filter-group label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.filter-group label i {
+    font-size: 0.9rem;
+}
+
+.filter-group .form-select {
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    transition: all 0.2s ease;
+}
+
+.filter-group .form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* 参数组动画 */
+.parameter-group {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .parameter-filters {
+        padding: 15px;
+    }
+
+    .parameter-group {
+        padding: 12px;
+        margin-bottom: 20px;
+    }
+
+    .parameter-group-header {
+        margin-bottom: 12px;
+    }
+
+    .parameter-group-header .badge {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+    }
+
+    .filter-group label {
+        font-size: 0.9rem;
+        margin-bottom: 6px;
+    }
+}
+
+/* 二级分类联动显示效果 */
+.secondary-btn {
+    transition: all 0.3s ease;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.secondary-btn[style*="display: none"] {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+/* 参数组提示样式 */
+.parameter-hint {
+    border-radius: 8px;
+    border: none;
+    font-size: 0.9rem;
+    animation: slideInDown 0.3s ease-out;
+}
+
+.parameter-hint i {
+    font-size: 1rem;
+}
+
+/* 参数组切换动画优化 */
+.parameter-group {
+    transition: all 0.3s ease;
+}
+
+.parameter-group[style*="display: none"] {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.parameter-group[style*="display: block"] {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 分类按钮激活状态优化 */
+.primary-btn.active {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.secondary-btn.active {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+    .secondary-btn {
+        margin-bottom: 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .parameter-hint {
+        font-size: 0.8rem;
+        padding: 0.75rem;
+    }
+}
+
+/* 滑入动画 */
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+}
 </style>
 
 <script>
@@ -830,6 +1215,177 @@ body {
 let ITEMS_PER_PAGE = 12;
 let currentPage = 1;
 let filteredProducts = [];
+
+// 参数组控制
+function showParameterGroup(category) {
+    // 隐藏所有专用参数组
+    const allGroups = document.querySelectorAll('.parameter-group');
+    allGroups.forEach(group => {
+        if (group.id !== 'common-parameters') {
+            group.style.display = 'none';
+        }
+    });
+
+    // 通用参数组始终显示
+    const commonGroup = document.getElementById('common-parameters');
+    if (commonGroup) commonGroup.style.display = 'block';
+
+    // 根据选择的分类显示对应的专用参数组
+    if (category === '电子内窥镜') {
+        const electronicGroup = document.getElementById('electronic-parameters');
+        if (electronicGroup) {
+            electronicGroup.style.display = 'block';
+            // 添加显示动画
+            electronicGroup.style.animation = 'fadeInUp 0.5s ease-out';
+        }
+    } else if (category === '光纤内窥镜') {
+        const fiberGroup = document.getElementById('fiber-parameters');
+        if (fiberGroup) {
+            fiberGroup.style.display = 'block';
+            fiberGroup.style.animation = 'fadeInUp 0.5s ease-out';
+        }
+    } else if (category === '光学内窥镜') {
+        const opticalGroup = document.getElementById('optical-parameters');
+        if (opticalGroup) {
+            opticalGroup.style.display = 'block';
+            opticalGroup.style.animation = 'fadeInUp 0.5s ease-out';
+        }
+    }
+
+    // 更新参数组提示
+    updateParameterGroupHints(category);
+}
+
+// 二级分类联动显示控制
+function showSecondaryCategories(primaryCategory) {
+    const secondaryContainer = document.querySelector('.category-secondary');
+    const secondaryButtons = document.querySelectorAll('.secondary-btn');
+
+    if (!primaryCategory) {
+        // 没有选择一级分类时，显示所有二级分类
+        secondaryButtons.forEach(btn => {
+            btn.style.display = 'inline-block';
+        });
+        return;
+    }
+
+    // 根据一级分类筛选显示对应的二级分类
+    secondaryButtons.forEach(btn => {
+        const href = btn.getAttribute('href');
+        const btnText = btn.textContent.trim();
+
+        // 根据一级分类显示相关的二级分类
+        let shouldShow = false;
+
+        if (primaryCategory === '电子内窥镜') {
+            shouldShow = btnText.includes('工业视频内窥镜') ||
+                        btnText.includes('医用电子内窥镜') ||
+                        btnText.includes('全部二级分类');
+        } else if (primaryCategory === '光纤内窥镜') {
+            shouldShow = btnText.includes('柔性光纤内窥镜') ||
+                        btnText.includes('硬性光纤内窥镜') ||
+                        btnText.includes('全部二级分类');
+        } else if (primaryCategory === '光学内窥镜') {
+            shouldShow = btnText.includes('硬性光学内窥镜') ||
+                        btnText.includes('柔性光学内窥镜') ||
+                        btnText.includes('全部二级分类');
+        }
+
+        btn.style.display = shouldShow ? 'inline-block' : 'none';
+    });
+}
+
+// 监听分类按钮点击
+document.addEventListener('DOMContentLoaded', function() {
+    // 监听一级分类按钮
+    const primaryButtons = document.querySelectorAll('.primary-btn');
+    primaryButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            let category = '';
+
+            if (href && href.includes('primary_category=')) {
+                category = decodeURIComponent(href.split('primary_category=')[1]);
+            }
+
+            // 延迟执行以确保URL更新完成
+            setTimeout(() => {
+                showParameterGroup(category);
+                showSecondaryCategories(category);
+            }, 100);
+        });
+    });
+
+    // 页面加载时检查当前分类
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentCategory = urlParams.get('primary_category');
+
+    if (currentCategory) {
+        const decodedCategory = decodeURIComponent(currentCategory);
+        showParameterGroup(decodedCategory);
+        showSecondaryCategories(decodedCategory);
+    } else {
+        // 默认状态：只显示通用参数，显示所有二级分类
+        showParameterGroup('');
+        showSecondaryCategories('');
+    }
+
+    // 添加参数组切换提示
+    addParameterGroupHints();
+});
+
+// 添加参数组提示功能
+function addParameterGroupHints() {
+    const commonGroup = document.getElementById('common-parameters');
+    if (commonGroup) {
+        // 检查是否已经有提示
+        if (!commonGroup.querySelector('.parameter-hint')) {
+            const hint = document.createElement('div');
+            hint.className = 'parameter-hint alert alert-info mt-3';
+            hint.innerHTML = `
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>提示：</strong>选择上方的产品分类可查看更多专用技术参数
+            `;
+            commonGroup.appendChild(hint);
+        }
+    }
+}
+
+// 移除参数组提示
+function removeParameterGroupHints() {
+    const hints = document.querySelectorAll('.parameter-hint');
+    hints.forEach(hint => hint.remove());
+}
+
+// 更新参数组提示
+function updateParameterGroupHints(category) {
+    removeParameterGroupHints();
+
+    if (!category) {
+        addParameterGroupHints();
+    } else {
+        // 为专用参数组添加说明
+        const groups = {
+            '电子内窥镜': 'electronic-parameters',
+            '光纤内窥镜': 'fiber-parameters',
+            '光学内窥镜': 'optical-parameters'
+        };
+
+        const groupId = groups[category];
+        if (groupId) {
+            const group = document.getElementById(groupId);
+            if (group && !group.querySelector('.parameter-hint')) {
+                const hint = document.createElement('div');
+                hint.className = 'parameter-hint alert alert-success mt-3';
+                hint.innerHTML = `
+                    <i class="fas fa-check-circle me-2"></i>
+                    <strong>${category}专用参数：</strong>以下参数专门针对${category}产品设计
+                `;
+                group.appendChild(hint);
+            }
+        }
+    }
+}
 
 // 统一的筛选函数
 function updateFilters() {
@@ -843,17 +1399,27 @@ function applyAllFilters() {
     const currentPrimaryCategory = urlParams.get('primary_category');
     const currentSecondaryCategory = urlParams.get('secondary_category');
 
-    // 获取产品参数筛选条件
-    const screenSize = document.getElementById('screenSize').value;
-    const batteryLife = document.getElementById('batteryLife').value;
-    const probeDiameter = document.getElementById('probeDiameter').value;
-    const resolution = document.getElementById('resolution').value;
-    const viewingAngle = document.getElementById('viewingAngle').value;
-    const lightSource = document.getElementById('lightSource').value;
-    const guidance = document.getElementById('guidance').value;
-    const workingLength = document.getElementById('workingLength').value;
-    const fieldOfView = document.getElementById('fieldOfView').value;
-    const fiberGuidance = document.getElementById('fiberGuidance') ? document.getElementById('fiberGuidance').value : '';
+    // 获取通用参数筛选条件
+    const probeDiameter = document.getElementById('probeDiameter')?.value || '';
+    const viewingAngle = document.getElementById('viewingAngle')?.value || '';
+    const lightSource = document.getElementById('lightSource')?.value || '';
+
+    // 电子内窥镜参数
+    const screenSize = document.getElementById('screenSize')?.value || '';
+    const batteryLife = document.getElementById('batteryLife')?.value || '';
+    const resolution = document.getElementById('resolution')?.value || '';
+    const electronicGuidance = document.getElementById('electronicGuidance')?.value || '';
+    const cableMaterial = document.getElementById('cableMaterial')?.value || '';
+
+    // 光纤内窥镜参数
+    const fiberWorkingLength = document.getElementById('fiberWorkingLength')?.value || '';
+    const fiberFieldOfView = document.getElementById('fiberFieldOfView')?.value || '';
+    const focalLength = document.getElementById('focalLength')?.value || '';
+    const fiberGuidance = document.getElementById('fiberGuidance')?.value || '';
+
+    // 光学内窥镜参数
+    const opticalWorkingLength = document.getElementById('opticalWorkingLength')?.value || '';
+    const opticalFieldOfView = document.getElementById('opticalFieldOfView')?.value || '';
 
     // 获取所有产品并应用筛选
     const products = document.querySelectorAll('.product-item');
@@ -873,17 +1439,27 @@ function applyAllFilters() {
             show = false;
         }
 
-        // 产品参数筛选
-        if (screenSize && product.dataset.screenSize !== screenSize) show = false;
-        if (batteryLife && product.dataset.batteryLife !== batteryLife) show = false;
+        // 通用参数筛选
         if (probeDiameter && product.dataset.probeDiameter !== probeDiameter) show = false;
-        if (resolution && product.dataset.resolution !== resolution) show = false;
         if (viewingAngle && product.dataset.viewingAngle !== viewingAngle) show = false;
         if (lightSource && product.dataset.lightSource !== lightSource) show = false;
-        if (guidance && product.dataset.guidance !== guidance) show = false;
-        if (workingLength && product.dataset.workingLength !== workingLength) show = false;
-        if (fieldOfView && product.dataset.fieldOfView !== fieldOfView) show = false;
+
+        // 电子内窥镜参数筛选
+        if (screenSize && product.dataset.screenSize !== screenSize) show = false;
+        if (batteryLife && product.dataset.batteryLife !== batteryLife) show = false;
+        if (resolution && product.dataset.resolution !== resolution) show = false;
+        if (electronicGuidance && product.dataset.guidance !== electronicGuidance) show = false;
+        if (cableMaterial && product.dataset.cableMaterial !== cableMaterial) show = false;
+
+        // 光纤内窥镜参数筛选
+        if (fiberWorkingLength && product.dataset.workingLength !== fiberWorkingLength) show = false;
+        if (fiberFieldOfView && product.dataset.fieldOfView !== fiberFieldOfView) show = false;
+        if (focalLength && product.dataset.focalLength !== focalLength) show = false;
         if (fiberGuidance && product.dataset.guidance !== fiberGuidance) show = false;
+
+        // 光学内窥镜参数筛选
+        if (opticalWorkingLength && product.dataset.workingLength !== opticalWorkingLength) show = false;
+        if (opticalFieldOfView && product.dataset.fieldOfView !== opticalFieldOfView) show = false;
 
         if (show) {
             filteredProducts.push(product);
@@ -899,9 +1475,6 @@ function applyAllFilters() {
     if (viewingAngle) params.set('viewing_angle', viewingAngle); else params.delete('viewing_angle');
     if (lightSource) params.set('light_source', lightSource); else params.delete('light_source');
     if (guidance) params.set('guidance', guidance); else params.delete('guidance');
-    if (workingLength) params.set('working_length', workingLength); else params.delete('working_length');
-    if (fieldOfView) params.set('field_of_view', fieldOfView); else params.delete('field_of_view');
-    if (fiberGuidance) params.set('fiber_guidance', fiberGuidance); else params.delete('fiber_guidance');
 
     const newUrl = `${window.location.pathname}?${params.toString()}`;
     window.history.replaceState({}, '', newUrl);
@@ -915,9 +1488,6 @@ function applyAllFilters() {
 
     // 更新分类按钮状态
     updateCategoryButtons(currentPrimaryCategory, currentSecondaryCategory);
-
-    // 更新筛选器显示
-    updateFilterVisibility(currentPrimaryCategory, currentSecondaryCategory);
 }
 
 function resetFilters() {
@@ -938,10 +1508,7 @@ function setFiltersFromURL() {
         'resolution': urlParams.get('resolution'),
         'viewingAngle': urlParams.get('viewing_angle'),
         'lightSource': urlParams.get('light_source'),
-        'guidance': urlParams.get('guidance'),
-        'workingLength': urlParams.get('working_length'),
-        'fieldOfView': urlParams.get('field_of_view'),
-        'fiberGuidance': urlParams.get('fiber_guidance')
+        'guidance': urlParams.get('guidance')
     };
 
     Object.entries(filters).forEach(([id, value]) => {
@@ -962,52 +1529,6 @@ function handleCategoryFilter() {
     applyAllFilters();
 }
 
-// 根据分类切换筛选器显示
-function updateFilterVisibility(currentPrimary, currentSecondary) {
-    const opticalFilters = document.querySelectorAll('.optical-only-filter');
-    const fiberFilters = document.querySelectorAll('.fiber-only-filter');
-    const electronicFilters = document.querySelectorAll('.electronic-only-filter');
-    const opticalFiberFilters = document.querySelectorAll('.optical-fiber-filter');
-    const electronicOpticalFilters = document.querySelectorAll('.electronic-optical-filter');
-
-    const isOpticalCategory = currentPrimary === '光学内窥镜' || currentSecondary === '硬性光学内窥镜';
-    const isFiberCategory = currentPrimary === '光纤内窥镜' || currentSecondary === '柔性光纤内窥镜' || currentSecondary === '硬性光纤内窥镜';
-
-    // 清空所有筛选器
-    [opticalFilters, fiberFilters, electronicFilters, opticalFiberFilters, electronicOpticalFilters].forEach(filterGroup => {
-        filterGroup.forEach(filter => {
-            filter.style.display = 'none';
-            const select = filter.querySelector('select');
-            if (select) {
-                select.value = '';
-            }
-        });
-    });
-
-    // 通用参数：探头直径、视向 - 所有分类都显示
-    document.querySelectorAll('#probeDiameter, #viewingAngle').forEach(element => {
-        if (element && element.closest('.col-md-3')) {
-            element.closest('.col-md-3').style.display = 'block';
-        }
-    });
-
-    if (isOpticalCategory) {
-        // 光学内窥镜：探头直径、工作长度、视向、光源、视野 (5个)
-        opticalFilters.forEach(filter => filter.style.display = 'block');
-        opticalFiberFilters.forEach(filter => filter.style.display = 'block');
-        electronicOpticalFilters.forEach(filter => filter.style.display = 'block');
-    } else if (isFiberCategory) {
-        // 光纤内窥镜：探头直径、工作长度、视向、视野、导向 (5个，无光源)
-        fiberFilters.forEach(filter => filter.style.display = 'block');
-        opticalFiberFilters.forEach(filter => filter.style.display = 'block');
-        // 光纤内窥镜不显示光源
-    } else {
-        // 电子内窥镜：主机屏幕、待机时长、探头直径、像素、视向、光源、导向 (7个)
-        electronicFilters.forEach(filter => filter.style.display = 'block');
-        electronicOpticalFilters.forEach(filter => filter.style.display = 'block');
-    }
-}
-
 function updateCategoryButtons(currentPrimary, currentSecondary) {
     // 更新一级分类按钮状态
     document.querySelectorAll('.primary-btn').forEach(btn => {
@@ -1020,60 +1541,16 @@ function updateCategoryButtons(currentPrimary, currentSecondary) {
         }
     });
 
-    // 更新二级分类显示逻辑
-    updateSecondaryCategories(currentPrimary, currentSecondary);
-}
-
-function updateSecondaryCategories(currentPrimary, currentSecondary) {
-    // 获取所有二级分类按钮
-    const allSecondaryBtns = document.querySelectorAll('.secondary-category-btn');
-    const allSecondaryBtn = document.querySelector('.secondary-btn:not(.secondary-category-btn)');
-
-    // 先隐藏所有二级分类按钮
-    allSecondaryBtns.forEach(btn => {
-        btn.style.display = 'none';
+    // 更新二级分类按钮状态
+    document.querySelectorAll('.secondary-btn').forEach(btn => {
         btn.classList.remove('active');
+        const href = btn.getAttribute('href');
+        if (!currentSecondary && href.includes('products') && !href.includes('?')) {
+            btn.classList.add('active');
+        } else if (currentSecondary && href.includes(`secondary_category=${currentSecondary}`)) {
+            btn.classList.add('active');
+        }
     });
-
-    if (currentPrimary) {
-        // 如果选择了一级分类，只显示该分类下的二级分类
-        allSecondaryBtns.forEach(btn => {
-            const btnPrimaryCategory = btn.getAttribute('data-primary-category');
-            if (btnPrimaryCategory === currentPrimary) {
-                btn.style.display = 'inline-block';
-
-                // 检查是否为当前选中的二级分类
-                const btnSecondaryCategory = btn.getAttribute('data-secondary-category');
-                if (currentSecondary && btnSecondaryCategory === currentSecondary) {
-                    btn.classList.add('active');
-                    // 如果有选中的二级分类，"全部二级分类"按钮不激活
-                    if (allSecondaryBtn) allSecondaryBtn.classList.remove('active');
-                }
-            }
-        });
-
-        // 如果没有选中二级分类，激活"全部二级分类"按钮
-        if (!currentSecondary && allSecondaryBtn) {
-            allSecondaryBtn.classList.add('active');
-        }
-    } else {
-        // 如果没有选择一级分类，显示所有二级分类
-        allSecondaryBtns.forEach(btn => {
-            btn.style.display = 'inline-block';
-
-            // 检查是否为当前选中的二级分类
-            const btnSecondaryCategory = btn.getAttribute('data-secondary-category');
-            if (currentSecondary && btnSecondaryCategory === currentSecondary) {
-                btn.classList.add('active');
-                if (allSecondaryBtn) allSecondaryBtn.classList.remove('active');
-            }
-        });
-
-        // 如果没有选中二级分类，激活"全部二级分类"按钮
-        if (!currentSecondary && allSecondaryBtn) {
-            allSecondaryBtn.classList.add('active');
-        }
-    }
 }
 
 // 显示产品
@@ -1126,7 +1603,60 @@ function handleNoProducts() {
     }
 }
 
+// 重置筛选
+function resetFilters() {
+    // 重置所有筛选控件
+    const selects = document.querySelectorAll('.parameter-filters select');
+    selects.forEach(select => {
+        select.value = '';
+    });
 
+    // 重新应用筛选
+    applyAllFilters();
+
+    // 显示成功消息
+    showFilterMessage('筛选条件已重置', 'success');
+}
+
+// 应用筛选
+function applyFilters() {
+    applyAllFilters();
+    showFilterMessage('筛选条件已应用', 'info');
+}
+
+// 显示筛选消息
+function showFilterMessage(message, type) {
+    // 移除现有消息
+    const existingMessage = document.querySelector('.filter-message');
+    if (existingMessage) {
+        existingMessage.remove();
+    }
+
+    // 创建新消息
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `alert alert-${type} filter-message position-fixed`;
+    messageDiv.style.cssText = `
+        top: 20px;
+        right: 20px;
+        z-index: 1050;
+        min-width: 250px;
+        animation: slideInRight 0.3s ease-out;
+    `;
+    messageDiv.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check' : 'info'}-circle me-2"></i>
+        ${message}
+        <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+    `;
+
+    document.body.appendChild(messageDiv);
+
+    // 自动移除消息
+    setTimeout(() => {
+        if (messageDiv.parentElement) {
+            messageDiv.remove();
+        }
+    }, 3000);
+}
 
 // 页面加载完成后初始化筛选器
 document.addEventListener('DOMContentLoaded', function() {
@@ -1154,12 +1684,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     setFiltersFromURL();
     handleCategoryFilter();
-
-    // 初始化筛选器显示状态
-    const urlParams = new URLSearchParams(window.location.search);
-    const currentPrimaryCategory = urlParams.get('primary_category');
-    const currentSecondaryCategory = urlParams.get('secondary_category');
-    updateFilterVisibility(currentPrimaryCategory, currentSecondaryCategory);
 });
 </script>
 {{ end }}

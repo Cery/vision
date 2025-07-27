@@ -11,9 +11,6 @@ subcategories:
 tags:
 - 工业内窥镜
 - 无损检测
-- 技术创新
-- 市场分析
-- 发展趋势
 featured_image: "/images/news/industrial-endoscope-2025-01.svg"
 views: 156
 source: "行业调研报告"

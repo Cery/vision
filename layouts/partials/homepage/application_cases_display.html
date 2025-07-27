@@ -178,39 +178,7 @@
             </div>
         </div>
 
-        <!-- 快速统计 -->
-        <div class="row">
-            <div class="col-12">
-                <div class="case-stats bg-light rounded p-3">
-                    <div class="row text-center">
-                        <div class="col-3">
-                            <div class="stat-item">
-                                <h5 class="mb-1 text-primary">{{ len $cases }}+</h5>
-                                <small class="text-muted">成功案例</small>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="stat-item">
-                                <h5 class="mb-1 text-primary">{{ len (where $cases ".Params.industry" "!=" nil) }}+</h5>
-                                <small class="text-muted">覆盖行业</small>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="stat-item">
-                                <h5 class="mb-1 text-primary">100%</h5>
-                                <small class="text-muted">客户满意</small>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="stat-item">
-                                <h5 class="mb-1 text-primary">24/7</h5>
-                                <small class="text-muted">技术支持</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
     </div>
 </section>
 
@@ -386,12 +354,11 @@
     border: 1px solid #e1bee7;
 }
 
-/* PC端高度对称控制 */
+/* PC端布局优化 */
 @media (min-width: 992px) {
-    /* 左侧主要案例高度 */
+    /* 左侧主要案例 */
     .application-cases .col-lg-7 .card {
-        min-height: 420px;
-        max-height: 420px;
+        min-height: 380px;
         display: flex;
         flex-direction: column;
     }
@@ -401,60 +368,37 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        min-height: 210px;
         padding: var(--spacing-lg);
     }
 
     .application-cases .col-lg-7 .featured-case img {
-        height: 210px;
+        height: 190px;
         object-fit: cover;
     }
 
-    /* 右侧案例列表高度匹配 */
+    /* 右侧案例列表 */
     .application-cases .col-lg-5 {
         display: flex;
         flex-direction: column;
     }
 
     .application-cases .case-list-compact {
-        min-height: 420px;
-        max-height: 420px;
-        overflow-y: auto;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        gap: 8px;
         padding: 0;
     }
 
-    /* 确保案例项目均匀分布 */
+    /* 案例项目自适应高度 */
     .case-item-compact {
         flex: 1;
-        margin-bottom: 8px;
-        min-height: 95px;
-        max-height: 95px;
-    }
-
-    .case-item-compact:last-child {
         margin-bottom: 0;
+        min-height: 85px;
     }
 
-    /* 右侧案例列表滚动条样式 */
-    .application-cases .case-list-compact::-webkit-scrollbar {
-        width: 4px;
-    }
-
-    .application-cases .case-list-compact::-webkit-scrollbar-track {
-        background: #f8f9fa;
-        border-radius: 2px;
-    }
-
-    .application-cases .case-list-compact::-webkit-scrollbar-thumb {
-        background: #dee2e6;
-        border-radius: 2px;
-    }
-
-    .application-cases .case-list-compact::-webkit-scrollbar-thumb:hover {
-        background: #adb5bd;
+    .case-item-compact .card {
+        height: 100%;
+        min-height: 85px;
     }
 }
 
@@ -474,9 +418,7 @@
 
 .case-item-compact .card {
     border-radius: 8px;
-    min-height: 95px;
-    max-height: 95px;
-    overflow: hidden;
+    min-height: 85px;
     transition: all 0.3s ease;
 }
 
@@ -502,27 +444,32 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding: 2px 0;
 }
 
 .case-item-compact .case-title {
     font-size: 13px;
     font-weight: 600;
     color: #212529;
-    line-height: 1.2;
+    line-height: 1.3;
     margin-bottom: 4px !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .case-item-compact .case-summary {
     font-size: 11px;
     color: #6c757d;
-    line-height: 1.2;
+    line-height: 1.3;
     margin-bottom: 4px !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .case-item-compact .case-meta {
@@ -565,7 +512,6 @@
 /* 响应式调整 */
 @media (max-width: 991.98px) {
     .case-list-compact {
-        max-height: none;
         overflow: visible;
         margin-top: 1rem;
     }
@@ -575,8 +521,7 @@
     }
 
     .case-item-compact .card {
-        min-height: 90px;
-        max-height: 90px;
+        min-height: 85px;
     }
 
     .case-item-compact .case-thumb {
@@ -609,23 +554,7 @@
     object-fit: cover;
 }
 
-.application-cases .case-stats {
-    background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-}
 
-.application-cases .stat-item h5 {
-    font-weight: 700;
-    font-size: 20px;
-    color: var(--primary-color);
-}
-
-.application-cases .stat-item small {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text-muted);
-}
 
 .application-cases .badge {
     font-weight: 500;
@@ -714,14 +643,6 @@
 
     .application-cases .case-list img {
         height: 70px;
-    }
-
-    .application-cases .case-stats .row {
-        text-align: center;
-    }
-
-    .application-cases .case-stats .col-3 {
-        margin-bottom: 0.5rem;
     }
 }
 

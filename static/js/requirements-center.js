@@ -122,7 +122,7 @@ class RequirementCenter {
         paramsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
     
-    // 获取参数字段HTML（基于产品中心筛选功能的实际参数）
+    // 获取参数字段HTML（根据新的参数分类）
     getParameterFields(type) {
         const fields = {
             electronic: `
@@ -187,7 +187,6 @@ class RequirementCenter {
                             <option value="直视(0°)">直视(0°)</option>
                             <option value="侧视(30°)">侧视(30°)</option>
                             <option value="侧视(90°)">侧视(90°)</option>
-                            <option value="双目镜头直视">双目镜头直视</option>
                             <option value="其他">其他视向</option>
                         </select>
                     </div>
@@ -213,6 +212,17 @@ class RequirementCenter {
                             <option value="其他">其他导向</option>
                         </select>
                     </div>
+                    <div class="col-md-6">
+                        <label class="form-label">管线材质</label>
+                        <select class="form-select" name="cableMaterial">
+                            <option value="">请选择</option>
+                            <option value="合金弹簧软管">合金弹簧软管</option>
+                            <option value="钛合金硬杆">钛合金硬杆</option>
+                            <option value="钨丝编织软管">钨丝编织软管</option>
+                            <option value="不锈钢软管">不锈钢软管</option>
+                            <option value="其他">其他材质</option>
+                        </select>
+                    </div>
                 </div>
             `,
             fiber: `
@@ -223,6 +233,7 @@ class RequirementCenter {
                             <option value="">请选择</option>
                             <option value="2.8mm">2.8mm</option>
                             <option value="4.0mm">4.0mm</option>
+                            <option value="4.5mm">4.5mm</option>
                             <option value="6.0mm">6.0mm</option>
                             <option value="其他">其他规格</option>
                         </select>
@@ -254,9 +265,21 @@ class RequirementCenter {
                             <option value="">请选择</option>
                             <option value="60°">60°</option>
                             <option value="70°">70°</option>
+                            <option value="75°">75°</option>
                             <option value="90°">90°</option>
                             <option value="120°">120°</option>
                             <option value="其他">其他视野</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">焦距</label>
+                        <select class="form-select" name="focalLength">
+                            <option value="">请选择</option>
+                            <option value="5-50mm">5-50mm</option>
+                            <option value="10-100mm">10-100mm</option>
+                            <option value="20-200mm">20-200mm</option>
+                            <option value="可调焦">可调焦</option>
+                            <option value="其他">其他焦距</option>
                         </select>
                     </div>
                     <div class="col-md-6">
@@ -320,6 +343,7 @@ class RequirementCenter {
                             <option value="">请选择</option>
                             <option value="60°">60°</option>
                             <option value="70°">70°</option>
+                            <option value="85°">85°</option>
                             <option value="90°">90°</option>
                             <option value="120°">120°</option>
                             <option value="其他">其他视野</option>
@@ -492,7 +516,7 @@ product_type: "${data.productType}"
 contact_name: "${data.contactName}"
 contact_phone: "${data.contactPhone}"
 company_name: "${data.companyName || ''}"
-region: "${data.region || ''}"
+department: "${data.department || ''}"
 budget: "${data.budget || ''}"
 delivery_time: "${data.deliveryTime || ''}"
 screen_size: "${data.screenSize || ''}"
@@ -514,7 +538,7 @@ field_of_view: "${data.fieldOfView || ''}"
 - **联系人**: ${data.contactName}
 - **联系电话**: ${data.contactPhone}
 - **公司名称**: ${data.companyName || '未填写'}
-- **所在地区**: ${data.region || '未填写'}
+- **所属部门**: ${data.department || '未填写'}
 - **发布时间**: ${new Date(data.timestamp).toLocaleString()}
 
 ## 产品要求
@@ -640,7 +664,7 @@ ${data.description}
                 productType: 'electronic',
                 contactName: '张工程师',
                 companyName: '某汽车制造有限公司',
-                region: '华东',
+                department: '质量部',
                 budget: '10-20万',
                 description: '需要采购电子内窥镜用于汽车发动机缸体内部检测，要求高清成像，支持测量功能，能够检测直径6mm的孔洞...',
                 screenSize: '6英寸',
@@ -659,7 +683,7 @@ ${data.description}
                 productType: 'fiber',
                 contactName: '李经理',
                 companyName: '某航空科技公司',
-                region: '华北',
+                department: '技术部',
                 budget: '20-50万',
                 description: '用于航空发动机叶片检测的光纤内窥镜，需要超柔性探头，能够通过复杂路径进行检测...',
                 probeDiameter: '2.8mm',
@@ -676,7 +700,7 @@ ${data.description}
                 productType: 'optical',
                 contactName: '王总监',
                 companyName: '某精密制造企业',
-                region: '华南',
+                department: '生产部',
                 budget: '5-10万',
                 description: '需要光学内窥镜用于精密机械零件的质量检测，要求成像清晰，操作简便...',
                 probeDiameter: '2.5mm',
@@ -739,7 +763,7 @@ ${data.description}
                         <div class="requirement-meta">
                             <span class="badge bg-primary">${productTypeNames[req.productType]}</span>
                             <span class="badge bg-success">${req.budget || '预算面议'}</span>
-                            <span class="badge bg-info">${req.region || '全国'}</span>
+                            <span class="badge bg-info">${req.department || '未指定部门'}</span>
                             ${req.featured ? '<span class="badge bg-warning">推荐</span>' : ''}
                             ${req.urgent ? '<span class="badge bg-danger">紧急</span>' : ''}
                         </div>
@@ -864,7 +888,7 @@ ${data.description}
                     <strong>客户公司：</strong>${requirement.companyName || '个人用户'}
                 </div>
                 <div class="col-md-6">
-                    <strong>所在地区：</strong>${requirement.region || '未填写'}
+                    <strong>所属部门：</strong>${requirement.department || '未填写'}
                 </div>
             </div>
 

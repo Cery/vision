@@ -1,86 +1,135 @@
 {{ define "main" }}
-<div class="container py-5">
+<div class="container-fluid py-4">
     {{ partial "breadcrumbs.html" . }}
 
     <article class="case-detail">
-        <!-- 标题和元数据 -->
-        <header class="text-center mb-5">
-            <h1 class="display-4 mb-3">{{ .Title }}</h1>
-            <div class="meta text-muted mb-4">
-                <span class="me-3"><i class="bi bi-calendar3"></i> {{ .Date.Format "2006-01-02" }}</span>
-                {{ with .Params.author }}
-                <span class="me-3"><i class="bi bi-person"></i> {{ . }}</span>
-                {{ end }}
-                <span class="view-count-container">
-                    <i class="bi bi-eye"></i>
-                    <span id="page-views" class="view-count-number">加载中...</span>次浏览
-                    <span id="busuanzi_container_page_pv" class="busuanzi-backup" style="display:none;">
-                        (<span id="busuanzi_value_page_pv"></span>次)
-                    </span>
-                </span>
-            </div>
-            <div class="mb-4">
-                {{ range .Params.primary_category }}
-                <span class="badge bg-primary me-2">{{ . }}</span>
-                {{ end }}
-                {{ range .Params.application_field }}
-                <span class="badge bg-success me-2">{{ . }}</span>
-                {{ end }}
-                {{ range .Params.application_scenario }}
-                <span class="badge bg-info me-2">{{ . }}</span>
-                {{ end }}
-            </div>
-        </header>
-
-        <!-- 内容区域 -->
-        <div class="row">
-            <div class="col-lg-8">
-                <!-- 正文内容 -->
-                <div class="content-wrapper bg-white p-4 rounded shadow-sm">
-                    <!-- 封面图片插入到正文开头 -->
-                    <div class="featured-image mb-4">
-                        {{ with .Params.featured_image }}
-                        <img src="{{ . | relURL }}" class="img-fluid" alt="{{ $.Title }}">
-                        {{ else }}
-                        <img src="/images/cases/case-1.webp" class="img-fluid" alt="{{ .Title }}">
-                        {{ end }}
+        <!-- 案例标题区域 -->
+        <div class="case-header bg-gradient-primary text-white py-5 mb-4 rounded">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <h1 class="display-5 fw-bold mb-3">{{ .Title }}</h1>
+                        <p class="lead mb-3">{{ .Params.summary | default "专业内窥镜检测解决方案" }}</p>
+                        <div class="case-badges">
+                            {{ range .Params.primary_category }}
+                            <span class="badge bg-light text-dark me-2 px-3 py-2">{{ . }}</span>
+                            {{ end }}
+                            {{ range .Params.application_field }}
+                            <span class="badge bg-success me-2 px-3 py-2">{{ . }}</span>
+                            {{ end }}
+                            {{ range .Params.application_scenario }}
+                            <span class="badge bg-info me-2 px-3 py-2">{{ . }}</span>
+                            {{ end }}
+                        </div>
                     </div>
-
-                    <div class="content">
-                        {{ .Content }}
+                    <div class="col-lg-4 text-end">
+                        <div class="case-meta text-white-50">
+                            <div class="mb-2">
+                                <i class="fas fa-calendar-alt me-2"></i>{{ .Date.Format "2006年01月" }}
+                            </div>
+                            <div>
+                                <i class="fas fa-eye me-2"></i><span id="page-views">加载中...</span>次浏览
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="col-lg-4">
-                <!-- 侧边栏 -->
-                <div class="sidebar sticky-sidebar">
-                    <!-- 案例信息卡片 -->
-                    <div class="case-info bg-white p-4 rounded shadow-sm mb-4">
-                        <h4 class="mb-4">
-                            <i class="fas fa-info-circle me-2"></i>案例信息
-                        </h4>
-                        <div class="info-item mb-3">
-                            <strong class="text-primary">客户：</strong>
-                            <span>{{ .Params.client | default "保密" }}</span>
-                        </div>
-                        <div class="info-item mb-3">
-                            <strong class="text-primary">行业：</strong>
-                            <span>{{ .Params.industry | default "工业检测" }}</span>
-                        </div>
-                        <div class="info-item mb-3">
-                            <strong class="text-primary">检测对象：</strong>
-                            <span>{{ .Params.detection_object | default "工业设备" }}</span>
-                        </div>
-                        <div class="info-item mb-3">
-                            <strong class="text-primary">使用设备：</strong>
-                            <span>{{ .Params.equipment_used | default "专业检测设备" }}</span>
-                        </div>
-                        <div class="info-item">
-                            <strong class="text-primary">项目时间：</strong>
-                            <span>{{ .Date.Format "2006年01月" }}</span>
+        <!-- 主要内容区域 -->
+        <div class="container">
+            <div class="row">
+                <!-- 主内容区 -->
+                <div class="col-lg-8">
+                    <!-- 案例封面图片组 -->
+                    <div class="case-gallery mb-5">
+                        <div class="row g-3">
+                            <!-- 主封面图 -->
+                            <div class="col-12">
+                                <div class="main-cover-image">
+                                    {{ with .Params.featured_image }}
+                                    <img src="{{ . | relURL }}" class="img-fluid rounded shadow" alt="{{ $.Title }}">
+                                    {{ else }}
+                                    <img src="https://picsum.photos/800/400?random=main-{{ .File.UniqueID }}" class="img-fluid rounded shadow" alt="{{ .Title }}">
+                                    {{ end }}
+                                    <div class="image-caption mt-2 text-muted text-center">
+                                        <small>{{ .Params.main_image_caption | default "案例主图展示" }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 副封面图 -->
+                            <div class="col-md-6">
+                                <div class="sub-cover-image">
+                                    <img src="https://picsum.photos/400/300?random=sub1-{{ .File.UniqueID }}" class="img-fluid rounded shadow" alt="案例图片1">
+                                    <div class="image-caption mt-2 text-muted text-center">
+                                        <small>检测设备展示</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="sub-cover-image">
+                                    <img src="https://picsum.photos/400/300?random=sub2-{{ .File.UniqueID }}" class="img-fluid rounded shadow" alt="案例图片2">
+                                    <div class="image-caption mt-2 text-muted text-center">
+                                        <small>检测过程展示</small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- 案例内容主体 -->
+                    <div class="case-content bg-white rounded shadow-sm">
+                        <div class="content-body p-4">
+                            {{ .Content }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 侧边栏 -->
+                <div class="col-lg-4">
+                    <div class="sidebar sticky-sidebar">
+                        <!-- 案例信息卡片 -->
+                        <div class="case-info-card bg-white rounded shadow-sm mb-4">
+                            <div class="card-header bg-primary text-white py-3">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-info-circle me-2"></i>案例信息
+                                </h5>
+                            </div>
+                            <div class="card-body p-4">
+                                <div class="info-item mb-3 pb-3 border-bottom">
+                                    <div class="info-label text-muted mb-1">
+                                        <i class="fas fa-building me-2"></i>客户
+                                    </div>
+                                    <div class="info-value fw-semibold">
+                                        {{ .Params.client | default "保密客户" }}
+                                    </div>
+                                </div>
+                                <div class="info-item mb-3 pb-3 border-bottom">
+                                    <div class="info-label text-muted mb-1">
+                                        <i class="fas fa-industry me-2"></i>行业
+                                    </div>
+                                    <div class="info-value fw-semibold">
+                                        {{ .Params.industry | default "工业检测" }}
+                                    </div>
+                                </div>
+                                <div class="info-item mb-3 pb-3 border-bottom">
+                                    <div class="info-label text-muted mb-1">
+                                        <i class="fas fa-search me-2"></i>检测对象
+                                    </div>
+                                    <div class="info-value fw-semibold">
+                                        {{ .Params.detection_object | default "工业设备" }}
+                                    </div>
+                                </div>
+                                <div class="info-item mb-0">
+                                    <div class="info-label text-muted mb-1">
+                                        <i class="fas fa-tools me-2"></i>使用设备
+                                    </div>
+                                    <div class="info-value fw-semibold">
+                                        {{ .Params.equipment_used | default "专业检测设备" }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                     <!-- 相关案例 -->
                     {{ $currentPage := . }}
@@ -146,9 +195,7 @@
                     {{ end }}
 
                     <!-- 显示相关案例 -->
-                    {{ if gt (len $relatedCases) 0 }}
-                        {{ $relatedCases = first 4 $relatedCases }}
-                    {{ end }}
+                    {{ $relatedCases = first 4 $relatedCases }}
                     {{ with $relatedCases }}
                     <div class="related-cases bg-white p-4 rounded shadow-sm mb-4">
                         <h4 class="mb-4">
@@ -167,16 +214,9 @@
                                     <div class="card-body p-3">
                                         <h6 class="card-title text-primary mb-2" style="font-size: 0.9rem;">{{ .Title }}</h6>
                                         <div class="mb-2">
-                                            {{ if .Params.application_scenario }}
-                                                {{ $scenarios := .Params.application_scenario }}
-                                                {{ if reflect.IsSlice $scenarios }}
-                                                    {{ range first 2 $scenarios }}
-                                                    <span class="badge bg-info text-dark me-1" style="font-size: 0.7rem;">{{ . }}</span>
-                                                    {{ end }}
-                                                {{ else }}
-                                                    <span class="badge bg-info text-dark me-1" style="font-size: 0.7rem;">{{ $scenarios }}</span>
-                                                {{ end }}
-                                            {{ end }}
+                                            {{ if .Params.application_scenario }}{{ range (first 2 .Params.application_scenario) }}
+                                            <span class="badge bg-info text-dark me-1" style="font-size: 0.7rem;">{{ . }}</span>
+                                            {{ end }}{{ end }}
                                         </div>
                                         <small class="text-muted">{{ .Date.Format "2006-01-02" }}</small>
                                     </div>
@@ -339,40 +379,6 @@
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* 浏览次数样式优化 */
-.view-count-container {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.25rem 0.5rem;
-    background: rgba(25, 118, 210, 0.1);
-    border-radius: 0.375rem;
-    transition: all 0.15s ease-in-out;
-}
-
-.view-count-container:hover {
-    background: rgba(25, 118, 210, 0.15);
-}
-
-.view-count-container i {
-    color: #1976d2;
-    font-size: 0.875rem;
-}
-
-.view-count-number {
-    color: #1976d2;
-    font-weight: 600;
-    font-size: 0.875rem;
-    min-width: 1.5rem;
-    text-align: center;
-}
-
-.busuanzi-backup {
-    color: #6c757d;
-    font-size: 0.75rem;
-    margin-left: 0.25rem;
-}
-
 .related-case-item .card {
     transition: all 0.3s ease;
 }
@@ -425,30 +431,12 @@
 }
 </style>
 
-<!-- 页面数据存储 -->
-<div id="page-data"
-     data-current-path="{{ .RelPermalink | htmlEscape }}"
-     data-page-title="{{ .Title | htmlEscape }}"
-     style="display: none;"></div>
-
 <script>
 // 页面访问统计系统
 let isInitialized = false;
 let pageViewsElement;
-// 页面信息变量
-let currentPath = '';
-let pageTitle = '';
-
-// 获取页面信息的函数
-function getPageData() {
-    const pageData = document.getElementById('page-data');
-    if (pageData) {
-        currentPath = pageData.dataset.currentPath;
-        pageTitle = pageData.dataset.pageTitle;
-        return true;
-    }
-    return false;
-}
+let currentPath = '{{ .RelPermalink }}';
+let pageTitle = '{{ .Title }}';
 
 // LeanCloud 配置
 const LC_APP_ID = 'pUEgNUJ66pc7S4FqVpqxkTkx-MdYXbMMI';
@@ -458,13 +446,6 @@ function initPageViews() {
     // 防止重复初始化
     if (isInitialized) {
         console.log('页面访问统计已初始化，跳过重复初始化');
-        return;
-    }
-
-    // 获取页面数据
-    if (!getPageData()) {
-        console.error('无法获取页面数据，延迟重试');
-        setTimeout(initPageViews, 500);
         return;
     }
 
@@ -482,27 +463,18 @@ function initPageViews() {
 }
 
 function initLeanCloudViews() {
+    const url = 'https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter';
+
     // 检查pageViewsElement是否存在
     if (!pageViewsElement) {
         console.error('pageViewsElement未初始化，无法显示浏览次数');
         return;
     }
 
-    console.log('开始初始化浏览次数统计，路径:', currentPath);
+    // 移除本地存储的重复访问检查，只统计网络访问次数
+    // 每次访问都会增加计数，确保统计的是真实的网络访问量
 
-    // 首先尝试LeanCloud，失败后使用本地存储
-    tryLeanCloudFirst();
-}
-
-function tryLeanCloudFirst() {
-    const url = 'https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter';
     const queryUrl = url + '?where=' + encodeURIComponent(JSON.stringify({url: currentPath}));
-
-    console.log('尝试连接LeanCloud:', queryUrl);
-
-    // 设置超时时间为5秒
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
 
     fetch(queryUrl, {
         method: 'GET',
@@ -510,143 +482,34 @@ function tryLeanCloudFirst() {
             'X-LC-Id': LC_APP_ID,
             'X-LC-Key': LC_APP_KEY,
             'Content-Type': 'application/json'
-        },
-        signal: controller.signal
+        }
     })
     .then(response => {
-        clearTimeout(timeoutId);
-        console.log('LeanCloud响应状态:', response.status, response.statusText);
-
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
         return response.json();
     })
     .then(data => {
-        console.log('LeanCloud连接成功，查询结果:', data);
-
+        console.log('查询Counter结果:', data);
         if (data.results && data.results.length > 0) {
             const record = data.results[0];
             const currentViews = record.time || 0;
+
+            // 显示当前访问次数
+            pageViewsElement.textContent = currentViews.toString();
+
+            // 直接增加访问次数，不进行本地存储检查
             const newViews = currentViews + 1;
-
-            // 显示当前浏览次数
-            pageViewsElement.textContent = newViews.toString();
-
-            // 更新LeanCloud记录
-            updateLeanCloudCounter(record.objectId, newViews);
+            updateCounter(record.objectId, newViews);
         } else {
-            // 创建新记录
-            createLeanCloudCounter(1);
-            pageViewsElement.textContent = '1';
+            createCounter();
         }
     })
     .catch(error => {
-        clearTimeout(timeoutId);
-        console.error('LeanCloud连接失败:', error.message);
-
-        if (error.name === 'AbortError') {
-            console.log('LeanCloud连接超时，使用本地存储');
-        } else {
-            console.log('LeanCloud网络错误，使用本地存储');
-        }
-
-        // 回退到本地存储
-        initLocalPageViews();
-    });
-}
-
-function initLocalPageViews() {
-    try {
-        // 获取当前页面的浏览次数
-        const storageKey = 'pageviews_' + currentPath.replace(/[^a-zA-Z0-9]/g, '_');
-        let currentViews = parseInt(localStorage.getItem(storageKey) || '0');
-
-        // 增加浏览次数
-        currentViews += 1;
-
-        // 保存到本地存储
-        localStorage.setItem(storageKey, currentViews.toString());
-
-        // 显示浏览次数
-        pageViewsElement.textContent = currentViews.toString();
-
-        console.log('本地浏览次数统计成功，当前次数:', currentViews);
-
-        // 可选：同时尝试同步到LeanCloud（不阻塞显示）
-        tryLeanCloudSync(currentViews);
-
-    } catch (error) {
-        console.error('本地浏览次数统计失败:', error);
-        // 显示默认值
-        pageViewsElement.textContent = '1';
-    }
-}
-
-function tryLeanCloudSync(views) {
-    // 异步尝试同步到LeanCloud，不影响本地显示
-    const url = 'https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter';
-    const queryUrl = url + '?where=' + encodeURIComponent(JSON.stringify({url: currentPath}));
-
-    fetch(queryUrl, {
-        method: 'GET',
-        headers: {
-            'X-LC-Id': LC_APP_ID,
-            'X-LC-Key': LC_APP_KEY,
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.results && data.results.length > 0) {
-            // 更新现有记录
-            const record = data.results[0];
-            updateLeanCloudCounter(record.objectId, views);
-        } else {
-            // 创建新记录
-            createLeanCloudCounter(views);
-        }
-    })
-    .catch(error => {
-        console.log('LeanCloud同步失败（不影响本地统计）:', error.message);
-    });
-}
-
-function createLeanCloudCounter(views) {
-    const url = 'https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter';
-
-    const requestBody = {
-        url: currentPath,
-        title: pageTitle,
-        time: views,
-        createdAt: new Date().toISOString()
-    };
-
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'X-LC-Id': LC_APP_ID,
-            'X-LC-Key': LC_APP_KEY,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('LeanCloud创建成功:', data);
-    })
-    .catch(error => {
-        console.log('LeanCloud创建失败:', error.message);
+        console.error('查询Counter失败:', error);
+        // 网络失败时显示默认值
+        pageViewsElement.textContent = '0';
     });
 }
 
@@ -683,13 +546,8 @@ function fetchCurrentViews() {
     });
 }
 
-function updateLeanCloudCounter(objectId, views) {
+function updateCounter(objectId, views) {
     const url = `https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter/${objectId}`;
-
-    const requestBody = {
-        time: views,
-        updatedAt: new Date().toISOString()
-    };
 
     fetch(url, {
         method: 'PUT',
@@ -698,7 +556,10 @@ function updateLeanCloudCounter(objectId, views) {
             'X-LC-Key': LC_APP_KEY,
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(requestBody)
+        body: JSON.stringify({
+            time: views,
+            updatedAt: new Date().toISOString()
+        })
     })
     .then(response => {
         if (!response.ok) {
@@ -707,115 +568,315 @@ function updateLeanCloudCounter(objectId, views) {
         return response.json();
     })
     .then(data => {
-        console.log('LeanCloud更新成功:', data);
+        console.log('更新Counter成功:', data, '新访问次数:', views);
+        pageViewsElement.textContent = views.toString();
     })
     .catch(error => {
-        console.log('LeanCloud更新失败:', error.message);
+        console.error('更新Counter失败:', error);
+        // 更新失败时保持当前显示的数值
+        console.log('更新失败，保持当前显示');
     });
 }
 
-// 页面加载完成后初始化 - 只初始化一次
-document.addEventListener('DOMContentLoaded', function() {
-    // 延迟初始化，确保页面完全加载
-    setTimeout(initPageViews, 1000);
+function createCounter() {
+    const url = 'https://pUEgNUJ66pc7S4FqVpqxkTkx.api.lncldglobal.com/1.1/classes/Counter';
 
-    // 初始化不蒜子统计备用方案
-    setTimeout(initBusuanziBackup, 2000);
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-LC-Id': LC_APP_ID,
+            'X-LC-Key': LC_APP_KEY,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            url: currentPath,
+            title: pageTitle,
+            time: 1,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('创建Counter成功:', data);
+        pageViewsElement.textContent = '1';
+    })
+    .catch(error => {
+        console.error('创建Counter失败:', error);
+        pageViewsElement.textContent = '1';
+    });
+}
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM加载完成，初始化页面访问统计');
+    initPageViews();
 });
 
-// 不蒜子统计备用方案
-function initBusuanziBackup() {
-    // 检查LeanCloud是否工作正常
-    const pageViewsElement = document.getElementById('page-views');
-    const busuanziContainer = document.getElementById('busuanzi_container_page_pv');
-
-    if (pageViewsElement && (pageViewsElement.textContent === '网络错误' || pageViewsElement.textContent === '加载中...')) {
-        console.log('LeanCloud统计失败，启用不蒜子统计备用方案');
-
-        // 显示不蒜子统计
-        if (busuanziContainer) {
-            busuanziContainer.style.display = 'inline';
-        }
-
-        // 加载不蒜子统计脚本
-        if (!document.querySelector('script[src*="busuanzi"]')) {
-            const script = document.createElement('script');
-            script.async = true;
-            script.src = '//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js';
-            document.head.appendChild(script);
-
-            // 监听不蒜子加载完成
-            script.onload = function() {
-                console.log('不蒜子统计加载成功');
-                // 隐藏原来的错误提示
-                pageViewsElement.style.display = 'none';
-            };
-        }
-    }
+// 如果DOM已经加载完成，立即初始化
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPageViews);
+} else {
+    initPageViews();
 }
 </script>
 
 <style>
-/* 案例详情页响应式设计 */
+/* 案例详情页样式 */
+.case-detail {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* 案例标题区域 */
+.case-header {
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 50%, #0d47a1 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.case-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.3;
+}
+
+.case-header .container {
+    position: relative;
+    z-index: 1;
+}
+
+.case-badges .badge {
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 20px;
+}
+
+/* 案例图片画廊 */
+.case-gallery {
+    margin-bottom: 2rem;
+}
+
+.main-cover-image img,
+.sub-cover-image img {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.main-cover-image img:hover,
+.sub-cover-image img:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+}
+
+.image-caption {
+    font-style: italic;
+    font-size: 0.85rem;
+}
+
+/* 案例内容主体 */
+.case-content {
+    border: 1px solid #e9ecef;
+}
+
+.content-body {
+    line-height: 1.8;
+    font-size: 16px;
+    color: #333;
+}
+
+.content-body h2 {
+    color: #1976d2;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e3f2fd;
+}
+
+.content-body h3 {
+    color: #424242;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.content-body p {
+    margin-bottom: 1.2rem;
+    text-align: justify;
+}
+
+.content-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin: 1.5rem 0;
+    transition: transform 0.3s ease;
+}
+
+.content-body img:hover {
+    transform: scale(1.02);
+}
+
+.content-body .image-row {
+    display: flex;
+    gap: 1rem;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+}
+
+.content-body .image-item {
+    flex: 1;
+    min-width: 300px;
+    text-align: center;
+}
+
+.content-body .image-item img {
+    width: 100%;
+    margin-bottom: 0.5rem;
+}
+
+.content-body .image-caption {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-style: italic;
+    margin-top: 0.5rem;
+}
+
+/* 侧边栏样式 */
+.sidebar {
+    position: sticky;
+    top: 2rem;
+}
+
+.case-info-card {
+    border: 1px solid #e9ecef;
+    overflow: hidden;
+}
+
+.case-info-card .card-header {
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+    border-bottom: none;
+}
+
+.info-item {
+    transition: background-color 0.2s ease;
+}
+
+.info-item:hover {
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    padding: 0.5rem;
+    margin: -0.5rem;
+}
+
+.info-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.info-value {
+    font-size: 1rem;
+    color: #212529;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    .container-fluid {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
 @media (max-width: 992px) {
-    .case-detail .col-lg-4 {
+    .case-header {
+        text-align: center;
+    }
+
+    .case-header .col-lg-4 {
+        margin-top: 1rem;
+    }
+
+    .sidebar {
+        position: static;
         margin-top: 2rem;
+    }
+
+    .content-body .image-row {
+        flex-direction: column;
+    }
+
+    .content-body .image-item {
+        min-width: auto;
     }
 }
 
 @media (max-width: 768px) {
-    .case-detail header {
-        margin-bottom: 2rem !important;
+    .case-header {
+        padding: 2rem 0 !important;
     }
 
-    .case-detail .display-4 {
+    .case-header .display-5 {
         font-size: 1.8rem;
-        line-height: 1.3;
     }
 
-    .case-detail .meta {
-        font-size: 0.9rem;
+    .case-header .lead {
+        font-size: 1rem;
     }
 
-    .case-detail .meta span {
-        display: block;
-        margin: 0.25rem 0;
-    }
-
-    .case-detail .badge {
-        font-size: 0.75rem;
+    .case-badges .badge {
+        font-size: 0.8rem;
         margin: 0.25rem 0.25rem 0.25rem 0;
     }
 
-    .content-wrapper {
-        padding: 1rem !important;
-    }
-
-    .featured-image {
-        margin-bottom: 1rem !important;
-    }
-
-    .sidebar-section {
-        margin-bottom: 1.5rem;
-        padding: 1rem;
-    }
-
-    .sidebar-section h5 {
-        font-size: 1.1rem;
-    }
-
-    .related-cases .card {
+    .case-gallery .col-md-6 {
         margin-bottom: 1rem;
     }
 
-    .related-cases .card-body {
-        padding: 0.75rem;
+    .content-body {
+        font-size: 15px;
+        padding: 1.5rem !important;
     }
 
-    .related-cases .card-title {
-        font-size: 0.9rem;
+    .content-body h2 {
+        font-size: 1.4rem;
+        margin-top: 1.5rem;
+    }
+
+    .content-body h3 {
+        font-size: 1.2rem;
+        margin-top: 1rem;
+    }
+
+    .case-info-card .card-body {
+        padding: 1.5rem !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .case-header .display-5 {
+        font-size: 1.5rem;
         line-height: 1.3;
     }
+
+    .content-body {
+        padding: 1rem !important;
+    }
+
+    .content-body img {
+        margin: 1rem 0;
+    }
+}
 }
 
 @media (max-width: 576px) {
