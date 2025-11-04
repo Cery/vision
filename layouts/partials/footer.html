@@ -168,9 +168,15 @@ style="position: fixed; right: 32px; bottom: 48px; z-index: 999; display: none; 
     font-size: 1.3rem !important;
   }
 
+  /* 友链在小屏保持左对齐且平铺换行 */
+  .friend-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
   .friend-links a {
-    display: block;
-    margin: 0.5rem 0;
+    display: inline-flex;
+    margin: 0.25rem 0.5rem;
     font-size: 0.85rem;
   }
 

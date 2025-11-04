@@ -1,0 +1,108 @@
+{{ define "main" }}
+<div class="container py-5">
+  {{ partial "breadcrumbs.html" . }}
+
+  <div class="text-center mb-5">
+    <h1 class="display-5 text-primary mb-2">{{ .Title }}</h1>
+    <p class="lead text-muted">{{ .Description }}</p>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <!-- 平台介绍 -->
+      <section class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0"><i class="fas fa-building me-2"></i>平台介绍</h5>
+        </div>
+        <div class="card-body p-4">
+          {{ if .Content }}{{ .Content }}{{ else }}
+          <p class="text-muted mb-0">这里展示平台定位与价值，后续可替换为实际介绍文本。</p>
+          {{ end }}
+        </div>
+      </section>
+
+      <!-- 合作方式 -->
+      <section class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-warning text-dark">
+          <h5 class="mb-0"><i class="fas fa-handshake me-2"></i>合作方式</h5>
+        </div>
+        <div class="card-body p-4">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <div class="cooperation-item p-3 border rounded-3 h-100">
+                <div class="icon-wrap text-primary mb-2"><i class="fas fa-store fa-lg"></i></div>
+                <div class="fw-semibold mb-1">供应商入驻</div>
+                <div class="text-muted small">开通供应商主页与产品目录，统一内容结构与展示。</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="cooperation-item p-3 border rounded-3 h-100">
+                <div class="icon-wrap text-primary mb-2"><i class="fas fa-tags fa-lg"></i></div>
+                <div class="fw-semibold mb-1">产品联合推广</div>
+                <div class="text-muted small">按应用场景整合产品组合，提升曝光与转化。</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="cooperation-item p-3 border rounded-3 h-100">
+                <div class="icon-wrap text-primary mb-2"><i class="fas fa-clipboard-check fa-lg"></i></div>
+                <div class="fw-semibold mb-1">内容共建</div>
+                <div class="text-muted small">联合发布技术文章与案例，建立可靠技术影响力。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 联系方式 -->
+      <section class="card shadow-sm border-0">
+        <div class="card-header bg-info text-white">
+          <h5 class="mb-0"><i class="fas fa-address-book me-2"></i>联系方式</h5>
+        </div>
+        <div class="card-body p-4">
+          {{ $c := .Params.contact }}
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="d-flex align-items-center"><i class="fas fa-envelope text-primary me-2"></i><span>Email：{{ with $c.email }}{{ . }}{{ else }}info@visndt.com{{ end }}</span></div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex align-items-center"><i class="fas fa-phone text-primary me-2"></i><span>电话：{{ with $c.phone }}{{ . }}{{ else }}400-888-9999{{ end }}</span></div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex align-items-center"><i class="fab fa-weixin text-primary me-2"></i><span>微信：{{ with $c.wechat }}{{ . }}{{ else }}VisNDT{{ end }}</span></div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex align-items-center"><i class="fas fa-map-marker-alt text-primary me-2"></i><span>地址：{{ with $c.address }}{{ . }}{{ else }}天津市滨海新区（示例地址）{{ end }}</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="col-lg-4">
+      <!-- 侧栏：平台亮点 -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center mb-3"><i class="fas fa-star text-warning me-2"></i><span class="fw-semibold">平台亮点</span></div>
+          <ul class="list-unstyled small text-muted mb-0">
+            <li class="mb-2"><i class="fas fa-check text-success me-1"></i>统一规范的产品与内容结构</li>
+            <li class="mb-2"><i class="fas fa-check text-success me-1"></i>灵活的筛选与检索体验</li>
+            <li class="mb-0"><i class="fas fa-check text-success me-1"></i>按应用场景聚合展示</li>
+          </ul>
+        </div>
+      </div>
+      <!-- 侧栏：快速联系 -->
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center mb-3"><i class="fas fa-headset text-primary me-2"></i><span class="fw-semibold">快速联系</span></div>
+          <div class="small text-muted">欢迎来邮或致电沟通合作细节，我们将在一个工作日内回复。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .cooperation-item .icon-wrap { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; }
+    .card-header h5 { font-weight: 600; }
+  </style>
+</div>
+{{ end }}

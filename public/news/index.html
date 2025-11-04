@@ -938,7 +938,7 @@
                 </li>
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="/cooperation">商务服务</a>
+                    <a class="nav-link" href="/cooperation">商务合作</a>
                 </li>
                 
             </ul>
@@ -1169,6 +1169,11 @@
                 </div>
                 <div class="card-body">
                     
+                    <div id="selected-filters-inline" class="selected-filters-inline" style="display: none;">
+                        <div class="selected-filters-label mb-2"><i class="fas fa-check-circle me-1"></i>已选条件</div>
+                        <div id="selected-filters-inline-container" class="d-flex flex-wrap gap-2"></div>
+                    </div>
+                    
                     <div class="mb-4">
                         <h6 class="filter-section-title">
                             <i class="fas fa-folder-open me-2"></i>资讯分类
@@ -1349,16 +1354,6 @@
             </div>
 
             
-            <div class="card shadow-sm mt-3" id="selected-filters-card" style="display: none;">
-                <div class="card-header bg-info text-white">
-                    <h6 class="mb-0"><i class="fas fa-check-circle me-2"></i>已选条件</h6>
-                </div>
-                <div class="card-body">
-                    <div id="selected-filters-container" class="d-flex flex-wrap gap-2">
-                        
-                    </div>
-                </div>
-            </div>
         </div>
 
         
@@ -2087,14 +2082,22 @@ body {
 
 .filter-buttons-container {
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.4rem 0.4rem;
+}
+
+ 
+#category-filters .filter-btn {
+    width: max-content;
 }
 
 .filter-btn {
-    display: flex;
-    justify-content: space-between;
+    display: inline-flex;
+    justify-content: center;
     align-items: center;
+    gap: 0.35rem;
     padding: 0.5rem 0.75rem;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
@@ -2104,6 +2107,9 @@ body {
     font-size: 14px;
     font-weight: 500;
     transition: all 0.15s ease-in-out;
+    width: max-content;
+    white-space: nowrap;
+    flex: 0 0 auto;
 }
 
 .filter-btn:hover {
@@ -2147,16 +2153,17 @@ body {
 }
 
 .selected-filter-tag {
-    background-color: #e3f2fd;
-    color: #1976d2;
-    border: 1px solid #1976d2;
+    background-color: #E8F0FE;
+    color: #1a73e8;
+    border: 1px solid #c5d7fe;
     padding: 0.25rem 0.5rem;
-    border-radius: 6px;
+    border-radius: 999px;
     font-size: 12px;
     font-weight: 500;
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
 }
 
 .selected-filter-tag .remove-filter {
@@ -2167,6 +2174,15 @@ body {
 
 .selected-filter-tag .remove-filter:hover {
     color: #d32f2f;
+}
+
+ 
+.selected-filters-inline {
+    border: 1px dashed #e0e0e0;
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    background: #fafafa;
+    margin-bottom: 0.75rem;
 }
 
  
@@ -2856,33 +2872,27 @@ function updateNewsCount() {
 function updateSelectedFilters() {
     const selectedCategories = getSelectedFilters('#category-filters');
     const selectedTags = getSelectedFilters('#tag-filters');
-    const selectedFiltersCard = document.getElementById('selected-filters-card');
-    const selectedFiltersContainer = document.getElementById('selected-filters-container');
+    const inlineCard = document.getElementById('selected-filters-inline');
+    const inlineContainer = document.getElementById('selected-filters-inline-container');
 
     const hasFilters = selectedCategories.length > 0 || selectedTags.length > 0;
 
-    if (hasFilters) {
-        selectedFiltersCard.style.display = 'block';
-        let filtersHTML = '';
+    let filtersHTML = '';
+    selectedCategories.forEach(category => {
+        filtersHTML += `<span class="selected-filter-tag">
+            分类: ${category}
+            <span class="remove-filter" onclick="removeFilter('category', '${category}')">&times;</span>
+        </span>`;
+    });
+    selectedTags.forEach(tag => {
+        filtersHTML += `<span class="selected-filter-tag">
+            标签: ${tag}
+            <span class="remove-filter" onclick="removeFilter('tag', '${tag}')">&times;</span>
+        </span>`;
+    });
 
-        selectedCategories.forEach(category => {
-            filtersHTML += `<span class="selected-filter-tag">
-                分类: ${category}
-                <span class="remove-filter" onclick="removeFilter('category', '${category}')">&times;</span>
-            </span>`;
-        });
-
-        selectedTags.forEach(tag => {
-            filtersHTML += `<span class="selected-filter-tag">
-                标签: ${tag}
-                <span class="remove-filter" onclick="removeFilter('tag', '${tag}')">&times;</span>
-            </span>`;
-        });
-
-        selectedFiltersContainer.innerHTML = filtersHTML;
-    } else {
-        selectedFiltersCard.style.display = 'none';
-    }
+    if (inlineCard) inlineCard.style.display = hasFilters ? 'block' : 'none';
+    if (inlineContainer) inlineContainer.innerHTML = hasFilters ? filtersHTML : '';
 }
 
 function removeFilter(filterType, value) {
@@ -3082,9 +3092,15 @@ style="position: fixed; right: 32px; bottom: 48px; z-index: 999; display: none; 
     font-size: 1.3rem !important;
   }
 
+   
+  .friend-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
   .friend-links a {
-    display: block;
-    margin: 0.5rem 0;
+    display: inline-flex;
+    margin: 0.25rem 0.5rem;
     font-size: 0.85rem;
   }
 

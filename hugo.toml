@@ -90,7 +90,7 @@ paginate = 12
       parent = "需求中心"
       weight = 63
   [[menu.main]]
-    name = "商务服务"
+    name = "商务合作"
     url = "/cooperation"
     weight = 70
 
