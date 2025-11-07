@@ -34,7 +34,24 @@ exports.handler = async (event) => {
     const resp = await fetch(url, {
       headers: { Authorization: `Bearer ${AIRTABLE_KEY}` }
     });
-    if (!resp.ok) throw new Error(`Airtable HTTP ${resp.status}`);
+
+    // Gracefully handle non-OK responses to avoid 500 in frontend
+    if (!resp.ok) {
+      // Provide clearer error for common misconfigurations
+      if (resp.status === 401 || resp.status === 403) {
+        return { statusCode: 200, body: JSON.stringify({ valid: false, error: 'Airtable访问未授权，请检查 AIRTABLE_API_KEY/AIRTABLE_BASE_ID 配置。' }) };
+      }
+      if (resp.status === 404) {
+        return { statusCode: 200, body: JSON.stringify({ valid: false }) };
+      }
+      let msg = `Airtable HTTP ${resp.status}`;
+      try {
+        const errJson = await resp.json();
+        msg = errJson?.error?.message || msg;
+      } catch (_) {}
+      return { statusCode: 200, body: JSON.stringify({ valid: false, error: msg }) };
+    }
+
     const data = await resp.json();
     const record = Array.isArray(data.records) && data.records[0] ? data.records[0].fields : null;
     if (!record) {

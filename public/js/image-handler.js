@@ -1,3 +1,22 @@
+// 提前定义全局错误处理，避免内联 onerror 在脚本加载前触发报错
+window.handleImageError = function(event) {
+    try {
+        const img = event && event.target ? event.target : event;
+        if (!img) return;
+        const fallback = '/images/placeholder.svg';
+        if (img.src !== fallback) {
+            console.warn(`图片加载失败: ${img.src}, 使用占位图片: ${fallback}`);
+            img.src = fallback;
+            img.alt = img.alt || '图片加载失败';
+            if (img.classList) {
+                img.classList.add('img-error');
+            }
+        }
+    } catch (e) {
+        console.error('handleImageError 处理异常:', e);
+    }
+};
+
 // 增强的图片加载和错误处理系统
 document.addEventListener('DOMContentLoaded', function() {
     // 默认占位图片配置
@@ -178,4 +197,4 @@ document.addEventListener('DOMContentLoaded', function() {
     lazyImages.forEach(img => {
         imageObserver.observe(img);
     });
-}); 
+});

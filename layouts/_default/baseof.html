@@ -24,8 +24,10 @@
 
     {{ partial "search-modal.html" . }}
 
-    <!-- 图片代理脚本 - 处理后台管理系统的图片访问 -->
-    <script src="/js/image-proxy.js"></script>
+    <!-- 图片代理脚本 - 仅在显式启用时加载 -->
+    {{ if .Site.Params.enable_image_proxy }}
+    <script src="{{ "js/image-proxy.js" | relURL }}"></script>
+    {{ end }}
 
 </body>
 </html>

@@ -22,7 +22,11 @@
                             <div class="img-container" data-fit="cover">
                                 <img src="{{ if $slide.image }}{{ $slide.image | relURL }}{{ else }}https://picsum.photos/1200/600?random={{ $index }}{{ end }}" 
                                      class="d-block w-100" 
-                                     alt="{{ $slide.alt }}">
+                                     alt="{{ $slide.alt }}"
+                                     onerror="handleImageError(event)"
+                                     loading="{{ if eq $index 0 }}eager{{ else }}lazy{{ end }}"
+                                     decoding="async"
+                                     fetchpriority="{{ if eq $index 0 }}high{{ else }}auto{{ end }}">
                             </div>
                             <div class="carousel-caption">
                                 {{ if $slide.title }}
@@ -51,6 +55,9 @@
         </div>
     </div>
 </section>
+
+<!-- 轮播增强脚本（兜底加载，确保在首页生效） -->
+<script defer src="{{ "js/carousel-handler.js" | relURL }}"></script>
 
 <style>
 .product-carousel-section {
@@ -160,7 +167,6 @@
         font-size: 0.8rem;
         padding: 0.25rem 0.5rem;
     }
-}
 }
 
 .carousel-caption h3 {

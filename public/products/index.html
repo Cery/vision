@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1315&amp;path=livereload" data-no-instant defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>产品中心 - 维森·视觉检测仪器</title>
@@ -26,19 +26,19 @@
 
 
 <meta property="og:type" content="article">
-<meta property="og:url" content="http://localhost:1313/products/">
+<meta property="og:url" content="//:1315/products/">
 <meta property="og:title" content="产品中心 - 维森视觉检测仪器">
 <meta property="og:description" content="专业的视觉检测设备信息与资讯发布平台，提供工业内窥镜、检测相机等产品信息，为制造业提供优质的检测解决方案">
-<meta property="og:image" content="http://localhost:1313/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta property="og:image" content="//:1315/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 <meta property="og:site_name" content="维森视觉检测仪器">
 <meta property="og:locale" content="zh_CN">
 
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="http://localhost:1313/products/">
+<meta name="twitter:url" content="//:1315/products/">
 <meta name="twitter:title" content="产品中心 - 维森视觉检测仪器">
 <meta name="twitter:description" content="专业的视觉检测设备信息与资讯发布平台，提供工业内窥镜、检测相机等产品信息，为制造业提供优质的检测解决方案">
-<meta name="twitter:image" content="http://localhost:1313/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta name="twitter:image" content="//:1315/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 
 
 
@@ -48,7 +48,7 @@
   "@type": "Product",
   "name": "产品中心",
   "description": "产品中心",
-  "image": "http:\/\/localhost:1313\/images\/assets\/brand\/logos\/brand_logos_logo-dark_original_v1.svg",
+  "image": "\/\/:1315\/images\/assets\/brand\/logos\/brand_logos_logo-dark_original_v1.svg",
   "brand": {
     "@type": "Brand",
     "name": "维森视觉检测仪器"
@@ -62,13 +62,13 @@
 
 
 
-<link rel="canonical" href="http://localhost:1313/products/">
+<link rel="canonical" href="//:1315/products/">
 
 
-<link rel="icon" type="image/svg+xml" href="/images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
-<link rel="alternate icon" href="/images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
-<link rel="mask-icon" href="/images/assets/brand/icons/brand_icons_favicon_original_v1.svg" color="#1976d2">
-<link rel="apple-touch-icon" href="/images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
+<link rel="icon" type="image/svg+xml" href="../images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
+<link rel="alternate icon" href="../images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
+<link rel="mask-icon" href="../images/assets/brand/icons/brand_icons_favicon_original_v1.svg" color="#1976d2">
+<link rel="apple-touch-icon" href="../images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
 
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -77,12 +77,12 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
 
-<link href="/css/unified-theme.css" rel="stylesheet">
+<link href="../css/unified-theme.css" rel="stylesheet">
 
-<link href="/css/section-titles.css" rel="stylesheet">
+<link href="../css/section-titles.css" rel="stylesheet">
 
-<link href="/css/custom.css" rel="stylesheet">
-<link href="/css/news-filters.css" rel="stylesheet">
+<link href="../css/custom.css" rel="stylesheet">
+<link href="../css/news-filters.css" rel="stylesheet">
 
 <style>
      
@@ -847,10 +847,10 @@
     </script>
 
 
-<script src="/js/search.js"></script>
-<script src="/js/search-modal.js"></script>
+<script src="../js/search.js"></script>
+<script src="../js/search-modal.js"></script>
 
-<link rel="stylesheet" href="/css/image-utils.css">
+<link rel="stylesheet" href="../css/image-utils.css">
 
 
 
@@ -870,7 +870,24 @@
       });
     });
     </script>
-<script src="/js/image-handler.js" defer></script>
+
+<script>
+  window.handleImageError = window.handleImageError || function(el) {
+    try {
+      var img = el && el.target ? el.target : el;
+      if (!img) return;
+      var fallback = '/images/placeholder.svg';
+      if (img.src !== fallback) {
+        console.warn('图片加载失败(预定义): ' + img.src + ', 使用占位: ' + fallback);
+        img.src = fallback;
+        img.alt = img.alt || '图片加载失败';
+        if (img.classList) { img.classList.add('img-error'); }
+      }
+    } catch (e) { console.error('预定义 handleImageError 异常:', e); }
+  };
+</script>
+<script src="../js/image-handler.js"></script>
+<script src="../js/carousel-handler.js"></script>
     
 </head>
 <body>
@@ -897,8 +914,8 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
         
-        <a class="navbar-brand" href="/">
-            <img src="/images/assets/brand/logos/brand_logos_logo-new_original_v1.svg" alt="维森视觉检测仪器" height="50" class="logo-img">
+        <a class="navbar-brand" href="../">
+            <img src="../images/assets/brand/logos/brand_logos_logo-new_original_v1.svg" alt="维森视觉检测仪器" height="50" class="logo-img">
         </a>
 
         
@@ -928,31 +945,31 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="/">首页</a>
+                    <a class="nav-link" href="../">首页</a>
                 </li>
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="/products">产品中心</a>
+                    <a class="nav-link" href="../products">产品中心</a>
                 </li>
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="/applications/">应用领域</a>
+                    <a class="nav-link" href="../applications/">应用领域</a>
                 </li>
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="/cases/">应用案例</a>
+                    <a class="nav-link" href="../cases/">应用案例</a>
                 </li>
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="/news">资讯中心</a>
+                    <a class="nav-link" href="../news">资讯中心</a>
                 </li>
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="/requirements">需求市场</a>
+                    <a class="nav-link" href="../requirements">需求市场</a>
                 </li>
                 
                 <li class="nav-item">
-                    <a class="nav-link" href="/cooperation">商务合作</a>
+                    <a class="nav-link" href="../cooperation">商务合作</a>
                 </li>
                 
             </ul>
@@ -1166,7 +1183,7 @@
 <div class="container py-5">
     <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-light p-3 rounded">
-        <li class="breadcrumb-item"><a href="/">首页</a></li>
+        <li class="breadcrumb-item"><a href="../">首页</a></li>
         
             
         
@@ -1197,7 +1214,7 @@
                                     
                                     
 
-                                    <a href="http://localhost:1313/products" class="btn btn-lg btn-primary fw-bold shadow-sm primary-btn all-btn active">
+                                    <a href="//:1315/products" class="btn btn-lg btn-primary fw-bold shadow-sm primary-btn all-btn active">
                                         <i class="fas fa-home me-1"></i>全部分类
                                     </a>
 
@@ -1208,16 +1225,16 @@
                                         
                                         
                                         
-                                            <a href='http://localhost:1313/products?primary_category=%e7%94%b5%e5%ad%90%e5%86%85%e7%aa%a5%e9%95%9c' class="btn btn-lg btn-outline-primary fw-bold shadow-sm primary-btn " data-category="电子内窥镜">
+                                            <a href='//:1315/products?primary_category=%e7%94%b5%e5%ad%90%e5%86%85%e7%aa%a5%e9%95%9c' class="btn btn-lg btn-outline-primary fw-bold shadow-sm primary-btn " data-category="电子内窥镜">
                                                 <i class="fas fa-folder me-1"></i>电子内窥镜
-                                                <span class="badge bg-light text-dark ms-1">4</span>
+                                                <span class="badge bg-light text-dark ms-1">3</span>
                                             </a>
                                         
                                     
                                         
                                         
                                         
-                                            <a href='http://localhost:1313/products?primary_category=%e5%85%89%e5%ad%a6%e5%86%85%e7%aa%a5%e9%95%9c' class="btn btn-lg btn-outline-primary fw-bold shadow-sm primary-btn " data-category="光学内窥镜">
+                                            <a href='//:1315/products?primary_category=%e5%85%89%e5%ad%a6%e5%86%85%e7%aa%a5%e9%95%9c' class="btn btn-lg btn-outline-primary fw-bold shadow-sm primary-btn " data-category="光学内窥镜">
                                                 <i class="fas fa-folder me-1"></i>光学内窥镜
                                                 <span class="badge bg-light text-dark ms-1">2</span>
                                             </a>
@@ -1226,9 +1243,9 @@
                                         
                                         
                                         
-                                            <a href='http://localhost:1313/products?primary_category=%e5%85%89%e7%ba%a4%e5%86%85%e7%aa%a5%e9%95%9c' class="btn btn-lg btn-outline-primary fw-bold shadow-sm primary-btn " data-category="光纤内窥镜">
+                                            <a href='//:1315/products?primary_category=%e5%85%89%e7%ba%a4%e5%86%85%e7%aa%a5%e9%95%9c' class="btn btn-lg btn-outline-primary fw-bold shadow-sm primary-btn " data-category="光纤内窥镜">
                                                 <i class="fas fa-folder me-1"></i>光纤内窥镜
-                                                <span class="badge bg-light text-dark ms-1">2</span>
+                                                <span class="badge bg-light text-dark ms-1">3</span>
                                             </a>
                                         
                                     
@@ -1287,7 +1304,7 @@
                                 <div class="category-connector"></div>
 
                                 <div class="d-flex flex-wrap gap-1 align-items-center">
-                                    <a href="http://localhost:1313/products" class="btn btn-outline-secondary btn-sm secondary-btn all-btn active">
+                                    <a href="//:1315/products" class="btn btn-outline-secondary btn-sm secondary-btn all-btn active">
                                         <i class="fas fa-list me-1"></i>全部二级分类
                                     </a>
 
@@ -1344,7 +1361,7 @@
                                                 
                                             
                                             
-                                            <a href='http://localhost:1313/products?secondary_category=%e7%a1%ac%e6%80%a7%e5%85%89%e5%ad%a6%e5%86%85%e7%aa%a5%e9%95%9c' 
+                                            <a href='//:1315/products?secondary_category=%e7%a1%ac%e6%80%a7%e5%85%89%e5%ad%a6%e5%86%85%e7%aa%a5%e9%95%9c' 
                                                class="btn btn-outline-secondary btn-sm secondary-btn " 
                                                data-category="硬性光学内窥镜"
                                                data-primary-categories="光学内窥镜">
@@ -1367,12 +1384,31 @@
                                                 
                                             
                                             
-                                            <a href='http://localhost:1313/products?secondary_category=%e6%9f%94%e6%80%a7%e5%85%89%e7%ba%a4%e5%86%85%e7%aa%a5%e9%95%9c' 
+                                            <a href='//:1315/products?secondary_category=%e6%9f%94%e6%80%a7%e5%85%89%e7%ba%a4%e5%86%85%e7%aa%a5%e9%95%9c' 
                                                class="btn btn-outline-secondary btn-sm secondary-btn " 
                                                data-category="柔性光纤内窥镜"
                                                data-primary-categories="光纤内窥镜">
                                                 <i class="fas fa-tag me-1"></i>柔性光纤内窥镜
                                                 <span class="badge bg-light text-dark ms-1">2</span>
+                                            </a>
+                                        
+                                    
+                                        
+                                        
+                                        
+                                            
+                                            
+                                                
+                                                    
+                                                
+                                            
+                                            
+                                            <a href='//:1315/products?secondary_category=%e7%a1%ac%e6%80%a7%e5%85%89%e7%ba%a4%e5%86%85%e7%aa%a5%e9%95%9c' 
+                                               class="btn btn-outline-secondary btn-sm secondary-btn " 
+                                               data-category="硬性光纤内窥镜"
+                                               data-primary-categories="光纤内窥镜">
+                                                <i class="fas fa-tag me-1"></i>硬性光纤内窥镜
+                                                <span class="badge bg-light text-dark ms-1">1</span>
                                             </a>
                                         
                                     
@@ -1393,17 +1429,13 @@
                                                     
                                                 
                                             
-                                                
-                                                    
-                                                
                                             
-                                            
-                                            <a href='http://localhost:1313/products?secondary_category=%e5%b7%a5%e4%b8%9a%e8%a7%86%e9%a2%91%e5%86%85%e7%aa%a5%e9%95%9c' 
+                                            <a href='//:1315/products?secondary_category=%e5%b7%a5%e4%b8%9a%e8%a7%86%e9%a2%91%e5%86%85%e7%aa%a5%e9%95%9c' 
                                                class="btn btn-outline-secondary btn-sm secondary-btn " 
                                                data-category="工业视频内窥镜"
                                                data-primary-categories="电子内窥镜">
                                                 <i class="fas fa-tag me-1"></i>工业视频内窥镜
-                                                <span class="badge bg-light text-dark ms-1">4</span>
+                                                <span class="badge bg-light text-dark ms-1">3</span>
                                             </a>
                                         
                                     
@@ -2364,26 +2396,6 @@
                                                     
                                                 
                                                     
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                    
                                                 
                                                     
                                                 
@@ -2492,26 +2504,6 @@
                                                 
                                                     
                                                 
-                                                    
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
                                                     
                                                 
                                                     
@@ -2622,26 +2614,6 @@
                                                     
                                                 
                                                     
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                    
                                                 
                                                     
                                                 
@@ -2751,26 +2723,6 @@
                                                     
                                                 
                                                     
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                    
                                                 
                                                     
                                                 
@@ -2879,26 +2831,6 @@
                                                 
                                                     
                                                 
-                                                    
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
                                                     
                                                 
                                                     
@@ -3042,6 +2974,26 @@
                                                     
                                                 
                                                     
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                    
                                                 
                                                     
                                                 
@@ -3122,6 +3074,26 @@
                                                         
                                                     
                                                 
+                                                    
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
                                                     
                                                 
                                                     
@@ -3204,6 +3176,26 @@
                                                     
                                                 
                                                     
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                    
                                                 
                                                     
                                                 
@@ -3284,6 +3276,26 @@
                                                         
                                                     
                                                 
+                                                    
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
+                                                            
+                                                        
                                                     
                                                 
                                                     
@@ -3656,15 +3668,15 @@
                     
                 
                 
-                <a href="http://localhost:1313/products/%E6%A0%B7%E4%BE%8B%E4%BA%A7%E5%93%81/" class="card-img-link">
-                    <img src="/images/products/default-product.jpg" class="card-img-top" alt="样例产品" style="height: 240px; object-fit: cover;" onerror="handleImageError(this)">
+                <a href="//:1315/products/%E6%A0%B7%E4%BE%8B%E4%BA%A7%E5%93%81/" class="card-img-link">
+                    <img src="../images/products/default-product.jpg" class="card-img-top" alt="样例产品" style="height: 240px; object-fit: cover;" onerror="handleImageError(this)">
                     
                 </a>
 
                 <div class="card-body">
                     
                     <h5 class="card-title mb-3">
-                        <a href="http://localhost:1313/products/%E6%A0%B7%E4%BE%8B%E4%BA%A7%E5%93%81/" class="text-decoration-none text-dark product-title">样例产品</a>
+                        <a href="//:1315/products/%E6%A0%B7%E4%BE%8B%E4%BA%A7%E5%93%81/" class="text-decoration-none text-dark product-title">样例产品</a>
                     </h5>
 
                     
@@ -3891,7 +3903,7 @@
                 
                 
                 
-                <a href="http://localhost:1313/products/vs/ws-o3020/" class="card-img-link">
+                <a href="//:1315/products/vs/ws-o3020/" class="card-img-link">
                     <img src="https://picsum.photos/800/600?random=o3020-main" class="card-img-top" alt="WS-O3020硬性光学内窥镜 - 3.0mm侧视型" style="height: 240px; object-fit: cover;" onerror="handleImageError(this)">
                     
                     <div class="product-tags">
@@ -3907,7 +3919,7 @@
                 <div class="card-body">
                     
                     <h5 class="card-title mb-3">
-                        <a href="http://localhost:1313/products/vs/ws-o3020/" class="text-decoration-none text-dark product-title">WS-O3020硬性光学内窥镜 - 3.0mm侧视型</a>
+                        <a href="//:1315/products/vs/ws-o3020/" class="text-decoration-none text-dark product-title">WS-O3020硬性光学内窥镜 - 3.0mm侧视型</a>
                     </h5>
 
                     
@@ -4154,7 +4166,7 @@
                 
                 
                 
-                <a href="http://localhost:1313/products/vs/ws-f4525/" class="card-img-link">
+                <a href="//:1315/products/vs/ws-f4525/" class="card-img-link">
                     <img src="https://picsum.photos/800/600?random=f4525-main" class="card-img-top" alt="WS-F4525柔性光纤内窥镜 - 4.5mm双向导向型" style="height: 240px; object-fit: cover;" onerror="handleImageError(this)">
                     
                     <div class="product-tags">
@@ -4170,7 +4182,7 @@
                 <div class="card-body">
                     
                     <h5 class="card-title mb-3">
-                        <a href="http://localhost:1313/products/vs/ws-f4525/" class="text-decoration-none text-dark product-title">WS-F4525柔性光纤内窥镜 - 4.5mm双向导向型</a>
+                        <a href="//:1315/products/vs/ws-f4525/" class="text-decoration-none text-dark product-title">WS-F4525柔性光纤内窥镜 - 4.5mm双向导向型</a>
                     </h5>
 
                     
@@ -4348,8 +4360,8 @@
         
 
         <div class="col-md-6 col-lg-4 mb-4 product-item product-card"
-             data-primary-category="电子内窥镜"
-             data-secondary-category="工业视频内窥镜"
+             data-primary-category="光纤内窥镜"
+             data-secondary-category="硬性光纤内窥镜"
              data-probe-diameter="2.8mm"
              data-viewing-angle="直视(0°)"
              data-light-source="LED光源"
@@ -4379,8 +4391,8 @@
                 
                 
                 
-                <a href="http://localhost:1313/products/vis/vis-t10100/" class="card-img-link">
-                    <img src="/images/products/F-series/F-main.jpg" class="card-img-top" alt="VIS-T2815工业视频内窥镜 - 2.8mm高清探头" style="height: 240px; object-fit: cover;" onerror="handleImageError(this)">
+                <a href="//:1315/products/vis/vis-t10100/" class="card-img-link">
+                    <img src="../images/products/F-series/F-main.jpg" class="card-img-top" alt="VIS-T2815工业视频内窥镜 - 2.8mm高清探头" style="height: 240px; object-fit: cover;" onerror="handleImageError(this)">
                     
                     <div class="product-tags">
                         
@@ -4395,19 +4407,19 @@
                 <div class="card-body">
                     
                     <h5 class="card-title mb-3">
-                        <a href="http://localhost:1313/products/vis/vis-t10100/" class="text-decoration-none text-dark product-title">VIS-T2815工业视频内窥镜 - 2.8mm高清探头</a>
+                        <a href="//:1315/products/vis/vis-t10100/" class="text-decoration-none text-dark product-title">VIS-T2815工业视频内窥镜 - 2.8mm高清探头</a>
                     </h5>
 
                     
                     <div class="product-categories mb-3">
                         
                         <span class="badge bg-dark me-1 mb-1">
-                            <i class="fas fa-folder me-1"></i>电子内窥镜
+                            <i class="fas fa-folder me-1"></i>光纤内窥镜
                         </span>
                         
                         
                         <span class="badge bg-dark me-1 mb-1">
-                            <i class="fas fa-tag me-1"></i>工业视频内窥镜
+                            <i class="fas fa-tag me-1"></i>硬性光纤内窥镜
                         </span>
                         
                     </div>
@@ -4604,8 +4616,8 @@
                 
                 
                 
-                <a href="http://localhost:1313/products/vis/vis-t27140/" class="card-img-link">
-                    <img src="/images/products/F-series/F-main.jpg" class="card-img-top" alt="VIS-T2815工业视频内窥镜 - 2.8mm高清探头" style="height: 240px; object-fit: cover;" onerror="handleImageError(this)">
+                <a href="//:1315/products/vis/vis-t27140/" class="card-img-link">
+                    <img src="../images/products/F-series/F-main.jpg" class="card-img-top" alt="VIS-T2815工业视频内窥镜 - 2.8mm高清探头" style="height: 240px; object-fit: cover;" onerror="handleImageError(this)">
                     
                     <div class="product-tags">
                         
@@ -4620,7 +4632,7 @@
                 <div class="card-body">
                     
                     <h5 class="card-title mb-3">
-                        <a href="http://localhost:1313/products/vis/vis-t27140/" class="text-decoration-none text-dark product-title">VIS-T2815工业视频内窥镜 - 2.8mm高清探头</a>
+                        <a href="//:1315/products/vis/vis-t27140/" class="text-decoration-none text-dark product-title">VIS-T2815工业视频内窥镜 - 2.8mm高清探头</a>
                     </h5>
 
                     
@@ -4829,8 +4841,8 @@
                 
                 
                 
-                <a href="http://localhost:1313/products/vis/vis-t2810/" class="card-img-link">
-                    <img src="/images/products/F-series/F-main.jpg" class="card-img-top" alt="VIS-T2815工业视频内窥镜 - 2.8mm高清探头" style="height: 240px; object-fit: cover;" onerror="handleImageError(this)">
+                <a href="//:1315/products/vis/vis-t2810/" class="card-img-link">
+                    <img src="../images/products/F-series/F-main.jpg" class="card-img-top" alt="VIS-T2815工业视频内窥镜 - 2.8mm高清探头" style="height: 240px; object-fit: cover;" onerror="handleImageError(this)">
                     
                     <div class="product-tags">
                         
@@ -4845,7 +4857,7 @@
                 <div class="card-body">
                     
                     <h5 class="card-title mb-3">
-                        <a href="http://localhost:1313/products/vis/vis-t2810/" class="text-decoration-none text-dark product-title">VIS-T2815工业视频内窥镜 - 2.8mm高清探头</a>
+                        <a href="//:1315/products/vis/vis-t2810/" class="text-decoration-none text-dark product-title">VIS-T2815工业视频内窥镜 - 2.8mm高清探头</a>
                     </h5>
 
                     
@@ -5054,8 +5066,8 @@
                 
                 
                 
-                <a href="http://localhost:1313/products/vis/vis-t2815/" class="card-img-link">
-                    <img src="/images/products/F-series/F-main.jpg" class="card-img-top" alt="VIS-T2815工业视频内窥镜 - 2.8mm高清探头" style="height: 240px; object-fit: cover;" onerror="handleImageError(this)">
+                <a href="//:1315/products/vis/vis-t2815/" class="card-img-link">
+                    <img src="../images/products/F-series/F-main.jpg" class="card-img-top" alt="VIS-T2815工业视频内窥镜 - 2.8mm高清探头" style="height: 240px; object-fit: cover;" onerror="handleImageError(this)">
                     
                     <div class="product-tags">
                         
@@ -5070,7 +5082,7 @@
                 <div class="card-body">
                     
                     <h5 class="card-title mb-3">
-                        <a href="http://localhost:1313/products/vis/vis-t2815/" class="text-decoration-none text-dark product-title">VIS-T2815工业视频内窥镜 - 2.8mm高清探头</a>
+                        <a href="//:1315/products/vis/vis-t2815/" class="text-decoration-none text-dark product-title">VIS-T2815工业视频内窥镜 - 2.8mm高清探头</a>
                     </h5>
 
                     
@@ -5317,8 +5329,8 @@
                 
                 
                 
-                <a href="http://localhost:1313/products/vs/ws-p3915/" class="card-img-link">
-                    <img src="/images/products/P60/P-MAIN.jpg" class="card-img-top" alt="WS-P3915高清工业视频内窥镜 - 3.9mm四方向导向探头" style="height: 240px; object-fit: cover;" onerror="handleImageError(this)">
+                <a href="//:1315/products/vs/ws-p3915/" class="card-img-link">
+                    <img src="../images/products/P60/P-MAIN.jpg" class="card-img-top" alt="WS-P3915高清工业视频内窥镜 - 3.9mm四方向导向探头" style="height: 240px; object-fit: cover;" onerror="handleImageError(this)">
                     
                     <div class="product-tags">
                         
@@ -5333,7 +5345,7 @@
                 <div class="card-body">
                     
                     <h5 class="card-title mb-3">
-                        <a href="http://localhost:1313/products/vs/ws-p3915/" class="text-decoration-none text-dark product-title">WS-P3915高清工业视频内窥镜 - 3.9mm四方向导向探头</a>
+                        <a href="//:1315/products/vs/ws-p3915/" class="text-decoration-none text-dark product-title">WS-P3915高清工业视频内窥镜 - 3.9mm四方向导向探头</a>
                     </h5>
 
                     
@@ -5580,8 +5592,8 @@
                 
                 
                 
-                <a href="http://localhost:1313/products/vs/ws-p6020/" class="card-img-link">
-                    <img src="/images/products/P60/P-MAIN.jpg" class="card-img-top" alt="WS-P6020高清工业视频内窥镜 - 6mm大直径探头" style="height: 240px; object-fit: cover;" onerror="handleImageError(this)">
+                <a href="//:1315/products/vs/ws-p6020/" class="card-img-link">
+                    <img src="../images/products/P60/P-MAIN.jpg" class="card-img-top" alt="WS-P6020高清工业视频内窥镜 - 6mm大直径探头" style="height: 240px; object-fit: cover;" onerror="handleImageError(this)">
                     
                     <div class="product-tags">
                         
@@ -5598,7 +5610,7 @@
                 <div class="card-body">
                     
                     <h5 class="card-title mb-3">
-                        <a href="http://localhost:1313/products/vs/ws-p6020/" class="text-decoration-none text-dark product-title">WS-P6020高清工业视频内窥镜 - 6mm大直径探头</a>
+                        <a href="//:1315/products/vs/ws-p6020/" class="text-decoration-none text-dark product-title">WS-P6020高清工业视频内窥镜 - 6mm大直径探头</a>
                     </h5>
 
                     
@@ -7067,7 +7079,7 @@ function handleNoProducts() {
                     <h4 class="alert-heading">暂无产品</h4>
                     <p class="mb-0">当前筛选条件下没有找到相关产品，请尝试调整筛选条件。</p>
                     <hr>
-                    <a href="/products/" class="btn btn-outline-primary mt-2">
+                    <a href="../products/" class="btn btn-outline-primary mt-2">
                         <i class="fas fa-home me-1"></i>查看全部产品
                     </a>
                 </div>
@@ -7286,7 +7298,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         <div class="col-md-4 mb-4 mb-md-0 text-center text-md-start">
           <div class="footer-logo-container mb-3">
-            <img src="/images/logo-footer.svg" alt="维森视觉检测仪器" height="40" class="footer-logo-img">
+            <img src="../images/logo-footer.svg" alt="维森视觉检测仪器" height="40" class="footer-logo-img" loading="lazy">
           </div>
           <div class="working-hours d-inline-block text-secondary">
             <i class="fas fa-clock me-1"></i> 工作时间: 周一至周五 9:00-18:00
@@ -7306,37 +7318,37 @@ document.addEventListener('DOMContentLoaded', function() {
               <div class="social-hover mx-3 mb-3">
                 <i class="fab fa-weixin fa-2x social-icon" style="color: #09bb07;"></i>
                 <div class="qr-code-float">
-                  <img src="https://picsum.photos/100/100?random=2" alt="微信二维码" class="img-fluid rounded">
+                  <img src="../images/placeholder.svg" alt="微信二维码" class="img-fluid rounded" loading="lazy">
                 </div>
               </div>
               <div class="social-hover mx-3 mb-3">
                 <i class="fab fa-weibo fa-2x social-icon" style="color: #e6162d;"></i>
                 <div class="qr-code-float">
-                  <img src="https://picsum.photos/100/100?random=3" alt="微博二维码" class="img-fluid rounded">
+                  <img src="../images/placeholder.svg" alt="微博二维码" class="img-fluid rounded" loading="lazy">
                 </div>
               </div>
               <div class="social-hover mx-3 mb-3">
                 <i class="fab fa-tiktok fa-2x social-icon" style="color: #000;"></i>
                 <div class="qr-code-float">
-                  <img src="https://picsum.photos/100/100?random=5" alt="抖音二维码" class="img-fluid rounded">
+                  <img src="../images/placeholder.svg" alt="抖音二维码" class="img-fluid rounded" loading="lazy">
                 </div>
               </div>
               <div class="social-hover mx-3 mb-3">
                 <i class="fas fa-video fa-2x social-icon" style="color: #07C160;"></i>
                 <div class="qr-code-float">
-                  <img src="https://picsum.photos/100/100?random=6" alt="视频号二维码" class="img-fluid rounded">
+                  <img src="../images/placeholder.svg" alt="视频号二维码" class="img-fluid rounded" loading="lazy">
                 </div>
               </div>
               <div class="social-hover mx-3 mb-3">
                 <i class="fas fa-comment-dots fa-2x social-icon" style="color: #0086D6;"></i>
                 <div class="qr-code-float">
-                  <img src="https://picsum.photos/100/100?random=7" alt="钉钉二维码" class="img-fluid rounded">
+                  <img src="../images/placeholder.svg" alt="钉钉二维码" class="img-fluid rounded" loading="lazy">
                 </div>
               </div>
               <div class="social-hover mx-3 mb-3">
                 <i class="fas fa-building fa-2x social-icon" style="color: #1AAD19;"></i>
                 <div class="qr-code-float">
-                  <img src="https://picsum.photos/100/100?random=8" alt="企业微信二维码" class="img-fluid rounded">
+                  <img src="../images/placeholder.svg" alt="企业微信二维码" class="img-fluid rounded" loading="lazy">
                 </div>
               </div>
             </div>
@@ -7345,9 +7357,19 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="friend-links-container mt-4">
         <h5 class="friend-links-title mb-2">友情链接</h5>
         <div class="friend-links mb-3">
-          <a href="#" class="me-3 text-decoration-none text-primary">中国机器视觉网</a>
+          <a href="#" class="me-3 text-decoration-none text-primary">航天科技</a>
+          <a href="#" class="me-3 text-decoration-none text-primary">航天科工</a>
+          <a href="#" class="me-3 text-decoration-none text-primary">航发商城</a>
+          <a href="#" class="me-3 text-decoration-none text-primary">一汽集团</a>
+          <a href="#" class="me-3 text-decoration-none text-primary">长城汽车</a>
+          <a href="#" class="me-3 text-decoration-none text-primary">联合动力</a>
+          <a href="#" class="me-3 text-decoration-none text-primary">中国兵器</a>
+          <a href="#" class="me-3 text-decoration-none text-primary">全军武器采购</a>
+          <a href="#" class="me-3 text-decoration-none text-primary">南方航空</a>
+          <a href="#" class="me-3 text-decoration-none text-primary">大唐电子</a>
+          <a href="#" class="me-3 text-decoration-none text-primary">机器视觉网</a>
           <a href="#" class="me-3 text-decoration-none text-primary">自动化检测协会</a>
-          <a href="#" class="me-3 text-decoration-none text-primary">工业4.0研究院</a>
+          <a href="#" class="me-3 text-decoration-none text-primary">工研院</a>
           <a href="#" class="me-3 text-decoration-none text-primary">视觉检测技术论坛</a>
           <a href="#" class="me-3 text-decoration-none text-primary">智能制造联盟</a>
         </div>
@@ -7561,7 +7583,7 @@ style="position: fixed; right: 32px; bottom: 48px; z-index: 999; display: none; 
   </div>
 
     
-    <script src="/js/image-proxy.js"></script>
+    
 
 </body>
 </html>

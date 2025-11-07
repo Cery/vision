@@ -9,7 +9,7 @@ hasCJKLanguage = true
 
 # URL配置
 canonifyURLs = false
-relativeURLs = false
+relativeURLs = true
 
 # 启用分类功能
 [taxonomies]
@@ -89,6 +89,11 @@ paginate = 12
       url = "/requirements/my"
       parent = "需求市场"
       weight = 63
+    [[menu.main]]
+      name = "需求市场管理后台"
+      url = "/management.html"
+      parent = "需求市场"
+      weight = 64
   [[menu.main]]
     name = "商务合作"
     url = "/cooperation"

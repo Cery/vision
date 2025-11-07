@@ -14,7 +14,7 @@
     "product-server:dev": "nodemon product-server.js",
     "content-server": "node content-server.js",
     "build": "hugo --gc --minify",
-    "dev:netlify": "netlify dev",
+    "dev:netlify": "cross-env AIRTABLE_API_KEY=pat39XNJcEyet48SK.83b699fc1a7d3fb3999d371ee4bc5f65ef62ffd4ab818d27eb575a15992ae016 AIRTABLE_BASE_ID=appuBWUPmqALV2455 netlify dev",
     "build:css": "postcss static/css/main.css -o static/css/main.min.css",
     "cms:proxy": "netlify-cms-proxy-server --port 8081 --config static/admin/config.yml",
     "encoding:check": "node scripts/simple-encoding-fix.js",
@@ -53,7 +53,9 @@
     "postcss": "^8.5.4",
     "postcss-cli": "^11.0.1",
     "rimraf": "^6.0.1",
-    "sharp": "^0.34.3"
+    "sharp": "^0.34.3",
+    "dotenv": "^16.4.5",
+    "cross-env": "^7.0.3"
   },
   "main": "content-server.js",
   "directories": {

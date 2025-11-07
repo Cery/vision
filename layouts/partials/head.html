@@ -813,4 +813,21 @@
       });
     });
     </script>
-<script src="{{ "js/image-handler.js" | relURL }}" defer></script>
+<!-- 提前提供全局图片错误处理占位，避免内联 onerror 报错 -->
+<script>
+  window.handleImageError = window.handleImageError || function(el) {
+    try {
+      var img = el && el.target ? el.target : el;
+      if (!img) return;
+      var fallback = '/images/placeholder.svg';
+      if (img.src !== fallback) {
+        console.warn('图片加载失败(预定义): ' + img.src + ', 使用占位: ' + fallback);
+        img.src = fallback;
+        img.alt = img.alt || '图片加载失败';
+        if (img.classList) { img.classList.add('img-error'); }
+      }
+    } catch (e) { console.error('预定义 handleImageError 异常:', e); }
+  };
+</script>
+<script src="{{ "js/image-handler.js" | relURL }}"></script>
+<script src="{{ "js/carousel-handler.js" | relURL }}"></script>

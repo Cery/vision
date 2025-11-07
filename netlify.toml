@@ -17,11 +17,15 @@
 
 [dev]
   port = 8888
-  targetPort = 1313
-  publish = "public"
+  targetPort = 1314
   autoLaunch = true
   # 自动启动 Hugo 开发服务器，统一运行端口与函数代理
-  command = "hugo server -D --port 1313"
+  command = "hugo server -D --port 1314 --baseURL /"
+
+  [dev.environment]
+    AIRTABLE_API_KEY = "pat39XNJcEyet48SK.83b699fc1a7d3fb3999d371ee4bc5f65ef62ffd4ab818d27eb575a15992ae016"
+    AIRTABLE_BASE_ID = "appuBWUPmqALV2455"
+    HUGO_BASEURL = "/"
 
 [functions]
   directory = "netlify/functions"
@@ -106,44 +110,15 @@
 #   to = "/admin/index.html"
 #   status = 200
 
-# 处理动态路由
-[[redirects]]
-  from = "/products/*"
-  to = "/products/:splat"
-  status = 200
-  force = false
-
-[[redirects]]
-  from = "/news/*"
-  to = "/news/:splat"
-  status = 200
-  force = false
-
-[[redirects]]
-  from = "/applications/*"
-  to = "/applications/:splat"
-  status = 200
-  force = false
-
-[[redirects]]
-  from = "/cases/*"
-  to = "/cases/:splat"
-  status = 200
-  force = false
-
-
-
-[[redirects]]
-  from = "/cooperation/*"
-  to = "/cooperation/:splat"
-  status = 200
-  force = false
+# 清理无必要的直通重写，避免本地开发代理中间层出现 500
+# 多页面静态站点无需对同路径进行 200 重写，Hugo Dev 直接处理即可
 
 # 处理其他路由
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# 取消 SPA 式兜底重定向，避免多页面站点在开发环境被错误路由导致 500
+# [[redirects]]
+#   from = "/*"
+#   to = "/index.html"
+#   status = 200
 
 # 移除有问题的.netlify身份验证重定向
 # [[redirects]]

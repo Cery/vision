@@ -1,11 +1,10 @@
 const Airtable = require('airtable');
 const { isRateLimited, validateDelete } = require('./security');
 
-const {
-  AIRTABLE_API_KEY,
-  AIRTABLE_BASE_ID,
-  AIRTABLE_QUOTES_TABLE = 'RequirementQuotes',
-} = process.env;
+// Support both naming conventions: *_API_KEY/*_BASE_ID and *_KEY/*_BASE
+const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY || process.env.AIRTABLE_KEY;
+const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE;
+const AIRTABLE_QUOTES_TABLE = process.env.AIRTABLE_QUOTES_TABLE || 'RequirementQuotes';
 
 exports.handler = async (event) => {
   try {

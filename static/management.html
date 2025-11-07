@@ -51,26 +51,32 @@
             fetch('/.netlify/functions/listRequirements')
                 .then(response => response.json())
                 .then(data => {
-                    requirementsList.innerHTML = data.items.map(req => `
+                    const items = Array.isArray(data) ? data : (data.items || []);
+                    requirementsList.innerHTML = items.map(req => `
                         <a href="#" class="list-group-item list-group-item-action" data-id="${req.RequirementID}">
-                            ${req.Summary || 'Untitled'}
+                            ${req.Title || req.RequirementID || '未命名需求'}
                         </a>
                     `).join('');
+                })
+                .catch(() => {
+                    requirementsList.innerHTML = '<div class="text-muted">无法加载需求列表，请检查 Netlify Functions 或 Airtable 配置。</div>';
                 });
 
             // Handle requirement selection
             requirementsList.addEventListener('click', e => {
                 e.preventDefault();
                 if (e.target.classList.contains('list-group-item')) {
+                    document.querySelectorAll('#requirementsList .list-group-item').forEach(el => el.classList.remove('active'));
+                    e.target.classList.add('active');
                     const requirementID = e.target.dataset.id;
                     selectedRequirement.textContent = `需求: ${e.target.textContent.trim()}`;
                     quotesPanel.style.display = 'block';
-                    loadQuotes(requirementID);
+                    window.loadQuotes(requirementID);
                 }
             });
 
             // Load quotes for a requirement
-            function loadQuotes(requirementID) {
+            window.loadQuotes = function loadQuotes(requirementID) {
                 fetch(`/.netlify/functions/listQuotes?RequirementID=${requirementID}`)
                     .then(response => response.json())
                     .then(data => {
@@ -93,6 +99,9 @@
                                 </td>
                             </tr>
                         `).join('');
+                    })
+                    .catch(() => {
+                        quotesList.innerHTML = '<tr><td colspan="6" class="text-danger">无法加载报价列表，请在 Netlify Dev 环境下访问或完成部署配置。</td></tr>';
                     });
             }
 
@@ -121,6 +130,10 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ quoteId, status }),
+            }).then(() => {
+                // 状态更新成功（可选：提示）
+            }).catch(() => {
+                alert('更新状态失败，请检查函数配置');
             });
         }
 
@@ -133,8 +146,11 @@
                     body: JSON.stringify({ quoteId }),
                 }).then(() => {
                     // Reload quotes
-                    const requirementID = document.querySelector('.list-group-item.active').dataset.id;
-                    loadQuotes(requirementID);
+                    const active = document.querySelector('#requirementsList .list-group-item.active');
+                    const requirementID = active ? active.dataset.id : '';
+                    if (requirementID) window.loadQuotes(requirementID);
+                }).catch(() => {
+                    alert('删除失败，请检查函数配置');
                 });
             }
         }
