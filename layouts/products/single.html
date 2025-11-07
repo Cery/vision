@@ -21,7 +21,7 @@
                             {{ end }}
                         {{ end }}
                         {{ if $mainImageSrc }}
-                        <img src="{{ $mainImageSrc | relURL }}" class="img-fluid rounded mb-3 main-product-image" alt="{{ $mainImageAlt }}" id="main-product-image">
+                        <img src="{{ if or (hasPrefix $mainImageSrc "http://") (hasPrefix $mainImageSrc "https://") }}{{ $mainImageSrc }}{{ else }}{{ $mainImageSrc | relURL }}{{ end }}" class="img-fluid rounded mb-3 main-product-image" alt="{{ $mainImageAlt }}" id="main-product-image">
                         {{ else }}
                         <img src="/images/products/default-product.jpg" class="img-fluid rounded mb-3 main-product-image" alt="主图占位图" id="main-product-image">
                         {{ end }}
@@ -36,21 +36,21 @@
                                     {{ if reflect.IsMap . }}
                                     <div class="col-3">
                                         <div class="thumbnail-container">
-                                            <img src="{{ .image | relURL }}"
+                                            <img src="{{ if or (hasPrefix .image "http://") (hasPrefix .image "https://") }}{{ .image }}{{ else }}{{ .image | relURL }}{{ end }}"
                                                  class="img-fluid rounded object-fit-cover thumbnail-image"
                                                  alt="{{ .alt | default "产品图片" }}"
-                                                 onclick="switchMainImage('{{ .image | relURL }}', '{{ .alt | default "产品图片" }}')"
-                                                 data-full-image="{{ .image | relURL }}">
+                                                 onclick="switchMainImage('{{ if or (hasPrefix .image "http://") (hasPrefix .image "https://") }}{{ .image }}{{ else }}{{ .image | relURL }}{{ end }}', '{{ .alt | default "产品图片" }}')"
+                                                 data-full-image="{{ if or (hasPrefix .image "http://") (hasPrefix .image "https://") }}{{ .image }}{{ else }}{{ .image | relURL }}{{ end }}">
                                         </div>
                                     </div>
                                     {{ else }}
                                     <div class="col-3">
                                         <div class="thumbnail-container">
-                                            <img src="{{ . | relURL }}"
+                                            <img src="{{ if or (hasPrefix . "http://") (hasPrefix . "https://") }}{{ . }}{{ else }}{{ . | relURL }}{{ end }}"
                                                  class="img-fluid rounded object-fit-cover thumbnail-image"
                                                  alt="产品图片"
-                                                 onclick="switchMainImage('{{ . | relURL }}', '产品图片')"
-                                                 data-full-image="{{ . | relURL }}">
+                                                 onclick="switchMainImage('{{ if or (hasPrefix . "http://") (hasPrefix . "https://") }}{{ . }}{{ else }}{{ . | relURL }}{{ end }}', '产品图片')"
+                                                 data-full-image="{{ if or (hasPrefix . "http://") (hasPrefix . "https://") }}{{ . }}{{ else }}{{ . | relURL }}{{ end }}">
                                         </div>
                                     </div>
                                     {{ end }}

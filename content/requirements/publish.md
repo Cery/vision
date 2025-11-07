@@ -1,13 +1,13 @@
 ---
-title: "需求中心"
+title: "发布需求"
 description: "发布和浏览工业内窥镜设备需求，专业的供需对接平台"
 date: 2025-01-15T10:00:00+08:00
 draft: false
 layout: "single"
 type: "requirements"
-seo_title: "工业内窥镜需求中心 - 专业供需对接平台"
-seo_description: "Vision NDT需求中心提供工业内窥镜设备需求发布和浏览服务，支持电子内窥镜、光纤内窥镜、光学内窥镜等产品类型的专业对接。"
-seo_keywords: ["需求中心", "工业内窥镜", "设备需求", "供需对接", "技术方案"]
+seo_title: "工业内窥镜需求市场 - 发布需求与供需对接"
+seo_description: "Vision NDT需求市场提供工业内窥镜设备需求发布与浏览服务，支持电子、光纤、光学内窥镜等产品类型的专业对接。"
+seo_keywords: ["需求市场", "工业内窥镜", "设备需求", "供需对接", "技术方案"]
 ---
 
 <div id="app" class="requirements-center-app">
@@ -17,7 +17,7 @@ seo_keywords: ["需求中心", "工业内窥镜", "设备需求", "供需对接"
             <div class="row align-items-center">
                 <div class="col-md-8">
                     <h1 class="mb-1">
-                        <i class="bi bi-building me-2"></i>工业内窥镜需求中心
+                        <i class="bi bi-building me-2"></i>工业内窥镜需求市场
                     </h1>
                     <p class="text-muted mb-0">专业的设备需求发布与供需对接平台</p>
                 </div>

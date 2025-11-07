@@ -20,21 +20,26 @@
   targetPort = 1313
   publish = "public"
   autoLaunch = true
+  # 自动启动 Hugo 开发服务器，统一运行端口与函数代理
+  command = "hugo server -D --port 1313"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
 
 # HTTP头部设置 - 确保正确的编码
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Type = "text/html; charset=utf-8"
     X-Content-Type-Options = "nosniff"
 
 [[headers]]
-  for = "/*.css"
+  for = "/css/*"
   [headers.values]
     Content-Type = "text/css; charset=utf-8"
 
 [[headers]]
-  for = "/*.js"
+  for = "/js/*"
   [headers.values]
     Content-Type = "application/javascript; charset=utf-8"
 
@@ -87,7 +92,7 @@
     X-Frame-Options = "DENY"
     X-XSS-Protection = "1; mode=block"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://identity.netlify.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; font-src 'self' data: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; connect-src 'self' https://identity.netlify.com https://api.netlify.com"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://identity.netlify.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://hm.baidu.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://picsum.photos https://fastly.picsum.photos; font-src 'self' data: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; connect-src 'self' https://identity.netlify.com https://api.netlify.com"
 
 # Identity and Git Gateway Redirects
 [[redirects]]
@@ -153,7 +158,7 @@
     X-Frame-Options = "DENY"
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
-    Content-Security-Policy = "default-src 'self' https://identity.netlify.com https://unpkg.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://identity.netlify.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: https://unpkg.com; font-src 'self' data: https://unpkg.com; connect-src 'self' https://identity.netlify.com https://api.netlify.com"
+    Content-Security-Policy = "default-src 'self' https://identity.netlify.com https://unpkg.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://identity.netlify.com https://unpkg.com https://hm.baidu.com; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: https://unpkg.com https://picsum.photos https://fastly.picsum.photos; font-src 'self' data: https://unpkg.com; connect-src 'self' https://identity.netlify.com https://api.netlify.com"
 
 [[headers]]
   for = "/*"

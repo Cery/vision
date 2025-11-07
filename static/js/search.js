@@ -92,7 +92,9 @@ const SearchModule = {
             const results = await response.json();
             this.displayLiveSearchResults(results);
         } catch (error) {
-            console.error('搜索请求失败:', error);
+            if (window.DEBUG_SEARCH === true) {
+                console.warn('搜索请求失败:', error);
+            }
         }
     },
 
@@ -219,7 +221,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.index = this.preprocessIndex(window.searchIndex);
                 this.isReady = true;
                 this.onReadyCallbacks.forEach(cb => cb());
-                console.log(`搜索引擎已就绪，索引了 ${this.index.length} 个项目`);
+                if (window.DEBUG_SEARCH === true) {
+                    console.log(`搜索引擎已就绪，索引了 ${this.index.length} 个项目`);
+                }
             } else {
                 setTimeout(() => this.init(), 100);
             }
@@ -431,12 +435,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // 全局搜索管理器实例
     window.visndtSearchManager = new HugoSearchManager();
 
-    // 页面加载后初始化搜索管理器
+    // 页面加载后初始化搜索管理器（避免无意义的错误日志）
     document.addEventListener('DOMContentLoaded', () => {
-        const initResult = window.visndtSearchManager.init();
-        if (!initResult) {
-            console.error('搜索管理器初始化失败！');
-        }
+        // 构造函数已触发初始化，这里仅在就绪后做轻量日志或后续处理
+        window.visndtSearchManager.onReady(() => {
+            // console.log('搜索管理器已准备就绪');
+        });
     });
 })();
 

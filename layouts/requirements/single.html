@@ -1,0 +1,59 @@
+{{ define "main" }}
+<div class="container my-4">
+  <div class="card">
+    <div class="card-body">
+      <h3 class="mb-2">{{ .Params.Title | default .Title }}</h3>
+      <p class="text-muted">{{ .Params.PublicPreview }}</p>
+
+      <!-- 私密信息区域，初始隐藏 -->
+      <div id="privateInfo" style="display:none;">
+        <hr>
+        <h5 class="mb-3">发布方信息</h5>
+        <p>公司：<span id="pub-company"></span></p>
+        <p>联系人：<span id="pub-contact"></span></p>
+        <p>电话：<span id="pub-phone"></span></p>
+      </div>
+
+      <div class="mt-3">
+        <button class="btn btn-primary" onclick="requestViewPrivateInfo()">查看完整信息 / 在线报价</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 密码模态 -->
+{{ partial "password-modal.html" . }}
+
+<script>
+  const requirementID = "{{ .Params.RequirementID }}";
+
+  // 展示密码输入弹窗
+  function requestViewPrivateInfo() {
+    if (typeof showPasswordModal !== 'function') {
+      alert('密码组件未加载，请稍后再试');
+      return;
+    }
+    showPasswordModal(async (inputPwd) => {
+      try {
+        const resp = await fetch('/.netlify/functions/verifyPassword', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ requirementID, password: inputPwd })
+        });
+        const res = await resp.json();
+        if (res && res.valid) {
+          document.getElementById('pub-company').textContent = res.data?.company || '—';
+          document.getElementById('pub-contact').textContent = res.data?.contact || '—';
+          document.getElementById('pub-phone').textContent = res.data?.phone || '—';
+          document.getElementById('privateInfo').style.display = 'block';
+        } else {
+          alert('密码错误或已过期。');
+        }
+      } catch (e) {
+        console.error(e);
+        alert('验证服务暂不可用，请稍后再试');
+      }
+    });
+  }
+</script>
+{{ end }}

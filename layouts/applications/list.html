@@ -23,7 +23,7 @@
                     </div>
                     {{ end }}
                     {{ with .Params.image }}
-                    <img src="{{ . | relURL }}" alt="{{ $.Title }}" class="img-fluid">
+                    <img src="{{ if or (hasPrefix . "http://") (hasPrefix . "https://") }}{{ . }}{{ else }}{{ . | relURL }}{{ end }}" alt="{{ $.Title }}" class="img-fluid">
                     {{ else }}
                     <img src="/images/application/default-application.jpg" alt="{{ .Title }}" class="img-fluid">
                     {{ end }}
@@ -333,4 +333,4 @@
     }
 }
 </style>
-{{ end }} 
+{{ end }}

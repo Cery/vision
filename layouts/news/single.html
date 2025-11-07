@@ -71,7 +71,7 @@
                     <!-- 特色图片 -->
                     <div class="featured-image-container mb-5">
                         {{ with .Params.featured_image }}
-                        <img src="{{ . | relURL }}" class="img-fluid rounded shadow featured-image" alt="{{ $.Title }}">
+                        <img src="{{ if or (hasPrefix . "http://") (hasPrefix . "https://") }}{{ . }}{{ else }}{{ . | relURL }}{{ end }}" class="img-fluid rounded shadow featured-image" alt="{{ $.Title }}">
                         {{ else }}
                         <img src="https://picsum.photos/800/450?random=main-{{ .File.UniqueID }}" class="img-fluid rounded shadow featured-image" alt="{{ .Title }}">
                         {{ end }}
@@ -189,7 +189,7 @@
                                 <div class="related-article-item p-3 border-bottom">
                                     <div class="d-flex">
                                         {{ with .Params.featured_image }}
-                                        <img src="{{ . | relURL }}" class="me-3 rounded related-thumb" alt="{{ $.Title }}">
+                                <img src="{{ if or (hasPrefix . "http://") (hasPrefix . "https://") }}{{ . }}{{ else }}{{ . | relURL }}{{ end }}" class="me-3 rounded related-thumb" alt="{{ $.Title }}">
                                         {{ else }}
                                         <img src="https://picsum.photos/120/80?random=related-{{ .File.UniqueID }}" class="me-3 rounded related-thumb" alt="{{ .Title }}">
                                         {{ end }}

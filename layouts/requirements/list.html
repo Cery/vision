@@ -1,473 +1,494 @@
 {{ define "main" }}
-<div class="container py-5">
-    {{ partial "breadcrumbs.html" . }}
-    <div class="row">
-        <!-- 左侧：需求发布表单 -->
-        <div class="col-lg-7 mb-4 mb-lg-0">
-            <div class="card shadow-sm">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h4 class="card-title mb-0">
-                            <i class="fas fa-plus-circle text-primary me-2"></i>发布设备需求
-                        </h4>
-                        <span class="badge bg-success">免费发布</span>
-                    </div>
-                    
-                    <form id="requirementForm" class="needs-validation" novalidate>
-                        <!-- 基本信息 -->
-                        <div class="card mb-4">
-                            <div class="card-header bg-light">
-                                <h5 class="card-title mb-0">
-                                    <i class="fas fa-user me-2"></i>基本信息
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="contactName" class="form-label">联系人姓名 <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="contactName" name="contactName" placeholder="请输入联系人姓名" required>
-                                        <div class="invalid-feedback">请输入联系人姓名</div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="contactPhone" class="form-label">联系电话 <span class="text-danger">*</span></label>
-                                        <input type="tel" class="form-control" id="contactPhone" name="contactPhone" placeholder="请输入11位手机号码" pattern="[0-9]{11}" required>
-                                        <div class="invalid-feedback">请输入正确的11位手机号码</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="companyName" class="form-label">公司名称</label>
-                                        <input type="text" class="form-control" id="companyName" name="companyName" placeholder="请输入公司全称">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="department" class="form-label">所属部门</label>
-                                        <select class="form-select" id="department" name="department">
-                                            <option value="">请选择部门</option>
-                                            <option value="研发部">研发部</option>
-                                            <option value="质量部">质量部</option>
-                                            <option value="生产部">生产部</option>
-                                            <option value="技术部">技术部</option>
-                                            <option value="工程部">工程部</option>
-                                            <option value="检测部">检测部</option>
-                                            <option value="维修部">维修部</option>
-                                            <option value="采购部">采购部</option>
-                                            <option value="其他">其他</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<div class="container my-4">
+  <div class="row g-4">
+    <!-- 左栏：发布需求（窄） -->
+    <div class="col-lg-4">
+      {{ partial "requirement-form.html" . }}
+    </div>
 
-                        <!-- 产品类型 -->
-                        <div class="card mb-4">
-                            <div class="card-header bg-light">
-                                <h5 class="card-title mb-0">
-                                    <i class="fas fa-cogs me-2"></i>产品类型 <span class="text-danger">*</span>
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row g-3">
-                                    <div class="col-md-4">
-                                        <input type="radio" class="btn-check" name="productType" id="electronic" value="electronic" required>
-                                        <label class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center" for="electronic" style="min-height: 100px;">
-                                            <i class="fas fa-video mb-2" style="font-size: 2rem;"></i>
-                                            <strong>电子内窥镜</strong>
-                                            <small class="text-muted">数字成像，高精度</small>
-                                        </label>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <input type="radio" class="btn-check" name="productType" id="fiber" value="fiber" required>
-                                        <label class="btn btn-outline-warning w-100 h-100 d-flex flex-column align-items-center justify-content-center" for="fiber" style="min-height: 100px;">
-                                            <i class="fas fa-project-diagram mb-2" style="font-size: 2rem;"></i>
-                                            <strong>光纤内窥镜</strong>
-                                            <small class="text-muted">柔性检测，复杂路径</small>
-                                        </label>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <input type="radio" class="btn-check" name="productType" id="optical" value="optical" required>
-                                        <label class="btn btn-outline-info w-100 h-100 d-flex flex-column align-items-center justify-content-center" for="optical" style="min-height: 100px;">
-                                            <i class="fas fa-eye mb-2" style="font-size: 2rem;"></i>
-                                            <strong>光学内窥镜</strong>
-                                            <small class="text-muted">直线检测，高清成像</small>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="invalid-feedback">请选择产品类型</div>
-                            </div>
-                        </div>
-
-                        <!-- 技术参数（动态显示） -->
-                        <div class="card mb-4" id="technicalParams" style="display: none;">
-                            <div class="card-header bg-light">
-                                <h5 class="card-title mb-0">
-                                    <i class="fas fa-sliders-h me-2"></i>技术参数
-                                </h5>
-                            </div>
-                            <div class="card-body" id="parameterFields">
-                                <!-- 动态生成的参数字段 -->
-                            </div>
-                        </div>
-
-                        <!-- 需求描述 -->
-                        <div class="card mb-4">
-                            <div class="card-header bg-light">
-                                <h5 class="card-title mb-0">
-                                    <i class="fas fa-file-alt me-2"></i>需求描述 <span class="text-danger">*</span>
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <textarea class="form-control" id="description" name="description" rows="4" 
-                                    placeholder="请详细描述您的检测需求、应用环境、检测对象等..." required></textarea>
-                                <div class="invalid-feedback">请描述您的具体需求</div>
-                            </div>
-                        </div>
-
-                        <!-- 预算和时间 -->
-                        <div class="card mb-4">
-                            <div class="card-header bg-light">
-                                <h5 class="card-title mb-0">
-                                    <i class="fas fa-dollar-sign me-2"></i>预算与时间
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label for="budget" class="form-label">预算范围</label>
-                                        <select class="form-select" id="budget" name="budget">
-                                            <option value="">请选择预算范围</option>
-                                            <option value="1-5万">1-5万元</option>
-                                            <option value="5-10万">5-10万元</option>
-                                            <option value="10-20万">10-20万元</option>
-                                            <option value="20-50万">20-50万元</option>
-                                            <option value="50万以上">50万元以上</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="deliveryTime" class="form-label">期望交付时间</label>
-                                        <select class="form-select" id="deliveryTime" name="deliveryTime">
-                                            <option value="">请选择交付时间</option>
-                                            <option value="1周内">1周内</option>
-                                            <option value="2周内">2周内</option>
-                                            <option value="1个月内">1个月内</option>
-                                            <option value="2个月内">2个月内</option>
-                                            <option value="3个月内">3个月内</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 提交状态显示 -->
-                        <div id="submitStatus" class="alert" style="display: none;" role="alert">
-                            <div id="submitMessage"></div>
-                        </div>
-
-                        <!-- 提交按钮 -->
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
-                                <span id="submitText">
-                                    <i class="fas fa-paper-plane me-2"></i>发布需求
-                                </span>
-                                <span id="submitSpinner" class="spinner-border spinner-border-sm ms-2" style="display: none;" role="status" aria-hidden="true"></span>
-                            </button>
-                            <small class="text-muted text-center mt-2">
-                                <i class="fas fa-shield-alt me-1"></i>
-                                您的信息将被严格保密，仅用于需求匹配服务
-                            </small>
-                        </div>
-                    </form>
+    <!-- 右栏：需求列表（宽） -->
+    <div class="col-lg-8">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h2 class="mb-0 d-flex align-items-center gap-2">
+          <i class="fa-solid fa-store text-primary"></i>
+          需求市场
+        </h2>
+      </div>
+      <!-- 顶部筛选与搜索 -->
+      <div class="row g-3 mb-3 align-items-center">
+        <div class="col-md-4">
+          <div class="input-group">
+            <span class="input-group-text"><i class="fa-solid fa-list"></i></span>
+            <select id="primaryFilter" class="form-select">
+              <option value="">全部分类</option>
+              <option value="电子内窥镜">电子内窥镜</option>
+              <option value="光纤内窥镜">光纤内窥镜</option>
+              <option value="光学内窥镜">光学内窥镜</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="input-group">
+            <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input type="text" id="requirementsSearch" class="form-control" placeholder="搜索编号或标题，如 REQ-2025 或 电子内窥镜">
+            <button class="btn btn-outline-secondary" type="button" id="clearSearchBtn">清除</button>
+          </div>
+        </div>
+      </div>
+      <div id="requirementsList">
+        {{ if .Site.Data.requirements }}
+          {{ range .Site.Data.requirements }}
+          <div class="card mb-3 requirement-card" style="min-height: 160px;"
+               data-id="{{ .RequirementID }}"
+               data-status="{{ .Status }}"
+               data-title="{{ .Title | lower }}"
+               data-primary="{{ .PrimaryCategory }}"
+               data-secondary="{{ .SecondaryCategory }}"
+               data-dept=""
+               data-budget="{{ .BudgetRange }}"
+               data-published="{{ .PublishedAt }}"
+               data-preview="{{ .PublicPreview }}"
+               data-contact-public="{{ .ContactPublic }}"
+               data-contact-name="{{ .ContactName }}"
+               data-contact-phone="{{ .ContactPhone }}"
+               data-contact-company="{{ .ContactCompany }}"
+               data-progress="{{ with .Progress }}{{ . }}{{ else }}发布中{{ end }}"
+               data-params='{{ .Parameters | jsonify }}'>
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div class="me-3">
+                  <div class="mb-2">
+                    <span class="badge bg-light text-dark border me-2"><i class="fa-solid fa-hashtag me-1"></i>{{ .RequirementID }}</span>
+                    <span class="badge bg-info text-dark me-2"><i class="fa-solid fa-layer-group me-1"></i>{{ .PrimaryCategory }}</span>
+                    {{ with .BudgetRange }}<span class="badge bg-success me-2"><i class="fa-solid fa-coins me-1"></i>{{ . }}</span>{{ end }}
+                    <span class="badge {{ if eq .Status "公开" }}bg-success{{ else }}bg-warning{{ end }}"><i class="fa-solid fa-bullhorn me-1"></i>{{ .Status }}</span>
+                    <span class="badge {{ if (eq (or .Progress "发布中") "发布中") }}bg-primary{{ else if (eq .Progress "接洽中") }}bg-warning{{ else }}bg-secondary{{ end }}"><i class="fa-solid fa-flag me-1"></i>{{ with .Progress }}{{ . }}{{ else }}发布中{{ end }}</span>
+                  </div>
+                  <h5 class="mb-1"><i class="fa-solid fa-file-lines me-1 text-secondary"></i>{{ .Title }}</h5>
+                  <p class="text-muted mb-2">{{ .PublicPreview }}</p>
                 </div>
-            </div>
-        </div>
-
-        <!-- 右侧：需求展示列表 -->
-        <div class="col-lg-5">
-            <div class="card shadow-sm">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h4 class="card-title mb-0">
-                            <i class="fas fa-list-ul text-primary me-2"></i>最新需求
-                        </h4>
-                        <div class="d-flex align-items-center gap-2">
-                            <select class="form-select form-select-sm" id="typeFilter" style="width: auto;">
-                                <option value="">所有类型</option>
-                                <option value="electronic">电子内窥镜</option>
-                                <option value="fiber">光纤内窥镜</option>
-                                <option value="optical">光学内窥镜</option>
-                            </select>
-                            <span class="badge bg-primary">
-                                <span id="activeRequirements">0</span> 活跃
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- 需求列表 -->
-                    <div id="requirementsList" class="requirements-list">
-                        <div class="loading-state text-center py-4">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">加载中...</span>
-                            </div>
-                            <p class="mt-2 text-muted">正在加载需求信息...</p>
-                        </div>
-                    </div>
-
-                    <!-- 底部提示 -->
-                    <div class="mt-4 text-center">
-                        <div class="alert alert-info">
-                            <small>
-                                <i class="fas fa-info-circle me-1"></i>
-                                需求信息每日更新，供应商可联系平台获取详细信息
-                            </small>
-                        </div>
-                    </div>
+                <div class="text-end">
+                  {{ if .PublishedAt }}<small class="text-muted" data-time="{{ .PublishedAt }}"></small>{{ end }}
+                  <button class="btn btn-sm btn-outline-primary show-detail"><i class="fa-solid fa-eye me-1"></i>查看详情</button>
                 </div>
+              </div>
             </div>
-        </div>
+          </div>
+          {{ end }}
+        {{ else }}
+          <div class="alert alert-info">暂时没有需求数据。请稍后再试或提交您的需求。</div>
+        {{ end }}
+      </div>
+      <!-- 统一增强分页 -->
+      {{ partial "enhanced-pagination.html" (dict "context" . "containerId" "requirementsList" "itemsPerPage" 6 "itemType" "需求") }}
+      <!-- 客户端实时拉取（可选） -->
+      <div class="mt-3">
+        <button class="btn btn-sm btn-outline-secondary" onclick="refreshRequirementsList()"><i class="fa-solid fa-rotate me-1"></i>实时拉取最新需求</button>
+      </div>
     </div>
+  </div>
 </div>
+<script>
+// 从 Netlify Function 拉取最新需求列表（实时）
+async function listRequirements() {
+  try {
+    const res = await fetch('/.netlify/functions/listRequirements');
+    if (!res.ok) throw new Error('网络错误');
+    const data = await res.json();
+    return Array.isArray(data) ? data : [];
+  } catch (e) {
+    console.error('拉取失败', e);
+    return [];
+  }
+}
 
-<!-- 需求详情模态框 -->
-<div class="modal fade" id="requirementModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-file-alt me-2"></i>需求详情
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+async function refreshRequirementsList() {
+  const listEl = document.getElementById('requirementsList');
+  const items = await listRequirements();
+  if (!items.length) {
+    alert('暂无实时数据或服务未配置。');
+    return;
+  }
+  listEl.innerHTML = items.map(item => `
+    <div class="card mb-3 requirement-card" style="min-height: 160px;" data-id="${item.RequirementID}" data-status="${item.Status}" data-title="${(item.Title || '').toLowerCase()}" data-primary="${item.PrimaryCategory || ''}" data-secondary="${item.SecondaryCategory || ''}" data-dept="" data-budget="${item.BudgetRange || ''}" data-published="${item.PublishedAt || ''}" data-preview="${item.PublicPreview || ''}" data-contact-public="${item.ContactPublic || false}" data-contact-name="${item.ContactName || ''}" data-contact-phone="${item.ContactPhone || ''}" data-contact-company="${item.ContactCompany || ''}" data-progress="${item.Progress || '发布中'}" data-params='${JSON.stringify(item.Parameters || {})}'>
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start">
+          <div class="me-3">
+            <div class="mb-2">
+              <span class="badge bg-light text-dark border me-2"><i class="fa-solid fa-hashtag me-1"></i>${item.RequirementID}</span>
+              <span class="badge bg-info text-dark me-2"><i class="fa-solid fa-layer-group me-1"></i>${item.PrimaryCategory || '—'}</span>
+              ${item.BudgetRange ? `<span class=\"badge bg-success me-2\"><i class=\"fa-solid fa-coins me-1\"></i>${item.BudgetRange}</span>` : ''}
+              <span class="badge ${(item.Status==='公开')?'bg-success':'bg-warning'}"><i class="fa-solid fa-bullhorn me-1"></i>${item.Status || '—'}</span>
+              <span class="badge ${((item.Progress||'发布中')==='发布中')?'bg-primary':((item.Progress==='接洽中')?'bg-warning':'bg-secondary')}"><i class="fa-solid fa-flag me-1"></i>${item.Progress||'发布中'}</span>
             </div>
-            <div class="modal-body" id="requirementModalBody">
-                <!-- 动态内容 -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" onclick="contactRequirement()">
-                    <i class="fas fa-phone me-1"></i>联系客户
-                </button>
-            </div>
+            <h5 class="mb-1"><i class="fa-solid fa-file-lines me-1 text-secondary"></i>${item.Title || '未命名需求'}</h5>
+            <p class="text-muted mb-2">${item.PublicPreview || ''}</p>
+          </div>
+          <div class="text-end">
+            ${item.PublishedAt ? `<small class=\"text-muted\" data-time=\"${item.PublishedAt}\"></small>` : ''}
+            <button class="btn btn-sm btn-outline-primary show-detail"><i class="fa-solid fa-eye me-1"></i>查看详情</button>
+          </div>
         </div>
+      </div>
     </div>
-</div>
+  `).join('');
+  applyFiltersAndPaginate();
+  bindRequirementCardEvents();
+}
 
-<!-- 成功提交模态框 -->
-<div class="modal fade" id="successModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title">
-                    <i class="fas fa-check-circle me-2"></i>需求提交成功
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body" id="successModalBody">
-                <!-- 动态内容 -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" onclick="window.open('/requirements/my', '_blank')">
-                    <i class="fas fa-search me-1"></i>查询状态
-                </button>
-            </div>
+// 搜索过滤（按编号/标题）
+// 筛选 + 分页联动
+let allCards = [];
+let filteredCards = [];
+function applyFiltersAndPaginate() {
+  const q = (document.getElementById('requirementsSearch')?.value || '').trim().toLowerCase();
+  const primary = document.getElementById('primaryFilter')?.value || '';
+  allCards = Array.from(document.querySelectorAll('.requirement-card'));
+  filteredCards = allCards.filter(card => {
+    const id = (card.dataset.id || '').toLowerCase();
+    const title = (card.dataset.title || '').toLowerCase();
+    const pcat = card.dataset.primary || '';
+    const matchText = !q || id.includes(q) || title.includes(q);
+    const matchPrimary = !primary || pcat === primary;
+    return matchText && matchPrimary;
+  });
+  initEnhancedPagination('requirementsList', 6, '需求');
+  updateEnhancedPagination('requirementsList', filteredCards, 1);
+  showCurrentPage();
+}
+function showCurrentPage() {
+  const config = window.EnhancedPagination['requirementsList'];
+  if (!config) return;
+  const start = (config.currentPage - 1) * config.itemsPerPage;
+  const end = start + config.itemsPerPage;
+  allCards.forEach(c => c.style.display = 'none');
+  filteredCards.slice(start, end).forEach(c => c.style.display = '');
+}
+
+document.getElementById('requirementsSearch')?.addEventListener('input', applyFiltersAndPaginate);
+document.getElementById('clearSearchBtn')?.addEventListener('click', () => {
+  const input = document.getElementById('requirementsSearch');
+  if (input) input.value = '';
+  applyFiltersAndPaginate();
+});
+document.getElementById('primaryFilter')?.addEventListener('change', applyFiltersAndPaginate);
+document.addEventListener('enhancedPaginationChange', (e) => {
+  if (e.detail?.containerId === 'requirementsList') {
+    showCurrentPage();
+  }
+});
+
+// 初始加载时应用筛选与分页，并绑定事件
+document.addEventListener('DOMContentLoaded', () => {
+  applyFiltersAndPaginate();
+  bindRequirementCardEvents();
+});
+
+// 绑定卡片事件与时间显示
+function bindRequirementCardEvents() {
+  document.querySelectorAll('.requirement-card .show-detail').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const card = e.target.closest('.requirement-card');
+      openRequirementModal(card);
+    });
+  });
+
+  document.querySelectorAll('.requirement-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (!e.target.closest('.show-detail')) {
+        openRequirementModal(card);
+      }
+    });
+  });
+
+  document.querySelectorAll('[data-time]').forEach(el => {
+    const iso = el.getAttribute('data-time');
+    if (!iso) return;
+    el.textContent = getTimeAgo(iso);
+  });
+}
+
+function getTimeAgo(iso) {
+  const now = new Date();
+  const t = new Date(iso);
+  const diffMs = now - t;
+  const days = Math.floor(diffMs / 86400000);
+  const hours = Math.floor((diffMs % 86400000) / 3600000);
+  if (days > 0) return `${days}天前`;
+  if (hours > 0) return `${hours}小时前`;
+  const mins = Math.floor((diffMs % 3600000) / 60000);
+  return `${mins}分钟前`;
+}
+
+function openRequirementModal(card) {
+  if (!card) return;
+  const data = {
+    id: card.dataset.id,
+    title: card.dataset.title,
+    primary: card.dataset.primary,
+    secondary: card.dataset.secondary,
+    dept: card.dataset.dept,
+    budget: card.dataset.budget,
+    status: card.dataset.status,
+    progress: card.dataset.progress || '发布中',
+    published: card.dataset.published,
+    preview: card.dataset.preview,
+    contactPublic: card.dataset.contactPublic === 'true',
+    contactName: card.dataset.contactName,
+    contactPhone: card.dataset.contactPhone,
+    contactCompany: card.dataset.contactCompany,
+    params: {}
+  };
+  try { data.params = JSON.parse(card.dataset.params || '{}'); } catch(e){}
+
+  const body = document.getElementById('requirementModalBody');
+  const modalEl = document.getElementById('requirementModal');
+  if (!body || !modalEl) return;
+
+  body.innerHTML = `
+    <div class="row mb-2">
+      <div class="col-md-6"><strong>需求编号：</strong>${data.id}</div>
+      <div class="col-md-6"><strong>发布时间：</strong>${new Date(data.published || Date.now()).toLocaleString()}</div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-md-6"><strong>产品类型：</strong>${data.primary}${data.secondary ? ' / '+data.secondary : ''}</div>
+      <div class="col-md-6"><strong>预算范围：</strong><span class="text-success">${data.budget || '面议'}</span></div>
+    </div>
+    <!-- 取消部门显示 -->
+    <div class="mb-3">
+      <strong>需求描述：</strong>
+      <p class="mt-2 p-3 bg-light rounded">${data.preview || '暂无描述'}</p>
+    </div>
+    <div class="mb-3">
+      <strong>技术参数：</strong>
+      <div class="mt-2 row">
+        ${renderParams(data.params)}
+      </div>
+    </div>
+    ${renderContactBlock(data)}
+    ${renderTimeline(data)}
+    ${renderQuoteForm(data)}
+  `;
+
+  const bsModal = new bootstrap.Modal(modalEl);
+  bsModal.show();
+}
+
+function renderParams(params) {
+  const map = {
+    ScreenSize: '主机屏幕',
+    BatteryLife: '待机时长',
+    ProbeDiameter: '探头直径',
+    Resolution: '像素/分辨率',
+    ViewingDirection: '视向',
+    LightSource: '光源',
+    Guidance: '导向',
+    WorkingLength: '工作长度',
+    FieldOfView: '视场角'
+  };
+  const items = Object.keys(params || {}).filter(k => params[k]).map(k => {
+    const label = map[k] || k;
+    return `<div class='col-md-6 mb-2'><strong>${label}：</strong>${params[k]}</div>`;
+  });
+  return items.length ? items.join('') : '<p class="text-muted">无特殊技术要求</p>';
+}
+
+function renderContactBlock(data) {
+  // 所有联系方式默认需要查看密码验证后显示
+  return `
+    <div class="alert alert-warning" id="contact-block">
+      <h6 class="mb-2"><i class="fa-solid fa-lock me-1"></i> 查看联系方式（需查看密码）</h6>
+      <div class="input-group mb-2" style="max-width: 360px;">
+        <span class="input-group-text"><i class="fa-solid fa-key"></i></span>
+        <input type="text" class="form-control" id="viewPasswordInput" placeholder="输入查看密码">
+        <button class="btn btn-primary" onclick="verifyRequirementPassword('${data.id}')">验证</button>
+      </div>
+      <div class="text-muted small">发布方式：${data.status}；进度：${data.progress}</div>
+      <div id="contactUnlocked" style="display:none;" class="mt-3">
+        <div class="alert alert-info mb-0">
+          <h6><i class="fa-solid fa-address-card me-1"></i> 联系方式</h6>
+          <div class="row">
+            <div class="col-md-6">联系人：<span id="cName">${data.contactName || '—'}</span></div>
+            <div class="col-md-6">电话：<span id="cPhone">${data.contactPhone || '—'}</span></div>
+          </div>
+          ${data.contactCompany ? `<div>公司：<span id="cCompany">${data.contactCompany}</span></div>` : ''}
         </div>
+        <div class="mt-2">
+          <button class="btn btn-outline-secondary btn-sm" onclick="loadQuotes('${data.id}')">
+            <i class="fa-solid fa-list me-1"></i> 查看报价列表
+          </button>
+        </div>
+        <div id="quotesList" class="mt-2"></div>
+      </div>
     </div>
-</div>
-<!-- 重复的模态框定义已移除 -->
-
-<!-- 重复的成功模态框定义已移除 -->
-
-<style>
-.product-type-btn {
-    min-height: 120px;
-    transition: all 0.3s ease;
+  `;
 }
 
-.product-type-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.btn-check:checked + .product-type-btn {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,123,255,0.3);
-}
-
-.requirements-list {
-    max-height: 600px;
-    overflow-y: auto;
-}
-
-.requirement-item {
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.requirement-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    border-color: #007bff;
-}
-
-.requirement-item.featured {
-    border-left: 4px solid #ffc107;
-    background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
-}
-
-.requirement-item.urgent {
-    border-left: 4px solid #dc3545;
-    background: linear-gradient(135deg, #ffe6e6 0%, #ffffff 100%);
-}
-
-.requirement-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 0.5rem;
-}
-
-.requirement-meta {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-bottom: 1rem;
-}
-
-.requirement-meta .badge {
-    font-size: 0.75rem;
-    padding: 0.4rem 0.6rem;
-    border-radius: 0.375rem;
-    font-weight: 500;
-}
-
-/* 修复标签背景色和文字颜色 */
-.requirement-meta .badge.bg-primary {
-    background-color: #0d6efd !important;
-    color: #ffffff !important;
-}
-
-.requirement-meta .badge.bg-success {
-    background-color: #198754 !important;
-    color: #ffffff !important;
-}
-
-.requirement-meta .badge.bg-info {
-    background-color: #0dcaf0 !important;
-    color: #000000 !important;
-}
-
-.requirement-meta .badge.bg-warning {
-    background-color: #ffc107 !important;
-    color: #000000 !important;
-}
-
-.requirement-meta .badge.bg-danger {
-    background-color: #dc3545 !important;
-    color: #ffffff !important;
-}
-
-/* 确保标签文字可见性 */
-.requirement-meta .badge {
-    display: inline-block;
-    min-width: 60px;
-    text-align: center;
-    margin-right: 0.5rem;
-    margin-bottom: 0.25rem;
-    border: 1px solid transparent;
-    transition: all 0.2s ease-in-out;
-}
-
-/* 悬停效果 */
-.requirement-meta .badge:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-/* 确保在任何背景下都可见 */
-.requirement-meta .badge.bg-primary {
-    border-color: #0a58ca;
-}
-
-.requirement-meta .badge.bg-success {
-    border-color: #146c43;
-}
-
-.requirement-meta .badge.bg-info {
-    border-color: #087990;
-}
-
-.requirement-meta .badge.bg-warning {
-    border-color: #997404;
-}
-
-.requirement-meta .badge.bg-danger {
-    border-color: #b02a37;
-}
-
-.requirement-description {
-    color: #6c757d;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    margin-bottom: 1rem;
-}
-
-.requirement-footer {
-    display: flex;
-    justify-content: between;
-    align-items: center;
-    padding-top: 1rem;
-    border-top: 1px solid #f0f0f0;
-}
-
-.requirement-id {
-    font-size: 0.8rem;
-    color: #6c757d;
-}
-
-.contact-btn {
-    font-size: 0.85rem;
-    padding: 0.4rem 0.8rem;
-}
-
-/* 滚动条样式 */
-.requirements-list::-webkit-scrollbar {
-    width: 6px;
-}
-
-.requirements-list::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
-}
-
-.requirements-list::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 3px;
-}
-
-.requirements-list::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
-}
-
-/* 动画效果 */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
+async function verifyRequirementPassword(requirementID) {
+  const pw = document.getElementById('viewPasswordInput')?.value || '';
+  if (!pw) { alert('请输入查看密码'); return; }
+  try {
+    const resp = await fetch('/.netlify/functions/verifyPassword', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ requirementID: requirementID, password: pw })
+    });
+    const data = await resp.json();
+    if (data && data.valid) {
+      // 显示联系方式
+      document.getElementById('contactUnlocked')?.setAttribute('style','');
+      if (data.data) {
+        document.getElementById('cName')?.replaceChildren(document.createTextNode(data.data.contact || ''));
+        document.getElementById('cPhone')?.replaceChildren(document.createTextNode(data.data.phone || ''));
+        const cc = document.getElementById('cCompany'); if (cc) cc.replaceChildren(document.createTextNode(data.data.company || ''));
+      }
+      // 允许提交报价
+      document.querySelector('#quoteForm button[type="submit"]')?.removeAttribute('disabled');
+      document.querySelectorAll('#quoteForm input, #quoteForm textarea, #quoteForm select')?.forEach(el => el.removeAttribute('disabled'));
+    } else {
+      alert(data?.error ? `验证失败：${data.error}` : '查看密码不正确');
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+  } catch(e) {
+    console.error(e);
+    alert('验证服务不可用，请稍后重试或联系平台。');
+  }
+}
+
+async function loadQuotes(requirementID) {
+  const listEl = document.getElementById('quotesList');
+  if (!listEl) return;
+  listEl.innerHTML = '<div class="text-muted">加载报价...</div>';
+  try {
+    const resp = await fetch(`/.netlify/functions/listQuotes?RequirementID=${encodeURIComponent(requirementID)}`);
+    if (!resp.ok) throw new Error('Bad response');
+    const { items } = await resp.json();
+    if (!items || items.length === 0) {
+      listEl.innerHTML = '<div class="text-muted">暂无报价</div>';
+      return;
     }
+    listEl.innerHTML = items
+      .map((q) => `
+        <div class="border rounded p-2 mb-2">
+          <div class="small text-muted">提交时间：${(q.CreatedAt || '').toString()}</div>
+          <div><strong>供应商：</strong>${q.SupplierCompanyName || '—'}，<strong>联系人：</strong>${q.SupplierContact || '—'}，<strong>电话：</strong>${q.SupplierPhone || '—'}</div>
+          <div><strong>产品型号：</strong>${q.ProductModel || '—'}，<strong>交期：</strong>${q.DeliveryTime || '—'}</div>
+          <div><strong>报价：</strong>${typeof q.Price === 'number' ? q.Price : (q.Price || '—')}</div>
+          <div class="small">报价详情：${q.QuoteDetail || '—'}</div>
+          <div class="small">状态：${q.Status || '接洽中'}</div>
+        </div>
+      `)
+      .join('');
+  } catch (e) {
+    listEl.innerHTML = '<div class="text-danger">报价列表接口未开启或出错。请在 Netlify Dev 环境下访问或完成部署配置。</div>';
+  }
 }
 
-.requirement-item {
-    animation: fadeInUp 0.3s ease;
+function renderQuoteForm(data) {
+  return `
+    <div class="mt-3">
+      <h6 class="mb-2"><i class="fa-solid fa-file-invoice-dollar me-1"></i> 在线报价</h6>
+      <form id="quoteForm" name="requirement-quote" data-netlify="true">
+        <input type="hidden" name="RequirementID" value="${data.id}">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">公司名称</label>
+            <input type="text" name="SupplierCompanyName" class="form-control" required disabled>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">联系人</label>
+            <input type="text" name="SupplierContact" class="form-control" required disabled>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">邮箱</label>
+            <input type="email" name="SupplierEmail" class="form-control" disabled>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">电话</label>
+            <input type="text" name="SupplierPhone" class="form-control" required disabled>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">产品型号</label>
+            <input type="text" name="ProductModel" class="form-control" disabled>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">关键参数</label>
+            <input type="text" name="KeyParams" class="form-control" disabled>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">交期</label>
+            <input type="text" name="DeliveryTime" class="form-control" disabled>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">报价金额 (元)</label>
+            <input type="number" name="Price" class="form-control" required disabled>
+          </div>
+          <div class="col-12">
+            <label class="form-label">报价详情（含税/不含税说明）</label>
+            <textarea name="QuoteDetail" class="form-control" rows="3" disabled></textarea>
+          </div>
+        </div>
+        <div class="text-end mt-3">
+          <button type="submit" class="btn btn-success" disabled>
+            <i class="fa-solid fa-paper-plane me-1"></i> 提交报价
+          </button>
+        </div>
+      </form>
+    </div>
+  `;
 }
-</style>
 
-<script src="/js/requirements-center.js"></script>
+function renderTimeline(data) {
+  const pub = new Date(data.published || Date.now()).toLocaleString();
+  return `
+    <div class="mt-3">
+      <h6 class="mb-2"><i class="fa-solid fa-timeline me-1"></i> 进展时间线</h6>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><span class="badge bg-light text-dark border me-2">${pub}</span>需求发布</li>
+        <li class="list-group-item"><span class="badge bg-light text-dark border me-2">—</span>供应商浏览（自动）</li>
+        <li class="list-group-item"><span class="badge bg-light text-dark border me-2">—</span>提交在线报价</li>
+        <li class="list-group-item"><span class="badge bg-light text-dark border me-2">—</span>平台/发布方接洽</li>
+      </ul>
+    </div>
+  `;
+}
 
+// 报价表单简单提交（演示用），实际可接后端或 Netlify Function
+document.addEventListener('submit', (e) => {
+  if (e.target && e.target.id === 'quoteForm') {
+    e.preventDefault();
+    const form = e.target;
+    const fd = new FormData(form);
+    const payload = Object.fromEntries(fd.entries());
+    // 允许未解锁联系方式也能报价；保存到后端
+    fetch('/.netlify/functions/submitQuote', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+      .then((r) => r.ok ? r.json() : Promise.reject(r))
+      .then(() => {
+        alert('报价已提交成功！我们将通知发布方尽快接洽。');
+        form.reset();
+      })
+      .catch(() => {
+        alert('报价提交接口未开启或出错。请配置 Netlify/Airtable 后重试。');
+      });
+  }
+});
+</script>
+<!-- 需求详情弹窗 -->
+<div class="modal fade" id="requirementModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa-solid fa-lock me-1"></i> 需求详情</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="requirementModalBody"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
 {{ end }}

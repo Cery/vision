@@ -16,7 +16,19 @@
         </div>
         <div class="card-body p-4">
           {{ if .Content }}{{ .Content }}{{ else }}
-          <p class="text-muted mb-0">这里展示平台定位与价值，后续可替换为实际介绍文本。</p>
+          <div class="text-muted">
+            <p class="mb-2">VisNDT 是面向视觉检测行业的内容与产品协同平台，帮助供应商与集成商以更标准、更高效的方式连接需求方。</p>
+            <div class="fw-semibold mb-1">我们能为你做什么</div>
+            <ul class="small mb-3">
+              <li>统一规范的产品与内容结构，降低集成与检索成本</li>
+              <li>按应用场景聚合展示，提升曝光与转化效率</li>
+              <li>联合推广与技术内容共建，扩大品牌与技术影响力</li>
+            </ul>
+            <div class="fw-semibold mb-1">适合的合作对象</div>
+            <ul class="small mb-0">
+              <li>设备/组件供应商、方案集成商、行业用户与渠道伙伴</li>
+            </ul>
+          </div>
           {{ end }}
         </div>
       </section>
@@ -52,6 +64,7 @@
           </div>
         </div>
       </section>
+
 
       <!-- 联系方式 -->
       <section class="card shadow-sm border-0">

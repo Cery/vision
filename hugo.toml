@@ -69,25 +69,25 @@ paginate = 12
       parent = "资讯中心"
       weight = 53
   [[menu.main]]
-    name = "需求中心"
+    name = "需求市场"
     url = "/requirements"
     weight = 60
 
-    # 需求中心子菜单
+    # 需求市场子菜单
     [[menu.main]]
       name = "发布需求"
       url = "/requirements/publish"
-      parent = "需求中心"
+      parent = "需求市场"
       weight = 61
     [[menu.main]]
       name = "需求大厅"
       url = "/requirements/hall"
-      parent = "需求中心"
+      parent = "需求市场"
       weight = 62
     [[menu.main]]
       name = "我的需求"
       url = "/requirements/my"
-      parent = "需求中心"
+      parent = "需求市场"
       weight = 63
   [[menu.main]]
     name = "商务合作"

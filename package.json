@@ -14,6 +14,7 @@
     "product-server:dev": "nodemon product-server.js",
     "content-server": "node content-server.js",
     "build": "hugo --gc --minify",
+    "dev:netlify": "netlify dev",
     "build:css": "postcss static/css/main.css -o static/css/main.min.css",
     "cms:proxy": "netlify-cms-proxy-server --port 8081 --config static/admin/config.yml",
     "encoding:check": "node scripts/simple-encoding-fix.js",
@@ -33,7 +34,9 @@
     "compression": "^1.8.1",
     "cors": "^2.8.5",
     "express": "^4.21.2",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "bcryptjs": "^2.4.3",
+    "airtable": "^0.12.2"
   },
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^7.0.2",

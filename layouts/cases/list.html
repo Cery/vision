@@ -115,7 +115,7 @@
                         <a href="{{ .Permalink }}" class="card-img-link">
                             <div class="card-img-wrapper">
                                 {{ with .Params.featured_image }}
-                                <img src="{{ . | relURL }}" class="card-img-top object-fit-cover" alt="{{ $page.Title }}" style="height: 200px;">
+                                <img src="{{ if or (hasPrefix . "http://") (hasPrefix . "https://") }}{{ . }}{{ else }}{{ . | relURL }}{{ end }}" class="card-img-top object-fit-cover" alt="{{ $page.Title }}" style="height: 200px;">
                                 {{ else }}
                                 {{ $images := slice "/images/cases/case-1.webp" "/images/cases/case-2.webp" "/images/cases/case-3.webp" "/images/cases/case-4.webp" "/images/cases/case-5.webp" "/images/cases/case-6.webp" "/images/cases/case-7.webp" "/images/cases/case-8.webp" }}
                                 <img src="{{ index $images (mod $index 8) }}" class="card-img-top object-fit-cover" alt="{{ $page.Title }}" style="height: 200px;">

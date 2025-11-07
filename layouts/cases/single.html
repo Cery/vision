@@ -48,7 +48,7 @@
                             <div class="col-12">
                                 <div class="main-cover-image">
                                     {{ with .Params.featured_image }}
-                                    <img src="{{ . | relURL }}" class="img-fluid rounded shadow" alt="{{ $.Title }}">
+                                    <img src="{{ if or (hasPrefix . "http://") (hasPrefix . "https://") }}{{ . }}{{ else }}{{ . | relURL }}{{ end }}" class="img-fluid rounded shadow" alt="{{ $.Title }}">
                                     {{ else }}
                                     <img src="https://picsum.photos/800/400?random=main-{{ .File.UniqueID }}" class="img-fluid rounded shadow" alt="{{ .Title }}">
                                     {{ end }}
@@ -206,7 +206,7 @@
                             <a href="{{ .Permalink }}" class="text-decoration-none">
                                 <div class="card hover-card border-0 shadow-sm">
                                     {{ with .Params.featured_image }}
-                                    <img src="{{ . | relURL }}" class="card-img-top" alt="{{ $.Title }}" style="height: 120px; object-fit: cover;">
+                                    <img src="{{ if or (hasPrefix . "http://") (hasPrefix . "https://") }}{{ . }}{{ else }}{{ . | relURL }}{{ end }}" class="card-img-top" alt="{{ $.Title }}" style="height: 120px; object-fit: cover;">
                                     {{ else }}
                                     {{ $caseImages := slice "/images/cases/case-1.webp" "/images/cases/case-2.webp" "/images/cases/case-3.webp" "/images/cases/case-4.webp" "/images/cases/case-5.webp" "/images/cases/case-6.webp" "/images/cases/case-7.webp" "/images/cases/case-8.webp" }}
                                     <img src="{{ index $caseImages (mod (.Title | len) 8) }}" class="card-img-top" alt="{{ .Title }}" style="height: 120px; object-fit: cover;">

@@ -73,7 +73,7 @@ test_pages:
       - selector: ".pagination"
         description: "分页"
         
-  - name: "需求中心"
+  - name: "需求市场"
     url: "/requirements"
     critical: true
     elements:

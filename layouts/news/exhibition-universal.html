@@ -18,7 +18,7 @@
         {{ end }}
 
         {{ if $coverImage }}
-        <div class="banner-background" style="background-image: url('{{ $coverImage | relURL }}');"></div>
+        <div class="banner-background" style="background-image: url('{{ if or (hasPrefix $coverImage "http://") (hasPrefix $coverImage "https://") }}{{ $coverImage }}{{ else }}{{ $coverImage | relURL }}{{ end }}');"></div>
         {{ else }}
         <div class="banner-background-default"></div>
         {{ end }}
@@ -30,7 +30,7 @@
                     <div class="banner-left">
                         <div class="exhibition-logo">
                             {{ if $coverImage }}
-                            <img src="{{ $coverImage | relURL }}" alt="{{ .Title }}" class="logo-image">
+                            <img src="{{ if or (hasPrefix $coverImage "http://") (hasPrefix $coverImage "https://") }}{{ $coverImage }}{{ else }}{{ $coverImage | relURL }}{{ end }}" alt="{{ .Title }}" class="logo-image">
                             {{ else }}
                             <div class="logo-placeholder">
                                 <i class="bi bi-calendar-event"></i>
@@ -372,7 +372,7 @@
                                         {{ end }}
 
                                         {{ if $productImage }}
-                                        <img src="{{ $productImage | relURL }}" alt="{{ $product.Title }}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                        <img src="{{ if or (hasPrefix $productImage "http://") (hasPrefix $productImage "https://") }}{{ $productImage }}{{ else }}{{ $productImage | relURL }}{{ end }}" alt="{{ $product.Title }}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                                         <div class="product-placeholder" style="display: none;">
                                             <i class="bi bi-box-seam"></i>
                                         </div>
