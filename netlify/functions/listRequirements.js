@@ -23,7 +23,17 @@ exports.handler = async () => {
         Title: r.fields.Title,
         PublicPreview: r.fields.PublicPreview,
         PrimaryCategory: r.fields.PrimaryCategory,
-        Status: r.fields.Status
+        SecondaryCategory: r.fields.SecondaryCategory,
+        Status: r.fields.Status,
+        ContactPublic: !!r.fields.ContactPublic,
+        ContactName: r.fields.ContactName,
+        ContactPhone: r.fields.ContactPhone,
+        ContactCompany: r.fields.ContactCompany,
+        BudgetRange: r.fields.BudgetRange,
+        PublishedAt: r.fields.PublishedAt,
+        Progress: r.fields.Progress,
+        AllowOpenQuotes: !!r.fields.AllowOpenQuotes,
+        Parameters: r.fields.Parameters || {}
       })).filter(x => x.RequirementID);
       return { statusCode: 200, body: JSON.stringify(items) };
     } catch (e) {

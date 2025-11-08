@@ -32,6 +32,10 @@
             <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
             <input type="text" id="requirementsSearch" class="form-control" placeholder="搜索编号或标题，如 REQ-2025 或 电子内窥镜">
             <button class="btn btn-outline-secondary" type="button" id="clearSearchBtn">清除</button>
+            <span class="input-group-text">
+              <input class="form-check-input mt-0" type="checkbox" value="" id="onlyOpenQuotesFilter" aria-label="仅开放报价">
+            </span>
+            <label class="input-group-text" for="onlyOpenQuotesFilter">仅开放报价</label>
           </div>
         </div>
       </div>
@@ -52,6 +56,7 @@
                data-contact-name="{{ .ContactName }}"
                data-contact-phone="{{ .ContactPhone }}"
                data-contact-company="{{ .ContactCompany }}"
+               data-allow-open="{{ .AllowOpenQuotes }}"
                data-progress="{{ with .Progress }}{{ . }}{{ else }}发布中{{ end }}"
                data-params='{{ .Parameters | jsonify }}'>
             <div class="card-body">
@@ -62,6 +67,8 @@
                     <span class="badge bg-info text-dark me-2"><i class="fa-solid fa-layer-group me-1"></i>{{ .PrimaryCategory }}</span>
                     {{ with .BudgetRange }}<span class="badge bg-success me-2"><i class="fa-solid fa-coins me-1"></i>{{ . }}</span>{{ end }}
                     <span class="badge {{ if eq .Status "公开" }}bg-success{{ else }}bg-warning{{ end }}"><i class="fa-solid fa-bullhorn me-1"></i>{{ .Status }}</span>
+                    {{ if .AllowOpenQuotes }}<span class="badge bg-success"><i class="fa-solid fa-unlock me-1"></i>开放报价</span>{{ else }}<span class="badge bg-warning"><i class="fa-solid fa-lock me-1"></i>需密码报价</span>{{ end }}
+                    {{ if .ContactPublic }}<span class="badge bg-info text-dark"><i class="fa-solid fa-eye me-1"></i>联系方式脱敏</span>{{ end }}
                     <span class="badge {{ if (eq (or .Progress "发布中") "发布中") }}bg-primary{{ else if (eq .Progress "接洽中") }}bg-warning{{ else }}bg-secondary{{ end }}"><i class="fa-solid fa-flag me-1"></i>{{ with .Progress }}{{ . }}{{ else }}发布中{{ end }}</span>
                   </div>
                   <h5 class="mb-1"><i class="fa-solid fa-file-lines me-1 text-secondary"></i>{{ .Title }}</h5>
@@ -110,7 +117,7 @@ async function refreshRequirementsList() {
     return;
   }
   listEl.innerHTML = items.map(item => `
-    <div class="card mb-3 requirement-card" style="min-height: 160px;" data-id="${item.RequirementID}" data-status="${item.Status}" data-title="${(item.Title || '').toLowerCase()}" data-primary="${item.PrimaryCategory || ''}" data-secondary="${item.SecondaryCategory || ''}" data-dept="" data-budget="${item.BudgetRange || ''}" data-published="${item.PublishedAt || ''}" data-preview="${item.PublicPreview || ''}" data-contact-public="${item.ContactPublic || false}" data-contact-name="${item.ContactName || ''}" data-contact-phone="${item.ContactPhone || ''}" data-contact-company="${item.ContactCompany || ''}" data-progress="${item.Progress || '发布中'}" data-params='${JSON.stringify(item.Parameters || {})}'>
+    <div class="card mb-3 requirement-card" style="min-height: 160px;" data-id="${item.RequirementID}" data-status="${item.Status}" data-title="${(item.Title || '').toLowerCase()}" data-primary="${item.PrimaryCategory || ''}" data-secondary="${item.SecondaryCategory || ''}" data-dept="" data-budget="${item.BudgetRange || ''}" data-published="${item.PublishedAt || ''}" data-preview="${item.PublicPreview || ''}" data-contact-public="${item.ContactPublic || false}" data-contact-name="${item.ContactName || ''}" data-contact-phone="${item.ContactPhone || ''}" data-contact-company="${item.ContactCompany || ''}" data-allow-open="${item.AllowOpenQuotes || false}" data-progress="${item.Progress || '发布中'}" data-params='${JSON.stringify(item.Parameters || {})}'>
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-start">
           <div class="me-3">
@@ -119,6 +126,8 @@ async function refreshRequirementsList() {
               <span class="badge bg-info text-dark me-2"><i class="fa-solid fa-layer-group me-1"></i>${item.PrimaryCategory || '—'}</span>
               ${item.BudgetRange ? `<span class=\"badge bg-success me-2\"><i class=\"fa-solid fa-coins me-1\"></i>${item.BudgetRange}</span>` : ''}
               <span class="badge ${(item.Status==='公开')?'bg-success':'bg-warning'}"><i class="fa-solid fa-bullhorn me-1"></i>${item.Status || '—'}</span>
+              ${item.AllowOpenQuotes ? `<span class=\"badge bg-success\"><i class=\"fa-solid fa-unlock me-1\"></i>开放报价</span>` : `<span class=\"badge bg-warning\"><i class=\"fa-solid fa-lock me-1\"></i>需密码报价</span>`}
+              ${item.ContactPublic ? `<span class=\"badge bg-info text-dark\"><i class=\"fa-solid fa-eye me-1\"></i>联系方式脱敏</span>` : ''}
               <span class="badge ${((item.Progress||'发布中')==='发布中')?'bg-primary':((item.Progress==='接洽中')?'bg-warning':'bg-secondary')}"><i class="fa-solid fa-flag me-1"></i>${item.Progress||'发布中'}</span>
             </div>
             <h5 class="mb-1"><i class="fa-solid fa-file-lines me-1 text-secondary"></i>${item.Title || '未命名需求'}</h5>
@@ -143,14 +152,17 @@ let filteredCards = [];
 function applyFiltersAndPaginate() {
   const q = (document.getElementById('requirementsSearch')?.value || '').trim().toLowerCase();
   const primary = document.getElementById('primaryFilter')?.value || '';
+  const onlyOpen = !!document.getElementById('onlyOpenQuotesFilter')?.checked;
   allCards = Array.from(document.querySelectorAll('.requirement-card'));
   filteredCards = allCards.filter(card => {
     const id = (card.dataset.id || '').toLowerCase();
     const title = (card.dataset.title || '').toLowerCase();
     const pcat = card.dataset.primary || '';
+    const allowOpen = card.dataset.allowOpen === 'true';
     const matchText = !q || id.includes(q) || title.includes(q);
     const matchPrimary = !primary || pcat === primary;
-    return matchText && matchPrimary;
+    const matchOpen = !onlyOpen || allowOpen;
+    return matchText && matchPrimary && matchOpen;
   });
   initEnhancedPagination('requirementsList', 6, '需求');
   updateEnhancedPagination('requirementsList', filteredCards, 1);
@@ -172,6 +184,8 @@ document.getElementById('clearSearchBtn')?.addEventListener('click', () => {
   applyFiltersAndPaginate();
 });
 document.getElementById('primaryFilter')?.addEventListener('change', applyFiltersAndPaginate);
+document.getElementById('onlyOpenQuotesFilter')?.addEventListener('change', applyFiltersAndPaginate);
+document.getElementById('onlyContactPublicFilter')?.addEventListener('change', applyFiltersAndPaginate);
 document.addEventListener('enhancedPaginationChange', (e) => {
   if (e.detail?.containerId === 'requirementsList') {
     showCurrentPage();
@@ -238,6 +252,7 @@ function openRequirementModal(card) {
     contactName: card.dataset.contactName,
     contactPhone: card.dataset.contactPhone,
     contactCompany: card.dataset.contactCompany,
+    allowOpenQuotes: card.dataset.allowOpen === 'true',
     params: {}
   };
   try { data.params = JSON.parse(card.dataset.params || '{}'); } catch(e){}
@@ -273,6 +288,11 @@ function openRequirementModal(card) {
 
   const bsModal = new bootstrap.Modal(modalEl);
   bsModal.show();
+  // 若开启全网可报价，则无需密码也可填写并提交报价（联系方式仍需密码解锁）
+  if (data.allowOpenQuotes) {
+    document.querySelector('#quoteForm button[type="submit"]')?.removeAttribute('disabled');
+    document.querySelectorAll('#quoteForm input, #quoteForm textarea, #quoteForm select')?.forEach(el => el.removeAttribute('disabled'));
+  }
 }
 
 function renderParams(params) {
@@ -295,10 +315,39 @@ function renderParams(params) {
 }
 
 function renderContactBlock(data) {
-  // 所有联系方式默认需要查看密码验证后显示
+  // 脱敏显示规则（姓名首字母 + *；电话保留前三后四；公司只显示前两字）
+  const maskName = (name) => {
+    if (!name) return '—';
+    const first = name.slice(0, 1);
+    return first + '＊＊';
+  };
+  const maskPhone = (phone) => {
+    if (!phone) return '—';
+    const digits = (phone || '').toString();
+    if (digits.length < 7) return digits;
+    return `${digits.slice(0,3)}****${digits.slice(-4)}`;
+  };
+  const maskCompany = (company) => {
+    if (!company) return '';
+    const head = company.slice(0, 2);
+    return `${head}…`;
+  };
+
+  const maskedBlock = data.contactPublic ? `
+    <div class="alert alert-light border mb-2">
+      <div class="small text-muted mb-1">已脱敏显示，输入查看密码可解锁完整信息</div>
+      <div class="row">
+        <div class="col-md-6">联系人：${maskName(data.contactName)}</div>
+        <div class="col-md-6">电话：${maskPhone(data.contactPhone)}</div>
+      </div>
+      ${data.contactCompany ? `<div>公司：${maskCompany(data.contactCompany)}</div>` : ''}
+    </div>
+  ` : '';
+
   return `
     <div class="alert alert-warning" id="contact-block">
       <h6 class="mb-2"><i class="fa-solid fa-lock me-1"></i> 查看联系方式（需查看密码）</h6>
+      ${maskedBlock}
       <div class="input-group mb-2" style="max-width: 360px;">
         <span class="input-group-text"><i class="fa-solid fa-key"></i></span>
         <input type="text" class="form-control" id="viewPasswordInput" placeholder="输入查看密码">
@@ -337,6 +386,9 @@ async function verifyRequirementPassword(requirementID) {
     if (data && data.valid) {
       // 显示联系方式
       document.getElementById('contactUnlocked')?.setAttribute('style','');
+      // 将密码注入报价表单隐藏字段，后端可校验
+      const vpInput = document.querySelector('#quoteForm input[name="ViewPassword"]');
+      if (vpInput) vpInput.value = pw;
       if (data.data) {
         document.getElementById('cName')?.replaceChildren(document.createTextNode(data.data.contact || ''));
         document.getElementById('cPhone')?.replaceChildren(document.createTextNode(data.data.phone || ''));
@@ -389,6 +441,7 @@ function renderQuoteForm(data) {
       <h6 class="mb-2"><i class="fa-solid fa-file-invoice-dollar me-1"></i> 在线报价</h6>
       <form id="quoteForm" name="requirement-quote" data-netlify="true">
         <input type="hidden" name="RequirementID" value="${data.id}">
+        <input type="hidden" name="ViewPassword" value="">
         <div class="row g-3">
           <div class="col-md-6">
             <label class="form-label">公司名称</label>

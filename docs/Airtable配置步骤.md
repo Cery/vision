@@ -21,6 +21,8 @@ Requirements 表字段：
 - `ContactPhone`：电话
 - `ContactCompany`：单行文本
 - `ViewPasswordHash`：单行文本（bcrypt 哈希，仅存哈希，不存明文）
+ - `ViewPasswordPlain`：单行文本（早期阶段为平台运营可见的明文；正式阶段建议停用）
+ - `AllowOpenQuotes`：复选框（开启后供应商可无需密码直接在线报价，但查看联系方式仍需密码）
 - `Parameters`：长文本（参数摘要）
 - `PublishedAt`：日期（Y-M-D）
 - `BudgetRange`：单行文本（预算范围）
@@ -55,6 +57,7 @@ node -e "const bcrypt=require('bcryptjs');(async()=>{const h=await bcrypt.hash('
 ```
 
 将输出的哈希写入 `ViewPasswordHash` 字段。前端验证将调用函数 `/.netlify/functions/verifyPassword` 使用 bcrypt 比对。
+如需让平台在管理后台直接看到明文（早期阶段），可将明文写入 `ViewPasswordPlain` 字段；注意仅管理员可见，正式阶段建议移除该字段。
 
 ## 三、在本地配置环境变量（Netlify Dev）
 
@@ -65,6 +68,8 @@ AIRTABLE_API_KEY=你的APIKey
 AIRTABLE_BASE_ID=你的BaseID
 AIRTABLE_REQUIREMENTS_TABLE=Requirements
 AIRTABLE_QUOTES_TABLE=RequirementQuotes
+ADMIN_KEY=你的管理员密钥
+REQUIRE_QUOTE_PASSWORD=true
 ```
 
 2) 启动本地开发：
@@ -74,6 +79,7 @@ npm run dev:netlify
 ```
 
 预览地址为 `http://localhost:8888/`，框架服务在 `http://localhost:1314/`。
+管理后台地址：`http://localhost:8888/management.html`。在页面顶端输入 `ADMIN_KEY` 后加载需求管理面板，可批量设置明文密码、生成并写入哈希，以及切换是否全网可报价。
 
 ## 四、在 Netlify 云端配置
 
@@ -81,6 +87,9 @@ npm run dev:netlify
 - `AIRTABLE_API_KEY`
 - `AIRTABLE_BASE_ID`
 - （可选）`AIRTABLE_REQUIREMENTS_TABLE`、`AIRTABLE_QUOTES_TABLE`
+ - `ADMIN_KEY`（供管理后台调用专用函数鉴权）
+ - `REQUIRE_QUOTE_PASSWORD`（设为 `true` 开启报价提交时的密码校验；若单条需求开启了 `AllowOpenQuotes` 将跳过校验）
+ - `AIRTABLE_AUDIT_TABLE`（可选，默认 `AuditLogs`。若设置则关键操作会写入审计日志：事件类型、需求编号、IP、时间与其他元信息）
 
 部署完成后，`/.netlify/functions/*` 将在云端可用。
 
@@ -93,3 +102,4 @@ npm run dev:netlify
 
 - 若出现 “验证服务不可用”：
   - 说明函数返回了 500 或网络错误，请检查环境变量是否填写正确、Airtable Base/表名是否一致，或查看本地控制台函数报错日志。
+  - 管理员函数错误会返回更具体的 `detail`，便于快速定位（例如 Airtable 授权失败、字段缺失等）。

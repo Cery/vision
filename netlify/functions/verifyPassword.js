@@ -61,10 +61,21 @@ exports.handler = async (event) => {
     const storedHash = record.ViewPasswordHash || '';
     const ok = storedHash && (await bcrypt.compare(password, storedHash));
     if (!ok) {
+      // 审计：验证失败
+      try {
+        const { logEvent } = require('./_audit');
+        const ip = event.headers['client-ip'] || event.headers['x-nf-client-connection-ip'];
+        logEvent({ eventType: 'verify_failed', requirementID, ip, meta: {} });
+      } catch {}
       return { statusCode: 200, body: JSON.stringify({ valid: false }) };
     }
 
     // Return minimal private info on success
+    try {
+      const { logEvent } = require('./_audit');
+      const ip = event.headers['client-ip'] || event.headers['x-nf-client-connection-ip'];
+      logEvent({ eventType: 'verify_success', requirementID, ip, meta: {} });
+    } catch {}
     return {
       statusCode: 200,
       body: JSON.stringify({

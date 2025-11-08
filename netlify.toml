@@ -17,10 +17,10 @@
 
 [dev]
   port = 8888
-  targetPort = 1314
+  targetPort = 1316
   autoLaunch = true
-  # 自动启动 Hugo 开发服务器，统一运行端口与函数代理
-  command = "hugo server -D --port 1314 --baseURL /"
+  # 自动启动 Hugo 开发服务器，统一运行端口与函数代理（避开端口占用）
+  command = "hugo server -D --port 1316 --baseURL /"
 
   [dev.environment]
     AIRTABLE_API_KEY = "pat39XNJcEyet48SK.83b699fc1a7d3fb3999d371ee4bc5f65ef62ffd4ab818d27eb575a15992ae016"

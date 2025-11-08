@@ -5,17 +5,156 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>运营管理 - VisNDT</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body>
-    <div class="container mt-5">
+<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+  <div class="container-fluid">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+      <i class="fa-solid fa-briefcase"></i>
+      <span>需求中心管理</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminOffcanvas" aria-controls="adminOffcanvas">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="d-flex align-items-center gap-2 ms-auto">
+      <span class="badge bg-secondary">本地预览</span>
+    </div>
+  </div>
+</nav>
+<div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="adminOffcanvas" aria-labelledby="adminOffcanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="adminOffcanvasLabel">导航</h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <nav class="nav flex-column">
+      <a class="nav-link text-light" href="#overview">概览</a>
+      <a class="nav-link text-light" href="#requirements">需求管理</a>
+      <a class="nav-link text-light" href="#quotes">报价管理</a>
+      <a class="nav-link text-light" href="#settings">系统设置</a>
+    </nav>
+  </div>
+</div>
+    <div class="container-fluid mt-4">
+      <div class="row">
+        <aside class="col-lg-2 d-none d-lg-block">
+          <div class="admin-sidenav rounded">
+            <div class="mb-3"><strong><i class="fa-solid fa-sliders me-1"></i> 导航</strong></div>
+            <nav class="nav flex-column">
+              <a class="nav-link" href="#overview">概览</a>
+              <a class="nav-link" href="#requirements">需求管理</a>
+              <a class="nav-link" href="#quotes">报价管理</a>
+              <a class="nav-link" href="#settings">系统设置</a>
+            </nav>
+          </div>
+        </aside>
+        <main class="col-lg-10">
         <h1>运营管理</h1>
-        <div class="row">
-            <div class="col-md-4">
-                <h2>需求列表</h2>
-                <div id="requirementsList" class="list-group"></div>
+        <div id="overview" class="card mb-4 shadow-sm">
+            <div class="card-body d-flex flex-wrap align-items-center gap-3">
+                <div>
+                    <div class="small text-muted">管理员密钥</div>
+                    <div class="d-flex align-items-end gap-2">
+                        <input id="adminKeyInput" type="password" class="form-control" style="max-width:320px" placeholder="输入 ADMIN_KEY 后加载需求管理">
+                        <button id="adminLoginBtn" class="btn btn-primary"><i class="fa-solid fa-key me-1"></i> 加载管理</button>
+                    </div>
+                </div>
+                <div class="ms-auto d-flex align-items-center gap-4">
+                    <div class="text-center">
+                        <div class="small text-muted">需求总数</div>
+                        <div class="h5 mb-0" id="statTotal">—</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="small text-muted">开放报价</div>
+                        <div class="h5 mb-0 text-success" id="statOpen">—</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="small text-muted">需密码</div>
+                        <div class="h5 mb-0 text-warning" id="statProtected">—</div>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-8">
-                <h2>报价列表</h2>
+            <div class="card-footer small text-muted">请在 Netlify 环境变量设置 <code>ADMIN_KEY</code>。平台管理员可查看明文密码并批量设置。</div>
+        </div>
+        <div class="row">
+            <div id="requirements" class="col-md-4">
+                <h2 class="section-title">需求列表</h2>
+                <div id="requirementsList" class="list-group"></div>
+                <div class="mt-4">
+                    <h2 class="section-title">需求管理</h2>
+                    <div class="small text-muted mb-2">可查看/设置明文密码、哈希与开放报价开关</div>
+                    <div id="adminPanel">
+                        <div class="mb-3">
+                            <label class="form-label">全局设置（应用到全部需求）</label>
+                            <input id="globalPasswordInput" type="text" class="form-control mb-2" placeholder="输入新密码（可选）">
+                            <select id="globalAllowOpenQuotes" class="form-select mb-2">
+                                <option value="">不变</option>
+                                <option value="true">开启全网可报价</option>
+                                <option value="false">关闭全网可报价（需密码）</option>
+                            </select>
+                            <select id="globalContactPublic" class="form-select mb-2">
+                                <option value="">不变</option>
+                                <option value="true">公开联系方式（脱敏显示）</option>
+                                <option value="false">不公开联系方式</option>
+                            </select>
+                            <button id="applyAllBtn" class="btn btn-outline-primary btn-sm">应用到全部需求</button>
+                        </div>
+                        <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                            <div class="input-group" style="max-width:320px;">
+                                <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+                                <input id="adminSearchInput" type="text" class="form-control" placeholder="按编号或标题搜索">
+                            </div>
+                            <div class="form-check ms-2">
+                                <input class="form-check-input" type="checkbox" value="" id="onlyOpenAdmin">
+                                <label class="form-check-label" for="onlyOpenAdmin">仅开放报价</label>
+                            </div>
+                            <div class="form-check ms-2">
+                                <input class="form-check-input" type="checkbox" value="" id="onlyMaskedAdmin">
+                                <label class="form-check-label" for="onlyMaskedAdmin">仅联系方式脱敏</label>
+                            </div>
+                            <div class="ms-2" style="min-width: 160px;">
+                                <select id="adminStatusFilter" class="form-select form-select-sm">
+                                    <option value="">状态：全部</option>
+                                    <option value="公开">公开</option>
+                                    <option value="隐私">隐私</option>
+                                    <option value="关闭">关闭</option>
+                                </select>
+                            </div>
+                            <div class="ms-2" style="min-width: 160px;">
+                                <select id="adminProgressFilter" class="form-select form-select-sm">
+                                    <option value="">进度：全部</option>
+                                    <option value="发布中">发布中</option>
+                                    <option value="接洽中">接洽中</option>
+                                    <option value="已完成">已完成</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-responsive" style="max-height: 420px; overflow:auto;">
+                            <table class="table table-sm table-striped align-middle admin-table">
+                                <thead class="table-light position-sticky top-0">
+                                    <tr>
+                                        <th>编号</th>
+                                        <th>标题</th>
+                                        <th>状态</th>
+                                        <th>进度</th>
+                                        <th>开放报价</th>
+                                        <th>公开联系方式</th>
+                                        <th>明文密码</th>
+                                        <th>哈希（截断）</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminRequirementsBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="quotes" class="col-md-8">
+                <h2 class="section-title">报价列表</h2>
                 <div id="quotesPanel" style="display: none;">
                     <h3 id="selectedRequirement"></h3>
                     <button id="exportCsvBtn" class="btn btn-primary btn-sm mb-3">导出为 CSV</button>
@@ -35,6 +174,15 @@
                 </div>
             </div>
         </div>
+        <!-- 系统设置占位区块 -->
+        <div id="settings" class="card mb-4 mt-4 shadow-sm">
+            <div class="card-body">
+                <h2 class="section-title">系统设置</h2>
+                <p class="text-muted mb-0">此处预留平台级偏好配置（例如默认脱敏策略、通知开关、导出格式等）。</p>
+            </div>
+        </div>
+        </main>
+      </div>
     </div>
 
     <script>
@@ -105,21 +253,41 @@
                     });
             }
 
-            // Export quotes to CSV
-            exportCsvBtn.addEventListener('click', () => {
-                let csvContent = "data:text/csv;charset=utf-8,";
-                csvContent += "供应商,联系人,电话,报价(元),状态\n";
-                currentQuotes.forEach(quote => {
-                    csvContent += `${quote.SupplierCompanyName},${quote.SupplierContact},${quote.SupplierPhone},${quote.Price},${quote.Status}\n`;
-                });
+        // Export quotes to CSV
+        exportCsvBtn.addEventListener('click', () => {
+          let csvContent = "data:text/csv;charset=utf-8,";
+          csvContent += "供应商,联系人,电话,报价(元),状态\n";
+          currentQuotes.forEach(quote => {
+            csvContent += `${quote.SupplierCompanyName},${quote.SupplierContact},${quote.SupplierPhone},${quote.Price},${quote.Status}\n`;
+          });
 
-                const encodedUri = encodeURI(csvContent);
-                const link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", "quotes.csv");
-                document.body.appendChild(link);
-                link.click();
+          const encodedUri = encodeURI(csvContent);
+          const link = document.createElement("a");
+          link.setAttribute("href", encodedUri);
+          link.setAttribute("download", "quotes.csv");
+          document.body.appendChild(link);
+          link.click();
+        });
+        // 导出为 Excel（兼容 .xls）
+        (function addXlsExport(){
+          try {
+            const exportXlsBtn = document.createElement('button');
+            exportXlsBtn.className = 'btn btn-outline-success btn-sm ms-2';
+            exportXlsBtn.innerHTML = '<i class="fa-solid fa-file-excel me-1"></i> 导出为 Excel';
+            exportCsvBtn.parentElement?.insertBefore(exportXlsBtn, exportCsvBtn.nextSibling);
+            exportXlsBtn.addEventListener('click', () => {
+              const rows = (currentQuotes||[]).map(q =>
+                `<tr><td>${q.SupplierCompanyName||''}</td><td>${q.SupplierContact||''}</td><td>${q.SupplierPhone||''}</td><td>${q.Price||''}</td><td>${q.Status||''}</td></tr>`
+              ).join('');
+              const html = `<!DOCTYPE html><html><head><meta charset="utf-8" /></head><body><table border="1"><thead><tr><th>供应商</th><th>联系人</th><th>电话</th><th>报价(元)</th><th>状态</th></tr></thead><tbody>${rows}</tbody></table></body></html>`;
+              const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a'); a.href = url; a.download = 'quotes.xls';
+              document.body.appendChild(a); a.click();
+              setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 0);
             });
+          } catch {}
+        })();
         });
 
         // Update quote status
@@ -155,5 +323,278 @@
             }
         }
     </script>
+    <script>
+    // 侧栏与 offcanvas 导航联动：平滑滚动 + 高亮
+    (function() {
+      const sideNav = document.querySelector('.admin-sidenav .nav');
+      const offNav = document.querySelector('#adminOffcanvas .nav');
+      const links = document.querySelectorAll('.admin-sidenav .nav-link, #adminOffcanvas .nav-link');
+      const ids = ['overview','requirements','quotes','settings'];
+      const sections = ids.map(id => document.getElementById(id)).filter(Boolean);
+
+      links.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const id = link.getAttribute('href').replace('#','');
+          const el = document.getElementById(id);
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          const offEl = document.getElementById('adminOffcanvas');
+          if (offEl && offEl.classList.contains('show')) {
+            try { new bootstrap.Offcanvas(offEl).hide(); } catch(_) {}
+          }
+        });
+      });
+
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            document.querySelectorAll('.admin-sidenav .nav-link, #adminOffcanvas .nav-link').forEach(a => {
+              a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+            });
+          }
+        });
+      }, { root: null, threshold: 0.25, rootMargin: '0px 0px -55% 0px' });
+
+      sections.forEach(sec => io.observe(sec));
+    })();
+    </script>
+<script>
+// 管理员面板逻辑（独立脚本块）
+(() => {
+  const adminLoginBtn = document.getElementById('adminLoginBtn');
+  const adminRequirementsBody = document.getElementById('adminRequirementsBody');
+  const applyAllBtn = document.getElementById('applyAllBtn');
+  let adminKey = '';
+
+  if (adminLoginBtn) {
+    adminLoginBtn.addEventListener('click', async () => {
+      adminKey = document.getElementById('adminKeyInput').value.trim();
+      if (!adminKey) { alert('请输入管理员密钥'); return; }
+      try {
+        const resp = await fetch('/.netlify/functions/adminListRequirements', { headers: { 'X-Admin-Key': adminKey } });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error((data.error || '加载失败') + (data.detail ? ('：' + data.detail) : ''));
+                    const items = data.items || [];
+                    window.adminItems = items;
+                    const renderAdminRows = (list) => {
+                      adminRequirementsBody.innerHTML = list.map(item => `
+                        <tr data-id="${item.RequirementID}">
+                            <td>${item.RequirementID}</td>
+                            <td class="text-truncate" style="max-width:160px;" title="${item.Title || ''}">${item.Title || ''}</td>
+                            <td>${item.Status || ''}</td>
+                            <td>${item.Progress || ''}</td>
+                            <td>
+                                <select class="form-select form-select-sm allow-open-select">
+                                    <option value="true" ${item.AllowOpenQuotes ? 'selected' : ''}>开启</option>
+                                    <option value="false" ${!item.AllowOpenQuotes ? 'selected' : ''}>关闭</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-select form-select-sm contact-public-select">
+                                    <option value="true" ${item.ContactPublic ? 'selected' : ''}>公开（脱敏）</option>
+                                    <option value="false" ${!item.ContactPublic ? 'selected' : ''}>不公开</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control form-control-sm plain-pw" value="${item.ViewPasswordPlain || ''}" placeholder="明文密码"></td>
+                            <td class="small text-muted">${(item.ViewPasswordHash || '').slice(0, 12)}...</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary" onclick="updateRequirementRow(this)">更新当前</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                    };
+                    const adminSearchInput = document.getElementById('adminSearchInput');
+                    const onlyOpenAdmin = document.getElementById('onlyOpenAdmin');
+                    const onlyMaskedAdmin = document.getElementById('onlyMaskedAdmin');
+                    const adminStatusFilter = document.getElementById('adminStatusFilter');
+                    const adminProgressFilter = document.getElementById('adminProgressFilter');
+                    // 恢复筛选持久化
+                    try {
+                      const saved = JSON.parse(localStorage.getItem('adminFilters')||'{}');
+                      if (saved.search && adminSearchInput) adminSearchInput.value = saved.search;
+                      if (typeof saved.onlyOpen==='boolean' && onlyOpenAdmin) onlyOpenAdmin.checked = saved.onlyOpen;
+                      if (typeof saved.onlyMasked==='boolean' && onlyMaskedAdmin) onlyMaskedAdmin.checked = saved.onlyMasked;
+                      if (saved.status) adminStatusFilter.value = saved.status;
+                      if (saved.progress) adminProgressFilter.value = saved.progress;
+                    } catch {}
+                    const applyAdminFilter = () => {
+                      const q = (adminSearchInput?.value || '').trim().toLowerCase();
+                      const onlyOpen = !!onlyOpenAdmin?.checked;
+                      const onlyMasked = !!onlyMaskedAdmin?.checked;
+                      const statusSel = adminStatusFilter?.value || '';
+                      const progressSel = adminProgressFilter?.value || '';
+                      const filtered = (window.adminItems||[]).filter(it => {
+                        const id = (it.RequirementID || '').toLowerCase();
+                        const title = (it.Title || '').toLowerCase();
+                        const matchText = !q || id.includes(q) || title.includes(q);
+                        const matchOpen = !onlyOpen || !!it.AllowOpenQuotes;
+                        const matchMasked = !onlyMasked || !!it.ContactPublic;
+                        const matchStatus = !statusSel || (it.Status || '') === statusSel;
+                        const matchProgress = !progressSel || (it.Progress || '') === progressSel;
+                        return matchText && matchOpen && matchMasked && matchStatus && matchProgress;
+                      });
+                      renderAdminRows(filtered);
+                    };
+                    const persistFilters = () => {
+                      try {
+                        localStorage.setItem('adminFilters', JSON.stringify({
+                          search: adminSearchInput?.value || '',
+                          onlyOpen: !!onlyOpenAdmin?.checked,
+                          onlyMasked: !!onlyMaskedAdmin?.checked,
+                          status: adminStatusFilter?.value || '',
+                          progress: adminProgressFilter?.value || ''
+                        }));
+                      } catch {}
+                    };
+                    adminSearchInput?.addEventListener('input', () => { persistFilters(); applyAdminFilter(); });
+                    onlyOpenAdmin?.addEventListener('change', () => { persistFilters(); applyAdminFilter(); });
+                    onlyMaskedAdmin?.addEventListener('change', () => { persistFilters(); applyAdminFilter(); });
+                    adminStatusFilter?.addEventListener('change', () => { persistFilters(); applyAdminFilter(); });
+                    adminProgressFilter?.addEventListener('change', () => { persistFilters(); applyAdminFilter(); });
+                    renderAdminRows(items);
+      } catch (e) {
+        alert(e.message || '管理员接口调用失败');
+      }
+    });
+  }
+
+  if (applyAllBtn) {
+    applyAllBtn.addEventListener('click', async () => {
+      if (!adminKey) { alert('请先输入管理员密钥并加载管理面板'); return; }
+      const pw = document.getElementById('globalPasswordInput').value.trim();
+                const allowSel = document.getElementById('globalAllowOpenQuotes').value;
+                const contactSel = document.getElementById('globalContactPublic')?.value || '';
+                const payload = { applyToAll: true };
+                if (pw) payload.newPasswordPlain = pw;
+                if (allowSel === 'true') payload.allowOpenQuotes = true;
+                if (allowSel === 'false') payload.allowOpenQuotes = false;
+                if (contactSel === 'true') payload.contactPublic = true;
+                if (contactSel === 'false') payload.contactPublic = false;
+      try {
+        const resp = await fetch('/.netlify/functions/adminUpdateRequirement', {
+          method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Key': adminKey },
+          body: JSON.stringify(payload)
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error || '更新失败');
+        alert(`已更新 ${data.updated} 条需求`);
+      } catch (e) {
+        alert(e.message);
+      }
+    });
+  }
+})();
+
+// 单条更新函数（暴露到全局以供按钮调用）
+async function updateRequirementRow(btn) {
+  const tr = btn.closest('tr');
+  const reqId = tr?.dataset?.id || '';
+  const plainPw = tr?.querySelector('.plain-pw')?.value.trim() || '';
+  const allowOpen = tr?.querySelector('.allow-open-select')?.value === 'true';
+  const adminKey = document.getElementById('adminKeyInput').value.trim();
+  if (!reqId || !adminKey) { alert('请确保需求编号与管理员密钥有效'); return; }
+  const payload = { requirementID: reqId, allowOpenQuotes: allowOpen };
+  if (plainPw) payload.newPasswordPlain = plainPw;
+  try {
+    const resp = await fetch('/.netlify/functions/adminUpdateRequirement', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Key': adminKey },
+      body: JSON.stringify(payload)
+    });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || '更新失败');
+    alert('已更新当前需求设置');
+  } catch (e) {
+    alert(e.message);
+  }
+}
+</script>
+<!-- Bootstrap JS（offcanvas/scrollspy） -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+// 管理页：追加 XLSX 导出按钮（依赖 SheetJS）
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    const exportCsvBtn = document.getElementById('exportCsvBtn');
+    if (!exportCsvBtn || !window.XLSX) return;
+    const exportXlsxBtn = document.createElement('button');
+    exportXlsxBtn.className = 'btn btn-success btn-sm ms-2';
+    exportXlsxBtn.id = 'exportXlsxBtn';
+    exportXlsxBtn.innerHTML = '<i class="fa-solid fa-file-excel me-1"></i> 导出为 XLSX';
+    exportCsvBtn.parentElement?.insertBefore(exportXlsxBtn, exportCsvBtn.nextSibling);
+    exportXlsxBtn.addEventListener('click', () => {
+      const rows = (window.currentQuotes||[]).map(q => ({
+        供应商: q.SupplierCompanyName||'',
+        联系人: q.SupplierContact||'',
+        电话: q.SupplierPhone||'',
+        报价: q.Price||'',
+        状态: q.Status||''
+      }));
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(rows);
+      XLSX.utils.book_append_sheet(wb, ws, '报价');
+      XLSX.writeFile(wb, 'quotes.xlsx');
+    });
+  } catch {}
+});
+</script>
+<script>
+// 系统设置：默认导出格式与“仅联系方式脱敏”筛选持久化与应用
+document.addEventListener('DOMContentLoaded', () => {
+  const exportCsvBtn = document.getElementById('exportCsvBtn');
+  const exportXlsxBtn = document.getElementById('exportXlsxBtn');
+  const defaultExportFormat = document.getElementById('defaultExportFormat');
+  const defaultMaskedFilter = document.getElementById('defaultMaskedFilter');
+  const notifyEmail = document.getElementById('notifyEmail');
+  const notifySms = document.getElementById('notifySms');
+  const saveBtn = document.getElementById('saveAdminSettings');
+  const hint = document.getElementById('saveSettingsHint');
+
+  function applySettingsToUI(s){
+    if (!s) return;
+    // 导出按钮高亮切换
+    if (exportCsvBtn && exportXlsxBtn) {
+      const useCsv = (s.defaultExportFormat || 'csv') === 'csv';
+      exportCsvBtn.classList.toggle('btn-primary', useCsv);
+      exportCsvBtn.classList.toggle('btn-outline-primary', !useCsv);
+      exportXlsxBtn.classList.toggle('btn-outline-success', useCsv);
+    }
+    // 默认启用“仅联系方式脱敏”筛选
+    try {
+      const onlyMaskedAdmin = document.getElementById('onlyMaskedAdmin');
+      if (onlyMaskedAdmin && typeof s.defaultMaskedFilter === 'boolean') {
+        onlyMaskedAdmin.checked = s.defaultMaskedFilter;
+        onlyMaskedAdmin.dispatchEvent(new Event('change'));
+      }
+    } catch {}
+  }
+
+  // 读取持久化
+  try {
+    const s = JSON.parse(localStorage.getItem('adminSettings')||'{}');
+    if (defaultExportFormat) defaultExportFormat.value = s.defaultExportFormat || 'csv';
+    if (defaultMaskedFilter) defaultMaskedFilter.checked = !!s.defaultMaskedFilter;
+    if (notifyEmail) notifyEmail.checked = !!s.notifyEmail;
+    if (notifySms) notifySms.checked = !!s.notifySms;
+    applySettingsToUI(s);
+  } catch {}
+
+  saveBtn?.addEventListener('click', () => {
+    const s = {
+      defaultExportFormat: defaultExportFormat?.value || 'csv',
+      defaultMaskedFilter: !!defaultMaskedFilter?.checked,
+      notifyEmail: !!notifyEmail?.checked,
+      notifySms: !!notifySms?.checked
+    };
+    try {
+      localStorage.setItem('adminSettings', JSON.stringify(s));
+      hint.textContent = '已保存';
+      applySettingsToUI(s);
+      setTimeout(() => { hint.textContent = ''; }, 1500);
+    } catch {}
+  });
+});
+</script>
 </body>
 </html>
