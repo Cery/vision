@@ -148,6 +148,8 @@ enableGitInfo = true
     # 合作伙伴
     partner_companies_title = "合作伙伴"
     partner_companies_subtitle = "值得信赖的合作伙伴"
+    # 首页应用案例紧凑列表展示数量（默认4）
+    casesListCount = 4
 
   # 轮播图配置
   [[params.carousel_images]]

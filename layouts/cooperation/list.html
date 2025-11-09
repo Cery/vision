@@ -10,8 +10,8 @@
   <div class="row g-4">
     <div class="col-lg-8">
       <!-- 平台介绍 -->
-      <section class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-primary text-white">
+      <section class="card shadow-sm border-0 mb-4 cooperation-card">
+        <div class="card-header">
           <h5 class="mb-0"><i class="fas fa-building me-2"></i>平台介绍</h5>
         </div>
         <div class="card-body p-4">
@@ -34,8 +34,8 @@
       </section>
 
       <!-- 合作方式 -->
-      <section class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-warning text-dark">
+      <section class="card shadow-sm border-0 mb-4 cooperation-card">
+        <div class="card-header">
           <h5 class="mb-0"><i class="fas fa-handshake me-2"></i>合作方式</h5>
         </div>
         <div class="card-body p-4">
@@ -67,8 +67,8 @@
 
 
       <!-- 联系方式 -->
-      <section class="card shadow-sm border-0">
-        <div class="card-header bg-info text-white">
+      <section class="card shadow-sm border-0 cooperation-card">
+        <div class="card-header">
           <h5 class="mb-0"><i class="fas fa-address-book me-2"></i>联系方式</h5>
         </div>
         <div class="card-body p-4">
@@ -114,8 +114,29 @@
   </div>
 
   <style>
+    /* 统一卡片与标题风格 */
+    .cooperation-card {
+      border-radius: 16px;
+      border: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .cooperation-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 48px rgba(0,0,0,0.12);
+    }
+    .cooperation-card .card-header {
+      background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+      color: #fff;
+      padding: 1rem 1.25rem;
+      border-bottom: none;
+    }
+    .cooperation-card .card-header h5 {
+      font-weight: 700;
+      margin: 0;
+    }
     .cooperation-item .icon-wrap { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; }
-    .card-header h5 { font-weight: 600; }
   </style>
 </div>
 {{ end }}

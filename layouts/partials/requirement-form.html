@@ -14,29 +14,10 @@
       <!-- 密码（明文，初期阶段保存在 Netlify 表单；后期在函数中哈希存储） -->
       <input type="hidden" id="view-password" name="viewPassword" value="">
 
-      <!-- 基本信息 -->
-      <div class="mb-3">
-        <label class="form-label"><i class="fa-solid fa-user me-1 text-secondary"></i>联系人</label>
-        <input type="text" name="contactName" class="form-control" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label"><i class="fa-solid fa-phone me-1 text-secondary"></i>手机号</label>
-        <input type="text" name="contactPhone" class="form-control" required>
-      </div>
       <!-- 需求简述/标题 -->
       <div class="mb-3">
         <label class="form-label"><i class="fa-solid fa-heading me-1 text-secondary"></i>需求简述/标题</label>
         <input type="text" name="Title" class="form-control" placeholder="例如：某公司电子内窥镜采购需求" required>
-      </div>
-
-      <!-- 公司信息 -->
-      <div class="mb-3">
-        <label class="form-label"><i class="fa-solid fa-building me-1 text-secondary"></i>公司/单位</label>
-        <input type="text" name="contactCompany" class="form-control" placeholder="可选">
-      </div>
-      <div class="mb-3">
-        <label class="form-label"><i class="fa-solid fa-envelope me-1 text-secondary"></i>邮箱</label>
-        <input type="email" name="contactEmail" class="form-control" placeholder="可选">
       </div>
 
 
@@ -48,6 +29,34 @@
           <option value="光纤内窥镜">光纤内窥镜</option>
           <option value="光学内窥镜">光学内窥镜</option>
         </select>
+      </div>
+
+      <!-- 发布方信息（移至产品信息下方，集中展示） -->
+      <div class="card mb-3">
+        <div class="card-header d-flex align-items-center gap-2">
+          <i class="fa-solid fa-id-card text-secondary"></i>
+          <strong>发布方信息</strong>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label"><i class="fa-solid fa-user me-1 text-secondary"></i>联系人</label>
+              <input type="text" name="contactName" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label"><i class="fa-solid fa-phone me-1 text-secondary"></i>手机号</label>
+              <input type="text" name="contactPhone" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label"><i class="fa-solid fa-building me-1 text-secondary"></i>公司/单位</label>
+              <input type="text" name="contactCompany" class="form-control" placeholder="可选">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label"><i class="fa-solid fa-envelope me-1 text-secondary"></i>邮箱</label>
+              <input type="email" name="contactEmail" class="form-control" placeholder="可选">
+            </div>
+          </div>
+        </div>
       </div>
       <!-- 二级分类项不展示（按需求） -->
 
@@ -164,11 +173,7 @@
         </div>
       </div>
 
-      <!-- 需求详细说明 -->
-      <div class="mb-3">
-        <label class="form-label">详细说明</label>
-        <textarea name="summary" class="form-control" required rows="5"></textarea>
-      </div>
+      <!-- 需求详细说明（已移除重复项，保留上方“详细说明/参数”） -->
 
       <!-- 发布方式（移至底部，与提交整合） -->
       <div class="mb-3 pt-3 border-top">
@@ -267,7 +272,77 @@ function generateAndSubmitRequirement() {
   document.getElementById('view-password-preview').value = pw;
   preview.style.display = '';
 
-  // 提交表单
-  document.getElementById('requirementForm').submit();
+  // 构建数据并调用后端函数创建需求
+  const form = document.getElementById('requirementForm');
+  const fd = new FormData(form);
+  const payload = {
+    requirementID: id,
+    viewPassword: pw,
+    contactName: fd.get('contactName') || '',
+    contactPhone: fd.get('contactPhone') || '',
+    contactCompany: fd.get('contactCompany') || '',
+    contactEmail: fd.get('contactEmail') || '',
+    Title: fd.get('Title') || '',
+    primaryCategory: fd.get('primaryCategory') || '',
+    Status: fd.get('Status') || '公开',
+    ContactPublic: !!fd.get('contactPublic'),
+    BudgetRange: fd.get('budgetRange') || '',
+    PublicPreview: (function(){
+      const title = (fd.get('Title') || '').toString();
+      const cat = (fd.get('primaryCategory') || '').toString();
+      const raw = (fd.get('parameters') || '').toString().trim();
+      const summary = raw || buildParametersSummary();
+      return [title, cat ? `分类：${cat}` : '', summary].filter(Boolean).join('\n').slice(0, 500);
+    })(),
+    Parameters: (function(){
+      const raw = (fd.get('parameters') || '').toString();
+      const fields = {};
+      form.querySelectorAll('input[name^="param_"]').forEach(inp => {
+        const key = inp.name.replace(/^param_/, '');
+        const val = (inp.value || '').trim();
+        if (val) fields[key] = val;
+      });
+      // 追加截止日期到参数字段，便于后端统一存储
+      const deadline = (fd.get('deadline') || '').toString().trim();
+      if (deadline) fields['deadline'] = deadline;
+      let jsonPart = {};
+      if (raw) {
+        try { jsonPart = JSON.parse(raw); } catch { jsonPart = { text: raw }; }
+      }
+      return { ...jsonPart, fields };
+    })(),
+  };
+
+  const btn = form.querySelector('button.btn-primary');
+  const origText = btn?.innerHTML;
+  if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> 发布中…'; }
+
+  fetch('/.netlify/functions/createRequirement', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(r => r.json())
+    .then(res => {
+      if (res && res.RequirementID) {
+        document.getElementById('requirement-id-preview').value = res.RequirementID;
+        document.getElementById('view-password-preview').value = res.ViewPassword || pw;
+        preview.style.display = '';
+        // 成功提示
+        const ok = document.createElement('div');
+        ok.className = 'alert alert-success mt-3';
+        ok.innerHTML = `<i class="fa-solid fa-check-circle me-1"></i> 需求发布成功！请妥善保存编号与查看密码。`;
+        form.appendChild(ok);
+      } else {
+        throw new Error(res?.error || '发布失败');
+      }
+    })
+    .catch(err => {
+      console.error('Create requirement error:', err);
+      const el = document.createElement('div');
+      el.className = 'alert alert-danger mt-3';
+      el.textContent = `发布失败：${err.message || err}`;
+      form.appendChild(el);
+    })
+    .finally(() => { if (btn) { btn.disabled = false; btn.innerHTML = origText; } });
 }
 </script>

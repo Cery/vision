@@ -1,8 +1,4 @@
-{{ $product1 := $.Site.GetPage "products/product-dz60" }}
-{{ $product2 := $.Site.GetPage "products/product-p2810" }}
-{{ $product3 := $.Site.GetPage "products/WS-K09510-a" }}
-
-<section class="new-products-section py-4">
+<section class="new-products-section py-5">
     <div class="container">
         <div class="row mb-4">
             <div class="col-12">
@@ -11,40 +7,61 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row g-4">
+            {{/* 动态读取并展示最新产品 */}}
+            {{ $products := where .Site.RegularPages "Section" "products" }}
+            {{ $products = sort $products "Date" "desc" }}
+            {{ $products = first 3 $products }}
             {{ $displayedProducts := 0 }}
-            {{ range slice $product1 $product2 $product3 }}
-            {{ if . }}
+            {{ range $p := $products }}
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="ad-card">
-                    <a href="{{ .Permalink }}" class="ad-link">
-                        {{ $hasImage := false }}
-                        {{ range first 1 .Params.gallery }}
-                            {{ if .is_main }}
-                            <div class="ad-image-wrapper">
-                                <img src="{{ .image }}" class="ad-image" alt="{{ .alt }}">
-                            </div>
-                            {{ $hasImage = true }}
+                    <a href="{{ $p.Permalink }}" class="ad-link">
+                        {{/* 主图优先取 gallery 中 is_main=true 的图片 */}}
+                        {{ with $p.Params.gallery }}
+                            {{ $mains := where . "is_main" true }}
+                            {{ with index $mains 0 }}
+                                <div class="ad-image-wrapper">
+                                    <img src="{{ .image }}" class="ad-image" alt="{{ .alt | default $p.Title }}">
+                                </div>
+                            {{ else }}
+                                <div class="ad-image-wrapper">
+                                    {{ $pm := site.Data.path_mapping.mappings.products }}
+                                    {{ $defaultKey := "/images/products/default-product.jpg" }}
+                                    {{ $defaultSrc := cond (and $pm (index $pm $defaultKey)) (index $pm $defaultKey) $defaultKey }}
+                                    <img src="{{ $defaultSrc }}" class="ad-image" alt="{{ $p.Title }}">
+                                </div>
                             {{ end }}
-                        {{ end }}
-                        
-                        {{ if not $hasImage }}
+                        {{ else }}
                             <div class="ad-image-wrapper">
-                                <img src="/images/products/default-product.jpg" class="ad-image" alt="{{ .Title }}">
+                                {{ $pm := site.Data.path_mapping.mappings.products }}
+                                {{ $defaultKey := "/images/products/default-product.jpg" }}
+                                {{ $defaultSrc := cond (and $pm (index $pm $defaultKey)) (index $pm $defaultKey) $defaultKey }}
+                                <img src="{{ $defaultSrc }}" class="ad-image" alt="{{ $p.Title }}">
                             </div>
                         {{ end }}
                         
                         <div class="ad-content">
                             <div class="ad-categories">
-                                {{ with .Params.primary_category }}
-                                    <span class="ad-category primary">{{ . }}</span>
+                                {{ with $p.Params.primary_category }}
+                                    {{ $pct := printf "%T" . }}
+                                    {{ if in $pct "[]" }}
+                                        <span class="ad-category primary">{{ index . 0 }}</span>
+                                    {{ else }}
+                                        <span class="ad-category primary">{{ . }}</span>
+                                    {{ end }}
                                 {{ end }}
-                                {{ with .Params.secondary_category }}
-                                    <span class="ad-category secondary">{{ . }}</span>
+                                {{ with $p.Params.secondary_category }}
+                                    {{ $sct := printf "%T" . }}
+                                    {{ if in $sct "[]" }}
+                                        <span class="ad-category secondary">{{ index . 0 }}</span>
+                                    {{ else }}
+                                        <span class="ad-category secondary">{{ . }}</span>
+                                    {{ end }}
                                 {{ end }}
                             </div>
-                            <h3 class="ad-title">{{ .Title }}</h3>
-                            {{ with .Params.model }}
+                            <h3 class="ad-title">{{ $p.Title }}</h3>
+                            {{ with $p.Params.model }}
                             <div class="ad-model">型号：{{ . }}</div>
                             {{ end }}
                         </div>
@@ -53,15 +70,22 @@
             </div>
             {{ $displayedProducts = add $displayedProducts 1 }}
             {{ end }}
-            {{ end }}
 
             <!-- 如果没有足够的产品，添加占位广告 -->
-            {{ range seq (sub 3 $displayedProducts) }}
+            {{/* 计算占位卡片数量，避免负数（不使用 max 以兼容旧版本 Hugo） */}}
+            {{ $remain := sub 3 $displayedProducts }}
+            {{ if lt $remain 0 }}
+                {{ $remain = 0 }}
+            {{ end }}
+            {{ range seq $remain }}
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="ad-card">
-                        <a href="#" class="ad-link">
+                        <a href="/products/" class="ad-link">
                             <div class="ad-image-wrapper">
-                                <img src="https://picsum.photos/400/300?random={{ . }}" class="ad-image" alt="广告占位图">
+                                {{ $pm := site.Data.path_mapping.mappings.products }}
+                                {{ $defaultKey := "/images/products/default-product.jpg" }}
+                                {{ $defaultSrc := cond (and $pm (index $pm $defaultKey)) (index $pm $defaultKey) $defaultKey }}
+                                <img src="{{ $defaultSrc }}" class="ad-image" alt="广告占位图">
                             </div>
                             <div class="ad-content">
                                 <div class="ad-categories">
@@ -80,37 +104,7 @@
 </section>
 
 <style>
-/* 新品推荐样式 - 统一设计 */
-.section-title {
-    font-size: 24px;
-    font-weight: 700;
-    color: #212121;
-    margin-bottom: 0.5rem;
-    text-align: center;
-    position: relative;
-    padding-bottom: 15px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-.section-title:after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 3px;
-    background: linear-gradient(to right, #1976d2, #42a5f5);
-    border-radius: 2px;
-}
-
-.section-subtitle {
-    font-size: 16px;
-    color: #616161;
-    text-align: center;
-    margin-bottom: 2rem;
-    font-weight: 400;
-}
+/* 新品推荐样式 - 统一设计（标题样式已集中到 section-titles.css） */
 
 .ad-card {
     position: relative;

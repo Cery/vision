@@ -497,10 +497,14 @@
                   }
                 };
 
-                // 图片加载错误处理
-                img.onerror = function () {
-                  img.src = 'https://via.placeholder.com/300x200/f8f9fa/6c757d?text=图片加载失败';
-                  img.alt = '图片加载失败';
+                // 图片加载错误处理（统一全局占位图回退）
+                img.onerror = function (ev) {
+                  if (typeof handleImageError === 'function') {
+                    handleImageError(img);
+                  } else {
+                    img.src = (window.__ImageFallbackSrc || '/images/placeholder.svg');
+                    img.alt = '图片加载失败';
+                  }
                 };
 
                 imgWrapper.appendChild(img);
@@ -521,12 +525,9 @@
           galleryContainer.innerHTML = '<div class="text-muted text-center py-5"><i class="fas fa-images fa-2x mb-3 d-block"></i>暂无企业相册</div>';
         }
   
-      });
-    }
   });
-  console.log({
-  title, address, type, contactPerson, position, phone, email, description, series, models, gallery
-});
+}
+  });
 
   </script>
   

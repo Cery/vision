@@ -1,0 +1,17 @@
+primary_categories:
+  - name: 展会资讯
+    subcategories:
+      - 铸造展
+      - 风能展
+      - 动力展
+      - 燃机大会
+  - name: 行业资讯
+    subcategories:
+      - 市场动态
+      - 企业新闻
+      - 行业政策
+  - name: 技术文章
+    subcategories:
+      - 原理解析
+      - 应用指南
+      - 技术评测

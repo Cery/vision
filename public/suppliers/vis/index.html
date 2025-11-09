@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1321&amp;path=livereload" data-no-instant defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>天津维森科技有限公司 - 维森·视觉检测仪器</title>
@@ -26,25 +26,25 @@
 
 
 <meta property="og:type" content="article">
-<meta property="og:url" content="http://localhost:1313/suppliers/vis/">
+<meta property="og:url" content="http://localhost:1321/suppliers/vis/">
 <meta property="og:title" content="天津维森科技有限公司 - 维森视觉检测仪器">
 <meta property="og:description" content="天津维森科技有限公司是一家专注仪器仪表、检测量具、刀具的机电设备服务商。">
-<meta property="og:image" content="http://localhost:1313/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta property="og:image" content="http://localhost:1321/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 <meta property="og:site_name" content="维森视觉检测仪器">
 <meta property="og:locale" content="zh_CN">
 
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="http://localhost:1313/suppliers/vis/">
+<meta name="twitter:url" content="http://localhost:1321/suppliers/vis/">
 <meta name="twitter:title" content="天津维森科技有限公司 - 维森视觉检测仪器">
 <meta name="twitter:description" content="天津维森科技有限公司是一家专注仪器仪表、检测量具、刀具的机电设备服务商。">
-<meta name="twitter:image" content="http://localhost:1313/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta name="twitter:image" content="http://localhost:1321/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 
 
 
 
 
-<link rel="canonical" href="http://localhost:1313/suppliers/vis/">
+<link rel="canonical" href="http://localhost:1321/suppliers/vis/">
 
 
 <link rel="icon" type="image/svg+xml" href="../../images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
@@ -104,6 +104,57 @@
         color: var(--color-primary-600);
         background-color: var(--color-primary-50);
         transform: translateY(-1px);
+    }
+
+     
+    .breadcrumb-section {
+        background: linear-gradient(135deg, var(--color-gray-50, #f8fafc) 0%, var(--color-gray-100, #e9eef5) 100%);
+        border-bottom: 1px solid var(--border-light);
+        margin-top: var(--spacing-sm);
+        margin-bottom: var(--spacing-md);
+        position: relative;
+    }
+    .breadcrumb-section .breadcrumb {
+        margin-bottom: 0;
+        background: transparent !important;
+    }
+    .breadcrumb-section .breadcrumb-item a {
+        color: var(--text-secondary);
+    }
+    .breadcrumb-section .breadcrumb-item a:hover {
+        color: var(--color-primary-600);
+        text-decoration: none;
+    }
+
+     
+    @media (max-width: 575.98px) {
+      .breadcrumb-section .breadcrumb {
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;  
+      }
+      .breadcrumb-section .breadcrumb::-webkit-scrollbar {
+        display: none;  
+      }
+      .breadcrumb-section::before,
+      .breadcrumb-section::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 20px;
+        pointer-events: none;
+        z-index: 1;
+      }
+      .breadcrumb-section::before {
+        left: 0;
+        background: linear-gradient(to right, rgba(248, 250, 252, 1), rgba(248, 250, 252, 0));
+      }
+      .breadcrumb-section::after {
+        right: 0;
+        background: linear-gradient(to left, rgba(233, 238, 245, 1), rgba(233, 238, 245, 0));
+      }
     }
 
      
@@ -697,11 +748,22 @@
  
 #backToTopBtn {
   transition: opacity 0.3s;
-  opacity: 0.85;
+  opacity: 0.92;
+  position: relative;  
 }
 #backToTopBtn:hover {
   opacity: 1;
-  background: #0056b3;
+}
+
+ 
+#backToTopBtn::before {
+  content: '';
+  position: absolute;
+  inset: -4px;  
+  border-radius: 50%;
+  background: conic-gradient(#90caf9 var(--scroll-progress, 0%), rgba(0,0,0,0.08) 0);
+  z-index: -1;  
+  box-shadow: 0 4px 10px rgba(25,118,210,0.2);
 }
 </style>
 
@@ -735,10 +797,35 @@
 
 <script>
     window.searchIndex = [{
-        "title": "\"样例产品\"",
-        "url": "\"/products/%E6%A0%B7%E4%BE%8B%E4%BA%A7%E5%93%81/\"",
-        "content": "\"产品详细描述\\u0026hellip;\\n\"",
-        "type": "product"
+        "title": "\"焊缝质量缺陷检测与工艺优化案例\"",
+        "url": "\"/cases/case-weld-quality/\"",
+        "content": "\"项目背景 焊接质量直接影响整车安全与可靠性，传统抽检难以发现内部缺陷。\\n解决方案 引入内窥检测与SPC方法，依据缺陷根因调整焊接参数并建立检测标准。\\n实施效果 返修率与交付周期显著改善，形成标准化质量控制流程。\\n\"",
+        "type": "case"
+      },{
+        "title": "\"基于AI的缺陷识别在工业内窥中的应用实践\"",
+        "url": "\"/news/tech-article/2025-ai-defect-detection/\"",
+        "content": "\"本文分享在工业场景下采用深度学习进行缺陷识别的实践经验，包括数据采集、标注、模型训练与评估指标。\\n\"",
+        "type": "article"
+      },{
+        "title": "\"石化储罐内壁腐蚀监测与维护案例\"",
+        "url": "\"/cases/case-petrochemical-corrosion/\"",
+        "content": "\"项目背景 储罐长期服役环境导致内壁腐蚀，需精准监测与科学维护。\\n解决方案 结合成像与评估模型计算腐蚀程度，并制定分级维护策略。\\n实施效果 安全性与经济性提升，建立规范化巡检体系。\\n\"",
+        "type": "case"
+      },{
+        "title": "\"航空发动机叶片内部缺陷检测案例\"",
+        "url": "\"/cases/case-aero-engine-blade/\"",
+        "content": "\"项目背景 航空发动机叶片是飞行安全关键部件，需要对内部微缺陷进行高精度检测。\\n解决方案 采用微型内窥成像与光源优化，结合缺陷识别算法进行快速判定。\\n实施效果 检测率与维护效率均提升，保障发动机可靠运行。\\n\"",
+        "type": "case"
+      },{
+        "title": "\"微电子BGA焊点缺陷检测案例\"",
+        "url": "\"/cases/2025-microelectronics-bga-inspection/\"",
+        "content": "\"针对微电子封装中的BGA焊点缺陷，我们构建了高分辨率成像方案与自动化检测流水线，覆盖空洞、桥连、虚焊等关键问题。\\n方案摘要：\\n使用高分辨率工业相机与远心镜头，实现焊点区域稳定成像。 采用分割与检测融合算法，识别焊点几何异常与表面缺陷。 根据工艺标准输出分级结果与处置建议，支持生产追溯与SPC分析。 收益：\\n降低不良品率，提升生产良率与一致性。 实现自动化质检，提高效率并减少人工误判。 \"",
+        "type": "case"
+      },{
+        "title": "\"风电齿轮箱缺陷检测案例\"",
+        "url": "\"/cases/2025-wind-turbine-gearbox-inspection/\"",
+        "content": "\"在风力发电场的日常维护中，齿轮箱的齿面裂纹、点蚀与磨损是常见问题。我们结合高清工业内窥镜与基于深度学习的缺陷识别模型，实现了对齿面缺陷的快速定位与定量评估。\\n解决方案亮点：\\n使用短焦、可弯曲探头在狭窄空间内灵活探查齿面区域。 采用图像增强与去噪算法，提高弱纹理缺陷可见性。 基于样本库训练的AI模型对裂纹、点蚀、磨损进行分类与置信度输出。 自动生成检测报告与维护建议，支持趋势分析与寿命预测。 应用价值：\\n降低停机时间与维护成本，提升风电设备可靠性。 实现标准化、可追溯的检测流程，支持批量设备巡检。 \"",
+        "type": "case"
       },{
         "title": "\"2025年工业内窥镜市场发展趋势分析报告\"",
         "url": "\"/news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/\"",
@@ -840,33 +927,64 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
       var btn = document.getElementById('backToTopBtn');
+      function updateBackToTopProgress() {
+        var doc = document.documentElement;
+        var top = doc.scrollTop || document.body.scrollTop || window.scrollY || 0;
+        var height = (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight;
+        var progress = height > 0 ? (top / height) * 100 : 0;
+        if (btn && btn.style) {
+          btn.style.setProperty('--scroll-progress', progress + '%');
+        }
+      }
       window.addEventListener('scroll', function() {
         if (window.scrollY > 200) {
           btn.style.display = 'block';
         } else {
           btn.style.display = 'none';
         }
+        updateBackToTopProgress();
       });
       btn.addEventListener('click', function() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
+      
+      updateBackToTopProgress();
     });
     </script>
 
 <script>
+  
+  window.__ImageFallbackSrc = window.__ImageFallbackSrc || (function() {
+    try {
+      var fallback = '\/images\/assets\/brand\/brand_general_placeholder_original_v1.svg';
+      return fallback;
+    } catch (e) { return '/images/placeholder.svg'; }
+  })();
+
   window.handleImageError = window.handleImageError || function(el) {
     try {
       var img = el && el.target ? el.target : el;
       if (!img) return;
-      var fallback = '/images/placeholder.svg';
+      var fallback = window.__ImageFallbackSrc || '/images/placeholder.svg';
       if (img.src !== fallback) {
-        console.warn('图片加载失败(预定义): ' + img.src + ', 使用占位: ' + fallback);
+        console.warn('图片加载失败: ' + img.src + ', 使用占位: ' + fallback);
         img.src = fallback;
         img.alt = img.alt || '图片加载失败';
         if (img.classList) { img.classList.add('img-error'); }
       }
-    } catch (e) { console.error('预定义 handleImageError 异常:', e); }
+    } catch (e) { console.error('handleImageError 异常:', e); }
   };
+
+  
+  (function attachGlobalImageErrorHandler(){
+    try {
+      window.addEventListener('error', function(e){
+        if (e && e.target && e.target.tagName === 'IMG') {
+          window.handleImageError(e);
+        }
+      }, true);
+    } catch (e) {   }
+  })();
 </script>
 <script src="../../js/image-handler.js"></script>
 <script src="../../js/carousel-handler.js"></script>
@@ -1186,7 +1304,7 @@
             </div>
             <div>
                 
-                <a href="http://localhost:1313/suppliers/vsndt/" style="color: #007bff; text-decoration: none;">
+                <a href="http://localhost:1321/suppliers/vsndt/" style="color: #007bff; text-decoration: none;">
                     深圳市微视光电科技有限公司 →
                 </a>
                 
@@ -1311,6 +1429,23 @@ style="position: fixed; right: 32px; bottom: 48px; z-index: 999; display: none; 
 </button>
 
 <style>
+ 
+#backToTopBtn {
+  background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
+  border: none;
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(25,118,210,0.35);
+  transition: opacity 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+#backToTopBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(25,118,210,0.45);
+}
+#backToTopBtn:active {
+  transform: translateY(0);
+}
+ 
+#backToTopBtn i { font-size: 1rem; }
  
 @media (max-width: 768px) {
   .footer {

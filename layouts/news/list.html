@@ -10,41 +10,66 @@
                     <h5 class="mb-0"><i class="fas fa-filter me-2"></i>筛选条件</h5>
                 </div>
                 <div class="card-body">
-                    <!-- 已选筛选项（内嵌在筛选卡片顶部） -->
-                    <div id="selected-filters-inline" class="selected-filters-inline" style="display: none;">
-                        <div class="selected-filters-label mb-2"><i class="fas fa-check-circle me-1"></i>已选条件</div>
-                        <div id="selected-filters-inline-container" class="d-flex flex-wrap gap-2"></div>
-                    </div>
-                    <!-- 资讯分类筛选 -->
+                    <!-- 资讯分类筛选（错位两级分类） -->
                     <div class="mb-4">
                         <h6 class="filter-section-title">
                             <i class="fas fa-folder-open me-2"></i>资讯分类
                         </h6>
-                        <div class="filter-buttons-container" id="category-filters">
-                            <a href="javascript:void(0)" class="filter-btn active" data-filter-type="category" data-filter-value="">
-                                全部
-                            </a>
+                        <div id="category-filters">
                             {{ $newsPages := where .Site.RegularPages "Type" "news" }}
-                            {{ $newsCategories := dict }}
-                            {{ range $newsPages }}
-                                {{ range .Params.categories }}
-                                    {{ $newsCategories = merge $newsCategories (dict . (add (index $newsCategories . | default 0) 1)) }}
-                                {{ end }}
-                            {{ end }}
-                            {{ range $category, $count := $newsCategories }}
-                            <a href="javascript:void(0)" class="filter-btn" data-filter-type="category" data-filter-value="{{ $category }}">
-                                {{ $category }} <span class="badge bg-light text-dark">{{ $count }}</span>
-                            </a>
+                            {{ $catsData := site.Data.news_categories }}
+
+                            {{ if and $catsData $catsData.primary_categories }}
+                                <div class="filter-buttons-container">
+                                    {{ range $catsData.primary_categories }}
+                                        {{ $pname := .name }}
+                                        {{ $pcount := len (where $newsPages "Params.categories" "intersect" (slice $pname)) }}
+                                        <a href="javascript:void(0)"
+                                           class="filter-btn category-btn"
+                                           data-filter-type="category" data-filter-value="{{ $pname }}">
+                                            <i class="fas fa-folder me-1"></i>{{ $pname }}
+                                            <span class="badge bg-light text-dark ms-1">{{ $pcount }}</span>
+                                        </a>
+                                        {{ range .subcategories }}
+                                            {{ $sc := . }}
+                                            {{/* 计数：主类命中且子类在标签或分类中命中（并集去重） */}}
+                                            {{ $pagesPrimary := where $newsPages "Params.categories" "intersect" (slice $pname) }}
+                                            {{ $pagesByTag := where $pagesPrimary "Params.tags" "intersect" (slice $sc) }}
+                                            {{ $pagesByCat := where $pagesPrimary "Params.categories" "intersect" (slice $sc) }}
+                                            {{ $pairUnion := union $pagesByTag $pagesByCat }}
+                                            {{ $scount := len $pairUnion }}
+                                            <a href="javascript:void(0)" class="filter-btn tag-btn" data-filter-type="category" data-filter-value="{{ printf "%s|%s" $pname $sc }}">
+                                                {{ $pname }} - {{ $sc }} <span class="badge bg-light text-dark">{{ $scount }}</span>
+                                            </a>
+                                        {{ end }}
+                                    {{ end }}
+                                </div>
+                            {{ else }}
+                                {{/* 回退：无数据文件时按站点分类展示（不分组） */}}
+                                <div class="filter-buttons-container">
+                                    {{ $newsCategories := dict }}
+                                    {{ range $newsPages }}
+                                        {{ range .Params.categories }}
+                                            {{ $newsCategories = merge $newsCategories (dict . (add (index $newsCategories . | default 0) 1)) }}
+                                        {{ end }}
+                                    {{ end }}
+                                    {{ range $category, $count := $newsCategories }}
+                                    <a href="javascript:void(0)" class="filter-btn" data-filter-type="category" data-filter-value="{{ $category }}">
+                                        {{ $category }} <span class="badge bg-light text-dark">{{ $count }}</span>
+                                    </a>
+                                    {{ end }}
+                                </div>
                             {{ end }}
                         </div>
                     </div>
 
-                    <!-- 标签筛选 -->
+                    <!-- 热门标签筛选 -->
                     <div class="mb-4">
                         <h6 class="filter-section-title">
                             <i class="fas fa-tags me-2"></i>热门标签
                         </h6>
                         <div class="filter-buttons-container" id="tag-filters">
+                            {{ $newsPages := where .Site.RegularPages "Type" "news" }}
                             {{ $newsTags := dict }}
                             {{ range $newsPages }}
                                 {{ range .Params.tags }}
@@ -69,6 +94,12 @@
                         <button class="btn btn-outline-secondary btn-sm" id="clearAllFilters">
                             <i class="fas fa-times me-1"></i>清除全部
                         </button>
+                    </div>
+
+                    <!-- 已选筛选项（放置在卡片底部） -->
+                    <div id="selected-filters-inline" class="selected-filters-inline mt-3" style="display: none;">
+                        <div class="selected-filters-label mb-2"><i class="fas fa-check-circle me-1"></i>已选条件</div>
+                        <div id="selected-filters-inline-container" class="d-flex flex-wrap gap-2"></div>
                     </div>
                 </div>
             </div>
@@ -110,11 +141,17 @@
                                 {{ with .Params.featured_image }}
                                 <img src="{{ if or (hasPrefix . "http://") (hasPrefix . "https://") }}{{ . }}{{ else }}{{ . | relURL }}{{ end }}" class="card-img-top object-fit-cover" alt="{{ $page.Title }}" style="height: 200px;">
                                 {{ else }}
-                                {{ $newsImages := slice "/images/news/news-1.jpeg" "/images/news/news-2.jpeg" "/images/news/news-3.jpeg" "/images/news/news-4.jpeg" "/images/news/news-5.jpeg" "/images/news/news-6.jpeg" }}
-                                <img src="{{ index $newsImages (mod $index 6) }}" class="card-img-top object-fit-cover" alt="{{ $page.Title }}" style="height: 200px;">
+                                {{ $mapping := site.Data.path_mapping.mappings.news }}
+                                {{ if $mapping }}
+                                    {{ $newsImages := slice (index $mapping "/images/news/news-1.jpeg") (index $mapping "/images/news/news-2.jpeg") (index $mapping "/images/news/news-3.jpeg") (index $mapping "/images/news/news-4.jpeg") (index $mapping "/images/news/news-5.jpeg") (index $mapping "/images/news/news-6.jpeg") }}
+                                    <img src="{{ index $newsImages (mod $index 6) }}" class="card-img-top object-fit-cover" alt="{{ $page.Title }}" style="height: 200px;">
+                                {{ else }}
+                                    {{ $newsImages := slice "/images/news/news-1.jpeg" "/images/news/news-2.jpeg" "/images/news/news-3.jpeg" "/images/news/news-4.jpeg" "/images/news/news-5.jpeg" "/images/news/news-6.jpeg" }}
+                                    <img src="{{ index $newsImages (mod $index 6) }}" class="card-img-top object-fit-cover" alt="{{ $page.Title }}" style="height: 200px;">
                                 {{ end }}
-                            </div>
-                        </a>
+                            {{ end }}
+                        </div>
+                    </a>
                         <div class="card-body d-flex flex-column">
                             <div class="mb-2">
                                 {{ range .Params.categories }}
@@ -210,9 +247,17 @@ body {
     gap: 0.4rem 0.4rem;
 }
 
-/* 强制分类区按钮按内容宽度平铺，避免占满整行 */
+/* 分类侧栏：每行一个，竖排显示 */
+#category-filters {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+}
+
 #category-filters .filter-btn {
-    width: max-content;
+    width: 100%;
+    justify-content: flex-start;
 }
 
 .filter-btn {
@@ -260,6 +305,55 @@ body {
 .tag-btn {
     font-size: 13px;
     padding: 0.4rem 0.6rem;
+}
+
+/* 二级分类分组样式 */
+.subcategory-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.subcategory-group-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #424242;
+    margin-bottom: 0.35rem;
+}
+
+.subcategory-list .filter-btn {
+    width: 100%;
+    justify-content: flex-start;
+}
+
+/* 错位两级分类布局样式 */
+.category-level-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.category-primary-container .category-primary {
+    background: linear-gradient(135deg, #E3F2FD, #F5F5F5);
+    border: 1px solid #BBDEFB;
+}
+
+.category-secondary-container .category-secondary {
+    background: #FAFAFA;
+}
+
+.category-connector {
+    position: absolute;
+    left: 12px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, #BBDEFB, transparent);
+}
+
+.primary-btn {
+    justify-content: flex-start;
 }
 
 /* 已选筛选项卡片 */
@@ -882,6 +976,20 @@ function fetchViewCountsForPermalinks(permalinks) {
     });
 }
 
+function matchesCategoryFilters(categories, tags, selectedCategories) {
+    if (selectedCategories.length === 0) return true;
+    return selectedCategories.some(cat => {
+        if (cat.includes('|')) {
+            const [primary, secondary] = cat.split('|');
+            const primaryOk = categories.includes(primary);
+            const secondaryOk = categories.includes(secondary) || tags.includes(secondary);
+            return primaryOk && secondaryOk;
+        } else {
+            return categories.includes(cat) || tags.includes(cat);
+        }
+    });
+}
+
 function applyFiltersAndSort() {
     console.log('🔄 应用筛选和排序');
 
@@ -904,8 +1012,7 @@ function applyFiltersAndSort() {
             newsItem.dataset.tags.split(',').map(t => t.trim()) : [];
 
         // 检查分类匹配
-        let categoryMatch = selectedCategories.length === 0 ||
-            selectedCategories.some(cat => categories.includes(cat));
+        let categoryMatch = matchesCategoryFilters(categories, tags, selectedCategories);
 
         // 检查标签匹配
         let tagMatch = selectedTags.length === 0 ||
@@ -1001,8 +1108,9 @@ function updateSelectedFilters() {
 
     let filtersHTML = '';
     selectedCategories.forEach(category => {
+        const label = category.includes('|') ? category.replace('|', '-') : category;
         filtersHTML += `<span class="selected-filter-tag">
-            分类: ${category}
+            分类: ${label}
             <span class="remove-filter" onclick="removeFilter('category', '${category}')">&times;</span>
         </span>`;
     });

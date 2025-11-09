@@ -1,0 +1,7 @@
+{
+  "SupplierGlobalPassword": "",
+  "DefaultExportFormat": "csv",
+  "DefaultMaskedFilter": true,
+  "NotifyEmailEnabled": false,
+  "NotifySmsEnabled": false
+}

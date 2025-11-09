@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1321&amp;path=livereload" data-no-instant defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>应用案例 - 维森·视觉检测仪器</title>
@@ -26,25 +26,25 @@
 
 
 <meta property="og:type" content="article">
-<meta property="og:url" content="http://localhost:1313/cases/">
+<meta property="og:url" content="http://localhost:1321/cases/">
 <meta property="og:title" content="应用案例 - 维森视觉检测仪器">
 <meta property="og:description" content="专业的视觉检测设备信息与资讯发布平台，提供工业内窥镜、检测相机等产品信息，为制造业提供优质的检测解决方案">
-<meta property="og:image" content="http://localhost:1313/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta property="og:image" content="http://localhost:1321/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 <meta property="og:site_name" content="维森视觉检测仪器">
 <meta property="og:locale" content="zh_CN">
 
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="http://localhost:1313/cases/">
+<meta name="twitter:url" content="http://localhost:1321/cases/">
 <meta name="twitter:title" content="应用案例 - 维森视觉检测仪器">
 <meta name="twitter:description" content="专业的视觉检测设备信息与资讯发布平台，提供工业内窥镜、检测相机等产品信息，为制造业提供优质的检测解决方案">
-<meta name="twitter:image" content="http://localhost:1313/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta name="twitter:image" content="http://localhost:1321/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 
 
 
 
 
-<link rel="canonical" href="http://localhost:1313/cases/">
+<link rel="canonical" href="http://localhost:1321/cases/">
 
 
 <link rel="icon" type="image/svg+xml" href="../images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
@@ -104,6 +104,57 @@
         color: var(--color-primary-600);
         background-color: var(--color-primary-50);
         transform: translateY(-1px);
+    }
+
+     
+    .breadcrumb-section {
+        background: linear-gradient(135deg, var(--color-gray-50, #f8fafc) 0%, var(--color-gray-100, #e9eef5) 100%);
+        border-bottom: 1px solid var(--border-light);
+        margin-top: var(--spacing-sm);
+        margin-bottom: var(--spacing-md);
+        position: relative;
+    }
+    .breadcrumb-section .breadcrumb {
+        margin-bottom: 0;
+        background: transparent !important;
+    }
+    .breadcrumb-section .breadcrumb-item a {
+        color: var(--text-secondary);
+    }
+    .breadcrumb-section .breadcrumb-item a:hover {
+        color: var(--color-primary-600);
+        text-decoration: none;
+    }
+
+     
+    @media (max-width: 575.98px) {
+      .breadcrumb-section .breadcrumb {
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;  
+      }
+      .breadcrumb-section .breadcrumb::-webkit-scrollbar {
+        display: none;  
+      }
+      .breadcrumb-section::before,
+      .breadcrumb-section::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 20px;
+        pointer-events: none;
+        z-index: 1;
+      }
+      .breadcrumb-section::before {
+        left: 0;
+        background: linear-gradient(to right, rgba(248, 250, 252, 1), rgba(248, 250, 252, 0));
+      }
+      .breadcrumb-section::after {
+        right: 0;
+        background: linear-gradient(to left, rgba(233, 238, 245, 1), rgba(233, 238, 245, 0));
+      }
     }
 
      
@@ -697,11 +748,22 @@
  
 #backToTopBtn {
   transition: opacity 0.3s;
-  opacity: 0.85;
+  opacity: 0.92;
+  position: relative;  
 }
 #backToTopBtn:hover {
   opacity: 1;
-  background: #0056b3;
+}
+
+ 
+#backToTopBtn::before {
+  content: '';
+  position: absolute;
+  inset: -4px;  
+  border-radius: 50%;
+  background: conic-gradient(#90caf9 var(--scroll-progress, 0%), rgba(0,0,0,0.08) 0);
+  z-index: -1;  
+  box-shadow: 0 4px 10px rgba(25,118,210,0.2);
 }
 </style>
 
@@ -735,10 +797,35 @@
 
 <script>
     window.searchIndex = [{
-        "title": "\"样例产品\"",
-        "url": "\"/products/%E6%A0%B7%E4%BE%8B%E4%BA%A7%E5%93%81/\"",
-        "content": "\"产品详细描述\\u0026hellip;\\n\"",
-        "type": "product"
+        "title": "\"焊缝质量缺陷检测与工艺优化案例\"",
+        "url": "\"/cases/case-weld-quality/\"",
+        "content": "\"项目背景 焊接质量直接影响整车安全与可靠性，传统抽检难以发现内部缺陷。\\n解决方案 引入内窥检测与SPC方法，依据缺陷根因调整焊接参数并建立检测标准。\\n实施效果 返修率与交付周期显著改善，形成标准化质量控制流程。\\n\"",
+        "type": "case"
+      },{
+        "title": "\"基于AI的缺陷识别在工业内窥中的应用实践\"",
+        "url": "\"/news/tech-article/2025-ai-defect-detection/\"",
+        "content": "\"本文分享在工业场景下采用深度学习进行缺陷识别的实践经验，包括数据采集、标注、模型训练与评估指标。\\n\"",
+        "type": "article"
+      },{
+        "title": "\"石化储罐内壁腐蚀监测与维护案例\"",
+        "url": "\"/cases/case-petrochemical-corrosion/\"",
+        "content": "\"项目背景 储罐长期服役环境导致内壁腐蚀，需精准监测与科学维护。\\n解决方案 结合成像与评估模型计算腐蚀程度，并制定分级维护策略。\\n实施效果 安全性与经济性提升，建立规范化巡检体系。\\n\"",
+        "type": "case"
+      },{
+        "title": "\"航空发动机叶片内部缺陷检测案例\"",
+        "url": "\"/cases/case-aero-engine-blade/\"",
+        "content": "\"项目背景 航空发动机叶片是飞行安全关键部件，需要对内部微缺陷进行高精度检测。\\n解决方案 采用微型内窥成像与光源优化，结合缺陷识别算法进行快速判定。\\n实施效果 检测率与维护效率均提升，保障发动机可靠运行。\\n\"",
+        "type": "case"
+      },{
+        "title": "\"微电子BGA焊点缺陷检测案例\"",
+        "url": "\"/cases/2025-microelectronics-bga-inspection/\"",
+        "content": "\"针对微电子封装中的BGA焊点缺陷，我们构建了高分辨率成像方案与自动化检测流水线，覆盖空洞、桥连、虚焊等关键问题。\\n方案摘要：\\n使用高分辨率工业相机与远心镜头，实现焊点区域稳定成像。 采用分割与检测融合算法，识别焊点几何异常与表面缺陷。 根据工艺标准输出分级结果与处置建议，支持生产追溯与SPC分析。 收益：\\n降低不良品率，提升生产良率与一致性。 实现自动化质检，提高效率并减少人工误判。 \"",
+        "type": "case"
+      },{
+        "title": "\"风电齿轮箱缺陷检测案例\"",
+        "url": "\"/cases/2025-wind-turbine-gearbox-inspection/\"",
+        "content": "\"在风力发电场的日常维护中，齿轮箱的齿面裂纹、点蚀与磨损是常见问题。我们结合高清工业内窥镜与基于深度学习的缺陷识别模型，实现了对齿面缺陷的快速定位与定量评估。\\n解决方案亮点：\\n使用短焦、可弯曲探头在狭窄空间内灵活探查齿面区域。 采用图像增强与去噪算法，提高弱纹理缺陷可见性。 基于样本库训练的AI模型对裂纹、点蚀、磨损进行分类与置信度输出。 自动生成检测报告与维护建议，支持趋势分析与寿命预测。 应用价值：\\n降低停机时间与维护成本，提升风电设备可靠性。 实现标准化、可追溯的检测流程，支持批量设备巡检。 \"",
+        "type": "case"
       },{
         "title": "\"2025年工业内窥镜市场发展趋势分析报告\"",
         "url": "\"/news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/\"",
@@ -840,33 +927,64 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
       var btn = document.getElementById('backToTopBtn');
+      function updateBackToTopProgress() {
+        var doc = document.documentElement;
+        var top = doc.scrollTop || document.body.scrollTop || window.scrollY || 0;
+        var height = (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight;
+        var progress = height > 0 ? (top / height) * 100 : 0;
+        if (btn && btn.style) {
+          btn.style.setProperty('--scroll-progress', progress + '%');
+        }
+      }
       window.addEventListener('scroll', function() {
         if (window.scrollY > 200) {
           btn.style.display = 'block';
         } else {
           btn.style.display = 'none';
         }
+        updateBackToTopProgress();
       });
       btn.addEventListener('click', function() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
+      
+      updateBackToTopProgress();
     });
     </script>
 
 <script>
+  
+  window.__ImageFallbackSrc = window.__ImageFallbackSrc || (function() {
+    try {
+      var fallback = '\/images\/assets\/brand\/brand_general_placeholder_original_v1.svg';
+      return fallback;
+    } catch (e) { return '/images/placeholder.svg'; }
+  })();
+
   window.handleImageError = window.handleImageError || function(el) {
     try {
       var img = el && el.target ? el.target : el;
       if (!img) return;
-      var fallback = '/images/placeholder.svg';
+      var fallback = window.__ImageFallbackSrc || '/images/placeholder.svg';
       if (img.src !== fallback) {
-        console.warn('图片加载失败(预定义): ' + img.src + ', 使用占位: ' + fallback);
+        console.warn('图片加载失败: ' + img.src + ', 使用占位: ' + fallback);
         img.src = fallback;
         img.alt = img.alt || '图片加载失败';
         if (img.classList) { img.classList.add('img-error'); }
       }
-    } catch (e) { console.error('预定义 handleImageError 异常:', e); }
+    } catch (e) { console.error('handleImageError 异常:', e); }
   };
+
+  
+  (function attachGlobalImageErrorHandler(){
+    try {
+      window.addEventListener('error', function(e){
+        if (e && e.target && e.target.tagName === 'IMG') {
+          window.handleImageError(e);
+        }
+      }, true);
+    } catch (e) {   }
+  })();
 </script>
 <script src="../js/image-handler.js"></script>
 <script src="../js/carousel-handler.js"></script>
@@ -1163,15 +1281,19 @@
     <main class="container my-0 py-0 main-content">
         
 <div class="container py-5">
-    <nav aria-label="breadcrumb">
-    <ol class="breadcrumb bg-light p-3 rounded">
+    <nav aria-label="breadcrumb" class="breadcrumb-section">
+    <ol class="breadcrumb p-3 rounded">
         <li class="breadcrumb-item"><a href="../">首页</a></li>
+
         
             
+                
+            
         
+
         <li class="breadcrumb-item active" aria-current="page">应用案例</li>
     </ol>
-</nav> 
+</nav>
 
     <div class="row">
         
@@ -1198,7 +1320,35 @@
                                 
                             
                                 
+                                    
+                                
                             
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                            
+                                
+                            
+                            
+                            <a href="javascript:void(0)" class="filter-btn" data-filter-type="primary_category" data-filter-value="工业内窥镜">
+                                工业内窥镜 <span class="badge bg-light text-dark">4</span>
+                            </a>
+                            
+                            <a href="javascript:void(0)" class="filter-btn" data-filter-type="primary_category" data-filter-value="检测相机">
+                                检测相机 <span class="badge bg-light text-dark">1</span>
+                            </a>
                             
                             <a href="javascript:void(0)" class="filter-btn" data-filter-type="primary_category" data-filter-value="电子内窥镜">
                                 电子内窥镜 <span class="badge bg-light text-dark">1</span>
@@ -1220,10 +1370,58 @@
                                 
                             
                                 
+                                    
+                                
                             
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                                    
+                                
+                            
+                                
+                                    
+                                
+                            
+                                
+                            
+                            
+                            <a href="javascript:void(0)" class="filter-btn" data-filter-type="application_field" data-filter-value="品质管控">
+                                品质管控 <span class="badge bg-light text-dark">1</span>
+                            </a>
+                            
+                            <a href="javascript:void(0)" class="filter-btn" data-filter-type="application_field" data-filter-value="微电子检测">
+                                微电子检测 <span class="badge bg-light text-dark">1</span>
+                            </a>
                             
                             <a href="javascript:void(0)" class="filter-btn" data-filter-type="application_field" data-filter-value="汽车制造">
-                                汽车制造 <span class="badge bg-light text-dark">1</span>
+                                汽车制造 <span class="badge bg-light text-dark">2</span>
+                            </a>
+                            
+                            <a href="javascript:void(0)" class="filter-btn" data-filter-type="application_field" data-filter-value="石油化工">
+                                石油化工 <span class="badge bg-light text-dark">1</span>
+                            </a>
+                            
+                            <a href="javascript:void(0)" class="filter-btn" data-filter-type="application_field" data-filter-value="航空航天">
+                                航空航天 <span class="badge bg-light text-dark">1</span>
+                            </a>
+                            
+                            <a href="javascript:void(0)" class="filter-btn" data-filter-type="application_field" data-filter-value="设备检修">
+                                设备检修 <span class="badge bg-light text-dark">1</span>
+                            </a>
+                            
+                            <a href="javascript:void(0)" class="filter-btn" data-filter-type="application_field" data-filter-value="风电维护">
+                                风电维护 <span class="badge bg-light text-dark">1</span>
                             </a>
                             
                         </div>
@@ -1236,6 +1434,16 @@
                         </h6>
                         <div class="filter-buttons-container" id="application-scenario-filters">
                             
+                            
+                                
+                            
+                                
+                            
+                                
+                            
+                                
+                            
+                                
                             
                                 
                                     
@@ -1273,7 +1481,7 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h4 class="mb-0">应用案例</h4>
-                    <small class="text-muted" id="case-count-info">共 2 个案例</small>
+                    <small class="text-muted" id="case-count-info">共 7 个案例</small>
                 </div>
                 <div class="d-flex align-items-center">
                     <label for="sortOrder" class="form-label me-2 mb-0">排序：</label>
@@ -1289,13 +1497,202 @@
             <div class="row" id="cases-container">
                 
                 <div class="col-lg-6 col-xl-4 mb-4 case-item"
+                     data-primary-category="工业内窥镜"
+                     data-application-field="汽车制造"
+                     data-application-scenario=""
+                     data-date="2025-11-08"
+                     data-title="焊缝质量缺陷检测与工艺优化案例">
+                    <div class="card h-100 shadow-sm hover-card">
+                        <a href="http://localhost:1321/cases/case-weld-quality/" class="card-img-link">
+                            <div class="card-img-wrapper">
+                                
+                                <img src="../images/cases/case-3.jpg" class="card-img-top object-fit-cover" alt="焊缝质量缺陷检测与工艺优化案例" style="height: 200px;">
+                                
+                            </div>
+                        </a>
+                        <div class="card-body d-flex flex-column">
+                            <div class="mb-2">
+                                
+                                <span class="badge bg-primary me-1">工业内窥镜</span>
+                                
+                                
+                                <span class="badge bg-success me-1">汽车制造</span>
+                                
+                                
+                            </div>
+                            <h5 class="card-title case-title">
+                                <a href="http://localhost:1321/cases/case-weld-quality/" class="text-decoration-none text-dark hover-primary">焊缝质量缺陷检测与工艺优化案例</a>
+                            </h5>
+                            
+                            <p class="card-text text-muted flex-grow-1 case-summary">针对复杂焊缝开展内窥检测与工艺参数优化，显著降低返修率。</p>
+                            
+                            <div class="mt-auto">
+                                <small class="text-muted"><i class="far fa-calendar-alt me-1"></i>2025-11-08</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 col-xl-4 mb-4 case-item"
+                     data-primary-category="工业内窥镜"
+                     data-application-field="石油化工"
+                     data-application-scenario=""
+                     data-date="2025-11-05"
+                     data-title="石化储罐内壁腐蚀监测与维护案例">
+                    <div class="card h-100 shadow-sm hover-card">
+                        <a href="http://localhost:1321/cases/case-petrochemical-corrosion/" class="card-img-link">
+                            <div class="card-img-wrapper">
+                                
+                                <img src="../images/cases/case-2.jpg" class="card-img-top object-fit-cover" alt="石化储罐内壁腐蚀监测与维护案例" style="height: 200px;">
+                                
+                            </div>
+                        </a>
+                        <div class="card-body d-flex flex-column">
+                            <div class="mb-2">
+                                
+                                <span class="badge bg-primary me-1">工业内窥镜</span>
+                                
+                                
+                                <span class="badge bg-success me-1">石油化工</span>
+                                
+                                
+                            </div>
+                            <h5 class="card-title case-title">
+                                <a href="http://localhost:1321/cases/case-petrochemical-corrosion/" class="text-decoration-none text-dark hover-primary">石化储罐内壁腐蚀监测与维护案例</a>
+                            </h5>
+                            
+                            <p class="card-text text-muted flex-grow-1 case-summary">通过定期内窥检查与腐蚀评估模型，实现储罐安全运行与维护成本优化。</p>
+                            
+                            <div class="mt-auto">
+                                <small class="text-muted"><i class="far fa-calendar-alt me-1"></i>2025-11-05</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 col-xl-4 mb-4 case-item"
+                     data-primary-category="工业内窥镜"
+                     data-application-field="航空航天"
+                     data-application-scenario=""
+                     data-date="2025-11-03"
+                     data-title="航空发动机叶片内部缺陷检测案例">
+                    <div class="card h-100 shadow-sm hover-card">
+                        <a href="http://localhost:1321/cases/case-aero-engine-blade/" class="card-img-link">
+                            <div class="card-img-wrapper">
+                                
+                                <img src="../images/cases/case-3.jpg" class="card-img-top object-fit-cover" alt="航空发动机叶片内部缺陷检测案例" style="height: 200px;">
+                                
+                            </div>
+                        </a>
+                        <div class="card-body d-flex flex-column">
+                            <div class="mb-2">
+                                
+                                <span class="badge bg-primary me-1">工业内窥镜</span>
+                                
+                                
+                                <span class="badge bg-success me-1">航空航天</span>
+                                
+                                
+                            </div>
+                            <h5 class="card-title case-title">
+                                <a href="http://localhost:1321/cases/case-aero-engine-blade/" class="text-decoration-none text-dark hover-primary">航空发动机叶片内部缺陷检测案例</a>
+                            </h5>
+                            
+                            <p class="card-text text-muted flex-grow-1 case-summary">利用微型内窥系统检测叶片内部微裂纹与异物，提升航空器可靠性。</p>
+                            
+                            <div class="mt-auto">
+                                <small class="text-muted"><i class="far fa-calendar-alt me-1"></i>2025-11-03</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 col-xl-4 mb-4 case-item"
+                     data-primary-category="检测相机"
+                     data-application-field="微电子检测,品质管控"
+                     data-application-scenario=""
+                     data-date="2025-07-28"
+                     data-title="微电子BGA焊点缺陷检测案例">
+                    <div class="card h-100 shadow-sm hover-card">
+                        <a href="http://localhost:1321/cases/2025-microelectronics-bga-inspection/" class="card-img-link">
+                            <div class="card-img-wrapper">
+                                
+                                <img src="../images/applications/microelectronics-inspection.svg" class="card-img-top object-fit-cover" alt="微电子BGA焊点缺陷检测案例" style="height: 200px;">
+                                
+                            </div>
+                        </a>
+                        <div class="card-body d-flex flex-column">
+                            <div class="mb-2">
+                                
+                                <span class="badge bg-primary me-1">检测相机</span>
+                                
+                                
+                                <span class="badge bg-success me-1">微电子检测</span>
+                                
+                                <span class="badge bg-success me-1">品质管控</span>
+                                
+                                
+                            </div>
+                            <h5 class="card-title case-title">
+                                <a href="http://localhost:1321/cases/2025-microelectronics-bga-inspection/" class="text-decoration-none text-dark hover-primary">微电子BGA焊点缺陷检测案例</a>
+                            </h5>
+                            
+                            <p class="card-text text-muted flex-grow-1 case-summary">在微电子装配环节对BGA焊点进行空洞、桥连与虚焊识别，提升良率。</p>
+                            
+                            <div class="mt-auto">
+                                <small class="text-muted"><i class="far fa-calendar-alt me-1"></i>2025-07-28</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 col-xl-4 mb-4 case-item"
+                     data-primary-category="工业内窥镜"
+                     data-application-field="风电维护,设备检修"
+                     data-application-scenario=""
+                     data-date="2025-07-28"
+                     data-title="风电齿轮箱缺陷检测案例">
+                    <div class="card h-100 shadow-sm hover-card">
+                        <a href="http://localhost:1321/cases/2025-wind-turbine-gearbox-inspection/" class="card-img-link">
+                            <div class="card-img-wrapper">
+                                
+                                <img src="../images/cases/wind-turbine-gearbox-inspection-2025-01.svg" class="card-img-top object-fit-cover" alt="风电齿轮箱缺陷检测案例" style="height: 200px;">
+                                
+                            </div>
+                        </a>
+                        <div class="card-body d-flex flex-column">
+                            <div class="mb-2">
+                                
+                                <span class="badge bg-primary me-1">工业内窥镜</span>
+                                
+                                
+                                <span class="badge bg-success me-1">风电维护</span>
+                                
+                                <span class="badge bg-success me-1">设备检修</span>
+                                
+                                
+                            </div>
+                            <h5 class="card-title case-title">
+                                <a href="http://localhost:1321/cases/2025-wind-turbine-gearbox-inspection/" class="text-decoration-none text-dark hover-primary">风电齿轮箱缺陷检测案例</a>
+                            </h5>
+                            
+                            <p class="card-text text-muted flex-grow-1 case-summary">利用工业内窥镜与AI识别进行风电齿轮箱齿面裂纹与磨损检测，提升维护效率与可靠性。</p>
+                            
+                            <div class="mt-auto">
+                                <small class="text-muted"><i class="far fa-calendar-alt me-1"></i>2025-07-28</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 col-xl-4 mb-4 case-item"
                      data-primary-category="电子内窥镜"
                      data-application-field="汽车制造"
                      data-application-scenario="发动机检测,质量控制"
                      data-date="2025-07-27"
                      data-title="汽车发动机缸体内部缺陷检测案例">
                     <div class="card h-100 shadow-sm hover-card">
-                        <a href="http://localhost:1313/cases/2025-07-27-%E6%B1%BD%E8%BD%A6%E5%8F%91%E5%8A%A8%E6%9C%BA%E7%BC%B8%E4%BD%93%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/" class="card-img-link">
+                        <a href="http://localhost:1321/cases/2025-07-27-%E6%B1%BD%E8%BD%A6%E5%8F%91%E5%8A%A8%E6%9C%BA%E7%BC%B8%E4%BD%93%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 <img src="https://picsum.photos/800/400?random=engine-main" class="card-img-top object-fit-cover" alt="汽车发动机缸体内部缺陷检测案例" style="height: 200px;">
@@ -1317,7 +1714,7 @@
                                 
                             </div>
                             <h5 class="card-title case-title">
-                                <a href="http://localhost:1313/cases/2025-07-27-%E6%B1%BD%E8%BD%A6%E5%8F%91%E5%8A%A8%E6%9C%BA%E7%BC%B8%E4%BD%93%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/" class="text-decoration-none text-dark hover-primary">汽车发动机缸体内部缺陷检测案例</a>
+                                <a href="http://localhost:1321/cases/2025-07-27-%E6%B1%BD%E8%BD%A6%E5%8F%91%E5%8A%A8%E6%9C%BA%E7%BC%B8%E4%BD%93%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/" class="text-decoration-none text-dark hover-primary">汽车发动机缸体内部缺陷检测案例</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 case-summary">采用高清电子内窥镜对汽车发动机缸体进行全面检测，成功发现并定位内部缺陷，为客户节省大量维修成本</p>
@@ -1336,11 +1733,11 @@
                      data-date="2025-07-16"
                      data-title="航空发动机叶片内部缺陷检测成功案例">
                     <div class="card h-100 shadow-sm hover-card">
-                        <a href="http://localhost:1313/cases/2025-07-16-%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA%E5%8F%B6%E7%89%87%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/" class="card-img-link">
+                        <a href="http://localhost:1321/cases/2025-07-16-%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA%E5%8F%B6%E7%89%87%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 
-                                <img src="../images/cases/case-2.webp" class="card-img-top object-fit-cover" alt="航空发动机叶片内部缺陷检测成功案例" style="height: 200px;">
+                                <img src="../images/cases/case-7.webp" class="card-img-top object-fit-cover" alt="航空发动机叶片内部缺陷检测成功案例" style="height: 200px;">
                                 
                             </div>
                         </a>
@@ -1351,7 +1748,7 @@
                                 
                             </div>
                             <h5 class="card-title case-title">
-                                <a href="http://localhost:1313/cases/2025-07-16-%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA%E5%8F%B6%E7%89%87%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/" class="text-decoration-none text-dark hover-primary">航空发动机叶片内部缺陷检测成功案例</a>
+                                <a href="http://localhost:1321/cases/2025-07-16-%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA%E5%8F%B6%E7%89%87%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/" class="text-decoration-none text-dark hover-primary">航空发动机叶片内部缺陷检测成功案例</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 case-summary">采用高精度工业内窥镜成功检测航空发动机叶片内部微小缺陷，提高检测效率60%，确保飞行安全。</p>
@@ -2320,6 +2717,23 @@ style="position: fixed; right: 32px; bottom: 48px; z-index: 999; display: none; 
 </button>
 
 <style>
+ 
+#backToTopBtn {
+  background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
+  border: none;
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(25,118,210,0.35);
+  transition: opacity 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+#backToTopBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(25,118,210,0.45);
+}
+#backToTopBtn:active {
+  transform: translateY(0);
+}
+ 
+#backToTopBtn i { font-size: 1rem; }
  
 @media (max-width: 768px) {
   .footer {

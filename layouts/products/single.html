@@ -1,7 +1,15 @@
 {{ define "main" }}
 <div class="container py-5">
     {{ partial "breadcrumbs.html" . }}
-    <div class="row">
+    <script>
+      // 防护：若有脚本错误地使用未声明的全局 title 变量，提供安全回退
+      try {
+        if (typeof title === 'undefined') {
+          var title = document && document.title ? document.title : '';
+        }
+      } catch (e) { /* ignore */ }
+    </script>
+    <div class="row align-items-start">
         <div class="col-lg-6">
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
@@ -21,9 +29,12 @@
                             {{ end }}
                         {{ end }}
                         {{ if $mainImageSrc }}
-                        <img src="{{ if or (hasPrefix $mainImageSrc "http://") (hasPrefix $mainImageSrc "https://") }}{{ $mainImageSrc }}{{ else }}{{ $mainImageSrc | relURL }}{{ end }}" class="img-fluid rounded mb-3 main-product-image" alt="{{ $mainImageAlt }}" id="main-product-image">
+                        <img src="{{ if or (hasPrefix $mainImageSrc "http://") (hasPrefix $mainImageSrc "https://") }}{{ $mainImageSrc }}{{ else }}{{ $mainImageSrc | relURL }}{{ end }}" class="img-fluid rounded mb-3 main-product-image" alt="{{ $mainImageAlt }}" id="main-product-image" onerror="handleImageError(this)">
                         {{ else }}
-                        <img src="/images/products/default-product.jpg" class="img-fluid rounded mb-3 main-product-image" alt="主图占位图" id="main-product-image">
+                        {{ $pm := site.Data.path_mapping.mappings.products }}
+                        {{ $defaultKey := "/images/products/default-product.jpg" }}
+                        {{ $defaultSrc := cond (and $pm (index $pm $defaultKey)) (index $pm $defaultKey) $defaultKey }}
+                        <img src="{{ $defaultSrc }}" class="img-fluid rounded mb-3 main-product-image" alt="主图占位图" id="main-product-image" onerror="handleImageError(this)">
                         {{ end }}
                     </div>
 
@@ -40,7 +51,7 @@
                                                  class="img-fluid rounded object-fit-cover thumbnail-image"
                                                  alt="{{ .alt | default "产品图片" }}"
                                                  onclick="switchMainImage('{{ if or (hasPrefix .image "http://") (hasPrefix .image "https://") }}{{ .image }}{{ else }}{{ .image | relURL }}{{ end }}', '{{ .alt | default "产品图片" }}')"
-                                                 data-full-image="{{ if or (hasPrefix .image "http://") (hasPrefix .image "https://") }}{{ .image }}{{ else }}{{ .image | relURL }}{{ end }}">
+                                                 data-full-image="{{ if or (hasPrefix .image "http://") (hasPrefix .image "https://") }}{{ .image }}{{ else }}{{ .image | relURL }}{{ end }}" onerror="handleImageError(this)">
                                         </div>
                                     </div>
                                     {{ else }}
@@ -50,7 +61,7 @@
                                                  class="img-fluid rounded object-fit-cover thumbnail-image"
                                                  alt="产品图片"
                                                  onclick="switchMainImage('{{ if or (hasPrefix . "http://") (hasPrefix . "https://") }}{{ . }}{{ else }}{{ . | relURL }}{{ end }}', '产品图片')"
-                                                 data-full-image="{{ if or (hasPrefix . "http://") (hasPrefix . "https://") }}{{ . }}{{ else }}{{ . | relURL }}{{ end }}">
+                                                 data-full-image="{{ if or (hasPrefix . "http://") (hasPrefix . "https://") }}{{ . }}{{ else }}{{ . | relURL }}{{ end }}" onerror="handleImageError(this)">
                                         </div>
                                     </div>
                                     {{ end }}
@@ -60,11 +71,14 @@
                         {{ range seq 2 5 }}
                         <div class="col-3">
                             <div class="thumbnail-container">
-                                <img src="/images/products/default-gallery-{{ . }}.jpg"
+                                {{ $pm := site.Data.path_mapping.mappings.products }}
+                                {{ $gkey := printf "/images/products/default-gallery-%d.jpg" . }}
+                                {{ $gsrc := cond (and $pm (index $pm $gkey)) (index $pm $gkey) $gkey }}
+                                <img src="{{ $gsrc }}"
                                      class="img-fluid rounded object-fit-cover thumbnail-image"
                                      alt="副图占位图"
-                                     onclick="switchMainImage('/images/products/default-gallery-{{ . }}.jpg', '副图占位图')"
-                                     data-full-image="/images/products/default-gallery-{{ . }}.jpg">
+                                     onclick="switchMainImage('{{ $gsrc }}', '副图占位图')"
+                                     data-full-image="{{ $gsrc }}" onerror="handleImageError(this)">
                             </div>
                         </div>
                         {{ end }}
@@ -281,8 +295,11 @@
                         <div class="tab-pane fade" id="download" role="tabpanel" aria-labelledby="download-tab">
                             {{ with .Params.data_download }}
                             <ul class="list-unstyled">
+                                {{ $dm := site.Data.path_mapping.mappings.downloads }}
                                 {{ range . }}
-                                <li><a href="{{ .file_path | relURL }}" target="_blank">{{ .file_title }}</a></li>
+                                {{ $path := .file_path }}
+                                {{ $href := cond (and $dm (index $dm $path)) (index $dm $path) (cond (or (hasPrefix $path "http://") (hasPrefix $path "https://")) $path ($path | relURL)) }}
+                                <li><a href="{{ $href }}" target="_blank">{{ .file_title }}</a></li>
                                 {{ end }}
                             </ul>
                             {{ else }}
@@ -295,7 +312,46 @@
         </div>
     </div>
 
-    {{ with .Params.related_products }}
+    {{ $relatedParam := .Params.related_products }}
+    {{ $relatedPages := slice }}
+    {{ if $relatedParam }}
+        {{ $allProducts := where site.RegularPages "Section" "products" }}
+        {{ range $relatedParam }}
+            {{ $rp := site.GetPage (printf "products/%s" .) }}
+            {{ if not $rp }}
+                {{ $byModel := where $allProducts "Params.model" . }}
+                {{ if gt (len $byModel) 0 }}
+                    {{ $rp = index $byModel 0 }}
+                {{ end }}
+            {{ end }}
+            {{ if $rp }}
+                {{ $relatedPages = $relatedPages | append $rp }}
+            {{ end }}
+        {{ end }}
+    {{ else }}
+        {{ $current := . }}
+        {{ $all := where site.RegularPages "Section" "products" }}
+        {{ $byPri := where $all "Params.primary_category" $current.Params.primary_category }}
+        {{ $bySec := where $all "Params.secondary_category" $current.Params.secondary_category }}
+        {{ $candidates := union $byPri $bySec }}
+        {{ $candidates = where $candidates "Permalink" "ne" $current.Permalink }}
+        {{ $relatedPages = first 3 $candidates }}
+        {{ if lt (len $relatedPages) 3 }}
+            {{ $more := where $all "Permalink" "ne" $current.Permalink }}
+            {{ $need := sub 3 (len $relatedPages) }}
+            {{ $fallback := first $need $more }}
+            {{ $relatedPages = union $relatedPages $fallback }}
+        {{ end }}
+    {{ end }}
+
+    {{ if gt (len $relatedPages) 0 }}
+    {{/* 排序：优先新品(is_new)与热度(hot_score)，否则按Date降序 */}}
+    {{ $newPages := where $relatedPages "Params.is_new" true }}
+    {{ $nonNewPages := where $relatedPages "Params.is_new" "ne" true }}
+    {{ $newPages = sort $newPages "Params.hot_score" "desc" }}
+    {{ $nonNewPages = sort $nonNewPages "Date" "desc" }}
+    {{ $sortedRelated := $newPages | append $nonNewPages }}
+    {{ $relatedPages = first 3 $sortedRelated }}
     <div class="row mt-4">
         <div class="col-12">
             <div class="card shadow-sm">
@@ -304,20 +360,78 @@
                 </div>
                 <div class="card-body">
                     <ul class="list-unstyled row row-cols-1 row-cols-md-3 g-4">
-                        {{ range . }}
-                        {{ $relatedProduct := site.GetPage (printf "products/%s" .) }}
-                        {{ with $relatedProduct }}
+                        {{ range $relatedPages }}
+                        {{ $thumbSrc := "" }}
+                        {{ $thumbAlt := .Title }}
+                        {{ with .Params.gallery }}
+                            {{ if reflect.IsSlice . }}
+                                {{ $first := index . 0 }}
+                                {{ if reflect.IsMap $first }}
+                                    {{ $thumbSrc = $first.image }}
+                                    {{ $thumbAlt = $first.alt | default $thumbAlt }}
+                                {{ else }}
+                                    {{ $thumbSrc = $first }}
+                                {{ end }}
+                            {{ end }}
+                        {{ end }}
+                        {{ if not $thumbSrc }}
+                            {{/* 品牌占位图优先：根据供应商页面的gallery首图 */}}
+                            {{ $supTitle := .Params.supplier }}
+                            {{ if $supTitle }}
+                                {{ $supAll := where site.RegularPages "Section" "suppliers" }}
+                                {{ $supMatches := where $supAll "Title" $supTitle }}
+                                {{ if gt (len $supMatches) 0 }}
+                                    {{ $sup := index $supMatches 0 }}
+                                    {{ with $sup.Params.gallery }}
+                                        {{ if reflect.IsSlice . }}
+                                            {{ $g0 := index . 0 }}
+                                            {{ if reflect.IsMap $g0 }}
+                                                {{ $thumbSrc = $g0.image | default $thumbSrc }}
+                                            {{ else }}
+                                                {{ $thumbSrc = $g0 }}
+                                            {{ end }}
+                                        {{ end }}
+                                    {{ end }}
+                                {{ end }}
+                            {{ end }}
+                        {{ end }}
+                        {{ if not $thumbSrc }}
+                            {{ $pm := site.Data.path_mapping.mappings.products }}
+                            {{ $defaultKey := "/images/products/default-product.jpg" }}
+                            {{ $thumbSrc = cond (and $pm (index $pm $defaultKey)) (index $pm $defaultKey) $defaultKey }}
+                        {{ end }}
+                        {{ $resolvedThumb := cond (or (hasPrefix $thumbSrc "http://") (hasPrefix $thumbSrc "https://")) $thumbSrc ($thumbSrc | relURL) }}
+
                         <li class="col">
                             <a href="{{ .Permalink }}" class="text-decoration-none">
-                                <div class="card h-100">
-                                    <div class="card-body">
-                                        <h6 class="card-title text-dark">{{ .Title }}</h6>
-                                        <p class="card-text text-muted small">{{ .Summary }}</p>
+                                <div class="card h-100 related-product-card">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="related-thumb-wrap flex-shrink-0">
+                                            <img src="{{ $resolvedThumb }}" alt="{{ $thumbAlt }}" class="related-product-thumb" onerror="handleImageError(this)">
+                                        </div>
+                                        <div class="ms-3 flex-grow-1">
+                                            <h6 class="card-title related-title mb-1">{{ .Title }}</h6>
+                                            <div class="related-categories">
+                                                {{ with .Params.primary_category }}<span class="me-2">{{ . }}</span>{{ end }}
+                                                {{ with .Params.secondary_category }}<span>{{ . }}</span>{{ end }}
+                                            </div>
+                                            {{ with .Params.supplier }}
+                                                <div class="related-supplier mt-1">供应商：{{ . }}</div>
+                                            {{ end }}
+                                            {{ with .Params.tags }}
+                                                {{ if gt (len .) 0 }}
+                                                    <div class="related-tags mt-2">
+                                                        {{ range first 4 . }}
+                                                            <span class="badge rounded-pill related-tag-badge me-1">{{ . }}</span>
+                                                        {{ end }}
+                                                    </div>
+                                                {{ end }}
+                                            {{ end }}
+                                        </div>
                                     </div>
                                 </div>
                             </a>
                         </li>
-                        {{ end }}
                         {{ end }}
                     </ul>
                 </div>
@@ -433,8 +547,7 @@ function initLeanCloudViews() {
     })
     .catch(error => {
         console.error('查询Counter失败:', error);
-        // 网络失败时显示默认值
-        pageViewsElement.textContent = '0';
+        initLocalPageViews();
     });
 }
 
@@ -477,7 +590,7 @@ function createCounter() {
     })
     .catch(error => {
         console.error('创建Counter失败:', error);
-        pageViewsElement.textContent = '1';
+        initLocalPageViews();
     });
 }
 
@@ -510,7 +623,7 @@ function fetchCurrentViews() {
     })
     .catch(error => {
         console.error('获取浏览次数失败:', error);
-        pageViewsElement.textContent = '0';
+        initLocalPageViews();
     });
 }
 
@@ -541,8 +654,7 @@ function updateCounter(objectId, views) {
     })
     .catch(error => {
         console.error('更新Counter失败:', error);
-        // 更新失败时保持当前显示的数值
-        console.log('更新失败，保持当前显示');
+        initLocalPageViews();
     });
 }
 
@@ -551,21 +663,45 @@ document.addEventListener('DOMContentLoaded', function() {
     // 延迟初始化，确保页面完全加载
     setTimeout(initPageViews, 1000);
 });
+
+// 本地存储回退方案：网络异常时依然显示递增的浏览次数
+function initLocalPageViews() {
+    try {
+        const storageKey = 'pageviews_' + (currentPath || location.pathname).replace(/[^a-zA-Z0-9]/g, '_');
+        let currentViews = parseInt(localStorage.getItem(storageKey) || '0');
+        currentViews = isNaN(currentViews) ? 0 : currentViews;
+        currentViews += 1;
+        localStorage.setItem(storageKey, currentViews.toString());
+        if (pageViewsElement) {
+            pageViewsElement.textContent = currentViews.toString();
+        }
+    } catch (e) {
+        if (pageViewsElement) {
+            pageViewsElement.textContent = '0';
+        }
+    }
+}
 </script>
 
 <script>
 function switchMainImage(imageUrl, altText) {
     const mainImage = document.getElementById('main-product-image');
     const thumbnails = document.querySelectorAll('.thumbnail-image');
-    
+    const resolvedImageUrl = (function(){
+        try { return new URL(imageUrl, document.baseURI).href; } catch (e) { return imageUrl; }
+    })();
+
     if (mainImage) {
-        mainImage.src = imageUrl;
+        mainImage.src = resolvedImageUrl;
         mainImage.alt = altText;
     }
 
-    // 高亮当前选中的缩略图
+    // 高亮当前选中的缩略图（使用data-full-image精确匹配）
     thumbnails.forEach(thumbnail => {
-        if (thumbnail.src === imageUrl) {
+        const thumbUrl = thumbnail.getAttribute('data-full-image') || thumbnail.src;
+        let resolvedThumbUrl = thumbUrl;
+        try { resolvedThumbUrl = new URL(thumbUrl, document.baseURI).href; } catch (e) {}
+        if (resolvedThumbUrl === resolvedImageUrl) {
             thumbnail.classList.add('active-thumbnail');
         } else {
             thumbnail.classList.remove('active-thumbnail');
@@ -674,7 +810,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /* 主图容器 - 统一设计 */
 .main-image-container {
-    height: 400px;
+    min-height: 320px;
+    height: auto;
     width: 100%;
     display: flex;
     align-items: center;
@@ -697,7 +834,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /* 缩略图容器 - 统一设计 */
 .thumbnail-container {
-    height: 100px;
+    min-height: 72px;
+    height: auto;
     width: 100%;
     display: flex;
     align-items: center;
@@ -861,6 +999,61 @@ document.addEventListener('DOMContentLoaded', function() {
     font-size: 14px;
     color: #212121;
     line-height: 1.5;
+}
+/* Related products */
+.related-thumb-wrap {
+    width: 112px;
+    height: 112px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fafafa;
+    border: 1px solid #f0f2f5;
+    border-radius: 12px;
+    overflow: hidden;
+}
+.related-product-thumb {
+    max-width: 92%;
+    max-height: 92%;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+.related-product-card .card-body {
+    padding: 0.9rem 0.85rem;
+}
+.related-title {
+    color: #111827;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.35;
+}
+.related-categories {
+    color: #4b5563;
+    font-size: 0.86rem;
+}
+.related-supplier {
+    color: #374151;
+    font-size: 0.85rem;
+}
+.related-tags .related-tag-badge {
+    background-color: #f3f4f6;
+    color: #374151;
+    border: 1px solid #e5e7eb;
+    font-weight: 500;
+    font-size: 0.78rem;
+}
+@media (max-width: 576px) {
+    .related-thumb-wrap {
+        width: 92px;
+        height: 92px;
+    }
+    .related-title {
+        font-size: 0.95rem;
+    }
+    .related-categories, .related-supplier {
+        font-size: 0.82rem;
+    }
 }
 </style>
 

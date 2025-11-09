@@ -160,6 +160,57 @@
         transform: translateY(-1px);
     }
 
+    /* 面包屑统一样式与间距 */
+    .breadcrumb-section {
+        background: linear-gradient(135deg, var(--color-gray-50, #f8fafc) 0%, var(--color-gray-100, #e9eef5) 100%);
+        border-bottom: 1px solid var(--border-light);
+        margin-top: var(--spacing-sm);
+        margin-bottom: var(--spacing-md);
+        position: relative;
+    }
+    .breadcrumb-section .breadcrumb {
+        margin-bottom: 0;
+        background: transparent !important;
+    }
+    .breadcrumb-section .breadcrumb-item a {
+        color: var(--text-secondary);
+    }
+    .breadcrumb-section .breadcrumb-item a:hover {
+        color: var(--color-primary-600);
+        text-decoration: none;
+    }
+
+    /* 移动端面包屑可滚动与边缘渐隐 */
+    @media (max-width: 575.98px) {
+      .breadcrumb-section .breadcrumb {
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Firefox 隐藏滚动条 */
+      }
+      .breadcrumb-section .breadcrumb::-webkit-scrollbar {
+        display: none; /* WebKit 隐藏滚动条 */
+      }
+      .breadcrumb-section::before,
+      .breadcrumb-section::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 20px;
+        pointer-events: none;
+        z-index: 1;
+      }
+      .breadcrumb-section::before {
+        left: 0;
+        background: linear-gradient(to right, rgba(248, 250, 252, 1), rgba(248, 250, 252, 0));
+      }
+      .breadcrumb-section::after {
+        right: 0;
+        background: linear-gradient(to left, rgba(233, 238, 245, 1), rgba(233, 238, 245, 0));
+      }
+    }
+
     /* 搜索模态框样式 - 统一设计 */
     #searchModal .modal-dialog {
         max-width: 600px;
@@ -751,11 +802,22 @@
 /* 返回顶部按钮 */
 #backToTopBtn {
   transition: opacity 0.3s;
-  opacity: 0.85;
+  opacity: 0.92;
+  position: relative; /* 用于伪元素定位 */
 }
 #backToTopBtn:hover {
   opacity: 1;
-  background: #0056b3;
+}
+
+/* 返回顶部进度环（滚动进度可视化） */
+#backToTopBtn::before {
+  content: '';
+  position: absolute;
+  inset: -4px; /* 扩展到按钮外形成环 */
+  border-radius: 50%;
+  background: conic-gradient(#90caf9 var(--scroll-progress, 0%), rgba(0,0,0,0.08) 0);
+  z-index: -1; /* 位于按钮后面 */
+  box-shadow: 0 4px 10px rgba(25,118,210,0.2);
 }
 </style>
 
@@ -801,33 +863,64 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
       var btn = document.getElementById('backToTopBtn');
+      function updateBackToTopProgress() {
+        var doc = document.documentElement;
+        var top = doc.scrollTop || document.body.scrollTop || window.scrollY || 0;
+        var height = (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight;
+        var progress = height > 0 ? (top / height) * 100 : 0;
+        if (btn && btn.style) {
+          btn.style.setProperty('--scroll-progress', progress + '%');
+        }
+      }
       window.addEventListener('scroll', function() {
         if (window.scrollY > 200) {
           btn.style.display = 'block';
         } else {
           btn.style.display = 'none';
         }
+        updateBackToTopProgress();
       });
       btn.addEventListener('click', function() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
+      // 初始化一次，避免进入页面无进度值
+      updateBackToTopProgress();
     });
     </script>
 <!-- 提前提供全局图片错误处理占位，避免内联 onerror 报错 -->
 <script>
+  // 统一占位图路径：优先使用路径映射中的品牌占位，否则回退默认占位
+  window.__ImageFallbackSrc = window.__ImageFallbackSrc || (function() {
+    try {
+      var fallback = '{{ with (index site.Data.path_mapping.mappings.brand "/images/placeholder.svg") }}{{ . }}{{ else }}{{ "/images/placeholder.svg" }}{{ end }}';
+      return fallback;
+    } catch (e) { return '/images/placeholder.svg'; }
+  })();
+
   window.handleImageError = window.handleImageError || function(el) {
     try {
       var img = el && el.target ? el.target : el;
       if (!img) return;
-      var fallback = '/images/placeholder.svg';
+      var fallback = window.__ImageFallbackSrc || '/images/placeholder.svg';
       if (img.src !== fallback) {
-        console.warn('图片加载失败(预定义): ' + img.src + ', 使用占位: ' + fallback);
+        console.warn('图片加载失败: ' + img.src + ', 使用占位: ' + fallback);
         img.src = fallback;
         img.alt = img.alt || '图片加载失败';
         if (img.classList) { img.classList.add('img-error'); }
       }
-    } catch (e) { console.error('预定义 handleImageError 异常:', e); }
+    } catch (e) { console.error('handleImageError 异常:', e); }
   };
+
+  // 全局捕获 IMG 加载错误进行回退（无需逐个 onerror）
+  (function attachGlobalImageErrorHandler(){
+    try {
+      window.addEventListener('error', function(e){
+        if (e && e.target && e.target.tagName === 'IMG') {
+          window.handleImageError(e);
+        }
+      }, true);
+    } catch (e) { /* ignore */ }
+  })();
 </script>
 <script src="{{ "js/image-handler.js" | relURL }}"></script>
 <script src="{{ "js/carousel-handler.js" | relURL }}"></script>

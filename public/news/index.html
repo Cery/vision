@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1321&amp;path=livereload" data-no-instant defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>资讯中心 - 维森·视觉检测仪器</title>
@@ -26,19 +26,19 @@
 
 
 <meta property="og:type" content="article">
-<meta property="og:url" content="http://localhost:1313/news/">
+<meta property="og:url" content="http://localhost:1321/news/">
 <meta property="og:title" content="资讯中心 - 维森视觉检测仪器">
 <meta property="og:description" content="获取最新的行业资讯、技术文章和展会信息，了解工业内窥镜和无损检测领域的前沿动态。">
-<meta property="og:image" content="http://localhost:1313/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta property="og:image" content="http://localhost:1321/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 <meta property="og:site_name" content="维森视觉检测仪器">
 <meta property="og:locale" content="zh_CN">
 
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="http://localhost:1313/news/">
+<meta name="twitter:url" content="http://localhost:1321/news/">
 <meta name="twitter:title" content="资讯中心 - 维森视觉检测仪器">
 <meta name="twitter:description" content="获取最新的行业资讯、技术文章和展会信息，了解工业内窥镜和无损检测领域的前沿动态。">
-<meta name="twitter:image" content="http://localhost:1313/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta name="twitter:image" content="http://localhost:1321/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 
 
 
@@ -48,7 +48,7 @@
   "@type": "Article",
   "headline": "资讯中心",
   "description": "获取最新的行业资讯、技术文章和展会信息，了解工业内窥镜和无损检测领域的前沿动态。",
-  "image": "http:\/\/localhost:1313\/images\/assets\/brand\/logos\/brand_logos_logo-dark_original_v1.svg",
+  "image": "http:\/\/localhost:1321\/images\/assets\/brand\/logos\/brand_logos_logo-dark_original_v1.svg",
   "author": {
     "@type": "Organization",
     "name": "维森视觉检测仪器"
@@ -58,17 +58,17 @@
     "name": "维森视觉检测仪器",
     "logo": {
       "@type": "ImageObject",
-      "url": "http:\/\/localhost:1313\/images\/assets\/brand\/logos\/brand_logos_logo-dark_original_v1.svg"
+      "url": "http:\/\/localhost:1321\/images\/assets\/brand\/logos\/brand_logos_logo-dark_original_v1.svg"
     }
   },
-  "datePublished": "2025-07-27T16:00:00\u002b08:00",
-  "dateModified": "2025-07-27T16:00:00\u002b08:00"
+  "datePublished": "2025-11-12T00:00:00Z",
+  "dateModified": "2025-11-12T00:00:00Z"
 }
 </script>
 
 
 
-<link rel="canonical" href="http://localhost:1313/news/">
+<link rel="canonical" href="http://localhost:1321/news/">
 
 
 <link rel="icon" type="image/svg+xml" href="../images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
@@ -128,6 +128,57 @@
         color: var(--color-primary-600);
         background-color: var(--color-primary-50);
         transform: translateY(-1px);
+    }
+
+     
+    .breadcrumb-section {
+        background: linear-gradient(135deg, var(--color-gray-50, #f8fafc) 0%, var(--color-gray-100, #e9eef5) 100%);
+        border-bottom: 1px solid var(--border-light);
+        margin-top: var(--spacing-sm);
+        margin-bottom: var(--spacing-md);
+        position: relative;
+    }
+    .breadcrumb-section .breadcrumb {
+        margin-bottom: 0;
+        background: transparent !important;
+    }
+    .breadcrumb-section .breadcrumb-item a {
+        color: var(--text-secondary);
+    }
+    .breadcrumb-section .breadcrumb-item a:hover {
+        color: var(--color-primary-600);
+        text-decoration: none;
+    }
+
+     
+    @media (max-width: 575.98px) {
+      .breadcrumb-section .breadcrumb {
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;  
+      }
+      .breadcrumb-section .breadcrumb::-webkit-scrollbar {
+        display: none;  
+      }
+      .breadcrumb-section::before,
+      .breadcrumb-section::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 20px;
+        pointer-events: none;
+        z-index: 1;
+      }
+      .breadcrumb-section::before {
+        left: 0;
+        background: linear-gradient(to right, rgba(248, 250, 252, 1), rgba(248, 250, 252, 0));
+      }
+      .breadcrumb-section::after {
+        right: 0;
+        background: linear-gradient(to left, rgba(233, 238, 245, 1), rgba(233, 238, 245, 0));
+      }
     }
 
      
@@ -721,11 +772,22 @@
  
 #backToTopBtn {
   transition: opacity 0.3s;
-  opacity: 0.85;
+  opacity: 0.92;
+  position: relative;  
 }
 #backToTopBtn:hover {
   opacity: 1;
-  background: #0056b3;
+}
+
+ 
+#backToTopBtn::before {
+  content: '';
+  position: absolute;
+  inset: -4px;  
+  border-radius: 50%;
+  background: conic-gradient(#90caf9 var(--scroll-progress, 0%), rgba(0,0,0,0.08) 0);
+  z-index: -1;  
+  box-shadow: 0 4px 10px rgba(25,118,210,0.2);
 }
 </style>
 
@@ -759,10 +821,35 @@
 
 <script>
     window.searchIndex = [{
-        "title": "\"样例产品\"",
-        "url": "\"/products/%E6%A0%B7%E4%BE%8B%E4%BA%A7%E5%93%81/\"",
-        "content": "\"产品详细描述\\u0026hellip;\\n\"",
-        "type": "product"
+        "title": "\"焊缝质量缺陷检测与工艺优化案例\"",
+        "url": "\"/cases/case-weld-quality/\"",
+        "content": "\"项目背景 焊接质量直接影响整车安全与可靠性，传统抽检难以发现内部缺陷。\\n解决方案 引入内窥检测与SPC方法，依据缺陷根因调整焊接参数并建立检测标准。\\n实施效果 返修率与交付周期显著改善，形成标准化质量控制流程。\\n\"",
+        "type": "case"
+      },{
+        "title": "\"基于AI的缺陷识别在工业内窥中的应用实践\"",
+        "url": "\"/news/tech-article/2025-ai-defect-detection/\"",
+        "content": "\"本文分享在工业场景下采用深度学习进行缺陷识别的实践经验，包括数据采集、标注、模型训练与评估指标。\\n\"",
+        "type": "article"
+      },{
+        "title": "\"石化储罐内壁腐蚀监测与维护案例\"",
+        "url": "\"/cases/case-petrochemical-corrosion/\"",
+        "content": "\"项目背景 储罐长期服役环境导致内壁腐蚀，需精准监测与科学维护。\\n解决方案 结合成像与评估模型计算腐蚀程度，并制定分级维护策略。\\n实施效果 安全性与经济性提升，建立规范化巡检体系。\\n\"",
+        "type": "case"
+      },{
+        "title": "\"航空发动机叶片内部缺陷检测案例\"",
+        "url": "\"/cases/case-aero-engine-blade/\"",
+        "content": "\"项目背景 航空发动机叶片是飞行安全关键部件，需要对内部微缺陷进行高精度检测。\\n解决方案 采用微型内窥成像与光源优化，结合缺陷识别算法进行快速判定。\\n实施效果 检测率与维护效率均提升，保障发动机可靠运行。\\n\"",
+        "type": "case"
+      },{
+        "title": "\"微电子BGA焊点缺陷检测案例\"",
+        "url": "\"/cases/2025-microelectronics-bga-inspection/\"",
+        "content": "\"针对微电子封装中的BGA焊点缺陷，我们构建了高分辨率成像方案与自动化检测流水线，覆盖空洞、桥连、虚焊等关键问题。\\n方案摘要：\\n使用高分辨率工业相机与远心镜头，实现焊点区域稳定成像。 采用分割与检测融合算法，识别焊点几何异常与表面缺陷。 根据工艺标准输出分级结果与处置建议，支持生产追溯与SPC分析。 收益：\\n降低不良品率，提升生产良率与一致性。 实现自动化质检，提高效率并减少人工误判。 \"",
+        "type": "case"
+      },{
+        "title": "\"风电齿轮箱缺陷检测案例\"",
+        "url": "\"/cases/2025-wind-turbine-gearbox-inspection/\"",
+        "content": "\"在风力发电场的日常维护中，齿轮箱的齿面裂纹、点蚀与磨损是常见问题。我们结合高清工业内窥镜与基于深度学习的缺陷识别模型，实现了对齿面缺陷的快速定位与定量评估。\\n解决方案亮点：\\n使用短焦、可弯曲探头在狭窄空间内灵活探查齿面区域。 采用图像增强与去噪算法，提高弱纹理缺陷可见性。 基于样本库训练的AI模型对裂纹、点蚀、磨损进行分类与置信度输出。 自动生成检测报告与维护建议，支持趋势分析与寿命预测。 应用价值：\\n降低停机时间与维护成本，提升风电设备可靠性。 实现标准化、可追溯的检测流程，支持批量设备巡检。 \"",
+        "type": "case"
       },{
         "title": "\"2025年工业内窥镜市场发展趋势分析报告\"",
         "url": "\"/news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/\"",
@@ -864,33 +951,64 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
       var btn = document.getElementById('backToTopBtn');
+      function updateBackToTopProgress() {
+        var doc = document.documentElement;
+        var top = doc.scrollTop || document.body.scrollTop || window.scrollY || 0;
+        var height = (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight;
+        var progress = height > 0 ? (top / height) * 100 : 0;
+        if (btn && btn.style) {
+          btn.style.setProperty('--scroll-progress', progress + '%');
+        }
+      }
       window.addEventListener('scroll', function() {
         if (window.scrollY > 200) {
           btn.style.display = 'block';
         } else {
           btn.style.display = 'none';
         }
+        updateBackToTopProgress();
       });
       btn.addEventListener('click', function() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
+      
+      updateBackToTopProgress();
     });
     </script>
 
 <script>
+  
+  window.__ImageFallbackSrc = window.__ImageFallbackSrc || (function() {
+    try {
+      var fallback = '\/images\/assets\/brand\/brand_general_placeholder_original_v1.svg';
+      return fallback;
+    } catch (e) { return '/images/placeholder.svg'; }
+  })();
+
   window.handleImageError = window.handleImageError || function(el) {
     try {
       var img = el && el.target ? el.target : el;
       if (!img) return;
-      var fallback = '/images/placeholder.svg';
+      var fallback = window.__ImageFallbackSrc || '/images/placeholder.svg';
       if (img.src !== fallback) {
-        console.warn('图片加载失败(预定义): ' + img.src + ', 使用占位: ' + fallback);
+        console.warn('图片加载失败: ' + img.src + ', 使用占位: ' + fallback);
         img.src = fallback;
         img.alt = img.alt || '图片加载失败';
         if (img.classList) { img.classList.add('img-error'); }
       }
-    } catch (e) { console.error('预定义 handleImageError 异常:', e); }
+    } catch (e) { console.error('handleImageError 异常:', e); }
   };
+
+  
+  (function attachGlobalImageErrorHandler(){
+    try {
+      window.addEventListener('error', function(e){
+        if (e && e.target && e.target.tagName === 'IMG') {
+          window.handleImageError(e);
+        }
+      }, true);
+    } catch (e) {   }
+  })();
 </script>
 <script src="../js/image-handler.js"></script>
 <script src="../js/carousel-handler.js"></script>
@@ -1187,15 +1305,19 @@
     <main class="container my-0 py-0 main-content">
         
 <div class="container py-5">
-    <nav aria-label="breadcrumb">
-    <ol class="breadcrumb bg-light p-3 rounded">
+    <nav aria-label="breadcrumb" class="breadcrumb-section">
+    <ol class="breadcrumb p-3 rounded">
         <li class="breadcrumb-item"><a href="../">首页</a></li>
+
         
             
+                
+            
         
+
         <li class="breadcrumb-item active" aria-current="page">资讯中心</li>
     </ol>
-</nav> 
+</nav>
 
     <div class="row">
         
@@ -1206,54 +1328,158 @@
                 </div>
                 <div class="card-body">
                     
-                    <div id="selected-filters-inline" class="selected-filters-inline" style="display: none;">
-                        <div class="selected-filters-label mb-2"><i class="fas fa-check-circle me-1"></i>已选条件</div>
-                        <div id="selected-filters-inline-container" class="d-flex flex-wrap gap-2"></div>
-                    </div>
-                    
                     <div class="mb-4">
                         <h6 class="filter-section-title">
                             <i class="fas fa-folder-open me-2"></i>资讯分类
                         </h6>
-                        <div class="filter-buttons-container" id="category-filters">
-                            <a href="javascript:void(0)" class="filter-btn active" data-filter-type="category" data-filter-value="">
-                                全部
-                            </a>
+                        <div id="category-filters">
                             
                             
+
                             
-                                
+                                <div class="filter-buttons-container">
                                     
-                                
-                            
-                                
+                                        
+                                        
+                                        <a href="javascript:void(0)"
+                                           class="filter-btn category-btn"
+                                           data-filter-type="category" data-filter-value="展会资讯">
+                                            <i class="fas fa-folder me-1"></i>展会资讯
+                                            <span class="badge bg-light text-dark ms-1">0</span>
+                                        </a>
+                                        
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            <a href="javascript:void(0)" class="filter-btn tag-btn" data-filter-type="category" data-filter-value="展会资讯|铸造展">
+                                                展会资讯 - 铸造展 <span class="badge bg-light text-dark">0</span>
+                                            </a>
+                                        
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            <a href="javascript:void(0)" class="filter-btn tag-btn" data-filter-type="category" data-filter-value="展会资讯|风能展">
+                                                展会资讯 - 风能展 <span class="badge bg-light text-dark">0</span>
+                                            </a>
+                                        
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            <a href="javascript:void(0)" class="filter-btn tag-btn" data-filter-type="category" data-filter-value="展会资讯|动力展">
+                                                展会资讯 - 动力展 <span class="badge bg-light text-dark">0</span>
+                                            </a>
+                                        
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            <a href="javascript:void(0)" class="filter-btn tag-btn" data-filter-type="category" data-filter-value="展会资讯|燃机大会">
+                                                展会资讯 - 燃机大会 <span class="badge bg-light text-dark">0</span>
+                                            </a>
+                                        
                                     
-                                
-                            
-                                
+                                        
+                                        
+                                        <a href="javascript:void(0)"
+                                           class="filter-btn category-btn"
+                                           data-filter-type="category" data-filter-value="行业资讯">
+                                            <i class="fas fa-folder me-1"></i>行业资讯
+                                            <span class="badge bg-light text-dark ms-1">2</span>
+                                        </a>
+                                        
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            <a href="javascript:void(0)" class="filter-btn tag-btn" data-filter-type="category" data-filter-value="行业资讯|市场动态">
+                                                行业资讯 - 市场动态 <span class="badge bg-light text-dark">0</span>
+                                            </a>
+                                        
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            <a href="javascript:void(0)" class="filter-btn tag-btn" data-filter-type="category" data-filter-value="行业资讯|企业新闻">
+                                                行业资讯 - 企业新闻 <span class="badge bg-light text-dark">0</span>
+                                            </a>
+                                        
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            <a href="javascript:void(0)" class="filter-btn tag-btn" data-filter-type="category" data-filter-value="行业资讯|行业政策">
+                                                行业资讯 - 行业政策 <span class="badge bg-light text-dark">0</span>
+                                            </a>
+                                        
                                     
-                                
-                            
-                                
+                                        
+                                        
+                                        <a href="javascript:void(0)"
+                                           class="filter-btn category-btn"
+                                           data-filter-type="category" data-filter-value="技术文章">
+                                            <i class="fas fa-folder me-1"></i>技术文章
+                                            <span class="badge bg-light text-dark ms-1">3</span>
+                                        </a>
+                                        
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            <a href="javascript:void(0)" class="filter-btn tag-btn" data-filter-type="category" data-filter-value="技术文章|原理解析">
+                                                技术文章 - 原理解析 <span class="badge bg-light text-dark">0</span>
+                                            </a>
+                                        
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            <a href="javascript:void(0)" class="filter-btn tag-btn" data-filter-type="category" data-filter-value="技术文章|应用指南">
+                                                技术文章 - 应用指南 <span class="badge bg-light text-dark">0</span>
+                                            </a>
+                                        
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            <a href="javascript:void(0)" class="filter-btn tag-btn" data-filter-type="category" data-filter-value="技术文章|技术评测">
+                                                技术文章 - 技术评测 <span class="badge bg-light text-dark">0</span>
+                                            </a>
+                                        
                                     
-                                
-                            
-                                
-                                    
-                                
-                            
-                            
-                            <a href="javascript:void(0)" class="filter-btn" data-filter-type="category" data-filter-value="展会信息">
-                                展会信息 <span class="badge bg-light text-dark">1</span>
-                            </a>
-                            
-                            <a href="javascript:void(0)" class="filter-btn" data-filter-type="category" data-filter-value="技术文章">
-                                技术文章 <span class="badge bg-light text-dark">2</span>
-                            </a>
-                            
-                            <a href="javascript:void(0)" class="filter-btn" data-filter-type="category" data-filter-value="行业资讯">
-                                行业资讯 <span class="badge bg-light text-dark">2</span>
-                            </a>
+                                </div>
                             
                         </div>
                     </div>
@@ -1266,10 +1492,7 @@
                         <div class="filter-buttons-container" id="tag-filters">
                             
                             
-                                
-                                    
-                                
-                                    
+                            
                                 
                                     
                                 
@@ -1295,6 +1518,12 @@
                                 
                                     
                                 
+                                    
+                                
+                                    
+                                
+                                    
+                                
                             
                                 
                                     
@@ -1308,7 +1537,17 @@
                                     
                                 
                             
+                                
+                                    
+                                
+                                    
+                                
                             
+                            
+                            
+                                
+                            
+                                
                             
                                 
                             
@@ -1346,12 +1585,24 @@
                                 工业内窥镜 <span class="badge bg-light text-dark">2</span>
                             </a>
                             
+                            <a href="javascript:void(0)" class="filter-btn tag-btn" data-filter-type="tag" data-filter-value="深度学习">
+                                深度学习 <span class="badge bg-light text-dark">2</span>
+                            </a>
+                            
                             <a href="javascript:void(0)" class="filter-btn tag-btn" data-filter-type="tag" data-filter-value="算法优化">
                                 算法优化 <span class="badge bg-light text-dark">2</span>
                             </a>
                             
+                            <a href="javascript:void(0)" class="filter-btn tag-btn" data-filter-type="tag" data-filter-value="AI识别">
+                                AI识别 <span class="badge bg-light text-dark">1</span>
+                            </a>
+                            
                             <a href="javascript:void(0)" class="filter-btn tag-btn" data-filter-type="tag" data-filter-value="内窥镜技术">
                                 内窥镜技术 <span class="badge bg-light text-dark">1</span>
+                            </a>
+                            
+                            <a href="javascript:void(0)" class="filter-btn tag-btn" data-filter-type="tag" data-filter-value="工业内窥">
+                                工业内窥 <span class="badge bg-light text-dark">1</span>
                             </a>
                             
                             <a href="javascript:void(0)" class="filter-btn tag-btn" data-filter-type="tag" data-filter-value="市场分析">
@@ -1366,18 +1617,6 @@
                                 无损检测 <span class="badge bg-light text-dark">1</span>
                             </a>
                             
-                            <a href="javascript:void(0)" class="filter-btn tag-btn" data-filter-type="tag" data-filter-value="深度学习">
-                                深度学习 <span class="badge bg-light text-dark">1</span>
-                            </a>
-                            
-                            <a href="javascript:void(0)" class="filter-btn tag-btn" data-filter-type="tag" data-filter-value="珠海航展">
-                                珠海航展 <span class="badge bg-light text-dark">1</span>
-                            </a>
-                            
-                            <a href="javascript:void(0)" class="filter-btn tag-btn" data-filter-type="tag" data-filter-value="竞争格局">
-                                竞争格局 <span class="badge bg-light text-dark">1</span>
-                            </a>
-                            
                         </div>
                     </div>
 
@@ -1386,6 +1625,12 @@
                         <button class="btn btn-outline-secondary btn-sm" id="clearAllFilters">
                             <i class="fas fa-times me-1"></i>清除全部
                         </button>
+                    </div>
+
+                    
+                    <div id="selected-filters-inline" class="selected-filters-inline mt-3" style="display: none;">
+                        <div class="selected-filters-label mb-2"><i class="fas fa-check-circle me-1"></i>已选条件</div>
+                        <div id="selected-filters-inline-container" class="d-flex flex-wrap gap-2"></div>
                     </div>
                 </div>
             </div>
@@ -1398,7 +1643,7 @@
             
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <small class="text-muted" id="news-count-info">共 5 篇资讯</small>
+                    <small class="text-muted" id="news-count-info">共 6 篇资讯</small>
                 </div>
                 <div class="d-flex align-items-center">
                     <label for="sortOrder" class="form-label me-2 mb-0">排序：</label>
@@ -1415,6 +1660,59 @@
                 
                 
                 <div class="col-lg-6 col-xl-4 mb-4 news-item"
+                     data-categories="技术文章"
+                     data-tags="AI识别,深度学习,工业内窥"
+                     data-date="2025-11-08"
+                     data-views="0"
+                     data-permalink="/news/tech-article/2025-ai-defect-detection/"
+                     data-title="基于AI的缺陷识别在工业内窥中的应用实践">
+                    <div class="card h-100 shadow-sm news-card">
+                        <a href="http://localhost:1321/news/tech-article/2025-ai-defect-detection/" class="card-img-link">
+                            <div class="card-img-wrapper">
+                                
+                                
+                                
+                                    
+                                    <img src="../images/content/news/covers/news_covers_news-1_original_v1.jpeg" class="card-img-top object-fit-cover" alt="基于AI的缺陷识别在工业内窥中的应用实践" style="height: 200px;">
+                                
+                            
+                        </div>
+                    </a>
+                        <div class="card-body d-flex flex-column">
+                            <div class="mb-2">
+                                
+                                <span class="badge bg-primary me-1">技术文章</span>
+                                
+                                
+                                <span class="badge bg-secondary me-1">AI识别</span>
+                                
+                                <span class="badge bg-secondary me-1">深度学习</span>
+                                
+                                <span class="badge bg-secondary me-1">工业内窥</span>
+                                
+                            </div>
+                            <h5 class="card-title news-title">
+                                <a href="http://localhost:1321/news/tech-article/2025-ai-defect-detection/" class="text-decoration-none text-dark hover-primary">基于AI的缺陷识别在工业内窥中的应用实践</a>
+                            </h5>
+                            
+                            <p class="card-text text-muted flex-grow-1 news-summary">介绍将深度学习用于内窥图像缺陷识别的落地流程与效果评估。</p>
+                            
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <small class="text-muted"><i class="far fa-calendar-alt me-1"></i>2025-11-08</small>
+                                        
+                                    </div>
+                                    <div>
+                                        <small class="text-muted"><i class="fas fa-eye me-1"></i><span class="view-count-display">0</span></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 col-xl-4 mb-4 news-item"
                      data-categories="行业资讯"
                      data-tags="市场分析,行业趋势,工业内窥镜,市场预测,竞争格局"
                      data-date="2025-07-27"
@@ -1422,13 +1720,13 @@
                      data-permalink="/news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/"
                      data-title="2025年工业内窥镜市场发展趋势分析报告">
                     <div class="card h-100 shadow-sm news-card">
-                        <a href="http://localhost:1313/news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/" class="card-img-link">
+                        <a href="http://localhost:1321/news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 <img src="https://picsum.photos/800/450?random=industry-main" class="card-img-top object-fit-cover" alt="2025年工业内窥镜市场发展趋势分析报告" style="height: 200px;">
                                 
-                            </div>
-                        </a>
+                        </div>
+                    </a>
                         <div class="card-body d-flex flex-column">
                             <div class="mb-2">
                                 
@@ -1447,7 +1745,7 @@
                                 
                             </div>
                             <h5 class="card-title news-title">
-                                <a href="http://localhost:1313/news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/" class="text-decoration-none text-dark hover-primary">2025年工业内窥镜市场发展趋势分析报告</a>
+                                <a href="http://localhost:1321/news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/" class="text-decoration-none text-dark hover-primary">2025年工业内窥镜市场发展趋势分析报告</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 news-summary">深度分析2025年全球工业内窥镜市场发展现状、技术趋势、竞争格局及未来发展机遇，为行业从业者提供权威的市场洞察</p>
@@ -1477,13 +1775,13 @@
                      data-permalink="/news/2025-07-27-%E5%86%85%E7%AA%A5%E9%95%9C%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/"
                      data-title="内窥镜图像处理算法优化技术详解">
                     <div class="card h-100 shadow-sm news-card">
-                        <a href="http://localhost:1313/news/2025-07-27-%E5%86%85%E7%AA%A5%E9%95%9C%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/" class="card-img-link">
+                        <a href="http://localhost:1321/news/2025-07-27-%E5%86%85%E7%AA%A5%E9%95%9C%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 <img src="https://picsum.photos/800/450?random=tech-main" class="card-img-top object-fit-cover" alt="内窥镜图像处理算法优化技术详解" style="height: 200px;">
                                 
-                            </div>
-                        </a>
+                        </div>
+                    </a>
                         <div class="card-body d-flex flex-column">
                             <div class="mb-2">
                                 
@@ -1502,7 +1800,7 @@
                                 
                             </div>
                             <h5 class="card-title news-title">
-                                <a href="http://localhost:1313/news/2025-07-27-%E5%86%85%E7%AA%A5%E9%95%9C%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/" class="text-decoration-none text-dark hover-primary">内窥镜图像处理算法优化技术详解</a>
+                                <a href="http://localhost:1321/news/2025-07-27-%E5%86%85%E7%AA%A5%E9%95%9C%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/" class="text-decoration-none text-dark hover-primary">内窥镜图像处理算法优化技术详解</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 news-summary">深入探讨内窥镜图像处理中的关键算法，包括图像增强、噪声抑制、边缘检测等核心技术，为开发者提供实用的优化方案</p>
@@ -1532,13 +1830,13 @@
                      data-permalink="/news/industry/2025-07-14-industrial-endoscope-market-growth/"
                      data-title="工业内窥镜市场迎来快速增长期 - 无损检测行业最新发展动态">
                     <div class="card h-100 shadow-sm news-card">
-                        <a href="http://localhost:1313/news/industry/2025-07-14-industrial-endoscope-market-growth/" class="card-img-link">
+                        <a href="http://localhost:1321/news/industry/2025-07-14-industrial-endoscope-market-growth/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 <img src="../images/news/industrial-endoscope-2025-01.svg" class="card-img-top object-fit-cover" alt="工业内窥镜市场迎来快速增长期 - 无损检测行业最新发展动态" style="height: 200px;">
                                 
-                            </div>
-                        </a>
+                        </div>
+                    </a>
                         <div class="card-body d-flex flex-column">
                             <div class="mb-2">
                                 
@@ -1551,7 +1849,7 @@
                                 
                             </div>
                             <h5 class="card-title news-title">
-                                <a href="http://localhost:1313/news/industry/2025-07-14-industrial-endoscope-market-growth/" class="text-decoration-none text-dark hover-primary">工业内窥镜市场迎来快速增长期 - 无损检测行业最新发展动态</a>
+                                <a href="http://localhost:1321/news/industry/2025-07-14-industrial-endoscope-market-growth/" class="text-decoration-none text-dark hover-primary">工业内窥镜市场迎来快速增长期 - 无损检测行业最新发展动态</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 news-summary">本文深入分析了工业内窥镜在无损检测领域的最新发展趋势，探讨了相关技术创新、市场动态和未来发展方向，为行业从业者提供有价值的参考信息。</p>
@@ -1579,13 +1877,13 @@
                      data-permalink="/news/exhibition/exhibition-template-example/"
                      data-title="中国（珠海）国际航空航天展览会">
                     <div class="card h-100 shadow-sm news-card">
-                        <a href="http://localhost:1313/news/exhibition/exhibition-template-example/" class="card-img-link">
+                        <a href="http://localhost:1321/news/exhibition/exhibition-template-example/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 <img src="../images/news/zh-202611-01.jpg" class="card-img-top object-fit-cover" alt="中国（珠海）国际航空航天展览会" style="height: 200px;">
                                 
-                            </div>
-                        </a>
+                        </div>
+                    </a>
                         <div class="card-body d-flex flex-column">
                             <div class="mb-2">
                                 
@@ -1598,7 +1896,7 @@
                                 
                             </div>
                             <h5 class="card-title news-title">
-                                <a href="http://localhost:1313/news/exhibition/exhibition-template-example/" class="text-decoration-none text-dark hover-primary">中国（珠海）国际航空航天展览会</a>
+                                <a href="http://localhost:1321/news/exhibition/exhibition-template-example/" class="text-decoration-none text-dark hover-primary">中国（珠海）国际航空航天展览会</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 news-summary">中国国际航空航天博览会是唯一由中央政府批准举办的国际性专业航空航天展览，以实物展示、贸易洽谈、学术交流和飞行表演为主要特征。</p>
@@ -1626,13 +1924,13 @@
                      data-permalink="/news/tech-article/tech-article-1/"
                      data-title="工业内窥镜图像处理算法优化技术研究">
                     <div class="card h-100 shadow-sm news-card">
-                        <a href="http://localhost:1313/news/tech-article/tech-article-1/" class="card-img-link">
+                        <a href="http://localhost:1321/news/tech-article/tech-article-1/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 <img src="../images/news/%e6%96%b0%e9%97%bb.webp" class="card-img-top object-fit-cover" alt="工业内窥镜图像处理算法优化技术研究" style="height: 200px;">
                                 
-                            </div>
-                        </a>
+                        </div>
+                    </a>
                         <div class="card-body d-flex flex-column">
                             <div class="mb-2">
                                 
@@ -1645,7 +1943,7 @@
                                 
                             </div>
                             <h5 class="card-title news-title">
-                                <a href="http://localhost:1313/news/tech-article/tech-article-1/" class="text-decoration-none text-dark hover-primary">工业内窥镜图像处理算法优化技术研究</a>
+                                <a href="http://localhost:1321/news/tech-article/tech-article-1/" class="text-decoration-none text-dark hover-primary">工业内窥镜图像处理算法优化技术研究</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 news-summary">深入探讨工业内窥镜图像处理算法的优化方法，提升检测精度和效率</p>
@@ -2126,8 +2424,16 @@ body {
 }
 
  
+#category-filters {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+}
+
 #category-filters .filter-btn {
-    width: max-content;
+    width: 100%;
+    justify-content: flex-start;
 }
 
 .filter-btn {
@@ -2175,6 +2481,55 @@ body {
 .tag-btn {
     font-size: 13px;
     padding: 0.4rem 0.6rem;
+}
+
+ 
+.subcategory-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.subcategory-group-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #424242;
+    margin-bottom: 0.35rem;
+}
+
+.subcategory-list .filter-btn {
+    width: 100%;
+    justify-content: flex-start;
+}
+
+ 
+.category-level-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.category-primary-container .category-primary {
+    background: linear-gradient(135deg, #E3F2FD, #F5F5F5);
+    border: 1px solid #BBDEFB;
+}
+
+.category-secondary-container .category-secondary {
+    background: #FAFAFA;
+}
+
+.category-connector {
+    position: absolute;
+    left: 12px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, #BBDEFB, transparent);
+}
+
+.primary-btn {
+    justify-content: flex-start;
 }
 
  
@@ -2797,6 +3152,20 @@ function fetchViewCountsForPermalinks(permalinks) {
     });
 }
 
+function matchesCategoryFilters(categories, tags, selectedCategories) {
+    if (selectedCategories.length === 0) return true;
+    return selectedCategories.some(cat => {
+        if (cat.includes('|')) {
+            const [primary, secondary] = cat.split('|');
+            const primaryOk = categories.includes(primary);
+            const secondaryOk = categories.includes(secondary) || tags.includes(secondary);
+            return primaryOk && secondaryOk;
+        } else {
+            return categories.includes(cat) || tags.includes(cat);
+        }
+    });
+}
+
 function applyFiltersAndSort() {
     console.log('🔄 应用筛选和排序');
 
@@ -2819,8 +3188,7 @@ function applyFiltersAndSort() {
             newsItem.dataset.tags.split(',').map(t => t.trim()) : [];
 
         
-        let categoryMatch = selectedCategories.length === 0 ||
-            selectedCategories.some(cat => categories.includes(cat));
+        let categoryMatch = matchesCategoryFilters(categories, tags, selectedCategories);
 
         
         let tagMatch = selectedTags.length === 0 ||
@@ -2916,8 +3284,9 @@ function updateSelectedFilters() {
 
     let filtersHTML = '';
     selectedCategories.forEach(category => {
+        const label = category.includes('|') ? category.replace('|', '-') : category;
         filtersHTML += `<span class="selected-filter-tag">
-            分类: ${category}
+            分类: ${label}
             <span class="remove-filter" onclick="removeFilter('category', '${category}')">&times;</span>
         </span>`;
     });
@@ -3067,6 +3436,23 @@ style="position: fixed; right: 32px; bottom: 48px; z-index: 999; display: none; 
 </button>
 
 <style>
+ 
+#backToTopBtn {
+  background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
+  border: none;
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(25,118,210,0.35);
+  transition: opacity 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+#backToTopBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(25,118,210,0.45);
+}
+#backToTopBtn:active {
+  transform: translateY(0);
+}
+ 
+#backToTopBtn i { font-size: 1rem; }
  
 @media (max-width: 768px) {
   .footer {

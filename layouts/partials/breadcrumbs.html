@@ -1,11 +1,31 @@
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb bg-light p-3 rounded">
+<nav aria-label="breadcrumb" class="breadcrumb-section">
+    <ol class="breadcrumb p-3 rounded">
         <li class="breadcrumb-item"><a href="{{ "/" | relURL }}">首页</a></li>
-        {{ range .Ancestors.Reverse }}
-            {{ if not .IsHome }}
-                <li class="breadcrumb-item"><a href="{{ .Permalink }}">{{ .Title }}</a></li>
+
+        {{ if eq .Section "products" }}
+            <li class="breadcrumb-item"><a href="{{ "/products/" | relURL }}">产品中心</a></li>
+
+            {{ with .Params.primary_category }}
+                {{ $pc := . }}
+                <li class="breadcrumb-item">
+                    <a href="{{ printf "/products/?primary_category=%s" (urlquery $pc) | relURL }}">{{ $pc }}</a>
+                </li>
+            {{ end }}
+
+            {{ with .Params.secondary_category }}
+                {{ $sc := . }}
+                <li class="breadcrumb-item">
+                    <a href="{{ printf "/products/?secondary_category=%s" (urlquery $sc) | relURL }}">{{ $sc }}</a>
+                </li>
+            {{ end }}
+        {{ else }}
+            {{ range .Ancestors.Reverse }}
+                {{ if not .IsHome }}
+                    <li class="breadcrumb-item"><a href="{{ .Permalink }}">{{ .Title }}</a></li>
+                {{ end }}
             {{ end }}
         {{ end }}
+
         <li class="breadcrumb-item active" aria-current="page">{{ .Title }}</li>
     </ol>
-</nav> 
+</nav>

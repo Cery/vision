@@ -60,14 +60,64 @@
   "params": {"date":"2024-03-20T00:00:00Z","draft":false,"features":["高精度科研检测","多学科应用支持","实验过程监控","数据采集分析","定制化解决方案"],"icon":"fas fa-microscope","image":"/images/banners/category/application_general_pipe-2_original_v1.jpg","iscjklanguage":true,"key_technologies":["超高分辨率成像","多光谱分析技术","实时数据采集","图像处理算法","测量标定技术"],"lastmod":"2024-03-20T00:00:00Z","publishdate":"2024-03-20T00:00:00Z","scenarios":[{"description":"材料微观结构、性能测试和失效分析研究","icon":"fas fa-atom","title":"材料科学研究"},{"description":"生物组织结构观察和医疗器械研发支持","icon":"fas fa-dna","title":"生物医学研究"},{"description":"机械结构分析、疲劳试验和性能评估","icon":"fas fa-cog","title":"机械工程研究"},{"description":"环境监测、污染检测和生态研究支持","icon":"fas fa-leaf","title":"环境科学研究"}],"summary":"科研实验检测分析专业解决方案，支持科学研究和技术创新","title":"科学研究","weight":6}
 },
 {
-  "uri": "/products/%E6%A0%B7%E4%BE%8B%E4%BA%A7%E5%93%81/",
-  "title": "样例产品",
-  "content": "产品详细描述\u0026hellip;\n",
-  "summary": "\u003cp\u003e产品详细描述\u0026hellip;\u003c/p\u003e",
-  "type": "products",
-  "section": "products",
-  "date": "2025-11-04",
-  "params": {"application_scenarios":"- 简述产品适用的行业与场景…\n","data_download":[{"file_path":"/downloads/product-brochure.pdf","file_title":"产品彩页"},{"file_path":"/downloads/user-manual.pdf","file_title":"用户手册"}],"date":"2025-11-04T21:01:45+09:00","draft":false,"featured_image":"/images/products/placeholder.jpg","featured_image_alt":"","gallery":[{"alt":"主图","image":"/images/products/default-product.jpg"},{"alt":"副图1","image":"/images/products/default-gallery-2.jpg"},{"alt":"副图2","image":"/images/products/default-gallery-3.jpg"}],"iscjklanguage":true,"lastmod":"2025-11-04T21:01:45+09:00","model":"","parameters":[{"name":"主机屏幕","value":""},{"name":"待机时长","value":""},{"name":"探头直径","value":""},{"name":"像素","value":""},{"name":"视向","value":""},{"name":"光源","value":""},{"name":"导向","value":""},{"name":"管线材质","value":""}],"primary_category":"","product_category":"","product_type":"","publishdate":"2025-11-04T21:01:45+09:00","published":"2025-11-04T21:01:45+09:00","secondary_category":"","series":"","summary":"","supplier":"","title":"样例产品"}
+  "uri": "/cases/case-weld-quality/",
+  "title": "焊缝质量缺陷检测与工艺优化案例",
+  "content": "项目背景 焊接质量直接影响整车安全与可靠性，传统抽检难以发现内部缺陷。\n解决方案 引入内窥检测与SPC方法，依据缺陷根因调整焊接参数并建立检测标准。\n实施效果 返修率与交付周期显著改善，形成标准化质量控制流程。\n",
+  "summary": "针对复杂焊缝开展内窥检测与工艺参数优化，显著降低返修率。",
+  "type": "cases",
+  "section": "cases",
+  "date": "2025-11-08",
+  "params": {"application_field":["汽车制造"],"casetype":"optimization","categories":["应用案例"],"challenge":"焊缝内部缺陷难以检测，返修率高影响交付周期。","client":"华南汽车零部件厂","date":"2025-11-08T00:00:00Z","draft":false,"featured_image":"/images/cases/case-3.jpg","industry":"汽车制造","iscjklanguage":true,"keymetrics":[{"description":"返修率显著降低","label":"返修率降低","value":"-9%"},{"description":"交付周期缩短","label":"交付周期","value":"-7天"}],"lastmod":"2025-11-08T00:00:00Z","primary_category":["工业内窥镜"],"projectduration":"1.5个月","publishdate":"2025-11-08T00:00:00Z","related_tech":["过程控制","图像分析"],"results":"返修率由12%降至3%，交付周期缩短一周。","solution":"采用高清工业内窥镜与统计过程控制（SPC），识别缺陷并优化焊接参数。","subcategories":["汽车制造"],"summary":"针对复杂焊缝开展内窥检测与工艺参数优化，显著降低返修率。","tags":["焊缝检测","质量控制","工艺优化"],"technology_tags":["SPC统计控制","高清成像"],"title":"焊缝质量缺陷检测与工艺优化案例","views":0}
+},
+{
+  "uri": "/news/tech-article/2025-ai-defect-detection/",
+  "title": "基于AI的缺陷识别在工业内窥中的应用实践",
+  "content": "本文分享在工业场景下采用深度学习进行缺陷识别的实践经验，包括数据采集、标注、模型训练与评估指标。\n",
+  "summary": "介绍将深度学习用于内窥图像缺陷识别的落地流程与效果评估。",
+  "type": "news",
+  "section": "news",
+  "date": "2025-11-08",
+  "params": {"authors":["维森研发中心"],"categories":["技术文章"],"date":"2025-11-08T00:00:00Z","draft":false,"iscjklanguage":true,"lastmod":"2025-11-08T00:00:00Z","publishdate":"2025-11-08T00:00:00Z","summary":"介绍将深度学习用于内窥图像缺陷识别的落地流程与效果评估。","tags":["AI识别","深度学习","工业内窥"],"title":"基于AI的缺陷识别在工业内窥中的应用实践"}
+},
+{
+  "uri": "/cases/case-petrochemical-corrosion/",
+  "title": "石化储罐内壁腐蚀监测与维护案例",
+  "content": "项目背景 储罐长期服役环境导致内壁腐蚀，需精准监测与科学维护。\n解决方案 结合成像与评估模型计算腐蚀程度，并制定分级维护策略。\n实施效果 安全性与经济性提升，建立规范化巡检体系。\n",
+  "summary": "通过定期内窥检查与腐蚀评估模型，实现储罐安全运行与维护成本优化。",
+  "type": "cases",
+  "section": "cases",
+  "date": "2025-11-05",
+  "params": {"application_field":["石油化工"],"casetype":"innovation","categories":["应用案例"],"challenge":"传统人工检测费时且易漏检，储罐安全风险高。","client":"华北炼化企业","date":"2025-11-05T00:00:00Z","draft":false,"featured_image":"/images/cases/case-2.jpg","industry":"石油化工","iscjklanguage":true,"keymetrics":[{"description":"停机时间减少","label":"停机时间","value":"-20%"},{"description":"维护成本降低","label":"维护成本","value":"-15%"}],"lastmod":"2025-11-05T00:00:00Z","primary_category":["工业内窥镜"],"projectduration":"3个月","publishdate":"2025-11-05T00:00:00Z","related_tech":["风险评估","数据分析"],"results":"安全风险降低，维护成本控制在预算内，停机时间减少。","solution":"采用内窥成像、腐蚀深度评估与风险分级策略，形成维护计划。","subcategories":["石油化工"],"summary":"通过定期内窥检查与腐蚀评估模型，实现储罐安全运行与维护成本优化。","tags":["储罐检测","腐蚀监测","安全运行"],"technology_tags":["腐蚀评估","高清成像"],"title":"石化储罐内壁腐蚀监测与维护案例","views":0}
+},
+{
+  "uri": "/cases/case-aero-engine-blade/",
+  "title": "航空发动机叶片内部缺陷检测案例",
+  "content": "项目背景 航空发动机叶片是飞行安全关键部件，需要对内部微缺陷进行高精度检测。\n解决方案 采用微型内窥成像与光源优化，结合缺陷识别算法进行快速判定。\n实施效果 检测率与维护效率均提升，保障发动机可靠运行。\n",
+  "summary": "利用微型内窥系统检测叶片内部微裂纹与异物，提升航空器可靠性。",
+  "type": "cases",
+  "section": "cases",
+  "date": "2025-11-03",
+  "params": {"application_field":["航空航天"],"casetype":"success","categories":["应用案例"],"challenge":"叶片内部结构复杂，传统检测难以触达并精确识别微裂纹。","client":"某航发研究所","date":"2025-11-03T00:00:00Z","draft":false,"featured_image":"/images/cases/case-3.jpg","industry":"航空航天","iscjklanguage":true,"keymetrics":[{"description":"微裂纹检测率显著提升","label":"检测率提升","value":"+40%"},{"description":"维护效率提升","label":"维护效率","value":"+25%"}],"lastmod":"2025-11-03T00:00:00Z","primary_category":["工业内窥镜"],"projectduration":"1个月","publishdate":"2025-11-03T00:00:00Z","related_tech":["光学成像","缺陷识别"],"results":"微裂纹检测率提升，维护计划优化，提升飞行安全性。","solution":"采用微型内窥镜与特殊光源系统结合，提高成像清晰度并增强缺陷识别能力。","subcategories":["航空航天"],"summary":"利用微型内窥系统检测叶片内部微裂纹与异物，提升航空器可靠性。","tags":["叶片检测","微裂纹","微型内窥"],"technology_tags":["特殊光源","微型内窥"],"title":"航空发动机叶片内部缺陷检测案例","views":0}
+},
+{
+  "uri": "/cases/2025-microelectronics-bga-inspection/",
+  "title": "微电子BGA焊点缺陷检测案例",
+  "content": "针对微电子封装中的BGA焊点缺陷，我们构建了高分辨率成像方案与自动化检测流水线，覆盖空洞、桥连、虚焊等关键问题。\n方案摘要：\n使用高分辨率工业相机与远心镜头，实现焊点区域稳定成像。 采用分割与检测融合算法，识别焊点几何异常与表面缺陷。 根据工艺标准输出分级结果与处置建议，支持生产追溯与SPC分析。 收益：\n降低不良品率，提升生产良率与一致性。 实现自动化质检，提高效率并减少人工误判。 ",
+  "summary": "在微电子装配环节对BGA焊点进行空洞、桥连与虚焊识别，提升良率。",
+  "type": "cases",
+  "section": "cases",
+  "date": "2025-07-28",
+  "params": {"application_field":["微电子检测","品质管控"],"date":"2025-07-28T10:00:00+08:00","draft":false,"featured_image":"/images/applications/microelectronics-inspection.svg","industry":"微电子制造","iscjklanguage":true,"lastmod":"2025-07-28T10:00:00+08:00","primary_category":["检测相机"],"publishdate":"2025-07-28T10:00:00+08:00","summary":"在微电子装配环节对BGA焊点进行空洞、桥连与虚焊识别，提升良率。","tags":["BGA","焊点","外观检测","良率提升"],"technology_tags":["焊点检测","空洞识别","外观缺陷"],"title":"微电子BGA焊点缺陷检测案例"}
+},
+{
+  "uri": "/cases/2025-wind-turbine-gearbox-inspection/",
+  "title": "风电齿轮箱缺陷检测案例",
+  "content": "在风力发电场的日常维护中，齿轮箱的齿面裂纹、点蚀与磨损是常见问题。我们结合高清工业内窥镜与基于深度学习的缺陷识别模型，实现了对齿面缺陷的快速定位与定量评估。\n解决方案亮点：\n使用短焦、可弯曲探头在狭窄空间内灵活探查齿面区域。 采用图像增强与去噪算法，提高弱纹理缺陷可见性。 基于样本库训练的AI模型对裂纹、点蚀、磨损进行分类与置信度输出。 自动生成检测报告与维护建议，支持趋势分析与寿命预测。 应用价值：\n降低停机时间与维护成本，提升风电设备可靠性。 实现标准化、可追溯的检测流程，支持批量设备巡检。 ",
+  "summary": "利用工业内窥镜与AI识别进行风电齿轮箱齿面裂纹与磨损检测，提升维护效率与可靠性。",
+  "type": "cases",
+  "section": "cases",
+  "date": "2025-07-28",
+  "params": {"application_field":["风电维护","设备检修"],"date":"2025-07-28T09:00:00+08:00","draft":false,"featured_image":"/images/cases/wind-turbine-gearbox-inspection-2025-01.svg","industry":"能源电力","iscjklanguage":true,"lastmod":"2025-07-28T09:00:00+08:00","primary_category":["工业内窥镜"],"publishdate":"2025-07-28T09:00:00+08:00","summary":"利用工业内窥镜与AI识别进行风电齿轮箱齿面裂纹与磨损检测，提升维护效率与可靠性。","tags":["风电","齿轮箱","内窥镜","AI检测"],"technology_tags":["裂纹识别","磨损评估","图像增强"],"title":"风电齿轮箱缺陷检测案例"}
 },
 {
   "uri": "/news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/",
@@ -137,7 +187,7 @@
   "type": "products",
   "section": "products",
   "date": "2025-01-27",
-  "params": {"application_scenarios":"## 硬性光学内窥镜应用场景\n\n![精密机械制造](https://picsum.photos/600/400?random=precision-manufacturing)\n*图：精密机械制造检测应用*\n\n### 精密机械制造检测\n在精密机械制造领域，WS-O3020硬性光学内窥镜发挥着关键作用：\n- **精密轴承内圈检查** - 检测滚道表面质量和润滑状况\n- **齿轮箱内部检测** - 观察齿轮啮合面和磨损情况\n- **液压缸内壁检查** - 检测缸体内壁光洁度和密封槽\n- **阀门内部检测** - 检查阀座密封面和流道状况\n\n![医疗器械检测](https://picsum.photos/600/400?random=medical-device)\n*图：医疗器械质量检测*\n\n### 医疗器械检测\n广泛应用于医疗器械的质量控制和检验：\n- **手术器械检查** - 检测器械内腔清洁度和表面质量\n- **植入物检测** - 观察植入物表面处理和精度\n- **导管内壁检查** - 检测医用导管内壁光滑度\n- **精密仪器检测** - 检查医疗仪器内部组件状况\n\n![航空航天检测](https://picsum.photos/600/400?random=aerospace)\n*图：航空航天部件检测*\n\n### 航空航天检测\n适用于航空航天精密部件的质量检测：\n- **涡轮叶片检查** - 检测叶片表面缺陷和冷却孔\n- **燃油系统检测** - 检查燃油喷嘴和管路内部\n- **液压系统检查** - 检测液压组件内部状况\n- **结构件检测** - 检查关键结构件的内部质量\n\n![电子制造检测](https://picsum.photos/600/400?random=electronics)\n*图：电子制造业检测应用*\n\n### 电子制造检测\n在电子制造业中的精密检测应用：\n- **连接器检查** - 检测连接器内部接触点状况\n- **PCB检测** - 观察电路板孔洞和焊接质量\n- **散热器检查** - 检测散热器内部流道和表面\n- **精密组件检测** - 检查微小组件的装配质量\n\n### 技术优势\n- **高清光学成像** - 提供卓越的图像清晰度和色彩还原\n- **30度侧视设计** - 适合检测侧壁和难以直视的区域\n- **医用级材质** - 不锈钢材质确保耐腐蚀和生物相容性\n- **精确景深控制** - 8-60mm景深范围适应不同检测需求\n- **高放大倍率** - 1.2-3.5倍放大满足精密检测要求\n","data_download":[{"file_path":"/downloads/WS-O3020-specifications.pdf","file_title":"WS-O3020产品规格书"},{"file_path":"/downloads/WS-O3020-operation-guide.pdf","file_title":"WS-O3020操作指南"},{"file_path":"/downloads/WS-O3020-calibration.pdf","file_title":"WS-O3020校准证书"},{"file_path":"/downloads/WS-O3020-application-manual.pdf","file_title":"WS-O3020应用手册"},{"file_path":"/downloads/WS-O3020-catalog.jpg","file_title":"WS-O3020产品图册"},{"file_path":"/downloads/WS-O3020-drawings.jpg","file_title":"WS-O3020技术图纸"}],"date":"2025-01-27T15:45:00+08:00","draft":false,"gallery":[{"alt":"WS-O3020硬性光学内窥镜主图","image":"https://picsum.photos/800/600?random=o3020-main","is_main":true},{"alt":"WS-O3020光学内窥镜探头","image":"https://picsum.photos/800/600?random=o3020-1"},{"alt":"WS-O3020光学内窥镜光源系统","image":"https://picsum.photos/800/600?random=o3020-2"},{"alt":"WS-O3020光学内窥镜应用","image":"https://picsum.photos/800/600?random=o3020-3"}],"iscjklanguage":true,"lastmod":"2025-01-27T15:45:00+08:00","model":"WS-O3020","parameters":[{"name":"探头直径","value":"3.0mm"},{"name":"工作长度","value":"200mm"},{"name":"视向","value":"侧视(30°)"},{"name":"光源","value":"冷光源"},{"name":"视野","value":"85°"},{"name":"景深","value":"8mm~60mm"},{"name":"材质","value":"医用不锈钢"},{"name":"防护等级","value":"IP66"},{"name":"工作温度","value":"-5℃~65℃"},{"name":"光纤束","value":"高密度光纤传导"},{"name":"镜头类型","value":"高清光学镜头"},{"name":"放大倍率","value":"1.2-3.5倍"}],"primary_category":"光学内窥镜","publishdate":"2025-01-27T15:45:00+08:00","published":"2025-01-27T15:45:00+08:00","related_products":["WS-O2510","WS-O4030","WS-F4525","WS-K1010"],"secondary_category":"硬性光学内窥镜","seo_description":"WS-O3020硬性光学内窥镜，3.0mm直径、30度侧视型、高清光学成像，专为精密检测设计，适用于机械制造、医疗器械、精密仪器检查。","seo_keywords":["硬性光学内窥镜","3.0mm内窥镜","侧视内窥镜","光学检测设备","精密机械检测","医疗器械检查"],"seo_title":"WS-O3020硬性光学内窥镜 - 3.0mm侧视型专业检测设备","series":"O系列","summary":"高品质硬性光学内窥镜，3.0mm直径，30度侧视型，适用于精密机械检测和医疗器械检查，专业级光学成像系统","supplier":"天津维森科技有限公司","tags":["硬性探头","光学成像"],"title":"WS-O3020硬性光学内窥镜 - 3.0mm侧视型"}
+  "params": {"application_scenarios":"## 硬性光学内窥镜应用场景\n\n![精密机械制造](https://picsum.photos/600/400?random=precision-manufacturing)\n*图：精密机械制造检测应用*\n\n### 精密机械制造检测\n在精密机械制造领域，WS-O3020硬性光学内窥镜发挥着关键作用：\n- **精密轴承内圈检查** - 检测滚道表面质量和润滑状况\n- **齿轮箱内部检测** - 观察齿轮啮合面和磨损情况\n- **液压缸内壁检查** - 检测缸体内壁光洁度和密封槽\n- **阀门内部检测** - 检查阀座密封面和流道状况\n\n![医疗器械检测](https://picsum.photos/600/400?random=medical-device)\n*图：医疗器械质量检测*\n\n### 医疗器械检测\n广泛应用于医疗器械的质量控制和检验：\n- **手术器械检查** - 检测器械内腔清洁度和表面质量\n- **植入物检测** - 观察植入物表面处理和精度\n- **导管内壁检查** - 检测医用导管内壁光滑度\n- **精密仪器检测** - 检查医疗仪器内部组件状况\n\n![航空航天检测](https://picsum.photos/600/400?random=aerospace)\n*图：航空航天部件检测*\n\n### 航空航天检测\n适用于航空航天精密部件的质量检测：\n- **涡轮叶片检查** - 检测叶片表面缺陷和冷却孔\n- **燃油系统检测** - 检查燃油喷嘴和管路内部\n- **液压系统检查** - 检测液压组件内部状况\n- **结构件检测** - 检查关键结构件的内部质量\n\n![电子制造检测](https://picsum.photos/600/400?random=electronics)\n*图：电子制造业检测应用*\n\n### 电子制造检测\n在电子制造业中的精密检测应用：\n- **连接器检查** - 检测连接器内部接触点状况\n- **PCB检测** - 观察电路板孔洞和焊接质量\n- **散热器检查** - 检测散热器内部流道和表面\n- **精密组件检测** - 检查微小组件的装配质量\n\n### 技术优势\n- **高清光学成像** - 提供卓越的图像清晰度和色彩还原\n- **30度侧视设计** - 适合检测侧壁和难以直视的区域\n- **医用级材质** - 不锈钢材质确保耐腐蚀和生物相容性\n- **精确景深控制** - 8-60mm景深范围适应不同检测需求\n- **高放大倍率** - 1.2-3.5倍放大满足精密检测要求\n","data_download":[{"file_path":"/downloads/WS-O3020-specifications.pdf","file_title":"WS-O3020产品规格书"},{"file_path":"/downloads/WS-O3020-operation-guide.pdf","file_title":"WS-O3020操作指南"},{"file_path":"/downloads/WS-O3020-calibration.pdf","file_title":"WS-O3020校准证书"},{"file_path":"/downloads/WS-O3020-application-manual.pdf","file_title":"WS-O3020应用手册"},{"file_path":"/downloads/WS-O3020-catalog.jpg","file_title":"WS-O3020产品图册"},{"file_path":"/downloads/WS-O3020-drawings.jpg","file_title":"WS-O3020技术图纸"}],"date":"2025-01-27T15:45:00+08:00","draft":false,"gallery":[{"alt":"WS-O3020硬性光学内窥镜主图","image":"https://picsum.photos/800/600?random=o3020-main","is_main":true},{"alt":"WS-O3020光学内窥镜探头","image":"https://picsum.photos/800/600?random=o3020-1"},{"alt":"WS-O3020光学内窥镜光源系统","image":"https://picsum.photos/800/600?random=o3020-2"},{"alt":"WS-O3020光学内窥镜应用","image":"https://picsum.photos/800/600?random=o3020-3"}],"iscjklanguage":true,"lastmod":"2025-01-27T15:45:00+08:00","model":"WS-O3020","parameters":[{"name":"探头直径","value":"3.0mm"},{"name":"工作长度","value":"200mm"},{"name":"视向","value":"侧视(30°)"},{"name":"光源","value":"冷光源"},{"name":"视野","value":"85°"},{"name":"景深","value":"8mm~60mm"},{"name":"材质","value":"医用不锈钢"},{"name":"防护等级","value":"IP66"},{"name":"工作温度","value":"-5℃~65℃"},{"name":"光纤束","value":"高密度光纤传导"},{"name":"镜头类型","value":"高清光学镜头"},{"name":"放大倍率","value":"1.2-3.5倍"}],"primary_category":"光学内窥镜","publishdate":"2025-01-27T15:45:00+08:00","published":"2025-01-27T15:45:00+08:00","related_products":["WS-F4525","WS-P3915","WS-P6020"],"secondary_category":"硬性光学内窥镜","seo_description":"WS-O3020硬性光学内窥镜，3.0mm直径、30度侧视型、高清光学成像，专为精密检测设计，适用于机械制造、医疗器械、精密仪器检查。","seo_keywords":["硬性光学内窥镜","3.0mm内窥镜","侧视内窥镜","光学检测设备","精密机械检测","医疗器械检查"],"seo_title":"WS-O3020硬性光学内窥镜 - 3.0mm侧视型专业检测设备","series":"O系列","summary":"高品质硬性光学内窥镜，3.0mm直径，30度侧视型，适用于精密机械检测和医疗器械检查，专业级光学成像系统","supplier":"天津维森科技有限公司","tags":["硬性探头","光学成像"],"title":"WS-O3020硬性光学内窥镜 - 3.0mm侧视型"}
 },
 {
   "uri": "/products/vs/ws-f4525/",

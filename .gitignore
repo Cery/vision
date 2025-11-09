@@ -4,6 +4,8 @@
 # Hugo 生成文件
 public/
 resources/
+archive/temp-backup-*/
+archive/temp-files/**
 
 # Node.js
 node_modules/
@@ -22,6 +24,8 @@ package-lock.json
 # 日志文件
 *.log
 logs/
+*.tmp
+*.temp
 
 # 临时文件
 *.tmp
@@ -45,6 +49,8 @@ static/images/temp/
 backups/
 *.backup
 *.bak
+deno.lock
+npm/
 
 # 系统文件
 .DS_Store

@@ -4,6 +4,7 @@
   "description": "新旧图片路径映射关系",
   "mappings": {
     "products": {},
+    "downloads": {},
     "news": {
       "/images/news/news-1.jpeg": "/images/content/news/covers/news_covers_news-1_original_v1.jpeg",
       "/images/news/news-2.jpeg": "/images/content/news/covers/news_covers_news-2_original_v1.jpeg",

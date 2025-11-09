@@ -16,69 +16,178 @@
       <i class="fa-solid fa-briefcase"></i>
       <span>需求中心管理</span>
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminOffcanvas" aria-controls="adminOffcanvas">
-      <span class="navbar-toggler-icon"></span>
-    </button>
     <div class="d-flex align-items-center gap-2 ms-auto">
       <span class="badge bg-secondary">本地预览</span>
     </div>
   </div>
 </nav>
-<div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="adminOffcanvas" aria-labelledby="adminOffcanvasLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="adminOffcanvasLabel">导航</h5>
-    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    <nav class="nav flex-column">
-      <a class="nav-link text-light" href="#overview">概览</a>
-      <a class="nav-link text-light" href="#requirements">需求管理</a>
-      <a class="nav-link text-light" href="#quotes">报价管理</a>
-      <a class="nav-link text-light" href="#settings">系统设置</a>
-    </nav>
+
+<!-- 欢迎页 / 登录确认 -->
+<div id="welcomeScreen" class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h3 class="mb-3">管理员登录</h3>
+          <div class="mb-3">
+            <label class="form-label">管理员密钥</label>
+            <input id="adminKeyInput" type="password" class="form-control" placeholder="输入 ADMIN_KEY">
+          </div>
+          <button id="adminLoginBtn" class="btn btn-primary w-100"><i class="fa-solid fa-key me-1"></i> 确认登录</button>
+          <div class="mt-4" id="welcomeStats" style="display:none;">
+            <div class="row text-center">
+              <div class="col"><div class="small text-muted">需求总数</div><div class="h5 mb-0" id="statTotal">—</div></div>
+              <div class="col"><div class="small text-muted">开放报价</div><div class="h5 mb-0 text-success" id="statOpen">—</div></div>
+              <div class="col"><div class="small text-muted">需密码</div><div class="h5 mb-0 text-warning" id="statProtected">—</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer small text-muted">登录后可查看统计、需求列表、需求方与供应商信息。</div>
+      </div>
+    </div>
   </div>
 </div>
-    <div class="container-fluid mt-4">
-      <div class="row">
-        <aside class="col-lg-2 d-none d-lg-block">
-          <div class="admin-sidenav rounded">
-            <div class="mb-3"><strong><i class="fa-solid fa-sliders me-1"></i> 导航</strong></div>
-            <nav class="nav flex-column">
-              <a class="nav-link" href="#overview">概览</a>
-              <a class="nav-link" href="#requirements">需求管理</a>
-              <a class="nav-link" href="#quotes">报价管理</a>
-              <a class="nav-link" href="#settings">系统设置</a>
-            </nav>
-          </div>
-        </aside>
-        <main class="col-lg-10">
-        <h1>运营管理</h1>
-        <div id="overview" class="card mb-4 shadow-sm">
-            <div class="card-body d-flex flex-wrap align-items-center gap-3">
-                <div>
-                    <div class="small text-muted">管理员密钥</div>
-                    <div class="d-flex align-items-end gap-2">
-                        <input id="adminKeyInput" type="password" class="form-control" style="max-width:320px" placeholder="输入 ADMIN_KEY 后加载需求管理">
-                        <button id="adminLoginBtn" class="btn btn-primary"><i class="fa-solid fa-key me-1"></i> 加载管理</button>
-                    </div>
-                </div>
-                <div class="ms-auto d-flex align-items-center gap-4">
-                    <div class="text-center">
-                        <div class="small text-muted">需求总数</div>
-                        <div class="h5 mb-0" id="statTotal">—</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="small text-muted">开放报价</div>
-                        <div class="h5 mb-0 text-success" id="statOpen">—</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="small text-muted">需密码</div>
-                        <div class="h5 mb-0 text-warning" id="statProtected">—</div>
-                    </div>
-                </div>
+
+<!-- 主界面：登录后显示 -->
+<div id="adminApp" class="container-fluid mt-4" style="display:none;">
+  <div class="row">
+    <aside class="col-lg-2 d-none d-lg-block">
+      <div class="admin-sidenav rounded">
+        <div class="mb-3"><strong><i class="fa-solid fa-sliders me-1"></i> 菜单</strong></div>
+        <nav class="nav flex-column">
+          <a class="nav-link active" data-tab="requirementsSection" href="#">需求列表</a>
+          <a class="nav-link" data-tab="demandersSection" href="#">需求方</a>
+          <a class="nav-link" data-tab="suppliersSection" href="#">供应商</a>
+        </nav>
+      </div>
+    </aside>
+    <main class="col-lg-10">
+      <h1 class="mb-3">运营管理</h1>
+      <!-- 需求列表 -->
+      <section id="requirementsSection" class="card mb-4 shadow-sm">
+        <div class="card-body">
+          <h2 class="section-title">需求列表</h2>
+          <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+            <div class="input-group" style="max-width:360px;">
+              <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+              <input id="reqSearchInput" type="text" class="form-control" placeholder="按编号、标题、公司或联系人搜索">
             </div>
-            <div class="card-footer small text-muted">请在 Netlify 环境变量设置 <code>ADMIN_KEY</code>。平台管理员可查看明文密码并批量设置。</div>
+            <select id="reqStatusFilter" class="form-select form-select-sm" style="max-width:160px;">
+              <option value="">状态：全部</option>
+              <option value="公开">公开</option>
+              <option value="隐私">隐私</option>
+              <option value="关闭">关闭</option>
+            </select>
+            <select id="reqOpenFilter" class="form-select form-select-sm" style="max-width:160px;">
+              <option value="">在线报价：全部</option>
+              <option value="true">开启</option>
+              <option value="false">关闭</option>
+            </select>
+            <select id="reqContactFilter" class="form-select form-select-sm" style="max-width:180px;">
+              <option value="">联系方式公开：全部</option>
+              <option value="true">公开</option>
+              <option value="false">不公开</option>
+            </select>
+            <button id="reqApplyFilter" class="btn btn-outline-primary btn-sm">应用筛选</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-sm table-striped align-middle admin-table">
+              <thead class="table-light">
+                <tr>
+                  <th>编号</th>
+                  <th>标题</th>
+                  <th>状态</th>
+                  <th>在线报价</th>
+                  <th>联系方式公开</th>
+                  <th>报价数量</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="reqTableBody"></tbody>
+            </table>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mt-2">
+            <div class="small text-muted" id="reqPageHint">—</div>
+            <div class="btn-group">
+              <button id="reqPrevPage" class="btn btn-outline-secondary btn-sm" disabled>上一页</button>
+              <button id="reqNextPage" class="btn btn-outline-secondary btn-sm" disabled>下一页</button>
+            </div>
+          </div>
         </div>
+      </section>
+
+      <!-- 需求方 -->
+      <section id="demandersSection" class="card mb-4 shadow-sm" style="display:none;">
+        <div class="card-body">
+          <h2 class="section-title">需求方</h2>
+          <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+            <div class="input-group" style="max-width:360px;">
+              <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+              <input id="demSearchInput" type="text" class="form-control" placeholder="按公司或联系人搜索">
+            </div>
+            <button id="demReloadAll" class="btn btn-outline-primary btn-sm">重新加载统计</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-sm table-striped align-middle admin-table">
+              <thead class="table-light">
+                <tr>
+                  <th>公司</th>
+                  <th>联系人</th>
+                  <th>电话</th>
+                  <th>需求数量</th>
+                  <th>公开</th>
+                  <th>需密码</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="demTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 供应商 -->
+      <section id="suppliersSection" class="card mb-4 shadow-sm" style="display:none;">
+        <div class="card-body">
+          <h2 class="section-title">供应商</h2>
+          <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+            <div class="input-group" style="max-width:360px;">
+              <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+              <input id="supSearchInput" type="text" class="form-control" placeholder="按名称、系列或型号搜索">
+            </div>
+            <button id="supReloadBtn" class="btn btn-outline-primary btn-sm">重新加载</button>
+            <div class="form-check ms-2">
+              <input class="form-check-input" type="checkbox" value="" id="supPublicOnly">
+              <label class="form-check-label" for="supPublicOnly">仅公开</label>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-sm table-striped align-middle admin-table">
+              <thead class="table-light">
+                <tr>
+                  <th>名称</th>
+                  <th>联系人</th>
+                  <th>电话</th>
+                  <th>邮箱</th>
+                  <th>系列/型号数量</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="supTableBody"></tbody>
+            </table>
+          </div>
+          <div class="d-flex align-items-center justify-content-between mt-2">
+            <div id="supPageInfo" class="small text-muted"></div>
+            <div class="btn-group btn-group-sm">
+              <button id="supPrevPage" class="btn btn-outline-secondary">上一页</button>
+              <button id="supNextPage" class="btn btn-outline-secondary">下一页</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
         <div class="row">
             <div id="requirements" class="col-md-4">
                 <h2 class="section-title">需求列表</h2>
@@ -153,34 +262,7 @@
                     </div>
                 </div>
             </div>
-            <div id="quotes" class="col-md-8">
-                <h2 class="section-title">报价列表</h2>
-                <div id="quotesPanel" style="display: none;">
-                    <h3 id="selectedRequirement"></h3>
-                    <button id="exportCsvBtn" class="btn btn-primary btn-sm mb-3">导出为 CSV</button>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>供应商</th>
-                                <th>联系人</th>
-                                <th>电话</th>
-                                <th>报价 (元)</th>
-                                <th>状态</th>
-                                <th>操作</th>
-                            </tr>
-                        </thead>
-                        <tbody id="quotesList"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <!-- 系统设置占位区块 -->
-        <div id="settings" class="card mb-4 mt-4 shadow-sm">
-            <div class="card-body">
-                <h2 class="section-title">系统设置</h2>
-                <p class="text-muted mb-0">此处预留平台级偏好配置（例如默认脱敏策略、通知开关、导出格式等）。</p>
-            </div>
-        </div>
+            
         </main>
       </div>
     </div>
@@ -254,6 +336,7 @@
             }
 
         // Export quotes to CSV
+        if (exportCsvBtn) {
         exportCsvBtn.addEventListener('click', () => {
           let csvContent = "data:text/csv;charset=utf-8,";
           csvContent += "供应商,联系人,电话,报价(元),状态\n";
@@ -268,13 +351,14 @@
           document.body.appendChild(link);
           link.click();
         });
+        }
         // 导出为 Excel（兼容 .xls）
         (function addXlsExport(){
           try {
             const exportXlsBtn = document.createElement('button');
             exportXlsBtn.className = 'btn btn-outline-success btn-sm ms-2';
             exportXlsBtn.innerHTML = '<i class="fa-solid fa-file-excel me-1"></i> 导出为 Excel';
-            exportCsvBtn.parentElement?.insertBefore(exportXlsBtn, exportCsvBtn.nextSibling);
+            exportCsvBtn?.parentElement?.insertBefore(exportXlsBtn, exportCsvBtn?.nextSibling);
             exportXlsBtn.addEventListener('click', () => {
               const rows = (currentQuotes||[]).map(q =>
                 `<tr><td>${q.SupplierCompanyName||''}</td><td>${q.SupplierContact||''}</td><td>${q.SupplierPhone||''}</td><td>${q.Price||''}</td><td>${q.Status||''}</td></tr>`
@@ -362,6 +446,10 @@
 <script>
 // 管理员面板逻辑（独立脚本块）
 (() => {
+  // 新版管理UI存在时，跳过旧版面板逻辑，避免重复绑定与报错
+  if (document.getElementById('requirementsSection')) {
+    return;
+  }
   const adminLoginBtn = document.getElementById('adminLoginBtn');
   const adminRequirementsBody = document.getElementById('adminRequirementsBody');
   const applyAllBtn = document.getElementById('applyAllBtn');
@@ -540,7 +628,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 <script>
-// 系统设置：默认导出格式与“仅联系方式脱敏”筛选持久化与应用
+// 系统设置：与后端 SystemConfig 联动
 document.addEventListener('DOMContentLoaded', () => {
   const exportCsvBtn = document.getElementById('exportCsvBtn');
   const exportXlsxBtn = document.getElementById('exportXlsxBtn');
@@ -553,9 +641,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function applySettingsToUI(s){
     if (!s) return;
+    if (defaultExportFormat) defaultExportFormat.value = s.DefaultExportFormat || s.defaultExportFormat || 'csv';
+    if (typeof s.DefaultMaskedFilter !== 'undefined' && defaultMaskedFilter) defaultMaskedFilter.checked = !!s.DefaultMaskedFilter;
+    if (typeof s.NotifyEmailEnabled !== 'undefined' && notifyEmail) notifyEmail.checked = !!s.NotifyEmailEnabled;
+    if (typeof s.NotifySmsEnabled !== 'undefined' && notifySms) notifySms.checked = !!s.NotifySmsEnabled;
     // 导出按钮高亮切换
     if (exportCsvBtn && exportXlsxBtn) {
-      const useCsv = (s.defaultExportFormat || 'csv') === 'csv';
+      const useCsv = (defaultExportFormat.value || 'csv') === 'csv';
       exportCsvBtn.classList.toggle('btn-primary', useCsv);
       exportCsvBtn.classList.toggle('btn-outline-primary', !useCsv);
       exportXlsxBtn.classList.toggle('btn-outline-success', useCsv);
@@ -563,38 +655,584 @@ document.addEventListener('DOMContentLoaded', () => {
     // 默认启用“仅联系方式脱敏”筛选
     try {
       const onlyMaskedAdmin = document.getElementById('onlyMaskedAdmin');
-      if (onlyMaskedAdmin && typeof s.defaultMaskedFilter === 'boolean') {
-        onlyMaskedAdmin.checked = s.defaultMaskedFilter;
+      if (onlyMaskedAdmin && typeof s.DefaultMaskedFilter === 'boolean') {
+        onlyMaskedAdmin.checked = s.DefaultMaskedFilter;
         onlyMaskedAdmin.dispatchEvent(new Event('change'));
       }
     } catch {}
   }
 
-  // 读取持久化
-  try {
-    const s = JSON.parse(localStorage.getItem('adminSettings')||'{}');
-    if (defaultExportFormat) defaultExportFormat.value = s.defaultExportFormat || 'csv';
-    if (defaultMaskedFilter) defaultMaskedFilter.checked = !!s.defaultMaskedFilter;
-    if (notifyEmail) notifyEmail.checked = !!s.notifyEmail;
-    if (notifySms) notifySms.checked = !!s.notifySms;
-    applySettingsToUI(s);
-  } catch {}
+  async function loadSystemConfig() {
+    const key = document.getElementById('adminKeyInput')?.value.trim();
+    if (!key) return;
+    try {
+      const resp = await fetch(`/.netlify/functions/adminGetSystemConfig?adminKey=${encodeURIComponent(key)}`);
+      const data = await resp.json();
+      if (resp.ok && data && data.config) {
+        applySettingsToUI(data.config);
+      }
+    } catch {}
+  }
 
-  saveBtn?.addEventListener('click', () => {
-    const s = {
-      defaultExportFormat: defaultExportFormat?.value || 'csv',
-      defaultMaskedFilter: !!defaultMaskedFilter?.checked,
-      notifyEmail: !!notifyEmail?.checked,
-      notifySms: !!notifySms?.checked
+  // 在“加载管理”后加载一次系统配置
+  document.getElementById('adminLoginBtn')?.addEventListener('click', () => {
+    setTimeout(loadSystemConfig, 300);
+  });
+
+  saveBtn?.addEventListener('click', async () => {
+    const key = document.getElementById('adminKeyInput')?.value.trim();
+    if (!key) { alert('请先输入管理员密钥并点击“加载管理”'); return; }
+    const payload = {
+      SupplierGlobalPassword: document.getElementById('supplierGlobalPasswordInput')?.value || '',
+      DefaultExportFormat: defaultExportFormat?.value || 'csv',
+      DefaultMaskedFilter: !!defaultMaskedFilter?.checked,
+      NotifyEmailEnabled: !!notifyEmail?.checked,
+      NotifySmsEnabled: !!notifySms?.checked,
     };
     try {
-      localStorage.setItem('adminSettings', JSON.stringify(s));
+      const resp = await fetch('/.netlify/functions/adminUpdateSystemConfig', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Key': key },
+        body: JSON.stringify(payload)
+      });
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error || '保存失败');
       hint.textContent = '已保存';
-      applySettingsToUI(s);
       setTimeout(() => { hint.textContent = ''; }, 1500);
-    } catch {}
+    } catch (e) {
+      alert(e.message || '保存失败');
+    }
   });
 });
+</script>
+<script>
+// 管理页新逻辑：登录、侧边切换、需求列表、需求方与供应商
+(() => {
+  let ADMIN_KEY = '';
+  let reqOffsetNext = '';
+  let reqOffsetStack = [];
+  let requirementsCache = [];
+
+  function escapeHtml(s){return String(s).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;' }[m]));}
+
+  // 侧边/抽屉菜单切换（兼容左侧栏与 offcanvas）
+  const bindTabSwitch = (rootSel) => {
+    document.querySelectorAll(`${rootSel} .nav-link`).forEach(a => a.addEventListener('click', (e)=>{
+      e.preventDefault();
+      const tab=a.dataset.tab;
+      ['requirementsSection','demandersSection','suppliersSection'].forEach(id => {
+        const el=document.getElementById(id);
+        if (el) el.style.display = (id===tab) ? '' : 'none';
+      });
+      document.querySelectorAll(`${rootSel} .nav-link`).forEach(b => b.classList.toggle('active', b===a));
+    }));
+  };
+  bindTabSwitch('aside');
+  bindTabSwitch('#adminOffcanvas');
+  // 初始激活需求列表
+  document.querySelectorAll('aside .nav-link, #adminOffcanvas .nav-link').forEach(a => a.classList.toggle('active', a.dataset.tab==='requirementsSection'));
+  const reqSec=document.getElementById('requirementsSection');
+  const demSec=document.getElementById('demandersSection');
+  const supSec=document.getElementById('suppliersSection');
+  if (reqSec) reqSec.style.display='';
+  if (demSec) demSec.style.display='none';
+  if (supSec) supSec.style.display='none';
+
+  // 登录
+  const adminLoginBtn = document.getElementById('adminLoginBtn');
+  adminLoginBtn?.addEventListener('click', async () => {
+    const key = document.getElementById('adminKeyInput')?.value.trim();
+    if (!key) { alert('请输入管理员密钥'); return; }
+    try {
+      const resp = await fetch('/.netlify/functions/adminListRequirements?limit=1', { headers: { 'X-Admin-Key': key } });
+      const text = await resp.text();
+      let data;
+      try { data = JSON.parse(text); } catch {
+        throw new Error('管理员接口不可用或返回非JSON，请在 Netlify Dev 环境下访问或完成部署。');
+      }
+      if (!resp.ok) throw new Error((data.error || '验证失败') + (data.detail ? ('：' + data.detail) : ''));
+      ADMIN_KEY = key;
+      const welcomeScreen = document.getElementById('welcomeScreen');
+      const adminApp = document.getElementById('adminApp');
+      if (welcomeScreen) welcomeScreen.style.display='none';
+      if (adminApp) adminApp.style.display='block';
+      // 隐藏旧版块，避免视觉冲突
+      try { const legacy = document.getElementById('requirements')?.closest('.row'); if (legacy) legacy.style.display = 'none'; } catch {}
+      await loadRequirementsPage(true);
+      // 预加载供应商
+      loadSuppliers();
+    } catch (e) {
+      alert(e.message || '管理员验证失败');
+    }
+  });
+
+  // 需求列表加载
+  async function loadRequirementsPage(initial=false){
+    const tbody = document.getElementById('reqTableBody');
+    const pageHint = document.getElementById('reqPageHint');
+    if (tbody) tbody.innerHTML = '<tr><td colspan="7" class="text-muted">加载中...</td></tr>';
+    const q = document.getElementById('reqSearchInput')?.value.trim() || '';
+    const statusSel = document.getElementById('reqStatusFilter')?.value || '';
+    const openSel = document.getElementById('reqOpenFilter')?.value || '';
+    const contactSel = document.getElementById('reqContactFilter')?.value || '';
+    const url = new URL('/.netlify/functions/adminListRequirements', window.location.origin);
+    if (q) url.searchParams.set('q', q);
+    if (statusSel) url.searchParams.set('status', statusSel);
+    if (openSel) url.searchParams.set('open', openSel);
+    if (contactSel) url.searchParams.set('contact', contactSel);
+    url.searchParams.set('limit', '20');
+    if (!initial && reqOffsetNext) url.searchParams.set('offset', reqOffsetNext);
+    try {
+      const resp = await fetch(url.toString(), { headers: { 'X-Admin-Key': ADMIN_KEY } });
+      const text = await resp.text();
+      let data;
+      try { data = JSON.parse(text); } catch { throw new Error('管理员接口不可用或返回非JSON，请启动函数服务'); }
+      if (!resp.ok) throw new Error(data.error || '加载失败');
+      const items = data.items || [];
+      reqOffsetNext = data.offsetNext || '';
+      if (initial) { reqOffsetStack = []; }
+      requirementsCache = items;
+      renderRequirements(items);
+      updateStats(items);
+      const prevBtn = document.getElementById('reqPrevPage');
+      const nextBtn = document.getElementById('reqNextPage');
+      if (prevBtn) prevBtn.disabled = reqOffsetStack.length === 0;
+      if (nextBtn) nextBtn.disabled = !reqOffsetNext;
+      if (pageHint) pageHint.textContent = `当前页：${items.length} 条，${reqOffsetNext ? '可下一页' : '无更多'}`;
+    } catch (e) {
+      if (tbody) tbody.innerHTML = `<tr><td colspan="7" class="text-danger">${e.message}</td></tr>`;
+    }
+  }
+
+  function renderRequirements(list){
+    const tbody=document.getElementById('reqTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = list.map(item => {
+      const isPublic = !!item.PublishedAt || (item.Status === '公开');
+      const online = !!item.AllowOpenQuotes;
+      const contactP = !!item.ContactPublic;
+      return `<tr data-id="${item.RequirementID}">
+        <td>${item.RequirementID}</td>
+        <td class="text-truncate" title="${escapeHtml(item.Title||'')}">${escapeHtml(item.Title||'')}</td>
+        <td>${item.Status||''}</td>
+        <td>${online ? '开启' : '关闭'}</td>
+        <td>${contactP ? '公开' : '不公开'}</td>
+        <td data-qcount="loading">—</td>
+        <td>
+          <button class="btn btn-sm btn-outline-primary me-1" data-action="detail">详情</button>
+          <button class="btn btn-sm btn-outline-secondary" data-action="quotes">报价</button>
+        </td>
+      </tr>`;
+    }).join('');
+    tbody.querySelectorAll('tr').forEach(tr => {
+      const id=tr.dataset.id;
+      loadQuoteCount(id, tr);
+      tr.querySelector('[data-action="detail"]')?.addEventListener('click', ()=>showRequirementDetail(id));
+      tr.querySelector('[data-action="quotes"]')?.addEventListener('click', ()=>showQuotesModal(id));
+    });
+  }
+
+  async function loadQuoteCount(reqId, tr){
+    try{
+      const resp = await fetch(`/.netlify/functions/listQuotes?RequirementID=${encodeURIComponent(reqId)}`);
+      const data = await resp.json();
+      const n=(data.items||[]).length;
+      const cell = tr.querySelector('[data-qcount]'); if(cell) cell.textContent = String(n);
+    } catch{
+      const cell = tr.querySelector('[data-qcount]'); if(cell) cell.textContent = '0';
+    }
+  }
+
+  function updateStats(items){
+    try {
+      const container = document.getElementById('adminStats') || (()=>{
+        const c=document.createElement('div');
+        c.id='adminStats';
+        c.className='mb-3 d-flex gap-3 flex-wrap';
+        const parent=document.querySelector('#requirementsSection .card-body');
+        parent.insertBefore(c, parent.querySelector('.d-flex.flex-wrap'));
+        return c;
+      })();
+      const total=items.length;
+      const openCount = items.filter(x=>x.AllowOpenQuotes).length;
+      const publicCount = items.filter(x=>x.PublishedAt || x.Status==='公开').length;
+      container.innerHTML = `<div class="badge bg-primary">需求总数 ${total}</div><div class="badge bg-success">在线报价开启 ${openCount}</div><div class="badge bg-info text-dark">公开需求 ${publicCount}</div>`;
+    } catch{}
+  }
+
+  function ensureDetailModal(){
+    let m=document.getElementById('reqDetailModal');
+    if(m) return m;
+    m=document.createElement('div');
+    m.id='reqDetailModal';
+    m.className='modal fade';
+    m.innerHTML = `<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">需求详情</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"></div><div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">关闭</button></div></div></div>`;
+    document.body.appendChild(m);
+    return m;
+  }
+
+  function showRequirementDetail(id){
+    const item = (requirementsCache||[]).find(x=>x.RequirementID===id);
+    if(!item) return;
+    const modal = ensureDetailModal();
+    modal.querySelector('.modal-title').textContent = `需求 ${item.RequirementID}`;
+    modal.querySelector('.modal-body').innerHTML = `<div class="row"><div class="col-md-6"><div>标题：${escapeHtml(item.Title||'')}</div><div>状态：${item.Status||''}</div><div>进度：${item.Progress||''}</div><div>在线报价：${item.AllowOpenQuotes?'开启':'关闭'}</div><div>联系方式公开：${item.ContactPublic?'公开':'不公开'}</div></div><div class="col-md-6"><div>公司：${escapeHtml(item.ContactCompany||'')}</div><div>联系人：${escapeHtml(item.ContactName||'')}</div><div>电话：${escapeHtml(item.ContactPhone||'')}</div><div>明文密码：${escapeHtml(item.ViewPasswordPlain||'')}</div><div>哈希：${escapeHtml((item.ViewPasswordHash||'').slice(0,12))}...</div><div>发布时间：${item.PublishedAt||''}</div></div></div>`;
+    new bootstrap.Modal(modal).show();
+  }
+
+  function ensureQuotesModal(){
+    let m=document.getElementById('quotesModal');
+    if(m) return m;
+    m=document.createElement('div');
+    m.id='quotesModal';
+    m.className='modal fade';
+    m.innerHTML = `<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">报价列表</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="table-responsive"><table class="table table-sm"><thead><tr><th>供应商</th><th>联系人</th><th>电话</th><th>报价(元)</th><th>状态</th></tr></thead><tbody id="quotesModalBody"></tbody></table></div></div><div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">关闭</button></div></div></div>`;
+    document.body.appendChild(m);
+    return m;
+  }
+
+  async function showQuotesModal(id){
+    const modal = ensureQuotesModal();
+    modal.querySelector('.modal-title').textContent = `报价列表 - ${id}`;
+    const body = modal.querySelector('#quotesModalBody');
+    body.innerHTML = '<tr><td colspan="5" class="text-muted">加载中...</td></tr>';
+    try {
+      const resp = await fetch(`/.netlify/functions/listQuotes?RequirementID=${encodeURIComponent(id)}`);
+      const text = await resp.text();
+      let data; try { data = JSON.parse(text); } catch { data = { items: [] }; }
+      const items = data.items || [];
+      body.innerHTML = items.map(q => `<tr><td>${escapeHtml(q.SupplierCompanyName||'')}</td><td>${escapeHtml(q.SupplierContact||'')}</td><td>${escapeHtml(q.SupplierPhone||'')}</td><td>${escapeHtml(q.Price||'')}</td><td>${escapeHtml(q.Status||'')}</td></tr>`).join('') || '<tr><td colspan="5" class="text-muted">暂无报价</td></tr>';
+    } catch {
+      body.innerHTML = '<tr><td colspan="5" class="text-danger">无法加载报价列表</td></tr>';
+    }
+    new bootstrap.Modal(modal).show();
+  }
+
+  document.getElementById('reqApplyFilter')?.addEventListener('click', ()=>{ reqOffsetNext=''; reqOffsetStack=[]; loadRequirementsPage(true); });
+  document.getElementById('reqPrevPage')?.addEventListener('click', ()=>{ reqOffsetNext=''; reqOffsetStack=[]; loadRequirementsPage(true); });
+  document.getElementById('reqNextPage')?.addEventListener('click', async ()=>{ if(!reqOffsetNext) return; reqOffsetStack.push(reqOffsetNext); await loadRequirementsPage(false); });
+
+  // 需求方统计
+  function aggregateDemanders(items){
+    const map=new Map();
+    items.forEach(it=>{
+      const company=(it.ContactCompany||'未留公司').trim();
+      const rec=map.get(company) || { company, contact: it.ContactName || '', phone: it.ContactPhone || '', count:0, public:false, needPw:false };
+      rec.count++;
+      rec.public = rec.public || !!it.ContactPublic;
+      rec.needPw = rec.needPw || !it.AllowOpenQuotes;
+      rec.contact = rec.contact || it.ContactName || '';
+      rec.phone = rec.phone || it.ContactPhone || '';
+      map.set(company, rec);
+    });
+    return Array.from(map.values()).sort((a,b)=> b.count - a.count);
+  }
+  function renderDemanders(items){
+    const body=document.getElementById('demTableBody'); if (!body) return;
+    const stats=aggregateDemanders(items);
+    const query=(document.getElementById('demSearchInput')?.value || '').trim().toLowerCase();
+    const list = stats.filter(d=> !query || (d.company.toLowerCase().includes(query) || d.contact.toLowerCase().includes(query)));
+    body.innerHTML = list.map(d => `<tr><td>${escapeHtml(d.company)}</td><td>${escapeHtml(d.contact)}</td><td>${escapeHtml(d.phone)}</td><td>${d.count}</td><td>${d.public?'公开':'不公开'}</td><td>${d.needPw?'需要':'不需要'}</td><td><button class="btn btn-sm btn-outline-primary" data-company="${escapeHtml(d.company)}" data-action="viewDem">查看需求</button></td></tr>`).join('');
+    body.querySelectorAll('button[data-action="viewDem"]').forEach(btn => {
+      btn.addEventListener('click', ()=>{
+        const company = btn.getAttribute('data-company');
+        const rel = items.filter(x=> (x.ContactCompany||'') === company);
+        showDemandList(company, rel);
+      });
+    });
+  }
+  function showDemandList(company, list){
+    const modal = ensureDetailModal();
+    modal.querySelector('.modal-title').textContent = `需求方：${company}`;
+    modal.querySelector('.modal-body').innerHTML = `<ul class="list-group">${list.map(it=>`<li class="list-group-item d-flex justify-content-between align-items-center"><span class="text-truncate" style="max-width:60%;">${escapeHtml(it.Title||it.RequirementID||'未命名')}</span><span class="small text-muted">${it.RequirementID}</span><div><button class="btn btn-sm btn-outline-secondary me-1" onclick="window.location.href='/quotes.html?RequirementID=${encodeURIComponent(it.RequirementID)}'">报价</button><button class="btn btn-sm btn-outline-primary" onclick="(${showRequirementDetail.toString()})('${it.RequirementID}')">详情</button></div></li>`).join('')}</ul>`;
+    new bootstrap.Modal(modal).show();
+  }
+  // 改为从管理接口拉取需求方列表
+  document.getElementById('demSearchInput')?.addEventListener('input', ()=>loadDemandersIndex(true));
+  document.getElementById('demReloadAll')?.addEventListener('click', ()=>loadDemandersIndex(true));
+
+  // 供应商索引
+  let suppliersCache=[];
+  let supOffsetNext='';
+  let supOffsetStack=[];
+  async function loadSuppliers(initial=false){
+    try{
+      // 优先从管理接口加载；失败时回退至站点索引 JSON
+      let ok=false;
+      try{
+        const urlObj = new URL('/.netlify/functions/adminListSuppliers', window.location.origin);
+        const onlyPublic = !!document.getElementById('supPublicOnly')?.checked;
+        const search = (document.getElementById('supSearchInput')?.value||'').trim();
+        if (onlyPublic) urlObj.searchParams.set('public','true');
+        if (search) urlObj.searchParams.set('q', search);
+        urlObj.searchParams.set('limit','20');
+        if (!initial && supOffsetNext) urlObj.searchParams.set('offset', supOffsetNext);
+        const respApi = await fetch(urlObj.toString(), { headers: { 'X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') } });
+        if (respApi.ok) {
+          const d = await respApi.json();
+          const items = (d.items||[]);
+          suppliersCache = items.map(it => ({
+            title: it.CompanyName || it.Title || '',
+            contact: it.ContactName || it.Contact || '',
+            phone: it.Phone || '',
+            email: it.Email || '',
+            series: 0,
+            models: 0,
+            uri: it.Website || it.Uri || ''
+          }));
+          supOffsetNext = d.offsetNext || '';
+          if (initial) supOffsetStack = [];
+          ok=true;
+        }
+      } catch {}
+      if (!ok) {
+        const resp = await fetch('/search-index.json');
+        if(!resp.ok) throw new Error('无法加载供应商索引');
+        const data = await resp.json();
+        const pages = (Array.isArray(data) ? data : (data.pages || data)) || [];
+        const list = pages.filter(p => (p.type || p.section) && ((p.type||'')==='suppliers' || (p.section||'')==='suppliers'));
+        suppliersCache = list.map(p => ({
+          title: p.title || '',
+          contact: (p.params&&p.params.contact_person) || '',
+          phone: (p.params&&p.params.phone) || '',
+          email: (p.params&&p.params.email) || '',
+          series: Array.isArray(p.params?.series) ? p.params.series.length : 0,
+          models: Array.isArray(p.params?.models) ? p.params.models.length : 0,
+          uri: p.uri || p.permalink || ''
+        }));
+      }
+      renderSuppliers();
+      const pageInfo=document.getElementById('supPageInfo');
+      const prevBtn=document.getElementById('supPrevPage');
+      const nextBtn=document.getElementById('supNextPage');
+      if (pageInfo) pageInfo.textContent = `当前页：${suppliersCache.length} 条，${supOffsetNext ? '可下一页' : '无更多'}`;
+      if (prevBtn) prevBtn.disabled = supOffsetStack.length === 0;
+      if (nextBtn) nextBtn.disabled = !supOffsetNext;
+    } catch(e){
+      const body=document.getElementById('supTableBody');
+      if (body) body.innerHTML = `<tr><td colspan="6" class="text-danger">${e.message}</td></tr>`;
+    }
+  }
+  function renderSuppliers(){
+    const body=document.getElementById('supTableBody'); if (!body) return;
+    const q=(document.getElementById('supSearchInput')?.value || '').trim().toLowerCase();
+    const list = suppliersCache.filter(s => !q || s.title.toLowerCase().includes(q) || String(s.series).includes(q) || String(s.models).includes(q));
+    body.innerHTML = list.map(s=>`<tr data-title="${escapeHtml(s.title)}" data-phone="${escapeHtml(s.phone)}" data-email="${escapeHtml(s.email)}" data-uri="${escapeHtml(s.uri||'')}"><td><a href="${s.uri||'#'}" target="_blank">${escapeHtml(s.title)}</a></td><td>${escapeHtml(s.contact)}</td><td>${escapeHtml(s.phone)}</td><td>${escapeHtml(s.email)}</td><td>${s.series + s.models}</td><td><a class="btn btn-sm btn-outline-secondary me-2" href="${s.uri||'#'}" target="_blank">打开</a><button class="btn btn-sm btn-outline-primary" data-action="editSup">编辑</button></td></tr>`).join('');
+    body.querySelectorAll('button[data-action="editSup"]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const tr=btn.closest('tr');
+        const item={ id:'', CompanyName: tr?.dataset.title||'', Title: tr?.dataset.title||'', ContactName: '', Phone: tr?.dataset.phone||'', Email: tr?.dataset.email||'', ContactPublic:false, Password:'', PasswordHash:'', Website: tr?.dataset.uri||'' };
+        showSupEditor(item);
+      });
+    });
+  }
+  document.getElementById('supSearchInput')?.addEventListener('input', ()=>loadSuppliers(true));
+  document.getElementById('supReloadBtn')?.addEventListener('click', ()=>loadSuppliers(true));
+  document.getElementById('supPublicOnly')?.addEventListener('change', ()=>loadSuppliers(true));
+  document.getElementById('supPrevPage')?.addEventListener('click', ()=>{
+    if (supOffsetStack.length){
+      supOffsetNext = supOffsetStack.pop();
+      loadSuppliers(false);
+    }
+  });
+  document.getElementById('supNextPage')?.addEventListener('click', ()=>{
+    if (supOffsetNext){
+      supOffsetStack.push(supOffsetNext);
+      loadSuppliers(false);
+    }
+  });
+
+  // 初始化（未登录时默认显示需求列表）
+  document.addEventListener('DOMContentLoaded', ()=>{
+    try { const legacy = document.getElementById('requirements')?.closest('.row'); if (legacy) legacy.style.display = 'none'; } catch {}
+    document.querySelectorAll('aside .nav-link').forEach(a => a.classList.toggle('active', a.dataset.tab==='requirementsSection'));
+    const reqSec=document.getElementById('requirementsSection');
+    const demSec=document.getElementById('demandersSection');
+    const supSec=document.getElementById('suppliersSection');
+    if (reqSec) reqSec.style.display='';
+    if (demSec) demSec.style.display='none';
+    if (supSec) supSec.style.display='none';
+    // 默认尝试加载供应商索引（登录前也可浏览）
+    loadSuppliers(true);
+  });
+
+  // 在侧边菜单切换时触发对应数据加载
+  document.querySelectorAll('aside .nav-link, #adminOffcanvas .nav-link').forEach(a => a.addEventListener('click', ()=>{
+    const tab=a.dataset.tab;
+    if (tab==='requirementsSection') {
+      try { loadRequirementsPage(true); } catch {}
+    } else if (tab==='demandersSection') {
+      try { loadDemandersIndex(true); } catch {}
+    } else if (tab==='suppliersSection') {
+      try { loadSuppliers(); } catch {}
+    }
+  }));
+
+  // 供应商管理编辑器
+  function ensureSupEditor(){
+    let panel=document.getElementById('supEditorPanel');
+    if (!panel){
+      panel=document.createElement('div'); panel.id='supEditorPanel'; panel.className='mt-3';
+      panel.innerHTML = `
+        <div class="border rounded p-3">
+          <div class="row g-2">
+            <div class="col-md-4"><label class="form-label small">公司/名称</label><input id="supCompany" class="form-control form-control-sm" /></div>
+            <div class="col-md-3"><label class="form-label small">联系人</label><input id="supContact" class="form-control form-control-sm" /></div>
+            <div class="col-md-3"><label class="form-label small">电话</label><input id="supPhone" class="form-control form-control-sm" /></div>
+            <div class="col-md-2"><label class="form-label small">邮箱</label><input id="supEmail" class="form-control form-control-sm" /></div>
+            <div class="col-md-4"><label class="form-label small">官网/链接</label><input id="supWebsite" class="form-control form-control-sm" /></div>
+            <div class="col-md-3"><div class="form-check mt-2"><input class="form-check-input" type="checkbox" id="supPublic"><label class="form-check-label" for="supPublic">公开联系方式</label></div></div>
+            <div class="col-md-3"><label class="form-label small">明文密码</label><input id="supPassword" class="form-control form-control-sm" /></div>
+            <div class="col-md-6 d-flex align-items-end justify-content-end gap-2">
+              <button id="supSaveBtn" class="btn btn-primary btn-sm">保存</button>
+              <button id="supCancelBtn" class="btn btn-secondary btn-sm">取消</button>
+              <span id="supSaveHint" class="small text-muted ms-2"></span>
+            </div>
+          </div>
+        </div>`;
+      const sec=document.getElementById('suppliersSection'); sec?.querySelector('.card-body')?.appendChild(panel);
+    }
+    return panel;
+  }
+  function showSupEditor(item){
+    const panel=ensureSupEditor();
+    panel.dataset.id = item.id||'';
+    document.getElementById('supCompany').value = item.CompanyName || item.Title || '';
+    document.getElementById('supContact').value = item.ContactName || '';
+    document.getElementById('supPhone').value = item.Phone || '';
+    document.getElementById('supEmail').value = item.Email || '';
+    document.getElementById('supWebsite').value = item.Website || '';
+    document.getElementById('supPublic').checked = !!item.ContactPublic;
+    document.getElementById('supPassword').value = item.Password || '';
+  }
+  document.addEventListener('click', async (e)=>{
+    const saveBtn = (e.target && e.target.id === 'supSaveBtn') ? e.target : null;
+    const cancelBtn = (e.target && e.target.id === 'supCancelBtn') ? e.target : null;
+    if (saveBtn){
+      const hint=document.getElementById('supSaveHint');
+      const panel=document.getElementById('supEditorPanel'); const id=panel?.dataset.id||'';
+      const payload={ id,
+        CompanyName: document.getElementById('supCompany').value.trim(),
+        Title: document.getElementById('supCompany').value.trim(),
+        ContactName: document.getElementById('supContact').value.trim(),
+        Phone: document.getElementById('supPhone').value.trim(),
+        Email: document.getElementById('supEmail').value.trim(),
+        Website: document.getElementById('supWebsite').value.trim(),
+        ContactPublic: document.getElementById('supPublic').checked,
+        Password: document.getElementById('supPassword').value
+      };
+      try{
+        const resp=await fetch('/.netlify/functions/adminUpdateSupplier', { method:'POST', headers:{ 'Content-Type':'application/json','X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') }, body: JSON.stringify(payload) });
+        const data=await resp.json();
+        if(!resp.ok) throw new Error(data.error||'保存失败');
+        hint.textContent='已保存';
+        await loadSuppliers();
+        setTimeout(()=>{hint.textContent='';},1200);
+      }catch(err){ hint.textContent = err.message||'保存失败'; setTimeout(()=>{hint.textContent='';},2000); }
+    } else if (cancelBtn){
+      const panel=document.getElementById('supEditorPanel'); if(panel) panel.dataset.id='';
+      ['supCompany','supContact','supPhone','supEmail','supWebsite','supPassword'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+      const chk=document.getElementById('supPublic'); if(chk) chk.checked=false;
+    }
+  });
+
+  // 需求方管理：列表 + 编辑
+  let demandersCache=[];
+  async function loadDemandersIndex(initial=false){
+    const tbody=document.getElementById('demTableBody');
+    if (tbody) tbody.innerHTML = '<tr><td colspan="7" class="text-muted">加载中...</td></tr>';
+    const q=(document.getElementById('demSearchInput')?.value||'').trim();
+    const url=new URL('/.netlify/functions/adminListDemanders', window.location.origin);
+    if (q) url.searchParams.set('q', q);
+    url.searchParams.set('limit','20');
+    try{
+      const resp=await fetch(url.toString(), { headers: { 'X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') } });
+      const data=await resp.json();
+      if (!resp.ok) throw new Error(data.error||'加载失败');
+      demandersCache = data.items||[];
+      renderDemandersIndex();
+    }catch(e){
+      if (tbody) tbody.innerHTML = `<tr><td colspan="7" class="text-danger">${e.message||'无法加载需求方列表'}</td></tr>`;
+    }
+  }
+  function renderDemandersIndex(){
+    const body=document.getElementById('demTableBody'); if(!body) return;
+    const query=(document.getElementById('demSearchInput')?.value||'').trim().toLowerCase();
+    const list=(demandersCache||[]).filter(d=> !query || (String(d.CompanyName||'').toLowerCase().includes(query) || String(d.ContactName||'').toLowerCase().includes(query)));
+    body.innerHTML = list.map(d=>`<tr data-id="${escapeHtml(d.id||'')}"><td>${escapeHtml(d.CompanyName||'')}</td><td>${escapeHtml(d.ContactName||'')}</td><td>${escapeHtml(d.Phone||'')}</td><td>${Number(d.RequirementCount||0)}</td><td>${d.ContactPublic?'公开':'不公开'}</td><td>${d.AllowOpenQuotes?'需要':'不需要'}</td><td><button class="btn btn-sm btn-outline-primary" data-action="editDem">编辑</button></td></tr>`).join('') || '<tr><td colspan="7" class="text-muted">暂无数据</td></tr>';
+    body.querySelectorAll('button[data-action="editDem"]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const tr = btn.closest('tr'); const id=tr?.dataset.id||'';
+        const item = (demandersCache||[]).find(x=> String(x.id||'')===String(id));
+        showDemEditor(item||{ id:'', CompanyName:'', ContactName:'', Phone:'', Email:'', ContactPublic:false, AllowOpenQuotes:false, Password:'', PasswordHash:'' });
+      });
+    });
+  }
+  document.getElementById('demSearchInput')?.addEventListener('input', ()=>loadDemandersIndex(true));
+  document.getElementById('demReloadAll')?.addEventListener('click', ()=>loadDemandersIndex(true));
+
+  function ensureDemEditor(){
+    let panel=document.getElementById('demEditorPanel');
+    if (!panel){
+      panel=document.createElement('div'); panel.id='demEditorPanel'; panel.className='mt-3';
+      panel.innerHTML = `
+        <div class="border rounded p-3">
+          <div class="row g-2">
+            <div class="col-md-4"><label class="form-label small">公司</label><input id="demCompany" class="form-control form-control-sm" /></div>
+            <div class="col-md-3"><label class="form-label small">联系人</label><input id="demContact" class="form-control form-control-sm" /></div>
+            <div class="col-md-3"><label class="form-label small">电话</label><input id="demPhone" class="form-control form-control-sm" /></div>
+            <div class="col-md-2"><label class="form-label small">邮箱</label><input id="demEmail" class="form-control form-control-sm" /></div>
+            <div class="col-md-3"><div class="form-check mt-2"><input class="form-check-input" type="checkbox" id="demPublic"><label class="form-check-label" for="demPublic">公开联系方式</label></div></div>
+            <div class="col-md-3"><label class="form-label small">明文密码</label><input id="demPassword" class="form-control form-control-sm" /></div>
+            <div class="col-md-6 d-flex align-items-end justify-content-end gap-2">
+              <button id="demSaveBtn" class="btn btn-primary btn-sm">保存</button>
+              <button id="demCancelBtn" class="btn btn-secondary btn-sm">取消</button>
+              <span id="demSaveHint" class="small text-muted ms-2"></span>
+            </div>
+          </div>
+        </div>`;
+      const sec=document.getElementById('demandersSection'); sec?.querySelector('.card-body')?.appendChild(panel);
+    }
+    return panel;
+  }
+  function showDemEditor(item){
+    const panel=ensureDemEditor();
+    panel.dataset.id = item.id||'';
+    document.getElementById('demCompany').value = item.CompanyName||'';
+    document.getElementById('demContact').value = item.ContactName||'';
+    document.getElementById('demPhone').value = item.Phone||'';
+    document.getElementById('demEmail').value = item.Email||'';
+    document.getElementById('demPublic').checked = !!item.ContactPublic;
+    document.getElementById('demPassword').value = item.Password||'';
+  }
+  document.addEventListener('click', async (e)=>{
+    const saveBtn = (e.target && e.target.id === 'demSaveBtn') ? e.target : null;
+    const cancelBtn = (e.target && e.target.id === 'demCancelBtn') ? e.target : null;
+    if (saveBtn){
+      const hint=document.getElementById('demSaveHint');
+      const panel=document.getElementById('demEditorPanel'); const id=panel?.dataset.id||'';
+      const payload={ id,
+        CompanyName: document.getElementById('demCompany').value.trim(),
+        ContactName: document.getElementById('demContact').value.trim(),
+        Phone: document.getElementById('demPhone').value.trim(),
+        Email: document.getElementById('demEmail').value.trim(),
+        ContactPublic: document.getElementById('demPublic').checked,
+        Password: document.getElementById('demPassword').value
+      };
+      try{
+        const resp=await fetch('/.netlify/functions/adminUpdateDemander', { method:'POST', headers:{ 'Content-Type':'application/json','X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') }, body: JSON.stringify(payload) });
+        const data=await resp.json();
+        if(!resp.ok) throw new Error(data.error||'保存失败');
+        hint.textContent='已保存';
+        await loadDemandersIndex(true);
+        setTimeout(()=>{hint.textContent='';},1200);
+      }catch(err){ hint.textContent = err.message||'保存失败'; setTimeout(()=>{hint.textContent='';},2000); }
+    } else if (cancelBtn){
+      const panel=document.getElementById('demEditorPanel'); if(panel) panel.dataset.id='';
+      ['demCompany','demContact','demPhone','demEmail','demPassword'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+      const chk=document.getElementById('demPublic'); if(chk) chk.checked=false;
+    }
+  });
+})();
 </script>
 </body>
 </html>

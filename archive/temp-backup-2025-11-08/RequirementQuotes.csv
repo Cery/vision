@@ -1,2 +1,0 @@
-QuoteID,Requirement,SupplierName,SupplierPhone,SupplierEmail,ProductModel,Parameters,DeliveryTime,QuoteAmount,Note
-QT-20231027-001,REQ-20231027-001,"李四","13900139000","lisi@supplier.com","VS-5010","5mm直径, 1m工作长度, 3.5寸屏","1周内",25000,"报价含税"

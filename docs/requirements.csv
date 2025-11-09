@@ -1,2 +1,0 @@
-RequirementID,Title,PublicPreview,PrimaryCategory,SecondaryCategory,Status,ContactName,ContactPhone,ContactCompany,ViewPasswordHash,Parameters,PublishedAt,BudgetRange,Progress,ContactPublic
-REQ-20241107-1234,测试需求：工业内窥镜采购,需要电子内窥镜，插入管长度 2m，高清成像。,电子内窥镜,采购,公开,张三,13800000000,维森科技,,插入管长度:2m; 光源类型:LED; 图像分辨率:1080p,2024-11-07,2万-5万,发布中,false

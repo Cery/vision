@@ -1,2 +1,0 @@
-RequirementID,SupplierCompanyName,SupplierContact,SupplierEmail,SupplierPhone,ProductModel,KeyParams,DeliveryTime,Price,QuoteDetail,Status,CreatedAt
-REQ-20241107-1234,深圳微视光电,李四,li.si@example.com,13900000000,VS-110,"镜头直径: 8mm; 视场角:120°",7天,32000,含运输及安装,接洽中,2024-11-07T12:30:00Z

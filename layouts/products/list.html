@@ -590,7 +590,28 @@
                 {{ end }}
                 
                 <a href="{{ .Permalink }}" class="card-img-link">
-                    <img src="{{ $mainImage }}" class="card-img-top" alt="{{ .Title }}" style="height: 240px; object-fit: cover;" onerror="handleImageError(this)">
+                    {{/* 统一图片路径解析与占位图 */}}
+                    {{ $pm := site.Data.path_mapping.mappings }}
+                    {{ $brandMap := $pm.brand }}
+                    {{ $placeholderKey := "/images/placeholder.svg" }}
+                    {{ $defaultSrc := cond (and $brandMap (index $brandMap $placeholderKey)) (index $brandMap $placeholderKey) $placeholderKey }}
+
+                    {{ $resolvedMain := "" }}
+                    {{ if $mainImage }}
+                        {{ if or (hasPrefix $mainImage "http://") (hasPrefix $mainImage "https://") }}
+                            {{ $resolvedMain = $mainImage }}
+                        {{ else }}
+                            {{ with index $pm.products $mainImage }}
+                                {{ $resolvedMain = . }}
+                            {{ else }}
+                                {{ $resolvedMain = ($mainImage | relURL) }}
+                            {{ end }}
+                        {{ end }}
+                    {{ else }}
+                        {{ $resolvedMain = ($defaultSrc | relURL) }}
+                    {{ end }}
+
+                    <img src="{{ $resolvedMain }}" class="card-img-top" alt="{{ .Title }}" style="height: 240px; object-fit: cover;" onerror="handleImageError(this)">
                     {{ if .Params.tags }}
                     <div class="product-tags">
                         {{ range .Params.tags }}
