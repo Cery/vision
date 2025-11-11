@@ -32,6 +32,14 @@ seo_keywords: ["需求信息", "商机展示", "工业内窥镜采购", "设备�
                 </div>
                 <div class="col-lg-4 text-center">
                     <i class="bi bi-shop display-1 opacity-75"></i>
+                    <div class="mt-3 d-flex flex-column gap-2">
+                        <a href="/entry-demand.html" class="btn btn-outline-light">
+                            <i class="bi bi-clipboard-check me-1"></i> 发布方入口
+                        </a>
+                        <a href="/entry-supplier.html" class="btn btn-outline-light">
+                            <i class="bi bi-person-workspace me-1"></i> 供应商入口
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

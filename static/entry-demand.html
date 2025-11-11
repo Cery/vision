@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>发布方入口｜我的需求与报价</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body { background: #f7f7f7; }
+      .container-narrow { max-width: 880px; }
+      .card + .card { margin-top: 1rem; }
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+      .small-muted { color: #6c757d; font-size: .9rem; }
+    </style>
+  </head>
+  <body>
+    <div class="container container-narrow py-4">
+      <header class="mb-4 d-flex align-items-center justify-content-between">
+        <div>
+          <h1 class="h4 mb-1">发布方入口</h1>
+          <div class="small-muted">使用需求ID与查看密码查看详情与报价</div>
+        </div>
+        <div>
+          <a href="/" class="btn btn-outline-secondary btn-sm">返回首页</a>
+        </div>
+      </header>
+
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <form id="queryForm" class="row g-3">
+            <div class="col-12 col-md-6">
+              <label class="form-label">需求ID <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="reqId" placeholder="例如：R-2024-0001" required>
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label">查看密码 <span class="text-danger">*</span></label>
+              <input type="password" class="form-control" id="viewPwd" placeholder="发布后获得的查看密码" required>
+            </div>
+            <div class="col-12 d-flex gap-2">
+              <button type="submit" class="btn btn-primary">查询需求与报价</button>
+              <button type="button" id="exportBtn" class="btn btn-outline-secondary" disabled>导出报价 CSV</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div id="resultArea" class="mt-4"></div>
+    </div>
+
+    <script>
+      // API base detection (align with management.html behavior)
+      (function() {
+        const defaultRemote = 'https://api.visndt.com';
+        const saved = (typeof localStorage !== 'undefined') ? localStorage.getItem('API_BASE') : '';
+        const base = saved || defaultRemote;
+        window.API_BASE = base.replace(/\/$/, '');
+      })();
+
+      async function apiFetch(path, options = {}) {
+        const url = window.API_BASE + path;
+        const headers = { 'Content-Type': 'application/json' };
+        if (options.headers) Object.assign(headers, options.headers);
+        const res = await fetch(url, { ...options, headers });
+        if (!res.ok) {
+          let errText = await res.text().catch(() => '');
+          throw new Error(`HTTP ${res.status}: ${errText || res.statusText}`);
+        }
+        const ct = res.headers.get('content-type') || '';
+        return ct.includes('application/json') ? res.json() : res.text();
+      }
+
+      const form = document.getElementById('queryForm');
+      const resultArea = document.getElementById('resultArea');
+      const exportBtn = document.getElementById('exportBtn');
+      let lastQuotes = [];
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        resultArea.innerHTML = '';
+        exportBtn.disabled = true;
+        lastQuotes = [];
+        const reqId = document.getElementById('reqId').value.trim();
+        const viewPwd = document.getElementById('viewPwd').value.trim();
+        if (!reqId || !viewPwd) return;
+
+        const load = (html) => {
+          const div = document.createElement('div');
+          div.className = 'alert alert-info';
+          div.innerHTML = html;
+          resultArea.appendChild(div);
+        };
+        load('正在查询，请稍候…');
+
+        try {
+          // Requirement detail
+          const detail = await apiFetch(`/api/requirements/${encodeURIComponent(reqId)}?view_password=${encodeURIComponent(viewPwd)}`);
+          // Quotes list
+          const quotes = await apiFetch(`/api/quotes?requirement_id=${encodeURIComponent(reqId)}&view_password=${encodeURIComponent(viewPwd)}`);
+          lastQuotes = Array.isArray(quotes) ? quotes : [];
+          exportBtn.disabled = lastQuotes.length === 0;
+
+          resultArea.innerHTML = '';
+          renderDetail(detail);
+          renderQuotes(lastQuotes);
+        } catch (err) {
+          resultArea.innerHTML = '';
+          const div = document.createElement('div');
+          div.className = 'alert alert-danger';
+          div.textContent = '查询失败：' + err.message;
+          resultArea.appendChild(div);
+        }
+      });
+
+      function renderDetail(detail) {
+        const card = document.createElement('div');
+        card.className = 'card shadow-sm';
+        card.innerHTML = `
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <h2 class="h5 mb-0">需求详情</h2>
+              <span class="badge bg-secondary mono">${detail.RequirementID || ''}</span>
+            </div>
+            <div class="mt-3">
+              <div><strong>标题：</strong>${escapeHtml(detail.Title || '')}</div>
+              <div><strong>分类：</strong>${escapeHtml(detail.primaryCategory || '')}</div>
+              <div><strong>联系人：</strong>${escapeHtml(detail.contactName || '')}</div>
+              <div><strong>电话：</strong><span class="mono">${escapeHtml(detail.contactPhone || '')}</span></div>
+            </div>
+          </div>`;
+        resultArea.appendChild(card);
+      }
+
+      function renderQuotes(quotes) {
+        const card = document.createElement('div');
+        card.className = 'card shadow-sm';
+        const rows = quotes.map((q, i) => `
+          <tr>
+            <td class="mono">${i + 1}</td>
+            <td class="mono">${escapeHtml(q.quote_id || '')}</td>
+            <td>${escapeHtml(q.supplier_name || q.supplier_id || '')}</td>
+            <td>${escapeHtml(q.price || '')}</td>
+            <td>${escapeHtml(q.notes || '')}</td>
+            <td class="mono small">${escapeHtml(q.created_at || '')}</td>
+          </tr>`).join('');
+        card.innerHTML = `
+          <div class="card-body">
+            <h2 class="h5">报价列表（${quotes.length}）</h2>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>报价ID</th>
+                    <th>供应商</th>
+                    <th>报价</th>
+                    <th>备注</th>
+                    <th>时间</th>
+                  </tr>
+                </thead>
+                <tbody>${rows || '<tr><td colspan="6" class="text-center text-muted">暂无报价</td></tr>'}</tbody>
+              </table>
+            </div>
+          </div>`;
+        resultArea.appendChild(card);
+      }
+
+      exportBtn.addEventListener('click', () => {
+        if (!lastQuotes.length) return;
+        const headers = ['quote_id','supplier_id','supplier_name','price','notes','created_at'];
+        const lines = [headers.join(',')];
+        lastQuotes.forEach(q => {
+          const row = headers.map(h => escapeCsv(q[h]));
+          lines.push(row.join(','));
+        });
+        const blob = new Blob(["\ufeff" + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `quotes_${Date.now()}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+
+      function escapeHtml(s) {
+        if (s === null || s === undefined) return '';
+        return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+      }
+      function escapeCsv(s) {
+        if (s === null || s === undefined) return '';
+        s = String(s);
+        if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+        return s;
+      }
+    </script>
+  </body>
+  </html>

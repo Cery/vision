@@ -6,12 +6,21 @@ export default {
     const url = new URL(request.url);
     const origin = request.headers.get('origin');
 
-    // Basic CORS
-    const allowOrigin = origin || '*';
+    // Basic CORS with whitelist: allow visndt domains and local dev
+    const allowedOrigins = new Set([
+      'https://visndt.com',
+      'https://www.visndt.com',
+      'https://api.visndt.com',
+      'http://localhost:1313', 'http://127.0.0.1:1313',
+      'http://localhost:8888', 'http://127.0.0.1:8888',
+      'http://localhost:5510', 'http://127.0.0.1:5510'
+    ]);
+    const allowOrigin = (origin && allowedOrigins.has(origin)) ? origin : 'https://visndt.com';
     const baseHeaders = {
       'Access-Control-Allow-Origin': allowOrigin,
       'Access-Control-Allow-Methods': 'GET,POST,PATCH,DELETE,OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key'
+      'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key',
+      'Vary': 'Origin'
     };
     if (request.method === 'OPTIONS') {
       return new Response('', { headers: baseHeaders });
@@ -271,7 +280,7 @@ export default {
     // List Quotes
     if (isApi('quotes') && request.method === 'GET' || isFn('listQuotes') && request.method === 'GET') {
       const requirement_id = url.searchParams.get('requirement_id');
-      const supplier_id = url.searchParams.get('supplier_id');
+      let supplier_id = url.searchParams.get('supplier_id');
       const admin = requireAdmin(request);
       const viewPwd = url.searchParams.get('view_password') || '';
       const supplierPwd = url.searchParams.get('supplier_access_password') || '';
@@ -284,7 +293,13 @@ export default {
         if (results && results[0] && results[0].view_password_plain === viewPwd) allowed = true;
       }
       if (!allowed && supplierPwd) {
-        allowed = await verifySupplierPassword(env, supplierPwd);
+        // If supplier provided a valid access password, allow and infer supplier_id when not provided
+        const stmtSup = env.DB.prepare('SELECT supplier_id FROM suppliers WHERE access_password_plain = ? AND (status IS NULL OR status != "disabled")').bind(supplierPwd);
+        const { results: supRes } = await stmtSup.all();
+        if (supRes && supRes[0]) {
+          allowed = true;
+          if (!supplier_id) supplier_id = supRes[0].supplier_id;
+        }
       }
       if (!allowed) return json({ error: 'Unauthorized' }, 401);
 
@@ -324,6 +339,18 @@ export default {
       const pass = String(data.password || '').trim();
       const ok = await verifySupplierPassword(env, pass);
       return json({ ok });
+    }
+
+    // Suppliers: session (login-like) to retrieve supplier identity by access password
+    if (isApi('suppliers/session') && request.method === 'POST') {
+      const data = await bodyJSON(request);
+      const pass = String(data.password || '').trim();
+      if (!pass) return json({ error: 'MissingPassword' }, 400);
+      const stmt = env.DB.prepare('SELECT supplier_id, name, company FROM suppliers WHERE access_password_plain = ? AND (status IS NULL OR status != "disabled")').bind(pass);
+      const { results } = await stmt.all();
+      if (!results || !results.length) return json({ error: 'Unauthorized' }, 401);
+      const s = results[0];
+      return json({ ok: true, supplier: { SupplierID: s.supplier_id, Name: s.name, Company: s.company } });
     }
 
     // Admin: list/update requirements
@@ -407,6 +434,19 @@ export default {
       const stmt = env.DB.prepare(`UPDATE requirements SET ${sets.join(', ')} WHERE requirement_id = ?`).bind(...binds, id);
       await stmt.run();
       return json({ ok: true });
+    }
+
+    // Admin: delete a single requirement (and cascade delete quotes)
+    if (isApi('admin/requirements/') && request.method === 'DELETE') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const id = path.split('/').pop();
+      try {
+        await env.DB.prepare('DELETE FROM quotes WHERE requirement_id = ?').bind(id).run();
+        await env.DB.prepare('DELETE FROM requirements WHERE requirement_id = ?').bind(id).run();
+        return json({ ok: true });
+      } catch (e) {
+        return json({ error: 'DeleteFailed', detail: String(e && e.message || e) }, 500);
+      }
     }
 
     // Admin: list/update suppliers
@@ -527,6 +567,33 @@ export default {
       }
 
       return json({ ok: true, counts: { requirements: (reqs||[]).length, suppliers: (sups||[]).length, demanders: (dems||[]).length } });
+    }
+
+    // Admin: cleanup invalid data (titles undefined/empty, missing IDs, orphan quotes)
+    if (isApi('admin/cleanup-invalid') && request.method === 'POST') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      try {
+        // Count before
+        const { results: reqCountBefore } = await env.DB.prepare('SELECT COUNT(1) as c FROM requirements').all();
+        const { results: quoteCountBefore } = await env.DB.prepare('SELECT COUNT(1) as c FROM quotes').all();
+
+        // Delete invalid requirements
+        await env.DB.prepare("DELETE FROM requirements WHERE requirement_id IS NULL OR TRIM(requirement_id) = ''").run();
+        await env.DB.prepare("DELETE FROM requirements WHERE title IS NULL OR TRIM(title) = '' OR title = 'undefined'").run();
+        await env.DB.prepare("DELETE FROM requirements WHERE primary_category = 'undefined' OR secondary_category = 'undefined'").run();
+
+        // Delete orphan quotes
+        await env.DB.prepare('DELETE FROM quotes WHERE requirement_id NOT IN (SELECT requirement_id FROM requirements)').run();
+
+        // Count after
+        const { results: reqCountAfter } = await env.DB.prepare('SELECT COUNT(1) as c FROM requirements').all();
+        const { results: quoteCountAfter } = await env.DB.prepare('SELECT COUNT(1) as c FROM quotes').all();
+        const deletedReqs = (reqCountBefore?.[0]?.c || 0) - (reqCountAfter?.[0]?.c || 0);
+        const deletedQuotes = (quoteCountBefore?.[0]?.c || 0) - (quoteCountAfter?.[0]?.c || 0);
+        return json({ ok: true, deleted: { requirements: deletedReqs, quotes: deletedQuotes } });
+      } catch (e) {
+        return json({ error: 'CleanupFailed', detail: String(e && e.message || e) }, 500);
+      }
     }
 
     return json({ error: 'NotFound' }, 404);
