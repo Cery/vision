@@ -4,7 +4,8 @@ compatibility_date = "2024-09-10"
 account_id = "594a18b97389b68fbc9769ab0cb47df7"
 workers_dev = true
 
-# 暂时不设置 routes，先在 workers.dev 下验证部署
+# Routes: 将 Worker 绑定到子域和主域路径前缀
+routes = ["api.visndt.com/*", "visndt.com/api/*", "www.visndt.com/api/*"]
 
 # D1 binding
 [[d1_databases]]
