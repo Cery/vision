@@ -8,13 +8,13 @@ export default {
 
     // Basic CORS with whitelist: allow visndt domains and local dev
     const allowedOrigins = new Set([
+      // Online API domains
       'https://visndt.com',
       'https://www.visndt.com',
       'https://api.visndt.com',
+      // Local Hugo & dev servers
       'http://localhost:1313', 'http://127.0.0.1:1313',
-      'http://localhost:8888', 'http://127.0.0.1:8888',
-      'http://localhost:5510', 'http://127.0.0.1:5510',
-      'http://localhost:5500', 'http://127.0.0.1:5500'
+      'http://localhost:8888', 'http://127.0.0.1:8888'
     ]);
     const allowOrigin = (origin && allowedOrigins.has(origin)) ? origin : 'https://visndt.com';
     const baseHeaders = {

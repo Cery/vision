@@ -24,7 +24,7 @@ class RequirementCenter {
     // 初始化应用
     async init() {
         this.setupEventListeners();
-        this.loadRequirements();
+        await this.loadRequirements();
         this.updateStats();
         
         // 检查API服务状态
@@ -607,8 +607,8 @@ ${data.description}
 
     // 加载需求列表
     async loadRequirements() {
-        // 首先从本地存储加载
-        this.loadFromLocalStorage();
+        // 首先从本地存储或离线示例加载
+        await this.loadFromLocalStorage();
 
         // 如果API可用，尝试从API加载更多数据
         if (this.apiAvailable) {
@@ -617,14 +617,15 @@ ${data.description}
                 // 合并API数据和本地数据，去重
                 const allRequirements = [...this.requirements];
                 apiRequirements.forEach(apiReq => {
-                    if (!allRequirements.find(req => req.id === apiReq.id)) {
-                        allRequirements.push(apiReq);
+                    if (!allRequirements.find(req => req.id === (apiReq.id || apiReq.RequirementID))) {
+                        const mapped = this.normalizeStaticRequirement(apiReq);
+                        allRequirements.push(mapped);
                     }
                 });
                 this.requirements = allRequirements.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
                 this.renderRequirements();
             } catch (error) {
-                console.warn('从API加载失败，使用本地数据:', error);
+                console.warn('从API加载失败，使用本地/离线数据:', error);
             }
         }
     }
@@ -640,18 +641,70 @@ ${data.description}
         return result.data || [];
     }
 
-    // 从本地存储加载
-    loadFromLocalStorage() {
+    // 从本地存储或示例数据加载
+    async loadFromLocalStorage() {
         const localRequirements = JSON.parse(localStorage.getItem('requirements') || '[]');
 
-        // 如果本地没有数据，使用模拟数据
+        // 如果本地没有数据，尝试加载网站示例数据（static/data/requirements.json）
         if (localRequirements.length === 0) {
-            this.requirements = this.getMockRequirements();
+            try {
+                const resp = await fetch('/data/requirements.json', { cache: 'no-cache' });
+                if (!resp.ok) throw new Error('示例数据不可用');
+                const json = await resp.json();
+                const items = Array.isArray(json) ? json : (json.items || json.requirements || []);
+                const normalized = items.map(it => this.normalizeStaticRequirement(it));
+                // 仅保留前50条，避免列表过长
+                const limited = normalized.slice(0, 50);
+                this.requirements = limited.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                localStorage.setItem('requirements', JSON.stringify(this.requirements));
+                this.showNotification('已加载网站示例需求数据（离线）', 'info');
+            } catch (e) {
+                console.warn('离线示例数据加载失败，使用内置样例:', e);
+                this.requirements = this.getMockRequirements();
+            }
         } else {
             this.requirements = localRequirements;
         }
 
         this.renderRequirements();
+    }
+
+    // 规范化示例/接口返回数据为需求中心字段
+    normalizeStaticRequirement(it) {
+        const id = it.id || it.RequirementID || it.requirement_id || '';
+        const published = it.timestamp || it.PublishedAt || it.published_at || it.created_at || new Date().toISOString();
+        const statusText = it.status || it.Status || '';
+        const primary = it.productType || it.PrimaryCategory || it.primaryCategory || it.category || '';
+        const toType = (s) => {
+            const t = String(s || '').toLowerCase();
+            if (t.includes('电子')) return 'electronic';
+            if (t.includes('光纤')) return 'fiber';
+            if (t.includes('光学')) return 'optical';
+            // 接口已是英文类型时直接返回
+            if (['electronic','fiber','optical'].includes(t)) return t;
+            return 'electronic';
+        };
+        const params = it.Parameters || it.parameters || {};
+        return {
+            id,
+            timestamp: published,
+            status: (statusText === '关闭' || statusText === 'closed') ? 'closed' : 'active',
+            productType: toType(primary),
+            contactName: it.ContactName || it.contact_name || '',
+            companyName: it.ContactCompany || it.contact_company || '',
+            department: it.Department || it.contact_department || '',
+            budget: it.BudgetRange || it.budget || '',
+            description: it.PublicPreview || it.public_preview || it.Description || it.description || '',
+            screenSize: params.ScreenSize || params.screen_size || '',
+            batteryLife: params.BatteryLife || params.battery_life || '',
+            probeDiameter: params.ProbeDiameter || params.probe_diameter || '',
+            resolution: params.Resolution || params.resolution || '',
+            viewingDirection: params.ViewingDirection || params.viewing_direction || '',
+            lightSource: params.LightSource || params.light_source || '',
+            guidance: params.Guidance || params.guidance || '',
+            featured: !!it.featured,
+            urgent: !!it.urgent
+        };
     }
 
     // 获取模拟需求数据

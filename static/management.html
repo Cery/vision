@@ -15,6 +15,11 @@
     <title>运营管理 - VisNDT</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- 本地字体回退，避免外链受限导致图标显示为问号 -->
+    <link rel="stylesheet" href="/css/vendor/font-awesome-fonts.css">
+    <link rel="preload" href="/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="/css/admin.css">
 </head>
@@ -767,6 +772,28 @@ document.addEventListener('DOMContentLoaded', () => {
   let reqOffsetStack = [];
   let requirementsCache = [];
 
+  // 统一字段大小写与命名，避免后端返回 snake_case/camelCase 不一致导致“undefined”
+  function normalizeRequirement(it){
+    const n = {
+      RequirementID: it.RequirementID || it.requirement_id || it.id || '',
+      Title: it.Title || it.title || '',
+      Status: it.Status || it.status || '',
+      Progress: it.Progress || it.progress || '',
+      AllowOpenQuotes: (typeof it.AllowOpenQuotes !== 'undefined') ? !!it.AllowOpenQuotes : !!it.allow_open_quotes,
+      ContactPublic: (typeof it.ContactPublic !== 'undefined') ? !!it.ContactPublic : !!it.contact_public,
+      ContactCompany: it.ContactCompany || it.contact_company || '',
+      ContactName: it.ContactName || it.contact_name || '',
+      ContactPhone: it.ContactPhone || it.contact_phone || '',
+      ContactEmail: it.ContactEmail || it.contact_email || '',
+      ContactDepartment: it.ContactDepartment || it.contact_department || '',
+      ViewPasswordPlain: it.ViewPasswordPlain || it.view_password_plain || '',
+      ViewPasswordHash: it.ViewPasswordHash || it.view_password_hash || '',
+      PublicPreview: it.PublicPreview || it.public_preview || '',
+      PublishedAt: it.PublishedAt || it.published_at || ''
+    };
+    return n;
+  }
+
   function escapeHtml(s){return String(s).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;' }[m]));}
 
   // 侧边/抽屉菜单切换（兼容左侧栏与 offcanvas）
@@ -845,44 +872,65 @@ document.addEventListener('DOMContentLoaded', () => {
       const items = data.items || [];
       reqOffsetNext = data.offsetNext || '';
       if (initial) { reqOffsetStack = []; }
-      requirementsCache = items;
-      renderRequirements(items);
-      updateStats(items);
+      requirementsCache = items.map(normalizeRequirement);
+      renderRequirements(requirementsCache);
+      updateStats(requirementsCache);
       const prevBtn = document.getElementById('reqPrevPage');
       const nextBtn = document.getElementById('reqNextPage');
       if (prevBtn) prevBtn.disabled = reqOffsetStack.length === 0;
       if (nextBtn) nextBtn.disabled = !reqOffsetNext;
       if (pageHint) pageHint.textContent = `当前页：${items.length} 条，${reqOffsetNext ? '可下一页' : '无更多'}`;
     } catch (e) {
-      if (tbody) tbody.innerHTML = `<tr><td colspan="7" class="text-danger">${e.message}</td></tr>`;
+      // 在线接口不可用时，尝试读取网站示例数据，进入只读模式
+      try {
+        const resp = await fetch('/data/requirements.json', { cache: 'no-cache' });
+        const json = await resp.json();
+        const items = Array.isArray(json) ? json : (json.items || json.requirements || []);
+        requirementsCache = items.map(normalizeRequirement);
+        renderRequirements(requirementsCache);
+        updateStats(requirementsCache);
+        const prevBtn = document.getElementById('reqPrevPage');
+        const nextBtn = document.getElementById('reqNextPage');
+        if (prevBtn) prevBtn.disabled = true;
+        if (nextBtn) nextBtn.disabled = true;
+        if (pageHint) pageHint.textContent = '离线只读：已加载网站示例数据（static/data/requirements.json）';
+        // 禁用写操作按钮（批量开关、重置、同步等）
+        ['reqStatusOnlineBtn','reqStatusPrivateBtn','reqStatusCloseBtn','resetAndSyncBtn','seedSampleBtn','cleanupInvalidBtn','applyAllBtn'].forEach(id => {
+          const btn = document.getElementById(id);
+          if (btn) btn.setAttribute('disabled','true');
+        });
+      } catch (e2) {
+        if (tbody) tbody.innerHTML = `<tr><td colspan="7" class="text-danger">${e.message}</td></tr>`;
+      }
     }
   }
 
   function renderRequirements(list){
     const tbody=document.getElementById('reqTableBody');
     if (!tbody) return;
-    tbody.innerHTML = list.map(item => {
-      const isPublic = !!item.PublishedAt || (item.Status === '公开');
+    tbody.innerHTML = list.map(raw => {
+      const item = normalizeRequirement(raw);
+      const id = item.RequirementID;
       const online = !!item.AllowOpenQuotes;
       const contactP = !!item.ContactPublic;
-      return `<tr data-id="${item.RequirementID}">
-        <td>${item.RequirementID}</td>
-        <td class="text-truncate" title="${escapeHtml(item.Title||'')}">${escapeHtml(item.Title||'')}</td>
-        <td>${item.Status||''}</td>
+      return `<tr data-id="${escapeHtml(id)}">
+        <td>${escapeHtml(id || '—')}</td>
+        <td class="text-truncate" title="${escapeHtml(item.Title||'未命名')}">${escapeHtml(item.Title||'未命名')}</td>
+        <td>${escapeHtml(item.Status||'')}</td>
         <td>${online ? '开启' : '关闭'}</td>
         <td>${contactP ? '公开' : '不公开'}</td>
         <td data-qcount="loading">—</td>
         <td>
-          <button class="btn btn-sm btn-outline-primary me-1" data-action="detail">详情</button>
-          <button class="btn btn-sm btn-outline-secondary" data-action="quotes">报价</button>
+          <button class="btn btn-sm btn-outline-primary me-1" data-action="detail" ${id?'':'disabled'}>详情</button>
+          <button class="btn btn-sm btn-outline-secondary" data-action="quotes" ${id?'':'disabled'}>报价</button>
         </td>
       </tr>`;
     }).join('');
     tbody.querySelectorAll('tr').forEach(tr => {
       const id=tr.dataset.id;
-      loadQuoteCount(id, tr);
-      tr.querySelector('[data-action="detail"]')?.addEventListener('click', ()=>showRequirementDetail(id));
-      tr.querySelector('[data-action="quotes"]')?.addEventListener('click', ()=>showQuotesModal(id));
+      if (id) { loadQuoteCount(id, tr); }
+      tr.querySelector('[data-action="detail"]')?.addEventListener('click', ()=>{ if(id) showRequirementDetail(id); });
+      tr.querySelector('[data-action="quotes"]')?.addEventListener('click', ()=>{ if(id) showQuotesModal(id); });
     });
   }
 
@@ -908,8 +956,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return c;
       })();
       const total=items.length;
-      const openCount = items.filter(x=>x.AllowOpenQuotes).length;
-      const publicCount = items.filter(x=>x.PublishedAt || x.Status==='公开').length;
+      const norm = items.map(normalizeRequirement);
+      const openCount = norm.filter(x=>x.AllowOpenQuotes).length;
+      const publicCount = norm.filter(x=>x.PublishedAt || x.Status==='公开').length;
       container.innerHTML = `<div class="badge bg-primary">需求总数 ${total}</div><div class="badge bg-success">在线报价开启 ${openCount}</div><div class="badge bg-info text-dark">公开需求 ${publicCount}</div>`;
     } catch{}
   }
@@ -1256,7 +1305,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 需求方统计
   function aggregateDemanders(items){
     const map=new Map();
-    items.forEach(it=>{
+    items.map(normalizeRequirement).forEach(it=>{
       const company=(it.ContactCompany||'未留公司').trim();
       const rec=map.get(company) || { company, contact: it.ContactName || '', phone: it.ContactPhone || '', count:0, public:false, needPw:false };
       rec.count++;
@@ -1412,20 +1461,23 @@ document.addEventListener('DOMContentLoaded', () => {
   // 统一导出：需求列表 CSV/XLSX
   function exportRequirementsToCSV(items){
     const headers = ['编号','标题','状态','进度','在线报价','联系方式公开','企业','联系人','电话','邮箱','部门','发布时间'];
-    const rows = (items||[]).map(it => [
-      it.RequirementID||'',
-      it.Title||'',
-      it.Status||'',
-      it.Progress||'',
-      it.AllowOpenQuotes ? '开启' : '关闭',
-      it.ContactPublic ? '公开' : '不公开',
-      it.ContactCompany||'',
-      it.ContactName||'',
-      it.ContactPhone||'',
-      it.ContactEmail||'',
-      it.ContactDepartment||'',
-      it.PublishedAt||''
-    ]);
+    const rows = (items||[]).map(it => {
+      const r = normalizeRequirement(it);
+      return [
+        r.RequirementID||'',
+        r.Title||'',
+        r.Status||'',
+        r.Progress||'',
+        r.AllowOpenQuotes ? '开启' : '关闭',
+        r.ContactPublic ? '公开' : '不公开',
+        r.ContactCompany||'',
+        r.ContactName||'',
+        r.ContactPhone||'',
+        r.ContactEmail||'',
+        r.ContactDepartment||'',
+        r.PublishedAt||''
+      ];
+    });
     const csv = [headers, ...rows].map(r => r.map(v => String(v).replace(/"/g,'""')).map(v => /,|\n|"/.test(v) ? `"${v}"` : v).join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -1434,20 +1486,23 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   function exportRequirementsToXLSX(items){
     if (!window.XLSX) { alert('XLSX 库未加载'); return; }
-    const rows = (items||[]).map(it => ({
-      编号: it.RequirementID||'',
-      标题: it.Title||'',
-      状态: it.Status||'',
-      进度: it.Progress||'',
-      在线报价: it.AllowOpenQuotes ? '开启' : '关闭',
-      联系方式公开: it.ContactPublic ? '公开' : '不公开',
-      企业: it.ContactCompany||'',
-      联系人: it.ContactName||'',
-      电话: it.ContactPhone||'',
-      邮箱: it.ContactEmail||'',
-      部门: it.ContactDepartment||'',
-      发布时间: it.PublishedAt||''
-    }));
+    const rows = (items||[]).map(it => {
+      const r = normalizeRequirement(it);
+      return ({
+        编号: r.RequirementID||'',
+        标题: r.Title||'',
+        状态: r.Status||'',
+        进度: r.Progress||'',
+        在线报价: r.AllowOpenQuotes ? '开启' : '关闭',
+        联系方式公开: r.ContactPublic ? '公开' : '不公开',
+        企业: r.ContactCompany||'',
+        联系人: r.ContactName||'',
+        电话: r.ContactPhone||'',
+        邮箱: r.ContactEmail||'',
+        部门: r.ContactDepartment||'',
+        发布时间: r.PublishedAt||''
+      });
+    });
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(rows);
     XLSX.utils.book_append_sheet(wb, ws, '需求');
