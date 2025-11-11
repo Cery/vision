@@ -90,6 +90,13 @@
             </select>
             <button id="reqApplyFilter" class="btn btn-outline-primary btn-sm">应用筛选</button>
           </div>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="small text-muted">导出当前筛选结果</div>
+            <div class="btn-group btn-group-sm">
+              <button id="reqExportCsvBtn" class="btn btn-outline-primary"><i class="fa-solid fa-file-csv me-1"></i> 导出 CSV</button>
+              <button id="reqExportXlsxBtn" class="btn btn-outline-success"><i class="fa-solid fa-file-excel me-1"></i> 导出 XLSX</button>
+            </div>
+          </div>
           <div class="table-responsive">
             <table class="table table-sm table-striped align-middle admin-table">
               <thead class="table-light">
@@ -878,7 +885,7 @@ document.addEventListener('DOMContentLoaded', () => {
     m=document.createElement('div');
     m.id='reqDetailModal';
     m.className='modal fade';
-    m.innerHTML = `<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">需求详情</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"></div><div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">关闭</button></div></div></div>`;
+    m.innerHTML = `<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">需求详情</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"></div><div class="modal-footer"><span id="reqDetailHint" class="small text-muted me-auto"></span><button id="reqDetailSaveBtn" class="btn btn-primary">保存</button><button class="btn btn-secondary" data-bs-dismiss="modal">关闭</button></div></div></div>`;
     document.body.appendChild(m);
     return m;
   }
@@ -888,9 +895,109 @@ document.addEventListener('DOMContentLoaded', () => {
     if(!item) return;
     const modal = ensureDetailModal();
     modal.querySelector('.modal-title').textContent = `需求 ${item.RequirementID}`;
-    modal.querySelector('.modal-body').innerHTML = `<div class="row"><div class="col-md-6"><div>标题：${escapeHtml(item.Title||'')}</div><div>状态：${item.Status||''}</div><div>进度：${item.Progress||''}</div><div>在线报价：${item.AllowOpenQuotes?'开启':'关闭'}</div><div>联系方式公开：${item.ContactPublic?'公开':'不公开'}</div></div><div class="col-md-6"><div>公司：${escapeHtml(item.ContactCompany||'')}</div><div>联系人：${escapeHtml(item.ContactName||'')}</div><div>电话：${escapeHtml(item.ContactPhone||'')}</div><div>明文密码：${escapeHtml(item.ViewPasswordPlain||'')}</div><div>哈希：${escapeHtml((item.ViewPasswordHash||'').slice(0,12))}...</div><div>发布时间：${item.PublishedAt||''}</div></div></div>`;
+    modal.querySelector('.modal-body').innerHTML = `
+      <div class="row g-3">
+        <div class="col-md-7">
+          <label class="form-label small">标题</label>
+          <input id="reqTitleInput" class="form-control" value="${escapeHtml(item.Title||'')}" />
+        </div>
+        <div class="col-md-5">
+          <label class="form-label small">企业（需求方公司）</label>
+          <input id="reqContactCompany" class="form-control" value="${escapeHtml(item.ContactCompany||'')}" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small">状态</label>
+          <select id="reqStatusSelect" class="form-select">
+            <option value="公开" ${item.Status==='公开'?'selected':''}>公开</option>
+            <option value="隐私" ${item.Status==='隐私'?'selected':''}>隐私</option>
+            <option value="关闭" ${item.Status==='关闭'?'selected':''}>关闭</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small">进度</label>
+          <select id="reqProgressSelect" class="form-select">
+            <option value="发布中" ${item.Progress==='发布中'?'selected':''}>发布中</option>
+            <option value="接洽中" ${item.Progress==='接洽中'?'selected':''}>接洽中</option>
+            <option value="已完成" ${item.Progress==='已完成'?'selected':''}>已完成</option>
+          </select>
+        </div>
+        <div class="col-md-4 d-flex align-items-end gap-3">
+          <div class="form-check">
+            <input id="reqAllowOpenQuotes" class="form-check-input" type="checkbox" ${item.AllowOpenQuotes?'checked':''}>
+            <label class="form-check-label" for="reqAllowOpenQuotes">开启在线报价</label>
+          </div>
+          <div class="form-check">
+            <input id="reqContactPublic" class="form-check-input" type="checkbox" ${item.ContactPublic?'checked':''}>
+            <label class="form-check-label" for="reqContactPublic">公开联系方式</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small">查看密码（明文）</label>
+          <input id="reqViewPassword" class="form-control" value="${escapeHtml(item.ViewPasswordPlain||'')}" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small">联系人</label>
+          <input id="reqContactName" class="form-control" value="${escapeHtml(item.ContactName||'')}" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small">联系电话</label>
+          <input id="reqContactPhone" class="form-control" value="${escapeHtml(item.ContactPhone||'')}" />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label small">联系邮箱</label>
+          <input id="reqContactEmail" class="form-control" value="${escapeHtml(item.ContactEmail||'')}" />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label small">部门</label>
+          <input id="reqContactDept" class="form-control" value="${escapeHtml(item.ContactDepartment||'')}" />
+        </div>
+        <div class="col-md-12">
+          <label class="form-label small">公开预览（对外展示简述）</label>
+          <textarea id="reqPublicPreview" class="form-control" rows="3">${escapeHtml(item.PublicPreview||item.public_preview||'')}</textarea>
+        </div>
+        <div class="col-md-12">
+          <div class="small text-muted">发布时间：${item.PublishedAt||''}；需求ID：${item.RequirementID}</div>
+        </div>
+      </div>`;
+    modal.querySelector('.modal-body').dataset.reqId = item.RequirementID;
     new bootstrap.Modal(modal).show();
   }
+
+  // 保存需求详情（管理员）
+  document.addEventListener('click', async (e)=>{
+    const btn = (e.target && e.target.id === 'reqDetailSaveBtn') ? e.target : null;
+    if (!btn) return;
+    const modal = document.getElementById('reqDetailModal');
+    const body = modal?.querySelector('.modal-body');
+    const id = body?.dataset.reqId || '';
+    const hint = document.getElementById('reqDetailHint'); if (hint) hint.textContent='';
+    const payload = {
+      title: document.getElementById('reqTitleInput')?.value || '',
+      status: document.getElementById('reqStatusSelect')?.value || '',
+      progress: document.getElementById('reqProgressSelect')?.value || '',
+      allow_open_quotes: !!document.getElementById('reqAllowOpenQuotes')?.checked,
+      contact_public: !!document.getElementById('reqContactPublic')?.checked,
+      view_password_plain: document.getElementById('reqViewPassword')?.value || '',
+      contact_name: document.getElementById('reqContactName')?.value || '',
+      contact_phone: document.getElementById('reqContactPhone')?.value || '',
+      contact_company: document.getElementById('reqContactCompany')?.value || '',
+      contact_email: document.getElementById('reqContactEmail')?.value || '',
+      contact_department: document.getElementById('reqContactDept')?.value || '',
+      public_preview: document.getElementById('reqPublicPreview')?.value || ''
+    };
+    try{
+      const resp = await window.apiFetch(`/api/admin/requirements/${encodeURIComponent(id)}`, { method:'PATCH', headers:{ 'Content-Type':'application/json','X-Admin-Key': ADMIN_KEY }, body: JSON.stringify(payload) });
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error||'保存失败');
+      if (hint) hint.textContent='已保存';
+      // 刷新列表数据
+      await loadRequirementsPage(true);
+      setTimeout(()=>{ if(hint) hint.textContent=''; }, 1200);
+    } catch (err) {
+      if (hint) hint.textContent = err.message || '保存失败';
+      setTimeout(()=>{ if(hint) hint.textContent=''; }, 2000);
+    }
+  });
 
   function ensureQuotesModal(){
     let m=document.getElementById('quotesModal');
@@ -898,7 +1005,7 @@ document.addEventListener('DOMContentLoaded', () => {
     m=document.createElement('div');
     m.id='quotesModal';
     m.className='modal fade';
-    m.innerHTML = `<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">报价列表</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="table-responsive"><table class="table table-sm"><thead><tr><th>供应商</th><th>联系人</th><th>电话</th><th>报价(元)</th><th>状态</th></tr></thead><tbody id="quotesModalBody"></tbody></table></div></div><div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">关闭</button></div></div></div>`;
+    m.innerHTML = `<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">报价列表</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="table-responsive"><table class="table table-sm"><thead><tr><th>供应商</th><th>联系人</th><th>电话</th><th>报价(元)</th><th>状态</th></tr></thead><tbody id="quotesModalBody"></tbody></table></div></div><div class="modal-footer"><div class="me-auto small text-muted">导出当前报价</div><button id="quotesExportCsvBtn" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-file-csv me-1"></i> 导出 CSV</button><button id="quotesExportXlsxBtn" class="btn btn-outline-success btn-sm"><i class="fa-solid fa-file-excel me-1"></i> 导出 XLSX</button><button class="btn btn-secondary" data-bs-dismiss="modal">关闭</button></div></div></div>`;
     document.body.appendChild(m);
     return m;
   }
@@ -913,7 +1020,72 @@ document.addEventListener('DOMContentLoaded', () => {
       const text = await resp.text();
       let data; try { data = JSON.parse(text); } catch { data = { items: [] }; }
       const items = Array.isArray(data) ? data : (data.items || []);
-      body.innerHTML = items.map(q => `<tr><td>${escapeHtml(q.SupplierCompanyName||q.supplier_name||'')}</td><td>${escapeHtml(q.SupplierContact||'')}</td><td>${escapeHtml(q.SupplierPhone||q.supplier_phone||'')}</td><td>${escapeHtml(q.Price||q.amount||'')}</td><td>${escapeHtml(q.Status||q.status||'')}</td></tr>`).join('') || '<tr><td colspan="5" class="text-muted">暂无报价</td></tr>';
+      // 缓存当前报价用于导出
+      window.currentQuotes = items;
+      body.innerHTML = items.map(q => {
+        const qid = q.quote_id || q.QuoteID || '';
+        const cur = q.status || q.Status || 'submitted';
+        return `<tr data-qid="${escapeHtml(qid)}"><td>${escapeHtml(q.SupplierCompanyName||q.supplier_name||'')}</td><td>${escapeHtml(q.SupplierContact||'')}</td><td>${escapeHtml(q.SupplierPhone||q.supplier_phone||'')}</td><td>${escapeHtml(q.Price||q.amount||'')}</td><td>
+          <div class="d-flex align-items-center gap-2">
+            <select class="form-select form-select-sm" data-field="status">
+              <option value="submitted" ${cur==='submitted'?'selected':''}>已提交</option>
+              <option value="reviewing" ${cur==='reviewing'?'selected':''}>审核中</option>
+              <option value="approved" ${cur==='approved'?'selected':''}>已通过</option>
+              <option value="rejected" ${cur==='rejected'?'selected':''}>已拒绝</option>
+              <option value="won" ${cur==='won'?'selected':''}>中标</option>
+              <option value="lost" ${cur==='lost'?'selected':''}>未中</option>
+            </select>
+            <button class="btn btn-sm btn-outline-primary" data-action="saveQuote">更新</button>
+          </div>
+        </td></tr>`;
+      }).join('') || '<tr><td colspan="5" class="text-muted">暂无报价</td></tr>';
+      body.querySelectorAll('button[data-action="saveQuote"]').forEach(btn => {
+        btn.addEventListener('click', async ()=>{
+          const tr = btn.closest('tr'); const qid = tr?.dataset.qid||'';
+          const statusSel = tr?.querySelector('select[data-field="status"]');
+          const status = statusSel?.value || 'reviewing';
+          try {
+            const r = await window.apiFetch(`/api/quotes/${encodeURIComponent(qid)}`, { method:'PATCH', headers:{ 'Content-Type':'application/json','X-Admin-Key': ADMIN_KEY }, body: JSON.stringify({ status }) });
+            const dj = await r.json(); if(!r.ok) throw new Error(dj.error||'更新失败');
+            btn.textContent='已更新'; setTimeout(()=>{btn.textContent='更新';},1200);
+          } catch(e){ btn.textContent='失败'; setTimeout(()=>{btn.textContent='更新';},1200); }
+        });
+      });
+      // 绑定导出按钮事件
+      const btnCsv = modal.querySelector('#quotesExportCsvBtn');
+      const btnXlsx = modal.querySelector('#quotesExportXlsxBtn');
+      if (btnCsv) {
+        btnCsv.onclick = () => {
+          const headers = ['供应商','联系人','电话','报价(元)','状态'];
+          const rows = (window.currentQuotes||items||[]).map(q => [
+            q.SupplierCompanyName||q.supplier_name||'',
+            q.SupplierContact||'',
+            q.SupplierPhone||q.supplier_phone||'',
+            q.Price||q.amount||'',
+            q.Status||q.status||''
+          ]);
+          const csv = [headers, ...rows].map(r => r.map(v => String(v).replace(/"/g,'""')).map(v => /,|\n|"/.test(v) ? `"${v}"` : v).join(',')).join('\n');
+          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a'); a.href = url; a.download = `quotes_${id}.csv`; document.body.appendChild(a); a.click();
+          setTimeout(()=>{URL.revokeObjectURL(url); a.remove();},0);
+        };
+      }
+      if (btnXlsx && window.XLSX) {
+        btnXlsx.onclick = () => {
+          const rows = (window.currentQuotes||items||[]).map(q => ({
+            供应商: q.SupplierCompanyName||q.supplier_name||'',
+            联系人: q.SupplierContact||'',
+            电话: q.SupplierPhone||q.supplier_phone||'',
+            报价: q.Price||q.amount||'',
+            状态: q.Status||q.status||''
+          }));
+          const wb = XLSX.utils.book_new();
+          const ws = XLSX.utils.json_to_sheet(rows);
+          XLSX.utils.book_append_sheet(wb, ws, '报价');
+          XLSX.writeFile(wb, `quotes_${id}.xlsx`);
+        };
+      }
     } catch {
       body.innerHTML = '<tr><td colspan="5" class="text-danger">无法加载报价列表</td></tr>';
     }
@@ -1079,6 +1251,53 @@ document.addEventListener('DOMContentLoaded', () => {
       try { loadSuppliers(); } catch {}
     }
   }));
+
+  // 统一导出：需求列表 CSV/XLSX
+  function exportRequirementsToCSV(items){
+    const headers = ['编号','标题','状态','进度','在线报价','联系方式公开','企业','联系人','电话','邮箱','部门','发布时间'];
+    const rows = (items||[]).map(it => [
+      it.RequirementID||'',
+      it.Title||'',
+      it.Status||'',
+      it.Progress||'',
+      it.AllowOpenQuotes ? '开启' : '关闭',
+      it.ContactPublic ? '公开' : '不公开',
+      it.ContactCompany||'',
+      it.ContactName||'',
+      it.ContactPhone||'',
+      it.ContactEmail||'',
+      it.ContactDepartment||'',
+      it.PublishedAt||''
+    ]);
+    const csv = [headers, ...rows].map(r => r.map(v => String(v).replace(/"/g,'""')).map(v => /,|\n|"/.test(v) ? `"${v}"` : v).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'requirements.csv'; document.body.appendChild(a); a.click();
+    setTimeout(()=>{URL.revokeObjectURL(url); a.remove();},0);
+  }
+  function exportRequirementsToXLSX(items){
+    if (!window.XLSX) { alert('XLSX 库未加载'); return; }
+    const rows = (items||[]).map(it => ({
+      编号: it.RequirementID||'',
+      标题: it.Title||'',
+      状态: it.Status||'',
+      进度: it.Progress||'',
+      在线报价: it.AllowOpenQuotes ? '开启' : '关闭',
+      联系方式公开: it.ContactPublic ? '公开' : '不公开',
+      企业: it.ContactCompany||'',
+      联系人: it.ContactName||'',
+      电话: it.ContactPhone||'',
+      邮箱: it.ContactEmail||'',
+      部门: it.ContactDepartment||'',
+      发布时间: it.PublishedAt||''
+    }));
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(rows);
+    XLSX.utils.book_append_sheet(wb, ws, '需求');
+    XLSX.writeFile(wb, 'requirements.xlsx');
+  }
+  document.getElementById('reqExportCsvBtn')?.addEventListener('click', ()=>exportRequirementsToCSV((typeof requirementsCache!=='undefined'?requirementsCache:[])));
+  document.getElementById('reqExportXlsxBtn')?.addEventListener('click', ()=>exportRequirementsToXLSX((typeof requirementsCache!=='undefined'?requirementsCache:[])));
 
   // 供应商管理编辑器
   function ensureSupEditor(){

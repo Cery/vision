@@ -38,6 +38,29 @@
             <label class="input-group-text" for="onlyOpenQuotesFilter">仅开放报价</label>
           </div>
         </div>
+        <div class="col-md-12 d-flex flex-wrap align-items-center gap-2">
+          <select id="statusFilter" class="form-select form-select-sm" style="max-width:160px;">
+            <option value="">状态：全部</option>
+            <option value="公开">公开</option>
+            <option value="隐私">隐私</option>
+            <option value="关闭">关闭</option>
+          </select>
+          <select id="progressFilter" class="form-select form-select-sm" style="max-width:160px;">
+            <option value="">进度：全部</option>
+            <option value="发布中">发布中</option>
+            <option value="接洽中">接洽中</option>
+            <option value="已完成">已完成</option>
+          </select>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="onlyContactPublicFilter">
+            <label class="form-check-label" for="onlyContactPublicFilter">仅联系方式公开</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="groupByCompanyToggle">
+            <label class="form-check-label" for="groupByCompanyToggle">按企业分组分页</label>
+          </div>
+          <span id="companyFilterHint" class="badge bg-light text-dark border" style="display:none;"></span>
+        </div>
       </div>
       <div id="requirementsList">
         {{ if .Site.Data.requirements }}
@@ -65,6 +88,7 @@
                   <div class="mb-2">
                     <span class="badge bg-light text-dark border me-2"><i class="fa-solid fa-hashtag me-1"></i>{{ .RequirementID }}</span>
                     <span class="badge bg-info text-dark me-2"><i class="fa-solid fa-layer-group me-1"></i>{{ .PrimaryCategory }}</span>
+                    {{ with .SecondaryCategory }}<span class="badge bg-secondary text-light me-2"><i class="fa-solid fa-tag me-1"></i>{{ . }}</span>{{ end }}
                     {{ with .BudgetRange }}<span class="badge bg-success me-2"><i class="fa-solid fa-coins me-1"></i>{{ . }}</span>{{ end }}
                     <span class="badge {{ if eq .Status "公开" }}bg-success{{ else }}bg-warning{{ end }}"><i class="fa-solid fa-bullhorn me-1"></i>{{ .Status }}</span>
                     {{ if .AllowOpenQuotes }}<span class="badge bg-success"><i class="fa-solid fa-unlock me-1"></i>开放报价</span>{{ else }}<span class="badge bg-warning"><i class="fa-solid fa-lock me-1"></i>需密码报价</span>{{ end }}
@@ -88,9 +112,16 @@
       </div>
       <!-- 统一增强分页 -->
       {{ partial "enhanced-pagination.html" (dict "context" . "containerId" "requirementsList" "itemsPerPage" 6 "itemType" "需求") }}
+      <!-- 企业分组容器（开启分组时显示） -->
+      <div id="requirementsCompanyList" class="row g-3" style="display:none;"></div>
+      {{ partial "enhanced-pagination.html" (dict "context" . "containerId" "requirementsCompanyList" "itemsPerPage" 10 "itemType" "企业组") }}
       <!-- 客户端实时拉取（可选） -->
       <div class="mt-3">
-        <button class="btn btn-sm btn-outline-secondary" onclick="refreshRequirementsList()"><i class="fa-solid fa-rotate me-1"></i>实时拉取最新需求</button>
+        <div class="d-flex flex-wrap align-items-center gap-2">
+          <button class="btn btn-sm btn-outline-secondary" onclick="refreshRequirementsList()"><i class="fa-solid fa-rotate me-1"></i>实时拉取最新需求</button>
+          <button id="exportReqCsvBtn" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-file-csv me-1"></i> 导出当前筛选 CSV</button>
+          <button id="exportReqXlsBtn" class="btn btn-sm btn-outline-success"><i class="fa-solid fa-file-excel me-1"></i> 导出 Excel</button>
+        </div>
       </div>
     </div>
   </div>
@@ -156,20 +187,54 @@ function applyFiltersAndPaginate() {
   const q = (document.getElementById('requirementsSearch')?.value || '').trim().toLowerCase();
   const primary = document.getElementById('primaryFilter')?.value || '';
   const onlyOpen = !!document.getElementById('onlyOpenQuotesFilter')?.checked;
+  const statusSel = document.getElementById('statusFilter')?.value || '';
+  const progressSel = document.getElementById('progressFilter')?.value || '';
+  const onlyContactPublic = !!document.getElementById('onlyContactPublicFilter')?.checked;
+  const groupMode = !!document.getElementById('groupByCompanyToggle')?.checked;
+  const companyFilter = window.__companyFilter__ || '';
   allCards = Array.from(document.querySelectorAll('.requirement-card'));
   filteredCards = allCards.filter(card => {
     const id = (card.dataset.id || '').toLowerCase();
     const title = (card.dataset.title || '').toLowerCase();
     const pcat = card.dataset.primary || '';
     const allowOpen = card.dataset.allowOpen === 'true';
+    const status = card.dataset.status || '';
+    const progress = card.dataset.progress || '';
+    const contactPublic = card.dataset.contactPublic === 'true';
+    const company = card.dataset.contactCompany || '';
     const matchText = !q || id.includes(q) || title.includes(q);
     const matchPrimary = !primary || pcat === primary;
     const matchOpen = !onlyOpen || allowOpen;
-    return matchText && matchPrimary && matchOpen;
+    const matchStatus = !statusSel || status === statusSel;
+    const matchProgress = !progressSel || progress === progressSel;
+    const matchContactPublic = !onlyContactPublic || contactPublic;
+    const matchCompany = !companyFilter || company === companyFilter;
+    return matchText && matchPrimary && matchOpen && matchStatus && matchProgress && matchContactPublic && matchCompany;
   });
-  initEnhancedPagination('requirementsList', 6, '需求');
-  updateEnhancedPagination('requirementsList', filteredCards, 1);
-  showCurrentPage();
+  const listEl = document.getElementById('requirementsList');
+  const companyEl = document.getElementById('requirementsCompanyList');
+  const hintEl = document.getElementById('companyFilterHint');
+  const listPag = document.getElementById('requirementsList-pagination-container');
+  const companyPag = document.getElementById('requirementsCompanyList-pagination-container');
+  if (hintEl) {
+    if (companyFilter) { hintEl.style.display=''; hintEl.textContent = `当前公司筛选：${companyFilter}`; } else { hintEl.style.display='none'; hintEl.textContent=''; }
+  }
+  if (!groupMode) {
+    if (companyEl) companyEl.style.display='none';
+    if (listEl) listEl.style.display='';
+    if (companyPag) companyPag.style.display='none';
+    if (listPag) listPag.style.display='';
+    initEnhancedPagination('requirementsList', 6, '需求');
+    updateEnhancedPagination('requirementsList', filteredCards, 1);
+    showCurrentPage();
+  } else {
+    if (listEl) listEl.style.display='none';
+    if (companyEl) companyEl.style.display='';
+    if (listPag) listPag.style.display='none';
+    if (companyPag) companyPag.style.display='';
+    renderCompanyGroups();
+    showCompanyGroupsPage();
+  }
 }
 function showCurrentPage() {
   const config = window.EnhancedPagination['requirementsList'];
@@ -189,9 +254,14 @@ document.getElementById('clearSearchBtn')?.addEventListener('click', () => {
 document.getElementById('primaryFilter')?.addEventListener('change', applyFiltersAndPaginate);
 document.getElementById('onlyOpenQuotesFilter')?.addEventListener('change', applyFiltersAndPaginate);
 document.getElementById('onlyContactPublicFilter')?.addEventListener('change', applyFiltersAndPaginate);
+document.getElementById('statusFilter')?.addEventListener('change', applyFiltersAndPaginate);
+document.getElementById('progressFilter')?.addEventListener('change', applyFiltersAndPaginate);
+document.getElementById('groupByCompanyToggle')?.addEventListener('change', ()=>{ window.__companyFilter__=''; applyFiltersAndPaginate(); });
 document.addEventListener('enhancedPaginationChange', (e) => {
   if (e.detail?.containerId === 'requirementsList') {
     showCurrentPage();
+  } else if (e.detail?.containerId === 'requirementsCompanyList') {
+    showCompanyGroupsPage();
   }
 });
 
@@ -361,6 +431,10 @@ function renderContactBlock(data) {
         <div class="col-md-6">电话：${maskPhone(data.contactPhone)}</div>
       </div>
       ${data.contactCompany ? `<div>公司：${maskCompany(data.contactCompany)}</div>` : ''}
+      <div class="row">
+        <div class="col-md-6">邮箱：—</div>
+        <div class="col-md-6">部门：—</div>
+      </div>
     </div>
   ` : '';
 
@@ -382,6 +456,10 @@ function renderContactBlock(data) {
             <div class="col-md-6">电话：<span id="cPhone">${data.contactPhone || '—'}</span></div>
           </div>
           ${data.contactCompany ? `<div>公司：<span id="cCompany">${data.contactCompany}</span></div>` : ''}
+          <div class="row mt-2">
+            <div class="col-md-6">邮箱：<span id="cEmail">${data.contactEmail || '—'}</span></div>
+            <div class="col-md-6">部门：<span id="cDept">${data.contactDepartment || '—'}</span></div>
+          </div>
         </div>
         <div class="mt-2">
           <button class="btn btn-outline-secondary btn-sm" onclick="loadQuotes('${data.id}')">
@@ -410,6 +488,8 @@ async function verifyRequirementPassword(requirementID) {
       document.getElementById('cName')?.replaceChildren(document.createTextNode(data.ContactName || ''));
       document.getElementById('cPhone')?.replaceChildren(document.createTextNode(data.ContactPhone || ''));
       const cc = document.getElementById('cCompany'); if (cc) cc.replaceChildren(document.createTextNode(data.ContactCompany || ''));
+      const ce = document.getElementById('cEmail'); if (ce) ce.replaceChildren(document.createTextNode(data.ContactEmail || ''));
+      const cd = document.getElementById('cDept'); if (cd) cd.replaceChildren(document.createTextNode(data.ContactDepartment || ''));
       // 允许提交报价
       document.querySelector('#quoteForm button[type="submit"]')?.removeAttribute('disabled');
       document.querySelectorAll('#quoteForm input, #quoteForm textarea, #quoteForm select')?.forEach(el => el.removeAttribute('disabled'));
@@ -421,6 +501,111 @@ async function verifyRequirementPassword(requirementID) {
     alert('验证服务不可用，请稍后重试或联系平台。');
   }
 }
+
+// 企业分组渲染
+function renderCompanyGroups(){
+  const container = document.getElementById('requirementsCompanyList');
+  if (!container) return;
+  const map = new Map();
+  (filteredCards||[]).forEach(card => {
+    const company = (card.dataset.contactCompany || '未留公司').trim();
+    const arr = map.get(company) || [];
+    arr.push(card);
+    map.set(company, arr);
+  });
+  const groups = Array.from(map.entries()).map(([company, cards]) => ({ company, count: cards.length }));
+  container.innerHTML = groups.map(g => `
+    <div class="col-md-6">
+      <div class="border rounded p-3 d-flex justify-content-between align-items-center">
+        <div>
+          <div class="fw-bold">${g.company}</div>
+          <div class="small text-muted">需求数量：${g.count}</div>
+        </div>
+        <div>
+          <button class="btn btn-sm btn-outline-primary" data-company="${g.company}">查看该企业需求</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  // 绑定点击，切换到公司筛选模式
+  container.querySelectorAll('button[data-company]')?.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const company = btn.getAttribute('data-company') || '';
+      window.__companyFilter__ = company;
+      const toggle = document.getElementById('groupByCompanyToggle'); if (toggle) toggle.checked = false;
+      applyFiltersAndPaginate();
+    });
+  });
+  initEnhancedPagination('requirementsCompanyList', 10, '企业组');
+  const tiles = Array.from(container.children);
+  updateEnhancedPagination('requirementsCompanyList', tiles, 1);
+}
+
+function showCompanyGroupsPage(){
+  const container = document.getElementById('requirementsCompanyList');
+  if (!container) return;
+  const config = window.EnhancedPagination['requirementsCompanyList'];
+  if (!config) return;
+  const tiles = Array.from(container.children);
+  const start = (config.currentPage - 1) * config.itemsPerPage;
+  const end = start + config.itemsPerPage;
+  tiles.forEach(el => el.style.display='none');
+  tiles.slice(start, end).forEach(el => el.style.display='');
+}
+
+// 导出当前筛选
+function exportCurrentRequirementsCSV(){
+  const headers = ['编号','标题','状态','进度','开放报价','联系方式公开','公司','联系人','电话','主类','次类','预算','发布时间'];
+  const rows = (filteredCards||[]).map(card => [
+    card.dataset.id || '',
+    card.querySelector('h5')?.textContent?.trim() || (card.dataset.title||''),
+    card.dataset.status || '',
+    card.dataset.progress || '',
+    (card.dataset.allowOpen==='true')?'开启':'关闭',
+    (card.dataset.contactPublic==='true')?'公开':'不公开',
+    card.dataset.contactCompany || '',
+    card.dataset.contactName || '',
+    card.dataset.contactPhone || '',
+    card.dataset.primary || '',
+    card.dataset.secondary || '',
+    card.dataset.budget || '',
+    card.dataset.published || ''
+  ]);
+  const csv = [headers, ...rows].map(r => r.map(v => String(v).replace(/"/g,'""')).map(v => /,|\n|"/.test(v) ? `"${v}"` : v).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'requirements_public.csv'; document.body.appendChild(a); a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url); a.remove();},0);
+}
+function exportCurrentRequirementsXLS(){
+  const headers = ['编号','标题','状态','进度','开放报价','联系方式公开','公司','联系人','电话','主类','次类','预算','发布时间'];
+  const rowsHtml = (filteredCards||[]).map(card => `
+    <tr>
+      <td>${card.dataset.id||''}</td>
+      <td>${card.querySelector('h5')?.textContent?.trim() || (card.dataset.title||'')}</td>
+      <td>${card.dataset.status||''}</td>
+      <td>${card.dataset.progress||''}</td>
+      <td>${(card.dataset.allowOpen==='true')?'开启':'关闭'}</td>
+      <td>${(card.dataset.contactPublic==='true')?'公开':'不公开'}</td>
+      <td>${card.dataset.contactCompany||''}</td>
+      <td>${card.dataset.contactName||''}</td>
+      <td>${card.dataset.contactPhone||''}</td>
+      <td>${card.dataset.primary||''}</td>
+      <td>${card.dataset.secondary||''}</td>
+      <td>${card.dataset.budget||''}</td>
+      <td>${card.dataset.published||''}</td>
+    </tr>
+  `).join('');
+  const thead = `<thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>`;
+  const html = `<!DOCTYPE html><html><head><meta charset="utf-8" /></head><body><table border="1">${thead}<tbody>${rowsHtml}</tbody></table></body></html>`;
+  const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'requirements_public.xls'; document.body.appendChild(a); a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url); a.remove();},0);
+}
+
+document.getElementById('exportReqCsvBtn')?.addEventListener('click', exportCurrentRequirementsCSV);
+document.getElementById('exportReqXlsBtn')?.addEventListener('click', exportCurrentRequirementsXLS);
 
 async function loadQuotes(requirementID) {
   const listEl = document.getElementById('quotesList');
