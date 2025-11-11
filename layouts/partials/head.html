@@ -120,6 +120,19 @@
 <link href="/css/custom.css" rel="stylesheet">
 <link href="/css/news-filters.css" rel="stylesheet">
 
+<script>
+  // 主题切换：支持通过 URL 参数 ?theme=teal|violet|blue 设置
+  (function() {
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var theme = params.get('theme');
+      if (theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+      }
+    } catch (e) { /* 忽略运行时异常 */ }
+  })();
+</script>
+
 <style>
     /* 全局样式 - 统一字体系统 */
     body {

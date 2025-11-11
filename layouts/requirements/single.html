@@ -25,6 +25,9 @@
 {{ partial "password-modal.html" . }}
 
 <script>
+  // 统一 API 基础地址（本地与线上）
+  window.API_BASE = window.API_BASE || (location.hostname === 'localhost' ? 'http://localhost:8787' : 'https://api.visndt.com');
+  window.apiFetch = window.apiFetch || ((path, opts={}) => fetch(`${window.API_BASE}${path}`, opts));
   const requirementID = "{{ .Params.RequirementID }}";
 
   // 展示密码输入弹窗
@@ -35,23 +38,16 @@
     }
     showPasswordModal(async (inputPwd) => {
       try {
-        const resp = await fetch('/.netlify/functions/verifyPassword', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ requirementID, password: inputPwd })
-        });
+        const resp = await window.apiFetch(`/api/requirements/${encodeURIComponent(requirementID)}?view_password=${encodeURIComponent(inputPwd)}`);
+        if (!resp.ok) throw new Error('密码错误或已过期');
         const res = await resp.json();
-        if (res && res.valid) {
-          document.getElementById('pub-company').textContent = res.data?.company || '—';
-          document.getElementById('pub-contact').textContent = res.data?.contact || '—';
-          document.getElementById('pub-phone').textContent = res.data?.phone || '—';
-          document.getElementById('privateInfo').style.display = 'block';
-        } else {
-          alert('密码错误或已过期。');
-        }
+        document.getElementById('pub-company').textContent = res.ContactCompany || '—';
+        document.getElementById('pub-contact').textContent = res.ContactName || '—';
+        document.getElementById('pub-phone').textContent = res.ContactPhone || '—';
+        document.getElementById('privateInfo').style.display = 'block';
       } catch (e) {
         console.error(e);
-        alert('验证服务暂不可用，请稍后再试');
+        alert(e.message || '验证服务暂不可用，请稍后再试');
       }
     });
   }

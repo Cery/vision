@@ -15,6 +15,13 @@ const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID || '';
 const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN || '';
 const TWILIO_PHONE_FROM = process.env.TWILIO_PHONE_FROM || '';
 
+// Optional free persistence via GitHub (commits JSON to repo)
+const GH_TOKEN = process.env.GITHUB_TOKEN || process.env.GH_TOKEN || '';
+const GH_OWNER = process.env.GITHUB_OWNER || process.env.GH_OWNER || '';
+const GH_REPO = process.env.GITHUB_REPO || process.env.GH_REPO || '';
+const GH_BRANCH = process.env.GITHUB_BRANCH || 'main';
+const GH_REQUIREMENTS_PATH = process.env.GITHUB_REQUIREMENTS_PATH || 'data/requirements.json';
+
 function generateServerRequirementID() {
   const d = new Date();
   const y = d.getFullYear();
@@ -66,6 +73,47 @@ async function sendSMS({ to, text }) {
   }
 }
 
+// Append record to JSON in GitHub repository via Contents API
+async function githubAppendRequirement(record) {
+  if (!GH_TOKEN || !GH_OWNER || !GH_REPO) throw new Error('GitHub not configured');
+  const baseUrl = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_REQUIREMENTS_PATH}`;
+  let current = [];
+  let sha;
+  try {
+    const getUrl = `${baseUrl}?ref=${encodeURIComponent(GH_BRANCH)}`;
+    const resp = await fetch(getUrl, { headers: { Authorization: `Bearer ${GH_TOKEN}`, Accept: 'application/vnd.github+json' } });
+    if (resp.status === 404) {
+      current = [];
+      sha = undefined;
+    } else {
+      if (!resp.ok) throw new Error(`GitHub GET ${resp.status}`);
+      const data = await resp.json();
+      sha = data.sha;
+      const decoded = Buffer.from(data.content, data.encoding || 'base64').toString('utf8');
+      try { current = JSON.parse(decoded); } catch { current = []; }
+    }
+  } catch (e) {
+    // If GET fails for reasons other than 404, surface error
+    if (e && String(e).includes('GitHub GET')) throw e;
+    current = current || [];
+  }
+  current.push(record);
+  const newContent = Buffer.from(JSON.stringify(current, null, 2)).toString('base64');
+  const putResp = await fetch(baseUrl, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${GH_TOKEN}`, Accept: 'application/vnd.github+json' },
+    body: JSON.stringify({
+      message: `chore: add requirement ${record.RequirementID}`,
+      content: newContent,
+      branch: GH_BRANCH,
+      sha
+    })
+  });
+  const putData = await putResp.json();
+  if (!putResp.ok) throw new Error(putData.message || `GitHub PUT ${putResp.status}`);
+  return { committed: true, url: (putData.content && putData.content.html_url) || '' };
+}
+
 exports.handler = async (event) => {
   try {
     if (event.httpMethod !== 'POST') {
@@ -110,28 +158,53 @@ exports.handler = async (event) => {
     const parametersObj = (function(){
       try { return data.Parameters || {}; } catch { return {}; }
     })();
+    // Build common record object for non-Airtable storage flows
+    const localRecord = {
+      RequirementID: requirementID,
+      Title: data.Title,
+      PublicPreview: publicPreview,
+      PrimaryCategory: data.primaryCategory,
+      SecondaryCategory: secondaryCategory,
+      Status: status,
+      ContactName: data.contactName,
+      ContactPhone: data.contactPhone,
+      ContactCompany: contactCompany,
+      ContactPublic: contactPublic,
+      AllowOpenQuotes: allowOpenQuotes,
+      Parameters: parametersObj,
+      PublishedAt: publishedAt,
+      BudgetRange: budgetRange,
+      Progress: progress,
+      ViewPasswordPlain: viewPasswordPlain
+    };
+
+    // Prefer GitHub persistence if configured
+    if (GH_TOKEN && GH_OWNER && GH_REPO) {
+      try {
+        await githubAppendRequirement(localRecord);
+        // Notifications (best-effort)
+        const siteUrl = process.env.SITE_URL || '';
+        const detailUrl = siteUrl ? `${siteUrl}/requirements/${encodeURIComponent(requirementID)}/` : '';
+        const subject = `需求发布成功：${requirementID}`;
+        const textLines = [
+          `您的需求已发布成功。`,
+          `编号：${requirementID}`,
+          `查看密码：${viewPasswordPlain}`,
+          detailUrl ? `查看链接：${detailUrl}` : '',
+          `如需修改开放报价/联系方式脱敏，可联系平台客服。`
+        ].filter(Boolean);
+        const text = textLines.join('\n');
+        try { if (contactEmail) await sendEmail({ to: contactEmail, subject, text }); } catch {}
+        try { if (data.contactPhone) await sendSMS({ to: data.contactPhone, text }); } catch {}
+        return { statusCode: 200, body: JSON.stringify({ RequirementID: requirementID, ViewPassword: viewPasswordPlain, storage: 'github' }) };
+      } catch (e) {
+        console.error('GitHub commit failed, falling back:', e.message || e);
+        // fall through to Airtable/local
+      }
+    }
 
     // If Airtable is not configured, store locally as a graceful fallback
     if (!AIRTABLE_API_KEY || !AIRTABLE_BASE_ID) {
-      const localRecord = {
-        RequirementID: requirementID,
-        Title: data.Title,
-        PublicPreview: publicPreview,
-        PrimaryCategory: data.primaryCategory,
-        SecondaryCategory: secondaryCategory,
-        Status: status,
-        ContactName: data.contactName,
-        ContactPhone: data.contactPhone,
-        ContactCompany: contactCompany,
-        ContactPublic: contactPublic,
-        AllowOpenQuotes: allowOpenQuotes,
-        Parameters: parametersObj,
-        PublishedAt: publishedAt,
-        BudgetRange: budgetRange,
-        Progress: progress,
-        ViewPasswordPlain: viewPasswordPlain
-      };
-
       try {
         const arr = await readJson('data/requirements.json', []);
         arr.push(localRecord);

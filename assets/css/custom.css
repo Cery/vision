@@ -8,3 +8,31 @@
     max-width: 100%;
   }
 } 
+/* 发布方式分段按钮样式增强 */
+.publish-mode-group {
+  gap: .5rem;
+}
+.publish-mode-group .btn {
+  border-radius: 999px;
+  padding: .4rem .9rem;
+  font-weight: 600;
+}
+.publish-mode-group label.btn.btn-outline-success,
+.publish-mode-group label.btn.btn-outline-warning {
+  background-color: rgba(0,0,0,.03);
+  border-color: rgba(0,0,0,.12);
+  color: #333;
+}
+.publish-mode-group input#publishPublic.btn-check:checked + label {
+  background-color: var(--bs-success, #198754);
+  color: #fff;
+  border-color: var(--bs-success, #198754);
+}
+.publish-mode-group input#publishQuote.btn-check:checked + label {
+  background-color: var(--bs-warning, #ffc107);
+  color: #212529;
+  border-color: var(--bs-warning, #ffc107);
+}
+.publish-mode-group .btn:focus {
+  box-shadow: 0 0 0 .2rem rgba(0,0,0,.05);
+}

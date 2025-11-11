@@ -277,8 +277,18 @@
 
             let currentQuotes = [];
 
-            // Fetch and display requirements
-            fetch('/.netlify/functions/listRequirements')
+            // 统一 Cloudflare API 基础地址（本地/生产），支持从 localStorage 覆盖
+            try {
+                const saved = localStorage.getItem('API_BASE') || '';
+                if (saved && typeof saved === 'string') {
+                    window.API_BASE = saved;
+                }
+            } catch {}
+            window.API_BASE = window.API_BASE || (location.hostname === 'localhost' ? 'http://localhost:8787' : 'https://api.visndt.com');
+            window.apiFetch = (path, opts={}) => fetch(`${window.API_BASE}${path}`, opts);
+
+            // 加载并显示需求列表（Cloudflare D1）
+            window.apiFetch('/api/requirements')
                 .then(response => response.json())
                 .then(data => {
                     const items = Array.isArray(data) ? data : (data.items || []);
@@ -289,7 +299,7 @@
                     `).join('');
                 })
                 .catch(() => {
-                    requirementsList.innerHTML = '<div class="text-muted">无法加载需求列表，请检查 Netlify Functions 或 Airtable 配置。</div>';
+                    requirementsList.innerHTML = '<div class="text-muted">无法加载需求列表，请检查 Cloudflare Workers/D1 部署。</div>';
                 });
 
             // Handle requirement selection
@@ -305,33 +315,35 @@
                 }
             });
 
-            // Load quotes for a requirement
+            // 加载某个需求的报价（需要管理员或密码访问）
             window.loadQuotes = function loadQuotes(requirementID) {
-                fetch(`/.netlify/functions/listQuotes?RequirementID=${requirementID}`)
+                const adminKey = document.getElementById('adminKeyInput')?.value || '';
+                window.apiFetch(`/api/quotes?requirement_id=${encodeURIComponent(requirementID)}`, { headers: { 'X-Admin-Key': adminKey } })
                     .then(response => response.json())
                     .then(data => {
-                        currentQuotes = data.items;
-                        quotesList.innerHTML = data.items.map(quote => `
+                        const items = Array.isArray(data) ? data : (data.items || []);
+                        currentQuotes = items;
+                        quotesList.innerHTML = items.map(quote => `
                             <tr>
-                                <td>${quote.SupplierCompanyName}</td>
-                                <td>${quote.SupplierContact}</td>
-                                <td>${quote.SupplierPhone}</td>
-                                <td>${quote.Price}</td>
+                                <td>${quote.SupplierCompanyName || quote.supplier_name || ''}</td>
+                                <td>${quote.SupplierContact || ''}</td>
+                                <td>${quote.SupplierPhone || quote.supplier_phone || ''}</td>
+                                <td>${quote.Price || quote.amount || ''}</td>
                                 <td>
-                                    <select class="form-select form-select-sm" data-id="${quote.id}" onchange="updateQuoteStatus(this)">
-                                        <option value="接洽中" ${quote.Status === '接洽中' ? 'selected' : ''}>接洽中</option>
-                                        <option value="已中标" ${quote.Status === '已中标' ? 'selected' : ''}>已中标</option>
-                                        <option value="未中标" ${quote.Status === '未中标' ? 'selected' : ''}>未中标</option>
+                                    <select class="form-select form-select-sm" data-id="${quote.quote_id || quote.id || ''}" onchange="updateQuoteStatus(this)">
+                                        <option value="接洽中" ${(quote.Status||quote.status) === '接洽中' ? 'selected' : ''}>接洽中</option>
+                                        <option value="已中标" ${(quote.Status||quote.status) === '已中标' ? 'selected' : ''}>已中标</option>
+                                        <option value="未中标" ${(quote.Status||quote.status) === '未中标' ? 'selected' : ''}>未中标</option>
                                     </select>
                                 </td>
                                 <td>
-                                    <button class="btn btn-danger btn-sm" onclick="deleteQuote('${quote.id}')">删除</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteQuote('${quote.quote_id || quote.id || ''}')">删除</button>
                                 </td>
                             </tr>
                         `).join('');
                     })
                     .catch(() => {
-                        quotesList.innerHTML = '<tr><td colspan="6" class="text-danger">无法加载报价列表，请在 Netlify Dev 环境下访问或完成部署配置。</td></tr>';
+                        quotesList.innerHTML = '<tr><td colspan="6" class="text-danger">无法加载报价列表，请检查 Cloudflare Workers/D1 或本地 dev 环境。</td></tr>';
                     });
             }
 
@@ -378,31 +390,32 @@
         function updateQuoteStatus(selectElement) {
             const quoteId = selectElement.dataset.id;
             const status = selectElement.value;
-            fetch('/.netlify/functions/updateQuoteStatus', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ quoteId, status }),
+            const adminKey = document.getElementById('adminKeyInput')?.value || '';
+            window.apiFetch(`/api/quotes/${encodeURIComponent(quoteId)}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json', 'X-Admin-Key': adminKey },
+                body: JSON.stringify({ status }),
             }).then(() => {
                 // 状态更新成功（可选：提示）
             }).catch(() => {
-                alert('更新状态失败，请检查函数配置');
+                alert('更新状态失败，请检查 Cloudflare API 配置');
             });
         }
 
         // Delete quote
         function deleteQuote(quoteId) {
             if (confirm('Are you sure you want to delete this quote?')) {
-                fetch('/.netlify/functions/deleteQuote', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ quoteId }),
+                const adminKey = document.getElementById('adminKeyInput')?.value || '';
+                window.apiFetch(`/api/quotes/${encodeURIComponent(quoteId)}`, {
+                    method: 'DELETE',
+                    headers: { 'X-Admin-Key': adminKey },
                 }).then(() => {
                     // Reload quotes
                     const active = document.querySelector('#requirementsList .list-group-item.active');
                     const requirementID = active ? active.dataset.id : '';
                     if (requirementID) window.loadQuotes(requirementID);
                 }).catch(() => {
-                    alert('删除失败，请检查函数配置');
+                    alert('删除失败，请检查 Cloudflare API 配置');
                 });
             }
         }
@@ -460,7 +473,7 @@
       adminKey = document.getElementById('adminKeyInput').value.trim();
       if (!adminKey) { alert('请输入管理员密钥'); return; }
       try {
-        const resp = await fetch('/.netlify/functions/adminListRequirements', { headers: { 'X-Admin-Key': adminKey } });
+        const resp = await window.apiFetch('/api/admin/requirements', { headers: { 'X-Admin-Key': adminKey } });
         const data = await resp.json();
         if (!resp.ok) throw new Error((data.error || '加载失败') + (data.detail ? ('：' + data.detail) : ''));
                     const items = data.items || [];
@@ -560,7 +573,7 @@
                 if (contactSel === 'true') payload.contactPublic = true;
                 if (contactSel === 'false') payload.contactPublic = false;
       try {
-        const resp = await fetch('/.netlify/functions/adminUpdateRequirement', {
+        const resp = await window.apiFetch('/api/admin/requirements', {
           method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Key': adminKey },
           body: JSON.stringify(payload)
         });
@@ -585,7 +598,7 @@ async function updateRequirementRow(btn) {
   const payload = { requirementID: reqId, allowOpenQuotes: allowOpen };
   if (plainPw) payload.newPasswordPlain = plainPw;
   try {
-    const resp = await fetch('/.netlify/functions/adminUpdateRequirement', {
+    const resp = await window.apiFetch('/api/admin/requirements', {
       method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Key': adminKey },
       body: JSON.stringify(payload)
     });
@@ -666,7 +679,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const key = document.getElementById('adminKeyInput')?.value.trim();
     if (!key) return;
     try {
-      const resp = await fetch(`/.netlify/functions/adminGetSystemConfig?adminKey=${encodeURIComponent(key)}`);
+      const resp = await window.apiFetch('/api/admin/system-config', { headers: { 'X-Admin-Key': key } });
       const data = await resp.json();
       if (resp.ok && data && data.config) {
         applySettingsToUI(data.config);
@@ -690,7 +703,7 @@ document.addEventListener('DOMContentLoaded', () => {
       NotifySmsEnabled: !!notifySms?.checked,
     };
     try {
-      const resp = await fetch('/.netlify/functions/adminUpdateSystemConfig', {
+      const resp = await window.apiFetch('/api/admin/system-config', {
         method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Key': key },
         body: JSON.stringify(payload)
       });
@@ -743,11 +756,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const key = document.getElementById('adminKeyInput')?.value.trim();
     if (!key) { alert('请输入管理员密钥'); return; }
     try {
-      const resp = await fetch('/.netlify/functions/adminListRequirements?limit=1', { headers: { 'X-Admin-Key': key } });
+      const resp = await window.apiFetch('/api/admin/requirements?limit=1', { headers: { 'X-Admin-Key': key } });
       const text = await resp.text();
       let data;
       try { data = JSON.parse(text); } catch {
-        throw new Error('管理员接口不可用或返回非JSON，请在 Netlify Dev 环境下访问或完成部署。');
+        throw new Error('管理员接口不可用或返回非JSON，请检查 Cloudflare Workers/D1 部署或本地 dev 环境。');
       }
       if (!resp.ok) throw new Error((data.error || '验证失败') + (data.detail ? ('：' + data.detail) : ''));
       ADMIN_KEY = key;
@@ -774,15 +787,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusSel = document.getElementById('reqStatusFilter')?.value || '';
     const openSel = document.getElementById('reqOpenFilter')?.value || '';
     const contactSel = document.getElementById('reqContactFilter')?.value || '';
-    const url = new URL('/.netlify/functions/adminListRequirements', window.location.origin);
-    if (q) url.searchParams.set('q', q);
-    if (statusSel) url.searchParams.set('status', statusSel);
-    if (openSel) url.searchParams.set('open', openSel);
-    if (contactSel) url.searchParams.set('contact', contactSel);
-    url.searchParams.set('limit', '20');
-    if (!initial && reqOffsetNext) url.searchParams.set('offset', reqOffsetNext);
+    const params = new URLSearchParams();
+    if (q) params.set('q', q);
+    if (statusSel) params.set('status', statusSel);
+    if (openSel) params.set('open', openSel);
+    if (contactSel) params.set('contact', contactSel);
+    params.set('limit', '20');
+    if (!initial && reqOffsetNext) params.set('offset', reqOffsetNext);
     try {
-      const resp = await fetch(url.toString(), { headers: { 'X-Admin-Key': ADMIN_KEY } });
+      const resp = await window.apiFetch(`/api/admin/requirements?${params.toString()}`, { headers: { 'X-Admin-Key': ADMIN_KEY } });
       const text = await resp.text();
       let data;
       try { data = JSON.parse(text); } catch { throw new Error('管理员接口不可用或返回非JSON，请启动函数服务'); }
@@ -833,9 +846,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function loadQuoteCount(reqId, tr){
     try{
-      const resp = await fetch(`/.netlify/functions/listQuotes?RequirementID=${encodeURIComponent(reqId)}`);
+      const resp = await window.apiFetch(`/api/quotes?requirement_id=${encodeURIComponent(reqId)}`, { headers: { 'X-Admin-Key': ADMIN_KEY } });
       const data = await resp.json();
-      const n=(data.items||[]).length;
+      const n = Array.isArray(data) ? data.length : ((data.items||[]).length);
       const cell = tr.querySelector('[data-qcount]'); if(cell) cell.textContent = String(n);
     } catch{
       const cell = tr.querySelector('[data-qcount]'); if(cell) cell.textContent = '0';
@@ -896,11 +909,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const body = modal.querySelector('#quotesModalBody');
     body.innerHTML = '<tr><td colspan="5" class="text-muted">加载中...</td></tr>';
     try {
-      const resp = await fetch(`/.netlify/functions/listQuotes?RequirementID=${encodeURIComponent(id)}`);
+      const resp = await window.apiFetch(`/api/quotes?requirement_id=${encodeURIComponent(id)}`, { headers: { 'X-Admin-Key': ADMIN_KEY } });
       const text = await resp.text();
       let data; try { data = JSON.parse(text); } catch { data = { items: [] }; }
-      const items = data.items || [];
-      body.innerHTML = items.map(q => `<tr><td>${escapeHtml(q.SupplierCompanyName||'')}</td><td>${escapeHtml(q.SupplierContact||'')}</td><td>${escapeHtml(q.SupplierPhone||'')}</td><td>${escapeHtml(q.Price||'')}</td><td>${escapeHtml(q.Status||'')}</td></tr>`).join('') || '<tr><td colspan="5" class="text-muted">暂无报价</td></tr>';
+      const items = Array.isArray(data) ? data : (data.items || []);
+      body.innerHTML = items.map(q => `<tr><td>${escapeHtml(q.SupplierCompanyName||q.supplier_name||'')}</td><td>${escapeHtml(q.SupplierContact||'')}</td><td>${escapeHtml(q.SupplierPhone||q.supplier_phone||'')}</td><td>${escapeHtml(q.Price||q.amount||'')}</td><td>${escapeHtml(q.Status||q.status||'')}</td></tr>`).join('') || '<tr><td colspan="5" class="text-muted">暂无报价</td></tr>';
     } catch {
       body.innerHTML = '<tr><td colspan="5" class="text-danger">无法加载报价列表</td></tr>';
     }
@@ -959,25 +972,25 @@ document.addEventListener('DOMContentLoaded', () => {
       // 优先从管理接口加载；失败时回退至站点索引 JSON
       let ok=false;
       try{
-        const urlObj = new URL('/.netlify/functions/adminListSuppliers', window.location.origin);
+        const urlObj = new URL('/api/admin/suppliers', window.location.origin);
         const onlyPublic = !!document.getElementById('supPublicOnly')?.checked;
         const search = (document.getElementById('supSearchInput')?.value||'').trim();
         if (onlyPublic) urlObj.searchParams.set('public','true');
         if (search) urlObj.searchParams.set('q', search);
         urlObj.searchParams.set('limit','20');
         if (!initial && supOffsetNext) urlObj.searchParams.set('offset', supOffsetNext);
-        const respApi = await fetch(urlObj.toString(), { headers: { 'X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') } });
+        const respApi = await window.apiFetch(`/api/admin/suppliers?${urlObj.searchParams.toString()}`, { headers: { 'X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') } });
         if (respApi.ok) {
           const d = await respApi.json();
-          const items = (d.items||[]);
+          const items = Array.isArray(d) ? d : (d.items||[]);
           suppliersCache = items.map(it => ({
-            title: it.CompanyName || it.Title || '',
-            contact: it.ContactName || it.Contact || '',
-            phone: it.Phone || '',
-            email: it.Email || '',
+            title: it.company || it.CompanyName || it.Title || '',
+            contact: it.name || it.ContactName || it.Contact || '',
+            phone: it.contact_phone || it.Phone || '',
+            email: it.contact_email || it.Email || '',
             series: 0,
             models: 0,
-            uri: it.Website || it.Uri || ''
+            uri: (it.metadata_json && (typeof it.metadata_json==='object' ? it.metadata_json.website : '')) || it.Website || it.Uri || ''
           }));
           supOffsetNext = d.offsetNext || '';
           if (initial) supOffsetStack = [];
@@ -1110,18 +1123,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (saveBtn){
       const hint=document.getElementById('supSaveHint');
       const panel=document.getElementById('supEditorPanel'); const id=panel?.dataset.id||'';
-      const payload={ id,
-        CompanyName: document.getElementById('supCompany').value.trim(),
-        Title: document.getElementById('supCompany').value.trim(),
-        ContactName: document.getElementById('supContact').value.trim(),
-        Phone: document.getElementById('supPhone').value.trim(),
-        Email: document.getElementById('supEmail').value.trim(),
-        Website: document.getElementById('supWebsite').value.trim(),
-        ContactPublic: document.getElementById('supPublic').checked,
-        Password: document.getElementById('supPassword').value
+      const payload={
+        name: document.getElementById('supContact').value.trim(),
+        company: document.getElementById('supCompany').value.trim(),
+        contact_phone: document.getElementById('supPhone').value.trim(),
+        contact_email: document.getElementById('supEmail').value.trim(),
+        access_password_plain: document.getElementById('supPassword').value,
+        status: 'active',
+        metadata_json: {
+          contact_public: !!document.getElementById('supPublic').checked,
+          website: document.getElementById('supWebsite').value.trim()
+        }
       };
       try{
-        const resp=await fetch('/.netlify/functions/adminUpdateSupplier', { method:'POST', headers:{ 'Content-Type':'application/json','X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') }, body: JSON.stringify(payload) });
+        const resp=await window.apiFetch(`/api/admin/suppliers/${encodeURIComponent(id)}`, { method:'PATCH', headers:{ 'Content-Type':'application/json','X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') }, body: JSON.stringify(payload) });
         const data=await resp.json();
         if(!resp.ok) throw new Error(data.error||'保存失败');
         hint.textContent='已保存';
@@ -1141,14 +1156,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const tbody=document.getElementById('demTableBody');
     if (tbody) tbody.innerHTML = '<tr><td colspan="7" class="text-muted">加载中...</td></tr>';
     const q=(document.getElementById('demSearchInput')?.value||'').trim();
-    const url=new URL('/.netlify/functions/adminListDemanders', window.location.origin);
+    const url=new URL('/api/admin/demanders', window.location.origin);
     if (q) url.searchParams.set('q', q);
     url.searchParams.set('limit','20');
     try{
-      const resp=await fetch(url.toString(), { headers: { 'X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') } });
+      const resp=await window.apiFetch(`/api/admin/demanders?${url.searchParams.toString()}`, { headers: { 'X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') } });
       const data=await resp.json();
       if (!resp.ok) throw new Error(data.error||'加载失败');
-      demandersCache = data.items||[];
+      const items = Array.isArray(data) ? data : (data.items || []);
+      demandersCache = items.map(d => ({
+        id: d.demander_id || d.id || '',
+        CompanyName: d.company || d.CompanyName || '',
+        ContactName: d.name || d.ContactName || '',
+        Phone: d.contact_phone || d.Phone || '',
+        Email: d.contact_email || d.Email || '',
+        ContactPublic: (d.metadata_json && (typeof d.metadata_json==='object' ? !!d.metadata_json.contact_public : false)) || !!d.ContactPublic,
+        AllowOpenQuotes: false
+      }));
       renderDemandersIndex();
     }catch(e){
       if (tbody) tbody.innerHTML = `<tr><td colspan="7" class="text-danger">${e.message||'无法加载需求方列表'}</td></tr>`;
@@ -1210,16 +1234,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (saveBtn){
       const hint=document.getElementById('demSaveHint');
       const panel=document.getElementById('demEditorPanel'); const id=panel?.dataset.id||'';
-      const payload={ id,
-        CompanyName: document.getElementById('demCompany').value.trim(),
-        ContactName: document.getElementById('demContact').value.trim(),
-        Phone: document.getElementById('demPhone').value.trim(),
-        Email: document.getElementById('demEmail').value.trim(),
-        ContactPublic: document.getElementById('demPublic').checked,
-        Password: document.getElementById('demPassword').value
+      const payload={
+        name: document.getElementById('demContact').value.trim(),
+        company: document.getElementById('demCompany').value.trim(),
+        contact_phone: document.getElementById('demPhone').value.trim(),
+        contact_email: document.getElementById('demEmail').value.trim(),
+        metadata_json: {
+          contact_public: !!document.getElementById('demPublic').checked,
+          password_plain: document.getElementById('demPassword').value
+        }
       };
       try{
-        const resp=await fetch('/.netlify/functions/adminUpdateDemander', { method:'POST', headers:{ 'Content-Type':'application/json','X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') }, body: JSON.stringify(payload) });
+        const resp=await window.apiFetch(`/api/admin/demanders/${encodeURIComponent(id)}`, { method:'PATCH', headers:{ 'Content-Type':'application/json','X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') }, body: JSON.stringify(payload) });
         const data=await resp.json();
         if(!resp.ok) throw new Error(data.error||'保存失败');
         hint.textContent='已保存';

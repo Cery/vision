@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1321&amp;path=livereload" data-no-instant defer></script>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>产品中心 - 维森·视觉检测仪器</title>
@@ -26,19 +26,19 @@
 
 
 <meta property="og:type" content="article">
-<meta property="og:url" content="http://localhost:1321/products/">
+<meta property="og:url" content="http://localhost:1313/products/">
 <meta property="og:title" content="产品中心 - 维森视觉检测仪器">
 <meta property="og:description" content="专业的视觉检测设备信息与资讯发布平台，提供工业内窥镜、检测相机等产品信息，为制造业提供优质的检测解决方案">
-<meta property="og:image" content="http://localhost:1321/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta property="og:image" content="http://localhost:1313/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 <meta property="og:site_name" content="维森视觉检测仪器">
 <meta property="og:locale" content="zh_CN">
 
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="http://localhost:1321/products/">
+<meta name="twitter:url" content="http://localhost:1313/products/">
 <meta name="twitter:title" content="产品中心 - 维森视觉检测仪器">
 <meta name="twitter:description" content="专业的视觉检测设备信息与资讯发布平台，提供工业内窥镜、检测相机等产品信息，为制造业提供优质的检测解决方案">
-<meta name="twitter:image" content="http://localhost:1321/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta name="twitter:image" content="http://localhost:1313/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 
 
 
@@ -48,7 +48,7 @@
   "@type": "Product",
   "name": "产品中心",
   "description": "产品中心",
-  "image": "http:\/\/localhost:1321\/images\/assets\/brand\/logos\/brand_logos_logo-dark_original_v1.svg",
+  "image": "http:\/\/localhost:1313\/images\/assets\/brand\/logos\/brand_logos_logo-dark_original_v1.svg",
   "brand": {
     "@type": "Brand",
     "name": "维森视觉检测仪器"
@@ -62,7 +62,7 @@
 
 
 
-<link rel="canonical" href="http://localhost:1321/products/">
+<link rel="canonical" href="http://localhost:1313/products/">
 
 
 <link rel="icon" type="image/svg+xml" href="../images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
@@ -83,6 +83,19 @@
 
 <link href="../css/custom.css" rel="stylesheet">
 <link href="../css/news-filters.css" rel="stylesheet">
+
+<script>
+  
+  (function() {
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var theme = params.get('theme');
+      if (theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+      }
+    } catch (e) {   }
+  })();
+</script>
 
 <style>
      
@@ -815,6 +828,16 @@
 
 <script>
     window.searchIndex = [{
+        "title": "\"2025年工业内窥与无损检测技术发展趋势\"",
+        "url": "\"/news/industry/2025-industrial-ndt-trends/\"",
+        "content": "\"在智能制造背景下，工业内窥镜与无损检测技术持续迭代。高清成像、AI缺陷识别以及远程协作成为行业主流趋势。\\n\"",
+        "type": "article"
+      },{
+        "title": "\"管道内腐蚀检测与维护优化案例\"",
+        "url": "\"/cases/case-pipeline-inspection/\"",
+        "content": "\"项目背景 针对长输管道内部腐蚀与结垢问题，要求快速、准确的在线检测与维护决策支持。\\n解决方案 部署可移动高清工业内窥镜系统与AI识别模块，配合巡检流程标准化与数据留存。\\n实施效果 实现高效率巡检与低漏检率，并形成可复用的维护知识库。\\n\"",
+        "type": "case"
+      },{
         "title": "\"焊缝质量缺陷检测与工艺优化案例\"",
         "url": "\"/cases/case-weld-quality/\"",
         "content": "\"项目背景 焊接质量直接影响整车安全与可靠性，传统抽检难以发现内部缺陷。\\n解决方案 引入内窥检测与SPC方法，依据缺陷根因调整焊接参数并建立检测标准。\\n实施效果 返修率与交付周期显著改善，形成标准化质量控制流程。\\n\"",
@@ -1106,22 +1129,22 @@
 <style>
  
 .top-bar {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
-    font-size: 0.875rem;
+    background-color: var(--bg-primary);
+    border-bottom: 1px solid var(--border-light);
+    font-size: var(--font-size-sm);
 }
 
 .top-bar-text {
-    color: #6c757d;
+    color: var(--text-secondary);
 }
 
 .top-bar-link {
-    color: #007bff;
+    color: var(--color-primary-600);
     text-decoration: none;
 }
 
 .top-bar-link:hover {
-    color: #0056b3;
+    color: var(--color-primary-700);
     text-decoration: underline;
 }
 
@@ -1144,7 +1167,7 @@
 }
 
 .nav-link:hover {
-    color: #007bff !important;
+    color: var(--color-primary-600) !important;
 }
 
  
@@ -1157,10 +1180,10 @@
     justify-content: center;
     padding: 0;
     border: 2px solid transparent;
-    background: linear-gradient(135deg, #007bff, #0056b3);
+    background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-700));
     color: white;
-    box-shadow: 0 3px 10px rgba(0, 123, 255, 0.3);
-    transition: all 0.3s ease;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-normal);
     position: relative;
     overflow: hidden;
 }
@@ -1183,9 +1206,9 @@
 }
 
 .mobile-search-btn:hover {
-    background: linear-gradient(135deg, #0056b3, #004085);
+    background: linear-gradient(135deg, var(--color-primary-700), var(--color-primary-800));
     transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+    box-shadow: var(--shadow-lg);
 }
 
 .mobile-search-btn:active {
@@ -1250,26 +1273,26 @@
 
     .navbar-toggler {
         padding: 0.5rem;
-        border: 2px solid #dee2e6;
+        border: 2px solid var(--border-light);
         border-radius: 50%;
         width: 46px;
         height: 46px;
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: #f8f9fa;
-        transition: all 0.3s ease;
+        background-color: var(--bg-secondary);
+        transition: var(--transition-normal);
     }
 
     .navbar-toggler:hover {
-        background-color: #e9ecef;
-        border-color: #adb5bd;
+        background-color: var(--bg-tertiary);
+        border-color: var(--border-medium);
         transform: scale(1.05);
     }
 
     .navbar-toggler:focus {
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem var(--color-primary-200);
+        border-color: var(--color-primary-600);
     }
 
     .navbar-toggler:active {
@@ -1338,7 +1361,7 @@
                                     
                                     
 
-                                    <a href="http://localhost:1321/products" class="btn btn-lg btn-primary fw-bold shadow-sm primary-btn all-btn active">
+                                    <a href="http://localhost:1313/products" class="btn btn-lg btn-primary fw-bold shadow-sm primary-btn all-btn active">
                                         <i class="fas fa-home me-1"></i>全部分类
                                     </a>
 
@@ -1349,7 +1372,7 @@
                                         
                                         
                                         
-                                            <a href='http://localhost:1321/products?primary_category=%e7%94%b5%e5%ad%90%e5%86%85%e7%aa%a5%e9%95%9c' class="btn btn-lg btn-outline-primary fw-bold shadow-sm primary-btn " data-category="电子内窥镜">
+                                            <a href='http://localhost:1313/products?primary_category=%e7%94%b5%e5%ad%90%e5%86%85%e7%aa%a5%e9%95%9c' class="btn btn-lg btn-outline-primary fw-bold shadow-sm primary-btn " data-category="电子内窥镜">
                                                 <i class="fas fa-folder me-1"></i>电子内窥镜
                                                 <span class="badge bg-light text-dark ms-1">3</span>
                                             </a>
@@ -1358,7 +1381,7 @@
                                         
                                         
                                         
-                                            <a href='http://localhost:1321/products?primary_category=%e5%85%89%e5%ad%a6%e5%86%85%e7%aa%a5%e9%95%9c' class="btn btn-lg btn-outline-primary fw-bold shadow-sm primary-btn " data-category="光学内窥镜">
+                                            <a href='http://localhost:1313/products?primary_category=%e5%85%89%e5%ad%a6%e5%86%85%e7%aa%a5%e9%95%9c' class="btn btn-lg btn-outline-primary fw-bold shadow-sm primary-btn " data-category="光学内窥镜">
                                                 <i class="fas fa-folder me-1"></i>光学内窥镜
                                                 <span class="badge bg-light text-dark ms-1">2</span>
                                             </a>
@@ -1367,7 +1390,7 @@
                                         
                                         
                                         
-                                            <a href='http://localhost:1321/products?primary_category=%e5%85%89%e7%ba%a4%e5%86%85%e7%aa%a5%e9%95%9c' class="btn btn-lg btn-outline-primary fw-bold shadow-sm primary-btn " data-category="光纤内窥镜">
+                                            <a href='http://localhost:1313/products?primary_category=%e5%85%89%e7%ba%a4%e5%86%85%e7%aa%a5%e9%95%9c' class="btn btn-lg btn-outline-primary fw-bold shadow-sm primary-btn " data-category="光纤内窥镜">
                                                 <i class="fas fa-folder me-1"></i>光纤内窥镜
                                                 <span class="badge bg-light text-dark ms-1">3</span>
                                             </a>
@@ -1426,7 +1449,7 @@
                                 <div class="category-connector"></div>
 
                                 <div class="d-flex flex-wrap gap-1 align-items-center">
-                                    <a href="http://localhost:1321/products" class="btn btn-outline-secondary btn-sm secondary-btn all-btn active">
+                                    <a href="http://localhost:1313/products" class="btn btn-outline-secondary btn-sm secondary-btn all-btn active">
                                         <i class="fas fa-list me-1"></i>全部二级分类
                                     </a>
 
@@ -1481,7 +1504,7 @@
                                                 
                                             
                                             
-                                            <a href='http://localhost:1321/products?secondary_category=%e7%a1%ac%e6%80%a7%e5%85%89%e5%ad%a6%e5%86%85%e7%aa%a5%e9%95%9c' 
+                                            <a href='http://localhost:1313/products?secondary_category=%e7%a1%ac%e6%80%a7%e5%85%89%e5%ad%a6%e5%86%85%e7%aa%a5%e9%95%9c' 
                                                class="btn btn-outline-secondary btn-sm secondary-btn " 
                                                data-category="硬性光学内窥镜"
                                                data-primary-categories="光学内窥镜">
@@ -1504,7 +1527,7 @@
                                                 
                                             
                                             
-                                            <a href='http://localhost:1321/products?secondary_category=%e6%9f%94%e6%80%a7%e5%85%89%e7%ba%a4%e5%86%85%e7%aa%a5%e9%95%9c' 
+                                            <a href='http://localhost:1313/products?secondary_category=%e6%9f%94%e6%80%a7%e5%85%89%e7%ba%a4%e5%86%85%e7%aa%a5%e9%95%9c' 
                                                class="btn btn-outline-secondary btn-sm secondary-btn " 
                                                data-category="柔性光纤内窥镜"
                                                data-primary-categories="光纤内窥镜">
@@ -1523,7 +1546,7 @@
                                                 
                                             
                                             
-                                            <a href='http://localhost:1321/products?secondary_category=%e7%a1%ac%e6%80%a7%e5%85%89%e7%ba%a4%e5%86%85%e7%aa%a5%e9%95%9c' 
+                                            <a href='http://localhost:1313/products?secondary_category=%e7%a1%ac%e6%80%a7%e5%85%89%e7%ba%a4%e5%86%85%e7%aa%a5%e9%95%9c' 
                                                class="btn btn-outline-secondary btn-sm secondary-btn " 
                                                data-category="硬性光纤内窥镜"
                                                data-primary-categories="光纤内窥镜">
@@ -1550,7 +1573,7 @@
                                                 
                                             
                                             
-                                            <a href='http://localhost:1321/products?secondary_category=%e5%b7%a5%e4%b8%9a%e8%a7%86%e9%a2%91%e5%86%85%e7%aa%a5%e9%95%9c' 
+                                            <a href='http://localhost:1313/products?secondary_category=%e5%b7%a5%e4%b8%9a%e8%a7%86%e9%a2%91%e5%86%85%e7%aa%a5%e9%95%9c' 
                                                class="btn btn-outline-secondary btn-sm secondary-btn " 
                                                data-category="工业视频内窥镜"
                                                data-primary-categories="电子内窥镜">
@@ -1587,10 +1610,6 @@
                         <div id="parameter-filters" class="parameter-filters">
                             
                             <div class="parameter-group" id="common-parameters">
-                                <div class="parameter-group-header">
-                                    <span class="badge bg-info me-2">通用参数</span>
-                                    <small class="text-muted">适用于所有产品类型</small>
-                                </div>
                                 <div class="row g-3 mt-2">
                                     
                                     <div class="col-md-3">
@@ -2010,7 +2029,7 @@
                                     <div class="col-md-3">
                                         <div class="filter-group">
                                             <label class="form-label">
-                                                <i class="fas fa-lightbulb me-1 text-primary"></i>光源
+                                                <i class="fas fa-lightbulb me-1 text-primary"></i>光源类型
                                             </label>
                                             <select class="form-select" id="lightSource">
                                                 <option value="">全部光源</option>
@@ -2217,9 +2236,9 @@
                                     <div class="col-md-3">
                                         <div class="filter-group">
                                             <label class="form-label">
-                                                <i class="fas fa-ruler me-1 text-primary"></i>插入管长度
+                                                <i class="fas fa-ruler me-1 text-primary"></i>长度
                                             </label>
-                                            <select class="form-select" id="insertionLength">
+                                            <select class="form-select" id="workingLength">
                                                 <option value="">全部长度</option>
                                                 
                                                 
@@ -2408,6 +2427,10 @@
                                                     
                                                 
                                                 
+                                                <option value="200mm">200mm</option>
+                                                
+                                                <option value="2000mm">2000mm</option>
+                                                
                                             </select>
                                         </div>
                                     </div>
@@ -2416,10 +2439,6 @@
 
                             
                             <div class="parameter-group" id="electronic-parameters" style="display: none;">
-                                <div class="parameter-group-header">
-                                    <span class="badge bg-success me-2">电子内窥镜参数</span>
-                                    <small class="text-muted">电子内窥镜专用技术参数</small>
-                                </div>
                                 <div class="row g-3 mt-2">
                                     
                                     <div class="col-md-3">
@@ -2958,109 +2977,7 @@
 
                             
                             <div class="parameter-group" id="fiber-parameters" style="display: none;">
-                                <div class="parameter-group-header">
-                                    <span class="badge bg-warning me-2">光纤内窥镜参数</span>
-                                    <small class="text-muted">光纤内窥镜专用技术参数</small>
-                                </div>
                                 <div class="row g-3 mt-2">
-                                    
-                                    <div class="col-md-3">
-                                        <div class="filter-group">
-                                            <label class="form-label">
-                                                <i class="fas fa-ruler me-1 text-warning"></i>工作长度
-                                            </label>
-                                            <select class="form-select" id="fiberWorkingLength" onchange="updateFilters()">
-                                                <option value="">全部长度</option>
-                                                
-                                                
-                                                    
-                                                
-                                                    
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                    
-                                                
-                                                    
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                    
-                                                
-                                                    
-                                                
-                                                    
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                    
-                                                
-                                                    
-                                                
-                                                    
-                                                
-                                                    
-                                                
-                                                
-                                                <option value="2000mm">2000mm</option>
-                                                
-                                            </select>
-                                        </div>
-                                    </div>
 
                                     
                                     <div class="col-md-3">
@@ -3162,103 +3079,6 @@
                                     </div>
 
                                     
-                                    <div class="col-md-3">
-                                        <div class="filter-group">
-                                            <label class="form-label">
-                                                <i class="fas fa-search me-1 text-warning"></i>焦距
-                                            </label>
-                                            <select class="form-select" id="focalLength">
-                                                <option value="">全部焦距</option>
-                                                
-                                                
-                                                    
-                                                
-                                                    
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                    
-                                                
-                                                    
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                    
-                                                
-                                                    
-                                                
-                                                    
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                    
-                                                
-                                                    
-                                                
-                                                    
-                                                
-                                                    
-                                                
-                                                
-                                                <option value="10-100mm">10-100mm</option>
-                                                
-                                            </select>
-                                        </div>
-                                    </div>
 
                                     
                                     <div class="col-md-3">
@@ -3363,89 +3183,7 @@
 
                             
                             <div class="parameter-group" id="optical-parameters" style="display: none;">
-                                <div class="parameter-group-header">
-                                    <span class="badge bg-danger me-2">光学内窥镜参数</span>
-                                    <small class="text-muted">光学内窥镜专用技术参数</small>
-                                </div>
                                 <div class="row g-3 mt-2">
-                                    
-                                    <div class="col-md-4">
-                                        <div class="filter-group">
-                                            <label class="form-label">
-                                                <i class="fas fa-ruler me-1 text-danger"></i>工作长度
-                                            </label>
-                                            <select class="form-select" id="opticalWorkingLength">
-                                                <option value="">全部长度</option>
-                                                
-                                                
-                                                    
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                    
-                                                
-                                                    
-                                                
-                                                    
-                                                
-                                                    
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                            
-                                                        
-                                                    
-                                                
-                                                    
-                                                
-                                                    
-                                                
-                                                    
-                                                
-                                                    
-                                                
-                                                
-                                                <option value="200mm">200mm</option>
-                                                
-                                            </select>
-                                        </div>
-                                    </div>
 
                                     
                                     <div class="col-md-4">
@@ -3736,7 +3474,7 @@
                 
                 
                 
-                <a href="http://localhost:1321/products/vs/ws-o3020/" class="card-img-link">
+                <a href="http://localhost:1313/products/vs/ws-o3020/" class="card-img-link">
                     
                     
                     
@@ -3765,7 +3503,7 @@
                 <div class="card-body">
                     
                     <h5 class="card-title mb-3">
-                        <a href="http://localhost:1321/products/vs/ws-o3020/" class="text-decoration-none text-dark product-title">WS-O3020硬性光学内窥镜 - 3.0mm侧视型</a>
+                        <a href="http://localhost:1313/products/vs/ws-o3020/" class="text-decoration-none text-dark product-title">WS-O3020硬性光学内窥镜 - 3.0mm侧视型</a>
                     </h5>
 
                     
@@ -4012,7 +3750,7 @@
                 
                 
                 
-                <a href="http://localhost:1321/products/vs/ws-f4525/" class="card-img-link">
+                <a href="http://localhost:1313/products/vs/ws-f4525/" class="card-img-link">
                     
                     
                     
@@ -4041,7 +3779,7 @@
                 <div class="card-body">
                     
                     <h5 class="card-title mb-3">
-                        <a href="http://localhost:1321/products/vs/ws-f4525/" class="text-decoration-none text-dark product-title">WS-F4525柔性光纤内窥镜 - 4.5mm双向导向型</a>
+                        <a href="http://localhost:1313/products/vs/ws-f4525/" class="text-decoration-none text-dark product-title">WS-F4525柔性光纤内窥镜 - 4.5mm双向导向型</a>
                     </h5>
 
                     
@@ -4250,7 +3988,7 @@
                 
                 
                 
-                <a href="http://localhost:1321/products/vis/vis-t10100/" class="card-img-link">
+                <a href="http://localhost:1313/products/vis/vis-t10100/" class="card-img-link">
                     
                     
                     
@@ -4281,7 +4019,7 @@
                 <div class="card-body">
                     
                     <h5 class="card-title mb-3">
-                        <a href="http://localhost:1321/products/vis/vis-t10100/" class="text-decoration-none text-dark product-title">VIS-T2815工业视频内窥镜 - 2.8mm高清探头</a>
+                        <a href="http://localhost:1313/products/vis/vis-t10100/" class="text-decoration-none text-dark product-title">VIS-T2815工业视频内窥镜 - 2.8mm高清探头</a>
                     </h5>
 
                     
@@ -4490,7 +4228,7 @@
                 
                 
                 
-                <a href="http://localhost:1321/products/vis/vis-t27140/" class="card-img-link">
+                <a href="http://localhost:1313/products/vis/vis-t27140/" class="card-img-link">
                     
                     
                     
@@ -4521,7 +4259,7 @@
                 <div class="card-body">
                     
                     <h5 class="card-title mb-3">
-                        <a href="http://localhost:1321/products/vis/vis-t27140/" class="text-decoration-none text-dark product-title">VIS-T2815工业视频内窥镜 - 2.8mm高清探头</a>
+                        <a href="http://localhost:1313/products/vis/vis-t27140/" class="text-decoration-none text-dark product-title">VIS-T2815工业视频内窥镜 - 2.8mm高清探头</a>
                     </h5>
 
                     
@@ -4730,7 +4468,7 @@
                 
                 
                 
-                <a href="http://localhost:1321/products/vis/vis-t2810/" class="card-img-link">
+                <a href="http://localhost:1313/products/vis/vis-t2810/" class="card-img-link">
                     
                     
                     
@@ -4761,7 +4499,7 @@
                 <div class="card-body">
                     
                     <h5 class="card-title mb-3">
-                        <a href="http://localhost:1321/products/vis/vis-t2810/" class="text-decoration-none text-dark product-title">VIS-T2815工业视频内窥镜 - 2.8mm高清探头</a>
+                        <a href="http://localhost:1313/products/vis/vis-t2810/" class="text-decoration-none text-dark product-title">VIS-T2815工业视频内窥镜 - 2.8mm高清探头</a>
                     </h5>
 
                     
@@ -4970,7 +4708,7 @@
                 
                 
                 
-                <a href="http://localhost:1321/products/vis/vis-t2815/" class="card-img-link">
+                <a href="http://localhost:1313/products/vis/vis-t2815/" class="card-img-link">
                     
                     
                     
@@ -5001,7 +4739,7 @@
                 <div class="card-body">
                     
                     <h5 class="card-title mb-3">
-                        <a href="http://localhost:1321/products/vis/vis-t2815/" class="text-decoration-none text-dark product-title">VIS-T2815工业视频内窥镜 - 2.8mm高清探头</a>
+                        <a href="http://localhost:1313/products/vis/vis-t2815/" class="text-decoration-none text-dark product-title">VIS-T2815工业视频内窥镜 - 2.8mm高清探头</a>
                     </h5>
 
                     
@@ -5248,7 +4986,7 @@
                 
                 
                 
-                <a href="http://localhost:1321/products/vs/ws-p3915/" class="card-img-link">
+                <a href="http://localhost:1313/products/vs/ws-p3915/" class="card-img-link">
                     
                     
                     
@@ -5279,7 +5017,7 @@
                 <div class="card-body">
                     
                     <h5 class="card-title mb-3">
-                        <a href="http://localhost:1321/products/vs/ws-p3915/" class="text-decoration-none text-dark product-title">WS-P3915高清工业视频内窥镜 - 3.9mm四方向导向探头</a>
+                        <a href="http://localhost:1313/products/vs/ws-p3915/" class="text-decoration-none text-dark product-title">WS-P3915高清工业视频内窥镜 - 3.9mm四方向导向探头</a>
                     </h5>
 
                     
@@ -5526,7 +5264,7 @@
                 
                 
                 
-                <a href="http://localhost:1321/products/vs/ws-p6020/" class="card-img-link">
+                <a href="http://localhost:1313/products/vs/ws-p6020/" class="card-img-link">
                     
                     
                     
@@ -5559,7 +5297,7 @@
                 <div class="card-body">
                     
                     <h5 class="card-title mb-3">
-                        <a href="http://localhost:1321/products/vs/ws-p6020/" class="text-decoration-none text-dark product-title">WS-P6020高清工业视频内窥镜 - 6mm大直径探头</a>
+                        <a href="http://localhost:1313/products/vs/ws-p6020/" class="text-decoration-none text-dark product-title">WS-P6020高清工业视频内窥镜 - 6mm大直径探头</a>
                     </h5>
 
                     
@@ -6737,57 +6475,9 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-function addParameterGroupHints() {
-    const commonGroup = document.getElementById('common-parameters');
-    if (commonGroup) {
-        
-        if (!commonGroup.querySelector('.parameter-hint')) {
-            const hint = document.createElement('div');
-            hint.className = 'parameter-hint alert alert-info mt-3';
-            hint.innerHTML = `
-                <i class="fas fa-info-circle me-2"></i>
-                <strong>提示：</strong>选择上方的产品分类可查看更多专用技术参数
-            `;
-            commonGroup.appendChild(hint);
-        }
-    }
-}
-
-
-function removeParameterGroupHints() {
-    const hints = document.querySelectorAll('.parameter-hint');
-    hints.forEach(hint => hint.remove());
-}
-
-
-function updateParameterGroupHints(category) {
-    removeParameterGroupHints();
-
-    if (!category) {
-        addParameterGroupHints();
-    } else {
-        
-        const groups = {
-            '电子内窥镜': 'electronic-parameters',
-            '光纤内窥镜': 'fiber-parameters',
-            '光学内窥镜': 'optical-parameters'
-        };
-
-        const groupId = groups[category];
-        if (groupId) {
-            const group = document.getElementById(groupId);
-            if (group && !group.querySelector('.parameter-hint')) {
-                const hint = document.createElement('div');
-                hint.className = 'parameter-hint alert alert-success mt-3';
-                hint.innerHTML = `
-                    <i class="fas fa-check-circle me-2"></i>
-                    <strong>${category}专用参数：</strong>以下参数专门针对${category}产品设计
-                `;
-                group.appendChild(hint);
-            }
-        }
-    }
-}
+function addParameterGroupHints() {   }
+function removeParameterGroupHints() {   }
+function updateParameterGroupHints(category) {   }
 
 
 function updateFilters() {
@@ -6805,6 +6495,7 @@ function applyAllFilters() {
     const probeDiameter = document.getElementById('probeDiameter')?.value || '';
     const viewingAngle = document.getElementById('viewingAngle')?.value || '';
     const lightSource = document.getElementById('lightSource')?.value || '';
+    const workingLength = document.getElementById('workingLength')?.value || '';
 
     
     const screenSize = document.getElementById('screenSize')?.value || '';
@@ -6814,13 +6505,11 @@ function applyAllFilters() {
     const cableMaterial = document.getElementById('cableMaterial')?.value || '';
 
     
-    const fiberWorkingLength = document.getElementById('fiberWorkingLength')?.value || '';
     const fiberFieldOfView = document.getElementById('fiberFieldOfView')?.value || '';
     const focalLength = document.getElementById('focalLength')?.value || '';
     const fiberGuidance = document.getElementById('fiberGuidance')?.value || '';
 
     
-    const opticalWorkingLength = document.getElementById('opticalWorkingLength')?.value || '';
     const opticalFieldOfView = document.getElementById('opticalFieldOfView')?.value || '';
     
     const guidance = electronicGuidance || fiberGuidance || '';
@@ -6847,6 +6536,7 @@ function applyAllFilters() {
         if (probeDiameter && product.dataset.probeDiameter !== probeDiameter) show = false;
         if (viewingAngle && product.dataset.viewingAngle !== viewingAngle) show = false;
         if (lightSource && product.dataset.lightSource !== lightSource) show = false;
+        if (workingLength && product.dataset.workingLength !== workingLength) show = false;
 
         
         if (screenSize && product.dataset.screenSize !== screenSize) show = false;
@@ -6856,13 +6546,11 @@ function applyAllFilters() {
         if (cableMaterial && product.dataset.cableMaterial !== cableMaterial) show = false;
 
         
-        if (fiberWorkingLength && product.dataset.workingLength !== fiberWorkingLength) show = false;
         if (fiberFieldOfView && product.dataset.fieldOfView !== fiberFieldOfView) show = false;
         if (focalLength && product.dataset.focalLength !== focalLength) show = false;
         if (fiberGuidance && product.dataset.guidance !== fiberGuidance) show = false;
 
         
-        if (opticalWorkingLength && product.dataset.workingLength !== opticalWorkingLength) show = false;
         if (opticalFieldOfView && product.dataset.fieldOfView !== opticalFieldOfView) show = false;
 
         if (show) {
@@ -6879,6 +6567,7 @@ function applyAllFilters() {
     if (viewingAngle) params.set('viewing_angle', viewingAngle); else params.delete('viewing_angle');
     if (lightSource) params.set('light_source', lightSource); else params.delete('light_source');
     if (guidance) params.set('guidance', guidance); else params.delete('guidance');
+    if (workingLength) params.set('working_length', workingLength); else params.delete('working_length');
 
     const newUrl = `${window.location.pathname}?${params.toString()}`;
     window.history.replaceState({}, '', newUrl);
@@ -6905,10 +6594,8 @@ function applyAllFilters() {
         resolution,
         guidance,
         cableMaterial,
-        fiberWorkingLength,
         fiberFieldOfView,
         focalLength,
-        opticalWorkingLength,
         opticalFieldOfView
     });
 }
@@ -6925,7 +6612,8 @@ function setFiltersFromURL() {
         'resolution': urlParams.get('resolution'),
         'viewingAngle': urlParams.get('viewing_angle'),
         'lightSource': urlParams.get('light_source'),
-        'guidance': urlParams.get('guidance')
+        'guidance': urlParams.get('guidance'),
+        'workingLength': urlParams.get('working_length')
     };
 
     Object.entries(filters).forEach(([id, value]) => {
@@ -6952,10 +6640,9 @@ function setFiltersFromURL() {
         resolution: document.getElementById('resolution')?.value || '',
         guidance: (document.getElementById('electronicGuidance')?.value || document.getElementById('fiberGuidance')?.value || ''),
         cableMaterial: document.getElementById('cableMaterial')?.value || '',
-        fiberWorkingLength: document.getElementById('fiberWorkingLength')?.value || '',
+        workingLength: document.getElementById('workingLength')?.value || '',
         fiberFieldOfView: document.getElementById('fiberFieldOfView')?.value || '',
         focalLength: document.getElementById('focalLength')?.value || '',
-        opticalWorkingLength: document.getElementById('opticalWorkingLength')?.value || '',
         opticalFieldOfView: document.getElementById('opticalFieldOfView')?.value || ''
     });
 }
@@ -7106,16 +6793,15 @@ function updateFilterSummary(filters) {
         secondaryCategory: '二级分类',
         probeDiameter: '探头直径',
         viewingAngle: '视向',
-        lightSource: '光源',
+        lightSource: '光源类型',
         screenSize: '主机屏幕',
         batteryLife: '待机时长',
         resolution: '像素',
-        guidance: '导向',
+        guidance: '镜头导向',
         cableMaterial: '管线材质',
-        fiberWorkingLength: '工作长度',
+        workingLength: '长度',
         fiberFieldOfView: '视野',
         focalLength: '焦距',
-        opticalWorkingLength: '工作长度',
         opticalFieldOfView: '视野'
     };
 

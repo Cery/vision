@@ -3,6 +3,7 @@ title: "微电子BGA焊点缺陷检测案例"
 date: 2025-07-28T10:00:00+08:00
 summary: "在微电子装配环节对BGA焊点进行空洞、桥连与虚焊识别，提升良率。"
 industry: "微电子制造"
+featured_image: "/images/cases/case-2.jpg"
 primary_category: ["检测相机"]
 application_field: ["微电子检测", "品质管控"]
 technology_tags: ["焊点检测", "空洞识别", "外观缺陷"]

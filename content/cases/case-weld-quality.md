@@ -19,7 +19,7 @@ keyMetrics:
   - label: "交付周期"
     value: "-7天"
     description: "交付周期缩短"
-featured_image: "/images/cases/case-3.jpg"
+featured_image: "/images/cases/case-2.jpg"
 primary_category: ["工业内窥镜"]
 application_field: ["汽车制造"]
 technology_tags: ["SPC统计控制", "高清成像"]

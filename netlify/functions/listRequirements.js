@@ -5,6 +5,12 @@
 const fs = require('fs');
 const path = require('path');
 
+// GitHub raw fallback (free, reads latest committed JSON)
+const GH_OWNER = process.env.GITHUB_OWNER || process.env.GH_OWNER || '';
+const GH_REPO = process.env.GITHUB_REPO || process.env.GH_REPO || '';
+const GH_BRANCH = process.env.GITHUB_BRANCH || 'main';
+const GH_REQUIREMENTS_PATH = process.env.GITHUB_REQUIREMENTS_PATH || 'data/requirements.json';
+
 exports.handler = async () => {
   const AIRTABLE_BASE = process.env.AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE;
   const AIRTABLE_KEY = process.env.AIRTABLE_API_KEY || process.env.AIRTABLE_KEY;
@@ -38,6 +44,22 @@ exports.handler = async () => {
       return { statusCode: 200, body: JSON.stringify(items) };
     } catch (e) {
       console.error('Airtable fetch failed, falling back to local file:', e.message);
+    }
+  }
+
+  // Fallback to GitHub raw JSON if configured
+  if (GH_OWNER && GH_REPO) {
+    try {
+      const rawUrl = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${GH_REQUIREMENTS_PATH}`;
+      const resp = await fetch(rawUrl);
+      if (resp.ok) {
+        const items = await resp.json();
+        return { statusCode: 200, body: JSON.stringify(items) };
+      } else {
+        console.error('GitHub raw fetch failed:', resp.status);
+      }
+    } catch (e) {
+      console.error('GitHub raw fallback failed:', e.message);
     }
   }
 

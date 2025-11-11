@@ -60,6 +60,26 @@
   "params": {"date":"2024-03-20T00:00:00Z","draft":false,"features":["高精度科研检测","多学科应用支持","实验过程监控","数据采集分析","定制化解决方案"],"icon":"fas fa-microscope","image":"/images/banners/category/application_general_pipe-2_original_v1.jpg","iscjklanguage":true,"key_technologies":["超高分辨率成像","多光谱分析技术","实时数据采集","图像处理算法","测量标定技术"],"lastmod":"2024-03-20T00:00:00Z","publishdate":"2024-03-20T00:00:00Z","scenarios":[{"description":"材料微观结构、性能测试和失效分析研究","icon":"fas fa-atom","title":"材料科学研究"},{"description":"生物组织结构观察和医疗器械研发支持","icon":"fas fa-dna","title":"生物医学研究"},{"description":"机械结构分析、疲劳试验和性能评估","icon":"fas fa-cog","title":"机械工程研究"},{"description":"环境监测、污染检测和生态研究支持","icon":"fas fa-leaf","title":"环境科学研究"}],"summary":"科研实验检测分析专业解决方案，支持科学研究和技术创新","title":"科学研究","weight":6}
 },
 {
+  "uri": "/news/industry/2025-industrial-ndt-trends/",
+  "title": "2025年工业内窥与无损检测技术发展趋势",
+  "content": "在智能制造背景下，工业内窥镜与无损检测技术持续迭代。高清成像、AI缺陷识别以及远程协作成为行业主流趋势。\n",
+  "summary": "聚焦高清成像、智能识别与远程协作三大趋势，推动工业检测智能化升级。",
+  "type": "news",
+  "section": "news",
+  "date": "2025-11-10",
+  "params": {"authors":["维森研究院"],"categories":["行业资讯"],"date":"2025-11-10T00:00:00Z","draft":false,"iscjklanguage":true,"lastmod":"2025-11-10T00:00:00Z","publishdate":"2025-11-10T00:00:00Z","summary":"聚焦高清成像、智能识别与远程协作三大趋势，推动工业检测智能化升级。","tags":["工业内窥","无损检测","智能识别"],"title":"2025年工业内窥与无损检测技术发展趋势"}
+},
+{
+  "uri": "/cases/case-pipeline-inspection/",
+  "title": "管道内腐蚀检测与维护优化案例",
+  "content": "项目背景 针对长输管道内部腐蚀与结垢问题，要求快速、准确的在线检测与维护决策支持。\n解决方案 部署可移动高清工业内窥镜系统与AI识别模块，配合巡检流程标准化与数据留存。\n实施效果 实现高效率巡检与低漏检率，并形成可复用的维护知识库。\n",
+  "summary": "通过工业内窥镜与AI识别技术进行长输管道内腐蚀检测，显著提升巡检效率与可靠性。",
+  "type": "cases",
+  "section": "cases",
+  "date": "2025-11-10",
+  "params": {"application_field":["石油化工"],"casetype":"success","categories":["应用案例"],"challenge":"管道内部环境复杂、传统检测效率低且漏检率高。","client":"华东管道公司","date":"2025-11-10T00:00:00Z","draft":false,"featured_image":"/images/cases/case-2.jpg","industry":"石油化工","iscjklanguage":true,"keymetrics":[{"description":"巡检效率提升50%","label":"效率提升","value":"50%"},{"description":"显著降低漏检率","label":"漏检率降低","value":"\u003c5%"}],"lastmod":"2025-11-10T00:00:00Z","primary_category":["工业内窥镜"],"projectduration":"2个月","publishdate":"2025-11-10T00:00:00Z","related_tech":["图像识别","数据分析"],"results":"巡检效率提升50%，漏检率下降至5%以下，维护成本显著降低。","solution":"采用高清工业内窥镜结合AI缺陷识别算法，实现快速定位腐蚀点并生成维护建议。","subcategories":["石油化工"],"summary":"通过工业内窥镜与AI识别技术进行长输管道内腐蚀检测，显著提升巡检效率与可靠性。","tags":["腐蚀检测","工业内窥镜","AI识别"],"technology_tags":["AI缺陷识别","高清成像"],"title":"管道内腐蚀检测与维护优化案例","views":0}
+},
+{
   "uri": "/cases/case-weld-quality/",
   "title": "焊缝质量缺陷检测与工艺优化案例",
   "content": "项目背景 焊接质量直接影响整车安全与可靠性，传统抽检难以发现内部缺陷。\n解决方案 引入内窥检测与SPC方法，依据缺陷根因调整焊接参数并建立检测标准。\n实施效果 返修率与交付周期显著改善，形成标准化质量控制流程。\n",
@@ -67,7 +87,7 @@
   "type": "cases",
   "section": "cases",
   "date": "2025-11-08",
-  "params": {"application_field":["汽车制造"],"casetype":"optimization","categories":["应用案例"],"challenge":"焊缝内部缺陷难以检测，返修率高影响交付周期。","client":"华南汽车零部件厂","date":"2025-11-08T00:00:00Z","draft":false,"featured_image":"/images/cases/case-3.jpg","industry":"汽车制造","iscjklanguage":true,"keymetrics":[{"description":"返修率显著降低","label":"返修率降低","value":"-9%"},{"description":"交付周期缩短","label":"交付周期","value":"-7天"}],"lastmod":"2025-11-08T00:00:00Z","primary_category":["工业内窥镜"],"projectduration":"1.5个月","publishdate":"2025-11-08T00:00:00Z","related_tech":["过程控制","图像分析"],"results":"返修率由12%降至3%，交付周期缩短一周。","solution":"采用高清工业内窥镜与统计过程控制（SPC），识别缺陷并优化焊接参数。","subcategories":["汽车制造"],"summary":"针对复杂焊缝开展内窥检测与工艺参数优化，显著降低返修率。","tags":["焊缝检测","质量控制","工艺优化"],"technology_tags":["SPC统计控制","高清成像"],"title":"焊缝质量缺陷检测与工艺优化案例","views":0}
+  "params": {"application_field":["汽车制造"],"casetype":"optimization","categories":["应用案例"],"challenge":"焊缝内部缺陷难以检测，返修率高影响交付周期。","client":"华南汽车零部件厂","date":"2025-11-08T00:00:00Z","draft":false,"featured_image":"/images/cases/case-2.jpg","industry":"汽车制造","iscjklanguage":true,"keymetrics":[{"description":"返修率显著降低","label":"返修率降低","value":"-9%"},{"description":"交付周期缩短","label":"交付周期","value":"-7天"}],"lastmod":"2025-11-08T00:00:00Z","primary_category":["工业内窥镜"],"projectduration":"1.5个月","publishdate":"2025-11-08T00:00:00Z","related_tech":["过程控制","图像分析"],"results":"返修率由12%降至3%，交付周期缩短一周。","solution":"采用高清工业内窥镜与统计过程控制（SPC），识别缺陷并优化焊接参数。","subcategories":["汽车制造"],"summary":"针对复杂焊缝开展内窥检测与工艺参数优化，显著降低返修率。","tags":["焊缝检测","质量控制","工艺优化"],"technology_tags":["SPC统计控制","高清成像"],"title":"焊缝质量缺陷检测与工艺优化案例","views":0}
 },
 {
   "uri": "/news/tech-article/2025-ai-defect-detection/",
@@ -97,7 +117,7 @@
   "type": "cases",
   "section": "cases",
   "date": "2025-11-03",
-  "params": {"application_field":["航空航天"],"casetype":"success","categories":["应用案例"],"challenge":"叶片内部结构复杂，传统检测难以触达并精确识别微裂纹。","client":"某航发研究所","date":"2025-11-03T00:00:00Z","draft":false,"featured_image":"/images/cases/case-3.jpg","industry":"航空航天","iscjklanguage":true,"keymetrics":[{"description":"微裂纹检测率显著提升","label":"检测率提升","value":"+40%"},{"description":"维护效率提升","label":"维护效率","value":"+25%"}],"lastmod":"2025-11-03T00:00:00Z","primary_category":["工业内窥镜"],"projectduration":"1个月","publishdate":"2025-11-03T00:00:00Z","related_tech":["光学成像","缺陷识别"],"results":"微裂纹检测率提升，维护计划优化，提升飞行安全性。","solution":"采用微型内窥镜与特殊光源系统结合，提高成像清晰度并增强缺陷识别能力。","subcategories":["航空航天"],"summary":"利用微型内窥系统检测叶片内部微裂纹与异物，提升航空器可靠性。","tags":["叶片检测","微裂纹","微型内窥"],"technology_tags":["特殊光源","微型内窥"],"title":"航空发动机叶片内部缺陷检测案例","views":0}
+  "params": {"application_field":["航空航天"],"casetype":"success","categories":["应用案例"],"challenge":"叶片内部结构复杂，传统检测难以触达并精确识别微裂纹。","client":"某航发研究所","date":"2025-11-03T00:00:00Z","draft":false,"featured_image":"/images/cases/case-2.jpg","industry":"航空航天","iscjklanguage":true,"keymetrics":[{"description":"微裂纹检测率显著提升","label":"检测率提升","value":"+40%"},{"description":"维护效率提升","label":"维护效率","value":"+25%"}],"lastmod":"2025-11-03T00:00:00Z","primary_category":["工业内窥镜"],"projectduration":"1个月","publishdate":"2025-11-03T00:00:00Z","related_tech":["光学成像","缺陷识别"],"results":"微裂纹检测率提升，维护计划优化，提升飞行安全性。","solution":"采用微型内窥镜与特殊光源系统结合，提高成像清晰度并增强缺陷识别能力。","subcategories":["航空航天"],"summary":"利用微型内窥系统检测叶片内部微裂纹与异物，提升航空器可靠性。","tags":["叶片检测","微裂纹","微型内窥"],"technology_tags":["特殊光源","微型内窥"],"title":"航空发动机叶片内部缺陷检测案例","views":0}
 },
 {
   "uri": "/cases/2025-microelectronics-bga-inspection/",
@@ -147,7 +167,7 @@
   "type": "cases",
   "section": "cases",
   "date": "2025-07-27",
-  "params": {"application_field":["汽车制造"],"application_scenario":["发动机检测","质量控制"],"author":"技术团队","client":"某知名汽车制造商","date":"2025-07-27T10:30:00+08:00","detection_object":"发动机缸体","draft":false,"equipment_used":"WS-K1010高清电子内窥镜","featured_image":"https://picsum.photos/800/400?random=engine-main","industry":"汽车制造业","iscjklanguage":true,"lastmod":"2025-07-27T10:30:00+08:00","main_image_caption":"汽车发动机缸体检测现场","primary_category":["电子内窥镜"],"publishdate":"2025-07-27T10:30:00+08:00","seo_description":"详细介绍使用高清电子内窥镜对汽车发动机缸体进行内部缺陷检测的完整案例，包括检测过程、发现问题及解决方案。","seo_keywords":["发动机检测","电子内窥镜","汽车制造","质量控制","缺陷检测"],"seo_title":"汽车发动机缸体内部缺陷检测案例 - 电子内窥镜应用","summary":"采用高清电子内窥镜对汽车发动机缸体进行全面检测，成功发现并定位内部缺陷，为客户节省大量维修成本","title":"汽车发动机缸体内部缺陷检测案例","views":156}
+  "params": {"application_field":["汽车制造"],"application_scenario":["发动机检测","质量控制"],"author":"技术团队","client":"某知名汽车制造商","date":"2025-07-27T10:30:00+08:00","detection_object":"发动机缸体","draft":false,"equipment_used":"WS-K1010高清电子内窥镜","featured_image":"/images/cases/case-2.jpg","industry":"汽车制造业","iscjklanguage":true,"lastmod":"2025-07-27T10:30:00+08:00","main_image_caption":"汽车发动机缸体检测现场","primary_category":["电子内窥镜"],"publishdate":"2025-07-27T10:30:00+08:00","seo_description":"详细介绍使用高清电子内窥镜对汽车发动机缸体进行内部缺陷检测的完整案例，包括检测过程、发现问题及解决方案。","seo_keywords":["发动机检测","电子内窥镜","汽车制造","质量控制","缺陷检测"],"seo_title":"汽车发动机缸体内部缺陷检测案例 - 电子内窥镜应用","summary":"采用高清电子内窥镜对汽车发动机缸体进行全面检测，成功发现并定位内部缺陷，为客户节省大量维修成本","title":"汽车发动机缸体内部缺陷检测案例","views":156}
 },
 {
   "uri": "/cases/2025-07-16-%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA%E5%8F%B6%E7%89%87%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/",
@@ -157,7 +177,7 @@
   "type": "cases",
   "section": "cases",
   "date": "2025-07-16",
-  "params": {"casetype":"success","categories":["应用案例"],"challenge":"传统检测方法效率低，难以发现微小内部缺陷","client":"某航空制造企业","date":"2025-07-16T10:00:00+08:00","draft":false,"industry":"航空航天","iscjklanguage":true,"keymetrics":[{"description":"检测效率提升60%","label":"效率提升","value":"60%"},{"description":"缺陷识别准确率达到99.5%","label":"准确率","value":"99.5%"}],"lastmod":"2025-07-16T10:00:00+08:00","projectduration":"3个月","publishdate":"2025-07-16T10:00:00+08:00","results":"检测效率提升60%，缺陷识别准确率达到99.5%","solution":"采用高分辨率工业内窥镜配合AI识别技术","subcategories":["航空航天"],"summary":"采用高精度工业内窥镜成功检测航空发动机叶片内部微小缺陷，提高检测效率60%，确保飞行安全。","tags":["航空发动机","叶片检测","无损检测","成功案例"],"title":"航空发动机叶片内部缺陷检测成功案例","views":0}
+  "params": {"casetype":"success","categories":["应用案例"],"challenge":"传统检测方法效率低，难以发现微小内部缺陷","client":"某航空制造企业","date":"2025-07-16T10:00:00+08:00","draft":false,"featured_image":"/images/cases/case-2.jpg","industry":"航空航天","iscjklanguage":true,"keymetrics":[{"description":"检测效率提升60%","label":"效率提升","value":"60%"},{"description":"缺陷识别准确率达到99.5%","label":"准确率","value":"99.5%"}],"lastmod":"2025-07-16T10:00:00+08:00","projectduration":"3个月","publishdate":"2025-07-16T10:00:00+08:00","results":"检测效率提升60%，缺陷识别准确率达到99.5%","solution":"采用高分辨率工业内窥镜配合AI识别技术","subcategories":["航空航天"],"summary":"采用高精度工业内窥镜成功检测航空发动机叶片内部微小缺陷，提高检测效率60%，确保飞行安全。","tags":["航空发动机","叶片检测","无损检测","成功案例"],"title":"航空发动机叶片内部缺陷检测成功案例","views":0}
 },
 {
   "uri": "/news/industry/2025-07-14-industrial-endoscope-market-growth/",

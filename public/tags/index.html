@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1321&amp;path=livereload" data-no-instant defer></script>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tags - 维森·视觉检测仪器</title>
@@ -26,25 +26,25 @@
 
 
 <meta property="og:type" content="article">
-<meta property="og:url" content="http://localhost:1321/tags/">
+<meta property="og:url" content="http://localhost:1313/tags/">
 <meta property="og:title" content="Tags - 维森视觉检测仪器">
 <meta property="og:description" content="专业的视觉检测设备信息与资讯发布平台，提供工业内窥镜、检测相机等产品信息，为制造业提供优质的检测解决方案">
-<meta property="og:image" content="http://localhost:1321/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta property="og:image" content="http://localhost:1313/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 <meta property="og:site_name" content="维森视觉检测仪器">
 <meta property="og:locale" content="zh_CN">
 
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="http://localhost:1321/tags/">
+<meta name="twitter:url" content="http://localhost:1313/tags/">
 <meta name="twitter:title" content="Tags - 维森视觉检测仪器">
 <meta name="twitter:description" content="专业的视觉检测设备信息与资讯发布平台，提供工业内窥镜、检测相机等产品信息，为制造业提供优质的检测解决方案">
-<meta name="twitter:image" content="http://localhost:1321/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta name="twitter:image" content="http://localhost:1313/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 
 
 
 
 
-<link rel="canonical" href="http://localhost:1321/tags/">
+<link rel="canonical" href="http://localhost:1313/tags/">
 
 
 <link rel="icon" type="image/svg+xml" href="../images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
@@ -65,6 +65,19 @@
 
 <link href="../css/custom.css" rel="stylesheet">
 <link href="../css/news-filters.css" rel="stylesheet">
+
+<script>
+  
+  (function() {
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var theme = params.get('theme');
+      if (theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+      }
+    } catch (e) {   }
+  })();
+</script>
 
 <style>
      
@@ -797,6 +810,16 @@
 
 <script>
     window.searchIndex = [{
+        "title": "\"2025年工业内窥与无损检测技术发展趋势\"",
+        "url": "\"/news/industry/2025-industrial-ndt-trends/\"",
+        "content": "\"在智能制造背景下，工业内窥镜与无损检测技术持续迭代。高清成像、AI缺陷识别以及远程协作成为行业主流趋势。\\n\"",
+        "type": "article"
+      },{
+        "title": "\"管道内腐蚀检测与维护优化案例\"",
+        "url": "\"/cases/case-pipeline-inspection/\"",
+        "content": "\"项目背景 针对长输管道内部腐蚀与结垢问题，要求快速、准确的在线检测与维护决策支持。\\n解决方案 部署可移动高清工业内窥镜系统与AI识别模块，配合巡检流程标准化与数据留存。\\n实施效果 实现高效率巡检与低漏检率，并形成可复用的维护知识库。\\n\"",
+        "type": "case"
+      },{
         "title": "\"焊缝质量缺陷检测与工艺优化案例\"",
         "url": "\"/cases/case-weld-quality/\"",
         "content": "\"项目背景 焊接质量直接影响整车安全与可靠性，传统抽检难以发现内部缺陷。\\n解决方案 引入内窥检测与SPC方法，依据缺陷根因调整焊接参数并建立检测标准。\\n实施效果 返修率与交付周期显著改善，形成标准化质量控制流程。\\n\"",
@@ -1088,22 +1111,22 @@
 <style>
  
 .top-bar {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
-    font-size: 0.875rem;
+    background-color: var(--bg-primary);
+    border-bottom: 1px solid var(--border-light);
+    font-size: var(--font-size-sm);
 }
 
 .top-bar-text {
-    color: #6c757d;
+    color: var(--text-secondary);
 }
 
 .top-bar-link {
-    color: #007bff;
+    color: var(--color-primary-600);
     text-decoration: none;
 }
 
 .top-bar-link:hover {
-    color: #0056b3;
+    color: var(--color-primary-700);
     text-decoration: underline;
 }
 
@@ -1126,7 +1149,7 @@
 }
 
 .nav-link:hover {
-    color: #007bff !important;
+    color: var(--color-primary-600) !important;
 }
 
  
@@ -1139,10 +1162,10 @@
     justify-content: center;
     padding: 0;
     border: 2px solid transparent;
-    background: linear-gradient(135deg, #007bff, #0056b3);
+    background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-700));
     color: white;
-    box-shadow: 0 3px 10px rgba(0, 123, 255, 0.3);
-    transition: all 0.3s ease;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-normal);
     position: relative;
     overflow: hidden;
 }
@@ -1165,9 +1188,9 @@
 }
 
 .mobile-search-btn:hover {
-    background: linear-gradient(135deg, #0056b3, #004085);
+    background: linear-gradient(135deg, var(--color-primary-700), var(--color-primary-800));
     transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+    box-shadow: var(--shadow-lg);
 }
 
 .mobile-search-btn:active {
@@ -1232,26 +1255,26 @@
 
     .navbar-toggler {
         padding: 0.5rem;
-        border: 2px solid #dee2e6;
+        border: 2px solid var(--border-light);
         border-radius: 50%;
         width: 46px;
         height: 46px;
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: #f8f9fa;
-        transition: all 0.3s ease;
+        background-color: var(--bg-secondary);
+        transition: var(--transition-normal);
     }
 
     .navbar-toggler:hover {
-        background-color: #e9ecef;
-        border-color: #adb5bd;
+        background-color: var(--bg-tertiary);
+        border-color: var(--border-medium);
         transform: scale(1.05);
     }
 
     .navbar-toggler:focus {
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem var(--color-primary-200);
+        border-color: var(--color-primary-600);
     }
 
     .navbar-toggler:active {
@@ -1297,6 +1320,22 @@
         
           <div class="w-100 mb4 nested-copy-line-height relative bg-white">
   <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">应用案例</span>
+    <h1 class="f3 near-black">
+      <a href="../cases/case-pipeline-inspection/" class="link black dim">
+        管道内腐蚀检测与维护优化案例
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      通过工业内窥镜与AI识别技术进行长输管道内腐蚀检测，显著提升巡检效率与可靠性。
+    </div>
+    <a href="../cases/case-pipeline-inspection/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+  </div>
+</div>
+
+        
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
     <span class="f6 db">技术文章</span>
     <h1 class="f3 near-black">
       <a href="../news/tech-article/2025-ai-defect-detection/" class="link black dim">
@@ -1313,10 +1352,49 @@
         
       
         <h2 class="f1">
+          <a href="../tags/%E8%85%90%E8%9A%80%E6%A3%80%E6%B5%8B/" class="link blue hover-black">
+            Tag: 腐蚀检测
+          </a>
+        </h2>
+        
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">应用案例</span>
+    <h1 class="f3 near-black">
+      <a href="../cases/case-pipeline-inspection/" class="link black dim">
+        管道内腐蚀检测与维护优化案例
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      通过工业内窥镜与AI识别技术进行长输管道内腐蚀检测，显著提升巡检效率与可靠性。
+    </div>
+    <a href="../cases/case-pipeline-inspection/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+  </div>
+</div>
+
+        
+      
+        <h2 class="f1">
           <a href="../tags/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5/" class="link blue hover-black">
             Tag: 工业内窥
           </a>
         </h2>
+        
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">行业资讯</span>
+    <h1 class="f3 near-black">
+      <a href="../news/industry/2025-industrial-ndt-trends/" class="link black dim">
+        2025年工业内窥与无损检测技术发展趋势
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      聚焦高清成像、智能识别与远程协作三大趋势，推动工业检测智能化升级。
+    </div>
+    <a href="../news/industry/2025-industrial-ndt-trends/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+  </div>
+</div>
+
         
           <div class="w-100 mb4 nested-copy-line-height relative bg-white">
   <div class="mb3 pa4 gray overflow-hidden bg-white">
@@ -1330,6 +1408,221 @@
       介绍将深度学习用于内窥图像缺陷识别的落地流程与效果评估。
     </div>
     <a href="../news/tech-article/2025-ai-defect-detection/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+  </div>
+</div>
+
+        
+      
+        <h2 class="f1">
+          <a href="../tags/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C/" class="link blue hover-black">
+            Tag: 工业内窥镜
+          </a>
+        </h2>
+        
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">应用案例</span>
+    <h1 class="f3 near-black">
+      <a href="../cases/case-pipeline-inspection/" class="link black dim">
+        管道内腐蚀检测与维护优化案例
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      通过工业内窥镜与AI识别技术进行长输管道内腐蚀检测，显著提升巡检效率与可靠性。
+    </div>
+    <a href="../cases/case-pipeline-inspection/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+  </div>
+</div>
+
+        
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">资讯中心</span>
+    <h1 class="f3 near-black">
+      <a href="../news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/" class="link black dim">
+        2025年工业内窥镜市场发展趋势分析报告
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      深度分析2025年全球工业内窥镜市场发展现状、技术趋势、竞争格局及未来发展机遇，为行业从业者提供权威的市场洞察
+    </div>
+    <a href="../news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+  </div>
+</div>
+
+        
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">行业资讯</span>
+    <h1 class="f3 near-black">
+      <a href="../news/industry/2025-07-14-industrial-endoscope-market-growth/" class="link black dim">
+        工业内窥镜市场迎来快速增长期 - 无损检测行业最新发展动态
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      本文深入分析了工业内窥镜在无损检测领域的最新发展趋势，探讨了相关技术创新、市场动态和未来发展方向，为行业从业者提供有价值的参考信息。
+    </div>
+    <a href="../news/industry/2025-07-14-industrial-endoscope-market-growth/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+  </div>
+</div>
+
+        
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">技术文章</span>
+    <h1 class="f3 near-black">
+      <a href="../news/tech-article/" class="link black dim">
+        技术文章
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      <h1 id="技术文章">技术文章</h1>
+<p>欢迎来到技术文章专区，这里汇集了工业内窥镜领域的专业技术内容，包括：</p>
+<h2 id="主要内容分类">主要内容分类</h2>
+<h3 id="-图像处理技术">🔬 图像处理技术</h3>
+<ul>
+<li>图像增强算法</li>
+<li>缺陷识别技术</li>
+<li>深度学习应用</li>
+<li>计算机视觉技术</li>
+</ul>
+<h3 id="-检测技术原理">🔧 检测技术原理</h3>
+<ul>
+<li>光学检测原理</li>
+<li>电子内窥镜技术</li>
+<li>光纤传输技术</li>
+<li>传感器技术</li>
+</ul>
+<h3 id="-数据分析">📊 数据分析</h3>
+<ul>
+<li>检测数据处理</li>
+<li>统计分析方法</li>
+<li>质量评估标准</li>
+<li>报告生成技术</li>
+</ul>
+<h3 id="-设备技术">🛠️ 设备技术</h3>
+<ul>
+<li>硬件设计原理</li>
+<li>软件架构设计</li>
+<li>系统集成技术</li>
+<li>性能优化方法</li>
+</ul>
+<h2 id="技术特色">技术特色</h2>
+<ul>
+<li><strong>专业深度</strong>：由行业专家撰写的深度技术文章</li>
+<li><strong>实用性强</strong>：结合实际应用场景的技术解决方案</li>
+<li><strong>前沿技术</strong>：跟踪行业最新技术发展趋势</li>
+<li><strong>案例分析</strong>：真实项目案例的技术分析</li>
+</ul>
+<h2 id="适合读者">适合读者</h2>
+<ul>
+<li>工业检测工程师</li>
+<li>图像处理算法工程师</li>
+<li>NDT技术人员</li>
+<li>质量控制专家</li>
+<li>技术研发人员</li>
+<li>高校相关专业师生</li>
+</ul>
+<hr>
+<p><em>持续更新中，为您提供最新的工业内窥镜技术资讯</em></p>
+    </div>
+    <a href="../news/tech-article/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+  </div>
+</div>
+
+        
+      
+        <h2 class="f1">
+          <a href="../tags/%E6%97%A0%E6%8D%9F%E6%A3%80%E6%B5%8B/" class="link blue hover-black">
+            Tag: 无损检测
+          </a>
+        </h2>
+        
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">行业资讯</span>
+    <h1 class="f3 near-black">
+      <a href="../news/industry/2025-industrial-ndt-trends/" class="link black dim">
+        2025年工业内窥与无损检测技术发展趋势
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      聚焦高清成像、智能识别与远程协作三大趋势，推动工业检测智能化升级。
+    </div>
+    <a href="../news/industry/2025-industrial-ndt-trends/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+  </div>
+</div>
+
+        
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">应用案例</span>
+    <h1 class="f3 near-black">
+      <a href="../cases/2025-07-16-%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA%E5%8F%B6%E7%89%87%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/" class="link black dim">
+        航空发动机叶片内部缺陷检测成功案例
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      采用高精度工业内窥镜成功检测航空发动机叶片内部微小缺陷，提高检测效率60%，确保飞行安全。
+    </div>
+    <a href="../cases/2025-07-16-%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA%E5%8F%B6%E7%89%87%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+  </div>
+</div>
+
+        
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">行业资讯</span>
+    <h1 class="f3 near-black">
+      <a href="../news/industry/2025-07-14-industrial-endoscope-market-growth/" class="link black dim">
+        工业内窥镜市场迎来快速增长期 - 无损检测行业最新发展动态
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      本文深入分析了工业内窥镜在无损检测领域的最新发展趋势，探讨了相关技术创新、市场动态和未来发展方向，为行业从业者提供有价值的参考信息。
+    </div>
+    <a href="../news/industry/2025-07-14-industrial-endoscope-market-growth/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+  </div>
+</div>
+
+        
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">深圳市微视光电科技有限公司产品</span>
+    <h1 class="f3 near-black">
+      <a href="../products/vs/" class="link black dim">
+        深圳市微视光电科技有限公司产品
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      <h1 id="深圳市微视光电科技有限公司">深圳市微视光电科技有限公司</h1>
+<h2 id="公司简介">公司简介</h2>
+<p>深圳市微视光电科技有限公司是一家专业从事光学检测设备研发、生产和销售的高新技术企业。公司专注于光纤内窥镜、光学内窥镜等工业检测设备的技术创新，为全球客户提供优质的无损检测解决方案。</p>
+    </div>
+    <a href="../products/vs/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
+  </div>
+</div>
+
+        
+      
+        <h2 class="f1">
+          <a href="../tags/%E6%99%BA%E8%83%BD%E8%AF%86%E5%88%AB/" class="link blue hover-black">
+            Tag: 智能识别
+          </a>
+        </h2>
+        
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">行业资讯</span>
+    <h1 class="f3 near-black">
+      <a href="../news/industry/2025-industrial-ndt-trends/" class="link black dim">
+        2025年工业内窥与无损检测技术发展趋势
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      聚焦高清成像、智能识别与远程协作三大趋势，推动工业检测智能化升级。
+    </div>
+    <a href="../news/industry/2025-industrial-ndt-trends/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 
@@ -1824,109 +2117,6 @@
         
       
         <h2 class="f1">
-          <a href="../tags/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C/" class="link blue hover-black">
-            Tag: 工业内窥镜
-          </a>
-        </h2>
-        
-          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
-  <div class="mb3 pa4 gray overflow-hidden bg-white">
-    <span class="f6 db">资讯中心</span>
-    <h1 class="f3 near-black">
-      <a href="../news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/" class="link black dim">
-        2025年工业内窥镜市场发展趋势分析报告
-      </a>
-    </h1>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      深度分析2025年全球工业内窥镜市场发展现状、技术趋势、竞争格局及未来发展机遇，为行业从业者提供权威的市场洞察
-    </div>
-    <a href="../news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
-  <div class="mb3 pa4 gray overflow-hidden bg-white">
-    <span class="f6 db">行业资讯</span>
-    <h1 class="f3 near-black">
-      <a href="../news/industry/2025-07-14-industrial-endoscope-market-growth/" class="link black dim">
-        工业内窥镜市场迎来快速增长期 - 无损检测行业最新发展动态
-      </a>
-    </h1>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      本文深入分析了工业内窥镜在无损检测领域的最新发展趋势，探讨了相关技术创新、市场动态和未来发展方向，为行业从业者提供有价值的参考信息。
-    </div>
-    <a href="../news/industry/2025-07-14-industrial-endoscope-market-growth/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
-  <div class="mb3 pa4 gray overflow-hidden bg-white">
-    <span class="f6 db">技术文章</span>
-    <h1 class="f3 near-black">
-      <a href="../news/tech-article/" class="link black dim">
-        技术文章
-      </a>
-    </h1>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      <h1 id="技术文章">技术文章</h1>
-<p>欢迎来到技术文章专区，这里汇集了工业内窥镜领域的专业技术内容，包括：</p>
-<h2 id="主要内容分类">主要内容分类</h2>
-<h3 id="-图像处理技术">🔬 图像处理技术</h3>
-<ul>
-<li>图像增强算法</li>
-<li>缺陷识别技术</li>
-<li>深度学习应用</li>
-<li>计算机视觉技术</li>
-</ul>
-<h3 id="-检测技术原理">🔧 检测技术原理</h3>
-<ul>
-<li>光学检测原理</li>
-<li>电子内窥镜技术</li>
-<li>光纤传输技术</li>
-<li>传感器技术</li>
-</ul>
-<h3 id="-数据分析">📊 数据分析</h3>
-<ul>
-<li>检测数据处理</li>
-<li>统计分析方法</li>
-<li>质量评估标准</li>
-<li>报告生成技术</li>
-</ul>
-<h3 id="-设备技术">🛠️ 设备技术</h3>
-<ul>
-<li>硬件设计原理</li>
-<li>软件架构设计</li>
-<li>系统集成技术</li>
-<li>性能优化方法</li>
-</ul>
-<h2 id="技术特色">技术特色</h2>
-<ul>
-<li><strong>专业深度</strong>：由行业专家撰写的深度技术文章</li>
-<li><strong>实用性强</strong>：结合实际应用场景的技术解决方案</li>
-<li><strong>前沿技术</strong>：跟踪行业最新技术发展趋势</li>
-<li><strong>案例分析</strong>：真实项目案例的技术分析</li>
-</ul>
-<h2 id="适合读者">适合读者</h2>
-<ul>
-<li>工业检测工程师</li>
-<li>图像处理算法工程师</li>
-<li>NDT技术人员</li>
-<li>质量控制专家</li>
-<li>技术研发人员</li>
-<li>高校相关专业师生</li>
-</ul>
-<hr>
-<p><em>持续更新中，为您提供最新的工业内窥镜技术资讯</em></p>
-    </div>
-    <a href="../news/tech-article/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-      
-        <h2 class="f1">
           <a href="../tags/%E7%AB%9E%E4%BA%89%E6%A0%BC%E5%B1%80/" class="link blue hover-black">
             Tag: 竞争格局
           </a>
@@ -2263,63 +2453,6 @@
       采用高精度工业内窥镜成功检测航空发动机叶片内部微小缺陷，提高检测效率60%，确保飞行安全。
     </div>
     <a href="../cases/2025-07-16-%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA%E5%8F%B6%E7%89%87%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-      
-        <h2 class="f1">
-          <a href="../tags/%E6%97%A0%E6%8D%9F%E6%A3%80%E6%B5%8B/" class="link blue hover-black">
-            Tag: 无损检测
-          </a>
-        </h2>
-        
-          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
-  <div class="mb3 pa4 gray overflow-hidden bg-white">
-    <span class="f6 db">应用案例</span>
-    <h1 class="f3 near-black">
-      <a href="../cases/2025-07-16-%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA%E5%8F%B6%E7%89%87%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/" class="link black dim">
-        航空发动机叶片内部缺陷检测成功案例
-      </a>
-    </h1>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      采用高精度工业内窥镜成功检测航空发动机叶片内部微小缺陷，提高检测效率60%，确保飞行安全。
-    </div>
-    <a href="../cases/2025-07-16-%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA%E5%8F%B6%E7%89%87%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
-  <div class="mb3 pa4 gray overflow-hidden bg-white">
-    <span class="f6 db">行业资讯</span>
-    <h1 class="f3 near-black">
-      <a href="../news/industry/2025-07-14-industrial-endoscope-market-growth/" class="link black dim">
-        工业内窥镜市场迎来快速增长期 - 无损检测行业最新发展动态
-      </a>
-    </h1>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      本文深入分析了工业内窥镜在无损检测领域的最新发展趋势，探讨了相关技术创新、市场动态和未来发展方向，为行业从业者提供有价值的参考信息。
-    </div>
-    <a href="../news/industry/2025-07-14-industrial-endoscope-market-growth/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
-  </div>
-</div>
-
-        
-          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
-  <div class="mb3 pa4 gray overflow-hidden bg-white">
-    <span class="f6 db">深圳市微视光电科技有限公司产品</span>
-    <h1 class="f3 near-black">
-      <a href="../products/vs/" class="link black dim">
-        深圳市微视光电科技有限公司产品
-      </a>
-    </h1>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      <h1 id="深圳市微视光电科技有限公司">深圳市微视光电科技有限公司</h1>
-<h2 id="公司简介">公司简介</h2>
-<p>深圳市微视光电科技有限公司是一家专业从事光学检测设备研发、生产和销售的高新技术企业。公司专注于光纤内窥镜、光学内窥镜等工业检测设备的技术创新，为全球客户提供优质的无损检测解决方案。</p>
-    </div>
-    <a href="../products/vs/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1"></a>
   </div>
 </div>
 

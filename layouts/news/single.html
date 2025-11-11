@@ -3,13 +3,14 @@
     {{ partial "breadcrumbs.html" . }}
 
     <!-- 文章类型判断和样式设置 -->
-    {{ $articleType := .Params.category }}
-    {{ $isIndustry := eq $articleType "industry" }}
-    {{ $isTechnical := eq $articleType "technical" }}
+    {{ $categories := .Params.categories | default (slice) }}
+    {{ $isIndustry := in $categories "行业资讯" }}
+    {{ $isTechnical := in $categories "技术文章" }}
+    {{ $isExhibition := in $categories "展会资讯" }}
 
     <article class="news-article {{ if $isTechnical }}technical-article{{ else if $isIndustry }}industry-article{{ end }}">
         <!-- 文章头部区域 -->
-        <div class="article-header {{ if $isTechnical }}bg-gradient-technical{{ else if $isIndustry }}bg-gradient-industry{{ else }}bg-gradient-default{{ end }} text-white py-5 mb-4 rounded">
+        <div class="article-header {{ if $isTechnical }}bg-gradient-technical{{ else if or $isIndustry $isExhibition }}bg-gradient-industry{{ else }}bg-gradient-default{{ end }} text-white py-5 mb-4 rounded">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 mx-auto text-center">
@@ -129,7 +130,7 @@
                     <div class="sidebar sticky-sidebar">
                         <!-- 文章信息卡片 -->
                         <div class="article-info-card bg-white rounded shadow-sm mb-4">
-                            <div class="card-header {{ if $isTechnical }}bg-gradient-technical{{ else if $isIndustry }}bg-gradient-industry{{ else }}bg-primary{{ end }} text-white py-3">
+                            <div class="card-header {{ if $isTechnical }}bg-gradient-technical{{ else if $isIndustry }}bg-gradient-industry{{ else }}bg-gradient-default{{ end }} text-white py-3">
                                 <h5 class="mb-0">
                                     <i class="fas fa-info-circle me-2"></i>文章信息
                                 </h5>
@@ -225,19 +226,19 @@
 
 /* 文章头部渐变背景 */
 .bg-gradient-technical {
-    background: linear-gradient(135deg, #2e7d32 0%, #388e3c 50%, #4caf50 100%);
+    background: linear-gradient(135deg, var(--color-success) 0%, color-mix(in oklab, var(--color-success) 70%, white 30%) 50%, color-mix(in oklab, var(--color-success) 85%, black 15%) 100%);
     position: relative;
     overflow: hidden;
 }
 
 .bg-gradient-industry {
-    background: linear-gradient(135deg, #1976d2 0%, #1e88e5 50%, #2196f3 100%);
+    background: linear-gradient(135deg, var(--color-primary-600) 0%, var(--color-primary-500) 50%, var(--color-primary-400) 100%);
     position: relative;
     overflow: hidden;
 }
 
 .bg-gradient-default {
-    background: linear-gradient(135deg, #424242 0%, #616161 50%, #757575 100%);
+    background: linear-gradient(135deg, var(--color-gray-700) 0%, var(--color-gray-600) 50%, var(--color-gray-500) 100%);
     position: relative;
     overflow: hidden;
 }
@@ -250,9 +251,26 @@
     right: 0;
     bottom: 0;
     background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M 8 0 L 0 0 0 8" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-    opacity: 0.3;
+    opacity: 0.15;
 }
 
+.article-header {
+    color: var(--text-on-primary, #fff);
+}
+
+.article-header .article-title,
+.article-header .article-summary,
+.article-header .article-meta {
+    color: inherit !important;
+}
+
+/* 头部徽章在渐变背景上的可读性优化 */
+.article-header .badge.bg-light,
+.article-header .badge.bg-white {
+    background-color: rgba(255,255,255,0.18) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255,255,255,0.35);
+}
 .article-header .container {
     position: relative;
     z-index: 1;
@@ -296,34 +314,34 @@
 
 /* 文章内容样式 */
 .article-content {
-    border: 1px solid #e9ecef;
+    border: 1px solid var(--border-light);
 }
 
 .content-body {
     font-size: 16px;
     line-height: 1.8;
-    color: #333;
+    color: var(--text-primary);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .content-body p {
     margin-bottom: 1.5rem;
     text-align: justify;
-    color: #212121;
+    color: var(--text-primary);
 }
 
 .content-body h2 {
-    color: #1976d2;
+    color: var(--color-primary-600);
     font-weight: 600;
     font-size: 1.5rem;
     margin-top: 2.5rem;
     margin-bottom: 1rem;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid #e3f2fd;
+    border-bottom: 2px solid var(--color-primary-50);
 }
 
 .content-body h3 {
-    color: #424242;
+    color: var(--text-primary);
     font-weight: 600;
     font-size: 1.25rem;
     margin-top: 2rem;
@@ -331,7 +349,7 @@
 }
 
 .content-body h4 {
-    color: #616161;
+    color: var(--text-secondary);
     font-weight: 600;
     font-size: 1.1rem;
     margin-top: 1.5rem;
@@ -352,8 +370,8 @@
 }
 
 .content-body blockquote {
-    border-left: 4px solid #1976d2;
-    background: #f8f9fa;
+    border-left: 4px solid var(--color-primary-600);
+    background: var(--bg-secondary);
     padding: 1rem 1.5rem;
     margin: 1.5rem 0;
     border-radius: 0 8px 8px 0;
@@ -372,8 +390,8 @@
 
 /* 技术文章特有样式 */
 .technical-content pre {
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
     border-radius: 8px;
     padding: 1rem;
     overflow-x: auto;
@@ -381,28 +399,28 @@
 }
 
 .technical-content code {
-    background: #f1f3f4;
+    background: var(--bg-tertiary);
     padding: 0.2rem 0.4rem;
     border-radius: 4px;
     font-size: 0.9em;
-    color: #d63384;
+    color: var(--color-primary-700);
 }
 
 .tech-toc {
-    border-left: 4px solid #2e7d32;
+    border-left: 4px solid var(--color-success);
 }
 
 .tech-highlights {
-    border-left: 4px solid #ff9800;
+    border-left: 4px solid var(--color-warning);
 }
 
 /* 行业资讯特有样式 */
 .industry-content .highlight-box {
-    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+    background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-primary-100) 100%);
     border-radius: 8px;
     padding: 1.5rem;
     margin: 2rem 0;
-    border-left: 4px solid #1976d2;
+    border-left: 4px solid var(--color-primary-600);
 }
 
 /* 侧边栏样式 */
@@ -413,7 +431,7 @@
 
 .article-info-card,
 .related-articles-card {
-    border: 1px solid #e9ecef;
+    border: 1px solid var(--border-light);
     overflow: hidden;
 }
 
@@ -426,7 +444,7 @@
 }
 
 .info-item:hover {
-    background-color: #f8f9fa;
+    background-color: var(--bg-secondary);
     border-radius: 6px;
     padding: 0.5rem;
     margin: -0.5rem;
@@ -439,7 +457,7 @@
 
 .info-value {
     font-size: 1rem;
-    color: #212529;
+    color: var(--text-primary);
 }
 
 /* 相关文章样式 */
@@ -448,7 +466,7 @@
 }
 
 .related-article-item:hover {
-    background-color: #f8f9fa;
+    background-color: var(--bg-secondary);
 }
 
 .related-article-item:last-child {
@@ -478,7 +496,7 @@
 }
 
 .related-title a:hover {
-    color: #1976d2 !important;
+    color: var(--color-primary-600) !important;
 }
 
 .related-meta {
@@ -487,7 +505,7 @@
 
 /* 浏览次数样式 */
 #page-views {
-    color: #fff;
+    color: var(--text-on-primary, #fff);
     font-weight: 500;
     transition: color 0.15s ease-in-out;
 }
@@ -586,14 +604,14 @@
 
 .related-article h6 a:hover,
 .popular-article h6 a:hover {
-    color: #1976d2;
+    color: var(--color-primary-600);
     text-decoration: none;
 }
 
 .related-article small,
 .popular-article small {
     font-size: 12px;
-    color: #9e9e9e;
+    color: var(--text-secondary);
 }
 </style>
 

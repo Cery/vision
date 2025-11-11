@@ -14,16 +14,16 @@
       <!-- 密码（明文，初期阶段保存在 Netlify 表单；后期在函数中哈希存储） -->
       <input type="hidden" id="view-password" name="viewPassword" value="">
 
-      <!-- 需求简述/标题 -->
+      <!-- 发布标题 -->
       <div class="mb-3">
-        <label class="form-label"><i class="fa-solid fa-heading me-1 text-secondary"></i>需求简述/标题</label>
-        <input type="text" name="Title" class="form-control" placeholder="例如：某公司电子内窥镜采购需求" required>
+        <label class="form-label"><i class="fa-solid fa-heading me-1 text-secondary"></i>发布标题</label>
+        <input type="text" name="Title" class="form-control" placeholder="发动机缸盖检查电子内窥镜采购需求" required>
       </div>
 
 
-      <!-- 产品类型 -->
+      <!-- 产品分类（原一级分类） -->
       <div class="mb-3">
-        <label class="form-label"><i class="fa-solid fa-tags me-1 text-secondary"></i>一级分类</label>
+        <label class="form-label"><i class="fa-solid fa-tags me-1 text-secondary"></i>产品分类</label>
         <select name="primaryCategory" id="primaryCategory" class="form-select" required onchange="updateCategoryParams()">
           <option value="电子内窥镜">电子内窥镜</option>
           <option value="光纤内窥镜">光纤内窥镜</option>
@@ -31,7 +31,215 @@
         </select>
       </div>
 
-      <!-- 发布方信息（移至产品信息下方，集中展示） -->
+      <!-- 二级分类项不展示（按需求） -->
+
+      <!-- 分类参数选项 -->
+      <div id="categoryParams" class="mb-3">
+        <!-- 电子内窥镜 参数 -->
+        <div id="params-electronic" class="card mb-3">
+          <div class="card-header d-flex align-items-center gap-2">
+            <i class="fa-solid fa-camera text-primary"></i>
+            <strong>电子内窥镜参数</strong>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">主机屏幕</label>
+                <input type="text" class="form-control" name="param_screen_size" placeholder="如 7寸 / 10寸">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">探头直径（mm）</label>
+                <input type="text" class="form-control" name="param_probe_diameter" placeholder="如 3.8 / 6.0">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">长度（mm）</label>
+                <input type="text" class="form-control" name="param_working_length" placeholder="如 1000 / 1500 / 3000">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">像素</label>
+                <select class="form-select" name="param_resolution">
+                  <option value="">请选择</option>
+                  <option>16万</option>
+                  <option>30万</option>
+                  <option>52万</option>
+                  <option>100万</option>
+                  <option>200万</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">视向</label>
+                <select class="form-select" name="param_viewing_direction">
+                  <option value="">请选择</option>
+                  <option>0°直视</option>
+                  <option>30°斜视</option>
+                  <option>70°斜视</option>
+                  <option>90°侧视</option>
+                  <option>直侧一体</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">视野</label>
+                <input type="text" class="form-control" name="param_field_of_view" placeholder="如 70 / 90 / 120">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">光源类型</label>
+                <select class="form-select" name="param_light_source">
+                  <option value="">请选择</option>
+                  <option>前置LED灯</option>
+                  <option>后置LED光纤传导</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">镜头导向</label>
+                <select class="form-select" name="param_guidance">
+                  <option value="">请选择</option>
+                  <option>无导向</option>
+                  <option>180°两方向</option>
+                  <option>360°四方向</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 光纤内窥镜 参数 -->
+        <div id="params-fiber" class="card mb-3" style="display:none;">
+          <div class="card-header d-flex align-items-center gap-2">
+            <i class="fa-solid fa-lightbulb text-warning"></i>
+            <strong>光纤内窥镜参数</strong>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">探头直径（mm）</label>
+                <input type="text" class="form-control" name="param_probe_diameter" placeholder="如 2.8 / 4.0 / 6.0">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">长度（mm）</label>
+                <input type="text" class="form-control" name="param_working_length" placeholder="如 300 / 1000">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">视向</label>
+                <select class="form-select" name="param_viewing_direction">
+                  <option value="">请选择</option>
+                  <option>0°直视</option>
+                  <option>30°斜视</option>
+                  <option>70°斜视</option>
+                  <option>90°侧视</option>
+                  <option>直侧一体</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">视野</label>
+                <input type="text" class="form-control" name="param_field_of_view" placeholder="如 70 / 90 / 120">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">镜头导向</label>
+                <select class="form-select" name="param_guidance">
+                  <option value="">请选择</option>
+                  <option>无导向</option>
+                  <option>180°两方向</option>
+                  <option>360°四方向</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 光学内窥镜 参数 -->
+        <div id="params-optic" class="card mb-3" style="display:none;">
+          <div class="card-header d-flex align-items-center gap-2">
+            <i class="fa-solid fa-microscope text-success"></i>
+            <strong>光学内窥镜参数</strong>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">探头直径（mm）</label>
+                <input type="text" class="form-control" name="param_probe_diameter" placeholder="如 2.8 / 4.0 / 6.0">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">长度（mm）</label>
+                <input type="text" class="form-control" name="param_working_length" placeholder="如 300 / 500 / 1000">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">视向</label>
+                <select class="form-select" name="param_viewing_direction">
+                  <option value="">请选择</option>
+                  <option>0°直视</option>
+                  <option>30°斜视</option>
+                  <option>70°斜视</option>
+                  <option>90°侧视</option>
+                  <option>直侧一体</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">视野</label>
+                <input type="text" class="form-control" name="param_field_of_view" placeholder="如 60 / 90 / 110">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 详细说明 / 参数 -->
+      <div class="mb-3">
+        <label class="form-label"><i class="fa-solid fa-list-check me-1 text-secondary"></i>详细说明 / 参数</label>
+        <textarea name="parameters" id="parameters" class="form-control" rows="4" placeholder="可留空，系统会根据上方选项生成概要"></textarea>
+      </div>
+
+      <!-- 可选补充（折叠） -->
+      <div class="card mb-3">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center gap-2">
+            <i class="fa-solid fa-plus text-secondary"></i>
+            <strong>可选补充</strong>
+          </div>
+          <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#optionalSupplement" aria-expanded="false" aria-controls="optionalSupplement">展开/收起</button>
+        </div>
+        <div id="optionalSupplement" class="collapse">
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-12">
+                <label class="form-label">工件名称/描述</label>
+                <input type="text" class="form-control" name="param_workpiece_name" placeholder="如 发动机缸盖、材质、关键特征">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">插入孔径（mm）</label>
+                <input type="text" class="form-control" name="param_insert_diameter" placeholder="如 6 / 8 / 10">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">插入深度（mm）</label>
+                <input type="text" class="form-control" name="param_insert_depth" placeholder="如 100 / 300 / 500">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 预算与采购计划 -->
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+          <label class="form-label"><i class="fa-solid fa-coins me-1 text-secondary"></i>预算范围</label>
+          <select name="budgetRange" class="form-select" required>
+            <option value="0-5千">0-5千</option>
+            <option value="5千-5万">5千-5万</option>
+            <option value="5万-10万">5万-10万</option>
+            <option value="10万+">10万+</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label"><i class="fa-solid fa-clipboard-list me-1 text-secondary"></i>采购计划</label>
+          <select name="procurementPlan" class="form-select" required>
+            <option value="紧急采购">紧急采购</option>
+            <option value="3个月内">3个月内</option>
+            <option value="6个月内">6个月内</option>
+            <option value="市场调研">市场调研</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 需求详细说明（已移除重复项，保留上方“详细说明/参数”） -->
+
+      <!-- 发布方信息（移动到底部发布方式上方） -->
       <div class="card mb-3">
         <div class="card-header d-flex align-items-center gap-2">
           <i class="fa-solid fa-id-card text-secondary"></i>
@@ -55,140 +263,29 @@
               <label class="form-label"><i class="fa-solid fa-envelope me-1 text-secondary"></i>邮箱</label>
               <input type="email" name="contactEmail" class="form-control" placeholder="可选">
             </div>
-          </div>
-        </div>
-      </div>
-      <!-- 二级分类项不展示（按需求） -->
-
-      <!-- 分类参数选项 -->
-      <div id="categoryParams" class="mb-3">
-        <!-- 电子内窥镜 参数 -->
-        <div id="params-electronic" class="card mb-3">
-          <div class="card-header d-flex align-items-center gap-2">
-            <i class="fa-solid fa-camera text-primary"></i>
-            <strong>电子内窥镜参数</strong>
-          </div>
-          <div class="card-body">
-            <div class="row g-3">
-              <div class="col-md-6">
-                <label class="form-label">探头直径（mm）</label>
-                <input type="text" class="form-control" name="param_probe_diameter" placeholder="如 3.8 / 6.0">
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">分辨率</label>
-                <input type="text" class="form-control" name="param_resolution" placeholder="如 1920x1080 / 1280x720">
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">插入管长度（m）</label>
-                <input type="text" class="form-control" name="param_insertion_length" placeholder="如 1.5 / 3 / 5">
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">照明方式</label>
-                <input type="text" class="form-control" name="param_illumination" placeholder="如 LED / 光纤导光">
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">防水等级</label>
-                <input type="text" class="form-control" name="param_ip_rating" placeholder="如 IP67">
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- 光纤内窥镜 参数 -->
-        <div id="params-fiber" class="card mb-3" style="display:none;">
-          <div class="card-header d-flex align-items-center gap-2">
-            <i class="fa-solid fa-lightbulb text-warning"></i>
-            <strong>光纤内窥镜参数</strong>
-          </div>
-          <div class="card-body">
-            <div class="row g-3">
-              <div class="col-md-6">
-                <label class="form-label">镜体外径（mm）</label>
-                <input type="text" class="form-control" name="param_body_od" placeholder="如 2.8 / 4.0 / 6.0">
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">视场角（°）</label>
-                <input type="text" class="form-control" name="param_fov" placeholder="如 70 / 90 / 120">
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">工作长度（mm）</label>
-                <input type="text" class="form-control" name="param_work_length" placeholder="如 300 / 1000">
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">照明方式</label>
-                <input type="text" class="form-control" name="param_illumination_fiber" placeholder="如 卤素 / LED">
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- 光学内窥镜 参数 -->
-        <div id="params-optic" class="card mb-3" style="display:none;">
-          <div class="card-header d-flex align-items-center gap-2">
-            <i class="fa-solid fa-microscope text-success"></i>
-            <strong>光学内窥镜参数</strong>
-          </div>
-          <div class="card-body">
-            <div class="row g-3">
-              <div class="col-md-6">
-                <label class="form-label">镜头类型</label>
-                <input type="text" class="form-control" name="param_lens_type" placeholder="如 直视 / 侧视 / 变焦">
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">视场角（°）</label>
-                <input type="text" class="form-control" name="param_optic_fov" placeholder="如 60 / 90 / 110">
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">焦距范围（mm）</label>
-                <input type="text" class="form-control" name="param_focus_range" placeholder="如 5-50">
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">工作长度（mm）</label>
-                <input type="text" class="form-control" name="param_optic_work_length" placeholder="如 300 / 500 / 1000">
-              </div>
+            <div class="col-md-6">
+              <label class="form-label"><i class="fa-solid fa-users-gear me-1 text-secondary"></i>需求部门</label>
+              <input type="text" name="contactDepartment" class="form-control" placeholder="可选">
             </div>
           </div>
         </div>
       </div>
 
-      <!-- 详细说明 / 参数（可序列化为 JSON） -->
-      <div class="mb-3">
-        <label class="form-label"><i class="fa-solid fa-list-check me-1 text-secondary"></i>详细说明 / 参数（JSON 或结构化描述）</label>
-        <textarea name="parameters" id="parameters" class="form-control" rows="4" placeholder="可留空，系统会根据上方选项生成概要"></textarea>
-      </div>
-
-      <!-- 公开联系方式（仅验证查看密码后显示） -->
-      <div class="form-check mb-3">
-        <input type="checkbox" name="contactPublic" class="form-check-input" id="contactPublic">
-        <label class="form-check-label" for="contactPublic">公开联系方式（供应商通过查看密码能看到，平常不可见）</label>
-      </div>
-
-      <!-- 预算与截止时间 -->
-      <div class="row g-3 mb-3">
-        <div class="col-md-6">
-          <label class="form-label"><i class="fa-solid fa-coins me-1 text-secondary"></i>预算范围</label>
-          <input type="text" name="budgetRange" class="form-control" placeholder="如 5k-20k">
-        </div>
-        <div class="col-md-6">
-          <label class="form-label"><i class="fa-solid fa-calendar-day me-1 text-secondary"></i>截止日期</label>
-          <input type="date" name="deadline" class="form-control">
-        </div>
-      </div>
-
-      <!-- 需求详细说明（已移除重复项，保留上方“详细说明/参数”） -->
-
-      <!-- 发布方式（移至底部，与提交整合） -->
+      <!-- 发布方式（底部） -->
       <div class="mb-3 pt-3 border-top">
         <label class="form-label d-block"><i class="fa-solid fa-globe me-1 text-secondary"></i>发布方式</label>
-        <div class="btn-group" role="group" aria-label="发布方式">
+        <div class="btn-group publish-mode-group d-flex justify-content-center" role="group" aria-label="发布方式">
           <input type="radio" class="btn-check" name="publishMode" id="publishPublic" autocomplete="off" checked>
           <label class="btn btn-outline-success" for="publishPublic" onclick="document.getElementById('publish-status').value='公开'">
-            <i class="fa-solid fa-unlock me-1"></i> 公开联系方式（需查看密码）
+            <i class="fa-solid fa-unlock me-1"></i> 公开联系方式
           </label>
           <input type="radio" class="btn-check" name="publishMode" id="publishQuote" autocomplete="off">
           <label class="btn btn-outline-warning" for="publishQuote" onclick="document.getElementById('publish-status').value='在线报价'">
             <i class="fa-solid fa-handshake me-1"></i> 接受在线报价
           </label>
         </div>
-        <div class="form-text">公开联系方式：供应商输入查看密码后可见；在线报价：联系方式不公开，供应商提交方案即可。</div>
+        <div class="form-text">公开联系方式：供应商输入查看密码后可见。</div>
+        <div class="form-text">接受在线报价：联系方式不公开，供应商提交方案即可。</div>
       </div>
 
       <!-- 编号与密码预览 -->
@@ -213,6 +310,16 @@
 </div>
 
 <script>
+// 统一 API 基础地址（本地与线上）
+(function(){
+  const DEFAULT_API_BASE_PROD = 'https://api.visndt.com';
+  const DEFAULT_API_BASE_DEV = 'http://127.0.0.1:8787';
+  const host = location.hostname;
+  const isLocal = host === 'localhost' || host === '127.0.0.1';
+  const override = localStorage.getItem('API_BASE');
+  window.API_BASE = window.API_BASE || override || (isLocal ? DEFAULT_API_BASE_DEV : DEFAULT_API_BASE_PROD);
+  window.apiFetch = window.apiFetch || ((path, opts={}) => fetch(`${window.API_BASE}${path}`, opts));
+})();
 // 生成简单唯一ID（可替换为更复杂算法）
 function generateRequirementID() {
   const date = new Date();
@@ -243,10 +350,12 @@ function buildParametersSummary() {
   const visibleCards = Array.from(container.querySelectorAll('.card')).filter(c => c.style.display !== 'none');
   const parts = [];
   visibleCards.forEach(card => {
-    const inputs = card.querySelectorAll('input');
-    inputs.forEach(inp => {
-      const label = inp.closest('.col-md-6')?.querySelector('.form-label')?.textContent?.trim() || inp.name;
-      const val = (inp.value || '').trim();
+    const fields = card.querySelectorAll('input, select');
+    fields.forEach(field => {
+      const label = field.closest('.col-md-6')?.querySelector('.form-label')?.textContent?.trim() || field.name;
+      const val = (field.tagName === 'SELECT')
+        ? (field.options[field.selectedIndex]?.text || '').trim()
+        : (field.value || '').trim();
       if (val) parts.push(`${label}: ${val}`);
     });
   });
@@ -282,10 +391,10 @@ function generateAndSubmitRequirement() {
     contactPhone: fd.get('contactPhone') || '',
     contactCompany: fd.get('contactCompany') || '',
     contactEmail: fd.get('contactEmail') || '',
+    contactDepartment: fd.get('contactDepartment') || '',
     Title: fd.get('Title') || '',
     primaryCategory: fd.get('primaryCategory') || '',
     Status: fd.get('Status') || '公开',
-    ContactPublic: !!fd.get('contactPublic'),
     BudgetRange: fd.get('budgetRange') || '',
     PublicPreview: (function(){
       const title = (fd.get('Title') || '').toString();
@@ -296,28 +405,51 @@ function generateAndSubmitRequirement() {
     })(),
     Parameters: (function(){
       const raw = (fd.get('parameters') || '').toString();
-      const fields = {};
-      form.querySelectorAll('input[name^="param_"]').forEach(inp => {
-        const key = inp.name.replace(/^param_/, '');
-        const val = (inp.value || '').trim();
-        if (val) fields[key] = val;
+      const map = {
+        probe_diameter: 'ProbeDiameter',
+        resolution: 'Resolution',
+        working_length: 'WorkingLength',
+        light_source: 'LightSource',
+        ip_rating: 'IPRating',
+        screen_size: 'ScreenSize',
+        viewing_direction: 'ViewingDirection',
+        guidance: 'Guidance',
+        field_of_view: 'FieldOfView',
+        lens_type: 'LensType',
+        focal_length: 'FocalLength',
+        insert_diameter: 'InsertHoleDiameter',
+        insert_depth: 'InsertDepth',
+        workpiece_name: 'WorkpieceName'
+      };
+      const params = {};
+      form.querySelectorAll('input[name^="param_"], select[name^="param_"]').forEach(field => {
+        const rawKey = field.name.replace(/^param_/, '');
+        const val = (field.tagName === 'SELECT')
+          ? (field.options[field.selectedIndex]?.value || '').trim()
+          : (field.value || '').trim();
+        if (!val) return;
+        const unifiedKey = map[rawKey] || rawKey;
+        params[unifiedKey] = val;
       });
-      // 追加截止日期到参数字段，便于后端统一存储
-      const deadline = (fd.get('deadline') || '').toString().trim();
-      if (deadline) fields['deadline'] = deadline;
-      let jsonPart = {};
+      const plan = (fd.get('procurementPlan') || '').toString().trim();
+      if (plan) params['ProcurementPlan'] = plan;
       if (raw) {
-        try { jsonPart = JSON.parse(raw); } catch { jsonPart = { text: raw }; }
+        try {
+          const parsed = JSON.parse(raw);
+          Object.assign(params, parsed);
+        } catch {
+          params['text'] = raw;
+        }
       }
-      return { ...jsonPart, fields };
+      return params;
     })(),
   };
 
   const btn = form.querySelector('button.btn-primary');
   const origText = btn?.innerHTML;
   if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> 发布中…'; }
-
-  fetch('/.netlify/functions/createRequirement', {
+  
+  window.apiFetch('/api/requirements', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)

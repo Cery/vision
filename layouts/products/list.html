@@ -136,12 +136,8 @@
 
                         <!-- 参数筛选容器 -->
                         <div id="parameter-filters" class="parameter-filters">
-                            <!-- 通用参数 -->
+                            <!-- 通用参数（去除分组头部） -->
                             <div class="parameter-group" id="common-parameters">
-                                <div class="parameter-group-header">
-                                    <span class="badge bg-info me-2">通用参数</span>
-                                    <small class="text-muted">适用于所有产品类型</small>
-                                </div>
                                 <div class="row g-3 mt-2">
                                     <!-- 探头直径 - 通用参数 -->
                                     <div class="col-md-3">
@@ -189,7 +185,7 @@
                                     <div class="col-md-3">
                                         <div class="filter-group">
                                             <label class="form-label">
-                                                <i class="fas fa-lightbulb me-1 text-primary"></i>光源
+                                                <i class="fas fa-lightbulb me-1 text-primary"></i>光源类型
                                             </label>
                                             <select class="form-select" id="lightSource">
                                                 <option value="">全部光源</option>
@@ -210,17 +206,17 @@
                                     <div class="col-md-3">
                                         <div class="filter-group">
                                             <label class="form-label">
-                                                <i class="fas fa-ruler me-1 text-primary"></i>插入管长度
+                                                <i class="fas fa-ruler me-1 text-primary"></i>长度
                                             </label>
-                                            <select class="form-select" id="insertionLength">
+                                            <select class="form-select" id="workingLength">
                                                 <option value="">全部长度</option>
-                                                {{ $insertionLength := slice }}
+                                                {{ $workingLengthOptions := slice }}
                                                 {{ range $allProducts }}
                                                     {{ range .Params.parameters }}
-                                                        {{ if eq .name "插入管长度" }}{{ $insertionLength = $insertionLength | append .value }}{{ end }}
+                                                        {{ if eq .name "工作长度" }}{{ $workingLengthOptions = $workingLengthOptions | append .value }}{{ end }}
                                                     {{ end }}
                                                 {{ end }}
-                                                {{ range (uniq $insertionLength) }}
+                                                {{ range (uniq $workingLengthOptions) }}
                                                 <option value="{{ . }}">{{ . }}</option>
                                                 {{ end }}
                                             </select>
@@ -229,12 +225,8 @@
                                 </div>
                             </div>
 
-                            <!-- 电子内窥镜专用参数 -->
+                            <!-- 电子内窥镜参数（去除分组头部） -->
                             <div class="parameter-group" id="electronic-parameters" style="display: none;">
-                                <div class="parameter-group-header">
-                                    <span class="badge bg-success me-2">电子内窥镜参数</span>
-                                    <small class="text-muted">电子内窥镜专用技术参数</small>
-                                </div>
                                 <div class="row g-3 mt-2">
                                     <!-- 主机屏幕 -->
                                     <div class="col-md-3">
@@ -353,35 +345,9 @@
                                 </div>
                             </div>
 
-                            <!-- 光纤内窥镜专用参数 -->
+                            <!-- 光纤内窥镜参数（去除分组头部） -->
                             <div class="parameter-group" id="fiber-parameters" style="display: none;">
-                                <div class="parameter-group-header">
-                                    <span class="badge bg-warning me-2">光纤内窥镜参数</span>
-                                    <small class="text-muted">光纤内窥镜专用技术参数</small>
-                                </div>
                                 <div class="row g-3 mt-2">
-                                    <!-- 工作长度 -->
-                                    <div class="col-md-3">
-                                        <div class="filter-group">
-                                            <label class="form-label">
-                                                <i class="fas fa-ruler me-1 text-warning"></i>工作长度
-                                            </label>
-                                            <select class="form-select" id="fiberWorkingLength" onchange="updateFilters()">
-                                                <option value="">全部长度</option>
-                                                {{ $fiberWorkingLength := slice }}
-                                                {{ range $allProducts }}
-                                                    {{ if eq .Params.primary_category "光纤内窥镜" }}
-                                                        {{ range .Params.parameters }}
-                                                            {{ if eq .name "工作长度" }}{{ $fiberWorkingLength = $fiberWorkingLength | append .value }}{{ end }}
-                                                        {{ end }}
-                                                    {{ end }}
-                                                {{ end }}
-                                                {{ range (uniq $fiberWorkingLength) }}
-                                                <option value="{{ . }}">{{ . }}</option>
-                                                {{ end }}
-                                            </select>
-                                        </div>
-                                    </div>
 
                                     <!-- 视野 -->
                                     <div class="col-md-3">
@@ -406,28 +372,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- 焦距 -->
-                                    <div class="col-md-3">
-                                        <div class="filter-group">
-                                            <label class="form-label">
-                                                <i class="fas fa-search me-1 text-warning"></i>焦距
-                                            </label>
-                                            <select class="form-select" id="focalLength">
-                                                <option value="">全部焦距</option>
-                                                {{ $focalLength := slice }}
-                                                {{ range $allProducts }}
-                                                    {{ if eq .Params.primary_category "光纤内窥镜" }}
-                                                        {{ range .Params.parameters }}
-                                                            {{ if eq .name "焦距" }}{{ $focalLength = $focalLength | append .value }}{{ end }}
-                                                        {{ end }}
-                                                    {{ end }}
-                                                {{ end }}
-                                                {{ range (uniq $focalLength) }}
-                                                <option value="{{ . }}">{{ . }}</option>
-                                                {{ end }}
-                                            </select>
-                                        </div>
-                                    </div>
+                                    
 
                                     <!-- 导向 -->
                                     <div class="col-md-3">
@@ -454,35 +399,9 @@
                                 </div>
                             </div>
 
-                            <!-- 光学内窥镜专用参数 -->
+                            <!-- 光学内窥镜参数（去除分组头部） -->
                             <div class="parameter-group" id="optical-parameters" style="display: none;">
-                                <div class="parameter-group-header">
-                                    <span class="badge bg-danger me-2">光学内窥镜参数</span>
-                                    <small class="text-muted">光学内窥镜专用技术参数</small>
-                                </div>
                                 <div class="row g-3 mt-2">
-                                    <!-- 工作长度 -->
-                                    <div class="col-md-4">
-                                        <div class="filter-group">
-                                            <label class="form-label">
-                                                <i class="fas fa-ruler me-1 text-danger"></i>工作长度
-                                            </label>
-                                            <select class="form-select" id="opticalWorkingLength">
-                                                <option value="">全部长度</option>
-                                                {{ $opticalWorkingLength := slice }}
-                                                {{ range $allProducts }}
-                                                    {{ if eq .Params.primary_category "光学内窥镜" }}
-                                                        {{ range .Params.parameters }}
-                                                            {{ if eq .name "工作长度" }}{{ $opticalWorkingLength = $opticalWorkingLength | append .value }}{{ end }}
-                                                        {{ end }}
-                                                    {{ end }}
-                                                {{ end }}
-                                                {{ range (uniq $opticalWorkingLength) }}
-                                                <option value="{{ . }}">{{ . }}</option>
-                                                {{ end }}
-                                            </select>
-                                        </div>
-                                    </div>
 
                                     <!-- 视野 -->
                                     <div class="col-md-4">
@@ -1424,58 +1343,10 @@ document.addEventListener('DOMContentLoaded', function() {
     addParameterGroupHints();
 });
 
-// 添加参数组提示功能
-function addParameterGroupHints() {
-    const commonGroup = document.getElementById('common-parameters');
-    if (commonGroup) {
-        // 检查是否已经有提示
-        if (!commonGroup.querySelector('.parameter-hint')) {
-            const hint = document.createElement('div');
-            hint.className = 'parameter-hint alert alert-info mt-3';
-            hint.innerHTML = `
-                <i class="fas fa-info-circle me-2"></i>
-                <strong>提示：</strong>选择上方的产品分类可查看更多专用技术参数
-            `;
-            commonGroup.appendChild(hint);
-        }
-    }
-}
-
-// 移除参数组提示
-function removeParameterGroupHints() {
-    const hints = document.querySelectorAll('.parameter-hint');
-    hints.forEach(hint => hint.remove());
-}
-
-// 更新参数组提示
-function updateParameterGroupHints(category) {
-    removeParameterGroupHints();
-
-    if (!category) {
-        addParameterGroupHints();
-    } else {
-        // 为专用参数组添加说明
-        const groups = {
-            '电子内窥镜': 'electronic-parameters',
-            '光纤内窥镜': 'fiber-parameters',
-            '光学内窥镜': 'optical-parameters'
-        };
-
-        const groupId = groups[category];
-        if (groupId) {
-            const group = document.getElementById(groupId);
-            if (group && !group.querySelector('.parameter-hint')) {
-                const hint = document.createElement('div');
-                hint.className = 'parameter-hint alert alert-success mt-3';
-                hint.innerHTML = `
-                    <i class="fas fa-check-circle me-2"></i>
-                    <strong>${category}专用参数：</strong>以下参数专门针对${category}产品设计
-                `;
-                group.appendChild(hint);
-            }
-        }
-    }
-}
+// 参数提示移除：统一显示，无需提示分组
+function addParameterGroupHints() { /* no-op */ }
+function removeParameterGroupHints() { /* no-op */ }
+function updateParameterGroupHints(category) { /* no-op */ }
 
 // 统一的筛选函数
 function updateFilters() {
@@ -1493,6 +1364,7 @@ function applyAllFilters() {
     const probeDiameter = document.getElementById('probeDiameter')?.value || '';
     const viewingAngle = document.getElementById('viewingAngle')?.value || '';
     const lightSource = document.getElementById('lightSource')?.value || '';
+    const workingLength = document.getElementById('workingLength')?.value || '';
 
     // 电子内窥镜参数
     const screenSize = document.getElementById('screenSize')?.value || '';
@@ -1502,13 +1374,11 @@ function applyAllFilters() {
     const cableMaterial = document.getElementById('cableMaterial')?.value || '';
 
     // 光纤内窥镜参数
-    const fiberWorkingLength = document.getElementById('fiberWorkingLength')?.value || '';
     const fiberFieldOfView = document.getElementById('fiberFieldOfView')?.value || '';
     const focalLength = document.getElementById('focalLength')?.value || '';
     const fiberGuidance = document.getElementById('fiberGuidance')?.value || '';
 
     // 光学内窥镜参数
-    const opticalWorkingLength = document.getElementById('opticalWorkingLength')?.value || '';
     const opticalFieldOfView = document.getElementById('opticalFieldOfView')?.value || '';
     // 统一导向参数（电子/光纤）
     const guidance = electronicGuidance || fiberGuidance || '';
@@ -1535,6 +1405,7 @@ function applyAllFilters() {
         if (probeDiameter && product.dataset.probeDiameter !== probeDiameter) show = false;
         if (viewingAngle && product.dataset.viewingAngle !== viewingAngle) show = false;
         if (lightSource && product.dataset.lightSource !== lightSource) show = false;
+        if (workingLength && product.dataset.workingLength !== workingLength) show = false;
 
         // 电子内窥镜参数筛选
         if (screenSize && product.dataset.screenSize !== screenSize) show = false;
@@ -1544,13 +1415,11 @@ function applyAllFilters() {
         if (cableMaterial && product.dataset.cableMaterial !== cableMaterial) show = false;
 
         // 光纤内窥镜参数筛选
-        if (fiberWorkingLength && product.dataset.workingLength !== fiberWorkingLength) show = false;
         if (fiberFieldOfView && product.dataset.fieldOfView !== fiberFieldOfView) show = false;
         if (focalLength && product.dataset.focalLength !== focalLength) show = false;
         if (fiberGuidance && product.dataset.guidance !== fiberGuidance) show = false;
 
         // 光学内窥镜参数筛选
-        if (opticalWorkingLength && product.dataset.workingLength !== opticalWorkingLength) show = false;
         if (opticalFieldOfView && product.dataset.fieldOfView !== opticalFieldOfView) show = false;
 
         if (show) {
@@ -1567,6 +1436,7 @@ function applyAllFilters() {
     if (viewingAngle) params.set('viewing_angle', viewingAngle); else params.delete('viewing_angle');
     if (lightSource) params.set('light_source', lightSource); else params.delete('light_source');
     if (guidance) params.set('guidance', guidance); else params.delete('guidance');
+    if (workingLength) params.set('working_length', workingLength); else params.delete('working_length');
 
     const newUrl = `${window.location.pathname}?${params.toString()}`;
     window.history.replaceState({}, '', newUrl);
@@ -1593,10 +1463,8 @@ function applyAllFilters() {
         resolution,
         guidance,
         cableMaterial,
-        fiberWorkingLength,
         fiberFieldOfView,
         focalLength,
-        opticalWorkingLength,
         opticalFieldOfView
     });
 }
@@ -1613,7 +1481,8 @@ function setFiltersFromURL() {
         'resolution': urlParams.get('resolution'),
         'viewingAngle': urlParams.get('viewing_angle'),
         'lightSource': urlParams.get('light_source'),
-        'guidance': urlParams.get('guidance')
+        'guidance': urlParams.get('guidance'),
+        'workingLength': urlParams.get('working_length')
     };
 
     Object.entries(filters).forEach(([id, value]) => {
@@ -1640,10 +1509,9 @@ function setFiltersFromURL() {
         resolution: document.getElementById('resolution')?.value || '',
         guidance: (document.getElementById('electronicGuidance')?.value || document.getElementById('fiberGuidance')?.value || ''),
         cableMaterial: document.getElementById('cableMaterial')?.value || '',
-        fiberWorkingLength: document.getElementById('fiberWorkingLength')?.value || '',
+        workingLength: document.getElementById('workingLength')?.value || '',
         fiberFieldOfView: document.getElementById('fiberFieldOfView')?.value || '',
         focalLength: document.getElementById('focalLength')?.value || '',
-        opticalWorkingLength: document.getElementById('opticalWorkingLength')?.value || '',
         opticalFieldOfView: document.getElementById('opticalFieldOfView')?.value || ''
     });
 }
@@ -1794,16 +1662,15 @@ function updateFilterSummary(filters) {
         secondaryCategory: '二级分类',
         probeDiameter: '探头直径',
         viewingAngle: '视向',
-        lightSource: '光源',
+        lightSource: '光源类型',
         screenSize: '主机屏幕',
         batteryLife: '待机时长',
         resolution: '像素',
-        guidance: '导向',
+        guidance: '镜头导向',
         cableMaterial: '管线材质',
-        fiberWorkingLength: '工作长度',
+        workingLength: '长度',
         fiberFieldOfView: '视野',
         focalLength: '焦距',
-        opticalWorkingLength: '工作长度',
         opticalFieldOfView: '视野'
     };
 

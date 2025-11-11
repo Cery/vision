@@ -96,10 +96,13 @@
   </div>
 </div>
 <script>
+// 统一 API 基础地址（本地与线上）
+window.API_BASE = window.API_BASE || (location.hostname === 'localhost' ? 'http://localhost:8787' : 'https://api.visndt.com');
+window.apiFetch = window.apiFetch || ((path, opts={}) => fetch(`${window.API_BASE}${path}`, opts));
 // 从 Netlify Function 拉取最新需求列表（实时）
 async function listRequirements() {
   try {
-    const res = await fetch('/.netlify/functions/listRequirements');
+    const res = await window.apiFetch('/api/requirements');
     if (!res.ok) throw new Error('网络错误');
     const data = await res.json();
     return Array.isArray(data) ? data : [];
@@ -305,13 +308,30 @@ function renderParams(params) {
     LightSource: '光源',
     Guidance: '导向',
     WorkingLength: '工作长度',
-    FieldOfView: '视场角'
+    FieldOfView: '视场角',
+    IPRating: '防水等级',
+    LensType: '镜头类型',
+    FocalLength: '焦距',
+    InsertHoleDiameter: '插入孔径',
+    InsertDepth: '插入深度',
+    WorkpieceName: '工件名称/描述'
   };
   const items = Object.keys(params || {}).filter(k => params[k]).map(k => {
     const label = map[k] || k;
     return `<div class='col-md-6 mb-2'><strong>${label}：</strong>${params[k]}</div>`;
   });
   return items.length ? items.join('') : '<p class="text-muted">无特殊技术要求</p>';
+}
+
+function summarizeKeyParams(params) {
+  if (!params) return '';
+  const pickOrder = [
+    'ProbeDiameter','WorkingLength','FieldOfView','Resolution','LightSource',
+    'ViewingDirection','Guidance','LensType','FocalLength','IPRating'
+  ];
+  const parts = [];
+  pickOrder.forEach(k => { if (params[k]) parts.push(`${k}: ${params[k]}`); });
+  return parts.join('; ');
 }
 
 function renderContactBlock(data) {
@@ -378,22 +398,18 @@ async function verifyRequirementPassword(requirementID) {
   const pw = document.getElementById('viewPasswordInput')?.value || '';
   if (!pw) { alert('请输入查看密码'); return; }
   try {
-    const resp = await fetch('/.netlify/functions/verifyPassword', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ requirementID: requirementID, password: pw })
-    });
+    const resp = await window.apiFetch(`/api/requirements/${encodeURIComponent(requirementID)}?view_password=${encodeURIComponent(pw)}`);
+    if (!resp.ok) throw new Error('查看密码不正确或需求不存在');
     const data = await resp.json();
-    if (data && data.valid) {
+    if (data && (data.ContactName || data.ContactPhone || data.ContactCompany)) {
       // 显示联系方式
       document.getElementById('contactUnlocked')?.setAttribute('style','');
       // 将密码注入报价表单隐藏字段，后端可校验
       const vpInput = document.querySelector('#quoteForm input[name="ViewPassword"]');
       if (vpInput) vpInput.value = pw;
-      if (data.data) {
-        document.getElementById('cName')?.replaceChildren(document.createTextNode(data.data.contact || ''));
-        document.getElementById('cPhone')?.replaceChildren(document.createTextNode(data.data.phone || ''));
-        const cc = document.getElementById('cCompany'); if (cc) cc.replaceChildren(document.createTextNode(data.data.company || ''));
-      }
+      document.getElementById('cName')?.replaceChildren(document.createTextNode(data.ContactName || ''));
+      document.getElementById('cPhone')?.replaceChildren(document.createTextNode(data.ContactPhone || ''));
+      const cc = document.getElementById('cCompany'); if (cc) cc.replaceChildren(document.createTextNode(data.ContactCompany || ''));
       // 允许提交报价
       document.querySelector('#quoteForm button[type="submit"]')?.removeAttribute('disabled');
       document.querySelectorAll('#quoteForm input, #quoteForm textarea, #quoteForm select')?.forEach(el => el.removeAttribute('disabled'));
@@ -411,22 +427,22 @@ async function loadQuotes(requirementID) {
   if (!listEl) return;
   listEl.innerHTML = '<div class="text-muted">加载报价...</div>';
   try {
-    const resp = await fetch(`/.netlify/functions/listQuotes?RequirementID=${encodeURIComponent(requirementID)}`);
+    const vp = document.querySelector('#quoteForm input[name="ViewPassword"]')?.value || '';
+    const resp = await window.apiFetch(`/api/quotes?requirement_id=${encodeURIComponent(requirementID)}${vp?`&view_password=${encodeURIComponent(vp)}`:''}`);
     if (!resp.ok) throw new Error('Bad response');
-    const { items } = await resp.json();
-    if (!items || items.length === 0) {
+    const items = await resp.json();
+    if (!items || !Array.isArray(items) || items.length === 0) {
       listEl.innerHTML = '<div class="text-muted">暂无报价</div>';
       return;
     }
     listEl.innerHTML = items
       .map((q) => `
         <div class="border rounded p-2 mb-2">
-          <div class="small text-muted">提交时间：${(q.CreatedAt || '').toString()}</div>
-          <div><strong>供应商：</strong>${q.SupplierCompanyName || '—'}，<strong>联系人：</strong>${q.SupplierContact || '—'}，<strong>电话：</strong>${q.SupplierPhone || '—'}</div>
-          <div><strong>产品型号：</strong>${q.ProductModel || '—'}，<strong>交期：</strong>${q.DeliveryTime || '—'}</div>
-          <div><strong>报价：</strong>${typeof q.Price === 'number' ? q.Price : (q.Price || '—')}</div>
-          <div class="small">报价详情：${q.QuoteDetail || '—'}</div>
-          <div class="small">状态：${q.Status || '接洽中'}</div>
+          <div class="small text-muted">提交时间：${(q.created_at || '').toString()}</div>
+          <div><strong>供应商：</strong>${q.supplier_name || '—'}，<strong>电话：</strong>${q.supplier_phone || '—'}</div>
+          <div><strong>报价：</strong>${typeof q.amount === 'number' ? q.amount : (q.amount || '—')} ${q.currency || 'CNY'}</div>
+          <div class="small">报价备注：${q.remarks || '—'}</div>
+          <div class="small">状态：${q.status || 'submitted'}</div>
         </div>
       `)
       .join('');
@@ -436,6 +452,7 @@ async function loadQuotes(requirementID) {
 }
 
 function renderQuoteForm(data) {
+  const keyParams = summarizeKeyParams(data.params);
   return `
     <div class="mt-3">
       <h6 class="mb-2"><i class="fa-solid fa-file-invoice-dollar me-1"></i> 在线报价</h6>
@@ -465,7 +482,7 @@ function renderQuoteForm(data) {
           </div>
           <div class="col-md-6">
             <label class="form-label">关键参数</label>
-            <input type="text" name="KeyParams" class="form-control" disabled>
+            <input type="text" name="KeyParams" class="form-control" value="${keyParams}" disabled>
           </div>
           <div class="col-md-6">
             <label class="form-label">交期</label>
@@ -512,11 +529,18 @@ document.addEventListener('submit', (e) => {
     const form = e.target;
     const fd = new FormData(form);
     const payload = Object.fromEntries(fd.entries());
-    // 允许未解锁联系方式也能报价；保存到后端
-    fetch('/.netlify/functions/submitQuote', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+    // 允许未解锁联系方式也能报价；保存到 Cloudflare D1
+    const reqId = payload.RequirementID;
+    const cfPayload = {
+      requirement_id: reqId,
+      supplier_name: payload.SupplierCompanyName || payload.SupplierContact || '',
+      supplier_phone: payload.SupplierPhone || '',
+      amount: Number(payload.Price) || 0,
+      currency: 'CNY',
+      remarks: `型号:${payload.ProductModel||''}; 交期:${payload.DeliveryTime||''}; 关键参数:${payload.KeyParams||''}; 详情:${payload.QuoteDetail||''}`
+    };
+    window.apiFetch('/api/quotes', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(cfPayload)
     })
       .then((r) => r.ok ? r.json() : Promise.reject(r))
       .then(() => {
@@ -524,7 +548,7 @@ document.addEventListener('submit', (e) => {
         form.reset();
       })
       .catch(() => {
-        alert('报价提交接口未开启或出错。请配置 Netlify/Airtable 后重试。');
+        alert('报价提交接口未开启或出错。请检查 Cloudflare Workers 配置后重试。');
       });
   }
 });

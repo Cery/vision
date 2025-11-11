@@ -3,6 +3,7 @@ title: "风电齿轮箱缺陷检测案例"
 date: 2025-07-28T09:00:00+08:00
 summary: "利用工业内窥镜与AI识别进行风电齿轮箱齿面裂纹与磨损检测，提升维护效率与可靠性。"
 industry: "能源电力"
+featured_image: "/images/cases/case-2.jpg"
 primary_category: ["工业内窥镜"]
 application_field: ["风电维护", "设备检修"]
 technology_tags: ["裂纹识别", "磨损评估", "图像增强"]

@@ -19,7 +19,7 @@ keyMetrics:
   - label: "维护效率"
     value: "+25%"
     description: "维护效率提升"
-featured_image: "/images/cases/case-3.jpg"
+featured_image: "/images/cases/case-2.jpg"
 primary_category: ["工业内窥镜"]
 application_field: ["航空航天"]
 technology_tags: ["特殊光源", "微型内窥"]
