@@ -56,3 +56,18 @@ INSERT OR IGNORE INTO requirements (
     );
 
 -- Import Suppliers
+INSERT OR IGNORE INTO suppliers (
+      supplier_id, name, company, access_password_plain, contact_phone, contact_email, status, metadata_json, created_at, updated_at
+    ) VALUES (
+      'SUP-202501-001', '上海精测仪器有限公司', '上海精测仪器有限公司', 'supplier-123456', '021-88886666', 'sales@shjingce.example.com', 'active', '{"categories":["电子内窥镜","光学内窥镜"],"location":"上海"}', '2025-11-11T01:11:48.300Z', '2025-11-11T01:11:48.300Z'
+    );
+INSERT OR IGNORE INTO suppliers (
+      supplier_id, name, company, access_password_plain, contact_phone, contact_email, status, metadata_json, created_at, updated_at
+    ) VALUES (
+      'SUP-202501-002', '深圳光研科技', '深圳市光研科技有限公司', 'supplier-654321', '0755-66668888', 'bd@gytech.example.com', 'active', '{"categories":["光纤内窥镜","冷光源"],"location":"深圳"}', '2025-11-11T01:11:48.300Z', '2025-11-11T01:11:48.300Z'
+    );
+INSERT OR IGNORE INTO suppliers (
+      supplier_id, name, company, access_password_plain, contact_phone, contact_email, status, metadata_json, created_at, updated_at
+    ) VALUES (
+      'SUP-202501-003', '北京智检科技', '北京智检科技发展有限公司', 'supplier-000999', '010-66661234', 'contact@zj-tech.example.com', 'active', '{"categories":["电子内窥镜","主机/插入管"],"location":"北京"}', '2025-11-11T01:11:48.300Z', '2025-11-11T01:11:48.300Z'
+    );

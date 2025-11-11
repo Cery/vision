@@ -13,6 +13,14 @@
           <i class="fa-solid fa-store text-primary"></i>
           需求市场
         </h2>
+        <div class="d-flex flex-wrap gap-2">
+          <a href="/entry-demand.html" class="btn btn-sm btn-outline-primary">
+            <i class="fa-solid fa-user-tie me-1"></i> 发布方入口
+          </a>
+          <a href="/entry-supplier.html" class="btn btn-sm btn-outline-success">
+            <i class="fa-solid fa-industry me-1"></i> 供应商入口
+          </a>
+        </div>
       </div>
       <!-- 顶部筛选与搜索 -->
       <div class="row g-3 mb-3 align-items-center">
@@ -127,8 +135,16 @@
   </div>
 </div>
 <script>
-// 统一 API 基础地址（本地与线上）
-window.API_BASE = window.API_BASE || (location.hostname === 'localhost' ? 'http://localhost:8787' : 'https://api.visndt.com');
+// 统一 API 基础地址（优先 localStorage，其次本地/线上默认）
+(function(){
+  try {
+    const saved = (typeof localStorage !== 'undefined') ? (localStorage.getItem('API_BASE') || '') : '';
+    const base = saved || (location.hostname === 'localhost' ? 'https://vision-api.v-easechoice.workers.dev' : 'https://api.visndt.com');
+    window.API_BASE = (window.API_BASE || base).replace(/\/$/, '');
+  } catch (_) {
+    window.API_BASE = window.API_BASE || (location.hostname === 'localhost' ? 'https://vision-api.v-easechoice.workers.dev' : 'https://api.visndt.com');
+  }
+})();
 window.apiFetch = window.apiFetch || ((path, opts={}) => fetch(`${window.API_BASE}${path}`, opts));
 // 从 Netlify Function 拉取最新需求列表（实时）
 async function listRequirements() {
