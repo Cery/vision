@@ -124,7 +124,7 @@ export default {
     }
     function requireAdmin(req) {
       const key = req.headers.get('X-Admin-Key') || req.headers.get('x-admin-key') || '';
-      const expected = env.ADMIN_KEY || '';
+      const expected = env.ADMIN_KEY || env.ADMIN_KEY_SECRET || env.ADMIN_TOKEN || '';
       return Boolean(expected && key === expected);
     }
     function genRequirementID() {

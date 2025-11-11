@@ -2,6 +2,9 @@ name = "vision-api"
 main = "src/index.js"
 compatibility_date = "2024-09-10"
 account_id = "594a18b97389b68fbc9769ab0cb47df7"
+workers_dev = true
+
+# 暂时不设置 routes，先在 workers.dev 下验证部署
 
 # D1 binding
 [[d1_databases]]
@@ -9,12 +12,5 @@ binding = "DB"
 database_name = "vision-demand-market"
 database_id = "5a6d590d-43a2-482c-84ec-8ea0e9012632"
 
-# Optional KV/R2 bindings can be added later if needed
-
-# 触发器：自定义域路由（Cloudflare 官方推荐语法）
-[triggers]
-routes = ["api.visndt.com/*"]
-
-[vars]
-# 平台最高权限密钥（测试环境）
-ADMIN_KEY = "admin123456"
+# 敏感配置请使用 Secrets 管理：
+# 运行 `wrangler secret put ADMIN_KEY` 设置管理员密钥，不要在 toml 明文保存。
