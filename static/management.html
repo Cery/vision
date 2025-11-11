@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="
   default-src 'self';
-  connect-src 'self' https://identity.netlify.com https://api.netlify.com https://api.visndt.com https://vision-api.v-easechoice.workers.dev;
-  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://identity.netlify.com https://api.netlify.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://hm.baidu.com https://static.cloudflareinsights.com;
+  connect-src 'self' https://identity.netlify.com https://api.netlify.com https://api.visndt.com;
+  script-src 'self' 'unsafe-inline' https://identity.netlify.com https://api.netlify.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://hm.baidu.com https://static.cloudflareinsights.com;
   style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com;
   img-src 'self' data: blob: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
   font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;
@@ -104,6 +104,23 @@
             <div class="btn-group btn-group-sm">
               <button id="reqExportCsvBtn" class="btn btn-outline-primary"><i class="fa-solid fa-file-csv me-1"></i> 导出 CSV</button>
               <button id="reqExportXlsxBtn" class="btn btn-outline-success"><i class="fa-solid fa-file-excel me-1"></i> 导出 XLSX</button>
+            </div>
+          </div>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="small text-muted">数据运维</div>
+            <div class="btn-group btn-group-sm">
+              <button id="seedSampleBtn" class="btn btn-primary"><i class="fa-solid fa-database me-1"></i> 导入示例数据</button>
+              <button id="cleanupInvalidBtn" class="btn btn-outline-danger"><i class="fa-solid fa-broom me-1"></i> 清理无效内容</button>
+              <button id="resetAndSyncBtn" class="btn btn-warning"><i class="fa-solid fa-arrows-rotate me-1"></i> 一键清理并同步</button>
+            </div>
+          </div>
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <div class="small text-muted">批量开关与默认密码</div>
+            <div class="btn-group btn-group-sm">
+              <button id="reqStatusOnlineBtn" class="btn btn-outline-primary"><i class="fa-solid fa-toggle-on me-1"></i> 全部设为在线报价</button>
+              <button id="reqStatusPrivateBtn" class="btn btn-outline-secondary"><i class="fa-solid fa-user-shield me-1"></i> 全部设为隐私</button>
+              <button id="reqStatusCloseBtn" class="btn btn-outline-secondary"><i class="fa-solid fa-ban me-1"></i> 全部设为关闭</button>
+              <button id="supPwdDefaultBtn" class="btn btn-outline-success"><i class="fa-solid fa-key me-1"></i> 供应商密码统一为 456789</button>
             </div>
           </div>
           <div class="table-responsive">
@@ -295,7 +312,7 @@
 
             // 统一 Cloudflare API 基础地址（本地/生产），避免生产被 localStorage 覆盖到不安全地址
             const isProd = /(^|\.)visndt\.com$/i.test(location.hostname);
-            const defaultRemote = 'https://vision-api.v-easechoice.workers.dev';
+            const defaultRemote = 'https://api.visndt.com';
             let saved = '';
             try { saved = localStorage.getItem('API_BASE') || ''; } catch {}
             // 生产域仅允许白名单（同源或 api.visndt.com），其他情况强制使用相对路径
@@ -896,6 +913,128 @@ document.addEventListener('DOMContentLoaded', () => {
       container.innerHTML = `<div class="badge bg-primary">需求总数 ${total}</div><div class="badge bg-success">在线报价开启 ${openCount}</div><div class="badge bg-info text-dark">公开需求 ${publicCount}</div>`;
     } catch{}
   }
+
+  // 数据运维：导入示例与清理无效
+  (function bindOps(){
+    const seedBtn = document.getElementById('seedSampleBtn');
+    const cleanBtn = document.getElementById('cleanupInvalidBtn');
+    if (seedBtn) {
+      seedBtn.addEventListener('click', async () => {
+        if (!ADMIN_KEY) { alert('请先输入管理员密钥并点击“确认登录”'); return; }
+        seedBtn.disabled = true; const old = seedBtn.innerHTML; seedBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> 正在导入';
+        try {
+          const base = (location.origin + '/data');
+          const resp = await window.apiFetch(`/api/admin/dev-seed?base=${encodeURIComponent(base)}`, { method: 'POST', headers: { 'X-Admin-Key': ADMIN_KEY } });
+          const data = await resp.json();
+          if (!resp.ok) throw new Error(data.error || '导入失败');
+          alert(`导入完成：需求 ${data.counts?.requirements||0}，供应商 ${data.counts?.suppliers||0}，需求方 ${data.counts?.demanders||0}`);
+          await loadRequirementsPage(true);
+        } catch (e) {
+          alert(e.message || '导入示例数据失败');
+        } finally {
+          seedBtn.disabled = false; seedBtn.innerHTML = old;
+        }
+      });
+    }
+    if (cleanBtn) {
+      cleanBtn.addEventListener('click', async () => {
+        if (!ADMIN_KEY) { alert('请先输入管理员密钥并点击“确认登录”'); return; }
+        if (!confirm('确定要清理无效内容吗？将删除标题为空/undefined、缺失编号的记录及孤儿报价。')) return;
+        cleanBtn.disabled = true; const old = cleanBtn.innerHTML; cleanBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> 正在清理';
+        try {
+          const resp = await window.apiFetch('/api/admin/cleanup-invalid', { method: 'POST', headers: { 'X-Admin-Key': ADMIN_KEY } });
+          const data = await resp.json();
+          if (!resp.ok) throw new Error(data.error || '清理失败');
+          alert(`已清理：需求 ${data.deleted?.requirements||0} 条，报价 ${data.deleted?.quotes||0} 条`);
+          await loadRequirementsPage(true);
+        } catch (e) {
+          alert(e.message || '清理失败');
+        } finally {
+          cleanBtn.disabled = false; cleanBtn.innerHTML = old;
+        }
+      });
+    }
+
+    // 一键清理并同步：重置所有数据 -> 导入示例 -> 设置查看密码 -> 同步供应商
+    const resetBtn = document.getElementById('resetAndSyncBtn');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', async () => {
+        if (!ADMIN_KEY) { alert('请先输入管理员密钥并点击“确认登录”'); return; }
+        if (!confirm('将清理所有后台数据、导入网站示例需求、统一设置查看密码为“123456”，并同步网站现有供应商数据。是否继续？')) return;
+        resetBtn.disabled = true; const old = resetBtn.innerHTML; resetBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> 正在处理';
+        try {
+          const base = (location.origin + '/data');
+          // Step 1: 重置所有表数据
+          const respReset = await window.apiFetch('/api/admin/reset-data?scope=all', { method: 'POST', headers: { 'X-Admin-Key': ADMIN_KEY } });
+          const dataReset = await respReset.json();
+          if (!respReset.ok) throw new Error(dataReset.error || '重置失败');
+
+          // Step 2: 导入网站前端示例数据（需求/供应商/需求方）
+          const respSeed = await window.apiFetch(`/api/admin/dev-seed?base=${encodeURIComponent(base)}`, { method: 'POST', headers: { 'X-Admin-Key': ADMIN_KEY } });
+          const dataSeed = await respSeed.json();
+          if (!respSeed.ok) throw new Error(dataSeed.error || '导入示例失败');
+
+          // Step 3: 统一设置所有需求的查看密码为 123456
+          const respPwd = await window.apiFetch('/api/admin/requirements', { method: 'POST', headers: { 'Content-Type':'application/json','X-Admin-Key': ADMIN_KEY }, body: JSON.stringify({ applyToAll: true, newPasswordPlain: '123456' }) });
+          const dataPwd = await respPwd.json();
+          if (!respPwd.ok) throw new Error(dataPwd.error || '设置密码失败');
+
+          // Step 4: 同步供应商数据（与网站现有数据对接，支持增量 upsert）
+          const respSup = await window.apiFetch(`/api/admin/import-suppliers?base=${encodeURIComponent(base)}`, { method: 'POST', headers: { 'X-Admin-Key': ADMIN_KEY } });
+          const dataSup = await respSup.json();
+          if (!respSup.ok) throw new Error(dataSup.error || '供应商同步失败');
+
+          alert(`已完成：重置(${Object.values(dataReset.deleted||{}).reduce((a,b)=>a+Number(b||0),0)}条)，导入需求 ${dataSeed.counts?.requirements||0}，需求方 ${dataSeed.counts?.demanders||0}，供应商 ${dataSeed.counts?.suppliers||0}；已统一设置查看密码；供应商已同步。`);
+          await loadRequirementsPage(true);
+        } catch (e) {
+          alert(e.message || '一键清理并同步失败');
+        } finally {
+          resetBtn.disabled = false; resetBtn.innerHTML = old;
+        }
+      });
+    }
+    // 批量设置需求状态
+    const onlineBtn = document.getElementById('reqStatusOnlineBtn');
+    const privateBtn = document.getElementById('reqStatusPrivateBtn');
+    const closeBtn = document.getElementById('reqStatusCloseBtn');
+    async function setAllRequirementStatus(statusText) {
+      if (!ADMIN_KEY) { alert('请先输入管理员密钥并点击“确认登录”'); return; }
+      const ok = confirm(`将所有需求状态统一设置为“${statusText}”，确认继续？`);
+      if (!ok) return;
+      try {
+        const resp = await window.apiFetch('/api/admin/requirements', { method: 'POST', headers: { 'Content-Type':'application/json','X-Admin-Key': ADMIN_KEY }, body: JSON.stringify({ applyToAll: true, status: statusText }) });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error || '批量设置失败');
+        alert('已更新所有需求状态');
+        await loadRequirementsPage(true);
+      } catch (e) {
+        alert(e.message || '批量设置失败');
+      }
+    }
+    if (onlineBtn) onlineBtn.addEventListener('click', ()=> setAllRequirementStatus('在线报价'));
+    if (privateBtn) privateBtn.addEventListener('click', ()=> setAllRequirementStatus('隐私'));
+    if (closeBtn) closeBtn.addEventListener('click', ()=> setAllRequirementStatus('关闭'));
+
+    // 供应商密码统一为 456789
+    const supPwdDefaultBtn = document.getElementById('supPwdDefaultBtn');
+    if (supPwdDefaultBtn) {
+      supPwdDefaultBtn.addEventListener('click', async () => {
+        if (!ADMIN_KEY) { alert('请先输入管理员密钥并点击“确认登录”'); return; }
+        if (!confirm('将所有供应商的通行密码统一设置为“456789”，是否继续？')) return;
+        supPwdDefaultBtn.disabled = true; const old = supPwdDefaultBtn.innerHTML; supPwdDefaultBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> 正在更新';
+        try {
+          const resp = await window.apiFetch('/api/admin/suppliers', { method: 'POST', headers: { 'Content-Type':'application/json','X-Admin-Key': ADMIN_KEY }, body: JSON.stringify({ applyToAll: true, newPasswordPlain: '456789' }) });
+          const data = await resp.json();
+          if (!resp.ok) throw new Error(data.error || '设置失败');
+          alert('已统一设置供应商通行密码');
+        } catch (e) {
+          alert(e.message || '设置失败');
+        } finally {
+          supPwdDefaultBtn.disabled = false; supPwdDefaultBtn.innerHTML = old;
+        }
+      });
+    }
+  })();
 
   function ensureDetailModal(){
     let m=document.getElementById('reqDetailModal');

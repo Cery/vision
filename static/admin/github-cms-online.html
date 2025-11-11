@@ -302,6 +302,18 @@
                     <button class="nav-item" onclick="showRateLimit()">
                         <i class="fas fa-chart-bar"></i>API使用情况
                     </button>
+                    <button class="nav-item" onclick="syncRequirementsToD1()">
+                        <i class="fas fa-database"></i>同步需求到D1
+                    </button>
+                    <button class="nav-item" onclick="cleanupInvalidD1()">
+                        <i class="fas fa-broom"></i>清理D1无效记录
+                    </button>
+                    <button class="nav-item" onclick="promptAdminKey()">
+                        <i class="fas fa-key"></i>设置管理员密钥
+                    </button>
+                    <button class="nav-item" onclick="clearApiBaseOverride()">
+                        <i class="fas fa-link-slash"></i>移除API_BASE覆盖
+                    </button>
                 </div>
             </div>
         </nav>
@@ -862,6 +874,162 @@
         function showRateLimit() {
             checkRateLimit();
         }
+        // —— 通用通知与加载的安全回退 ——
+        const notify = window.notify || (window.CmsUtils && window.CmsUtils.notify) || {
+            success: m => console.log('SUCCESS:', m),
+            warning: m => console.warn('WARN:', m),
+            error: m => console.error('ERROR:', m),
+            info: m => console.log('INFO:', m)
+        };
+        const loading = window.loading || (window.CmsUtils && window.CmsUtils.loading) || {
+            show: m => console.log('LOADING:', m),
+            hide: () => {}
+        };
+
+        const getApiBase = () => {
+            const v = localStorage.getItem('API_BASE');
+            return v && v.trim() ? v.trim() : 'https://api.visndt.com';
+        };
+        const getAdminKey = () => localStorage.getItem('ADMIN_KEY') || '';
+        function promptAdminKey(){
+            const key = prompt('请输入管理员密钥（X-Admin-Key）：', getAdminKey());
+            if (key){
+                localStorage.setItem('ADMIN_KEY', key);
+                notify.success('已保存管理员密钥');
+            }
+        }
+        function clearApiBaseOverride(){
+            localStorage.removeItem('API_BASE');
+            notify.success('已移除 API_BASE，自默认使用 https://api.visndt.com');
+        }
+
+        async function fetchJsonSafe(url){
+            try{ const r = await fetch(url); if(!r.ok) return []; return await r.json(); }catch{ return []; }
+        }
+
+        async function syncRequirementsToD1(){
+            try{
+                const adminKey = getAdminKey();
+                if (!adminKey){
+                    notify.warning('请先设置管理员密钥');
+                    promptAdminKey();
+                    if (!getAdminKey()) return;
+                }
+                loading.show('正在同步需求到D1...');
+                const rawUrl = 'https://raw.githubusercontent.com/Cery/vision/main/data/requirements.json';
+                const items = await fetchJsonSafe(rawUrl);
+                const api = getApiBase();
+                const d1Resp = await fetch(`${api}/api/admin/requirements?limit=500`, { headers: { 'X-Admin-Key': getAdminKey() } });
+                if (!d1Resp.ok) throw new Error('获取D1现有需求失败');
+                const d1Data = await d1Resp.json();
+                const existingIDs = new Set(((d1Data.items||[]).map(it => it.requirement_id)));
+                let created = 0, updated = 0, failed = 0;
+                for (const item of (items||[])){
+                    const payload = {
+                        title: item.Title || '',
+                        public_preview: item.PublicPreview || '',
+                        primary_category: item.PrimaryCategory || '',
+                        secondary_category: item.SecondaryCategory || '',
+                        status: item.Status || '公开',
+                        contact_name: item.ContactName || '',
+                        contact_phone: item.ContactPhone || '',
+                        contact_company: item.ContactCompany || '',
+                        contact_email: item.ContactEmail || '',
+                        contact_department: item.Department || '',
+                        contact_public: item.ContactPublic ? 1 : 0,
+                        allow_open_quotes: item.Status === '在线报价' ? 1 : (item.AllowOpenQuotes ? 1 : 0),
+                        parameters_json: item.Parameters || {},
+                        published_at: item.PublishedAt || new Date().toISOString(),
+                        budget_range: item.BudgetRange || '',
+                        progress: item.Progress || '发布中',
+                        view_password_plain: item.ViewPasswordPlain || ''
+                    };
+                    if (existingIDs.has(item.RequirementID)){
+                        const r = await fetch(`${api}/api/admin/requirements/${encodeURIComponent(item.RequirementID)}`, {
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json', 'X-Admin-Key': getAdminKey() },
+                            body: JSON.stringify(payload)
+                        });
+                        if (r.ok) updated++; else failed++;
+                    } else {
+                        const createPayload = {
+                            Title: item.Title || '',
+                            PublicPreview: item.PublicPreview || '',
+                            primaryCategory: item.PrimaryCategory || '',
+                            secondaryCategory: item.SecondaryCategory || '',
+                            Status: item.Status || '公开',
+                            contactName: item.ContactName || '',
+                            contactPhone: item.ContactPhone || '',
+                            contactCompany: item.ContactCompany || '',
+                            contactEmail: item.ContactEmail || '',
+                            contactDepartment: item.Department || '',
+                            ContactPublic: item.ContactPublic ? 1 : 0,
+                            AllowOpenQuotes: item.Status === '在线报价' ? true : !!item.AllowOpenQuotes,
+                            Parameters: item.Parameters || {},
+                            PublishedAt: item.PublishedAt || new Date().toISOString(),
+                            BudgetRange: item.BudgetRange || '',
+                            Progress: item.Progress || '发布中',
+                            requirementID: item.RequirementID,
+                            viewPassword: item.ViewPasswordPlain || ''
+                        };
+                        const r = await fetch(`${api}/api/requirements`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(createPayload)
+                        });
+                        if (r.ok) created++; else failed++;
+                    }
+                }
+                const cl = await fetch(`${api}/api/admin/cleanup-invalid`, { method: 'POST', headers: { 'X-Admin-Key': getAdminKey() } });
+                let cleanupInfo = { deleted: { requirements: 0, quotes: 0 } };
+                try{ cleanupInfo = await cl.json(); }catch{}
+                notify.success(`同步完成：新增 ${created}，更新 ${updated}，失败 ${failed}；清理 ${cleanupInfo?.deleted?.requirements||0} 条需求、${cleanupInfo?.deleted?.quotes||0} 条报价`);
+            } catch(e){
+                notify.error('同步到D1失败：' + (e && e.message || e));
+            } finally {
+                loading.hide();
+            }
+        }
+
+        async function cleanupInvalidD1(){
+            try{
+                const adminKey = getAdminKey();
+                if (!adminKey){
+                    notify.warning('请先设置管理员密钥');
+                    promptAdminKey();
+                    if (!getAdminKey()) return;
+                }
+                loading.show('正在清理D1无效记录...');
+                const api = getApiBase();
+                const resp = await fetch(`${api}/api/admin/cleanup-invalid`, { method: 'POST', headers: { 'X-Admin-Key': getAdminKey() } });
+                const data = await resp.json();
+                if (resp.ok){
+                    notify.success(`清理完成：需求 ${data?.deleted?.requirements||0}，报价 ${data?.deleted?.quotes||0}`);
+                } else {
+                    throw new Error(data && data.error || '清理失败');
+                }
+            } catch(e){
+                notify.error('清理失败：' + (e && e.message || e));
+            } finally {
+                loading.hide();
+            }
+        }
+
+        // 自动同步：当在线编辑器提交 data/requirements.json 时触发
+        (function(){
+            const GitHubAPIClass = window.GitHubAPI;
+            if (!GitHubAPIClass) return;
+            const orig = GitHubAPIClass.prototype.createOrUpdateFile;
+            GitHubAPIClass.prototype.createOrUpdateFile = async function(path, content, message, sha){
+                const result = await orig.call(this, path, content, message, sha);
+                try{
+                    if (String(path||'').endsWith('data/requirements.json')){
+                        await syncRequirementsToD1();
+                    }
+                }catch{}
+                return result;
+            };
+        })();
 
         // 页面离开前检查
         window.addEventListener('beforeunload', function(e) {

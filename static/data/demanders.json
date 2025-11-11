@@ -1,0 +1,29 @@
+[
+  {
+    "DemanderID": "DEM-202501-001",
+    "Name": "张工程师",
+    "Company": "某汽车制造有限公司",
+    "ContactPhone": "13800001111",
+    "ContactEmail": "zhang@automanufacture.example.com",
+    "Department": "质量部",
+    "metadata": { "city": "上海" }
+  },
+  {
+    "DemanderID": "DEM-202501-002",
+    "Name": "李经理",
+    "Company": "某航空科技公司",
+    "ContactPhone": "13900002222",
+    "ContactEmail": "li@aviationtech.example.com",
+    "Department": "技术部",
+    "metadata": { "city": "西安" }
+  },
+  {
+    "DemanderID": "DEM-202501-003",
+    "Name": "王总监",
+    "Company": "某精密制造企业",
+    "ContactPhone": "13700003333",
+    "ContactEmail": "wang@precision.example.com",
+    "Department": "生产部",
+    "metadata": { "city": "苏州" }
+  }
+]

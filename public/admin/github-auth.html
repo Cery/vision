@@ -285,17 +285,27 @@
             }
 
             validateTokenFormat(token) {
-                const tokenPattern = /^ghp_[a-zA-Z0-9]{36}$/;
-                const isValid = tokenPattern.test(token);
-                
+                const classicPattern = /^ghp_[a-zA-Z0-9]{36}$/; // 经典PAT
+                const fineGrainedPattern = /^github_pat_[a-zA-Z0-9_]{22,}$/; // 精细化PAT
+                const isValid = classicPattern.test(token) || fineGrainedPattern.test(token);
+
                 const input = document.getElementById('githubToken');
                 const button = document.getElementById('loginBtn');
-                
+
+                const getCssVar = (name, fallback = '#ddd') => {
+                    try {
+                        const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+                        return v || fallback;
+                    } catch {
+                        return fallback;
+                    }
+                };
+
                 if (token.length > 0 && !isValid) {
-                    input.style.borderColor = var('--github-danger');
+                    input.style.borderColor = getCssVar('--github-danger', '#dc3545');
                     button.disabled = true;
                 } else {
-                    input.style.borderColor = var('--github-border');
+                    input.style.borderColor = getCssVar('--github-border', '#e1e4e8');
                     button.disabled = false;
                 }
             }

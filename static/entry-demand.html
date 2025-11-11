@@ -18,7 +18,7 @@
       <header class="mb-4 d-flex align-items-center justify-content-between">
         <div>
           <h1 class="h4 mb-1">发布方入口</h1>
-          <div class="small-muted">使用需求ID与查看密码查看详情与报价</div>
+          <div class="small-muted">仅输入查看密码即可访问对应需求与报价</div>
         </div>
         <div>
           <a href="/" class="btn btn-outline-secondary btn-sm">返回首页</a>
@@ -28,23 +28,22 @@
       <div class="card shadow-sm">
         <div class="card-body">
           <form id="queryForm" class="row g-3">
-            <div class="col-12 col-md-6">
-              <label class="form-label">需求ID <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" id="reqId" placeholder="例如：R-2024-0001" required>
-            </div>
-            <div class="col-12 col-md-6">
+            <div class="col-12 col-md-8">
               <label class="form-label">查看密码 <span class="text-danger">*</span></label>
               <input type="password" class="form-control" id="viewPwd" placeholder="发布后获得的查看密码" required>
             </div>
-            <div class="col-12 d-flex gap-2">
-              <button type="submit" class="btn btn-primary">查询需求与报价</button>
-              <button type="button" id="exportBtn" class="btn btn-outline-secondary" disabled>导出报价 CSV</button>
+            <div class="col-12 col-md-4 d-flex align-items-end">
+              <button type="submit" class="btn btn-primary w-100">查询我的需求</button>
             </div>
           </form>
+          <div id="reqChoiceArea" class="mt-3"></div>
         </div>
       </div>
 
-      <div id="resultArea" class="mt-4"></div>
+      <div class="d-flex justify-content-end mt-3">
+        <button type="button" id="exportBtn" class="btn btn-outline-secondary btn-sm" disabled>导出报价 CSV</button>
+      </div>
+      <div id="resultArea" class="mt-2"></div>
     </div>
 
     <script>
@@ -72,16 +71,17 @@
       const form = document.getElementById('queryForm');
       const resultArea = document.getElementById('resultArea');
       const exportBtn = document.getElementById('exportBtn');
+      const reqChoiceArea = document.getElementById('reqChoiceArea');
       let lastQuotes = [];
+      let currentReqId = '';
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         resultArea.innerHTML = '';
         exportBtn.disabled = true;
         lastQuotes = [];
-        const reqId = document.getElementById('reqId').value.trim();
         const viewPwd = document.getElementById('viewPwd').value.trim();
-        if (!reqId || !viewPwd) return;
+        if (!viewPwd) return;
 
         const load = (html) => {
           const div = document.createElement('div');
@@ -89,19 +89,26 @@
           div.innerHTML = html;
           resultArea.appendChild(div);
         };
-        load('正在查询，请稍候…');
+        load('正在查询，请稍候…'); reqChoiceArea.innerHTML = '';
 
         try {
-          // Requirement detail
-          const detail = await apiFetch(`/api/requirements/${encodeURIComponent(reqId)}?view_password=${encodeURIComponent(viewPwd)}`);
-          // Quotes list
-          const quotes = await apiFetch(`/api/quotes?requirement_id=${encodeURIComponent(reqId)}&view_password=${encodeURIComponent(viewPwd)}`);
-          lastQuotes = Array.isArray(quotes) ? quotes : [];
-          exportBtn.disabled = lastQuotes.length === 0;
-
+          // Find requirements by password
+          const list = await apiFetch(`/api/requirements/by-password?view_password=${encodeURIComponent(viewPwd)}`);
+          const items = Array.isArray(list?.items) ? list.items : [];
           resultArea.innerHTML = '';
-          renderDetail(detail);
-          renderQuotes(lastQuotes);
+          if (!items.length) {
+            const div = document.createElement('div');
+            div.className = 'alert alert-warning';
+            div.textContent = '未找到与该查看密码关联的需求。';
+            resultArea.appendChild(div);
+            return;
+          }
+          if (items.length === 1) {
+            currentReqId = items[0].RequirementID;
+            await loadDetailAndQuotes(currentReqId, viewPwd);
+          } else {
+            renderReqChoice(items, viewPwd);
+          }
         } catch (err) {
           resultArea.innerHTML = '';
           const div = document.createElement('div');
@@ -110,6 +117,46 @@
           resultArea.appendChild(div);
         }
       });
+
+      async function loadDetailAndQuotes(reqId, viewPwd) {
+        const detail = await apiFetch(`/api/requirements/${encodeURIComponent(reqId)}?view_password=${encodeURIComponent(viewPwd)}`);
+        const quotes = await apiFetch(`/api/quotes?requirement_id=${encodeURIComponent(reqId)}&view_password=${encodeURIComponent(viewPwd)}`);
+        lastQuotes = Array.isArray(quotes) ? quotes : [];
+        if (exportBtn) exportBtn.disabled = lastQuotes.length === 0;
+        resultArea.innerHTML = '';
+        renderDetail(detail);
+        renderQuotes(lastQuotes);
+      }
+
+      function renderReqChoice(items, viewPwd) {
+        const card = document.createElement('div');
+        card.className = 'card shadow-sm';
+        const rows = items.map((it) => `
+          <tr>
+            <td class="mono">${escapeHtml(it.RequirementID || '')}</td>
+            <td>${escapeHtml(it.Title || '')}</td>
+            <td>${escapeHtml(it.Status || '')}</td>
+            <td><button class="btn btn-outline-primary btn-sm" data-id="${escapeHtml(it.RequirementID || '')}">查看</button></td>
+          </tr>`).join('');
+        card.innerHTML = `
+          <div class="card-body">
+            <h2 class="h6">该查看密码关联多个需求，请选择：</h2>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle">
+                <thead><tr><th>需求ID</th><th>标题</th><th>状态</th><th>操作</th></tr></thead>
+                <tbody>${rows}</tbody>
+              </table>
+            </div>
+          </div>`;
+        reqChoiceArea.appendChild(card);
+        card.querySelectorAll('button[data-id]').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            currentReqId = btn.getAttribute('data-id') || '';
+            await loadDetailAndQuotes(currentReqId, viewPwd);
+            reqChoiceArea.innerHTML = '';
+          });
+        });
+      }
 
       function renderDetail(detail) {
         const card = document.createElement('div');
@@ -164,28 +211,30 @@
         resultArea.appendChild(card);
       }
 
-      exportBtn.addEventListener('click', () => {
-        if (!lastQuotes.length) return;
-        const headers = ['quote_id','supplier_id','supplier_name','price','notes','created_at'];
-        const lines = [headers.join(',')];
-        lastQuotes.forEach(q => {
-          const row = headers.map(h => {
-            if (h === 'price') return escapeCsv(q.price ?? q.amount ?? '');
-            if (h === 'notes') return escapeCsv(q.notes ?? q.remarks ?? '');
-            return escapeCsv(q[h]);
+      if (exportBtn) {
+        exportBtn.addEventListener('click', () => {
+          if (!lastQuotes.length) return;
+          const headers = ['quote_id','supplier_id','supplier_name','price','notes','created_at'];
+          const lines = [headers.join(',')];
+          lastQuotes.forEach(q => {
+            const row = headers.map(h => {
+              if (h === 'price') return escapeCsv(q.price ?? q.amount ?? '');
+              if (h === 'notes') return escapeCsv(q.notes ?? q.remarks ?? '');
+              return escapeCsv(q[h]);
+            });
+            lines.push(row.join(','));
           });
-          lines.push(row.join(','));
+          const blob = new Blob(["\ufeff" + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `quotes_${Date.now()}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
         });
-        const blob = new Blob(["\ufeff" + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `quotes_${Date.now()}.csv`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      });
+      }
 
       function escapeHtml(s) {
         if (s === null || s === undefined) return '';

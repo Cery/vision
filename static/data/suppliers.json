@@ -1,0 +1,41 @@
+[
+  {
+    "SupplierID": "SUP-202501-001",
+    "Name": "上海精测仪器有限公司",
+    "Company": "上海精测仪器有限公司",
+    "AccessPassword": "supplier-123456",
+    "ContactPhone": "021-88886666",
+    "ContactEmail": "sales@shjingce.example.com",
+    "Status": "active",
+    "metadata": {
+      "categories": ["电子内窥镜", "光学内窥镜"],
+      "location": "上海"
+    }
+  },
+  {
+    "SupplierID": "SUP-202501-002",
+    "Name": "深圳光研科技",
+    "Company": "深圳市光研科技有限公司",
+    "AccessPassword": "supplier-654321",
+    "ContactPhone": "0755-66668888",
+    "ContactEmail": "bd@gytech.example.com",
+    "Status": "active",
+    "metadata": {
+      "categories": ["光纤内窥镜", "冷光源"],
+      "location": "深圳"
+    }
+  },
+  {
+    "SupplierID": "SUP-202501-003",
+    "Name": "北京智检科技",
+    "Company": "北京智检科技发展有限公司",
+    "AccessPassword": "supplier-000999",
+    "ContactPhone": "010-66661234",
+    "ContactEmail": "contact@zj-tech.example.com",
+    "Status": "active",
+    "metadata": {
+      "categories": ["电子内窥镜", "主机/插入管"],
+      "location": "北京"
+    }
+  }
+]

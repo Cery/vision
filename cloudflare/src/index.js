@@ -13,7 +13,8 @@ export default {
       'https://api.visndt.com',
       'http://localhost:1313', 'http://127.0.0.1:1313',
       'http://localhost:8888', 'http://127.0.0.1:8888',
-      'http://localhost:5510', 'http://127.0.0.1:5510'
+      'http://localhost:5510', 'http://127.0.0.1:5510',
+      'http://localhost:5500', 'http://127.0.0.1:5500'
     ]);
     const allowOrigin = (origin && allowedOrigins.has(origin)) ? origin : 'https://visndt.com';
     const baseHeaders = {
@@ -396,6 +397,7 @@ export default {
         if (typeof data.allowOpenQuotes === 'boolean') { sets.push('allow_open_quotes = ?'); binds.push(data.allowOpenQuotes ? 1 : 0); }
         if (typeof data.contactPublic === 'boolean') { sets.push('contact_public = ?'); binds.push(data.contactPublic ? 1 : 0); }
         if (data.newPasswordPlain) { sets.push('view_password_plain = ?'); binds.push(String(data.newPasswordPlain)); }
+        if (typeof data.status === 'string' && data.status.trim()) { sets.push('status = ?'); binds.push(String(data.status).trim()); }
         sets.push('updated_at = ?'); binds.push(new Date().toISOString());
         if (!sets.length) return json({ error: 'NoFields' }, 400);
         const stmt = env.DB.prepare(`UPDATE requirements SET ${sets.join(', ')}`);
@@ -454,6 +456,23 @@ export default {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       const { results } = await env.DB.prepare('SELECT * FROM suppliers ORDER BY created_at DESC LIMIT 500').all();
       return json(results || []);
+    }
+    // Admin: bulk update suppliers (apply-to-all)
+    if (isApi('admin/suppliers') && request.method === 'POST') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const data = await bodyJSON(request);
+      const sets = [];
+      const binds = [];
+      if (data.applyToAll) {
+        if (data.newPasswordPlain) { sets.push('access_password_plain = ?'); binds.push(String(data.newPasswordPlain)); }
+        if (typeof data.status === 'string' && data.status.trim()) { sets.push('status = ?'); binds.push(String(data.status).trim()); }
+        sets.push('updated_at = ?'); binds.push(new Date().toISOString());
+        if (!sets.length) return json({ error: 'NoFields' }, 400);
+        const stmt = env.DB.prepare(`UPDATE suppliers SET ${sets.join(', ')}`);
+        await stmt.bind(...binds).run();
+        return json({ updated: 'all' });
+      }
+      return json({ error: 'InvalidRequest' }, 400);
     }
     if (isFn('adminUpdateSupplier') && request.method === 'POST' || isApi('admin/suppliers/') && request.method === 'PATCH') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
@@ -596,6 +615,108 @@ export default {
       }
     }
 
+    // Admin: reset data (wipe tables). Optional query param scope: 'all' | 'requirements' | 'quotes' | 'suppliers' | 'demanders'. Default: 'requirements,quotes'
+    if (isApi('admin/reset-data') && request.method === 'POST') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      try {
+        const scope = (url.searchParams.get('scope') || '').trim();
+        const wipeAll = scope === 'all' || scope === '';
+        const doReq = wipeAll || scope.includes('requirements');
+        const doQuote = wipeAll || scope.includes('quotes');
+        const doSup = scope.includes('suppliers') || (wipeAll);
+        const doDem = scope.includes('demanders') || (wipeAll);
+
+        // Count before
+        const { results: reqCountBefore } = await env.DB.prepare('SELECT COUNT(1) as c FROM requirements').all();
+        const { results: quoteCountBefore } = await env.DB.prepare('SELECT COUNT(1) as c FROM quotes').all();
+        const { results: supCountBefore } = await env.DB.prepare('SELECT COUNT(1) as c FROM suppliers').all();
+        const { results: demCountBefore } = await env.DB.prepare('SELECT COUNT(1) as c FROM demanders').all();
+
+        // Wipe in safe order
+        if (doQuote) { await env.DB.prepare('DELETE FROM quotes').run(); }
+        if (doReq) { await env.DB.prepare('DELETE FROM requirements').run(); }
+        if (doSup) { await env.DB.prepare('DELETE FROM suppliers').run(); }
+        if (doDem) { await env.DB.prepare('DELETE FROM demanders').run(); }
+
+        // Count after
+        const { results: reqCountAfter } = await env.DB.prepare('SELECT COUNT(1) as c FROM requirements').all();
+        const { results: quoteCountAfter } = await env.DB.prepare('SELECT COUNT(1) as c FROM quotes').all();
+        const { results: supCountAfter } = await env.DB.prepare('SELECT COUNT(1) as c FROM suppliers').all();
+        const { results: demCountAfter } = await env.DB.prepare('SELECT COUNT(1) as c FROM demanders').all();
+
+        return json({ ok: true, deleted: {
+          requirements: (reqCountBefore?.[0]?.c || 0) - (reqCountAfter?.[0]?.c || 0),
+          quotes: (quoteCountBefore?.[0]?.c || 0) - (quoteCountAfter?.[0]?.c || 0),
+          suppliers: (supCountBefore?.[0]?.c || 0) - (supCountAfter?.[0]?.c || 0),
+          demanders: (demCountBefore?.[0]?.c || 0) - (demCountAfter?.[0]?.c || 0)
+        }});
+      } catch (e) {
+        return json({ error: 'ResetFailed', detail: String(e && e.message || e) }, 500);
+      }
+    }
+
+    // Admin: import suppliers from JSON with upsert (synchronize with website data)
+    if (isApi('admin/import-suppliers') && request.method === 'POST') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      try {
+        const base = url.searchParams.get('base') || 'http://127.0.0.1:5500/data';
+        const sups = await fetchJsonSafe(`${base}/suppliers.json`);
+        const now = new Date().toISOString();
+        let upserted = 0;
+        for (const s of (sups || [])) {
+          try {
+            await env.DB.prepare(`INSERT INTO suppliers (
+              supplier_id, name, company, access_password_plain, contact_phone, contact_email, status, metadata_json, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(supplier_id) DO UPDATE SET
+              name = excluded.name,
+              company = excluded.company,
+              access_password_plain = excluded.access_password_plain,
+              contact_phone = excluded.contact_phone,
+              contact_email = excluded.contact_email,
+              status = COALESCE(excluded.status, suppliers.status),
+              metadata_json = excluded.metadata_json,
+              updated_at = excluded.updated_at
+            `)
+            .bind(
+              s.SupplierID || s.supplier_id || '', s.Name || s.name || '', s.Company || s.company || '', s.AccessPassword || s.access_password_plain || '',
+              s.ContactPhone || s.contact_phone || '', s.ContactEmail || s.contact_email || '', s.Status || s.status || '', JSON.stringify(s.metadata || s.metadata_json || {}),
+              s.created_at || now, s.updated_at || now
+            ).run();
+            upserted++;
+          } catch {}
+        }
+        return json({ ok: true, upserted });
+      } catch (e) {
+        return json({ error: 'ImportSuppliersFailed', detail: String(e && e.message || e) }, 500);
+      }
+    }
+
+    // Public: list requirements by view password only (for publisher entrance without ID)
+    if (isApi('requirements/by-password') && request.method === 'GET') {
+      const viewPwd = (url.searchParams.get('view_password') || '').trim();
+      if (!viewPwd) return json({ error: 'MissingPassword' }, 400);
+      const { results } = await env.DB.prepare('SELECT * FROM requirements WHERE view_password_plain = ? ORDER BY created_at DESC LIMIT 100').bind(viewPwd).all();
+      const items = (results || []).map(r => ({
+        RequirementID: r.requirement_id,
+        Title: r.title,
+        PrimaryCategory: r.primary_category,
+        SecondaryCategory: r.secondary_category,
+        Status: r.status,
+        BudgetRange: r.budget_range,
+        PublishedAt: r.published_at,
+        Progress: r.progress,
+        AllowOpenQuotes: !!r.allow_open_quotes,
+        Parameters: parseJSONSafe(r.parameters_json),
+        ContactName: r.contact_name,
+        ContactPhone: r.contact_phone,
+        ContactCompany: r.contact_company,
+        ContactEmail: r.contact_email,
+        ContactDepartment: r.contact_department
+      }));
+      return json({ items });
+    }
+
     return json({ error: 'NotFound' }, 404);
 
     function parseJSONSafe(s) { try { return JSON.parse(s || '{}'); } catch { return {}; } }
@@ -604,6 +725,76 @@ export default {
       const stmt = env.DB.prepare('SELECT 1 FROM suppliers WHERE access_password_plain = ? AND (status IS NULL OR status != "disabled")').bind(pass);
       const { results } = await stmt.all();
       return Boolean(results && results.length);
+    }
+  }
+  ,
+  async scheduled(event, env, ctx) {
+    // Automatic sync from website JSON if enabled via env or default
+    const base = env.SYNC_BASE_URL || 'https://www.visndt.com/data';
+    try {
+      // Seed requirements (INSERT OR IGNORE)
+      const reqs = await fetch(`${base}/requirements.json`).then(r => r.json()).catch(() => []);
+      const sups = await fetch(`${base}/suppliers.json`).then(r => r.json()).catch(() => []);
+      const dems = await fetch(`${base}/demanders.json`).then(r => r.json()).catch(() => []);
+      const now = new Date().toISOString();
+      for (const r of (reqs || [])) {
+        try {
+          await env.DB.prepare(`INSERT OR IGNORE INTO requirements (
+            requirement_id, title, public_preview, primary_category, secondary_category, status,
+            contact_name, contact_phone, contact_company, contact_email, contact_department,
+            contact_public, allow_open_quotes, parameters_json, published_at, budget_range, procurement_plan,
+            progress, view_password_plain, created_at, updated_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+          .bind(
+            r.RequirementID || '', r.Title || '', r.PublicPreview || '', r.PrimaryCategory || '', r.SecondaryCategory || '', r.Status || '',
+            r.ContactName || '', r.ContactPhone || '', r.ContactCompany || '', r.ContactEmail || '', r.ContactDepartment || '',
+            r.ContactPublic ? 1 : 0, r.AllowOpenQuotes ? 1 : 0, JSON.stringify(r.Parameters || {}), r.PublishedAt || now, r.BudgetRange || '', r.procurementPlan || '',
+            r.Progress || '', r.ViewPasswordPlain || '', r.created_at || now, r.updated_at || now
+          ).run();
+        } catch {}
+      }
+      // Upsert suppliers
+      for (const s of (sups || [])) {
+        try {
+          await env.DB.prepare(`INSERT INTO suppliers (
+            supplier_id, name, company, access_password_plain, contact_phone, contact_email, status, metadata_json, created_at, updated_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          ON CONFLICT(supplier_id) DO UPDATE SET
+            name = excluded.name,
+            company = excluded.company,
+            access_password_plain = excluded.access_password_plain,
+            contact_phone = excluded.contact_phone,
+            contact_email = excluded.contact_email,
+            status = COALESCE(excluded.status, suppliers.status),
+            metadata_json = excluded.metadata_json,
+            updated_at = excluded.updated_at
+          `)
+          .bind(
+            s.SupplierID || s.supplier_id || '', s.Name || s.name || '', s.Company || s.company || '', s.AccessPassword || s.access_password_plain || '',
+            s.ContactPhone || s.contact_phone || '', s.ContactEmail || s.contact_email || '', s.Status || s.status || '', JSON.stringify(s.metadata || s.metadata_json || {}),
+            s.created_at || now, s.updated_at || now
+          ).run();
+        } catch {}
+      }
+      if (env.DEFAULT_SUPPLIER_PASSWORD) {
+        try {
+          await env.DB.prepare('UPDATE suppliers SET access_password_plain = ?, updated_at = ?').bind(String(env.DEFAULT_SUPPLIER_PASSWORD), now).run();
+        } catch {}
+      }
+      // Seed demanders (ignore duplicates)
+      for (const d of (dems || [])) {
+        try {
+          await env.DB.prepare(`INSERT OR IGNORE INTO demanders (
+            demander_id, name, company, contact_phone, contact_email, department, metadata_json, created_at, updated_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+          .bind(
+            d.demander_id || d.DemanderID || '', d.name || d.Name || '', d.company || d.Company || '', d.contact_phone || d.ContactPhone || '', d.contact_email || d.ContactEmail || '',
+            d.department || d.Department || '', JSON.stringify(d.metadata || {}), d.created_at || now, d.updated_at || now
+          ).run();
+        } catch {}
+      }
+    } catch (e) {
+      // swallow errors to avoid cron failures surfacing
     }
   }
 };
