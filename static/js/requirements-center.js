@@ -12,13 +12,12 @@ class RequirementCenter {
         this.init();
     }
     
-    // 检测API服务地址
+    // 检测API服务地址（优先使用全局 API_BASE，其次使用相对路径）
     detectApiBase() {
-        const hostname = window.location.hostname;
-        if (hostname === 'localhost' || hostname === '127.0.0.1') {
-            return 'http://localhost:3001'; // content-server.js (正确端口)
+        if (typeof window !== 'undefined' && window.API_BASE) {
+            return String(window.API_BASE).replace(/\/$/, '');
         }
-        return '/api';
+        return '';
     }
     
     // 初始化应用
@@ -34,20 +33,16 @@ class RequirementCenter {
     // 检查API服务状态
     async checkApiStatus() {
         try {
-            const response = await fetch(`${this.apiBase}/health`, {
-                method: 'GET',
-                timeout: 3000
-            });
+            const response = await fetch(`${this.apiBase}/api/requirements`, { method: 'GET' });
             if (response.ok) {
                 console.log('✅ API服务连接正常');
                 this.apiAvailable = true;
-                this.showNotification('API服务已连接', 'success');
+                return;
             }
         } catch (error) {
-            console.warn('⚠️ API服务未连接，使用本地存储模式');
-            this.apiAvailable = false;
-            this.showNotification('使用本地存储模式', 'info');
+            console.warn('⚠️ API服务未连接');
         }
+        this.apiAvailable = false;
     }
     
     // 显示通知
@@ -605,68 +600,36 @@ ${data.description}
         console.log('💾 需求已保存到本地存储');
     }
 
-    // 加载需求列表
+    // 加载需求列表（仅从接口获取，移除离线示例回退）
     async loadRequirements() {
-        // 首先从本地存储或离线示例加载
-        await this.loadFromLocalStorage();
-
-        // 如果API可用，尝试从API加载更多数据
-        if (this.apiAvailable) {
-            try {
-                const apiRequirements = await this.loadFromApi();
-                // 合并API数据和本地数据，去重
-                const allRequirements = [...this.requirements];
-                apiRequirements.forEach(apiReq => {
-                    if (!allRequirements.find(req => req.id === (apiReq.id || apiReq.RequirementID))) {
-                        const mapped = this.normalizeStaticRequirement(apiReq);
-                        allRequirements.push(mapped);
-                    }
-                });
-                this.requirements = allRequirements.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-                this.renderRequirements();
-            } catch (error) {
-                console.warn('从API加载失败，使用本地/离线数据:', error);
-            }
+        try {
+            const apiRequirements = await this.loadFromApi();
+            this.requirements = (apiRequirements || []).map(apiReq => this.normalizeStaticRequirement(apiReq))
+                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            this.renderRequirements();
+        } catch (error) {
+            console.warn('从API加载失败:', error);
+            this.showNotification('需求列表加载失败，请稍后再试', 'error');
         }
     }
 
     // 从API加载需求
     async loadFromApi() {
-        const response = await fetch(`${this.apiBase}/api/requirements/list`);
+        const response = await fetch(`${this.apiBase}/api/requirements`);
         if (!response.ok) {
             throw new Error('API请求失败');
         }
-
         const result = await response.json();
-        return result.data || [];
+        return Array.isArray(result) ? result : (result.items || []);
     }
 
     // 从本地存储或示例数据加载
     async loadFromLocalStorage() {
         const localRequirements = JSON.parse(localStorage.getItem('requirements') || '[]');
-
-        // 如果本地没有数据，尝试加载网站示例数据（static/data/requirements.json）
-        if (localRequirements.length === 0) {
-            try {
-                const resp = await fetch('/data/requirements.json', { cache: 'no-cache' });
-                if (!resp.ok) throw new Error('示例数据不可用');
-                const json = await resp.json();
-                const items = Array.isArray(json) ? json : (json.items || json.requirements || []);
-                const normalized = items.map(it => this.normalizeStaticRequirement(it));
-                // 仅保留前50条，避免列表过长
-                const limited = normalized.slice(0, 50);
-                this.requirements = limited.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-                localStorage.setItem('requirements', JSON.stringify(this.requirements));
-                this.showNotification('已加载网站示例需求数据（离线）', 'info');
-            } catch (e) {
-                console.warn('离线示例数据加载失败，使用内置样例:', e);
-                this.requirements = this.getMockRequirements();
-            }
-        } else {
-            this.requirements = localRequirements;
+        this.requirements = localRequirements;
+        if (this.requirements.length) {
+            this.renderRequirements();
         }
-
-        this.renderRequirements();
     }
 
     // 规范化示例/接口返回数据为需求中心字段

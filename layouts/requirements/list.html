@@ -12,6 +12,7 @@
         <h2 class="mb-0 d-flex align-items-center gap-2">
           <i class="fa-solid fa-store text-primary"></i>
           需求市场
+          <span id="apiStatusBadge" class="badge bg-secondary">后端检测中</span>
         </h2>
         <div class="d-flex flex-wrap gap-2">
           <a href="/entry-demand.html" class="btn btn-sm btn-outline-primary">
@@ -90,17 +91,47 @@
   </div>
 </div>
 <script>
-// 统一 API 基础地址（优先 localStorage，其次本地/线上默认）
+// 统一 Cloudflare API 基础地址（与管理页一致）：生产同源 /api，本地/其他默认远端，可被 localStorage 覆盖
 (function(){
-  try {
-    const saved = (typeof localStorage !== 'undefined') ? (localStorage.getItem('API_BASE') || '') : '';
-    const base = saved || (location.hostname === 'localhost' ? 'https://vision-api.v-easechoice.workers.dev' : 'https://api.visndt.com');
-    window.API_BASE = (window.API_BASE || base).replace(/\/$/, '');
-  } catch (_) {
-    window.API_BASE = window.API_BASE || (location.hostname === 'localhost' ? 'https://vision-api.v-easechoice.workers.dev' : 'https://api.visndt.com');
+  const isProd = /(^|\.)visndt\.com$/i.test(location.hostname);
+  const defaultRemote = 'https://api.visndt.com';
+  let saved = '';
+  try { saved = (typeof localStorage !== 'undefined') ? (localStorage.getItem('API_BASE') || '') : ''; } catch {}
+  const allowInProd = new Set(['', 'https://api.visndt.com']);
+  if (isProd) {
+    window.API_BASE = allowInProd.has(saved) ? saved : '';
+  } else {
+    window.API_BASE = saved || defaultRemote;
   }
+  if (location.protocol === 'https:' && /^http:\/\//i.test(window.API_BASE||'')) {
+    try { localStorage.removeItem('API_BASE'); } catch {}
+    window.API_BASE = isProd ? '' : defaultRemote;
+  }
+  window.API_BASE = String(window.API_BASE).replace(/\/$/, '');
 })();
 window.apiFetch = window.apiFetch || ((path, opts={}) => fetch(`${window.API_BASE}${path}`, opts));
+
+// 后端状态徽标更新
+async function updateApiStatusBadge() {
+  const badge = document.getElementById('apiStatusBadge');
+  if (!badge) return;
+  badge.textContent = '后端检测中';
+  badge.className = 'badge bg-secondary';
+  try {
+    const res = await window.apiFetch('/api/requirements');
+    if (res && res.ok) {
+      badge.textContent = '后端在线';
+      badge.className = 'badge bg-success';
+    } else {
+      badge.textContent = '后端不可用';
+      badge.className = 'badge bg-danger';
+    }
+  } catch (_) {
+    badge.textContent = '后端不可用';
+    badge.className = 'badge bg-danger';
+  }
+}
+updateApiStatusBadge();
 // 从 Netlify Function 拉取最新需求列表（实时）
 async function listRequirements() {
   try {

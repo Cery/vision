@@ -47,12 +47,23 @@
     </div>
 
     <script>
-      // API base detection (align with management.html behavior)
+      // 统一 Cloudflare API 基础地址（与管理页一致）：生产同源 /api，本地/其他默认远端，可被 localStorage 覆盖
       (function() {
+        const isProd = /(^|\.)visndt\.com$/i.test(location.hostname);
         const defaultRemote = 'https://api.visndt.com';
-        const saved = (typeof localStorage !== 'undefined') ? localStorage.getItem('API_BASE') : '';
-        const base = saved || defaultRemote;
-        window.API_BASE = base.replace(/\/$/, '');
+        let saved = '';
+        try { saved = (typeof localStorage !== 'undefined') ? (localStorage.getItem('API_BASE') || '') : ''; } catch {}
+        const allowInProd = new Set(['', 'https://api.visndt.com']);
+        if (isProd) {
+          window.API_BASE = allowInProd.has(saved) ? saved : '';
+        } else {
+          window.API_BASE = saved || defaultRemote;
+        }
+        if (location.protocol === 'https:' && /^http:\/\//i.test(window.API_BASE||'')) {
+          try { localStorage.removeItem('API_BASE'); } catch {}
+          window.API_BASE = isProd ? '' : defaultRemote;
+        }
+        window.API_BASE = String(window.API_BASE).replace(/\/$/, '');
       })();
 
       async function apiFetch(path, options = {}) {

@@ -194,6 +194,7 @@
               <input id="supSearchInput" type="text" class="form-control" placeholder="按名称、系列或型号搜索">
             </div>
             <button id="supReloadBtn" class="btn btn-outline-primary btn-sm">重新加载</button>
+            <button id="supSyncBtn" class="btn btn-outline-success btn-sm">同步供应商</button>
             <div class="form-check ms-2">
               <input class="form-check-input" type="checkbox" value="" id="supPublicOnly">
               <label class="form-check-label" for="supPublicOnly">仅公开</label>
@@ -881,27 +882,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (nextBtn) nextBtn.disabled = !reqOffsetNext;
       if (pageHint) pageHint.textContent = `当前页：${items.length} 条，${reqOffsetNext ? '可下一页' : '无更多'}`;
     } catch (e) {
-      // 在线接口不可用时，尝试读取网站示例数据，进入只读模式
-      try {
-        const resp = await fetch('/data/requirements.json', { cache: 'no-cache' });
-        const json = await resp.json();
-        const items = Array.isArray(json) ? json : (json.items || json.requirements || []);
-        requirementsCache = items.map(normalizeRequirement);
-        renderRequirements(requirementsCache);
-        updateStats(requirementsCache);
-        const prevBtn = document.getElementById('reqPrevPage');
-        const nextBtn = document.getElementById('reqNextPage');
-        if (prevBtn) prevBtn.disabled = true;
-        if (nextBtn) nextBtn.disabled = true;
-        if (pageHint) pageHint.textContent = '离线只读：已加载网站示例数据（static/data/requirements.json）';
-        // 禁用写操作按钮（批量开关、重置、同步等）
-        ['reqStatusOnlineBtn','reqStatusPrivateBtn','reqStatusCloseBtn','resetAndSyncBtn','seedSampleBtn','cleanupInvalidBtn','applyAllBtn'].forEach(id => {
-          const btn = document.getElementById(id);
-          if (btn) btn.setAttribute('disabled','true');
-        });
-      } catch (e2) {
-        if (tbody) tbody.innerHTML = `<tr><td colspan="7" class="text-danger">${e.message}</td></tr>`;
-      }
+      if (tbody) tbody.innerHTML = `<tr><td colspan="7" class="text-danger">${e.message}</td></tr>`;
     }
   }
 
@@ -1347,50 +1328,32 @@ document.addEventListener('DOMContentLoaded', () => {
   let supOffsetStack=[];
   async function loadSuppliers(initial=false){
     try{
-      // 优先从管理接口加载；失败时回退至站点索引 JSON
-      let ok=false;
-      try{
-        const urlObj = new URL('/api/admin/suppliers', window.location.origin);
-        const onlyPublic = !!document.getElementById('supPublicOnly')?.checked;
-        const search = (document.getElementById('supSearchInput')?.value||'').trim();
-        if (onlyPublic) urlObj.searchParams.set('public','true');
-        if (search) urlObj.searchParams.set('q', search);
-        urlObj.searchParams.set('limit','20');
-        if (!initial && supOffsetNext) urlObj.searchParams.set('offset', supOffsetNext);
-        const respApi = await window.apiFetch(`/api/admin/suppliers?${urlObj.searchParams.toString()}`, { headers: { 'X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') } });
-        if (respApi.ok) {
-          const d = await respApi.json();
-          const items = Array.isArray(d) ? d : (d.items||[]);
-          suppliersCache = items.map(it => ({
-            title: it.company || it.CompanyName || it.Title || '',
-            contact: it.name || it.ContactName || it.Contact || '',
-            phone: it.contact_phone || it.Phone || '',
-            email: it.contact_email || it.Email || '',
-            series: 0,
-            models: 0,
-            uri: (it.metadata_json && (typeof it.metadata_json==='object' ? it.metadata_json.website : '')) || it.Website || it.Uri || ''
-          }));
-          supOffsetNext = d.offsetNext || '';
-          if (initial) supOffsetStack = [];
-          ok=true;
-        }
-      } catch {}
-      if (!ok) {
-        const resp = await fetch('/search-index.json');
-        if(!resp.ok) throw new Error('无法加载供应商索引');
-        const data = await resp.json();
-        const pages = (Array.isArray(data) ? data : (data.pages || data)) || [];
-        const list = pages.filter(p => (p.type || p.section) && ((p.type||'')==='suppliers' || (p.section||'')==='suppliers'));
-        suppliersCache = list.map(p => ({
-          title: p.title || '',
-          contact: (p.params&&p.params.contact_person) || '',
-          phone: (p.params&&p.params.phone) || '',
-          email: (p.params&&p.params.email) || '',
-          series: Array.isArray(p.params?.series) ? p.params.series.length : 0,
-          models: Array.isArray(p.params?.models) ? p.params.models.length : 0,
-          uri: p.uri || p.permalink || ''
-        }));
+      // 仅从管理接口加载，移除静态索引回退，保证单一数据源
+      const urlObj = new URL('/api/admin/suppliers', window.location.origin);
+      const onlyPublic = !!document.getElementById('supPublicOnly')?.checked;
+      const search = (document.getElementById('supSearchInput')?.value||'').trim();
+      if (onlyPublic) urlObj.searchParams.set('public','true');
+      if (search) urlObj.searchParams.set('q', search);
+      urlObj.searchParams.set('limit','20');
+      if (!initial && supOffsetNext) urlObj.searchParams.set('offset', supOffsetNext);
+      const respApi = await window.apiFetch(`/api/admin/suppliers?${urlObj.searchParams.toString()}`, { headers: { 'X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') } });
+      if (!respApi.ok) {
+        const errText = await respApi.text();
+        throw new Error(errText || '加载供应商失败');
       }
+      const d = await respApi.json();
+      const items = Array.isArray(d) ? d : (d.items||[]);
+      suppliersCache = items.map(it => ({
+        title: it.company || it.CompanyName || it.Title || '',
+        contact: it.name || it.ContactName || it.Contact || '',
+        phone: it.contact_phone || it.Phone || '',
+        email: it.contact_email || it.Email || '',
+        series: 0,
+        models: 0,
+        uri: (it.metadata_json && (typeof it.metadata_json==='object' ? it.metadata_json.website : '')) || it.Website || it.Uri || ''
+      }));
+      supOffsetNext = d.offsetNext || '';
+      if (initial) supOffsetStack = [];
       renderSuppliers();
       const pageInfo=document.getElementById('supPageInfo');
       const prevBtn=document.getElementById('supPrevPage');
@@ -1419,6 +1382,23 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('supSearchInput')?.addEventListener('input', ()=>loadSuppliers(true));
   document.getElementById('supReloadBtn')?.addEventListener('click', ()=>loadSuppliers(true));
   document.getElementById('supPublicOnly')?.addEventListener('change', ()=>loadSuppliers(true));
+  // 同步供应商：从网站 data/suppliers.json 增量 upsert 到后台
+  document.getElementById('supSyncBtn')?.addEventListener('click', async ()=>{
+    try {
+      if (!window.ADMIN_KEY && typeof ADMIN_KEY === 'undefined') { alert('请先输入管理员密钥并点击“确认登录”'); return; }
+      const btn = document.getElementById('supSyncBtn'); if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> 同步中'; }
+      const base = (location.origin + '/data');
+      const resp = await window.apiFetch(`/api/admin/import-suppliers?base=${encodeURIComponent(base)}`, { method: 'POST', headers: { 'X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') } });
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error || '同步失败');
+      alert(`已同步供应商：${data.upserted||0} 条`);
+      await loadSuppliers(true);
+    } catch (e) {
+      alert(e.message || '同步失败');
+    } finally {
+      const btn = document.getElementById('supSyncBtn'); if (btn) { btn.disabled = false; btn.innerHTML = '同步供应商'; }
+    }
+  });
   document.getElementById('supPrevPage')?.addEventListener('click', ()=>{
     if (supOffsetStack.length){
       supOffsetNext = supOffsetStack.pop();
