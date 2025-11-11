@@ -138,8 +138,8 @@
             <td class="mono">${i + 1}</td>
             <td class="mono">${escapeHtml(q.quote_id || '')}</td>
             <td>${escapeHtml(q.supplier_name || q.supplier_id || '')}</td>
-            <td>${escapeHtml(q.price || '')}</td>
-            <td>${escapeHtml(q.notes || '')}</td>
+            <td>${escapeHtml(q.price ?? q.amount ?? '')}</td>
+            <td>${escapeHtml(q.notes ?? q.remarks ?? '')}</td>
             <td class="mono small">${escapeHtml(q.created_at || '')}</td>
           </tr>`).join('');
         card.innerHTML = `
@@ -169,7 +169,11 @@
         const headers = ['quote_id','supplier_id','supplier_name','price','notes','created_at'];
         const lines = [headers.join(',')];
         lastQuotes.forEach(q => {
-          const row = headers.map(h => escapeCsv(q[h]));
+          const row = headers.map(h => {
+            if (h === 'price') return escapeCsv(q.price ?? q.amount ?? '');
+            if (h === 'notes') return escapeCsv(q.notes ?? q.remarks ?? '');
+            return escapeCsv(q[h]);
+          });
           lines.push(row.join(','));
         });
         const blob = new Blob(["\ufeff" + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });

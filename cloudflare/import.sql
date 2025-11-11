@@ -71,3 +71,45 @@ INSERT OR IGNORE INTO suppliers (
     ) VALUES (
       'SUP-202501-003', '北京智检科技', '北京智检科技发展有限公司', 'supplier-000999', '010-66661234', 'contact@zj-tech.example.com', 'active', '{"categories":["电子内窥镜","主机/插入管"],"location":"北京"}', '2025-11-11T01:11:48.300Z', '2025-11-11T01:11:48.300Z'
     );
+
+-- Import Quotes (sample data)
+INSERT OR IGNORE INTO quotes (
+      quote_id, requirement_id, supplier_id, supplier_name, supplier_phone, amount, currency, remarks, status, created_at, updated_at
+    ) VALUES (
+      'Q-2025-0001', 'REQ-20250115-001', 'SUP-202501-001', '上海精测仪器有限公司', '021-88886666', 125000.00, 'CNY', '含主机、插入管与基本配件，交付期30天', 'submitted', '2025-11-11T02:01:00.000Z', '2025-11-11T02:01:00.000Z'
+    );
+INSERT OR IGNORE INTO quotes (
+      quote_id, requirement_id, supplier_id, supplier_name, supplier_phone, amount, currency, remarks, status, created_at, updated_at
+    ) VALUES (
+      'Q-2025-0002', 'REQ-20250115-001', 'SUP-202501-003', '北京智检科技', '010-66661234', 135000.00, 'CNY', '支持四方向导向与测量功能，交付期25天', 'submitted', '2025-11-11T02:02:00.000Z', '2025-11-11T02:02:00.000Z'
+    );
+INSERT OR IGNORE INTO quotes (
+      quote_id, requirement_id, supplier_id, supplier_name, supplier_phone, amount, currency, remarks, status, created_at, updated_at
+    ) VALUES (
+      'Q-2025-0003', 'REQ-20250115-002', 'SUP-202501-002', '深圳光研科技', '0755-66668888', 320000.00, 'CNY', '超柔性探头方案含冷光源套件，交付期40天', 'submitted', '2025-11-11T02:03:00.000Z', '2025-11-11T02:03:00.000Z'
+    );
+INSERT OR IGNORE INTO quotes (
+      quote_id, requirement_id, supplier_id, supplier_name, supplier_phone, amount, currency, remarks, status, created_at, updated_at
+    ) VALUES (
+      'Q-2025-0004', 'REQ-20250115-002', 'SUP-202501-001', '上海精测仪器有限公司', '021-88886666', 345000.00, 'CNY', '替代性方案（侧视与多视场可选），交付期35天', 'submitted', '2025-11-11T02:04:00.000Z', '2025-11-11T02:04:00.000Z'
+    );
+INSERT OR IGNORE INTO quotes (
+      quote_id, requirement_id, supplier_id, supplier_name, supplier_phone, amount, currency, remarks, status, created_at, updated_at
+    ) VALUES (
+      'Q-2025-0005', 'REQ-20250112-003', 'SUP-202501-002', '深圳光研科技', '0755-66668888', 68000.00, 'CNY', '光学镜头方案（直视0°，含冷光源），交付期20天', 'submitted', '2025-11-11T02:05:00.000Z', '2025-11-11T02:05:00.000Z'
+    );
+INSERT OR IGNORE INTO quotes (
+      quote_id, requirement_id, supplier_id, supplier_name, supplier_phone, amount, currency, remarks, status, created_at, updated_at
+    ) VALUES (
+      'Q-2025-0006', 'REQ-20250110-004', 'SUP-202501-003', '北京智检科技', '010-66661234', 98000.00, 'CNY', '高温环境专用探头与高清主机，交付期28天', 'submitted', '2025-11-11T02:06:00.000Z', '2025-11-11T02:06:00.000Z'
+    );
+INSERT OR IGNORE INTO quotes (
+      quote_id, requirement_id, supplier_id, supplier_name, supplier_phone, amount, currency, remarks, status, created_at, updated_at
+    ) VALUES (
+      'Q-2025-0007', 'REQ-20250108-005', 'SUP-202501-001', '上海精测仪器有限公司', '021-88886666', 158000.00, 'CNY', '研发配套镜头组合（多视场切换），交付期30天', 'submitted', '2025-11-11T02:07:00.000Z', '2025-11-11T02:07:00.000Z'
+    );
+INSERT OR IGNORE INTO quotes (
+      quote_id, requirement_id, supplier_id, supplier_name, supplier_phone, amount, currency, remarks, status, created_at, updated_at
+    ) VALUES (
+      'Q-2025-0008', 'REQ-20250108-005', 'SUP-202501-002', '深圳光研科技', '0755-66668888', 171000.00, 'CNY', '含光纤光源与变焦镜头，交付期32天', 'submitted', '2025-11-11T02:08:00.000Z', '2025-11-11T02:08:00.000Z'
+    );

@@ -144,8 +144,8 @@
             <td class="mono">${i + 1}</td>
             <td class="mono">${escapeHtml(q.quote_id || '')}</td>
             <td class="mono">${escapeHtml(q.requirement_id || '')}</td>
-            <td>${escapeHtml(q.price || '')}</td>
-            <td>${escapeHtml(q.notes || '')}</td>
+            <td>${escapeHtml(q.price ?? q.amount ?? '')}</td>
+            <td>${escapeHtml(q.notes ?? q.remarks ?? '')}</td>
             <td class="mono small">${escapeHtml(q.created_at || '')}</td>
           </tr>`).join('');
         card.innerHTML = `
