@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS requirements (
   public_preview TEXT,
   primary_category TEXT,
   secondary_category TEXT,
+  approved INTEGER,
+  approved_at TEXT,
   status TEXT,
   contact_name TEXT,
   contact_phone TEXT,

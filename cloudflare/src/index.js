@@ -38,6 +38,8 @@ export default {
           public_preview TEXT,
           primary_category TEXT,
           secondary_category TEXT,
+          approved INTEGER,
+          approved_at TEXT,
           status TEXT,
           contact_name TEXT,
           contact_phone TEXT,
@@ -59,6 +61,9 @@ export default {
         await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_requirements_reqid ON requirements(requirement_id)').run();
         await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_requirements_phone ON requirements(contact_phone)').run();
         await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_requirements_progress ON requirements(progress)').run();
+        // Lightweight migrations: add columns if missing
+        try { await env.DB.prepare('ALTER TABLE requirements ADD COLUMN approved INTEGER').run(); } catch {}
+        try { await env.DB.prepare('ALTER TABLE requirements ADD COLUMN approved_at TEXT').run(); } catch {}
 
         // Quotes
         await env.DB.prepare(`CREATE TABLE IF NOT EXISTS quotes (
@@ -167,6 +172,19 @@ export default {
     const isFn = (p) => path.startsWith(`/.netlify/functions/${p}`);
     const isApi = (p) => path.startsWith(`/api/${p}`);
 
+    // Admin: verify via header token or body password
+    if (isApi('admin/verify') && request.method === 'POST') {
+      const data = await bodyJSON(request);
+      const pass = String(data.password || '').trim();
+      const headerOk = requireAdmin(request);
+      const envPass = String(env.ADMIN_PASSWORD || env.ADMIN_PASS || env.ADMIN_SECRET || '');
+      const passwordOk = Boolean(envPass && pass && pass === envPass);
+      if (headerOk || passwordOk) {
+        return json({ ok: true });
+      }
+      return json({ ok: false, error: 'Unauthorized' }, 401);
+    }
+
     // Create Requirement (alias for compatibility)
     if (isApi('requirements') && request.method === 'POST' || isFn('createRequirement') && request.method === 'POST') {
       const data = await bodyJSON(request);
@@ -186,13 +204,13 @@ export default {
 
       const stmt = env.DB.prepare(
         `INSERT INTO requirements (
-          requirement_id, title, public_preview, primary_category, secondary_category, status,
+          requirement_id, title, public_preview, primary_category, secondary_category, approved, approved_at, status,
           contact_name, contact_phone, contact_company, contact_email, contact_department,
           contact_public, allow_open_quotes, parameters_json, published_at, budget_range, procurement_plan,
           progress, view_password_plain, created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
       ).bind(
-        requirement_id, data.Title || '', data.PublicPreview || '', data.primaryCategory || '', data.secondaryCategory || '', status,
+        requirement_id, data.Title || '', data.PublicPreview || '', data.primaryCategory || '', data.secondaryCategory || '', 0, '', status,
         data.contactName || '', data.contactPhone || '', data.contactCompany || '', data.contactEmail || '', data.contactDepartment || '',
         contact_public, allow_open_quotes, parameters_json, data.PublishedAt || now, data.BudgetRange || '', data.procurementPlan || '',
         progress, view_password_plain, now, now
@@ -205,9 +223,12 @@ export default {
     if (isApi('requirements') && request.method === 'GET' || isFn('listRequirements') && request.method === 'GET') {
       const progress = url.searchParams.get('progress');
       const category = url.searchParams.get('category');
-      let q = 'SELECT requirement_id as RequirementID, title as Title, public_preview as PublicPreview, primary_category as PrimaryCategory, secondary_category as SecondaryCategory, status as Status, contact_public as ContactPublic, contact_name as ContactName, contact_phone as ContactPhone, contact_company as ContactCompany, budget_range as BudgetRange, published_at as PublishedAt, progress as Progress, allow_open_quotes as AllowOpenQuotes, parameters_json as Parameters FROM requirements';
+      let q = 'SELECT requirement_id as RequirementID, title as Title, public_preview as PublicPreview, primary_category as PrimaryCategory, secondary_category as SecondaryCategory, approved as Approved, status as Status, contact_public as ContactPublic, contact_name as ContactName, contact_phone as ContactPhone, contact_company as ContactCompany, budget_range as BudgetRange, published_at as PublishedAt, progress as Progress, allow_open_quotes as AllowOpenQuotes, parameters_json as Parameters FROM requirements';
       const where = [];
       const binds = [];
+      // 前台列表仅展示已审核且状态为“公开”的需求
+      where.push('approved = 1');
+      where.push("status = '公开'");
       if (progress) { where.push('progress = ?'); binds.push(progress); }
       if (category) { where.push('primary_category = ?'); binds.push(category); }
       if (where.length) q += ' WHERE ' + where.join(' AND ');
@@ -407,7 +428,7 @@ export default {
       }
       // If body provides requirementID, update single
       if (data.requirementID) {
-        const fields = ['title','public_preview','primary_category','secondary_category','status','contact_name','contact_phone','contact_company','contact_email','contact_department','contact_public','allow_open_quotes','parameters_json','published_at','budget_range','procurement_plan','progress','view_password_plain'];
+        const fields = ['title','public_preview','primary_category','secondary_category','approved','approved_at','status','contact_name','contact_phone','contact_company','contact_email','contact_department','contact_public','allow_open_quotes','parameters_json','published_at','budget_range','procurement_plan','progress','view_password_plain'];
         const sets = [];
         const binds = [];
         for (const f of fields) {
@@ -425,7 +446,7 @@ export default {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       const id = path.split('/').pop();
       const data = await bodyJSON(request);
-      const fields = ['title','public_preview','primary_category','secondary_category','status','contact_name','contact_phone','contact_company','contact_email','contact_department','contact_public','allow_open_quotes','parameters_json','published_at','budget_range','procurement_plan','progress','view_password_plain'];
+      const fields = ['title','public_preview','primary_category','secondary_category','approved','approved_at','status','contact_name','contact_phone','contact_company','contact_email','contact_department','contact_public','allow_open_quotes','parameters_json','published_at','budget_range','procurement_plan','progress','view_password_plain'];
       const sets = [];
       const binds = [];
       for (const f of fields) {
@@ -544,13 +565,13 @@ export default {
       for (const r of (reqs || [])) {
         try {
           await env.DB.prepare(`INSERT OR IGNORE INTO requirements (
-            requirement_id, title, public_preview, primary_category, secondary_category, status,
+            requirement_id, title, public_preview, primary_category, secondary_category, approved, approved_at, status,
             contact_name, contact_phone, contact_company, contact_email, contact_department,
             contact_public, allow_open_quotes, parameters_json, published_at, budget_range, procurement_plan,
             progress, view_password_plain, created_at, updated_at
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
           .bind(
-            r.RequirementID || '', r.Title || '', r.PublicPreview || '', r.PrimaryCategory || '', r.SecondaryCategory || '', r.Status || '',
+            r.RequirementID || '', r.Title || '', r.PublicPreview || '', r.PrimaryCategory || '', r.SecondaryCategory || '', 1, now, r.Status || '',
             r.ContactName || '', r.ContactPhone || '', r.ContactCompany || '', r.ContactEmail || '', r.ContactDepartment || '',
             r.ContactPublic ? 1 : 0, r.AllowOpenQuotes ? 1 : 0, JSON.stringify(r.Parameters || {}), r.PublishedAt || now, r.BudgetRange || '', r.procurementPlan || '',
             r.Progress || '', r.ViewPasswordPlain || '', r.created_at || now, r.updated_at || now
@@ -740,13 +761,13 @@ export default {
       for (const r of (reqs || [])) {
         try {
           await env.DB.prepare(`INSERT OR IGNORE INTO requirements (
-            requirement_id, title, public_preview, primary_category, secondary_category, status,
+            requirement_id, title, public_preview, primary_category, secondary_category, approved, approved_at, status,
             contact_name, contact_phone, contact_company, contact_email, contact_department,
             contact_public, allow_open_quotes, parameters_json, published_at, budget_range, procurement_plan,
             progress, view_password_plain, created_at, updated_at
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
           .bind(
-            r.RequirementID || '', r.Title || '', r.PublicPreview || '', r.PrimaryCategory || '', r.SecondaryCategory || '', r.Status || '',
+            r.RequirementID || '', r.Title || '', r.PublicPreview || '', r.PrimaryCategory || '', r.SecondaryCategory || '', 1, now, r.Status || '',
             r.ContactName || '', r.ContactPhone || '', r.ContactCompany || '', r.ContactEmail || '', r.ContactDepartment || '',
             r.ContactPublic ? 1 : 0, r.AllowOpenQuotes ? 1 : 0, JSON.stringify(r.Parameters || {}), r.PublishedAt || now, r.BudgetRange || '', r.procurementPlan || '',
             r.Progress || '', r.ViewPasswordPlain || '', r.created_at || now, r.updated_at || now

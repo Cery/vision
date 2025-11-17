@@ -60,6 +60,16 @@
   "params": {"date":"2024-03-20T00:00:00Z","draft":false,"features":["高精度科研检测","多学科应用支持","实验过程监控","数据采集分析","定制化解决方案"],"icon":"fas fa-microscope","image":"/images/banners/category/application_general_pipe-2_original_v1.jpg","iscjklanguage":true,"key_technologies":["超高分辨率成像","多光谱分析技术","实时数据采集","图像处理算法","测量标定技术"],"lastmod":"2024-03-20T00:00:00Z","publishdate":"2024-03-20T00:00:00Z","scenarios":[{"description":"材料微观结构、性能测试和失效分析研究","icon":"fas fa-atom","title":"材料科学研究"},{"description":"生物组织结构观察和医疗器械研发支持","icon":"fas fa-dna","title":"生物医学研究"},{"description":"机械结构分析、疲劳试验和性能评估","icon":"fas fa-cog","title":"机械工程研究"},{"description":"环境监测、污染检测和生态研究支持","icon":"fas fa-leaf","title":"环境科学研究"}],"summary":"科研实验检测分析专业解决方案，支持科学研究和技术创新","title":"科学研究","weight":6}
 },
 {
+  "uri": "/news/exhibition/2025-shanghai-ndt-expo/",
+  "title": "2025上海国际无损检测与智能制造展览会",
+  "content": "展会涵盖工业检测、机器人与视觉系统等主题。届时将发布新一代工业内窥镜产品与AI检测解决方案。\n",
+  "summary": "展会聚焦智能检测、机器视觉与内窥技术，行业品牌齐聚，发布多项创新成果。",
+  "type": "news",
+  "section": "news",
+  "date": "2025-11-12",
+  "params": {"categories":["展会资讯"],"date":"2025-11-12T00:00:00Z","draft":false,"iscjklanguage":true,"lastmod":"2025-11-12T00:00:00Z","location":"上海新国际博览中心","publishdate":"2025-11-12T00:00:00Z","summary":"展会聚焦智能检测、机器视觉与内窥技术，行业品牌齐聚，发布多项创新成果。","tags":["展会","智能制造","无损检测"],"title":"2025上海国际无损检测与智能制造展览会"}
+},
+{
   "uri": "/news/industry/2025-industrial-ndt-trends/",
   "title": "2025年工业内窥与无损检测技术发展趋势",
   "content": "在智能制造背景下，工业内窥镜与无损检测技术持续迭代。高清成像、AI缺陷识别以及远程协作成为行业主流趋势。\n",

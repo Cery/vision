@@ -637,6 +637,8 @@ ${data.description}
         const id = it.id || it.RequirementID || it.requirement_id || '';
         const published = it.timestamp || it.PublishedAt || it.published_at || it.created_at || new Date().toISOString();
         const statusText = it.status || it.Status || '';
+        const progressText = it.progress || it.Progress || '';
+        const titleText = it.title || it.Title || '';
         const primary = it.productType || it.PrimaryCategory || it.primaryCategory || it.category || '';
         const toType = (s) => {
             const t = String(s || '').toLowerCase();
@@ -652,6 +654,8 @@ ${data.description}
             id,
             timestamp: published,
             status: (statusText === '关闭' || statusText === 'closed') ? 'closed' : 'active',
+            progress: progressText,
+            title: titleText,
             productType: toType(primary),
             contactName: it.ContactName || it.contact_name || '',
             companyName: it.ContactCompany || it.contact_company || '',
@@ -882,57 +886,170 @@ ${data.description}
         const modal = new bootstrap.Modal(document.getElementById('requirementModal'));
         const modalBody = document.getElementById('requirementModalBody');
 
+        // 处理时间线步进：已发布 / 沟通中 / 已完成(或关闭)
+        const progressStr = String(requirement.progress || '').toLowerCase();
+        let activeStep = 1;
+        if (requirement.status === 'closed' || /完成|结束|closed|done/.test(progressStr)) {
+            activeStep = 3;
+        } else if (/沟通|接洽|联系|communicat|contact/.test(progressStr)) {
+            activeStep = 2;
+        }
+        const percent = activeStep === 1 ? 33 : (activeStep === 2 ? 66 : 100);
+
+        const title = requirement.title && String(requirement.title).trim()
+          ? requirement.title
+          : `${requirement.companyName || requirement.contactName || ''}的${this.getProductTypeName(requirement.productType)}需求`;
+
         modalBody.innerHTML = `
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <strong>需求编号：</strong>${requirement.id}
-                </div>
-                <div class="col-md-6">
-                    <strong>发布时间：</strong>${new Date(requirement.timestamp).toLocaleString()}
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <strong>产品类型：</strong>${this.getProductTypeName(requirement.productType)}
-                </div>
-                <div class="col-md-6">
-                    <strong>预算范围：</strong><span class="text-success">${requirement.budget || '面议'}</span>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <strong>客户公司：</strong>${requirement.companyName || '个人用户'}
-                </div>
-                <div class="col-md-6">
-                    <strong>所属部门：</strong>${requirement.department || '未填写'}
-                </div>
+            <div class="mb-2">
+                <h4 class="mb-1">${title}</h4>
+                <div class="text-muted small">编号：${requirement.id} · 发布：${new Date(requirement.timestamp).toLocaleString()}</div>
             </div>
 
+            <!-- 顶部时间线（横向） -->
             <div class="mb-3">
-                <strong>需求描述：</strong>
-                <p class="mt-2 p-3 bg-light rounded">${requirement.description}</p>
-            </div>
-
-            <div class="mb-3">
-                <strong>技术参数：</strong>
-                <div class="mt-2">
-                    ${this.generateTechnicalParamsHTML(requirement)}
+                <div class="d-flex align-items-center">
+                    <div class="progress flex-grow-1" style="height:8px;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: ${percent}%;" aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div class="ms-2 small text-muted">${activeStep===3?'已完成':(activeStep===2?'沟通中':'已发布')}</div>
+                </div>
+                <div class="d-flex justify-content-between small text-muted mt-1">
+                    <span>已发布</span><span>沟通中</span><span>已完成</span>
                 </div>
             </div>
 
-            <div class="alert alert-warning">
-                <h6><i class="fas fa-shield-exclamation me-1"></i>联系说明</h6>
-                <p class="mb-2">为保护客户隐私，详细联系方式需要通过平台获取：</p>
-                <div class="d-flex gap-2">
-                    <button class="btn btn-primary btn-sm" onclick="contactRequirement('${requirement.id}')">
-                        <i class="fas fa-phone me-1"></i>获取联系方式
-                    </button>
-                    <button class="btn btn-success btn-sm" onclick="submitProposal('${requirement.id}')">
-                        <i class="fas fa-paper-plane me-1"></i>提交方案
-                    </button>
+            <!-- 基本信息（板块化） -->
+            <div class="mb-3 p-3 border rounded">
+                <div class="row mb-2">
+                    <div class="col-md-6"><strong>产品类型：</strong>${this.getProductTypeName(requirement.productType)}</div>
+                    <div class="col-md-6"><strong>预算范围：</strong><span class="text-success">${requirement.budget || '面议'}</span></div>
                 </div>
+                <div class="row">
+                    <div class="col-md-6"><strong>客户公司：</strong>${requirement.companyName || '个人用户'}</div>
+                    <div class="col-md-6"><strong>所属部门：</strong>${requirement.department || '未填写'}</div>
+                </div>
+            </div>
+
+            <!-- 需求描述 -->
+            <div class="mb-3 p-3 bg-light rounded">
+                <div class="mb-2"><strong>需求描述</strong></div>
+                <div>${requirement.description}</div>
+            </div>
+
+            <!-- 技术参数 -->
+            <div class="mb-3 p-3 border rounded">
+                <div class="mb-2"><strong>技术参数</strong></div>
+                ${this.generateTechnicalParamsHTML(requirement)}
+            </div>
+
+            <!-- 联系方式（需授权密码） -->
+            <div class="mb-3 p-3 border rounded">
+                <div class="mb-2"><strong>联系方式</strong></div>
+                <div class="alert alert-warning">
+                    <div class="mb-2 small"><i class="fas fa-shield-exclamation me-1"></i>仅限合作供应商输入平台授权密码查看联系方式</div>
+                    <div class="d-flex gap-2 align-items-center mb-2">
+                        <input type="password" class="form-control form-control-sm" id="viewPasswordInput" placeholder="输入授权密码">
+                        <button class="btn btn-primary btn-sm" onclick="verifyRequirementPassword('${requirement.id}')">
+                            <i class="fas fa-unlock me-1"></i>解锁联系方式
+                        </button>
+                    </div>
+                    <div id="contactUnlocked" style="display:none;" class="mt-2">
+                        <div class="row g-2">
+                            <div class="col-md-6"><strong>联系人：</strong><span id="cName"></span></div>
+                            <div class="col-md-6"><strong>电话：</strong><span id="cPhone"></span></div>
+                            <div class="col-md-6"><strong>公司：</strong><span id="cCompany"></span></div>
+                            <div class="col-md-6"><strong>邮箱：</strong><span id="cEmail"></span></div>
+                            <div class="col-md-6"><strong>部门：</strong><span id="cDept"></span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 报价表单（默认折叠） -->
+            <div class="mb-1 d-flex justify-content-between align-items-center">
+                <div class="fw-bold">报价</div>
+                <button class="btn btn-outline-success btn-sm" id="toggleQuoteBtn">展开报价表单</button>
+            </div>
+            <div id="quoteFormWrap" style="display:none;" class="p-3 border rounded mb-2">
+                <form id="quoteForm" class="row g-2">
+                    <div class="col-md-6">
+                        <label class="form-label">供应商名称</label>
+                        <input type="text" class="form-control" id="supplierName" placeholder="公司或联系人">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">联系电话</label>
+                        <input type="text" class="form-control" id="supplierPhone" placeholder="手机号/座机">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">报价金额（元）</label>
+                        <input type="number" class="form-control" id="quoteAmount" placeholder="例如 20000">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">币种</label>
+                        <input type="text" class="form-control" id="quoteCurrency" value="CNY">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">备注（型号/交期/关键参数等）</label>
+                        <textarea class="form-control" id="quoteRemarks" rows="3"></textarea>
+                    </div>
+                    <div class="col-12 d-flex gap-2">
+                        <button type="submit" class="btn btn-success">提交报价</button>
+                        <button type="button" class="btn btn-outline-secondary" id="cancelQuoteBtn">收起</button>
+                    </div>
+                </form>
             </div>
         `;
+
+        // 折叠/展开报价表单
+        const toggleBtn = document.getElementById('toggleQuoteBtn');
+        const wrap = document.getElementById('quoteFormWrap');
+        const cancelBtn = document.getElementById('cancelQuoteBtn');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => {
+                const show = wrap.style.display === 'none';
+                wrap.style.display = show ? '' : 'none';
+                toggleBtn.textContent = show ? '收起报价表单' : '展开报价表单';
+            });
+        }
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                wrap.style.display = 'none';
+                toggleBtn.textContent = '展开报价表单';
+            });
+        }
+
+        // 提交报价
+        const form = document.getElementById('quoteForm');
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const supplier_name = document.getElementById('supplierName').value.trim();
+                const supplier_phone = document.getElementById('supplierPhone').value.trim();
+                const amount = Number(document.getElementById('quoteAmount').value || 0);
+                const currency = (document.getElementById('quoteCurrency').value || 'CNY').trim() || 'CNY';
+                const remarks = document.getElementById('quoteRemarks').value.trim();
+                if (!supplier_name || !amount) {
+                    alert('请填写供应商名称与报价金额');
+                    return;
+                }
+                try {
+                    const api = window.requirementCenter?.apiBase || '';
+                    const resp = await fetch(`${api}/api/quotes`, {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ requirement_id: requirement.id, supplier_name, supplier_phone, amount, currency, remarks })
+                    });
+                    if (!resp.ok) throw new Error('报价提交失败');
+                    await resp.json().catch(()=>({}));
+                    alert('报价已提交成功！我们将通知发布方尽快接洽。');
+                    form.reset();
+                    wrap.style.display = 'none';
+                    toggleBtn.textContent = '展开报价表单';
+                } catch (err) {
+                    alert('报价提交接口未开启或出错，请稍后再试');
+                }
+            });
+        }
 
         modal.show();
     }
@@ -979,6 +1096,35 @@ function contactRequirement(reqId) {
 
 function submitProposal(reqId) {
     alert(`提交技术方案\n\n请将您的技术方案和报价发送至：\nbusiness@vision-ndt.com\n\n邮件标题请注明：方案提交-${reqId}`);
+}
+
+// 授权密码验证并解锁联系方式（优先查看密码；失败则尝试供应商通行密码）
+async function verifyRequirementPassword(requirementID) {
+    const input = document.getElementById('viewPasswordInput');
+    const pw = (input && input.value || '').trim();
+    if (!pw) { alert('请输入授权密码'); return; }
+    const api = (window.requirementCenter && window.requirementCenter.apiBase) || '';
+    try {
+        let resp = await fetch(`${api}/api/requirements/${encodeURIComponent(requirementID)}?view_password=${encodeURIComponent(pw)}`);
+        let data = null;
+        if (resp.ok) data = await resp.json().catch(()=>null);
+        if (!resp.ok || !(data && (data.ContactName || data.ContactPhone || data.ContactCompany))) {
+            resp = await fetch(`${api}/api/requirements/${encodeURIComponent(requirementID)}?supplier_access_password=${encodeURIComponent(pw)}`);
+            if (resp.ok) data = await resp.json().catch(()=>null);
+        }
+        if (resp.ok && data && (data.ContactName || data.ContactPhone || data.ContactCompany)) {
+            document.getElementById('contactUnlocked')?.setAttribute('style','');
+            document.getElementById('cName')?.replaceChildren(document.createTextNode(data.ContactName || ''));
+            document.getElementById('cPhone')?.replaceChildren(document.createTextNode(data.ContactPhone || ''));
+            const cc = document.getElementById('cCompany'); if (cc) cc.replaceChildren(document.createTextNode(data.ContactCompany || ''));
+            const ce = document.getElementById('cEmail'); if (ce) ce.replaceChildren(document.createTextNode(data.ContactEmail || ''));
+            const cd = document.getElementById('cDept'); if (cd) cd.replaceChildren(document.createTextNode(data.ContactDepartment || ''));
+        } else {
+            alert('授权密码不正确或接口暂不可用');
+        }
+    } catch (e) {
+        alert('网络错误或接口不可用，请稍后再试');
+    }
 }
 
 // 初始化应用

@@ -135,8 +135,13 @@
                   <th>编号</th>
                   <th>标题</th>
                   <th>状态</th>
+                  <th>进度</th>
+                  <th>分类</th>
+                  <th>预算</th>
+                  <th>发布时间</th>
                   <th>在线报价</th>
                   <th>联系方式公开</th>
+                  <th>审批</th>
                   <th>报价数量</th>
                   <th>操作</th>
                 </tr>
@@ -780,6 +785,11 @@ document.addEventListener('DOMContentLoaded', () => {
       Title: it.Title || it.title || '',
       Status: it.Status || it.status || '',
       Progress: it.Progress || it.progress || '',
+      PrimaryCategory: it.PrimaryCategory || it.primary_category || '',
+      SecondaryCategory: it.SecondaryCategory || it.secondary_category || '',
+      BudgetRange: it.BudgetRange || it.budget_range || '',
+      ProcurementPlan: it.ProcurementPlan || it.procurement_plan || '',
+      Parameters: it.Parameters || it.parameters_json || {},
       AllowOpenQuotes: (typeof it.AllowOpenQuotes !== 'undefined') ? !!it.AllowOpenQuotes : !!it.allow_open_quotes,
       ContactPublic: (typeof it.ContactPublic !== 'undefined') ? !!it.ContactPublic : !!it.contact_public,
       ContactCompany: it.ContactCompany || it.contact_company || '',
@@ -790,12 +800,39 @@ document.addEventListener('DOMContentLoaded', () => {
       ViewPasswordPlain: it.ViewPasswordPlain || it.view_password_plain || '',
       ViewPasswordHash: it.ViewPasswordHash || it.view_password_hash || '',
       PublicPreview: it.PublicPreview || it.public_preview || '',
-      PublishedAt: it.PublishedAt || it.published_at || ''
+      PublishedAt: it.PublishedAt || it.published_at || '',
+      Approved: (function(){
+        const a = (typeof it.Approved !== 'undefined') ? it.Approved : it.approved;
+        if (typeof a === 'boolean') return a;
+        if (typeof a === 'number') return a === 1;
+        if (typeof a === 'string') return a === '1' || a.toLowerCase() === 'true';
+        return false;
+      })(),
+      ApprovedAt: it.ApprovedAt || it.approved_at || ''
     };
     return n;
   }
 
   function escapeHtml(s){return String(s).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;' }[m]));}
+
+  function formatDate(input){
+    if (!input) return '';
+    const d = new Date(input);
+    if (isNaN(d.getTime())) return '';
+    try {
+      if (Intl?.DateTimeFormat?.prototype?.formatToParts) {
+        const parts = new Intl.DateTimeFormat('zh-CN', { year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', hour12:false }).formatToParts(d);
+        const get = (t)=> parts.find(p=>p.type===t)?.value || '';
+        return `${get('year')}-${get('month')}-${get('day')} ${get('hour')}:${get('minute')}`;
+      }
+    } catch {}
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,'0');
+    const day = String(d.getDate()).padStart(2,'0');
+    const hh = String(d.getHours()).padStart(2,'0');
+    const mm = String(d.getMinutes()).padStart(2,'0');
+    return `${y}-${m}-${day} ${hh}:${mm}`;
+  }
 
   // 侧边/抽屉菜单切换（兼容左侧栏与 offcanvas）
   const bindTabSwitch = (rootSel) => {
@@ -894,16 +931,28 @@ document.addEventListener('DOMContentLoaded', () => {
       const id = item.RequirementID;
       const online = !!item.AllowOpenQuotes;
       const contactP = !!item.ContactPublic;
+      const pubText = (function(){
+        const f = formatDate(item.PublishedAt||'');
+        return f && f.trim() ? f : '—';
+      })();
       return `<tr data-id="${escapeHtml(id)}">
         <td>${escapeHtml(id || '—')}</td>
         <td class="text-truncate" title="${escapeHtml(item.Title||'未命名')}">${escapeHtml(item.Title||'未命名')}</td>
         <td>${escapeHtml(item.Status||'')}</td>
+        <td>${escapeHtml(item.Progress||'')}</td>
+        <td class="text-truncate" title="${escapeHtml(item.PrimaryCategory||'')}">${escapeHtml(item.PrimaryCategory||'')}</td>
+        <td class="text-truncate" title="${escapeHtml(item.BudgetRange||'')}">${escapeHtml(item.BudgetRange||'')}</td>
+        <td>${escapeHtml(pubText)}</td>
         <td>${online ? '开启' : '关闭'}</td>
         <td>${contactP ? '公开' : '不公开'}</td>
+        <td>
+          <button class="btn btn-sm ${item.Approved ? 'btn-success' : 'btn-outline-secondary'}" data-action="toggleApproved">${item.Approved ? '已批准' : '未批准'}</button>
+        </td>
         <td data-qcount="loading">—</td>
         <td>
           <button class="btn btn-sm btn-outline-primary me-1" data-action="detail" ${id?'':'disabled'}>详情</button>
           <button class="btn btn-sm btn-outline-secondary" data-action="quotes" ${id?'':'disabled'}>报价</button>
+          <button class="btn btn-sm btn-outline-danger ms-1" data-action="delete" ${id?'':'disabled'}>删除</button>
         </td>
       </tr>`;
     }).join('');
@@ -912,6 +961,37 @@ document.addEventListener('DOMContentLoaded', () => {
       if (id) { loadQuoteCount(id, tr); }
       tr.querySelector('[data-action="detail"]')?.addEventListener('click', ()=>{ if(id) showRequirementDetail(id); });
       tr.querySelector('[data-action="quotes"]')?.addEventListener('click', ()=>{ if(id) showQuotesModal(id); });
+      tr.querySelector('[data-action="toggleApproved"]')?.addEventListener('click', async ()=>{
+        if(!id) return;
+        const cur = (requirementsCache||[]).find(x=>x.RequirementID===id);
+        const newApproved = !(cur?.Approved);
+        try {
+          const r = await window.apiFetch(`/api/admin/requirements/${encodeURIComponent(id)}`, { method:'PATCH', headers:{ 'Content-Type':'application/json','X-Admin-Key': ADMIN_KEY }, body: JSON.stringify({ approved: newApproved }) });
+          const dj = await r.json(); if(!r.ok) throw new Error(dj.error||'更新失败');
+          const btn = tr.querySelector('[data-action="toggleApproved"]');
+          if (btn) { btn.textContent = newApproved ? '已批准' : '未批准'; btn.className = 'btn btn-sm ' + (newApproved ? 'btn-success' : 'btn-outline-secondary'); }
+          if (cur) cur.Approved = newApproved;
+          updateStats(requirementsCache);
+        } catch(e) {
+          alert(e.message || '更新失败');
+        }
+      });
+      tr.querySelector('[data-action="delete"]')?.addEventListener('click', async ()=>{
+        if(!id) return;
+        if (!ADMIN_KEY) { alert('请先输入管理员密钥并登录'); return; }
+        const ok = confirm('确定要删除该需求吗？此操作不可撤销。');
+        if (!ok) return;
+        try {
+          const r = await window.apiFetch(`/api/admin/requirements/${encodeURIComponent(id)}`, { method:'DELETE', headers:{ 'X-Admin-Key': ADMIN_KEY } });
+          let dj = {}; try { dj = await r.json(); } catch {}
+          if (!r.ok) throw new Error(dj.error || '删除失败');
+          tr.remove();
+          requirementsCache = (requirementsCache||[]).filter(x=>x.RequirementID!==id);
+          updateStats(requirementsCache);
+        } catch(e) {
+          alert(e.message || '删除失败');
+        }
+      });
     });
   }
 
@@ -940,7 +1020,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const norm = items.map(normalizeRequirement);
       const openCount = norm.filter(x=>x.AllowOpenQuotes).length;
       const publicCount = norm.filter(x=>x.PublishedAt || x.Status==='公开').length;
-      container.innerHTML = `<div class="badge bg-primary">需求总数 ${total}</div><div class="badge bg-success">在线报价开启 ${openCount}</div><div class="badge bg-info text-dark">公开需求 ${publicCount}</div>`;
+      const approvedCount = norm.filter(x=>x.Approved).length;
+      container.innerHTML = `<div class="badge bg-primary">需求总数 ${total}</div><div class="badge bg-success">在线报价开启 ${openCount}</div><div class="badge bg-info text-dark">公开需求 ${publicCount}</div><div class="badge bg-warning text-dark">已批准 ${approvedCount}</div>`;
     } catch{}
   }
 
@@ -1108,6 +1189,24 @@ document.addEventListener('DOMContentLoaded', () => {
             <option value="已完成" ${item.Progress==='已完成'?'selected':''}>已完成</option>
           </select>
         </div>
+        <div class="col-md-4 d-flex align-items-end">
+          <div class="form-check">
+            <input id="reqApproved" class="form-check-input" type="checkbox" ${item.Approved?'checked':''}>
+            <label class="form-check-label" for="reqApproved">已批准</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small">主分类</label>
+          <input id="reqPrimaryCategory" class="form-control" value="${escapeHtml(item.PrimaryCategory||'')}" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small">次分类</label>
+          <input id="reqSecondaryCategory" class="form-control" value="${escapeHtml(item.SecondaryCategory||'')}" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small">预算范围</label>
+          <input id="reqBudgetRange" class="form-control" value="${escapeHtml(item.BudgetRange||'')}" />
+        </div>
         <div class="col-md-4 d-flex align-items-end gap-3">
           <div class="form-check">
             <input id="reqAllowOpenQuotes" class="form-check-input" type="checkbox" ${item.AllowOpenQuotes?'checked':''}>
@@ -1118,36 +1217,100 @@ document.addEventListener('DOMContentLoaded', () => {
             <label class="form-check-label" for="reqContactPublic">公开联系方式</label>
           </div>
         </div>
+        <div class="col-md-8">
+          <div id="openQuotesHint" class="alert alert-info py-2 px-3 small d-none">
+            当前需求启用在线报价，外部页面将引导供应商在线提交报价，建议勿公开联系方式。
+          </div>
+          <div id="contactPublicHint" class="alert alert-secondary py-2 px-3 small d-none">
+            已选择公开联系方式：联系人与电话将在公开页展示。
+          </div>
+        </div>
         <div class="col-md-4">
           <label class="form-label small">查看密码（明文）</label>
           <input id="reqViewPassword" class="form-control" value="${escapeHtml(item.ViewPasswordPlain||'')}" />
         </div>
-        <div class="col-md-4">
-          <label class="form-label small">联系人</label>
-          <input id="reqContactName" class="form-control" value="${escapeHtml(item.ContactName||'')}" />
-        </div>
-        <div class="col-md-4">
-          <label class="form-label small">联系电话</label>
-          <input id="reqContactPhone" class="form-control" value="${escapeHtml(item.ContactPhone||'')}" />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label small">联系邮箱</label>
-          <input id="reqContactEmail" class="form-control" value="${escapeHtml(item.ContactEmail||'')}" />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label small">部门</label>
-          <input id="reqContactDept" class="form-control" value="${escapeHtml(item.ContactDepartment||'')}" />
+        <div id="contactFieldsGroup" class="col-12">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label small">联系人</label>
+              <input id="reqContactName" class="form-control" value="${escapeHtml(item.ContactName||'')}" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small">联系电话</label>
+              <input id="reqContactPhone" class="form-control" value="${escapeHtml(item.ContactPhone||'')}" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small">联系邮箱</label>
+              <input id="reqContactEmail" class="form-control" value="${escapeHtml(item.ContactEmail||'')}" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small">部门</label>
+              <input id="reqContactDept" class="form-control" value="${escapeHtml(item.ContactDepartment||'')}" />
+            </div>
+          </div>
         </div>
         <div class="col-md-12">
           <label class="form-label small">公开预览（对外展示简述）</label>
           <textarea id="reqPublicPreview" class="form-control" rows="3">${escapeHtml(item.PublicPreview||item.public_preview||'')}</textarea>
         </div>
         <div class="col-md-12">
-          <div class="small text-muted">发布时间：${item.PublishedAt||''}；需求ID：${item.RequirementID}</div>
+          <label class="form-label small">采购计划</label>
+          <textarea id="reqProcurementPlan" class="form-control" rows="2">${escapeHtml(item.ProcurementPlan||'')}</textarea>
+        </div>
+        <div class="col-md-12">
+          <label class="form-label small">关键参数（JSON）</label>
+          <textarea id="reqParametersJson" class="form-control" rows="3">${escapeHtml(typeof item.Parameters==='string' ? item.Parameters : JSON.stringify(item.Parameters||{}, null, 2))}</textarea>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label small">发布时间</label>
+          <input id="reqPublishedAt" type="datetime-local" class="form-control" value="${escapeHtml((item.PublishedAt||'').replace('Z',''))}" />
+        </div>
+        <div class="col-md-12">
+          <div class="small text-muted">发布时间：${formatDate(item.PublishedAt||'')}；需求ID：${item.RequirementID}</div>
         </div>
       </div>`;
     modal.querySelector('.modal-body').dataset.reqId = item.RequirementID;
     new bootstrap.Modal(modal).show();
+    // 开关联动：公开联系方式 vs 在线报价
+    try {
+      const chkOpen = document.getElementById('reqAllowOpenQuotes');
+      const chkPublic = document.getElementById('reqContactPublic');
+      const group = document.getElementById('contactFieldsGroup');
+      const openHint = document.getElementById('openQuotesHint');
+      const publicHint = document.getElementById('contactPublicHint');
+      const updateVis = ()=>{
+        const openOn = !!chkOpen?.checked;
+        const publicOn = !!chkPublic?.checked;
+        if (openHint) openHint.classList.toggle('d-none', !openOn);
+        if (publicHint) publicHint.classList.toggle('d-none', !publicOn);
+        // 不公开时隐藏联系方式输入区域（管理员仍可在此编辑，但默认隐藏）
+        if (group) group.classList.toggle('d-none', !publicOn);
+      };
+      updateVis();
+      chkOpen?.addEventListener('change', updateVis);
+      chkPublic?.addEventListener('change', updateVis);
+    } catch{}
+    // 参数 JSON 即时校验提示
+    try {
+      const txt = document.getElementById('reqParametersJson');
+      if (txt) {
+        let hint = document.getElementById('reqParametersHint');
+        if (!hint) {
+          hint = document.createElement('div');
+          hint.id = 'reqParametersHint';
+          hint.className = 'form-text small';
+          txt.parentElement.appendChild(hint);
+        }
+        const check = ()=>{
+          const v = txt.value || '';
+          if (!v.trim()) { txt.classList.remove('is-invalid','is-valid'); hint.textContent=''; return; }
+          try { JSON.parse(v); txt.classList.add('is-valid'); txt.classList.remove('is-invalid'); hint.textContent='JSON格式正确'; }
+          catch(e){ txt.classList.add('is-invalid'); txt.classList.remove('is-valid'); hint.textContent = 'JSON格式错误：' + (e.message||''); }
+        };
+        txt.addEventListener('input', check);
+        check();
+      }
+    } catch{}
   }
 
   // 保存需求详情（管理员）
@@ -1162,6 +1325,10 @@ document.addEventListener('DOMContentLoaded', () => {
       title: document.getElementById('reqTitleInput')?.value || '',
       status: document.getElementById('reqStatusSelect')?.value || '',
       progress: document.getElementById('reqProgressSelect')?.value || '',
+      approved: !!document.getElementById('reqApproved')?.checked,
+      primary_category: document.getElementById('reqPrimaryCategory')?.value || '',
+      secondary_category: document.getElementById('reqSecondaryCategory')?.value || '',
+      budget_range: document.getElementById('reqBudgetRange')?.value || '',
       allow_open_quotes: !!document.getElementById('reqAllowOpenQuotes')?.checked,
       contact_public: !!document.getElementById('reqContactPublic')?.checked,
       view_password_plain: document.getElementById('reqViewPassword')?.value || '',
@@ -1170,7 +1337,20 @@ document.addEventListener('DOMContentLoaded', () => {
       contact_company: document.getElementById('reqContactCompany')?.value || '',
       contact_email: document.getElementById('reqContactEmail')?.value || '',
       contact_department: document.getElementById('reqContactDept')?.value || '',
-      public_preview: document.getElementById('reqPublicPreview')?.value || ''
+      public_preview: document.getElementById('reqPublicPreview')?.value || '',
+      procurement_plan: document.getElementById('reqProcurementPlan')?.value || '',
+      published_at: (function(){
+        const v = document.getElementById('reqPublishedAt')?.value || '';
+        // 保持 ISO 格式（无秒则后端也可接受）
+        return v ? v.replace(' ', 'T') + 'Z' : '';
+      })(),
+      parameters_json: (function(){
+        const raw = document.getElementById('reqParametersJson')?.value || '';
+        if (!raw.trim()) return {};
+        try { return JSON.parse(raw); } catch (e) {
+          throw new Error('关键参数需为合法 JSON 格式');
+        }
+      })()
     };
     try{
       const resp = await window.apiFetch(`/api/admin/requirements/${encodeURIComponent(id)}`, { method:'PATCH', headers:{ 'Content-Type':'application/json','X-Admin-Key': ADMIN_KEY }, body: JSON.stringify(payload) });
@@ -1192,9 +1372,19 @@ document.addEventListener('DOMContentLoaded', () => {
     m=document.createElement('div');
     m.id='quotesModal';
     m.className='modal fade';
-    m.innerHTML = `<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">报价列表</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="table-responsive"><table class="table table-sm"><thead><tr><th>供应商</th><th>联系人</th><th>电话</th><th>报价(元)</th><th>状态</th></tr></thead><tbody id="quotesModalBody"></tbody></table></div></div><div class="modal-footer"><div class="me-auto small text-muted">导出当前报价</div><button id="quotesExportCsvBtn" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-file-csv me-1"></i> 导出 CSV</button><button id="quotesExportXlsxBtn" class="btn btn-outline-success btn-sm"><i class="fa-solid fa-file-excel me-1"></i> 导出 XLSX</button><button class="btn btn-secondary" data-bs-dismiss="modal">关闭</button></div></div></div>`;
+    m.innerHTML = `<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">报价列表</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="table-responsive"><table class="table table-sm table-striped table-hover align-middle"><thead><tr><th>供应商</th><th>联系人</th><th>电话</th><th>金额</th><th>币种</th><th>备注</th><th>创建时间</th><th>状态</th></tr></thead><tbody id="quotesModalBody"></tbody></table></div></div><div class="modal-footer"><div class="me-auto small text-muted">导出当前报价</div><button id="quotesExportCsvBtn" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-file-csv me-1"></i> 导出 CSV</button><button id="quotesExportXlsxBtn" class="btn btn-outline-success btn-sm"><i class="fa-solid fa-file-excel me-1"></i> 导出 XLSX</button><button class="btn btn-secondary" data-bs-dismiss="modal">关闭</button></div></div></div>`;
     document.body.appendChild(m);
     return m;
+  }
+
+  // 显示币种为中文：CNY->元，其它常见币种做基础映射
+  function displayCurrency(code){
+    const v=String(code||'').trim().toUpperCase();
+    if(!v) return '';
+    if(v==='CNY') return '元';
+    if(v==='USD') return '美元';
+    if(v==='EUR') return '欧元';
+    return code||'';
   }
 
   async function showQuotesModal(id){
@@ -1212,7 +1402,11 @@ document.addEventListener('DOMContentLoaded', () => {
       body.innerHTML = items.map(q => {
         const qid = q.quote_id || q.QuoteID || '';
         const cur = q.status || q.Status || 'submitted';
-        return `<tr data-qid="${escapeHtml(qid)}"><td>${escapeHtml(q.SupplierCompanyName||q.supplier_name||'')}</td><td>${escapeHtml(q.SupplierContact||'')}</td><td>${escapeHtml(q.SupplierPhone||q.supplier_phone||'')}</td><td>${escapeHtml(q.Price||q.amount||'')}</td><td>
+        const amt = (q.amount ?? q.Price ?? '');
+        const curcy = q.currency || q.Currency || 'CNY';
+        const remarks = q.remarks || q.Remarks || '';
+        const created = q.created_at || q.CreatedAt || '';
+        return `<tr data-qid="${escapeHtml(qid)}"><td>${escapeHtml(q.SupplierCompanyName||q.supplier_name||'')}</td><td>${escapeHtml(q.SupplierContact||'')}</td><td>${escapeHtml(q.SupplierPhone||q.supplier_phone||'')}</td><td>${escapeHtml(amt)}</td><td>${escapeHtml(displayCurrency(curcy))}</td><td class="text-truncate" title="${escapeHtml(remarks)}">${escapeHtml(remarks)}</td><td>${escapeHtml(created)}</td><td>
           <div class="d-flex align-items-center gap-2">
             <select class="form-select form-select-sm" data-field="status">
               <option value="submitted" ${cur==='submitted'?'selected':''}>已提交</option>
@@ -1225,7 +1419,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="btn btn-sm btn-outline-primary" data-action="saveQuote">更新</button>
           </div>
         </td></tr>`;
-      }).join('') || '<tr><td colspan="5" class="text-muted">暂无报价</td></tr>';
+      }).join('') || '<tr><td colspan="8" class="text-muted">暂无报价</td></tr>';
       body.querySelectorAll('button[data-action="saveQuote"]').forEach(btn => {
         btn.addEventListener('click', async ()=>{
           const tr = btn.closest('tr'); const qid = tr?.dataset.qid||'';
@@ -1243,13 +1437,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const btnXlsx = modal.querySelector('#quotesExportXlsxBtn');
       if (btnCsv) {
         btnCsv.onclick = () => {
-          const headers = ['供应商','联系人','电话','报价(元)','状态'];
+          const headers = ['供应商','联系人','电话','金额','币种','备注','创建时间','状态'];
           const rows = (window.currentQuotes||items||[]).map(q => [
             q.SupplierCompanyName||q.supplier_name||'',
             q.SupplierContact||'',
             q.SupplierPhone||q.supplier_phone||'',
-            q.Price||q.amount||'',
-            q.Status||q.status||''
+            (q.amount ?? q.Price ?? ''),
+            displayCurrency(q.currency || q.Currency || 'CNY'),
+            (q.remarks || q.Remarks || ''),
+            (q.created_at || q.CreatedAt || ''),
+            (q.Status || q.status || '')
           ]);
           const csv = [headers, ...rows].map(r => r.map(v => String(v).replace(/"/g,'""')).map(v => /,|\n|"/.test(v) ? `"${v}"` : v).join(',')).join('\n');
           const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -1264,8 +1461,11 @@ document.addEventListener('DOMContentLoaded', () => {
             供应商: q.SupplierCompanyName||q.supplier_name||'',
             联系人: q.SupplierContact||'',
             电话: q.SupplierPhone||q.supplier_phone||'',
-            报价: q.Price||q.amount||'',
-            状态: q.Status||q.status||''
+            金额: (q.amount ?? q.Price ?? ''),
+            币种: displayCurrency(q.currency || q.Currency || 'CNY'),
+            备注: (q.remarks || q.Remarks || ''),
+            创建时间: (q.created_at || q.CreatedAt || ''),
+            状态: (q.Status || q.status || '')
           }));
           const wb = XLSX.utils.book_new();
           const ws = XLSX.utils.json_to_sheet(rows);
@@ -1440,7 +1640,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 统一导出：需求列表 CSV/XLSX
   function exportRequirementsToCSV(items){
-    const headers = ['编号','标题','状态','进度','在线报价','联系方式公开','企业','联系人','电话','邮箱','部门','发布时间'];
+    const headers = ['编号','标题','状态','进度','主分类','次分类','预算','在线报价','联系方式公开','企业','联系人','电话','邮箱','部门','发布时间'];
     const rows = (items||[]).map(it => {
       const r = normalizeRequirement(it);
       return [
@@ -1448,6 +1648,9 @@ document.addEventListener('DOMContentLoaded', () => {
         r.Title||'',
         r.Status||'',
         r.Progress||'',
+        r.PrimaryCategory||'',
+        r.SecondaryCategory||'',
+        r.BudgetRange||'',
         r.AllowOpenQuotes ? '开启' : '关闭',
         r.ContactPublic ? '公开' : '不公开',
         r.ContactCompany||'',
@@ -1455,7 +1658,7 @@ document.addEventListener('DOMContentLoaded', () => {
         r.ContactPhone||'',
         r.ContactEmail||'',
         r.ContactDepartment||'',
-        r.PublishedAt||''
+        formatDate(r.PublishedAt||'')
       ];
     });
     const csv = [headers, ...rows].map(r => r.map(v => String(v).replace(/"/g,'""')).map(v => /,|\n|"/.test(v) ? `"${v}"` : v).join(',')).join('\n');
@@ -1473,6 +1676,9 @@ document.addEventListener('DOMContentLoaded', () => {
         标题: r.Title||'',
         状态: r.Status||'',
         进度: r.Progress||'',
+        主分类: r.PrimaryCategory||'',
+        次分类: r.SecondaryCategory||'',
+        预算: r.BudgetRange||'',
         在线报价: r.AllowOpenQuotes ? '开启' : '关闭',
         联系方式公开: r.ContactPublic ? '公开' : '不公开',
         企业: r.ContactCompany||'',
@@ -1480,7 +1686,7 @@ document.addEventListener('DOMContentLoaded', () => {
         电话: r.ContactPhone||'',
         邮箱: r.ContactEmail||'',
         部门: r.ContactDepartment||'',
-        发布时间: r.PublishedAt||''
+        发布时间: formatDate(r.PublishedAt||'')
       });
     });
     const wb = XLSX.utils.book_new();

@@ -12,7 +12,6 @@
         <h2 class="mb-0 d-flex align-items-center gap-2">
           <i class="fa-solid fa-store text-primary"></i>
           需求市场
-          <span id="apiStatusBadge" class="badge bg-secondary">后端检测中</span>
         </h2>
         <div class="d-flex flex-wrap gap-2">
           <a href="/entry-demand.html" class="btn btn-sm btn-outline-primary">
@@ -110,28 +109,6 @@
   window.API_BASE = String(window.API_BASE).replace(/\/$/, '');
 })();
 window.apiFetch = window.apiFetch || ((path, opts={}) => fetch(`${window.API_BASE}${path}`, opts));
-
-// 后端状态徽标更新
-async function updateApiStatusBadge() {
-  const badge = document.getElementById('apiStatusBadge');
-  if (!badge) return;
-  badge.textContent = '后端检测中';
-  badge.className = 'badge bg-secondary';
-  try {
-    const res = await window.apiFetch('/api/requirements');
-    if (res && res.ok) {
-      badge.textContent = '后端在线';
-      badge.className = 'badge bg-success';
-    } else {
-      badge.textContent = '后端不可用';
-      badge.className = 'badge bg-danger';
-    }
-  } catch (_) {
-    badge.textContent = '后端不可用';
-    badge.className = 'badge bg-danger';
-  }
-}
-updateApiStatusBadge();
 // 从 Netlify Function 拉取最新需求列表（实时）
 async function listRequirements() {
   try {
@@ -338,27 +315,28 @@ function openRequirementModal(card) {
   if (!body || !modalEl) return;
 
   body.innerHTML = `
-    <div class="row mb-2">
-      <div class="col-md-6"><strong>需求编号：</strong>${data.id}</div>
-      <div class="col-md-6"><strong>发布时间：</strong>${new Date(data.published || Date.now()).toLocaleString()}</div>
+    <div class="mb-2">
+      <h5 class="mb-1">${(data.title||'').trim() || `${data.primary}${data.secondary?(' / '+data.secondary):''}需求`}</h5>
+      <div class="text-muted small">编号：${data.id} · 发布：${new Date(data.published || Date.now()).toLocaleString()}</div>
     </div>
-    <div class="row mb-2">
-      <div class="col-md-6"><strong>产品类型：</strong>${data.primary}${data.secondary ? ' / '+data.secondary : ''}</div>
-      <div class="col-md-6"><strong>预算范围：</strong><span class="text-success">${data.budget || '面议'}</span></div>
+    ${renderTimeline(data)}
+    <div class="mb-3 p-3 border rounded">
+      <div class="row mb-1">
+        <div class="col-md-6"><strong>产品类型：</strong>${data.primary}${data.secondary ? ' / '+data.secondary : ''}</div>
+        <div class="col-md-6"><strong>预算范围：</strong><span class="text-success">${data.budget || '面议'}</span></div>
+      </div>
     </div>
-    <!-- 取消部门显示 -->
-    <div class="mb-3">
-      <strong>需求描述：</strong>
-      <p class="mt-2 p-3 bg-light rounded">${data.preview || '暂无描述'}</p>
+    <div class="mb-3 p-3 bg-light rounded">
+      <div class="mb-2"><strong>需求描述</strong></div>
+      <div>${data.preview || '暂无描述'}</div>
     </div>
-    <div class="mb-3">
-      <strong>技术参数：</strong>
-      <div class="mt-2 row">
+    <div class="mb-3 p-3 border rounded">
+      <div class="mb-2"><strong>技术参数</strong></div>
+      <div class="row">
         ${renderParams(data.params)}
       </div>
     </div>
     ${renderContactBlock(data)}
-    ${renderTimeline(data)}
     ${renderQuoteForm(data)}
   `;
 
@@ -368,6 +346,17 @@ function openRequirementModal(card) {
   if (data.allowOpenQuotes) {
     document.querySelector('#quoteForm button[type="submit"]')?.removeAttribute('disabled');
     document.querySelectorAll('#quoteForm input, #quoteForm textarea, #quoteForm select')?.forEach(el => el.removeAttribute('disabled'));
+  }
+
+  // 折叠/展开报价表单
+  const toggleBtn = document.getElementById('toggleQuoteBtn');
+  const wrap = document.getElementById('quoteWrap');
+  if (toggleBtn && wrap) {
+    toggleBtn.addEventListener('click', () => {
+      const show = wrap.style.display === 'none';
+      wrap.style.display = show ? '' : 'none';
+      toggleBtn.textContent = show ? '收起报价表单' : '展开报价表单';
+    });
   }
 }
 
@@ -443,11 +432,11 @@ function renderContactBlock(data) {
 
   return `
     <div class="alert alert-warning" id="contact-block">
-      <h6 class="mb-2"><i class="fa-solid fa-lock me-1"></i> 查看联系方式（需查看密码）</h6>
+      <h6 class="mb-2"><i class="fa-solid fa-lock me-1"></i> 查看联系方式（合作供应商授权密码或查看密码）</h6>
       ${maskedBlock}
       <div class="input-group mb-2" style="max-width: 360px;">
         <span class="input-group-text"><i class="fa-solid fa-key"></i></span>
-        <input type="text" class="form-control" id="viewPasswordInput" placeholder="输入查看密码">
+        <input type="text" class="form-control" id="viewPasswordInput" placeholder="输入授权密码/查看密码">
         <button class="btn btn-primary" onclick="verifyRequirementPassword('${data.id}')">验证</button>
       </div>
       <div class="text-muted small">发布方式：${data.status}；进度：${data.progress}</div>
@@ -475,35 +464,7 @@ function renderContactBlock(data) {
   `;
 }
 
-async function verifyRequirementPassword(requirementID) {
-  const pw = document.getElementById('viewPasswordInput')?.value || '';
-  if (!pw) { alert('请输入查看密码'); return; }
-  try {
-    const resp = await window.apiFetch(`/api/requirements/${encodeURIComponent(requirementID)}?view_password=${encodeURIComponent(pw)}`);
-    if (!resp.ok) throw new Error('查看密码不正确或需求不存在');
-    const data = await resp.json();
-    if (data && (data.ContactName || data.ContactPhone || data.ContactCompany)) {
-      // 显示联系方式
-      document.getElementById('contactUnlocked')?.setAttribute('style','');
-      // 将密码注入报价表单隐藏字段，后端可校验
-      const vpInput = document.querySelector('#quoteForm input[name="ViewPassword"]');
-      if (vpInput) vpInput.value = pw;
-      document.getElementById('cName')?.replaceChildren(document.createTextNode(data.ContactName || ''));
-      document.getElementById('cPhone')?.replaceChildren(document.createTextNode(data.ContactPhone || ''));
-      const cc = document.getElementById('cCompany'); if (cc) cc.replaceChildren(document.createTextNode(data.ContactCompany || ''));
-      const ce = document.getElementById('cEmail'); if (ce) ce.replaceChildren(document.createTextNode(data.ContactEmail || ''));
-      const cd = document.getElementById('cDept'); if (cd) cd.replaceChildren(document.createTextNode(data.ContactDepartment || ''));
-      // 允许提交报价
-      document.querySelector('#quoteForm button[type="submit"]')?.removeAttribute('disabled');
-      document.querySelectorAll('#quoteForm input, #quoteForm textarea, #quoteForm select')?.forEach(el => el.removeAttribute('disabled'));
-    } else {
-      alert(data?.error ? `验证失败：${data.error}` : '查看密码不正确');
-    }
-  } catch(e) {
-    console.error(e);
-    alert('验证服务不可用，请稍后重试或联系平台。');
-  }
-}
+// （已统一到 window.verifyRequirementPassword，旧函数移除以避免冲突）
 
 // 企业分组渲染
 function renderCompanyGroups(){
@@ -610,40 +571,17 @@ function exportCurrentRequirementsXLS(){
 document.getElementById('exportReqCsvBtn')?.addEventListener('click', exportCurrentRequirementsCSV);
 document.getElementById('exportReqXlsBtn')?.addEventListener('click', exportCurrentRequirementsXLS);
 
-async function loadQuotes(requirementID) {
-  const listEl = document.getElementById('quotesList');
-  if (!listEl) return;
-  listEl.innerHTML = '<div class="text-muted">加载报价...</div>';
-  try {
-    const vp = document.querySelector('#quoteForm input[name="ViewPassword"]')?.value || '';
-    const resp = await window.apiFetch(`/api/quotes?requirement_id=${encodeURIComponent(requirementID)}${vp?`&view_password=${encodeURIComponent(vp)}`:''}`);
-    if (!resp.ok) throw new Error('Bad response');
-    const items = await resp.json();
-    if (!items || !Array.isArray(items) || items.length === 0) {
-      listEl.innerHTML = '<div class="text-muted">暂无报价</div>';
-      return;
-    }
-    listEl.innerHTML = items
-      .map((q) => `
-        <div class="border rounded p-2 mb-2">
-          <div class="small text-muted">提交时间：${(q.created_at || '').toString()}</div>
-          <div><strong>供应商：</strong>${q.supplier_name || '—'}，<strong>电话：</strong>${q.supplier_phone || '—'}</div>
-          <div><strong>报价：</strong>${typeof q.amount === 'number' ? q.amount : (q.amount || '—')} ${q.currency || 'CNY'}</div>
-          <div class="small">报价备注：${q.remarks || '—'}</div>
-          <div class="small">状态：${q.status || 'submitted'}</div>
-        </div>
-      `)
-      .join('');
-  } catch (e) {
-    listEl.innerHTML = '<div class="text-danger">报价列表接口未开启或出错。请在 Netlify Dev 环境下访问或完成部署配置。</div>';
-  }
-}
+// （已统一到 window.loadQuotes，旧函数移除以避免冲突）
 
 function renderQuoteForm(data) {
   const keyParams = summarizeKeyParams(data.params);
   return `
     <div class="mt-3">
-      <h6 class="mb-2"><i class="fa-solid fa-file-invoice-dollar me-1"></i> 在线报价</h6>
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h6 class="mb-0"><i class="fa-solid fa-file-invoice-dollar me-1"></i> 在线报价</h6>
+        <button class="btn btn-sm btn-outline-success" id="toggleQuoteBtn">展开报价表单</button>
+      </div>
+      <div id="quoteWrap" style="display:none;">
       <form id="quoteForm" name="requirement-quote" data-netlify="true">
         <input type="hidden" name="RequirementID" value="${data.id}">
         <input type="hidden" name="ViewPassword" value="">
@@ -691,21 +629,29 @@ function renderQuoteForm(data) {
           </button>
         </div>
       </form>
+      </div>
     </div>
   `;
 }
 
 function renderTimeline(data) {
-  const pub = new Date(data.published || Date.now()).toLocaleString();
+  const p = String(data.progress || '').toLowerCase();
+  let step = 1;
+  if (/沟通|接洽|联系/.test(p)) step = 2;
+  if (/完成|结束|关闭|done|closed/.test(p)) step = 3;
+  const percent = step === 1 ? 33 : (step === 2 ? 66 : 100);
+  const label = step===3?'已完成':(step===2?'沟通中':'已发布');
   return `
-    <div class="mt-3">
-      <h6 class="mb-2"><i class="fa-solid fa-timeline me-1"></i> 进展时间线</h6>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item"><span class="badge bg-light text-dark border me-2">${pub}</span>需求发布</li>
-        <li class="list-group-item"><span class="badge bg-light text-dark border me-2">—</span>供应商浏览（自动）</li>
-        <li class="list-group-item"><span class="badge bg-light text-dark border me-2">—</span>提交在线报价</li>
-        <li class="list-group-item"><span class="badge bg-light text-dark border me-2">—</span>平台/发布方接洽</li>
-      </ul>
+    <div class="mb-3">
+      <div class="d-flex align-items-center">
+        <div class="progress flex-grow-1" style="height:8px;">
+          <div class="progress-bar bg-success" role="progressbar" style="width: ${percent}%;" aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="ms-2 small text-muted">${label}</div>
+      </div>
+      <div class="d-flex justify-content-between small text-muted mt-1">
+        <span>已发布</span><span>沟通中</span><span>已完成</span>
+      </div>
     </div>
   `;
 }
@@ -740,6 +686,95 @@ document.addEventListener('submit', (e) => {
       });
   }
 });
+</script>
+<script>
+// 覆盖原有的验证函数，以兼容“查看密码”与“供应商通行密码”两种方式
+window.verifyRequirementPassword = async function(requirementID) {
+  const pw = document.getElementById('viewPasswordInput')?.value || '';
+  if (!pw) { alert('请输入查看密码或供应商通行密码'); return; }
+  try {
+    // 先尝试查看密码
+    let resp = await window.apiFetch(`/api/requirements/${encodeURIComponent(requirementID)}?view_password=${encodeURIComponent(pw)}`);
+    let data = null; let used = 'view';
+    if (resp.ok) {
+      data = await resp.json().catch(()=>null);
+    }
+    // 若失败或未返回敏感字段，再尝试供应商通行密码
+    if (!resp.ok || !(data && (data.ContactName || data.ContactPhone || data.ContactCompany))) {
+      resp = await window.apiFetch(`/api/requirements/${encodeURIComponent(requirementID)}?supplier_access_password=${encodeURIComponent(pw)}`);
+      used = 'supplier';
+      if (resp.ok) data = await resp.json().catch(()=>null);
+    }
+
+    if (resp.ok && data && (data.ContactName || data.ContactPhone || data.ContactCompany)) {
+      // 显示联系方式
+      document.getElementById('contactUnlocked')?.setAttribute('style','');
+      document.getElementById('cName')?.replaceChildren(document.createTextNode(data.ContactName || ''));
+      document.getElementById('cPhone')?.replaceChildren(document.createTextNode(data.ContactPhone || ''));
+      const cc = document.getElementById('cCompany'); if (cc) cc.replaceChildren(document.createTextNode(data.ContactCompany || ''));
+      const ce = document.getElementById('cEmail'); if (ce) ce.replaceChildren(document.createTextNode(data.ContactEmail || ''));
+      const cd = document.getElementById('cDept'); if (cd) cd.replaceChildren(document.createTextNode(data.ContactDepartment || ''));
+
+      // 将密码注入报价表单隐藏字段
+      const form = document.getElementById('quoteForm');
+      if (form) {
+        if (used === 'view') {
+          let vp = form.querySelector('input[name="ViewPassword"]');
+          if (!vp) { vp = document.createElement('input'); vp.type='hidden'; vp.name='ViewPassword'; form.appendChild(vp); }
+          vp.value = pw;
+        } else {
+          let sp = form.querySelector('input[name="SupplierAccessPassword"]');
+          if (!sp) { sp = document.createElement('input'); sp.type='hidden'; sp.name='SupplierAccessPassword'; form.appendChild(sp); }
+          sp.value = pw;
+        }
+        // 允许提交输入
+        form.querySelector('button[type="submit"]')?.removeAttribute('disabled');
+        form.querySelectorAll('input, textarea, select')?.forEach(el => el.removeAttribute('disabled'));
+      }
+
+      // 刷新报价列表，兼容两种授权
+      if (typeof window.loadQuotes === 'function') window.loadQuotes(requirementID);
+    } else {
+      alert('验证失败：查看密码或供应商通行密码不正确');
+    }
+  } catch (e) {
+    console.error(e);
+    alert('验证服务不可用，请稍后重试或联系平台。');
+  }
+};
+
+// 覆盖报价加载，追加供应商通行密码参数
+// 显示币种中文映射：CNY->元 等
+function displayCurrency(code){
+  const v=String(code||'').trim().toUpperCase();
+  if(!v) return '';
+  if(v==='CNY') return '元';
+  if(v==='USD') return '美元';
+  if(v==='EUR') return '欧元';
+  return code||'';
+}
+window.loadQuotes = async function(requirementID) {
+  const listEl = document.getElementById('quotesList');
+  if (!listEl) return;
+  listEl.innerHTML = '<div class="text-muted">加载报价...</div>';
+  try {
+    const form = document.getElementById('quoteForm');
+    const vp = form?.querySelector('input[name="ViewPassword"]')?.value || '';
+    const sp = form?.querySelector('input[name="SupplierAccessPassword"]')?.value || '';
+    const extra = `${vp?`&view_password=${encodeURIComponent(vp)}`:''}${sp?`&supplier_access_password=${encodeURIComponent(sp)}`:''}`;
+    const resp = await window.apiFetch(`/api/quotes?requirement_id=${encodeURIComponent(requirementID)}${extra}`);
+    if (!resp.ok) throw new Error('Bad response');
+    const items = await resp.json();
+    if (Array.isArray(items) && items.length) {
+      listEl.innerHTML = items.map(q => `<div class="border rounded p-2 mb-2"><div class="small text-muted">${q.created_at||''}</div><div><strong>${q.supplier_name||'匿名供应商'}</strong> 报价：${q.amount ?? ''} ${displayCurrency(q.currency ?? '')}</div><div class="text-secondary">${(q.remarks||'').replace(/</g,'&lt;')}</div></div>`).join('');
+    } else {
+      listEl.innerHTML = '<div class="text-muted">暂无报价</div>';
+    }
+  } catch (e) {
+    console.error(e);
+    listEl.innerHTML = '<div class="text-danger">报价加载失败</div>';
+  }
+};
 </script>
 <!-- 需求详情弹窗 -->
 <div class="modal fade" id="requirementModal" tabindex="-1" aria-hidden="true">
