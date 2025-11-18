@@ -1126,15 +1126,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (privateBtn) privateBtn.addEventListener('click', ()=> setAllRequirementStatus('隐私'));
     if (closeBtn) closeBtn.addEventListener('click', ()=> setAllRequirementStatus('关闭'));
 
-    // 供应商密码统一为 456789
+    // 供应商密码统一为 888888
     const supPwdDefaultBtn = document.getElementById('supPwdDefaultBtn');
     if (supPwdDefaultBtn) {
       supPwdDefaultBtn.addEventListener('click', async () => {
         if (!ADMIN_KEY) { alert('请先输入管理员密钥并点击“确认登录”'); return; }
-        if (!confirm('将所有供应商的通行密码统一设置为“456789”，是否继续？')) return;
+        if (!confirm('将所有供应商的通行密码统一设置为“888888”，是否继续？')) return;
         supPwdDefaultBtn.disabled = true; const old = supPwdDefaultBtn.innerHTML; supPwdDefaultBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> 正在更新';
         try {
-          const resp = await window.apiFetch('/api/admin/suppliers', { method: 'POST', headers: { 'Content-Type':'application/json','X-Admin-Key': ADMIN_KEY }, body: JSON.stringify({ applyToAll: true, newPasswordPlain: '456789' }) });
+          const resp = await window.apiFetch('/api/admin/suppliers', { method: 'POST', headers: { 'Content-Type':'application/json','X-Admin-Key': ADMIN_KEY }, body: JSON.stringify({ applyToAll: true, newPasswordPlain: '888888' }) });
           const data = await resp.json();
           if (!resp.ok) throw new Error(data.error || '设置失败');
           alert('已统一设置供应商通行密码');

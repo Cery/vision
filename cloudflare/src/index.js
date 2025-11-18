@@ -802,6 +802,12 @@ export default {
           await env.DB.prepare('UPDATE suppliers SET access_password_plain = ?, updated_at = ?').bind(String(env.DEFAULT_SUPPLIER_PASSWORD), now).run();
         } catch {}
       }
+      // Apply default requirement view password only when it's currently empty
+      if (env.DEFAULT_REQUIREMENT_PASSWORD) {
+        try {
+          await env.DB.prepare("UPDATE requirements SET view_password_plain = CASE WHEN IFNULL(view_password_plain, '') = '' THEN ? ELSE view_password_plain END, updated_at = ?").bind(String(env.DEFAULT_REQUIREMENT_PASSWORD), now).run();
+        } catch {}
+      }
       // Seed demanders (ignore duplicates)
       for (const d of (dems || [])) {
         try {

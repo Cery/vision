@@ -25,4 +25,6 @@ crons = ["*/30 * * * *"]
 # 从网站前端 JSON 同步数据的基础地址
 SYNC_BASE_URL = "https://www.visndt.com/data"
 # 默认供应商通行密码（用于定时任务统一设置）
-DEFAULT_SUPPLIER_PASSWORD = "456789"
+DEFAULT_SUPPLIER_PASSWORD = "888888"
+# 默认需求查看密码（仅在当前为空时应用）
+DEFAULT_REQUIREMENT_PASSWORD = "777777"
