@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="
   default-src 'self';
-  connect-src 'self' https://identity.netlify.com https://api.netlify.com https://api.visndt.com;
+  connect-src 'self' https://identity.netlify.com https://api.netlify.com https://api.visndt.com http://localhost:8787 http://127.0.0.1:8787 http://localhost:8888 http://127.0.0.1:8888 http://localhost:8000 http://127.0.0.1:8000;
   script-src 'self' 'unsafe-inline' https://identity.netlify.com https://api.netlify.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://hm.baidu.com https://static.cloudflareinsights.com;
   style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com;
   img-src 'self' data: blob: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
@@ -336,6 +336,7 @@
             // 统一 Cloudflare API 基础地址（本地/生产），避免生产被 localStorage 覆盖到不安全地址
             const isProd = /(^|\.)visndt\.com$/i.test(location.hostname);
             const defaultRemote = 'https://api.visndt.com';
+            const defaultLocal = 'http://127.0.0.1:8787';
             let saved = '';
             try { saved = localStorage.getItem('API_BASE') || ''; } catch {}
             // 生产域仅允许白名单（同源或 api.visndt.com），其他情况强制使用相对路径
@@ -343,14 +344,28 @@
             if (isProd) {
                 window.API_BASE = allowInProd.has(saved) ? saved : '';
             } else {
-                window.API_BASE = saved || defaultRemote;
+                // 本地优先使用本地 Worker 开发端口，避免远程 CORS 限制
+                window.API_BASE = saved || defaultLocal;
             }
             // 若为 HTTPS 页面且保存为 http://，清理以避免 Mixed Content 导致 Failed to fetch
             if (location.protocol === 'https:' && /^http:\/\//i.test(window.API_BASE||'')) {
                 try { localStorage.removeItem('API_BASE'); } catch {}
                 window.API_BASE = isProd ? '' : defaultRemote;
             }
-            window.apiFetch = (path, opts={}) => fetch(`${window.API_BASE}${path}`, opts);
+            // 统一去除末尾斜杠
+            window.API_BASE = String(window.API_BASE || '').replace(/\/$/, '');
+            // 统一 API 请求：自动附加持久化的管理员密钥（X-Admin-Key）
+            window.apiFetch = (path, opts = {}) => {
+                const headers = Object.assign({}, opts.headers || {});
+                const keyVar = (typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY) ? ADMIN_KEY : '';
+                const keyStore = (typeof localStorage !== 'undefined') ? (localStorage.getItem('ADMIN_KEY') || '') : '';
+                const keyInput = (typeof document !== 'undefined') ? (document.getElementById('adminKeyInput')?.value || '') : '';
+                const key = keyVar || keyStore || keyInput;
+                // 若调用方显式传了空的 X-Admin-Key，进行覆盖；否则在缺省时自动附加
+                const cur = headers['X-Admin-Key'];
+                if (key && (!cur || !String(cur).trim())) headers['X-Admin-Key'] = key;
+                return fetch(`${window.API_BASE}${path}`, { ...opts, headers });
+            };
 
             // 加载并显示需求列表（Cloudflare D1）
             window.apiFetch('/api/requirements')
@@ -382,8 +397,7 @@
 
             // 加载某个需求的报价（需要管理员或密码访问）
             window.loadQuotes = function loadQuotes(requirementID) {
-                const adminKey = document.getElementById('adminKeyInput')?.value || '';
-                window.apiFetch(`/api/quotes?requirement_id=${encodeURIComponent(requirementID)}`, { headers: { 'X-Admin-Key': adminKey } })
+                window.apiFetch(`/api/quotes?requirement_id=${encodeURIComponent(requirementID)}`)
                     .then(response => response.json())
                     .then(data => {
                         const items = Array.isArray(data) ? data : (data.items || []);
@@ -455,10 +469,9 @@
         function updateQuoteStatus(selectElement) {
             const quoteId = selectElement.dataset.id;
             const status = selectElement.value;
-            const adminKey = document.getElementById('adminKeyInput')?.value || '';
             window.apiFetch(`/api/quotes/${encodeURIComponent(quoteId)}`, {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json', 'X-Admin-Key': adminKey },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status }),
             }).then(() => {
                 // 状态更新成功（可选：提示）
@@ -470,10 +483,9 @@
         // Delete quote
         function deleteQuote(quoteId) {
             if (confirm('Are you sure you want to delete this quote?')) {
-                const adminKey = document.getElementById('adminKeyInput')?.value || '';
                 window.apiFetch(`/api/quotes/${encodeURIComponent(quoteId)}`, {
                     method: 'DELETE',
-                    headers: { 'X-Admin-Key': adminKey },
+                    headers: {},
                 }).then(() => {
                     // Reload quotes
                     const active = document.querySelector('#requirementsList .list-group-item.active');
@@ -538,7 +550,9 @@
       adminKey = document.getElementById('adminKeyInput').value.trim();
       if (!adminKey) { alert('请输入管理员密钥'); return; }
       try {
-        const resp = await window.apiFetch('/api/admin/requirements', { headers: { 'X-Admin-Key': adminKey } });
+        // 持久化并同步全局密钥，后续统一由 apiFetch 自动附加
+        try { window.ADMIN_KEY = adminKey; localStorage.setItem('ADMIN_KEY', adminKey); } catch {}
+        const resp = await window.apiFetch('/api/admin/requirements');
         const data = await resp.json();
         if (!resp.ok) throw new Error((data.error || '加载失败') + (data.detail ? ('：' + data.detail) : ''));
                     const items = data.items || [];
@@ -627,7 +641,8 @@
 
   if (applyAllBtn) {
     applyAllBtn.addEventListener('click', async () => {
-      if (!adminKey) { alert('请先输入管理员密钥并加载管理面板'); return; }
+      const persistedKey = (typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY) || (localStorage.getItem('ADMIN_KEY') || '');
+      if (!persistedKey) { alert('请先输入管理员密钥并点击“加载管理”'); return; }
       const pw = document.getElementById('globalPasswordInput').value.trim();
                 const allowSel = document.getElementById('globalAllowOpenQuotes').value;
                 const contactSel = document.getElementById('globalContactPublic')?.value || '';
@@ -639,7 +654,7 @@
                 if (contactSel === 'false') payload.contactPublic = false;
       try {
         const resp = await window.apiFetch('/api/admin/requirements', {
-          method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Key': adminKey },
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
         const data = await resp.json();
@@ -658,13 +673,13 @@ async function updateRequirementRow(btn) {
   const reqId = tr?.dataset?.id || '';
   const plainPw = tr?.querySelector('.plain-pw')?.value.trim() || '';
   const allowOpen = tr?.querySelector('.allow-open-select')?.value === 'true';
-  const adminKey = document.getElementById('adminKeyInput').value.trim();
-  if (!reqId || !adminKey) { alert('请确保需求编号与管理员密钥有效'); return; }
+  const persistedKey = (typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY) || (localStorage.getItem('ADMIN_KEY') || '');
+  if (!reqId || !persistedKey) { alert('请确保需求编号与管理员密钥有效'); return; }
   const payload = { requirementID: reqId, allowOpenQuotes: allowOpen };
   if (plainPw) payload.newPasswordPlain = plainPw;
   try {
     const resp = await window.apiFetch('/api/admin/requirements', {
-      method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Key': adminKey },
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
     const data = await resp.json();
@@ -741,10 +756,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function loadSystemConfig() {
-    const key = document.getElementById('adminKeyInput')?.value.trim();
+    const key = (typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY) || (localStorage.getItem('ADMIN_KEY') || '');
     if (!key) return;
     try {
-      const resp = await window.apiFetch('/api/admin/system-config', { headers: { 'X-Admin-Key': key } });
+      const resp = await window.apiFetch('/api/admin/system-config');
       const data = await resp.json();
       if (resp.ok && data && data.config) {
         applySettingsToUI(data.config);
@@ -758,7 +773,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   saveBtn?.addEventListener('click', async () => {
-    const key = document.getElementById('adminKeyInput')?.value.trim();
+    const key = (typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY) || (localStorage.getItem('ADMIN_KEY') || '');
     if (!key) { alert('请先输入管理员密钥并点击“加载管理”'); return; }
     const payload = {
       SupplierGlobalPassword: document.getElementById('supplierGlobalPasswordInput')?.value || '',
@@ -769,7 +784,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     try {
       const resp = await window.apiFetch('/api/admin/system-config', {
-        method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Key': key },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
       const data = await resp.json();
@@ -1857,7 +1872,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       };
       try{
-        const resp=await window.apiFetch(`/api/admin/suppliers/upsert`, { method:'POST', headers:{ 'Content-Type':'application/json','X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') }, body: JSON.stringify({ id, ...payload }) });
+        const resp=await window.apiFetch(`/api/admin/suppliers/upsert`, { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify({ id, ...payload }) });
         const data=await resp.json();
         if(!resp.ok) throw new Error(data.error||'保存失败');
         hint.textContent='已保存';
@@ -1884,7 +1899,7 @@ document.addEventListener('DOMContentLoaded', () => {
     url.searchParams.set('limit','20');
     if (!initial && demOffsetNext) url.searchParams.set('offset', demOffsetNext);
     try{
-      const resp=await window.apiFetch(`/api/admin/demanders?${url.searchParams.toString()}`, { headers: { 'X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') } });
+      const resp=await window.apiFetch(`/api/admin/demanders?${url.searchParams.toString()}`);
       const data=await resp.json();
       if (!resp.ok) throw new Error(data.error||'加载失败');
       const items = Array.isArray(data) ? data : (data.items || []);
@@ -1929,7 +1944,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!id) return;
         if (!confirm('确认删除该需求方？')) return;
         try {
-          const resp=await window.apiFetch(`/api/admin/demanders/${encodeURIComponent(id)}`, { method:'DELETE', headers:{ 'X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') } });
+          const resp=await window.apiFetch(`/api/admin/demanders/${encodeURIComponent(id)}`, { method:'DELETE' });
           const data=await resp.json();
           if (!resp.ok) throw new Error(data.error||'删除失败');
           await loadDemandersIndex(true);
@@ -1941,7 +1956,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const tr = btn.closest('tr'); const company=tr?.dataset.company||'';
         if (!company) return;
         try{
-          const resp=await window.apiFetch(`/api/admin/requirements?q=${encodeURIComponent(company)}`, { headers: { 'X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') } });
+          const resp=await window.apiFetch(`/api/admin/requirements?q=${encodeURIComponent(company)}`);
           const data=await resp.json();
           const items = Array.isArray(data) ? data : (data.items||[]);
           const list = (items||[]).map(it=>({ RequirementID: it.requirement_id || it.RequirementID || '', Title: it.title || it.Title || ''}));
@@ -1958,7 +1973,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       if (!window.ADMIN_KEY && typeof ADMIN_KEY === 'undefined') { alert('请先输入管理员密钥并点击“确认登录”'); return; }
       const btn=document.getElementById('demReloadAll'); if (btn) { btn.disabled=true; btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span> 统计中'; }
-      const resp=await window.apiFetch('/api/admin/import-demanders', { method:'POST', headers:{ 'X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') } });
+      const resp=await window.apiFetch('/api/admin/import-demanders', { method:'POST' });
       const data=await resp.json();
       if (!resp.ok) throw new Error(data.error||'统计失败');
       alert(`已聚合需求方：${data.upserted||0} 条`);
@@ -1975,7 +1990,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!window.ADMIN_KEY && typeof ADMIN_KEY === 'undefined') { alert('请先输入管理员密钥并点击“确认登录”'); return; }
       const q=(document.getElementById('demSearchInput')?.value||'').trim();
       const url = `/api/admin/demanders/export${q?`?q=${encodeURIComponent(q)}`:''}`;
-      const resp=await window.apiFetch(url, { headers: { 'X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') } });
+      const resp=await window.apiFetch(url);
       const text=await resp.text();
       if (!resp.ok) throw new Error('导出失败');
       const blob = new Blob([text], { type:'text/csv;charset=utf-8;' });
@@ -1985,7 +2000,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   async function loadDemStats(){
     try{
-      const resp=await window.apiFetch('/api/admin/demanders/stats', { headers:{ 'X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') } });
+      const resp=await window.apiFetch('/api/admin/demanders/stats');
       const d=await resp.json();
       if (!resp.ok) throw new Error(d.error||'统计失败');
       const el=document.getElementById('demStatsHint'); if (el) el.textContent = `总数 ${d.total||0}，公开 ${d.public||0}，需密码 ${d.password||0}，开放报价 ${d.openQuotes||0}`;
@@ -2055,7 +2070,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const isCreate = !id;
         const url = isCreate ? '/api/admin/demanders' : `/api/admin/demanders/${encodeURIComponent(id)}`;
         const method = isCreate ? 'POST' : 'PATCH';
-        const resp=await window.apiFetch(url, { method, headers:{ 'Content-Type':'application/json','X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') }, body: JSON.stringify(payload) });
+        const resp=await window.apiFetch(url, { method, headers:{ 'Content-Type':'application/json' }, body: JSON.stringify(payload) });
         const data=await resp.json();
         if(!resp.ok) throw new Error(data.error||'保存失败');
         hint.textContent='已保存';
