@@ -14,7 +14,9 @@ export default {
       'https://api.visndt.com',
       // Local Hugo & dev servers
       'http://localhost:1313', 'http://127.0.0.1:1313',
-      'http://localhost:8888', 'http://127.0.0.1:8888'
+      'http://localhost:8888', 'http://127.0.0.1:8888',
+      'http://localhost:8000', 'http://127.0.0.1:8000',
+      'http://localhost:1314', 'http://127.0.0.1:1314'
     ]);
     const allowOrigin = (origin && allowedOrigins.has(origin)) ? origin : 'https://visndt.com';
     const baseHeaders = {
@@ -172,13 +174,16 @@ export default {
     const isFn = (p) => path.startsWith(`/.netlify/functions/${p}`);
     const isApi = (p) => path.startsWith(`/api/${p}`);
 
-    // Admin: verify via header token or body password
-    if (isApi('admin/verify') && request.method === 'POST') {
-      const data = await bodyJSON(request);
-      const pass = String(data.password || '').trim();
+    // Admin: verify via header token (GET/POST) or body password (POST only)
+    if (isApi('admin/verify') && (request.method === 'POST' || request.method === 'GET')) {
       const headerOk = requireAdmin(request);
-      const envPass = String(env.ADMIN_PASSWORD || env.ADMIN_PASS || env.ADMIN_SECRET || '');
-      const passwordOk = Boolean(envPass && pass && pass === envPass);
+      let passwordOk = false;
+      if (request.method === 'POST') {
+        const data = await bodyJSON(request);
+        const pass = String(data.password || '').trim();
+        const envPass = String(env.ADMIN_PASSWORD || env.ADMIN_PASS || env.ADMIN_SECRET || '');
+        passwordOk = Boolean(envPass && pass && pass === envPass);
+      }
       if (headerOk || passwordOk) {
         return json({ ok: true });
       }
