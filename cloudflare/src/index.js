@@ -475,8 +475,37 @@ export default {
     // Admin: list/update suppliers
     if (isFn('adminListSuppliers') && request.method === 'GET' || isApi('admin/suppliers') && request.method === 'GET') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-      const { results } = await env.DB.prepare('SELECT * FROM suppliers ORDER BY created_at DESC LIMIT 500').all();
-      return json(results || []);
+      const q = (url.searchParams.get('q') || '').trim().toLowerCase();
+      const onlyPublic = (url.searchParams.get('public') || '').trim().toLowerCase() === 'true';
+      const limit = Math.min(Math.max(parseInt(url.searchParams.get('limit') || '20', 10) || 20, 1), 200);
+      const offset = Math.max(parseInt(url.searchParams.get('offset') || '0', 10) || 0, 0);
+      const where = [];
+      const binds = [];
+      if (q) {
+        where.push('(LOWER(company) LIKE ? OR LOWER(name) LIKE ? OR LOWER(contact_phone) LIKE ? OR LOWER(contact_email) LIKE ?)');
+        const like = `%${q}%`;
+        binds.push(like, like, like, like);
+      }
+      if (onlyPublic) {
+        where.push("metadata_json LIKE '%\"contact_public\":true%'");
+      }
+      const whereSql = where.length ? (' WHERE ' + where.join(' AND ')) : '';
+      const sql = `SELECT * FROM suppliers${whereSql} ORDER BY created_at DESC LIMIT ? OFFSET ?`;
+      const { results } = await env.DB.prepare(sql).bind(...binds, limit, offset).all();
+      const items = (results || []).map(s => ({
+        supplier_id: s.supplier_id,
+        name: s.name,
+        company: s.company,
+        access_password_plain: s.access_password_plain,
+        contact_phone: s.contact_phone,
+        contact_email: s.contact_email,
+        status: s.status,
+        metadata_json: parseJSONSafe(s.metadata_json),
+        created_at: s.created_at,
+        updated_at: s.updated_at
+      }));
+      const offsetNext = items.length >= limit ? String(offset + limit) : '';
+      return json({ items, offsetNext });
     }
     // Admin: bulk update suppliers (apply-to-all)
     if (isApi('admin/suppliers') && request.method === 'POST') {
@@ -512,11 +541,112 @@ export default {
       return json({ ok: true });
     }
 
-    // Admin: list/update demanders (optional)
+    // Admin: list/update/create/delete demanders (optional)
     if (isFn('adminListDemanders') && request.method === 'GET' || isApi('admin/demanders') && request.method === 'GET') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-      const { results } = await env.DB.prepare('SELECT * FROM demanders ORDER BY created_at DESC LIMIT 500').all();
-      return json(results || []);
+      const q = (url.searchParams.get('q') || '').trim().toLowerCase();
+      const limit = Math.min(Math.max(parseInt(url.searchParams.get('limit') || '20', 10) || 20, 1), 200);
+      const offset = Math.max(parseInt(url.searchParams.get('offset') || '0', 10) || 0, 0);
+      const where = [];
+      const binds = [];
+      if (q) {
+        const like = `%${q}%`;
+        where.push('(LOWER(company) LIKE ? OR LOWER(name) LIKE ? OR LOWER(contact_phone) LIKE ? OR LOWER(contact_email) LIKE ?)');
+        binds.push(like, like, like, like);
+      }
+      const whereSql = where.length ? (' WHERE ' + where.join(' AND ')) : '';
+      const sql = `SELECT *, (
+          SELECT COUNT(1) FROM requirements r WHERE r.contact_company = demanders.company AND IFNULL(r.published_at,'') <> ''
+        ) AS req_count
+        FROM demanders${whereSql}
+        ORDER BY created_at DESC LIMIT ? OFFSET ?`;
+      const { results } = await env.DB.prepare(sql).bind(...binds, limit, offset).all();
+      const items = (results || []).map(d => ({
+        demander_id: d.demander_id,
+        name: d.name,
+        company: d.company,
+        contact_phone: d.contact_phone,
+        contact_email: d.contact_email,
+        department: d.department,
+        metadata_json: parseJSONSafe(d.metadata_json),
+        requirement_count: d.req_count || 0,
+        created_at: d.created_at,
+        updated_at: d.updated_at
+      }));
+      const offsetNext = items.length >= limit ? String(offset + limit) : '';
+      return json({ items, offsetNext });
+    }
+    // Admin: demanders stats
+    if (isApi('admin/demanders/stats') && request.method === 'GET') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const total = await env.DB.prepare('SELECT COUNT(1) AS c FROM demanders').all();
+      const pub = await env.DB.prepare('SELECT COUNT(1) AS c FROM demanders WHERE metadata_json LIKE ?').bind('%"contact_public":true%').all();
+      const pwd = await env.DB.prepare('SELECT COUNT(1) AS c FROM demanders WHERE metadata_json LIKE ?').bind('%"password_plain":"%').all();
+      const open = await env.DB.prepare('SELECT COUNT(1) AS c FROM demanders WHERE metadata_json LIKE ?').bind('%"allow_open_quotes":true%').all();
+      const totalCount = (total.results && total.results[0] && total.results[0].c) || 0;
+      const publicCount = (pub.results && pub.results[0] && pub.results[0].c) || 0;
+      const passwordCount = (pwd.results && pwd.results[0] && pwd.results[0].c) || 0;
+      const openQuotesCount = (open.results && open.results[0] && open.results[0].c) || 0;
+      return json({ total: totalCount, public: publicCount, password: passwordCount, openQuotes: openQuotesCount });
+    }
+    // Admin: demanders export CSV
+    if (isApi('admin/demanders/export') && request.method === 'GET') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const q = (url.searchParams.get('q') || '').trim().toLowerCase();
+      const where = [];
+      const binds = [];
+      if (q) {
+        const like = `%${q}%`;
+        where.push('(LOWER(company) LIKE ? OR LOWER(name) LIKE ? OR LOWER(contact_phone) LIKE ? OR LOWER(contact_email) LIKE ?)');
+        binds.push(like, like, like, like);
+      }
+      const whereSql = where.length ? (' WHERE ' + where.join(' AND ')) : '';
+      const sql = `SELECT *, (
+          SELECT COUNT(1) FROM requirements r WHERE r.contact_company = demanders.company AND IFNULL(r.published_at,'') <> ''
+        ) AS req_count FROM demanders${whereSql} ORDER BY created_at DESC LIMIT 10000 OFFSET 0`;
+      const { results } = await env.DB.prepare(sql).bind(...binds).all();
+      const items = results || [];
+      const headers = ['公司','联系人','电话','邮箱','部门','需求数量','公开','需密码'];
+      function esc(v){
+        const s = String(v==null?'':v);
+        const r = s.replace(/"/g,'""');
+        return /,|\n|"/.test(r) ? `"${r}"` : r;
+      }
+      const rows = items.map(d => {
+        const m = parseJSONSafe(d.metadata_json) || {};
+        const contactPublic = !!m.contact_public;
+        const needPassword = !(m.allow_open_quotes===true);
+        return [d.company||'', d.name||'', d.contact_phone||'', d.contact_email||'', d.department||'', d.req_count||0, contactPublic?'公开':'不公开', needPassword?'需要':'不需要'];
+      });
+      const csv = [headers, ...rows].map(r => r.map(esc).join(',')).join('\n');
+      return new Response(csv, { headers: { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': 'attachment; filename="demanders.csv"' } });
+    }
+    if (isApi('admin/demanders') && request.method === 'POST') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const data = await bodyJSON(request);
+      const now = new Date().toISOString();
+      const demander_id = (String(data.demander_id || data.company || '').trim()) || ('D-' + now.replace(/[-:T.Z]/g,''));
+      const name = String(data.name || '').trim();
+      const company = String(data.company || '').trim();
+      const phone = String(data.contact_phone || '').trim();
+      const email = String(data.contact_email || '').trim();
+      const dept = String(data.department || '').trim();
+      const meta = JSON.stringify(data.metadata_json || {});
+      try {
+        await env.DB.prepare(`INSERT INTO demanders (
+          demander_id, name, company, contact_phone, contact_email, department, metadata_json, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+        .bind(demander_id, name, company, phone, email, dept, meta, now, now).run();
+        return json({ ok: true, demander_id });
+      } catch (e) {
+        try {
+          await env.DB.prepare(`UPDATE demanders SET name = ?, company = ?, contact_phone = ?, contact_email = ?, department = ?, metadata_json = ?, updated_at = ? WHERE demander_id = ?`)
+            .bind(name, company, phone, email, dept, meta, now, demander_id).run();
+          return json({ ok: true, demander_id });
+        } catch (err) {
+          return json({ error: 'CreateDemanderFailed', detail: String(err && err.message || err) }, 500);
+        }
+      }
     }
     if (isFn('adminUpdateDemander') && request.method === 'POST' || isApi('admin/demanders/') && request.method === 'PATCH') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
@@ -533,6 +663,91 @@ export default {
       const stmt = env.DB.prepare(`UPDATE demanders SET ${sets.join(', ')} WHERE demander_id = ?`).bind(...binds, id);
       await stmt.run();
       return json({ ok: true });
+    }
+    if (isApi('admin/demanders/') && request.method === 'DELETE') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const id = path.split('/').pop();
+      try {
+        await env.DB.prepare('DELETE FROM demanders WHERE demander_id = ?').bind(id).run();
+        return json({ ok: true });
+      } catch (e) {
+        return json({ error: 'DeleteDemanderFailed', detail: String(e && e.message || e) }, 500);
+      }
+    }
+
+    // Admin: suppliers single upsert
+    if (isApi('admin/suppliers/upsert') && request.method === 'POST') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const data = await bodyJSON(request);
+      const now = new Date().toISOString();
+      const supplier_id = (String(data.supplier_id || data.company || '').trim()) || ('S-' + now.replace(/[-:T.Z]/g,''));
+      const name = String(data.name || '').trim();
+      const company = String(data.company || '').trim();
+      const phone = String(data.contact_phone || '').trim();
+      const email = String(data.contact_email || '').trim();
+      const pass = String(data.access_password_plain || '').trim();
+      const status = String(data.status || 'active').trim();
+      const meta = JSON.stringify(data.metadata_json || {});
+      try {
+        await env.DB.prepare(`INSERT INTO suppliers (
+          supplier_id, name, company, contact_phone, contact_email, access_password_plain, status, metadata_json, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+        .bind(supplier_id, name, company, phone, email, pass, status, meta, now, now).run();
+        return json({ ok: true, supplier_id });
+      } catch (e) {
+        try {
+          await env.DB.prepare(`UPDATE suppliers SET name = ?, company = ?, contact_phone = ?, contact_email = ?, access_password_plain = ?, status = ?, metadata_json = ?, updated_at = ? WHERE supplier_id = ?`)
+            .bind(name, company, phone, email, pass, status, meta, now, supplier_id).run();
+          return json({ ok: true, supplier_id });
+        } catch (err) {
+          return json({ error: 'UpsertSupplierFailed', detail: String(err && err.message || err) }, 500);
+        }
+      }
+    }
+    // Admin: suppliers delete
+    if (isApi('admin/suppliers/') && request.method === 'DELETE') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const id = path.split('/').pop();
+      try {
+        await env.DB.prepare('DELETE FROM suppliers WHERE supplier_id = ?').bind(id).run();
+        return json({ ok: true });
+      } catch (e) {
+        return json({ error: 'DeleteSupplierFailed', detail: String(e && e.message || e) }, 500);
+      }
+    }
+    // Admin: suppliers export CSV
+    if (isApi('admin/suppliers/export') && request.method === 'GET') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const q = (url.searchParams.get('q') || '').trim().toLowerCase();
+      const onlyPublic = url.searchParams.get('public') === 'true';
+      const where = [];
+      const binds = [];
+      if (q) {
+        where.push('(LOWER(company) LIKE ? OR LOWER(name) LIKE ? OR LOWER(contact_phone) LIKE ? OR LOWER(contact_email) LIKE ?)');
+        const like = `%${q}%`;
+        binds.push(like, like, like, like);
+      }
+      if (onlyPublic) {
+        where.push("metadata_json LIKE '%\"contact_public\":true%'");
+      }
+      const whereSql = where.length ? (' WHERE ' + where.join(' AND ')) : '';
+      const sql = `SELECT * FROM suppliers${whereSql} ORDER BY created_at DESC LIMIT 10000 OFFSET 0`;
+      const { results } = await env.DB.prepare(sql).bind(...binds).all();
+      const items = results || [];
+      const headers = ['公司/名称','联系人','电话','邮箱','公开','官网'];
+      function esc(v){
+        const s = String(v==null?'':v);
+        const r = s.replace(/"/g,'""');
+        return /,|\n|"/.test(r) ? `"${r}"` : r;
+      }
+      const rows = items.map(s => {
+        const m = parseJSONSafe(s.metadata_json) || {};
+        const contactPublic = !!m.contact_public;
+        const website = m.website || '';
+        return [s.company||s.name||'', s.name||'', s.contact_phone||'', s.contact_email||'', contactPublic?'公开':'不公开', website];
+      });
+      const csv = [headers, ...rows].map(r => r.map(esc).join(',')).join('\n');
+      return new Response(csv, { headers: { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': 'attachment; filename="suppliers.csv"' } });
     }
 
     // Admin: system config
@@ -710,6 +925,52 @@ export default {
         return json({ ok: true, upserted });
       } catch (e) {
         return json({ error: 'ImportSuppliersFailed', detail: String(e && e.message || e) }, 500);
+      }
+    }
+
+    // Admin: import demanders by aggregating published requirements
+    if (isApi('admin/import-demanders') && request.method === 'POST') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      try {
+        const now = new Date().toISOString();
+        const { results: reqs } = await env.DB.prepare("SELECT contact_company, contact_name, contact_phone, contact_email, contact_department, contact_public, allow_open_quotes FROM requirements WHERE IFNULL(published_at,'') <> ''").all();
+        const map = new Map();
+        for (const r of (reqs || [])) {
+          const key = String(r.contact_company || '').trim();
+          if (!key) continue;
+          const prev = map.get(key) || { company: key, name: '', contact_phone: '', contact_email: '', department: '', contact_public: 0, allow_open_quotes: 0, count: 0 };
+          const name = prev.name || String(r.contact_name || '').trim();
+          const phone = prev.contact_phone || String(r.contact_phone || '').trim();
+          const email = prev.contact_email || String(r.contact_email || '').trim();
+          const dept = prev.department || String(r.contact_department || '').trim();
+          const pub = prev.contact_public || (r.contact_public ? 1 : 0);
+          const open = prev.allow_open_quotes || (r.allow_open_quotes ? 1 : 0);
+          map.set(key, { company: key, name, contact_phone: phone, contact_email: email, department: dept, contact_public: pub, allow_open_quotes: open, count: (prev.count||0)+1 });
+        }
+        let upserted = 0;
+        for (const [company, v] of map.entries()) {
+          const id = company; // use company string as stable key
+          const meta = JSON.stringify({ contact_public: !!v.contact_public, allow_open_quotes: !!v.allow_open_quotes, aggregated_from_requirements: true });
+          try {
+            await env.DB.prepare(`INSERT INTO demanders (
+              demander_id, name, company, contact_phone, contact_email, department, metadata_json, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(demander_id) DO UPDATE SET
+              name = excluded.name,
+              company = excluded.company,
+              contact_phone = excluded.contact_phone,
+              contact_email = excluded.contact_email,
+              department = excluded.department,
+              metadata_json = excluded.metadata_json,
+              updated_at = excluded.updated_at
+            `)
+            .bind(id, v.name, company, v.contact_phone, v.contact_email, v.department, meta, now, now).run();
+            upserted++;
+          } catch {}
+        }
+        return json({ ok: true, upserted });
+      } catch (e) {
+        return json({ error: 'ImportDemandersFailed', detail: String(e && e.message || e) }, 500);
       }
     }
 
