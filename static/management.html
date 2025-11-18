@@ -869,6 +869,40 @@ document.addEventListener('DOMContentLoaded', () => {
   if (demSec) demSec.style.display='none';
   if (supSec) supSec.style.display='none';
 
+  // 展示已登录界面（隐藏欢迎页）
+  function showAdminUI(){
+    const welcomeScreen = document.getElementById('welcomeScreen');
+    const adminApp = document.getElementById('adminApp');
+    if (welcomeScreen) welcomeScreen.style.display='none';
+    if (adminApp) adminApp.style.display='block';
+    // 隐藏旧版块，避免视觉冲突
+    try { const legacy = document.getElementById('requirements')?.closest('.row'); if (legacy) legacy.style.display = 'none'; } catch {}
+  }
+
+  // 自动登录：从本地存储读取管理员密钥，验证通过后直接进入管理页
+  async function autoLogin(){
+    if (!ADMIN_KEY) return;
+    try {
+      const resp = await window.apiFetch('/api/admin/requirements?limit=1', { headers: { 'X-Admin-Key': ADMIN_KEY } });
+      const text = await resp.text();
+      let data; try { data = JSON.parse(text); } catch { throw new Error('管理员接口不可用或返回非JSON'); }
+      if (!resp.ok) throw new Error(data.error || '验证失败');
+      showAdminUI();
+      await loadRequirementsPage(true);
+      loadSuppliers();
+    } catch (e) {
+      // 验证失败则清理失效的本地密钥
+      try { localStorage.removeItem('ADMIN_KEY'); } catch {}
+      ADMIN_KEY = '';
+    }
+  }
+
+  // 尝试从本地存储恢复管理员密钥（解决刷新/返回后退出的问题）
+  try {
+    const saved = localStorage.getItem('ADMIN_KEY') || '';
+    if (saved) { ADMIN_KEY = saved; autoLogin(); }
+  } catch {}
+
   // 登录
   const adminLoginBtn = document.getElementById('adminLoginBtn');
   adminLoginBtn?.addEventListener('click', async () => {
@@ -883,12 +917,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (!resp.ok) throw new Error((data.error || '验证失败') + (data.detail ? ('：' + data.detail) : ''));
       ADMIN_KEY = key;
-      const welcomeScreen = document.getElementById('welcomeScreen');
-      const adminApp = document.getElementById('adminApp');
-      if (welcomeScreen) welcomeScreen.style.display='none';
-      if (adminApp) adminApp.style.display='block';
-      // 隐藏旧版块，避免视觉冲突
-      try { const legacy = document.getElementById('requirements')?.closest('.row'); if (legacy) legacy.style.display = 'none'; } catch {}
+      // 登录成功后持久化密钥，避免刷新或返回后退出
+      try { localStorage.setItem('ADMIN_KEY', key); } catch {}
+      showAdminUI();
       await loadRequirementsPage(true);
       // 预加载供应商
       loadSuppliers();
