@@ -109,7 +109,8 @@
       </div>
     </aside>
     <main class="col-lg-10">
-      <h1 class="mb-3">运营管理</h1>
+      <h1 class="mb-2">运营管理</h1>
+      <div id="envInfoBar" class="small text-muted mb-3">—</div>
       <!-- 需求列表 -->
       <section id="requirementsSection" class="card mb-4 shadow-sm">
         <div class="card-body">
@@ -169,22 +170,22 @@
               <button id="supPwdDefaultBtn" class="btn btn-outline-success"><i class="fa-solid fa-key me-1"></i> 供应商密码统一为 456789</button>
             </div>
           </div>
-          <div class="table-responsive">
+          <div class="table-responsive" style="max-height:60vh; overflow:auto;">
             <table class="table table-sm table-striped align-middle admin-table">
-              <thead class="table-light">
+              <thead class="table-light position-sticky top-0">
                 <tr>
-                  <th id="reqSortId">编号</th>
-                  <th>标题</th>
-                  <th>状态</th>
-                  <th>进度</th>
-                  <th>分类</th>
-                  <th>预算</th>
-                  <th id="reqSortPublished">发布时间</th>
-                  <th>在线报价</th>
-                  <th>联系方式公开</th>
-                  <th>审批</th>
-                  <th>报价数量</th>
-                  <th>操作</th>
+                  <th id="reqSortId" style="min-width:120px;">编号</th>
+                  <th style="min-width:240px;">标题</th>
+                  <th style="min-width:120px;">状态</th>
+                  <th style="min-width:120px;">进度</th>
+                  <th style="min-width:160px;">分类</th>
+                  <th style="min-width:120px;">预算</th>
+                  <th id="reqSortPublished" style="min-width:160px;">发布时间</th>
+                  <th style="min-width:120px;">在线报价</th>
+                  <th style="min-width:140px;">联系方式公开</th>
+                  <th style="min-width:120px;">审批</th>
+                  <th style="min-width:120px;">报价数量</th>
+                  <th style="min-width:160px;">操作</th>
                 </tr>
               </thead>
               <tbody id="reqTableBody"></tbody>
@@ -410,6 +411,17 @@
                 if (key && (!cur || !String(cur).trim())) headers['X-Admin-Key'] = key;
                 return fetch(`${window.API_BASE}${path}`, { ...opts, headers });
             };
+
+            try {
+                const el = document.getElementById('envInfoBar');
+                if (el) {
+                    const base = String(window.API_BASE||'');
+                    const apiText = base ? (base + '/api') : '(同源)/api';
+                    let k = '';
+                    try { k = (typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY) || (localStorage.getItem('ADMIN_KEY') || ''); } catch {}
+                    el.textContent = `API: ${apiText} · 密钥: ${k ? '已设置' : '未设置'}`;
+                }
+            } catch {}
 
             function showToast(text, kind){
                 let c = document.getElementById('toastContainer');
@@ -1804,7 +1816,7 @@ document.addEventListener('DOMContentLoaded', () => {
     m=document.createElement('div');
     m.id='quotesModal';
     m.className='modal fade';
-    m.innerHTML = `<div class="modal-dialog modal-xl"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">报价列表</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="table-responsive"><table class="table table-sm table-striped table-hover align-middle"><thead><tr><th style="min-width:260px;">供应商</th><th>联系人</th><th>电话</th><th>金额</th><th>币种</th><th>备注</th><th>创建时间</th><th>更新时间</th><th>状态</th><th>操作</th></tr></thead><tbody id="quotesModalBody"></tbody></table></div></div><div class="modal-footer"><div class="me-auto small text-muted">导出当前报价</div><button id="quotesExportCsvBtn" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-file-csv me-1"></i> 导出 CSV</button><button id="quotesExportXlsxBtn" class="btn btn-outline-success btn-sm"><i class="fa-solid fa-file-excel me-1"></i> 导出 XLSX</button><button class="btn btn-secondary" data-bs-dismiss="modal">关闭</button></div></div></div>`;
+    m.innerHTML = `<div class="modal-dialog modal-xl"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">报价列表</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="d-flex align-items-center justify-content-between mb-2"><div class="input-group input-group-sm" style="max-width:220px;"><span class="input-group-text">状态</span><select id="quotesStatusFilter" class="form-select form-select-sm"><option value="">全部</option><option value="submitted">已提交</option><option value="reviewing">审核中</option><option value="approved">已通过</option><option value="rejected">已拒绝</option><option value="won">中标</option><option value="lost">未中</option></select></div></div><div class="table-responsive" style="max-height:60vh; overflow:auto;"><table class="table table-sm table-striped table-hover align-middle"><thead class="position-sticky top-0"><tr><th style="min-width:260px;">供应商</th><th>联系人</th><th>电话</th><th>金额</th><th>币种</th><th>备注</th><th>创建时间</th><th>更新时间</th><th>状态</th><th>操作</th></tr></thead><tbody id="quotesModalBody"></tbody></table></div></div><div class="modal-footer"><div class="me-auto small text-muted">导出当前报价</div><button id="quotesExportCsvBtn" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-file-csv me-1"></i> 导出 CSV</button><button id="quotesExportXlsxBtn" class="btn btn-outline-success btn-sm"><i class="fa-solid fa-file-excel me-1"></i> 导出 XLSX</button><button class="btn btn-secondary" data-bs-dismiss="modal">关闭</button></div></div></div>`;
     document.body.appendChild(m);
     return m;
   }
@@ -1823,86 +1835,97 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = ensureQuotesModal();
     modal.querySelector('.modal-title').textContent = `报价列表 - ${id}`;
     const body = modal.querySelector('#quotesModalBody');
+    const filterEl = modal.querySelector('#quotesStatusFilter');
     body.innerHTML = '<tr><td colspan="5" class="text-muted">加载中...</td></tr>';
     try {
       const resp = await window.apiFetch(`/api/quotes?requirement_id=${encodeURIComponent(id)}`, { headers: { 'X-Admin-Key': ADMIN_KEY } });
       const text = await resp.text();
       let data; try { data = JSON.parse(text); } catch { data = { items: [] }; }
       const items = Array.isArray(data) ? data : (data.items || []);
-      // 缓存当前报价用于导出
+      window.currentQuotesOriginal = items;
       window.currentQuotes = items;
-      body.innerHTML = items.map(q => {
-        const qid = q.quote_id || q.QuoteID || '';
-        const cur = q.status || q.Status || 'submitted';
-        const amt = (q.amount ?? q.Price ?? '');
-        const curcy = q.currency || q.Currency || 'CNY';
-        const remarks = q.remarks || q.Remarks || '';
-        const created = q.created_at || q.CreatedAt || '';
-        const updated = q.updated_at || q.UpdatedAt || '';
-        const company = q.SupplierCompanyName||q.supplier_name||'';
-        return `<tr data-qid="${escapeHtml(qid)}">
-          <td style="min-width:260px;">
-            <div class="fw-semibold text-truncate" title="${escapeHtml(company)}">${escapeHtml(company)}</div>
-            <div class="small text-muted">ID: ${escapeHtml(qid||'—')}</div>
-          </td>
-          <td>${escapeHtml(q.SupplierContact||'')}</td>
-          <td>${escapeHtml(q.SupplierPhone||q.supplier_phone||'')}</td>
-          <td>${escapeHtml(amt)}</td>
-          <td>${escapeHtml(displayCurrency(curcy))}</td>
-          <td class="text-truncate" title="${escapeHtml(remarks)}">${escapeHtml(remarks)}</td>
-          <td>${escapeHtml(created)}</td>
-          <td>${escapeHtml(updated)}</td>
-          <td>
-            <div class="d-flex align-items-center gap-2">
-              <select class="form-select form-select-sm" data-field="status">
-                <option value="submitted" ${cur==='submitted'?'selected':''}>已提交</option>
-                <option value="reviewing" ${cur==='reviewing'?'selected':''}>审核中</option>
-                <option value="approved" ${cur==='approved'?'selected':''}>已通过</option>
-                <option value="rejected" ${cur==='rejected'?'selected':''}>已拒绝</option>
-                <option value="won" ${cur==='won'?'selected':''}>中标</option>
-                <option value="lost" ${cur==='lost'?'selected':''}>未中</option>
-              </select>
-              <button class="btn btn-sm btn-outline-primary" data-action="saveQuote">更新</button>
-            </div>
-          </td>
-          <td>
-            <button class="btn btn-sm btn-outline-danger" data-action="deleteQuote">删除</button>
-          </td>
-        </tr>`;
-      }).join('') || '<tr><td colspan="10" class="text-muted">暂无报价</td></tr>';
-      body.querySelectorAll('button[data-action="saveQuote"]').forEach(btn => {
-        btn.addEventListener('click', async ()=>{
-          const tr = btn.closest('tr'); const qid = tr?.dataset.qid||'';
-          const statusSel = tr?.querySelector('select[data-field="status"]');
-          const status = statusSel?.value || 'reviewing';
-          try {
-            const r = await window.apiFetch(`/api/quotes/${encodeURIComponent(qid)}`, { method:'PATCH', headers:{ 'Content-Type':'application/json','X-Admin-Key': ADMIN_KEY }, body: JSON.stringify({ status }) });
-            const dj = await r.json(); if(!r.ok) throw new Error(dj.error||'更新失败');
-            btn.textContent='已更新'; setTimeout(()=>{btn.textContent='更新';},1200);
-          } catch(e){ btn.textContent='失败'; setTimeout(()=>{btn.textContent='更新';},1200); }
+      const render = (list) => {
+        body.innerHTML = (list||[]).map(q => {
+          const qid = q.quote_id || q.QuoteID || '';
+          const cur = q.status || q.Status || 'submitted';
+          const amt = (q.amount ?? q.Price ?? '');
+          const curcy = q.currency || q.Currency || 'CNY';
+          const remarks = q.remarks || q.Remarks || '';
+          const created = q.created_at || q.CreatedAt || '';
+          const updated = q.updated_at || q.UpdatedAt || '';
+          const company = q.SupplierCompanyName||q.supplier_name||'';
+          return `<tr data-qid="${escapeHtml(qid)}">
+            <td style="min-width:260px;">
+              <div class="fw-semibold text-truncate" title="${escapeHtml(company)}">${escapeHtml(company)}</div>
+              <div class="small text-muted">ID: ${escapeHtml(qid||'—')}</div>
+            </td>
+            <td>${escapeHtml(q.SupplierContact||'')}</td>
+            <td>${escapeHtml(q.SupplierPhone||q.supplier_phone||'')}</td>
+            <td>${escapeHtml(amt)}</td>
+            <td>${escapeHtml(displayCurrency(curcy))}</td>
+            <td class="text-truncate" title="${escapeHtml(remarks)}">${escapeHtml(remarks)}</td>
+            <td>${escapeHtml(created)}</td>
+            <td>${escapeHtml(updated)}</td>
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <select class="form-select form-select-sm" data-field="status">
+                  <option value="submitted" ${cur==='submitted'?'selected':''}>已提交</option>
+                  <option value="reviewing" ${cur==='reviewing'?'selected':''}>审核中</option>
+                  <option value="approved" ${cur==='approved'?'selected':''}>已通过</option>
+                  <option value="rejected" ${cur==='rejected'?'selected':''}>已拒绝</option>
+                  <option value="won" ${cur==='won'?'selected':''}>中标</option>
+                  <option value="lost" ${cur==='lost'?'selected':''}>未中</option>
+                </select>
+                <button class="btn btn-sm btn-outline-primary" data-action="saveQuote">更新</button>
+              </div>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-outline-danger" data-action="deleteQuote">删除</button>
+            </td>
+          </tr>`;
+        }).join('') || '<tr><td colspan="10" class="text-muted">暂无报价</td></tr>';
+        body.querySelectorAll('button[data-action="saveQuote"]').forEach(btn => {
+          btn.addEventListener('click', async ()=>{
+            const tr = btn.closest('tr'); const qid = tr?.dataset.qid||'';
+            const statusSel = tr?.querySelector('select[data-field="status"]');
+            const status = statusSel?.value || 'reviewing';
+            try {
+              const r = await window.apiFetch(`/api/quotes/${encodeURIComponent(qid)}`, { method:'PATCH', headers:{ 'Content-Type':'application/json','X-Admin-Key': ADMIN_KEY }, body: JSON.stringify({ status }) });
+              const dj = await r.json(); if(!r.ok) throw new Error(dj.error||'更新失败');
+              btn.textContent='已更新'; setTimeout(()=>{btn.textContent='更新';},1200);
+            } catch(e){ btn.textContent='失败'; setTimeout(()=>{btn.textContent='更新';},1200); }
+          });
         });
-      });
-      // 绑定删除按钮事件
-      body.querySelectorAll('button[data-action="deleteQuote"]').forEach(btn => {
-        btn.addEventListener('click', async ()=>{
-          const tr = btn.closest('tr'); const qid = tr?.dataset.qid||'';
-          if(!qid) return;
-          try {
-            const r = await window.apiFetch(`/api/quotes/${encodeURIComponent(qid)}`, { method:'DELETE', headers:{ 'X-Admin-Key': ADMIN_KEY } });
-            const dj = await r.json(); if(!r.ok) throw new Error(dj.error||'删除失败');
-            tr.remove();
-            // 同步内存缓存
-            window.currentQuotes = (window.currentQuotes||items||[]).filter(x => (x.quote_id || x.QuoteID) !== qid);
-          } catch(e){ btn.textContent='失败'; setTimeout(()=>{btn.textContent='删除';},1200); }
+        body.querySelectorAll('button[data-action="deleteQuote"]').forEach(btn => {
+          btn.addEventListener('click', async ()=>{
+            const tr = btn.closest('tr'); const qid = tr?.dataset.qid||'';
+            if(!qid) return;
+            try {
+              const r = await window.apiFetch(`/api/quotes/${encodeURIComponent(qid)}`, { method:'DELETE', headers:{ 'X-Admin-Key': ADMIN_KEY } });
+              const dj = await r.json(); if(!r.ok) throw new Error(dj.error||'删除失败');
+              tr.remove();
+              window.currentQuotesOriginal = (window.currentQuotesOriginal||[]).filter(x => (x.quote_id || x.QuoteID) !== qid);
+              window.currentQuotes = (window.currentQuotes||[]).filter(x => (x.quote_id || x.QuoteID) !== qid);
+            } catch(e){ btn.textContent='失败'; setTimeout(()=>{btn.textContent='删除';},1200); }
+          });
         });
-      });
-      // 绑定导出按钮事件
+      };
+      render(items);
+      if (filterEl) {
+        filterEl.onchange = () => {
+          const val = filterEl.value || '';
+          const src = window.currentQuotesOriginal || items || [];
+          const filtered = val ? src.filter(q => (q.status || q.Status || '') === val) : src.slice();
+          window.currentQuotes = filtered;
+          render(filtered);
+        };
+      }
       const btnCsv = modal.querySelector('#quotesExportCsvBtn');
       const btnXlsx = modal.querySelector('#quotesExportXlsxBtn');
       if (btnCsv) {
         btnCsv.onclick = () => {
           const headers = ['报价ID','供应商','联系人','电话','金额','币种','备注','创建时间','更新时间','状态'];
-          const rows = (window.currentQuotes||items||[]).map(q => [
+          const rows = (window.currentQuotes||[]).map(q => [
             q.quote_id || q.QuoteID || '',
             q.SupplierCompanyName||q.supplier_name||'',
             q.SupplierContact||'',
@@ -1923,7 +1946,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (btnXlsx && window.XLSX) {
         btnXlsx.onclick = () => {
-          const rows = (window.currentQuotes||items||[]).map(q => ({
+          const rows = (window.currentQuotes||[]).map(q => ({
             报价ID: q.quote_id || q.QuoteID || '',
             供应商: q.SupplierCompanyName||q.supplier_name||'',
             联系人: q.SupplierContact||'',
@@ -1944,8 +1967,8 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch {
       body.innerHTML = '<tr><td colspan="5" class="text-danger">无法加载报价列表</td></tr>';
     }
-      new bootstrap.Modal(modal).show();
-    }
+    new bootstrap.Modal(modal).show();
+  }
 
   document.getElementById('reqApplyFilter')?.addEventListener('click', ()=>{ reqOffsetNext=''; reqOffsetStack=[]; loadRequirementsPage(true); });
   document.getElementById('reqPrevPage')?.addEventListener('click', ()=>{ reqOffsetNext=''; reqOffsetStack=[]; loadRequirementsPage(true); });
