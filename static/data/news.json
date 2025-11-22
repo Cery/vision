@@ -1,0 +1,59 @@
+{
+  "items": [
+    {
+      "id": "news-2025-ndt-trends",
+      "title": "2025工业内窥镜与无损检测市场趋势",
+      "summary": "全球制造业复苏带动设备维护与质量控制需求增长，工业内窥镜与无损检测迎来新一轮升级。",
+      "category": "行业资讯",
+      "tags": ["无损检测","工业内窥镜","市场趋势"],
+      "author": "Vision NDT Research",
+      "date": "2025-11-18",
+      "hero": "https://images.unsplash.com/photo-1581090700227-1f0d9423b2a9?auto=format&fit=crop&w=1200&q=60",
+      "content": "<p>2025年，工业内窥镜与无损检测（NDT）行业呈现数字化与智能化双轮驱动的趋势。以航空航天、能源电力、石油化工为代表的资产密集型行业，正在通过可视化检测与数据分析优化全生命周期维护。</p><h3>四大趋势</h3><ul><li>设备轻量化与高清化</li><li>AI辅助缺陷识别</li><li>云协同与远程运维</li><li>合规与安全强化</li></ul><p>预计未来3-5年，行业复合增速维持在12%-15%。</p>"
+    },
+    {
+      "id": "news-aviation-engine-maintenance",
+      "title": "航空发动机定检：内窥镜可视化与数据闭环",
+      "summary": "结合高清内窥镜与标准化流程，提升定检效率与可靠性。",
+      "category": "应用实践",
+      "tags": ["航空航天","内窥镜","定检"],
+      "author": "工程技术部",
+      "date": "2025-11-05",
+      "hero": "https://images.unsplash.com/photo-1516239322874-7ea2030fd3d7?auto=format&fit=crop&w=1200&q=60",
+      "content": "<p>针对航空发动机高温部件，采用柔性内窥镜进行可视化检查，并通过标准化拍照位点形成对比数据库。结合缺陷库，支持快速复判与趋势分析。</p>"
+    },
+    {
+      "id": "news-power-plant-boiler",
+      "title": "电厂锅炉管道的在役检测要点",
+      "summary": "高温腐蚀与结垢是主要问题，建议建立分区巡检与影像留档体系。",
+      "category": "技术要点",
+      "tags": ["能源电力","锅炉","腐蚀"],
+      "author": "现场技术中心",
+      "date": "2025-10-22",
+      "hero": "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=1200&q=60",
+      "content": "<p>锅炉系统存在内壁腐蚀与结垢风险，建议按照分区与风险等级制定巡检计划，结合高清影像与厚度测量进行趋势评估。</p>"
+    },
+    {
+      "id": "news-petrochemical-heat-exchanger",
+      "title": "石化换热器内窥镜检查的最佳实践",
+      "summary": "提升停机期间的可视化检查效率，减少返工与不确定性。",
+      "category": "最佳实践",
+      "tags": ["石油化工","换热器","可视化"],
+      "author": "项目交付团队",
+      "date": "2025-09-30",
+      "hero": "https://images.unsplash.com/photo-1581093588401-16b8c8a4a991?auto=format&fit=crop&w=1200&q=60",
+      "content": "<p>通过模块化镜体与多角度镜头，结合标准化拍摄清单，缩短停机检查时间，同时保证影像质量可复用。</p>"
+    },
+    {
+      "id": "news-ai-assisted-detection",
+      "title": "AI辅助缺陷识别在工业内窥镜场景的落地",
+      "summary": "从样本采集、模型训练到现场部署的全流程经验分享。",
+      "category": "技术文章",
+      "tags": ["AI识别","缺陷库","模型部署"],
+      "author": "算法团队",
+      "date": "2025-09-12",
+      "hero": "https://images.unsplash.com/photo-1550751827-4bd23f1b8deb?auto=format&fit=crop&w=1200&q=60",
+      "content": "<p>构建缺陷样本库并进行数据清洗，是AI识别落地的关键。建议采用半监督策略提升稀缺场景的召回率，并通过边缘设备实现低时延推理。</p>"
+    }
+  ]
+}

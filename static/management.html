@@ -183,6 +183,7 @@
                   <th>需求数量</th>
                   <th>公开</th>
                   <th>需密码</th>
+                  <th>密码</th>
                   <th>操作</th>
                 </tr>
               </thead>
@@ -225,6 +226,7 @@
                   <th>联系人</th>
                   <th>电话</th>
                   <th>邮箱</th>
+                  <th>密码</th>
                   <th>系列/型号数量</th>
                   <th>操作</th>
                 </tr>
@@ -366,6 +368,106 @@
                 if (key && (!cur || !String(cur).trim())) headers['X-Admin-Key'] = key;
                 return fetch(`${window.API_BASE}${path}`, { ...opts, headers });
             };
+
+            function showToast(text, kind){
+                let c = document.getElementById('toastContainer');
+                if (!c){
+                    c = document.createElement('div');
+                    c.id = 'toastContainer';
+                    c.style.position = 'fixed';
+                    c.style.right = '16px';
+                    c.style.bottom = '16px';
+                    c.style.zIndex = '1090';
+                    document.body.appendChild(c);
+                }
+                const d = document.createElement('div');
+                d.className = 'alert ' + (kind==='success'?'alert-success':kind==='error'?'alert-danger':'alert-secondary');
+                d.style.marginTop = '8px';
+                d.textContent = String(text||'');
+                c.appendChild(d);
+                setTimeout(()=>{ try{ c.removeChild(d); }catch{} }, 1800);
+            }
+
+            async function updateRequirementStatus(reqId, newStatus){
+                try{
+                    const headers = { 'Content-Type': 'application/json' };
+                    const isAdmin = !!(typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY);
+                    if (isAdmin) headers['X-Admin-Key'] = ADMIN_KEY;
+                    let body = { status: String(newStatus||'') };
+                    if (!isAdmin){
+                        const pwd = window.prompt('请输入需求方密码');
+                        if (!pwd){ return false; }
+                        body.demander_password = pwd;
+                    }
+                    const resp = await window.apiFetch(`/api/requirements/${encodeURIComponent(reqId)}`, { method: 'PATCH', headers, body: JSON.stringify(body) });
+                    let data = {}; try { data = await resp.json(); } catch {}
+                    if (!resp.ok){
+                        const msg = data && (data.error || data.message) || '更新失败';
+                        showToast(msg, 'error');
+                        return false;
+                    }
+                    showToast('状态更新成功', 'success');
+                    return true;
+                }catch(e){
+                    showToast(e.message||'更新失败', 'error');
+                    return false;
+                }
+            }
+
+            async function updateRequirementProgress(reqId, newProgress){
+                try{
+                    const isAdmin = !!(typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY);
+                    let headers = { 'Content-Type': 'application/json' };
+                    let url = `/api/requirements/${encodeURIComponent(reqId)}`;
+                    let body = { progress: String(newProgress||'') };
+                    if (isAdmin){ headers['X-Admin-Key'] = ADMIN_KEY; url = `/api/admin/requirements/${encodeURIComponent(reqId)}`; }
+                    else {
+                        const pwd = window.prompt('请输入需求方密码');
+                        if (!pwd){ return false; }
+                        body.demander_password = pwd;
+                    }
+                    const resp = await window.apiFetch(url, { method: 'PATCH', headers, body: JSON.stringify(body) });
+                    let data = {}; try { data = await resp.json(); } catch {}
+                    if (!resp.ok){ showToast((data && (data.error||data.message)) || '更新失败', 'error'); return false; }
+                    showToast('进度更新成功', 'success');
+                    return true;
+                }catch(e){ showToast(e.message||'更新失败', 'error'); return false; }
+            }
+
+            async function updateRequirementOpenQuotes(reqId, flag){
+                try{
+                    if (!(typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY)){
+                        alert('请先输入管理员密钥并登录');
+                        return false;
+                    }
+                    const headers = { 'Content-Type': 'application/json', 'X-Admin-Key': ADMIN_KEY };
+                    const resp = await window.apiFetch(`/api/admin/requirements/${encodeURIComponent(reqId)}`, { method: 'PATCH', headers, body: JSON.stringify({ allow_open_quotes: !!flag }) });
+                    let data = {}; try { data = await resp.json(); } catch {}
+                    if (!resp.ok){ showToast((data && (data.error||data.message)) || '更新失败', 'error'); return false; }
+                    showToast('在线报价已更新', 'success');
+                    return true;
+                }catch(e){ showToast(e.message||'更新失败', 'error'); return false; }
+            }
+
+            async function updateRequirementContactPublic(reqId, flag){
+                try{
+                    const isAdmin = !!(typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY);
+                    let headers = { 'Content-Type': 'application/json' };
+                    let url = `/api/requirements/${encodeURIComponent(reqId)}`;
+                    let body = { contact_public: !!flag };
+                    if (isAdmin){ headers['X-Admin-Key'] = ADMIN_KEY; url = `/api/admin/requirements/${encodeURIComponent(reqId)}`; }
+                    else {
+                        const pwd = window.prompt('请输入需求方密码');
+                        if (!pwd){ return false; }
+                        body.demander_password = pwd;
+                    }
+                    const resp = await window.apiFetch(url, { method: 'PATCH', headers, body: JSON.stringify(body) });
+                    let data = {}; try { data = await resp.json(); } catch {}
+                    if (!resp.ok){ showToast((data && (data.error||data.message)) || '更新失败', 'error'); return false; }
+                    showToast('联系方式公开已更新', 'success');
+                    return true;
+                }catch(e){ showToast(e.message||'更新失败', 'error'); return false; }
+            }
 
             // 加载并显示需求列表（Cloudflare D1）
             window.apiFetch('/api/requirements')
@@ -996,13 +1098,34 @@ document.addEventListener('DOMContentLoaded', () => {
       return `<tr data-id="${escapeHtml(id)}">
         <td>${escapeHtml(id || '—')}</td>
         <td class="text-truncate" title="${escapeHtml(item.Title||'未命名')}">${escapeHtml(item.Title||'未命名')}</td>
-        <td>${escapeHtml(item.Status||'')}</td>
-        <td>${escapeHtml(item.Progress||'')}</td>
+        <td>
+          <select class="form-select form-select-sm req-status" data-prev="${escapeHtml(item.Status||'')}">
+            <option value="公开" ${item.Status==='公开'?'selected':''}>公开</option>
+            <option value="在线报价" ${item.Status==='在线报价'?'selected':''}>在线报价</option>
+            <option value="隐私" ${item.Status==='隐私'?'selected':''}>隐私</option>
+            <option value="关闭" ${item.Status==='关闭'?'selected':''}>关闭</option>
+          </select>
+        </td>
+        <td>
+          <select class="form-select form-select-sm req-progress" data-prev="${escapeHtml(item.Progress||'')}">
+            <option value="发布中" ${item.Progress==='发布中'?'selected':''}>发布中</option>
+            <option value="接洽中" ${item.Progress==='接洽中'?'selected':''}>接洽中</option>
+            <option value="已完成" ${item.Progress==='已完成'?'selected':''}>已完成</option>
+          </select>
+        </td>
         <td class="text-truncate" title="${escapeHtml(item.PrimaryCategory||'')}">${escapeHtml(item.PrimaryCategory||'')}</td>
         <td class="text-truncate" title="${escapeHtml(item.BudgetRange||'')}">${escapeHtml(item.BudgetRange||'')}</td>
         <td>${escapeHtml(pubText)}</td>
-        <td>${online ? '开启' : '关闭'}</td>
-        <td>${contactP ? '公开' : '不公开'}</td>
+        <td>
+          <div class="form-check form-switch">
+            <input class="form-check-input req-open-toggle" type="checkbox" ${online?'checked':''}>
+          </div>
+        </td>
+        <td>
+          <div class="form-check form-switch">
+            <input class="form-check-input req-contact-toggle" type="checkbox" ${contactP?'checked':''}>
+          </div>
+        </td>
         <td>
           <button class="btn btn-sm ${item.Approved ? 'btn-success' : 'btn-outline-secondary'}" data-action="toggleApproved">${item.Approved ? '已批准' : '未批准'}</button>
         </td>
@@ -1019,6 +1142,22 @@ document.addEventListener('DOMContentLoaded', () => {
       if (id) { loadQuoteCount(id, tr); }
       tr.querySelector('[data-action="detail"]')?.addEventListener('click', ()=>{ if(id) showRequirementDetail(id); });
       tr.querySelector('[data-action="quotes"]')?.addEventListener('click', ()=>{ if(id) showQuotesModal(id); });
+      const sel = tr.querySelector('.req-status');
+      if (sel && id){
+        sel.addEventListener('change', async ()=>{
+          const prev = sel.getAttribute('data-prev') || '';
+          const next = String(sel.value||'');
+          sel.disabled = true;
+          const ok = await updateRequirementStatus(id, next);
+          if (ok){
+            sel.setAttribute('data-prev', next);
+            try { loadRequirementsPage(true); } catch {}
+          } else {
+            sel.value = prev;
+          }
+          sel.disabled = false;
+        });
+      }
       tr.querySelector('[data-action="toggleApproved"]')?.addEventListener('click', async ()=>{
         if(!id) return;
         const cur = (requirementsCache||[]).find(x=>x.RequirementID===id);
@@ -1184,15 +1323,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (privateBtn) privateBtn.addEventListener('click', ()=> setAllRequirementStatus('隐私'));
     if (closeBtn) closeBtn.addEventListener('click', ()=> setAllRequirementStatus('关闭'));
 
-    // 供应商密码统一为 888888
+    // 供应商密码统一为 456789
     const supPwdDefaultBtn = document.getElementById('supPwdDefaultBtn');
     if (supPwdDefaultBtn) {
       supPwdDefaultBtn.addEventListener('click', async () => {
         if (!ADMIN_KEY) { alert('请先输入管理员密钥并点击“确认登录”'); return; }
-        if (!confirm('将所有供应商的通行密码统一设置为“888888”，是否继续？')) return;
+        if (!confirm('将所有供应商的通行密码统一设置为“456789”，是否继续？')) return;
         supPwdDefaultBtn.disabled = true; const old = supPwdDefaultBtn.innerHTML; supPwdDefaultBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> 正在更新';
         try {
-          const resp = await window.apiFetch('/api/admin/suppliers', { method: 'POST', headers: { 'Content-Type':'application/json','X-Admin-Key': ADMIN_KEY }, body: JSON.stringify({ applyToAll: true, newPasswordPlain: '888888' }) });
+          const resp = await window.apiFetch('/api/admin/suppliers', { method: 'POST', headers: { 'Content-Type':'application/json','X-Admin-Key': ADMIN_KEY }, body: JSON.stringify({ applyToAll: true, newPasswordPlain: '456789' }) });
           const data = await resp.json();
           if (!resp.ok) throw new Error(data.error || '设置失败');
           alert('已统一设置供应商通行密码');
@@ -1287,6 +1426,14 @@ document.addEventListener('DOMContentLoaded', () => {
           <label class="form-label small">查看密码（明文）</label>
           <input id="reqViewPassword" class="form-control" value="${escapeHtml(item.ViewPasswordPlain||'')}" />
         </div>
+        <div class="col-md-4">
+          <label class="form-label small">报价密码（供应商）</label>
+          <input id="reqQuotePassword" class="form-control" value="${escapeHtml(item.quote_password||'')}" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small">查看密码（游客）</label>
+          <input id="reqViewPasswordAlt" class="form-control" value="${escapeHtml(item.view_password||'')}" />
+        </div>
         <div id="contactFieldsGroup" class="col-12">
           <div class="row g-3">
             <div class="col-md-4">
@@ -1379,39 +1526,60 @@ document.addEventListener('DOMContentLoaded', () => {
     const body = modal?.querySelector('.modal-body');
     const id = body?.dataset.reqId || '';
     const hint = document.getElementById('reqDetailHint'); if (hint) hint.textContent='';
-    const payload = {
-      title: document.getElementById('reqTitleInput')?.value || '',
-      status: document.getElementById('reqStatusSelect')?.value || '',
-      progress: document.getElementById('reqProgressSelect')?.value || '',
-      approved: !!document.getElementById('reqApproved')?.checked,
-      primary_category: document.getElementById('reqPrimaryCategory')?.value || '',
-      secondary_category: document.getElementById('reqSecondaryCategory')?.value || '',
-      budget_range: document.getElementById('reqBudgetRange')?.value || '',
-      allow_open_quotes: !!document.getElementById('reqAllowOpenQuotes')?.checked,
-      contact_public: !!document.getElementById('reqContactPublic')?.checked,
-      view_password_plain: document.getElementById('reqViewPassword')?.value || '',
-      contact_name: document.getElementById('reqContactName')?.value || '',
-      contact_phone: document.getElementById('reqContactPhone')?.value || '',
-      contact_company: document.getElementById('reqContactCompany')?.value || '',
-      contact_email: document.getElementById('reqContactEmail')?.value || '',
-      contact_department: document.getElementById('reqContactDept')?.value || '',
-      public_preview: document.getElementById('reqPublicPreview')?.value || '',
-      procurement_plan: document.getElementById('reqProcurementPlan')?.value || '',
-      published_at: (function(){
-        const v = document.getElementById('reqPublishedAt')?.value || '';
-        // 保持 ISO 格式（无秒则后端也可接受）
-        return v ? v.replace(' ', 'T') + 'Z' : '';
-      })(),
-      parameters_json: (function(){
-        const raw = document.getElementById('reqParametersJson')?.value || '';
-        if (!raw.trim()) return {};
-        try { return JSON.parse(raw); } catch (e) {
-          throw new Error('关键参数需为合法 JSON 格式');
-        }
-      })()
-    };
+    const isAdmin = !!(typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY);
+    let payload;
+    if (isAdmin) {
+      payload = {
+        title: document.getElementById('reqTitleInput')?.value || '',
+        status: document.getElementById('reqStatusSelect')?.value || '',
+        progress: document.getElementById('reqProgressSelect')?.value || '',
+        approved: !!document.getElementById('reqApproved')?.checked,
+        primary_category: document.getElementById('reqPrimaryCategory')?.value || '',
+        secondary_category: document.getElementById('reqSecondaryCategory')?.value || '',
+        budget_range: document.getElementById('reqBudgetRange')?.value || '',
+        allow_open_quotes: !!document.getElementById('reqAllowOpenQuotes')?.checked,
+        contact_public: !!document.getElementById('reqContactPublic')?.checked,
+        view_password_plain: document.getElementById('reqViewPassword')?.value || '',
+        quote_password: document.getElementById('reqQuotePassword')?.value || '',
+        view_password: document.getElementById('reqViewPasswordAlt')?.value || '',
+        contact_name: document.getElementById('reqContactName')?.value || '',
+        contact_phone: document.getElementById('reqContactPhone')?.value || '',
+        contact_company: document.getElementById('reqContactCompany')?.value || '',
+        contact_email: document.getElementById('reqContactEmail')?.value || '',
+        contact_department: document.getElementById('reqContactDept')?.value || '',
+        public_preview: document.getElementById('reqPublicPreview')?.value || '',
+        procurement_plan: document.getElementById('reqProcurementPlan')?.value || '',
+        published_at: (function(){
+          const v = document.getElementById('reqPublishedAt')?.value || '';
+          return v ? v.replace(' ', 'T') + 'Z' : '';
+        })(),
+        parameters_json: (function(){
+          const raw = document.getElementById('reqParametersJson')?.value || '';
+          if (!raw.trim()) return {};
+          try { return JSON.parse(raw); } catch (e) {
+            throw new Error('关键参数需为合法 JSON 格式');
+          }
+        })()
+      };
+    } else {
+      payload = {
+        status: document.getElementById('reqStatusSelect')?.value || '',
+        progress: document.getElementById('reqProgressSelect')?.value || '',
+        contact_public: !!document.getElementById('reqContactPublic')?.checked
+      };
+    }
     try{
-      const resp = await window.apiFetch(`/api/admin/requirements/${encodeURIComponent(id)}`, { method:'PATCH', headers:{ 'Content-Type':'application/json','X-Admin-Key': ADMIN_KEY }, body: JSON.stringify(payload) });
+      let url = `/api/admin/requirements/${encodeURIComponent(id)}`;
+      let headers = { 'Content-Type':'application/json' };
+      if (isAdmin) {
+        headers['X-Admin-Key'] = ADMIN_KEY;
+      } else {
+        const pwd = window.prompt('请输入需求方密码');
+        if (!pwd) throw new Error('需要需求方密码');
+        payload.demander_password = pwd;
+        url = `/api/requirements/${encodeURIComponent(id)}`;
+      }
+      const resp = await window.apiFetch(url, { method:'PATCH', headers, body: JSON.stringify(payload) });
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error||'保存失败');
       if (hint) hint.textContent='已保存';
@@ -1609,7 +1777,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function showDemandList(company, list){
     const modal = ensureDetailModal();
     modal.querySelector('.modal-title').textContent = `需求方：${company}`;
-    modal.querySelector('.modal-body').innerHTML = `<ul class="list-group">${list.map(it=>`<li class="list-group-item d-flex justify-content-between align-items-center"><span class="text-truncate" style="max-width:60%;">${escapeHtml(it.Title||it.RequirementID||'未命名')}</span><span class="small text-muted">${it.RequirementID}</span><div><button class="btn btn-sm btn-outline-secondary me-1" onclick="window.location.href='/quotes.html?RequirementID=${encodeURIComponent(it.RequirementID)}'">报价</button><button class="btn btn-sm btn-outline-primary" onclick="(${showRequirementDetail.toString()})('${it.RequirementID}')">详情</button></div></li>`).join('')}</ul>`;
+    modal.querySelector('.modal-body').innerHTML = `<ul class="list-group">${list.map(it=>`<li class="list-group-item d-flex justify-content-between align-items-center"><span class="text-truncate" style="max-width:60%;">${escapeHtml(it.Title||it.RequirementID||'未命名')}</span><span class="small text-muted">${it.RequirementID}</span><div><button class="btn btn-sm btn-outline-secondary me-1" onclick="(function(id){ var u=new URL('/static/entry.html', window.location.origin); u.searchParams.set('id', id); window.location.href=u.toString(); })('${it.RequirementID}')">入口</button><button class="btn btn-sm btn-outline-primary" onclick="(${showRequirementDetail.toString()})('${it.RequirementID}')">详情</button></div></li>`).join('')}</ul>`;
     new bootstrap.Modal(modal).show();
   }
   // 改为从管理接口拉取需求方列表
@@ -1637,16 +1805,23 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       const d = await respApi.json();
       const items = Array.isArray(d) ? d : (d.items||[]);
-      suppliersCache = items.map(it => ({
-        id: it.supplier_id || it.id || '',
-        title: it.company || it.CompanyName || it.Title || '',
-        contact: it.name || it.ContactName || it.Contact || '',
-        phone: it.contact_phone || it.Phone || '',
-        email: it.contact_email || it.Email || '',
-        series: 0,
-        models: 0,
-        uri: (it.metadata_json && (typeof it.metadata_json==='object' ? it.metadata_json.website : '')) || it.Website || it.Uri || ''
-      }));
+      suppliersCache = items.map(it => {
+        const meta = (function(){ try { return typeof it.metadata_json==='object' ? it.metadata_json : JSON.parse(it.metadata_json||'{}'); } catch { return {}; } })();
+        const products = Array.isArray(meta.products) ? meta.products : [];
+        const seriesCount = (function(){ try { return Array.from(new Set(products.map(p=>String(p.series||'').trim()).filter(Boolean))).length; } catch { return 0; } })();
+        const modelsCount = products.length || 0;
+        return {
+          id: it.supplier_id || it.id || '',
+          title: it.company || it.CompanyName || it.Title || '',
+          contact: it.name || it.ContactName || it.Contact || '',
+          phone: it.contact_phone || it.Phone || '',
+          email: it.contact_email || it.Email || '',
+          password: it.access_password_plain || it.Password || '',
+          series: seriesCount,
+          models: modelsCount,
+          uri: (meta && meta.website) || it.Website || it.Uri || ''
+        };
+      });
       supOffsetNext = d.offsetNext || '';
       if (initial) supOffsetStack = [];
       renderSuppliers();
@@ -1665,7 +1840,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const body=document.getElementById('supTableBody'); if (!body) return;
     const q=(document.getElementById('supSearchInput')?.value || '').trim().toLowerCase();
     const list = suppliersCache.filter(s => !q || s.title.toLowerCase().includes(q) || String(s.series).includes(q) || String(s.models).includes(q));
-    body.innerHTML = list.map(s=>`<tr data-id="${escapeHtml(s.id||'')}" data-title="${escapeHtml(s.title)}" data-phone="${escapeHtml(s.phone)}" data-email="${escapeHtml(s.email)}" data-uri="${escapeHtml(s.uri||'')}"><td><a href="${s.uri||'#'}" target="_blank">${escapeHtml(s.title)}</a></td><td>${escapeHtml(s.contact)}</td><td>${escapeHtml(s.phone)}</td><td>${escapeHtml(s.email)}</td><td>${s.series + s.models}</td><td><a class="btn btn-sm btn-outline-secondary me-2" href="${s.uri||'#'}" target="_blank">打开</a><button class="btn btn-sm btn-outline-primary me-2" data-action="editSup">编辑</button><button class="btn btn-sm btn-outline-danger" data-action="delSup">删除</button></td></tr>`).join('');
+    body.innerHTML = list.map(s=>`<tr data-id="${escapeHtml(s.id||'')}" data-title="${escapeHtml(s.title)}" data-phone="${escapeHtml(s.phone)}" data-email="${escapeHtml(s.email)}" data-uri="${escapeHtml(s.uri||'')}" data-pass="${escapeHtml(s.password||'')}"><td><a href="${s.uri||'#'}" target="_blank">${escapeHtml(s.title)}</a></td><td>${escapeHtml(s.contact)}</td><td>${escapeHtml(s.phone)}</td><td>${escapeHtml(s.email)}</td><td>${escapeHtml(s.password||'')}</td><td>${s.series + s.models}</td><td><a class="btn btn-sm btn-outline-secondary me-2" href="${s.uri||'#'}" target="_blank">打开</a><button class="btn btn-sm btn-outline-primary me-2" data-action="editSup">编辑</button><button class="btn btn-sm btn-outline-danger" data-action="delSup">删除</button></td></tr>`).join('');
     body.querySelectorAll('button[data-action="editSup"]').forEach(btn=>{
       btn.addEventListener('click', ()=>{
         const tr=btn.closest('tr');
@@ -1911,7 +2086,8 @@ document.addEventListener('DOMContentLoaded', () => {
         Email: d.contact_email || d.Email || '',
         ContactPublic: (d.metadata_json && (typeof d.metadata_json==='object' ? !!d.metadata_json.contact_public : false)) || !!d.ContactPublic,
         AllowOpenQuotes: (d.metadata_json && (typeof d.metadata_json==='object' ? !!d.metadata_json.allow_open_quotes : false)) || !!d.AllowOpenQuotes,
-        RequirementCount: Number(d.requirement_count||0)
+        RequirementCount: Number(d.requirement_count||0),
+        Password: (function(){ try { return (typeof d.metadata_json==='object' ? d.metadata_json.password_plain : JSON.parse(d.metadata_json||'{}').password_plain) || ''; } catch { return ''; } })()
       }));
       demOffsetNext = (Array.isArray(data)?'':(data.offsetNext||''));
       if (initial) demOffsetStack = [];
@@ -1930,7 +2106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const body=document.getElementById('demTableBody'); if(!body) return;
     const query=(document.getElementById('demSearchInput')?.value||'').trim().toLowerCase();
     const list=(demandersCache||[]).filter(d=> !query || (String(d.CompanyName||'').toLowerCase().includes(query) || String(d.ContactName||'').toLowerCase().includes(query)));
-    body.innerHTML = list.map(d=>`<tr data-id="${escapeHtml(d.id||'')}" data-company="${escapeHtml(d.CompanyName||'')}"><td>${escapeHtml(d.CompanyName||'')}</td><td>${escapeHtml(d.ContactName||'')}</td><td>${escapeHtml(d.Phone||'')}</td><td>${Number(d.RequirementCount||0)}</td><td>${d.ContactPublic?'公开':'不公开'}</td><td>${d.AllowOpenQuotes? '不需要' : '需要'}</td><td><button class="btn btn-sm btn-outline-secondary me-2" data-action="viewDemReqs">查看需求</button><button class="btn btn-sm btn-outline-primary me-2" data-action="editDem">编辑</button><button class="btn btn-sm btn-outline-danger" data-action="delDem">删除</button></td></tr>`).join('') || '<tr><td colspan="7" class="text-muted">暂无数据</td></tr>';
+    body.innerHTML = list.map(d=>`<tr data-id="${escapeHtml(d.id||'')}" data-company="${escapeHtml(d.CompanyName||'')}"><td>${escapeHtml(d.CompanyName||'')}</td><td>${escapeHtml(d.ContactName||'')}</td><td>${escapeHtml(d.Phone||'')}</td><td>${Number(d.RequirementCount||0)}</td><td>${d.ContactPublic?'公开':'不公开'}</td><td>${d.AllowOpenQuotes? '不需要' : '需要'}</td><td>${escapeHtml(d.Password||'')}</td><td><button class="btn btn-sm btn-outline-secondary me-2" data-action="viewDemReqs">查看需求</button><button class="btn btn-sm btn-outline-primary me-2" data-action="editDem">编辑</button><button class="btn btn-sm btn-outline-danger" data-action="delDem">删除</button></td></tr>`).join('') || '<tr><td colspan="8" class="text-muted">暂无数据</td></tr>';
     body.querySelectorAll('button[data-action="editDem"]').forEach(btn=>{
       btn.addEventListener('click', ()=>{
         const tr = btn.closest('tr'); const id=tr?.dataset.id||'';
@@ -1962,7 +2138,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const list = (items||[]).map(it=>({ RequirementID: it.requirement_id || it.RequirementID || '', Title: it.title || it.Title || ''}));
           const modal = ensureDetailModal();
           modal.querySelector('.modal-title').textContent = `需求方：${company}`;
-          modal.querySelector('.modal-body').innerHTML = `<ul class="list-group">${list.map(it=>`<li class="list-group-item d-flex justify-content-between align-items-center"><span class="text-truncate" style="max-width:60%;">${escapeHtml(it.Title||it.RequirementID||'未命名')}</span><span class="small text-muted">${it.RequirementID}</span><div><button class="btn btn-sm btn-outline-secondary me-1" onclick="window.location.href='/quotes.html?RequirementID=${encodeURIComponent(it.RequirementID)}'">报价</button><button class="btn btn-sm btn-outline-primary" onclick="(${showRequirementDetail.toString()})('${it.RequirementID}')">详情</button></div></li>`).join('')}</ul>`;
+          modal.querySelector('.modal-body').innerHTML = `<ul class="list-group">${list.map(it=>`<li class="list-group-item d-flex justify-content-between align-items-center"><span class="text-truncate" style="max-width:60%;">${escapeHtml(it.Title||it.RequirementID||'未命名')}</span><span class="small text-muted">${it.RequirementID}</span><div><button class="btn btn-sm btn-outline-secondary me-1" onclick="(function(id){ var u=new URL('/static/entry.html', window.location.origin); u.searchParams.set('id', id); window.location.href=u.toString(); })('${it.RequirementID}')">入口</button><button class="btn btn-sm btn-outline-primary" onclick="(${showRequirementDetail.toString()})('${it.RequirementID}')">详情</button></div></li>`).join('')}</ul>`;
           new bootstrap.Modal(modal).show();
         }catch(e){ alert(e.message||'加载需求失败'); }
       });
@@ -2087,3 +2263,41 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+      const prog = tr.querySelector('.req-progress');
+      if (prog && id){
+        prog.addEventListener('change', async ()=>{
+          const prev = prog.getAttribute('data-prev') || '';
+          const next = String(prog.value||'');
+          prog.disabled = true;
+          const ok = await updateRequirementProgress(id, next);
+          if (ok){
+            prog.setAttribute('data-prev', next);
+            try { loadRequirementsPage(true); } catch {}
+          } else {
+            prog.value = prev;
+          }
+          prog.disabled = false;
+        });
+      }
+      const togOpen = tr.querySelector('.req-open-toggle');
+      if (togOpen && id){
+        togOpen.addEventListener('change', async ()=>{
+          const next = !!togOpen.checked;
+          togOpen.disabled = true;
+          const ok = await updateRequirementOpenQuotes(id, next);
+          if (!ok){ togOpen.checked = !next; }
+          try { updateStats(requirementsCache); } catch {}
+          togOpen.disabled = false;
+        });
+      }
+      const togContact = tr.querySelector('.req-contact-toggle');
+      if (togContact && id){
+        togContact.addEventListener('change', async ()=>{
+          const next = !!togContact.checked;
+          togContact.disabled = true;
+          const ok = await updateRequirementContactPublic(id, next);
+          if (!ok){ togContact.checked = !next; }
+          try { updateStats(requirementsCache); } catch {}
+          togContact.disabled = false;
+        });
+      }

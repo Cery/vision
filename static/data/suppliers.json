@@ -1,41 +1,116 @@
 [
   {
-    "SupplierID": "SUP-202501-001",
-    "Name": "上海精测仪器有限公司",
-    "Company": "上海精测仪器有限公司",
-    "AccessPassword": "supplier-123456",
-    "ContactPhone": "021-88886666",
-    "ContactEmail": "sales@shjingce.example.com",
+    "SupplierID": "coantec",
+    "Name": "古安泰",
+    "Company": "深圳市古安泰自动化技术有限公司",
+    "AccessPassword": "coantec-532189",
+    "ContactPhone": "0755-88888888",
+    "ContactEmail": "sales@coantec.com",
     "Status": "active",
     "metadata": {
-      "categories": ["电子内窥镜", "光学内窥镜"],
-      "location": "上海"
+      "website": "https://www.coantec.com/",
+      "products": [
+        {
+          "series": "C40",
+          "model": "C40",
+          "name": "耐200℃ 高清工业内窥镜",
+          "uri": "https://www.coantec.com/Product/goods_6.html",
+          "image": "https://www.coantec.com/vancheerfile/images/2024/9/20240924113646453.jpg",
+          "parameters": {"探头直径": "1.8-6mm", "屏幕": "6.0英寸", "分辨率": "1080p", "耐温": "200℃", "管线": "可更换", "弯曲": "电动"}
+        },
+        {
+          "series": "C65",
+          "model": "C65",
+          "name": "三维测量高清工业内窥镜",
+          "uri": "https://www.coantec.com/Product/goods_8.html",
+          "image": "https://www.coantec.com/vancheerfile/images/2023/4/2023042516347598.jpg",
+          "parameters": {"屏幕": "6.5英寸", "像素": "100万", "测量": "点到点/线/面/面积", "存储": "支持", "图像翻转": "C手势"}
+        },
+        {
+          "series": "C68",
+          "model": "C68",
+          "name": "高性能工业视频内窥镜",
+          "uri": "http://www.coantec.com/Product/goods_9.html",
+          "image": "https://www.coantec.com/vancheerfile/images/2022/4/20220420184356959.jpg",
+          "parameters": {"屏幕": "IPS触摸屏", "图像": "高清", "操控": "电动摇杆+虚拟摇杆", "适用": "航空/能源/化工等"}
+        }
+      ]
     }
   },
   {
-    "SupplierID": "SUP-202501-002",
-    "Name": "深圳光研科技",
-    "Company": "深圳市光研科技有限公司",
-    "AccessPassword": "supplier-654321",
-    "ContactPhone": "0755-66668888",
-    "ContactEmail": "bd@gytech.example.com",
+    "SupplierID": "jeettech",
+    "Name": "杰泰科技",
+    "Company": "深圳杰泰科技有限公司",
+    "AccessPassword": "jeet-743205",
+    "ContactPhone": "0755-84863736",
+    "ContactEmail": "jeettech@126.com",
     "Status": "active",
     "metadata": {
-      "categories": ["光纤内窥镜", "冷光源"],
-      "location": "深圳"
+      "website": "https://www.jeettech.com/",
+      "products": [
+        {
+          "series": "JX",
+          "model": "JX",
+          "name": "电控三维测量内窥镜",
+          "uri": "https://www.jeettech.com/h-pd-71.html",
+          "image": "https://www.jeettech.com//16529055.s21i.faiusr.com/4/ABUIABAEGAAg1LL8kwYo4Pjv_wMwwwI4yAE.png",
+          "parameters": {"像素": "100万", "测量": "三维测量", "弯曲": "电控", "直径": "2.2-6.0mm"}
+        },
+        {
+          "series": "JM",
+          "model": "JM",
+          "name": "AI智能三维测量内窥镜",
+          "uri": "https://www.jeettech.com/h-pd-84.html",
+          "image": "https://www.jeettech.com//16529055.s21i.faiusr.com/4/ABUIABAEGAAgtYuw1wUoxMnL-AUwwgM4jQE.png",
+          "parameters": {"AI": "智能识别", "测量": "三维", "屏幕": "7英寸", "防护": "IP67"}
+        },
+        {
+          "series": "TH",
+          "model": "TH",
+          "name": "工业视频内窥镜",
+          "uri": "http://aijeet.com/sys-pd/26.html",
+          "image": "https://www.jeettech.com//16529055.s21i.faiusr.com/4/ABUIABAEGAAgz8TVggYovcPpjAUwpAM4uwI.png",
+          "parameters": {"直径": "3.9-6.0mm", "弯曲": "四向", "照明": "LED", "供电": "电池"}
+        }
+      ]
     }
   },
   {
-    "SupplierID": "SUP-202501-003",
-    "Name": "北京智检科技",
-    "Company": "北京智检科技发展有限公司",
-    "AccessPassword": "supplier-000999",
-    "ContactPhone": "010-66661234",
-    "ContactEmail": "contact@zj-tech.example.com",
+    "SupplierID": "hengyu",
+    "Name": "恒煜数字",
+    "Company": "深圳恒煜数字技术有限公司",
+    "AccessPassword": "hengyu-920415",
+    "ContactPhone": "0755-00000001",
+    "ContactEmail": "sales@hengyucn.com.cn",
     "Status": "active",
     "metadata": {
-      "categories": ["电子内窥镜", "主机/插入管"],
-      "location": "北京"
+      "website": "https://www.hengyucn.com.cn/",
+      "products": [
+        {
+          "series": "HP5",
+          "model": "HP5",
+          "name": "手持式高清视频内窥镜定制款",
+          "uri": "https://www.hengyucn.com.cn/product/list_1059_1.html",
+          "image": "https://www.hengyucn.com.cn/assets/pc/images/product/index.png",
+          "parameters": {"屏幕": "5英寸", "像素": "百万高清", "直径": "3.9-6.0mm", "防护": "IP67"}
+        },
+        {
+          "series": "HP8",
+          "model": "HP8",
+          "name": "手持式高清工业内窥镜",
+          "uri": "https://www.hengyucn.com.cn/product/list_1059_1.html",
+          "image": "https://www.hengyucn.com.cn/assets/pc/images/product/b1.png",
+          "parameters": {"屏幕": "8英寸", "像素": "高清", "弯曲": "四向", "直径": "6.0mm"}
+        },
+        {
+          "series": "HP9",
+          "model": "HP9",
+          "name": "警用高清工业内窥镜",
+          "uri": "https://www.hengyucn.com.cn/product/list_1059_1.html",
+          "image": "https://www.hengyucn.com.cn/assets/pc/images/product/b1-active.png",
+          "parameters": {"功能": "高清拍照录像", "照明": "强光LED", "防爆": "支持", "电池": "长续航"}
+        }
+      ]
     }
   }
 ]

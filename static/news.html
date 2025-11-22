@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>资讯中心</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/business.css">
+</head>
+<body>
+  <div class="container">
+    <div class="nav">
+      <div class="brand">Vision NDT · 资讯中心</div>
+      <div>
+        <a class="btn" href="cases.html">案例中心</a>
+      </div>
+    </div>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="menu">
+          <div class="menu-heading">新闻中心</div>
+          <ul class="menu-list">
+            <li><button data-category="" data-query="">全部</button></li>
+            <li><button data-category="行业资讯" data-query="">行业资讯</button></li>
+            <li><button data-category="公司动态" data-query="">公司动态</button></li>
+            <li><button data-category="展会活动" data-query="">展会活动</button></li>
+          </ul>
+          <div class="menu-heading" style="margin-top:12px">技术内容</div>
+          <ul class="menu-list">
+            <li><button data-category="技术文章" data-query="">技术文章</button></li>
+            <li><button data-category="最佳实践" data-query="">最佳实践</button></li>
+            <li><button data-category="技术要点" data-query="">技术要点</button></li>
+          </ul>
+          <div class="menu-heading" style="margin-top:12px">应用领域</div>
+          <ul class="menu-list menu-sub">
+            <li><button class="sub" data-category="" data-query="航空航天">航空航天</button></li>
+            <li><button class="sub" data-category="" data-query="能源电力">能源电力</button></li>
+            <li><button class="sub" data-category="" data-query="石油化工">石油化工</button></li>
+            <li><button class="sub" data-category="" data-query="机械制造">机械制造</button></li>
+            <li><button class="sub" data-category="" data-query="汽车制造">汽车制造</button></li>
+          </ul>
+        </div>
+      </aside>
+      <main class="content">
+        <div class="filters">
+          <input id="searchInput" class="input" placeholder="搜索文章标题或摘要">
+          <select id="categorySelect" class="select">
+            <option value="">全部分类</option>
+            <option>行业资讯</option>
+            <option>应用实践</option>
+            <option>技术要点</option>
+            <option>最佳实践</option>
+            <option>技术文章</option>
+            <option>公司动态</option>
+            <option>展会活动</option>
+          </select>
+          <button id="reloadBtn" class="btn">刷新</button>
+        </div>
+
+        <div id="hero" class="hero" style="display:none"></div>
+
+        <div id="grid" class="grid"></div>
+
+        <div class="footer">精选文章与行业洞察，为企业决策与现场交付提供参考。</div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const state={items:[],filtered:[]}
+    function fmtDate(s){try{const d=new Date(s);return d.toLocaleDateString()}catch{return s}}
+    async function load(){
+      try{
+        const r=await fetch('data/news.json');
+        const d=await r.json();
+        state.items=(d.items||[]).slice().sort((a,b)=> new Date(b.date)-new Date(a.date));
+        render();
+      }catch(e){document.getElementById('grid').innerHTML='<div class="card"><div class="body">加载失败</div></div>'}
+    }
+    function render(){
+      const q=(document.getElementById('searchInput').value||'').trim().toLowerCase()
+      const c=(document.getElementById('categorySelect').value||'').trim()
+      state.filtered=state.items.filter(it=>{
+        const okC=!c||it.category===c
+        const okQ=!q|| (String(it.title||'').toLowerCase().includes(q) || String(it.summary||'').toLowerCase().includes(q))
+        return okC&&okQ
+      })
+      const hero=document.getElementById('hero')
+      if(state.filtered.length){hero.style.display='block';hero.style.backgroundImage='url('+(state.filtered[0].hero||'')+')'} else {hero.style.display='none'}
+      const grid=document.getElementById('grid');
+      grid.innerHTML=state.filtered.map(it=>`
+        <div class="card" onclick="openDetail('${it.id}')">
+          <div class="thumb" style="background-image:url('${it.hero||''}')"></div>
+          <div class="body">
+            <div class="title">${escapeHtml(it.title||'未命名')}</div>
+            <div class="meta">${fmtDate(it.date)} · ${escapeHtml(it.category||'')}</div>
+            <div class="muted">${escapeHtml(it.summary||'')}</div>
+          </div>
+        </div>`).join('') || '<div class="muted">暂无内容</div>'
+    }
+    function escapeHtml(s){return String(s).replace(/[&<>"']/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'})[c]})}
+    function openDetail(id){const u=new URL('news-detail.html', location.origin);u.searchParams.set('id',id);location.href=u.toString()}
+    document.addEventListener('DOMContentLoaded',()=>{
+      document.getElementById('searchInput').addEventListener('input',render)
+      document.getElementById('categorySelect').addEventListener('change',render)
+      document.getElementById('reloadBtn').addEventListener('click',load)
+      document.querySelectorAll('.sidebar .menu-list button').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          const cat=btn.getAttribute('data-category')||'';
+          const q=btn.getAttribute('data-query')||'';
+          document.getElementById('categorySelect').value=cat;
+          document.getElementById('searchInput').value=q;
+          render();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        })
+      })
+      load()
+    })
+  </script>
+</body>
+</html>

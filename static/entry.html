@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>需求访问入口</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;padding:24px;background:#f7f7f9;color:#222}
+    .card{max-width:680px;margin:0 auto;background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+    .card-header{padding:16px 20px;border-bottom:1px solid #eef2f7;font-size:18px;font-weight:600}
+    .card-body{padding:20px}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .col{flex:1 1 300px}
+    label{display:block;font-size:13px;color:#555;margin-bottom:6px}
+    input{width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid #cfd6de;border-radius:8px;background:#fff;font-size:14px}
+    button{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border:0;border-radius:8px;background:#2563eb;color:#fff;font-weight:600;cursor:pointer}
+    button:disabled{opacity:.6;cursor:not-allowed}
+    .actions{display:flex;gap:12px;margin-top:16px}
+    .tip{font-size:12px;color:#666;margin-top:8px}
+    .error{color:#b91c1c;background:#fee2e2;border:1px solid #fecaca;padding:8px 12px;border-radius:8px;margin-top:12px;display:none}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-header">需求访问入口</div>
+    <div class="card-body">
+      <form id="accessForm">
+        <div class="row">
+          <div class="col">
+            <label for="reqId">需求ID</label>
+            <input id="reqId" name="reqId" placeholder="例如 REQ-20250101-1234" autocomplete="off" />
+          </div>
+          <div class="col">
+            <label for="pwd">访问密码</label>
+            <input id="pwd" name="pwd" placeholder="发布后平台提供的密码" autocomplete="off" />
+          </div>
+        </div>
+        <div class="row" style="margin-top:12px">
+          <div class="col">
+            <label for="sup">供应商访问密码（可选）</label>
+            <input id="sup" name="sup" placeholder="供应商表中的密码，可选" autocomplete="off" />
+          </div>
+        </div>
+        <div class="actions">
+          <button type="submit" id="viewBtn">查看需求</button>
+        </div>
+        <div class="tip">说明：输入任一角色的密码即可访问详情（需求方/供应商/游客）。如仅有供应商访问密码也可填写上方可选项。</div>
+        <div class="error" id="errBox"></div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function getParam(name){const u=new URL(location.href);return u.searchParams.get(name)||''}
+    function setErr(msg){const box=document.getElementById('errBox');box.textContent=msg;box.style.display=msg?'block':'none'}
+    document.addEventListener('DOMContentLoaded',function(){
+      const id=getParam('id');if(id) document.getElementById('reqId').value=id;
+      const sup=getParam('supplier_access_password');if(sup) document.getElementById('sup').value=sup;
+      document.getElementById('accessForm').addEventListener('submit',function(e){
+        e.preventDefault();
+        const reqId=(document.getElementById('reqId').value||'').trim();
+        const pwd=(document.getElementById('pwd').value||'').trim();
+        const sup=(document.getElementById('sup').value||'').trim();
+        if(!reqId){setErr('请填写需求ID');return}
+        if(!pwd && !sup){setErr('请填写访问密码或供应商访问密码');return}
+        setErr('');
+        const url=new URL('view.html', location.origin);
+        url.searchParams.set('id', reqId);
+        if(pwd) url.searchParams.set('password', pwd);
+        if(sup) url.searchParams.set('supplier_access_password', sup);
+        location.href=url.toString();
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+{
+  "items": [
+    {
+      "id": "case-aviation-borescope",
+      "title": "航空发动机内窥镜检测效率提升项目",
+      "client": "某航空维修中心",
+      "industry": "航空航天",
+      "date": "2025-10-12",
+      "hero": "https://images.unsplash.com/photo-1516239322874-7ea2030fd3d7?auto=format&fit=crop&w=1200&q=60",
+      "problem": "定检周期紧张，传统人工检查效率低、影像留档不规范，复判难度大。",
+      "solution": "引入高清柔性工业内窥镜，制定标准化拍摄位点清单，建立影像数据库与缺陷库，配合现场操作培训与复判流程。",
+      "results": [
+        {"metric": "单台检测时长", "before": "120分钟", "after": "45分钟", "improve": "-62.5%"},
+        {"metric": "复判一致率", "before": "88%", "after": "96%", "improve": "+8pp"}
+      ],
+      "images": [
+        "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&w=1200&q=60"
+      ]
+    },
+    {
+      "id": "case-power-plant-boiler",
+      "title": "电厂锅炉管道在役可视化巡检体系建设",
+      "client": "某大型火电集团",
+      "industry": "能源电力",
+      "date": "2025-09-03",
+      "hero": "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=1200&q=60",
+      "problem": "腐蚀与结垢问题频发，停机检查时间不可控，缺乏可视化数据积累。",
+      "solution": "建立分区巡检与风险分级策略，配套高清影像留档与厚度测量记录，实现趋势分析与预测性维护。",
+      "results": [
+        {"metric": "停机检查时长", "before": "36小时", "after": "24小时", "improve": "-33%"},
+        {"metric": "重复返工", "before": "15%", "after": "6%", "improve": "-9pp"}
+      ]
+    },
+    {
+      "id": "case-petrochemical-heat-exchanger",
+      "title": "石化换热器停机期间快速可视化检查",
+      "client": "某炼化企业",
+      "industry": "石油化工",
+      "date": "2025-08-20",
+      "hero": "https://images.unsplash.com/photo-1581093588401-16b8c8a4a991?auto=format&fit=crop&w=1200&q=60",
+      "problem": "停机窗口有限，但返工率高，影像质量不稳定。",
+      "solution": "采用模块化镜体与多角度镜头，标准化拍摄流程与现场质控节点，确保影像质量可复用。",
+      "results": [
+        {"metric": "返工率", "before": "12%", "after": "4%", "improve": "-8pp"},
+        {"metric": "单台检查时间", "before": "90分钟", "after": "55分钟", "improve": "-38.9%"}
+      ]
+    },
+    {
+      "id": "case-railway-maintenance",
+      "title": "铁路车辆检修：可视化与标准化融合",
+      "client": "某铁路检修段",
+      "industry": "交通轨道",
+      "date": "2025-07-14",
+      "hero": "https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?auto=format&fit=crop&w=1200&q=60",
+      "problem": "检修记录分散、影像不可比对，返工率偏高。",
+      "solution": "构建标准化位点拍摄与影像命名规则，实行影像留档与缺陷复核闭环，提高检修一致性。",
+      "results": [
+        {"metric": "返工比例", "before": "18%", "after": "7%", "improve": "-11pp"}
+      ]
+    }
+  ]
+}

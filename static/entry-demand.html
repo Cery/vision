@@ -29,8 +29,8 @@
         <div class="card-body">
           <form id="queryForm" class="row g-3">
             <div class="col-12 col-md-8">
-              <label class="form-label">查看密码 <span class="text-danger">*</span></label>
-              <input type="password" class="form-control" id="viewPwd" placeholder="发布后获得的查看密码" required>
+              <label class="form-label">发布方密码或查看密码 <span class="text-danger">*</span></label>
+              <input type="password" class="form-control" id="viewPwd" placeholder="发布方专用密码或单条需求查看密码" required>
             </div>
             <div class="col-12 col-md-4 d-flex align-items-end">
               <button type="submit" class="btn btn-primary w-100">查询我的需求</button>
@@ -103,20 +103,46 @@
         load('正在查询，请稍候…'); reqChoiceArea.innerHTML = '';
 
         try {
-          // Find requirements by password
+          // 优先使用发布方密码会话
+          let session = null;
+          try {
+            session = await apiFetch(`/api/demanders/session`, { method:'POST', body: JSON.stringify({ password: viewPwd }) });
+          } catch {}
+          resultArea.innerHTML = '';
+          if (session && session.ok && session.demander && session.demander.Company) {
+            const company = session.demander.Company;
+            const list = await apiFetch(`/api/demanders/requirements?company=${encodeURIComponent(company)}&password=${encodeURIComponent(viewPwd)}`);
+            const items = Array.isArray(list?.items) ? list.items : [];
+            if (!items.length) {
+              const warn = document.createElement('div'); warn.className='alert alert-warning'; warn.textContent='当前发布方暂无需求记录。'; resultArea.appendChild(warn);
+              return;
+            }
+            // 选择或直接加载第一条
+            if (items.length === 1) {
+              currentReqId = items[0].RequirementID;
+              const url = new URL('entry.html', window.location.origin);
+              url.searchParams.set('id', currentReqId);
+              window.location.href = url.toString();
+            } else {
+              renderReqChoiceDemander(items, viewPwd);
+            }
+            return;
+          }
+          // 回退到查看密码工作流
           const list = await apiFetch(`/api/requirements/by-password?view_password=${encodeURIComponent(viewPwd)}`);
           const items = Array.isArray(list?.items) ? list.items : [];
-          resultArea.innerHTML = '';
           if (!items.length) {
             const div = document.createElement('div');
             div.className = 'alert alert-warning';
-            div.textContent = '未找到与该查看密码关联的需求。';
+            div.textContent = '未找到与该密码关联的需求。';
             resultArea.appendChild(div);
             return;
           }
           if (items.length === 1) {
             currentReqId = items[0].RequirementID;
-            await loadDetailAndQuotes(currentReqId, viewPwd);
+            const url = new URL('entry.html', window.location.origin);
+            url.searchParams.set('id', currentReqId);
+            window.location.href = url.toString();
           } else {
             renderReqChoice(items, viewPwd);
           }
@@ -139,6 +165,16 @@
         renderQuotes(lastQuotes);
       }
 
+      async function loadDetailAndQuotesDemander(reqId, demPwd) {
+        const detail = await apiFetch(`/api/requirements/${encodeURIComponent(reqId)}?view_password=&supplier_access_password=&demander_password=${encodeURIComponent(demPwd)}`);
+        const quotes = await apiFetch(`/api/quotes?requirement_id=${encodeURIComponent(reqId)}&demander_password=${encodeURIComponent(demPwd)}`);
+        lastQuotes = Array.isArray(quotes) ? quotes : [];
+        if (exportBtn) exportBtn.disabled = lastQuotes.length === 0;
+        resultArea.innerHTML = '';
+        renderDetail(detail);
+        renderQuotes(lastQuotes);
+      }
+
       function renderReqChoice(items, viewPwd) {
         const card = document.createElement('div');
         card.className = 'card shadow-sm';
@@ -147,7 +183,7 @@
             <td class="mono">${escapeHtml(it.RequirementID || '')}</td>
             <td>${escapeHtml(it.Title || '')}</td>
             <td>${escapeHtml(it.Status || '')}</td>
-            <td><button class="btn btn-outline-primary btn-sm" data-id="${escapeHtml(it.RequirementID || '')}">查看</button></td>
+            <td><button class="btn btn-outline-primary btn-sm" data-id="${escapeHtml(it.RequirementID || '')}">进入入口</button></td>
           </tr>`).join('');
         card.innerHTML = `
           <div class="card-body">
@@ -163,8 +199,40 @@
         card.querySelectorAll('button[data-id]').forEach(btn => {
           btn.addEventListener('click', async () => {
             currentReqId = btn.getAttribute('data-id') || '';
-            await loadDetailAndQuotes(currentReqId, viewPwd);
-            reqChoiceArea.innerHTML = '';
+            const url = new URL('entry.html', window.location.origin);
+            url.searchParams.set('id', currentReqId);
+            window.location.href = url.toString();
+          });
+        });
+      }
+
+      function renderReqChoiceDemander(items, demPwd) {
+        const card = document.createElement('div');
+        card.className = 'card shadow-sm';
+        const rows = items.map((it) => `
+          <tr>
+            <td class="mono">${escapeHtml(it.RequirementID || '')}</td>
+            <td>${escapeHtml(it.Title || '')}</td>
+            <td>${escapeHtml(it.Status || '')}</td>
+            <td><button class="btn btn-outline-primary btn-sm" data-id="${escapeHtml(it.RequirementID || '')}">进入入口</button></td>
+          </tr>`).join('');
+        card.innerHTML = `
+          <div class="card-body">
+            <h2 class="h6">该发布方关联多个需求，请选择：</h2>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle">
+                <thead><tr><th>需求ID</th><th>标题</th><th>状态</th><th>操作</th></tr></thead>
+                <tbody>${rows}</tbody>
+              </table>
+            </div>
+          </div>`;
+        reqChoiceArea.appendChild(card);
+        card.querySelectorAll('button[data-id]').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            currentReqId = btn.getAttribute('data-id') || '';
+            const url = new URL('entry.html', window.location.origin);
+            url.searchParams.set('id', currentReqId);
+            window.location.href = url.toString();
           });
         });
       }

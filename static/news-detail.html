@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>资讯详情</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/business.css">
+</head>
+<body>
+  <div class="container">
+    <div class="nav">
+      <div class="brand">Vision NDT · 资讯详情</div>
+      <div>
+        <a class="btn" href="news.html">返回列表</a>
+      </div>
+    </div>
+
+    <div id="hero" class="hero" style="display:none"></div>
+    <div class="detail">
+      <div id="title" class="title"></div>
+      <div id="meta" class="meta"></div>
+      <div id="content" class="content"></div>
+    </div>
+
+    <div class="section">
+      <div class="pill">相关文章</div>
+      <div id="related" class="list"></div>
+    </div>
+  </div>
+
+  <script>
+    const state={item:null, all:[]}
+    function fmtDate(s){try{const d=new Date(s);return d.toLocaleDateString()}catch{return s}}
+    async function load(){
+      const u=new URL(location.href);const id=u.searchParams.get('id')||'';
+      try{const r=await fetch('data/news.json');const d=await r.json();state.all=d.items||[];state.item=state.all.find(x=>x.id===id)||null;render();}
+      catch(e){document.getElementById('content').textContent='加载失败'}
+    }
+    function render(){
+      if(!state.item){document.getElementById('content').textContent='未找到内容';return}
+      const it=state.item
+      const hero=document.getElementById('hero');hero.style.display=it.hero?'block':'none';hero.style.backgroundImage='url('+(it.hero||'')+')'
+      document.getElementById('title').textContent=it.title||''
+      document.getElementById('meta').textContent=`${fmtDate(it.date)} · ${it.author||''} · ${it.category||''}`
+      document.getElementById('content').innerHTML=it.content||''
+      const rel=state.all.filter(x=>x.id!==it.id && (x.category===it.category || (x.tags||[]).some(t=> (it.tags||[]).includes(t)))).slice(0,4)
+      const box=document.getElementById('related');
+      box.innerHTML=rel.map(x=>`<a href="news-detail.html?id=${encodeURIComponent(x.id)}"><div class="mini" style="background-image:url('${x.hero||''}')"></div><div>${escapeHtml(x.title||'')}</div></a>`).join('') || '<div class="muted">暂无</div>'
+    }
+    function escapeHtml(s){return String(s).replace(/[&<>"']/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'})[c]})}
+    document.addEventListener('DOMContentLoaded',load)
+  </script>
+</body>
+</html>

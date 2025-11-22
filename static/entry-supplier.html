@@ -38,6 +38,7 @@
             <div class="col-12 d-flex gap-2">
               <button type="submit" class="btn btn-primary">登录并查询报价</button>
               <button type="button" id="logoutBtn" class="btn btn-outline-secondary" disabled>退出</button>
+              <button type="button" id="gotoEntryBtn" class="btn btn-outline-primary">进入入口页</button>
             </div>
           </form>
         </div>
@@ -84,6 +85,7 @@
       const logoutBtn = document.getElementById('logoutBtn');
       const profileArea = document.getElementById('profileArea');
       const quotesArea = document.getElementById('quotesArea');
+      const gotoEntryBtn = document.getElementById('gotoEntryBtn');
 
       let session = null;
 
@@ -188,3 +190,13 @@
     </script>
   </body>
   </html>
+      // 进入统一入口页（按筛选的需求ID）
+      if (gotoEntryBtn) {
+        gotoEntryBtn.addEventListener('click', () => {
+          const v = (document.getElementById('reqIdFilter').value||'').trim();
+          if (!v) { alert('请先填写需求ID筛选'); return; }
+          const url = new URL('entry.html', window.location.origin);
+          url.searchParams.set('id', v);
+          window.location.href = url.toString();
+        });
+      }

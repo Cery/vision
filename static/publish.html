@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>发布需求</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container py-4">
+    <h3 class="mb-3">发布新需求</h3>
+    <div id="alert" class="alert d-none" role="alert"></div>
+    <form id="publishForm" class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">标题</label>
+        <input name="Title" class="form-control" required />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">一级分类</label>
+        <input name="primaryCategory" class="form-control" required />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">联系人</label>
+        <input name="contactName" class="form-control" required />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">联系电话</label>
+        <input name="contactPhone" class="form-control" required />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">公司</label>
+        <input name="contactCompany" class="form-control" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">公开预览</label>
+        <textarea name="PublicPreview" class="form-control" rows="2"></textarea>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">预算范围</label>
+        <input name="BudgetRange" class="form-control" />
+      </div>
+      <div class="col-md-12">
+        <div class="form-check">
+          <input name="ContactPublic" id="ContactPublic" type="checkbox" class="form-check-input">
+          <label for="ContactPublic" class="form-check-label">公开联系方式</label>
+        </div>
+      </div>
+      <div class="col-12">
+        <button class="btn btn-primary" type="submit">发布</button>
+      </div>
+    </form>
+
+    <div id="result" class="mt-4 d-none">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">发布成功</h5>
+          <p class="mb-1">需求ID：<span id="resId" class="fw-semibold"></span> <button id="copyIdBtn" class="btn btn-sm btn-outline-secondary ms-2">复制ID</button></p>
+          <p class="mb-1">需求方管理密码：<span id="resPwd" class="fw-bold text-danger"></span> <button id="copyPwdBtn" class="btn btn-sm btn-outline-secondary ms-2">复制密码</button></p>
+          <div class="mt-2">
+            <button id="gotoEntryBtn" class="btn btn-primary btn-sm">进入入口页</button>
+          </div>
+          <p class="text-muted small mt-2">请妥善保管此密码，用于查看收到的报价与管理需求进度。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+async function apiFetch(url, opts){
+  const r = await fetch(url, { ...opts, headers: { 'Content-Type':'application/json', ...(opts && opts.headers||{}) } });
+  return r;
+}
+function showAlert(msg, type){
+  const a = document.getElementById('alert');
+  a.textContent = msg; a.className = 'alert alert-' + (type||'info'); a.classList.remove('d-none');
+}
+  const form = document.getElementById('publishForm');
+  form.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const fd = new FormData(form);
+  const payload = Object.fromEntries(fd.entries());
+  try{
+    const resp = await apiFetch('/api/requirements', { method:'POST', body: JSON.stringify(payload) });
+    let data = {}; try{ data = await resp.json(); } catch{}
+    if(!resp.ok){ showAlert((data && (data.error||data.message))||'发布失败','danger'); return; }
+    document.getElementById('resId').textContent = data.requirement_id || data.RequirementID || '';
+    document.getElementById('resPwd').textContent = data.DemanderPassword || data.ViewPassword || '';
+    document.getElementById('result').classList.remove('d-none');
+    showAlert('需求发布成功','success');
+    try{
+      const id = document.getElementById('resId').textContent.trim();
+      const pwd = document.getElementById('resPwd').textContent.trim();
+      document.getElementById('copyIdBtn')?.addEventListener('click', async ()=>{
+        await navigator.clipboard.writeText(id);
+        showAlert('已复制需求ID','success');
+      });
+      document.getElementById('copyPwdBtn')?.addEventListener('click', async ()=>{
+        await navigator.clipboard.writeText(pwd);
+        showAlert('已复制管理密码','success');
+      });
+      document.getElementById('gotoEntryBtn')?.addEventListener('click', ()=>{
+        const url = new URL('entry.html', window.location.origin);
+        url.searchParams.set('id', id);
+        window.location.href = url.toString();
+      });
+    }catch{}
+  }catch(err){ showAlert(err.message||'发布失败','danger'); }
+});
+</script>
+</body>
+</html>

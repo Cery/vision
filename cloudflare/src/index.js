@@ -66,6 +66,8 @@ export default {
         // Lightweight migrations: add columns if missing
         try { await env.DB.prepare('ALTER TABLE requirements ADD COLUMN approved INTEGER').run(); } catch {}
         try { await env.DB.prepare('ALTER TABLE requirements ADD COLUMN approved_at TEXT').run(); } catch {}
+        try { await env.DB.prepare('ALTER TABLE requirements ADD COLUMN quote_password TEXT').run(); } catch {}
+        try { await env.DB.prepare('ALTER TABLE requirements ADD COLUMN view_password TEXT').run(); } catch {}
 
         // Quotes
         await env.DB.prepare(`CREATE TABLE IF NOT EXISTS quotes (
@@ -221,7 +223,24 @@ export default {
         progress, view_password_plain, now, now
       );
       const res = await stmt.run();
-      return json({ RequirementID: requirement_id, ViewPassword: view_password_plain });
+      try {
+        const meta = JSON.stringify({ contact_public: !!contact_public, allow_open_quotes: !!allow_open_quotes, password_plain: view_password_plain });
+        const demId = (data.contactCompany || '').trim() || (data.contactPhone || '').trim() || requirement_id;
+        await env.DB.prepare(`INSERT INTO demanders (
+          demander_id, name, company, contact_phone, contact_email, department, metadata_json, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(demander_id) DO UPDATE SET
+          name = excluded.name,
+          company = excluded.company,
+          contact_phone = excluded.contact_phone,
+          contact_email = excluded.contact_email,
+          department = excluded.department,
+          metadata_json = excluded.metadata_json,
+          updated_at = excluded.updated_at`).bind(
+          demId, data.contactName || '', data.contactCompany || '', data.contactPhone || '', data.contactEmail || '', data.contactDepartment || '', meta, now, now
+        ).run();
+      } catch {}
+      return json({ ok: true, requirement_id, RequirementID: requirement_id, ViewPassword: view_password_plain, DemanderPassword: view_password_plain });
     }
 
     // List Requirements
@@ -256,11 +275,36 @@ export default {
       const { results } = await stmt.all();
       if (!results || !results.length) return json({ error: 'NotFound' }, 404);
       const r = results[0];
+      const anyPwd = url.searchParams.get('password') || '';
       const supplierPwd = url.searchParams.get('supplier_access_password') || '';
       const viewPwd = url.searchParams.get('view_password') || '';
 
-      const showSensitive = r.contact_public === 1 || (viewPwd && viewPwd === r.view_password_plain) || await verifySupplierPassword(env, supplierPwd);
-      const payload = {
+      let role = 'public';
+      // Demander check via demanders metadata_json.password_plain (company-bound)
+      if (anyPwd) {
+        try {
+          const { results: reqRows } = await env.DB.prepare('SELECT contact_company FROM requirements WHERE requirement_id = ?').bind(id).all();
+          const company = (reqRows && reqRows[0] && reqRows[0].contact_company) || '';
+          if (company) {
+            const like = `%"password_plain":"${anyPwd}"%`;
+            const { results: demRows } = await env.DB.prepare('SELECT 1 FROM demanders WHERE company = ? AND metadata_json LIKE ?').bind(company, like).all();
+            if (demRows && demRows.length) role = 'demander';
+          }
+        } catch {}
+      }
+      // Supplier check via per-requirement quote_password
+      if (role === 'public' && anyPwd && typeof r.quote_password === 'string' && r.quote_password && anyPwd === r.quote_password) {
+        role = 'supplier';
+      }
+      // Guest check via per-requirement view_password or legacy view_password_plain
+      if (role === 'public' && anyPwd && ((typeof r.view_password === 'string' && r.view_password && anyPwd === r.view_password) || (anyPwd === r.view_password_plain))) {
+        role = 'guest';
+      }
+
+      const showSensitiveLegacy = r.contact_public === 1 || (viewPwd && viewPwd === r.view_password_plain) || await verifySupplierPassword(env, supplierPwd);
+      const showSensitive = role !== 'public' ? true : showSensitiveLegacy;
+
+      const requirement = {
         RequirementID: r.requirement_id,
         Title: r.title,
         PublicPreview: r.public_preview,
@@ -274,13 +318,86 @@ export default {
         Parameters: parseJSONSafe(r.parameters_json)
       };
       if (showSensitive) {
-        payload.ContactName = r.contact_name;
-        payload.ContactPhone = r.contact_phone;
-        payload.ContactCompany = r.contact_company;
-        payload.ContactEmail = r.contact_email;
-        payload.ContactDepartment = r.contact_department;
+        requirement.ContactName = r.contact_name;
+        requirement.ContactPhone = r.contact_phone;
+        requirement.ContactCompany = r.contact_company;
+        requirement.ContactEmail = r.contact_email;
+        requirement.ContactDepartment = r.contact_department;
       }
-      return json(payload);
+
+      let quotes = undefined;
+      if (role === 'demander') {
+        try {
+          const { results: qres } = await env.DB.prepare('SELECT quote_id as QuoteID, supplier_name as SupplierName, supplier_phone as SupplierPhone, amount as Amount, currency as Currency, remarks as Remarks, status as Status, created_at as CreatedAt FROM quotes WHERE requirement_id = ? ORDER BY created_at DESC LIMIT 200').bind(id).all();
+          quotes = qres || [];
+        } catch {}
+      }
+
+      return json({ role, requirement, quotes });
+    }
+
+    // Update Requirement (Admin or Demander)
+    if (isApi('requirements/') && request.method === 'PATCH') {
+      const reqId = path.split('/').filter(p => p && p !== 'api' && p !== 'requirements').shift();
+      if (!reqId) return json({ error: 'MissingRequirementID' }, 400);
+
+      const data = await bodyJSON(request);
+
+      let allowed = requireAdmin(request);
+      let isAdmin = allowed;
+      if (!allowed) {
+        const demPwd = String(data.demander_password || '').trim();
+        if (demPwd) {
+          try {
+            const { results: reqRows } = await env.DB.prepare('SELECT contact_company FROM requirements WHERE requirement_id = ?').bind(reqId).all();
+            const company = (reqRows && reqRows[0] && reqRows[0].contact_company) || '';
+            if (company) {
+              const like = `%"password_plain":"${demPwd}"%`;
+              const { results: demRows } = await env.DB.prepare('SELECT 1 FROM demanders WHERE company = ? AND metadata_json LIKE ?').bind(company, like).all();
+              if (demRows && demRows.length) allowed = true;
+            }
+          } catch {}
+        }
+      }
+
+      if (!allowed) return json({ error: 'Unauthorized' }, 401);
+
+      const fieldsAdmin = new Set(['status','progress','contact_public','view_password_plain', 'quote_password', 'view_password']);
+      const fieldsDemander = new Set(['status','progress','contact_public']);
+      const canUse = isAdmin ? fieldsAdmin : fieldsDemander;
+      const sets = [];
+      const binds = [];
+
+      if (canUse.has('status') && typeof data.status === 'string' && String(data.status).trim()) {
+        sets.push('status = ?'); binds.push(String(data.status).trim());
+      }
+      if (canUse.has('progress') && typeof data.progress === 'string' && String(data.progress).trim()) {
+        sets.push('progress = ?'); binds.push(String(data.progress).trim());
+      }
+      if (canUse.has('contact_public') && typeof data.contact_public !== 'undefined') {
+        const v = !!data.contact_public ? 1 : 0; sets.push('contact_public = ?'); binds.push(v);
+      }
+      if (canUse.has('view_password_plain') && typeof data.view_password_plain !== 'undefined') {
+        sets.push('view_password_plain = ?'); binds.push(String(data.view_password_plain||''));
+      }
+
+      if (canUse.has('quote_password') && typeof data.quote_password === 'string') {
+        sets.push('quote_password = ?'); binds.push(String(data.quote_password || '').trim());
+      }
+      if (canUse.has('view_password') && typeof data.view_password === 'string') {
+        sets.push('view_password = ?'); binds.push(String(data.view_password || '').trim());
+      }
+
+      if (!sets.length) return json({ error: 'NoFields' }, 400);
+
+      sets.push('updated_at = ?'); binds.push(new Date().toISOString());
+      const sql = `UPDATE requirements SET ${sets.join(', ')} WHERE requirement_id = ?`;
+      const stmt = env.DB.prepare(sql).bind(...binds, reqId);
+      const info = await stmt.run();
+      if (info.changes > 0) {
+        return json({ ok: true, requirement_id: reqId });
+      }
+      return json({ error: 'UpdateFailed' }, 404);
     }
 
     // Submit Quote
@@ -291,9 +408,31 @@ export default {
       if (missing.length) return json({ error: 'Missing fields', fields: missing }, 400);
       const now = new Date().toISOString();
       const quote_id = genQuoteID();
-      const stmtChk = env.DB.prepare('SELECT 1 FROM requirements WHERE requirement_id = ?').bind(data.requirement_id);
+      const stmtChk = env.DB.prepare('SELECT allow_open_quotes, quote_password FROM requirements WHERE requirement_id = ?').bind(data.requirement_id);
       const { results: chk } = await stmtChk.all();
       if (!chk || !chk.length) return json({ error: 'RequirementNotFound' }, 404);
+
+      // Access control: allow when requirement is open, or supplier has valid password
+      let allowed = (chk[0].allow_open_quotes === 1);
+      const anyPwd = String(data.password || '').trim();
+      const supAccessPwd = String(data.supplier_access_password || '').trim();
+      if (!allowed && anyPwd && chk[0].quote_password && anyPwd === chk[0].quote_password) {
+        allowed = true;
+      }
+      if (!allowed && supAccessPwd) {
+        const ok = await verifySupplierPassword(env, supAccessPwd);
+        if (ok) {
+          allowed = true;
+          if (!data.supplier_id) {
+            try {
+              const { results: supRes } = await env.DB.prepare('SELECT supplier_id FROM suppliers WHERE access_password_plain = ? AND (status IS NULL OR status != "disabled")').bind(supAccessPwd).all();
+              if (supRes && supRes[0]) data.supplier_id = supRes[0].supplier_id;
+            } catch {}
+          }
+        }
+      }
+      if (!allowed) return json({ error: 'Unauthorized' }, 401);
+
       const stmt = env.DB.prepare(
         `INSERT INTO quotes (quote_id, requirement_id, supplier_id, supplier_name, supplier_phone, amount, currency, remarks, status, created_at, updated_at)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
@@ -311,6 +450,7 @@ export default {
       const admin = requireAdmin(request);
       const viewPwd = url.searchParams.get('view_password') || '';
       const supplierPwd = url.searchParams.get('supplier_access_password') || '';
+      const demPwd = url.searchParams.get('demander_password') || '';
 
       // Access control: admin OR valid view password OR supplier access password
       let allowed = admin;
@@ -327,6 +467,17 @@ export default {
           allowed = true;
           if (!supplier_id) supplier_id = supRes[0].supplier_id;
         }
+      }
+      if (!allowed && demPwd && requirement_id) {
+        try {
+          const { results: reqRows } = await env.DB.prepare('SELECT contact_company FROM requirements WHERE requirement_id = ?').bind(requirement_id).all();
+          const company = (reqRows && reqRows[0] && reqRows[0].contact_company) || '';
+          if (company) {
+            const like = `%"password_plain":"${demPwd}"%`;
+            const { results: demRows } = await env.DB.prepare('SELECT 1 FROM demanders WHERE company = ? AND metadata_json LIKE ?').bind(company, like).all();
+            if (demRows && demRows[0]) allowed = true;
+          }
+        } catch {}
       }
       if (!allowed) return json({ error: 'Unauthorized' }, 401);
 
@@ -433,7 +584,7 @@ export default {
       }
       // If body provides requirementID, update single
       if (data.requirementID) {
-        const fields = ['title','public_preview','primary_category','secondary_category','approved','approved_at','status','contact_name','contact_phone','contact_company','contact_email','contact_department','contact_public','allow_open_quotes','parameters_json','published_at','budget_range','procurement_plan','progress','view_password_plain'];
+        const fields = ['title','public_preview','primary_category','secondary_category','approved','approved_at','status','contact_name','contact_phone','contact_company','contact_email','contact_department','contact_public','allow_open_quotes','parameters_json','published_at','budget_range','procurement_plan','progress','view_password_plain','quote_password','view_password'];
         const sets = [];
         const binds = [];
         for (const f of fields) {
@@ -451,7 +602,7 @@ export default {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       const id = path.split('/').pop();
       const data = await bodyJSON(request);
-      const fields = ['title','public_preview','primary_category','secondary_category','approved','approved_at','status','contact_name','contact_phone','contact_company','contact_email','contact_department','contact_public','allow_open_quotes','parameters_json','published_at','budget_range','procurement_plan','progress','view_password_plain'];
+      const fields = ['title','public_preview','primary_category','secondary_category','approved','approved_at','status','contact_name','contact_phone','contact_company','contact_email','contact_department','contact_public','allow_open_quotes','parameters_json','published_at','budget_range','procurement_plan','progress','view_password_plain','quote_password','view_password'];
       const sets = [];
       const binds = [];
       for (const f of fields) {
@@ -777,7 +928,7 @@ export default {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       const base = url.searchParams.get('base') || 'http://127.0.0.1:5500/data';
       const reqs = await fetchJsonSafe(`${base}/requirements.json`);
-      const sups = await fetchJsonSafe(`${base}/suppliers.json`);
+      let sups = await fetchJsonSafe(`${base}/suppliers.json`);
       const dems = await fetchJsonSafe(`${base}/demanders.json`);
 
       const now = new Date().toISOString();
@@ -799,17 +950,48 @@ export default {
         } catch {}
       }
 
-      // Seed suppliers
+      if (!Array.isArray(sups) || !sups.length) {
+        const siteBase = String(base).replace(/\/?data\/?$/i, '');
+        const idx = await fetchJsonSafe(`${siteBase}/index.json`);
+        const list = Array.isArray(idx) ? idx : [];
+        const items = list.filter(i => {
+          const t = String(i.type || i.section || '').toLowerCase();
+          return t === 'suppliers' || String(i.section || '').toLowerCase() === 'suppliers';
+        });
+        sups = items.map(i => {
+          const p = i.params || {};
+          const uri = String(i.uri || '').trim();
+          const id = String(p.slug || (uri.split('/').filter(Boolean).pop() || '') || p.title || i.title || '').trim();
+          return {
+            SupplierID: id || (p.title || i.title || ''),
+            Name: p.contact_person || '',
+            Company: p.title || i.title || '',
+            AccessPassword: '',
+            ContactPhone: p.phone || '',
+            ContactEmail: p.email || '',
+            Status: 'active',
+            metadata: {
+              website: siteBase ? (siteBase + uri) : uri,
+              type: p.type || '',
+              address: p.address || '',
+              series: Array.isArray(p.series) ? p.series : [],
+              models: Array.isArray(p.models) ? p.models : [],
+              gallery: Array.isArray(p.gallery) ? p.gallery : [],
+              description: p.description || ''
+            }
+          };
+        });
+      }
       for (const s of (sups || [])) {
         try {
           await env.DB.prepare(`INSERT OR IGNORE INTO suppliers (
             supplier_id, name, company, access_password_plain, contact_phone, contact_email, status, metadata_json, created_at, updated_at
           ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-          .bind(
-            s.SupplierID || s.supplier_id || '', s.Name || s.name || '', s.Company || s.company || '', s.AccessPassword || s.access_password_plain || '',
-            s.ContactPhone || s.contact_phone || '', s.ContactEmail || s.contact_email || '', s.Status || s.status || '', JSON.stringify(s.metadata || s.metadata_json || {}),
-            s.created_at || now, s.updated_at || now
-          ).run();
+        .bind(
+          s.SupplierID || s.supplier_id || '', s.Name || s.name || '', s.Company || s.company || '', s.AccessPassword || s.access_password_plain || '',
+          s.ContactPhone || s.contact_phone || '', s.ContactEmail || s.contact_email || '', s.Status || s.status || '', JSON.stringify(s.metadata || s.metadata_json || {}),
+          s.created_at || now, s.updated_at || now
+        ).run();
         } catch {}
       }
 
@@ -901,8 +1083,42 @@ export default {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       try {
         const base = url.searchParams.get('base') || 'http://127.0.0.1:5500/data';
-        const sups = await fetchJsonSafe(`${base}/suppliers.json`);
+        let sups = await fetchJsonSafe(`${base}/suppliers.json`);
         const now = new Date().toISOString();
+        if (!Array.isArray(sups) || !sups.length) {
+          const siteBase = String(base).replace(/\/?data\/?$/i, '');
+          const idx = await fetchJsonSafe(`${siteBase}/index.json`);
+          const list = Array.isArray(idx) ? idx : [];
+          const items = list.filter(i => {
+            const t = String(i.type || i.section || '').toLowerCase();
+            return t === 'suppliers' || String(i.section || '').toLowerCase() === 'suppliers';
+          });
+          sups = items.map(i => {
+            const p = i.params || {};
+            const uri = String(i.uri || '').trim();
+            const id = String(p.slug || (uri.split('/').filter(Boolean).pop() || '') || p.title || i.title || '').trim();
+            return {
+              SupplierID: id || (p.title || i.title || ''),
+              Name: p.contact_person || '',
+              Company: p.title || i.title || '',
+              AccessPassword: '',
+              ContactPhone: p.phone || '',
+              ContactEmail: p.email || '',
+              Status: 'active',
+              metadata: {
+                website: siteBase ? (siteBase + uri) : uri,
+                type: p.type || '',
+                address: p.address || '',
+                series: Array.isArray(p.series) ? p.series : [],
+                models: Array.isArray(p.models) ? p.models : [],
+                gallery: Array.isArray(p.gallery) ? p.gallery : [],
+                description: p.description || ''
+              },
+              created_at: now,
+              updated_at: now
+            };
+          });
+        }
         let upserted = 0;
         for (const s of (sups || [])) {
           try {
@@ -1021,7 +1237,7 @@ export default {
     try {
       // Seed requirements (INSERT OR IGNORE)
       const reqs = await fetch(`${base}/requirements.json`).then(r => r.json()).catch(() => []);
-      const sups = await fetch(`${base}/suppliers.json`).then(r => r.json()).catch(() => []);
+      let sups = await fetch(`${base}/suppliers.json`).then(r => r.json()).catch(() => []);
       const dems = await fetch(`${base}/demanders.json`).then(r => r.json()).catch(() => []);
       const now = new Date().toISOString();
       for (const r of (reqs || [])) {
@@ -1040,7 +1256,38 @@ export default {
           ).run();
         } catch {}
       }
-      // Upsert suppliers
+      if (!Array.isArray(sups) || !sups.length) {
+        const siteBase = String(base).replace(/\/?data\/?$/i, '');
+        const idx = await fetch(`${siteBase}/index.json`).then(r => r.json()).catch(() => []);
+        const list = Array.isArray(idx) ? idx : [];
+        const items = list.filter(i => {
+          const t = String(i.type || i.section || '').toLowerCase();
+          return t === 'suppliers' || String(i.section || '').toLowerCase() === 'suppliers';
+        });
+        sups = items.map(i => {
+          const p = i.params || {};
+          const uri = String(i.uri || '').trim();
+          const id = String(p.slug || (uri.split('/').filter(Boolean).pop() || '') || p.title || i.title || '').trim();
+          return {
+            SupplierID: id || (p.title || i.title || ''),
+            Name: p.contact_person || '',
+            Company: p.title || i.title || '',
+            AccessPassword: '',
+            ContactPhone: p.phone || '',
+            ContactEmail: p.email || '',
+            Status: 'active',
+            metadata: {
+              website: siteBase ? (siteBase + uri) : uri,
+              type: p.type || '',
+              address: p.address || '',
+              series: Array.isArray(p.series) ? p.series : [],
+              models: Array.isArray(p.models) ? p.models : [],
+              gallery: Array.isArray(p.gallery) ? p.gallery : [],
+              description: p.description || ''
+            }
+          };
+        });
+      }
       for (const s of (sups || [])) {
         try {
           await env.DB.prepare(`INSERT INTO suppliers (
@@ -1091,3 +1338,27 @@ export default {
     }
   }
 };
+    // Demanders: session by publisher password (login-like)
+    if (isApi('demanders/session') && request.method === 'POST') {
+      const data = await bodyJSON(request);
+      const pass = String(data.password || '').trim();
+      if (!pass) return json({ error: 'MissingPassword' }, 400);
+      const like = `%"password_plain":"${pass}"%`;
+      const { results } = await env.DB.prepare('SELECT demander_id, name, company FROM demanders WHERE metadata_json LIKE ?').bind(like).all();
+      if (!results || !results.length) return json({ error: 'Unauthorized' }, 401);
+      const d = results[0];
+      return json({ ok: true, demander: { DemanderID: d.demander_id, Name: d.name, Company: d.company } });
+    }
+
+    // Demanders: list requirements for a company authorized by demander password
+    if (isApi('demanders/requirements') && request.method === 'GET') {
+      const company = (url.searchParams.get('company') || '').trim();
+      const pass = (url.searchParams.get('password') || '').trim();
+      if (!company || !pass) return json({ error: 'MissingParams' }, 400);
+      const like = `%"password_plain":"${pass}"%`;
+      const { results: demRows } = await env.DB.prepare('SELECT 1 FROM demanders WHERE company = ? AND metadata_json LIKE ?').bind(company, like).all();
+      if (!demRows || !demRows.length) return json({ error: 'Unauthorized' }, 401);
+      const { results } = await env.DB.prepare('SELECT requirement_id, title, status FROM requirements WHERE contact_company = ? ORDER BY created_at DESC LIMIT 100').bind(company).all();
+      const items = (results || []).map(r => ({ RequirementID: r.requirement_id, Title: r.title, Status: r.status }));
+      return json({ items });
+    }

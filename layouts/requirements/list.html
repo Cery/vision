@@ -320,6 +320,10 @@ function openRequirementModal(card) {
       <div class="text-muted small">编号：${data.id} · 发布：${new Date(data.published || Date.now()).toLocaleString()}</div>
     </div>
     ${renderTimeline(data)}
+    <div class="alert alert-light border d-flex align-items-center gap-2 p-2" id="authHint">
+      <i class="fa-solid fa-shield"></i>
+      <span class="small text-muted">未授权：请输入供应商授权密码或查看密码以解锁联系方式与报价</span>
+    </div>
     <div class="mb-3 p-3 border rounded">
       <div class="row mb-1">
         <div class="col-md-6"><strong>产品类型：</strong>${data.primary}${data.secondary ? ' / '+data.secondary : ''}</div>
@@ -717,7 +721,7 @@ window.verifyRequirementPassword = async function(requirementID) {
 
       // 将密码注入报价表单隐藏字段
       const form = document.getElementById('quoteForm');
-      if (form) {
+  if (form) {
         if (used === 'view') {
           let vp = form.querySelector('input[name="ViewPassword"]');
           if (!vp) { vp = document.createElement('input'); vp.type='hidden'; vp.name='ViewPassword'; form.appendChild(vp); }
@@ -731,6 +735,13 @@ window.verifyRequirementPassword = async function(requirementID) {
         form.querySelector('button[type="submit"]')?.removeAttribute('disabled');
         form.querySelectorAll('input, textarea, select')?.forEach(el => el.removeAttribute('disabled'));
       }
+
+      // 更新授权提示
+      try {
+        const hint = document.getElementById('authHint');
+        const txt = used==='supplier' ? '已授权（供应商密码）' : '已授权（查看密码）';
+        if (hint) { hint.className = 'alert alert-success d-flex align-items-center gap-2 p-2'; hint.querySelector('span')?.replaceChildren(document.createTextNode(txt)); }
+      } catch {}
 
       // 刷新报价列表，兼容两种授权
       if (typeof window.loadQuotes === 'function') window.loadQuotes(requirementID);
