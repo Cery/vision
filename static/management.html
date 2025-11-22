@@ -30,11 +30,35 @@
       <i class="fa-solid fa-briefcase"></i>
       <span>需求中心管理</span>
     </a>
+    <button class="btn btn-outline-light d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminOffcanvas" aria-controls="adminOffcanvas"><i class="fa-solid fa-bars"></i></button>
     <div class="d-flex align-items-center gap-2 ms-auto">
       <span class="badge bg-secondary">本地预览</span>
     </div>
   </div>
 </nav>
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="adminOffcanvas" aria-labelledby="adminOffcanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="adminOffcanvasLabel">导航</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="mb-2 small text-muted">需求市场</div>
+    <nav class="nav flex-column">
+      <a class="nav-link" data-tab="requirementsSection" href="#">需求列表</a>
+      <button class="nav-link text-start sidenav-filter" data-filter="all" type="button">全部需求</button>
+      <button class="nav-link text-start sidenav-filter" data-filter="open" type="button">开放报价</button>
+      <button class="nav-link text-start sidenav-filter" data-filter="password" type="button">需密码</button>
+      <button class="nav-link text-start sidenav-filter" data-filter="approved" type="button">已批准</button>
+      <button class="nav-link text-start sidenav-filter" data-filter="progress_active" type="button">进行中</button>
+    </nav>
+    <div class="mt-3 mb-2 small text-muted">管理模块</div>
+    <nav class="nav flex-column">
+      <a class="nav-link" data-tab="demandersSection" href="#">需求方</a>
+      <a class="nav-link" data-tab="suppliersSection" href="#">供应商</a>
+    </nav>
+  </div>
+  </div>
 
 <!-- 欢迎页 / 登录确认 -->
 <div id="welcomeScreen" class="container py-5">
@@ -67,9 +91,18 @@
   <div class="row">
     <aside class="col-lg-2 d-none d-lg-block">
       <div class="admin-sidenav rounded">
-        <div class="mb-3"><strong><i class="fa-solid fa-sliders me-1"></i> 菜单</strong></div>
+        <div class="mb-2"><strong><i class="fa-solid fa-sliders me-1"></i> 菜单</strong></div>
+        <div class="mb-3 small text-muted">需求市场</div>
         <nav class="nav flex-column">
           <a class="nav-link active" data-tab="requirementsSection" href="#">需求列表</a>
+          <button class="nav-link text-start sidenav-filter" data-filter="all" type="button">全部需求</button>
+          <button class="nav-link text-start sidenav-filter" data-filter="open" type="button">开放报价</button>
+          <button class="nav-link text-start sidenav-filter" data-filter="password" type="button">需密码</button>
+          <button class="nav-link text-start sidenav-filter" data-filter="approved" type="button">已批准</button>
+          <button class="nav-link text-start sidenav-filter" data-filter="progress_active" type="button">进行中</button>
+        </nav>
+        <div class="mt-3 mb-2 small text-muted">管理模块</div>
+        <nav class="nav flex-column">
           <a class="nav-link" data-tab="demandersSection" href="#">需求方</a>
           <a class="nav-link" data-tab="suppliersSection" href="#">供应商</a>
         </nav>
@@ -89,6 +122,7 @@
             <select id="reqStatusFilter" class="form-select form-select-sm" style="max-width:160px;">
               <option value="">状态：全部</option>
               <option value="公开">公开</option>
+              <option value="在线报价">在线报价</option>
               <option value="隐私">隐私</option>
               <option value="关闭">关闭</option>
             </select>
@@ -103,6 +137,13 @@
               <option value="false">不公开</option>
             </select>
             <button id="reqApplyFilter" class="btn btn-outline-primary btn-sm">应用筛选</button>
+          </div>
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="small text-muted">视图切换</div>
+            <div class="btn-group btn-group-sm" role="group" aria-label="view switch">
+              <button id="reqViewTable" class="btn btn-outline-secondary active">列表视图</button>
+              <button id="reqViewCards" class="btn btn-outline-secondary">卡片视图</button>
+            </div>
           </div>
           <div class="d-flex align-items-center justify-content-between mb-2">
             <div class="small text-muted">导出当前筛选结果</div>
@@ -149,6 +190,7 @@
               <tbody id="reqTableBody"></tbody>
             </table>
           </div>
+          <div id="reqCardGrid" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 d-none"></div>
           <div class="d-flex justify-content-between align-items-center mt-2">
             <div class="small text-muted" id="reqPageHint">—</div>
             <div class="btn-group">
@@ -1086,7 +1128,18 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderRequirements(list){
     const tbody=document.getElementById('reqTableBody');
     if (!tbody) return;
-    tbody.innerHTML = list.map(raw => {
+    let viewList = list;
+    try {
+      if (window.quickFilterMode === 'approved') {
+        viewList = list.filter(r => normalizeRequirement(r).Approved);
+      } else if (window.quickFilterMode === 'progress_active') {
+        viewList = list.filter(r => {
+          const x = normalizeRequirement(r).Progress || '';
+          return x === '发布中' || x === '接洽中';
+        });
+      }
+    } catch {}
+    tbody.innerHTML = viewList.map(raw => {
       const item = normalizeRequirement(raw);
       const id = item.RequirementID;
       const online = !!item.AllowOpenQuotes;
@@ -1190,7 +1243,106 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     });
+    try { renderRequirementCards(list); } catch {}
   }
+
+  function renderRequirementCards(list){
+    const grid = document.getElementById('reqCardGrid');
+    if (!grid) return;
+    let viewList = list;
+    try {
+      if (window.quickFilterMode === 'approved') {
+        viewList = list.filter(r => normalizeRequirement(r).Approved);
+      } else if (window.quickFilterMode === 'progress_active') {
+        viewList = list.filter(r => {
+          const x = normalizeRequirement(r).Progress || '';
+          return x === '发布中' || x === '接洽中';
+        });
+      }
+    } catch {}
+    grid.innerHTML = viewList.map(raw => {
+      const item = normalizeRequirement(raw);
+      const id = item.RequirementID;
+      const tags = [
+        item.AllowOpenQuotes ? '<span class="badge bg-success me-1">开放报价</span>' : '<span class="badge bg-secondary me-1">需密码</span>',
+        item.ContactPublic ? '<span class="badge bg-info text-dark me-1">公开联系方式</span>' : ''
+      ].join('');
+      const pubText = (function(){ const f = formatDate(item.PublishedAt||''); return f && f.trim() ? f : '—'; })();
+      return `<div class="col"><div class="card h-100"><div class="card-body d-flex flex-column">
+        <div class="d-flex align-items-center justify-content-between mb-2"><div class="small text-muted">${id||'—'}</div><div>${tags}</div></div>
+        <div class="fw-semibold mb-1 text-truncate" title="${escapeHtml(item.Title||'未命名')}">${escapeHtml(item.Title||'未命名')}</div>
+        <div class="small text-muted mb-2">状态：${escapeHtml(item.Status||'')} · 进度：${escapeHtml(item.Progress||'')}</div>
+        <div class="small">分类：${escapeHtml(item.PrimaryCategory||'')}<span class="text-muted">${item.SecondaryCategory?(' / '+escapeHtml(item.SecondaryCategory)):''}</span></div>
+        <div class="small">预算：${escapeHtml(item.BudgetRange||'')}</div>
+        <div class="small text-muted">发布时间：${escapeHtml(pubText)}</div>
+        <div class="mt-auto d-flex gap-2"><button class="btn btn-sm btn-outline-primary" data-action="detail" data-id="${escapeHtml(id)}" ${id?'':'disabled'}>详情</button><button class="btn btn-sm btn-outline-secondary" data-action="quotes" data-id="${escapeHtml(id)}" ${id?'':'disabled'}>报价</button></div>
+      </div></div></div>`;
+    }).join('');
+    grid.querySelectorAll('button[data-action="detail"]').forEach(btn => {
+      btn.addEventListener('click', () => { const id = btn.getAttribute('data-id')||''; if (id) showRequirementDetail(id); });
+    });
+    grid.querySelectorAll('button[data-action="quotes"]').forEach(btn => {
+      btn.addEventListener('click', () => { const id = btn.getAttribute('data-id')||''; if (id) showQuotesModal(id); });
+    });
+  }
+
+  try {
+    const btnTable = document.getElementById('reqViewTable');
+    const btnCards = document.getElementById('reqViewCards');
+    const tableWrap = document.querySelector('#requirementsSection .table-responsive');
+    const grid = document.getElementById('reqCardGrid');
+    if (btnTable && btnCards && tableWrap && grid) {
+      btnTable.addEventListener('click', () => {
+        btnTable.classList.add('active');
+        btnCards.classList.remove('active');
+        tableWrap.classList.remove('d-none');
+        grid.classList.add('d-none');
+      });
+      btnCards.addEventListener('click', () => {
+        btnCards.classList.add('active');
+        btnTable.classList.remove('active');
+        renderRequirementCards(requirementsCache||[]);
+        tableWrap.classList.add('d-none');
+        grid.classList.remove('d-none');
+      });
+    }
+  } catch {}
+
+  try {
+    window.quickFilterMode = '';
+    document.querySelectorAll('.sidenav-filter').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const t = btn.getAttribute('data-filter');
+        const sStatus = document.getElementById('reqStatusFilter');
+        const sOpen = document.getElementById('reqOpenFilter');
+        const sContact = document.getElementById('reqContactFilter');
+        if (sStatus) sStatus.value = '';
+        if (sOpen) sOpen.value = '';
+        if (sContact) sContact.value = '';
+        if (t === 'all') {
+          window.quickFilterMode = '';
+        } else if (t === 'open') {
+          if (sOpen) sOpen.value = 'true';
+          window.quickFilterMode = '';
+        } else if (t === 'password') {
+          if (sOpen) sOpen.value = 'false';
+          window.quickFilterMode = '';
+        } else if (t === 'approved') {
+          window.quickFilterMode = 'approved';
+        } else if (t === 'progress_active') {
+          window.quickFilterMode = 'progress_active';
+        }
+        reqOffsetNext=''; reqOffsetStack=[];
+        loadRequirementsPage(true);
+      });
+    });
+    document.querySelectorAll('#adminOffcanvas .nav-link, #adminOffcanvas .sidenav-filter').forEach(el => {
+      el.addEventListener('click', () => {
+        const offEl = document.getElementById('adminOffcanvas');
+        try { new bootstrap.Offcanvas(offEl).hide(); } catch {}
+      });
+    });
+  } catch {}
 
   async function loadQuoteCount(reqId, tr){
     try{

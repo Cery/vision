@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>需求市场</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/business.css">
+  <style>
+    .card-title{font-weight:600}
+    .tag{display:inline-block;padding:.2rem .5rem;border:1px solid #e5e7eb;border-radius:999px;font-size:.75rem;color:#6b7280;margin-right:.25rem}
+    .grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:16px}
+    .sidebar{position:sticky;top:16px;align-self:flex-start;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border:1px solid #e5e7eb;border-radius:12px}
+    .menu{padding:12px}
+    .menu .heading{font-weight:700;color:#2563eb;margin:6px 0}
+    .menu .list{list-style:none;padding:0;margin:0}
+    .menu .list li{margin:4px 0}
+    .menu .list button{width:100%;text-align:left;padding:8px 10px;border:0;background:transparent;border-radius:8px;color:#111827;cursor:pointer}
+    .menu .list button.active{background:#eef2ff}
+    .menu .list button:hover{background:#f3f4f6}
+    @media (max-width: 992px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="container py-3">
+    <h1 class="h4 mb-3">需求市场</h1>
+    <div class="grid">
+      <aside class="sidebar">
+        <div class="menu">
+          <div class="heading">快速筛选</div>
+          <ul class="list">
+            <li><button data-filter="all" class="active">全部</button></li>
+            <li><button data-filter="open">开放报价</button></li>
+            <li><button data-filter="password">需密码</button></li>
+            <li><button data-filter="approved">已批准</button></li>
+            <li><button data-filter="progress_active">进行中</button></li>
+          </ul>
+          <div class="heading" style="margin-top:12px">产品类型</div>
+          <ul class="list">
+            <li><button data-type="">全部类型</button></li>
+            <li><button data-type="电子内窥镜">电子内窥镜</button></li>
+            <li><button data-type="光纤内窥镜">光纤内窥镜</button></li>
+            <li><button data-type="硬性内窥镜">硬性内窥镜</button></li>
+          </ul>
+          <div class="heading" style="margin-top:12px">搜索</div>
+          <div class="input-group input-group-sm">
+            <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input id="searchInput" type="text" class="form-control" placeholder="按标题或公司搜索">
+          </div>
+        </div>
+      </aside>
+      <main>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="small text-muted" id="statsHint">—</div>
+          <div class="btn-group btn-group-sm">
+            <button id="refreshBtn" class="btn btn-outline-secondary">刷新</button>
+          </div>
+        </div>
+        <div id="cardGrid" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3"></div>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+  <script>
+    (function() {
+      const isProd = /(^|\.)visndt\.com$/i.test(location.hostname);
+      const defaultRemote = 'https://api.visndt.com';
+      let saved = '';
+      try { saved = (typeof localStorage !== 'undefined') ? (localStorage.getItem('API_BASE') || '') : ''; } catch {}
+      const allowInProd = new Set(['', 'https://api.visndt.com']);
+      if (isProd) {
+        window.API_BASE = allowInProd.has(saved) ? saved : '';
+      } else {
+        window.API_BASE = saved || defaultRemote;
+      }
+      if (location.protocol === 'https:' && /^http:\/\//i.test(window.API_BASE||'')) {
+        try { localStorage.removeItem('API_BASE'); } catch {}
+        window.API_BASE = isProd ? '' : defaultRemote;
+      }
+    })();
+
+    const state = { items: [], filter: 'all', type: '', query: '' };
+
+    function normalize(it){
+      return {
+        id: it.RequirementID || it.requirement_id || it.id || '',
+        title: it.Title || it.title || '未命名',
+        status: it.Status || it.status || '',
+        progress: it.Progress || it.progress || '',
+        primary: it.PrimaryCategory || it.primary_category || '',
+        secondary: it.SecondaryCategory || it.secondary_category || '',
+        budget: it.BudgetRange || it.budget_range || '',
+        open: (typeof it.AllowOpenQuotes !== 'undefined') ? !!it.AllowOpenQuotes : !!it.allow_open_quotes,
+        contactPublic: (typeof it.ContactPublic !== 'undefined') ? !!it.ContactPublic : !!it.contact_public,
+        preview: it.PublicPreview || it.public_preview || '',
+        company: it.ContactCompany || it.contact_company || '',
+        publishedAt: it.PublishedAt || it.published_at || ''
+      };
+    }
+
+    function formatDate(input){
+      if (!input) return '';
+      const d = new Date(input);
+      if (isNaN(d.getTime())) return '';
+      const y = d.getFullYear(); const m = String(d.getMonth()+1).padStart(2,'0'); const day = String(d.getDate()).padStart(2,'0');
+      return `${y}-${m}-${day}`;
+    }
+
+    async function load(){
+      const params = new URLSearchParams();
+      params.set('limit', '60');
+      const url = (window.API_BASE || '') + '/api/requirements?' + params.toString();
+      const r = await fetch(url);
+      const t = await r.text();
+      let data; try { data = JSON.parse(t); } catch { data = { items: [] }; }
+      const items = Array.isArray(data) ? data : (data.items || []);
+      state.items = items.map(normalize);
+      render();
+    }
+
+    function applyFilters(list){
+      let v = list;
+      if (state.filter === 'open') v = v.filter(x => x.open);
+      else if (state.filter === 'password') v = v.filter(x => !x.open);
+      else if (state.filter === 'approved') v = v.filter(x => x.status === '公开' || x.status === '在线报价');
+      else if (state.filter === 'progress_active') v = v.filter(x => x.progress === '发布中' || x.progress === '接洽中');
+      if (state.type) v = v.filter(x => x.primary === state.type || x.secondary === state.type);
+      const q = state.query.trim().toLowerCase();
+      if (q) v = v.filter(x => String(x.id).toLowerCase().includes(q) || String(x.title).toLowerCase().includes(q) || String(x.company).toLowerCase().includes(q));
+      return v;
+    }
+
+    function render(){
+      const grid = document.getElementById('cardGrid');
+      const list = applyFilters(state.items);
+      document.getElementById('statsHint').textContent = `当前 ${list.length} 条`;
+      grid.innerHTML = list.map(item => {
+        const tags = [
+          item.open ? '<span class="tag">开放报价</span>' : '<span class="tag">需密码</span>',
+          item.contactPublic ? '<span class="tag">公开联系方式</span>' : ''
+        ].join('');
+        const cat = [item.primary, item.secondary].filter(Boolean).join(' / ');
+        return `<div class="col"><div class="card h-100"><div class="card-body d-flex flex-column">
+          <div class="d-flex justify-content-between align-items-center mb-1"><div class="small text-muted">${item.id}</div><div>${tags}</div></div>
+          <div class="card-title text-truncate" title="${escapeHtml(item.title)}">${escapeHtml(item.title)}</div>
+          <div class="small text-muted">状态：${escapeHtml(item.status)} · 进度：${escapeHtml(item.progress)}</div>
+          <div class="small">分类：${escapeHtml(cat)}</div>
+          <div class="small">预算：${escapeHtml(item.budget)}</div>
+          <div class="small text-muted">发布时间：${escapeHtml(formatDate(item.publishedAt))}</div>
+          <div class="mt-auto d-flex gap-2">
+            <a class="btn btn-sm btn-outline-primary" href="/static/view.html?id=${encodeURIComponent(item.id)}">查看详情</a>
+            <a class="btn btn-sm btn-outline-secondary" href="/static/entry.html?id=${encodeURIComponent(item.id)}">进入入口</a>
+          </div>
+        </div></div></div>`;
+      }).join('');
+    }
+
+    function escapeHtml(s){return String(s).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[m]));}
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.menu .list button[data-filter]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.menu .list button[data-filter]').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          state.filter = btn.getAttribute('data-filter') || 'all';
+          render();
+        });
+      });
+      document.querySelectorAll('.menu .list button[data-type]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.menu .list button[data-type]').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          state.type = btn.getAttribute('data-type') || '';
+          render();
+        });
+      });
+      document.getElementById('searchInput').addEventListener('input', (e) => { state.query = e.target.value || ''; render(); });
+      document.getElementById('refreshBtn').addEventListener('click', load);
+      load();
+    });
+  </script>
+</body>
+</html>

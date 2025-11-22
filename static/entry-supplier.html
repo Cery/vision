@@ -132,6 +132,16 @@
         loginForm.reset();
       });
 
+      if (gotoEntryBtn) {
+        gotoEntryBtn.addEventListener('click', () => {
+          const v = (document.getElementById('reqIdFilter').value||'').trim();
+          if (!v) { alert('请先填写需求ID筛选'); return; }
+          const url = new URL('entry.html', window.location.origin);
+          url.searchParams.set('id', v);
+          window.location.href = url.toString();
+        });
+      }
+
       function renderProfile(s) {
         const card = document.createElement('div');
         card.className = 'card shadow-sm';
@@ -190,13 +200,3 @@
     </script>
   </body>
   </html>
-      // 进入统一入口页（按筛选的需求ID）
-      if (gotoEntryBtn) {
-        gotoEntryBtn.addEventListener('click', () => {
-          const v = (document.getElementById('reqIdFilter').value||'').trim();
-          if (!v) { alert('请先填写需求ID筛选'); return; }
-          const url = new URL('entry.html', window.location.origin);
-          url.searchParams.set('id', v);
-          window.location.href = url.toString();
-        });
-      }

@@ -76,25 +76,10 @@
       font-weight: 500;
     }
 
-    .status-active {
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .status-pending {
-      background: #fef3c7;
-      color: #92400e;
-    }
-
-    .status-completed {
-      background: #dbeafe;
-      color: #1e40af;
-    }
-
-    .status-cancelled {
-      background: #fee2e2;
-      color: #991b1b;
-    }
+    .status-公开 { background: #eef2ff; color: #1d4ed8; }
+    .status-在线报价 { background: #dcfce7; color: #166534; }
+    .status-隐私 { background: #fef3c7; color: #92400e; }
+    .status-关闭 { background: #fee2e2; color: #991b1b; }
 
     .urgency-high {
       color: #dc2626;
@@ -409,10 +394,10 @@
             <label class="form-label">状态筛选</label>
             <select v-model="filters.status" @change="applyFilters" class="form-select">
               <option value="">全部状态</option>
-              <option value="active">活跃</option>
-              <option value="pending">待处理</option>
-              <option value="completed">已完成</option>
-              <option value="cancelled">已取消</option>
+              <option value="公开">公开</option>
+              <option value="在线报价">在线报价</option>
+              <option value="隐私">隐私</option>
+              <option value="关闭">关闭</option>
             </select>
           </div>
           <div class="col-md-2">
@@ -866,7 +851,7 @@
               budget: '50-100万',
               delivery_time: '2个月内',
               product_type: 'electronic',
-              status: 'active',
+              status: '公开',
               urgency: 'high',
               is_vip: true,
               date: '2025-01-20T16:30:00+08:00',
@@ -932,13 +917,32 @@
                 special_features: ['耐高温', '防腐蚀']
               },
               application_scenario: '石油管道内部检测'
+            },
+            {
+              id: 'REQ-20250120-002',
+              requirement_id: 'REQ-20250120-002',
+              title: '汽车焊缝内窥检测设备采购',
+              description: '需要采购焊缝内窥检测设备，支持高温环境与狭窄空间操作',
+              contact_name: '王技师',
+              contact_phone: '139****0000',
+              contact_email: 'wang.tech@automotive.com',
+              company_name: '某汽车制造有限公司',
+              company_type: '制造企业',
+              region: '华东',
+              budget: '10-20万',
+              delivery_time: '1个月内',
+              product_type: 'fiber',
+              status: '在线报价',
+              urgency: 'medium',
+              is_vip: false,
+              date: '2025-01-18T09:20:00+08:00'
             }
           ];
         },
 
         updateStats() {
           this.stats.total = this.requirements.length;
-          this.stats.active = this.requirements.filter(req => req.status === 'active').length;
+          this.stats.active = this.requirements.filter(req => req.status === '公开' || req.status === '在线报价').length;
           this.stats.vip = this.requirements.filter(req => req.is_vip).length;
 
           const thisMonth = new Date();
@@ -1091,10 +1095,10 @@
         // 辅助方法
         getStatusText(status) {
           const statusMap = {
-            active: '活跃',
-            pending: '待处理',
-            completed: '已完成',
-            cancelled: '已取消'
+            '公开': '公开',
+            '在线报价': '在线报价',
+            '隐私': '隐私',
+            '关闭': '关闭'
           };
           return statusMap[status] || status;
         },
