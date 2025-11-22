@@ -23,7 +23,13 @@
 </head>
 <body>
   <div class="container py-3">
-    <h1 class="h4 mb-3">需求市场</h1>
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h1 class="h4 mb-0">需求市场</h1>
+      <div class="d-flex gap-2">
+        <a class="btn btn-outline-primary btn-sm" href="/static/entry-demand.html">发布方入口</a>
+        <a class="btn btn-outline-secondary btn-sm" href="/static/entry-supplier.html">供应商入口</a>
+      </div>
+    </div>
     <div class="grid">
       <aside class="sidebar">
         <div class="menu">
@@ -42,10 +48,21 @@
             <li><button data-type="光纤内窥镜">光纤内窥镜</button></li>
             <li><button data-type="硬性内窥镜">硬性内窥镜</button></li>
           </ul>
+          <div class="heading" style="margin-top:12px">状态</div>
+          <ul class="list">
+            <li><button data-status="">全部状态</button></li>
+            <li><button data-status="公开">公开</button></li>
+            <li><button data-status="隐私">隐私</button></li>
+            <li><button data-status="关闭">关闭</button></li>
+          </ul>
           <div class="heading" style="margin-top:12px">搜索</div>
           <div class="input-group input-group-sm">
             <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
             <input id="searchInput" type="text" class="form-control" placeholder="按标题或公司搜索">
+          </div>
+          <div class="form-check mt-2">
+            <input class="form-check-input" type="checkbox" id="openOnlyChk">
+            <label class="form-check-label" for="openOnlyChk">仅接受在线报价</label>
           </div>
         </div>
       </aside>
@@ -80,7 +97,7 @@
       }
     })();
 
-    const state = { items: [], filter: 'all', type: '', query: '' };
+    const state = { items: [], filter: 'all', type: '', status: '', openOnly: false, query: '' };
 
     function normalize(it){
       return {
@@ -125,6 +142,8 @@
       else if (state.filter === 'password') v = v.filter(x => !x.open);
       else if (state.filter === 'approved') v = v.filter(x => x.status === '公开' || x.status === '在线报价');
       else if (state.filter === 'progress_active') v = v.filter(x => x.progress === '发布中' || x.progress === '接洽中');
+      if (state.openOnly) v = v.filter(x => x.open);
+      if (state.status) v = v.filter(x => x.status === state.status);
       if (state.type) v = v.filter(x => x.primary === state.type || x.secondary === state.type);
       const q = state.query.trim().toLowerCase();
       if (q) v = v.filter(x => String(x.id).toLowerCase().includes(q) || String(x.title).toLowerCase().includes(q) || String(x.company).toLowerCase().includes(q));
@@ -175,7 +194,16 @@
           render();
         });
       });
+      document.querySelectorAll('.menu .list button[data-status]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.menu .list button[data-status]').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          state.status = btn.getAttribute('data-status') || '';
+          render();
+        });
+      });
       document.getElementById('searchInput').addEventListener('input', (e) => { state.query = e.target.value || ''; render(); });
+      document.getElementById('openOnlyChk').addEventListener('change', (e) => { state.openOnly = !!e.target.checked; render(); });
       document.getElementById('refreshBtn').addEventListener('click', load);
       load();
     });

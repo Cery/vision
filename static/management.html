@@ -173,13 +173,13 @@
             <table class="table table-sm table-striped align-middle admin-table">
               <thead class="table-light">
                 <tr>
-                  <th>编号</th>
+                  <th id="reqSortId">编号</th>
                   <th>标题</th>
                   <th>状态</th>
                   <th>进度</th>
                   <th>分类</th>
                   <th>预算</th>
-                  <th>发布时间</th>
+                  <th id="reqSortPublished">发布时间</th>
                   <th>在线报价</th>
                   <th>联系方式公开</th>
                   <th>审批</th>
@@ -1139,6 +1139,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
     } catch {}
+    try {
+      if (window.reqSortKey) {
+        const key = String(window.reqSortKey);
+        const order = String(window.reqSortOrder||'desc');
+        const arr = Array.from(viewList);
+        viewList = arr.sort((a,b)=>{
+          const na = normalizeRequirement(a);
+          const nb = normalizeRequirement(b);
+          let va = na[key];
+          let vb = nb[key];
+          if (key === 'PublishedAt') {
+            va = new Date(na.PublishedAt||'').getTime()||0;
+            vb = new Date(nb.PublishedAt||'').getTime()||0;
+          }
+          if (typeof va === 'string' && typeof vb === 'string') {
+            const cmp = va.localeCompare(vb);
+            return order==='asc' ? cmp : -cmp;
+          }
+          const diff = (va||0) - (vb||0);
+          return order==='asc' ? diff : -diff;
+        });
+      }
+    } catch {}
     tbody.innerHTML = viewList.map(raw => {
       const item = normalizeRequirement(raw);
       const id = item.RequirementID;
@@ -1309,6 +1332,37 @@ document.addEventListener('DOMContentLoaded', () => {
   } catch {}
 
   try {
+    window.reqSortKey = '';
+    window.reqSortOrder = 'desc';
+    const hId = document.getElementById('reqSortId');
+    const hPub = document.getElementById('reqSortPublished');
+    if (hId) {
+      hId.style.cursor = 'pointer';
+      hId.addEventListener('click', ()=>{
+        if (window.reqSortKey === 'RequirementID') {
+          window.reqSortOrder = window.reqSortOrder === 'asc' ? 'desc' : 'asc';
+        } else {
+          window.reqSortKey = 'RequirementID';
+          window.reqSortOrder = 'asc';
+        }
+        renderRequirements(requirementsCache||[]);
+      });
+    }
+    if (hPub) {
+      hPub.style.cursor = 'pointer';
+      hPub.addEventListener('click', ()=>{
+        if (window.reqSortKey === 'PublishedAt') {
+          window.reqSortOrder = window.reqSortOrder === 'asc' ? 'desc' : 'asc';
+        } else {
+          window.reqSortKey = 'PublishedAt';
+          window.reqSortOrder = 'desc';
+        }
+        renderRequirements(requirementsCache||[]);
+      });
+    }
+  } catch {}
+
+  try {
     window.quickFilterMode = '';
     document.querySelectorAll('.sidenav-filter').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -1430,7 +1484,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (!respReset.ok) throw new Error(dataReset.error || '重置失败');
 
           // Step 2: 导入网站前端示例数据（需求/供应商/需求方）
-          const respSeed = await window.apiFetch(`/api/admin/dev-seed?base=${encodeURIComponent(base)}`, { method: 'POST', headers: { 'X-Admin-Key': ADMIN_KEY } });
+          const respSeed = await window.apiFetch(`/api/admin/dev-seed?base=${encodeURIComponent(location.origin + '/data')}`, { method: 'POST', headers: { 'X-Admin-Key': ADMIN_KEY } });
           const dataSeed = await respSeed.json();
           if (!respSeed.ok) throw new Error(dataSeed.error || '导入示例失败');
 
@@ -1440,7 +1494,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (!respPwd.ok) throw new Error(dataPwd.error || '设置密码失败');
 
           // Step 4: 同步供应商数据（与网站现有数据对接，支持增量 upsert）
-          const respSup = await window.apiFetch(`/api/admin/import-suppliers?base=${encodeURIComponent(base)}`, { method: 'POST', headers: { 'X-Admin-Key': ADMIN_KEY } });
+          const respSup = await window.apiFetch(`/api/admin/import-suppliers?base=${encodeURIComponent(location.origin + '/content/suppliers')}`, { method: 'POST', headers: { 'X-Admin-Key': ADMIN_KEY } });
           const dataSup = await respSup.json();
           if (!respSup.ok) throw new Error(dataSup.error || '供应商同步失败');
 
@@ -2033,7 +2087,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       if (!window.ADMIN_KEY && typeof ADMIN_KEY === 'undefined') { alert('请先输入管理员密钥并点击“确认登录”'); return; }
       const btn = document.getElementById('supSyncBtn'); if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> 同步中'; }
-      const base = (location.origin + '/data');
+      const base = (location.origin + '/content/suppliers');
       const resp = await window.apiFetch(`/api/admin/import-suppliers?base=${encodeURIComponent(base)}`, { method: 'POST', headers: { 'X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') } });
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || '同步失败');
