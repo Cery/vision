@@ -127,6 +127,7 @@
     async function load(){
       const params = new URLSearchParams();
       params.set('limit', '60');
+      params.set('approved', '1');
       const url = (window.API_BASE || '') + '/api/requirements?' + params.toString();
       const r = await fetch(url);
       const t = await r.text();

@@ -45,6 +45,7 @@
       </div>
 
       <div id="profileArea"></div>
+      <div id="reqListArea" class="mt-3"></div>
       <div id="quotesArea" class="mt-3"></div>
     </div>
 
@@ -93,6 +94,7 @@
         e.preventDefault();
         quotesArea.innerHTML = '';
         profileArea.innerHTML = '';
+        document.getElementById('reqListArea').innerHTML = '';
         const supPwd = document.getElementById('supPwd').value.trim();
         const reqFilter = document.getElementById('reqIdFilter').value.trim();
         if (!supPwd) return;
@@ -114,6 +116,9 @@
           if (reqFilter) params.set('requirement_id', reqFilter);
           const quotes = await apiFetch('/api/quotes?' + params.toString());
           renderQuotes(Array.isArray(quotes) ? quotes : []);
+
+          // Requirements list
+          await loadRequirementsList(supPwd);
         } catch (err) {
           session = null;
           logoutBtn.disabled = true;
@@ -191,6 +196,133 @@
             </div>
           </div>`;
         quotesArea.appendChild(card);
+      }
+
+      async function loadRequirementsList(supPwd) {
+        try {
+          const r = await apiFetch('/api/requirements?limit=60');
+          const list = Array.isArray(r) ? r : (r.items || []);
+          renderRequirements(list, supPwd);
+        } catch (e) {
+          const div = document.createElement('div');
+          div.className = 'alert alert-warning';
+          div.textContent = '无法加载需求列表：' + e.message;
+          document.getElementById('reqListArea').appendChild(div);
+        }
+      }
+
+      function renderRequirements(items, supPwd) {
+        const area = document.getElementById('reqListArea');
+        const rows = (items||[]).map((it)=>{
+          const id = it.RequirementID || it.requirement_id || it.id || '';
+          const title = it.Title || it.title || '';
+          const status = it.Status || it.status || '';
+          const progress = it.Progress || it.progress || '';
+          const open = (typeof it.AllowOpenQuotes !== 'undefined') ? !!it.AllowOpenQuotes : !!it.allow_open_quotes;
+          return `
+            <tr data-id="${escapeHtml(id)}">
+              <td class="mono">${escapeHtml(id)}</td>
+              <td class="text-truncate" title="${escapeHtml(title)}">${escapeHtml(title)}</td>
+              <td>${escapeHtml(status)}</td>
+              <td>${escapeHtml(progress)}</td>
+              <td>${open ? '<span class="badge bg-success">开放报价</span>' : '<span class="badge bg-secondary">需密码</span>'}</td>
+              <td>
+                <button class="btn btn-outline-secondary btn-sm me-1" data-action="contact">查看联系方式</button>
+                <button class="btn btn-outline-primary btn-sm me-1" data-action="quotes">查看报价</button>
+                <button class="btn btn-outline-dark btn-sm" data-action="entry">入口</button>
+              </td>
+            </tr>`;
+        }).join('');
+        const card = document.createElement('div');
+        card.className = 'card shadow-sm';
+        card.innerHTML = `
+          <div class="card-body">
+            <h2 class="h5">需求列表</h2>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle">
+                <thead><tr><th>需求ID</th><th>标题</th><th>状态</th><th>进度</th><th>在线报价</th><th>操作</th></tr></thead>
+                <tbody>${rows || '<tr><td colspan="6" class="text-center text-muted">暂无需求</td></tr>'}</tbody>
+              </table>
+            </div>
+          </div>`;
+        area.appendChild(card);
+
+        card.querySelectorAll('button[data-action="contact"]').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const tr = btn.closest('tr'); const id = tr?.dataset.id || '';
+            if (!id) return;
+            try {
+              const detail = await apiFetch(`/api/requirements/${encodeURIComponent(id)}?supplier_access_password=${encodeURIComponent(supPwd)}`);
+              showContactDetail(detail);
+            } catch (e) {
+              const div = document.createElement('div'); div.className='alert alert-danger'; div.textContent='获取联系方式失败：'+e.message; area.appendChild(div);
+            }
+          });
+        });
+        card.querySelectorAll('button[data-action="quotes"]').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const tr = btn.closest('tr'); const id = tr?.dataset.id || '';
+            if (!id) return;
+            try {
+              const qs = await apiFetch(`/api/quotes?requirement_id=${encodeURIComponent(id)}&supplier_access_password=${encodeURIComponent(supPwd)}`);
+              showRequirementQuotes(id, Array.isArray(qs) ? qs : []);
+            } catch (e) {
+              const div = document.createElement('div'); div.className='alert alert-danger'; div.textContent='获取报价失败：'+e.message; quotesArea.appendChild(div);
+            }
+          });
+        });
+        card.querySelectorAll('button[data-action="entry"]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const tr = btn.closest('tr'); const id = tr?.dataset.id || '';
+            if (!id) return;
+            const url = new URL('entry.html', window.location.origin);
+            url.searchParams.set('id', id);
+            url.searchParams.set('supplier_access_password', supPwd);
+            window.location.href = url.toString();
+          });
+        });
+      }
+
+      function showContactDetail(detail) {
+        const area = document.getElementById('reqListArea');
+        const card = document.createElement('div');
+        card.className = 'card shadow-sm';
+        card.innerHTML = `
+          <div class="card-body">
+            <h2 class="h6">联系方式</h2>
+            <div><strong>联系人：</strong>${escapeHtml(detail.contact_name || detail.ContactName || '')}</div>
+            <div><strong>电话：</strong><span class="mono">${escapeHtml(detail.contact_phone || detail.ContactPhone || '')}</span></div>
+            <div><strong>公司：</strong>${escapeHtml(detail.contact_company || detail.ContactCompany || '')}</div>
+            <div><strong>邮箱：</strong>${escapeHtml(detail.contact_email || detail.ContactEmail || '')}</div>
+            <div><strong>部门：</strong>${escapeHtml(detail.contact_department || detail.ContactDepartment || '')}</div>
+          </div>`;
+        area.appendChild(card);
+      }
+
+      function showRequirementQuotes(reqId, quotes) {
+        const card = document.createElement('div');
+        card.className = 'card shadow-sm';
+        const rows = quotes.map((q, i) => `
+          <tr>
+            <td class="mono">${i + 1}</td>
+            <td class="mono">${escapeHtml(q.quote_id || q.QuoteID || '')}</td>
+            <td>${escapeHtml(q.supplier_name || q.SupplierCompanyName || '')}</td>
+            <td>${escapeHtml(q.amount ?? q.Price ?? '')}</td>
+            <td>${escapeHtml((q.currency || q.Currency || ''))}</td>
+            <td>${escapeHtml(q.remarks ?? q.Remarks ?? '')}</td>
+            <td class="mono small">${escapeHtml(q.created_at || q.CreatedAt || '')}</td>
+          </tr>`).join('');
+        card.innerHTML = `
+          <div class="card-body">
+            <h2 class="h6">需求 ${escapeHtml(reqId)} 的报价（${quotes.length}）</h2>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle">
+                <thead><tr><th>#</th><th>报价ID</th><th>供应商</th><th>报价</th><th>币种</th><th>备注</th><th>时间</th></tr></thead>
+                <tbody>${rows || '<tr><td colspan="7" class="text-center text-muted">暂无报价</td></tr>'}</tbody>
+              </table>
+            </div>
+          </div>`;
+        document.getElementById('quotesArea').appendChild(card);
       }
 
       function escapeHtml(s) {
