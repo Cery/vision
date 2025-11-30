@@ -32,44 +32,14 @@
       "/images/news/news-6.jpeg" "/images/content/news/covers/news_covers_news-6_original_v1.jpeg"
     }}
     
-    {{/* 检查直接映射 */}}
+    {{/* 检查直接映射 - 简化版：不再强制映射到 images/content */}}
     {{ if index $pathMappings $originalPath }}
-      {{ $finalPath = index $pathMappings $originalPath }}
+      {{/* 暂时保留直接映射，如果需要的话。或者可以直接跳过 */}}
+      {{/* $finalPath = index $pathMappings $originalPath */}}
+      {{ $finalPath = $originalPath }}
     {{ else }}
-      {{/* 模式匹配映射 */}}
-      {{ if hasPrefix $originalPath "/images/carousel/" }}
-        {{ $fileName := path.Base $originalPath }}
-        {{ $ext := path.Ext $fileName }}
-        {{ $baseName := strings.TrimSuffix $fileName $ext }}
-        {{ $finalPath = printf "/images/banners/home/carousel_general_%s_original_v1%s" $baseName $ext }}
-      {{ else if hasPrefix $originalPath "/images/banners/category/" }}
-        {{ $fileName := path.Base $originalPath }}
-        {{ $ext := path.Ext $fileName }}
-        {{ $baseName := strings.TrimSuffix $fileName $ext }}
-        {{ if not (in $fileName "_original_") }}
-          {{ $finalPath = printf "/images/banners/category/application_general_%s_original_v1%s" $baseName $ext }}
-        {{ end }}
-      {{ else if hasPrefix $originalPath "/images/partner/" }}
-        {{ $fileName := path.Base $originalPath }}
-        {{ $ext := path.Ext $fileName }}
-        {{ $baseName := strings.TrimSuffix $fileName $ext }}
-        {{ $finalPath = printf "/images/content/partners/logos/partners_logos_%s_original_v1%s" $baseName $ext }}
-      {{ else if hasPrefix $originalPath "/images/news/" }}
-        {{ $fileName := path.Base $originalPath }}
-        {{ $ext := path.Ext $fileName }}
-        {{ $baseName := strings.TrimSuffix $fileName $ext }}
-        {{ $finalPath = printf "/images/content/news/covers/news_covers_%s_original_v1%s" $baseName $ext }}
-      {{ else if hasPrefix $originalPath "/images/products/" }}
-        {{ $fileName := path.Base $originalPath }}
-        {{ $ext := path.Ext $fileName }}
-        {{ $baseName := strings.TrimSuffix $fileName $ext }}
-        {{ $finalPath = printf "/images/content/products/covers/products_covers_%s_original_v1%s" $baseName $ext }}
-      {{ else if hasPrefix $originalPath "/images/cases/" }}
-        {{ $fileName := path.Base $originalPath }}
-        {{ $ext := path.Ext $fileName }}
-        {{ $baseName := strings.TrimSuffix $fileName $ext }}
-        {{ $finalPath = printf "/images/content/cases/covers/cases_covers_%s_original_v1%s" $baseName $ext }}
-      {{ end }}
+      {{/* 模式匹配映射 - 已简化，直接使用原始路径 */}}
+      {{ $finalPath = $originalPath }}
     {{ end }}
   {{ end }}
 {{ else if hasPrefix $originalPath "http" }}

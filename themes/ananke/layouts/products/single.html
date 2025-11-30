@@ -1,0 +1,271 @@
+{{ define "main" }}
+<div class="mw9 center ph3 ph5-l pv4">
+  {{/* Breadcrumbs */}}
+  <div class="f6 gray mb4 flex items-center">
+    <a href="/" class="link gray hover-blue">首页</a>
+    <i class="fas fa-chevron-right f7 mh2 silver"></i>
+    <a href="/products" class="link gray hover-blue">产品中心</a>
+    <i class="fas fa-chevron-right f7 mh2 silver"></i>
+    <span class="blue fw6">{{ .Title }}</span>
+  </div>
+
+  <div class="flex flex-column flex-row-l gutter-l">
+    {{/* Left: Gallery */}}
+    <div class="w-100 w-50-l mb4 mb0-l ph3">
+      <div class="ba b--black-10 pa2 br3 bg-white shadow-1">
+        {{/* Main Image Logic */}}
+        {{ $mainImg := "" }}
+        {{ if .Params.gallery }}
+          {{ $mainImg = (index .Params.gallery 0).image }}
+        {{ else }}
+          {{/* Cloud Album Fallback */}}
+          {{ $dir := replace .File.Dir "\\" "/" }}
+          {{ $parts := split $dir "/" }}
+          {{ $supplier := index $parts 1 }}
+          {{ $mainImg = printf "https://vispic.visndt.com/%s/%s/p-gallery-001.jpg" $supplier .Params.series }}
+        {{ end }}
+        
+        <div class="aspect-ratio aspect-ratio--4x3 mb3 pointer dim relative overflow-hidden br2" data-bs-toggle="modal" data-bs-target="#galleryModal">
+          <div id="mainImage" class="aspect-ratio--object cover bg-center transition-transform hover-scale-105" style="background-image: url('{{ $mainImg }}'), url('https://via.placeholder.com/800x600?text=No+Image');"></div>
+          <div class="absolute bottom-0 right-0 pa2">
+            <i class="fas fa-search-plus white f4 shadow-1"></i>
+          </div>
+        </div>
+        
+        {{/* Thumbnails */}}
+        <div class="flex flex-wrap nl1 nr1">
+          {{ range $i, $img := .Params.gallery }}
+          <div class="w-20 ph1 mb2">
+            <div class="aspect-ratio aspect-ratio--1x1 ba b--black-10 hover-b--blue pointer br2 overflow-hidden" onclick="changeMainImage('{{ $img.image }}')">
+              <div class="aspect-ratio--object cover bg-center" style="background-image: url('{{ $img.image }}');"></div>
+            </div>
+          </div>
+          {{ end }}
+          
+          {{/* Cloud Album Auto-Generated Thumbnails */}}
+          {{ if not .Params.gallery }}
+             {{ $dir := replace .File.Dir "\\" "/" }}
+             {{ $parts := split $dir "/" }}
+             {{ $supplier := index $parts 1 }}
+             {{ range seq 1 4 }}
+               {{ $url := printf "https://vispic.visndt.com/%s/%s/p-gallery-%03d.jpg" $supplier $.Params.series . }}
+               <div class="w-20 ph1 mb2">
+                <div class="aspect-ratio aspect-ratio--1x1 ba b--black-10 hover-b--blue pointer br2 overflow-hidden" onclick="changeMainImage('{{ $url }}')">
+                  <div class="aspect-ratio--object cover bg-center" style="background-image: url('{{ $url }}'), url('https://via.placeholder.com/100?text={{ . }}');"></div>
+                </div>
+              </div>
+             {{ end }}
+          {{ end }}
+        </div>
+      </div>
+    </div>
+
+    {{/* Right: Info */}}
+    <div class="w-100 w-50-l ph3">
+      <h1 class="f2 fw6 mb2 lh-title">{{ .Title }}</h1>
+      
+      <div class="flex flex-wrap items-center mb3">
+        <span class="f4 fw6 dark-blue mr3">{{ .Params.model }}</span>
+        <span class="bg-blue white ph2 pv1 br2 f7 mr2">{{ .Params.primary_category }}</span>
+        {{ if .Params.secondary_category }}
+        <span class="bg-light-gray gray ph2 pv1 br2 f7 mr2">{{ .Params.secondary_category }}</span>
+        {{ end }}
+      </div>
+
+      {{/* Supplier & Series Info Card - Optimized */}}
+      <div class="bg-near-white pa3 br3 mb4 flex items-center shadow-1">
+         <div class="mr3">
+           <i class="fas fa-industry f3 gray"></i>
+         </div>
+         <div>
+           <div class="f7 gray mb1">供应商 / 品牌</div>
+           {{ $dir := replace .File.Dir "\\" "/" }}
+           {{ $parts := split $dir "/" }}
+           {{ $supplier := index $parts 1 }}
+           <div class="f6 fw6 dark-gray">{{ $supplier | humanize }} · {{ .Params.series | default "标准系列" }}</div>
+         </div>
+      </div>
+
+      <div class="prose mb4 f5 lh-copy dark-gray measure">
+        {{ .Summary }}
+      </div>
+
+      <a href="/requirements/publish" class="f5 link dim br2 ph4 pv3 dib white bg-blue w-100 tc shadow-2">
+        <i class="fas fa-comment-dots mr2"></i>咨询报价 / 获取方案
+      </a>
+    </div>
+  </div>
+
+  {{/* Tabs Section */}}
+  <div class="mt5">
+    <ul class="nav nav-tabs mb4 border-bottom-0" id="productTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active f5 fw6 pv3 ph4 dark-gray bg-transparent border-0 border-bottom-2-transparent hover-blue" id="detail-tab" data-bs-toggle="tab" data-bs-target="#detail" type="button" role="tab" aria-controls="detail" aria-selected="true">产品详情</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link f5 fw6 pv3 ph4 dark-gray bg-transparent border-0 border-bottom-2-transparent hover-blue" id="scenario-tab" data-bs-toggle="tab" data-bs-target="#scenario" type="button" role="tab" aria-controls="scenario" aria-selected="false">应用场景</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link f5 fw6 pv3 ph4 dark-gray bg-transparent border-0 border-bottom-2-transparent hover-blue" id="download-tab" data-bs-toggle="tab" data-bs-target="#download" type="button" role="tab" aria-controls="download" aria-selected="false">资料下载</button>
+      </li>
+    </ul>
+    
+    <div class="tab-content bg-white pa4 br3 shadow-1 ba b--black-05" id="productTabsContent">
+      
+      {{/* Tab 1: Detail & Params */}}
+      <div class="tab-pane fade show active" id="detail" role="tabpanel" aria-labelledby="detail-tab">
+        <div class="flex flex-column flex-row-l">
+           <div class="w-100 w-70-l pr4-l prose lh-copy f5 text-justify">
+              {{ .Content }}
+           </div>
+           <div class="w-100 w-30-l mt4 mt0-l pl4-l bl-l b--black-10">
+              <h4 class="f5 fw6 mb3 border-left-blue pl2">技术参数</h4>
+              <table class="f6 w-100" cellspacing="0">
+                <tbody class="lh-copy">
+                  {{ range .Params.parameters }}
+                  <tr class="stripe-dark">
+                    <td class="pa2 fw6 gray w-40">{{ .name }}</td>
+                    <td class="pa2">{{ .value }}</td>
+                  </tr>
+                  {{ end }}
+                </tbody>
+              </table>
+           </div>
+        </div>
+      </div>
+      
+      {{/* Tab 2: Scenarios */}}
+      <div class="tab-pane fade" id="scenario" role="tabpanel" aria-labelledby="scenario-tab">
+        <div class="prose lh-copy f5 mw8 center">
+          {{ if .Params.application_scenarios }}
+            {{ .Params.application_scenarios | markdownify }}
+          {{ else }}
+            <div class="tc pv5 gray">
+              <i class="fas fa-image f1 mb3 light-silver"></i>
+              <p>暂无特定应用场景描述，请联系客服获取更多案例。</p>
+            </div>
+          {{ end }}
+        </div>
+      </div>
+      
+      {{/* Tab 3: Downloads */}}
+      <div class="tab-pane fade" id="download" role="tabpanel" aria-labelledby="download-tab">
+        <div class="flex flex-wrap nl3 nr3">
+          {{ range .Params.data_download }}
+          <div class="w-100 w-50-m w-third-l ph3 mb3">
+             <a href="{{ .file_path }}" class="link db bg-near-white hover-bg-light-blue hover-white pa3 br2 transition-colors group">
+                <div class="flex items-center">
+                   <i class="far fa-file-pdf f3 red mr3 group-hover-white"></i>
+                   <div>
+                      <div class="fw6 f5 mb1 text-dark group-hover-white">{{ .file_title }}</div>
+                      <div class="f7 gray group-hover-light-blue">点击预览/下载</div>
+                   </div>
+                </div>
+             </a>
+          </div>
+          {{ end }}
+          
+          {{/* Cloud Album Auto-Generated Downloads */}}
+          {{ if not .Params.data_download }}
+             {{ $dir := replace .File.Dir "\\" "/" }}
+             {{ $parts := split $dir "/" }}
+             {{ $supplier := index $parts 1 }}
+             <div class="w-100 w-50-m w-third-l ph3 mb3">
+               <a href="https://vispic.visndt.com/{{ $supplier }}/{{ .Params.series }}/p-data-{{ .Params.model }}规格书.pdf" class="link db bg-near-white hover-bg-light-blue hover-white pa3 br2 transition-colors group">
+                  <div class="flex items-center">
+                     <i class="far fa-file-pdf f3 red mr3 group-hover-white"></i>
+                     <div>
+                        <div class="fw6 f5 mb1 text-dark group-hover-white">{{ .Params.model }} 规格书</div>
+                        <div class="f7 gray group-hover-light-blue">PDF 文档 (云端)</div>
+                     </div>
+                  </div>
+               </a>
+             </div>
+          {{ end }}
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  {{/* Related Products Section - New Feature */}}
+  <div class="mt5">
+    <div class="flex justify-between items-center mb4 bb b--black-10 pb2">
+      <h3 class="f3 fw6 ma0">相关产品推荐</h3>
+      <a href="/products" class="link blue f6 hover-dark-blue">查看更多 <i class="fas fa-angle-right ml1"></i></a>
+    </div>
+    <div class="flex flex-wrap nl2 nr2">
+      {{/* Find related products: Same category, exclude current */}}
+      {{ $currentTitle := .Title }}
+      {{ $related := where site.RegularPages "Params.primary_category" .Params.primary_category }}
+      {{ $count := 0 }}
+      {{ range $related }}
+        {{ if and (ne .Title $currentTitle) (lt $count 4) }}
+          {{ $count = add $count 1 }}
+          <div class="w-100 w-50-m w-25-l ph2 mb4">
+            <div class="bg-white br3 shadow-hover overflow-hidden h-100 flex flex-column relative transition-transform hover-translate-y-1 border-box ba b--black-05">
+              <a href="{{ .RelPermalink }}" class="db h-100 link black">
+                <div class="aspect-ratio aspect-ratio--4x3 bg-near-white">
+                  {{ $img := index .Params.gallery 0 }}
+                  {{ $bg := "" }}
+                  {{ if $img }}
+                     {{ $bg = $img.image }}
+                  {{ else }}
+                     {{ $supplier := index (split .File.Dir "\\") 2 }}
+                     {{ if eq $supplier "" }}{{ $supplier = index (split .File.Dir "/") 2 }}{{ end }}
+                     {{ $bg = printf "https://vispic.visndt.com/%s/%s/p-gallery-001.jpg" $supplier .Params.series }}
+                  {{ end }}
+                  <div class="aspect-ratio--object cover bg-center transition-opacity hover-opacity-90" style="background-image: url('{{ $bg }}'), url('https://via.placeholder.com/400x300?text=No+Image');"></div>
+                </div>
+                <div class="pa3 flex-auto flex flex-column">
+                  <h4 class="f6 fw6 mb1 lh-title truncate-2">{{ .Title }}</h4>
+                  <div class="flex justify-between items-center mt-auto pt2 bt b--black-05">
+                     <span class="f7 fw6 dark-blue truncate mr2">{{ .Params.model }}</span>
+                     <span class="f7 gray">详情 &rarr;</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        {{ end }}
+      {{ end }}
+      {{ if eq $count 0 }}
+        <div class="w-100 ph2 gray tc pv3">暂无同类产品推荐</div>
+      {{ end }}
+    </div>
+  </div>
+</div>
+
+<script>
+function changeMainImage(src) {
+  document.querySelector('#mainImage').style.backgroundImage = `url('${src}')`;
+}
+// Simple tab activation logic if bootstrap js not fully loaded/compatible
+document.addEventListener('DOMContentLoaded', function() {
+  var triggerTabList = [].slice.call(document.querySelectorAll('#productTabs button'))
+  triggerTabList.forEach(function (triggerEl) {
+    triggerEl.addEventListener('click', function (event) {
+      event.preventDefault()
+      // Deactivate all
+      triggerTabList.forEach(t => {
+         t.classList.remove('active');
+         t.classList.add('border-bottom-2-transparent');
+         t.classList.remove('border-blue');
+         t.classList.remove('blue');
+      });
+      document.querySelectorAll('.tab-pane').forEach(p => {
+         p.classList.remove('show', 'active');
+      });
+      
+      // Activate current
+      triggerEl.classList.add('active');
+      triggerEl.classList.remove('border-bottom-2-transparent');
+      // triggerEl.classList.add('border-blue'); // If using border bottom style
+      
+      var target = document.querySelector(triggerEl.dataset.bsTarget);
+      target.classList.add('show', 'active');
+    })
+  })
+});
+</script>
+{{ end }}

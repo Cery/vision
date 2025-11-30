@@ -1,334 +1,426 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>供应商入口｜我的报价</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-      body { background: #f7f7f7; }
-      .container-narrow { max-width: 880px; }
-      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
-      .small-muted { color: #6c757d; font-size: .9rem; }
-    </style>
-  </head>
-  <body>
-    <div class="container container-narrow py-4">
-      <header class="mb-4 d-flex align-items-center justify-content-between">
-        <div>
-          <h1 class="h4 mb-1">供应商入口</h1>
-          <div class="small-muted">使用通行密码查看本人的报价记录</div>
-        </div>
-        <div>
-          <a href="/" class="btn btn-outline-secondary btn-sm">返回首页</a>
-        </div>
-      </header>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>供应商入口 | Vision Market</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f3f4f6; min-height: 100vh; }
+    .auth-box { max-width: 400px; margin: 100px auto; }
+    .portal-container { max-width: 1200px; margin: 30px auto; }
+    .sidebar { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .nav-link { color: #4b5563; font-weight: 500; padding: 0.75rem 1rem; }
+    .nav-link.active { background-color: #eef2ff; color: #4f46e5; border-left: 3px solid #4f46e5; }
+    .nav-link:hover:not(.active) { background-color: #f9fafb; }
+  </style>
+</head>
+<body>
 
-      <div class="card shadow-sm mb-3">
-        <div class="card-body">
-          <form id="loginForm" class="row g-3">
-            <div class="col-12 col-md-6">
-              <label class="form-label">供应商通行密码 <span class="text-danger">*</span></label>
-              <input type="password" class="form-control" id="supPwd" placeholder="供应商通行密码" required>
-            </div>
-            <div class="col-12 col-md-6">
-              <label class="form-label">（可选）需求ID筛选</label>
-              <input type="text" class="form-control" id="reqIdFilter" placeholder="R-2024-0001（可选）">
-            </div>
-            <div class="col-12 d-flex gap-2">
-              <button type="submit" class="btn btn-primary">登录并查询报价</button>
-              <button type="button" id="logoutBtn" class="btn btn-outline-secondary" disabled>退出</button>
-              <button type="button" id="gotoEntryBtn" class="btn btn-outline-primary">进入入口页</button>
-            </div>
-          </form>
+<!-- Login View -->
+<div id="view-login" class="container">
+  <div class="card auth-box shadow-sm border-0">
+    <div class="card-body p-4">
+      <h4 class="fw-bold text-center mb-4">供应商入口</h4>
+      <form id="loginForm">
+        <div class="mb-3">
+          <label class="form-label text-muted small fw-bold">通行密码 (Access Password)</label>
+          <input type="password" class="form-control" id="loginPwd" required placeholder="请输入供应商通行密码">
+        </div>
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary">登录</button>
+        </div>
+        <div class="text-center mt-3">
+          <a href="/static/market.html" class="text-decoration-none small">返回需求市场</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Portal View -->
+<div id="view-portal" class="container portal-container d-none">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h4 class="fw-bold mb-0">供应商工作台</h4>
+      <div class="small text-muted">欢迎, <span id="supName">-</span></div>
+    </div>
+    <button class="btn btn-outline-secondary btn-sm" id="logoutBtn">退出</button>
+  </div>
+
+  <div class="row g-4">
+    <!-- Sidebar -->
+    <div class="col-lg-3">
+      <div class="sidebar py-2">
+        <nav class="nav flex-column">
+          <a class="nav-link active" href="#" data-tab="market"><i class="fa-solid fa-globe me-2"></i>需求广场</a>
+          <a class="nav-link" href="#" data-tab="my-quotes"><i class="fa-solid fa-list-check me-2"></i>我的报价</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-lg-9">
+      
+      <!-- Market Tab -->
+      <div id="tab-market" class="tab-pane">
+        <div class="card shadow-sm border-0 mb-3">
+           <div class="card-body">
+             <div class="input-group">
+               <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+               <input type="text" class="form-control border-start-0" id="marketSearch" placeholder="搜索需求...">
+             </div>
+           </div>
+        </div>
+        <div id="marketGrid" class="row g-3">
+          <!-- Items -->
         </div>
       </div>
 
-      <div id="profileArea"></div>
-      <div id="reqListArea" class="mt-3"></div>
-      <div id="quotesArea" class="mt-3"></div>
+      <!-- My Quotes Tab -->
+      <div id="tab-my-quotes" class="tab-pane d-none">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-white fw-bold">报价历史</div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>需求ID</th>
+                  <th>报价金额</th>
+                  <th>备注</th>
+                  <th>状态</th>
+                  <th>时间</th>
+                </tr>
+              </thead>
+              <tbody id="myQuotesBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detail View (Overlay or replace) -->
+      <div id="detailView" class="d-none">
+        <button class="btn btn-sm btn-outline-secondary mb-3" id="backToMarket"><i class="fa-solid fa-arrow-left me-1"></i>返回广场</button>
+        
+        <div class="card shadow-sm border-0 mb-4">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <h3 class="card-title mb-0" id="detTitle">-</h3>
+              <span class="badge bg-light text-dark border" id="detId">-</span>
+            </div>
+            
+            <div class="row g-3 mb-4">
+              <div class="col-md-6">
+                <h6 class="text-muted small fw-bold mb-2">基本信息</h6>
+                <ul class="list-unstyled small">
+                   <li class="mb-1">分类: <span id="detCat">-</span></li>
+                   <li class="mb-1">预算: <span id="detBudget" class="text-primary fw-bold">-</span></li>
+                   <li class="mb-1">发布时间: <span id="detDate">-</span></li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <h6 class="text-muted small fw-bold mb-2">联系方式 (仅内部可见)</h6>
+                <div class="bg-light p-2 rounded small border">
+                  <div><i class="fa-regular fa-building me-2"></i><span id="detCompany">-</span></div>
+                  <div><i class="fa-regular fa-user me-2"></i><span id="detContact">-</span></div>
+                  <div><i class="fa-solid fa-phone me-2"></i><span id="detPhone">-</span></div>
+                  <div><i class="fa-regular fa-envelope me-2"></i><span id="detEmail">-</span></div>
+                </div>
+              </div>
+            </div>
+            
+            <h6 class="text-muted small fw-bold mb-2">详细描述</h6>
+            <div class="bg-light p-3 rounded text-secondary mb-4" id="detDesc"></div>
+            
+            <hr>
+            
+            <h5 class="fw-bold mb-3">提交报价</h5>
+            <form id="quoteForm">
+              <input type="hidden" id="quoteReqId">
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <label class="form-label small fw-bold">报价金额</label>
+                  <input type="text" class="form-control" id="qPrice" required placeholder="例如: 500,000">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label small fw-bold">币种</label>
+                  <select class="form-select" id="qCurrency">
+                    <option value="CNY">CNY 人民币</option>
+                    <option value="USD">USD 美元</option>
+                  </select>
+                </div>
+                <div class="col-md-12">
+                  <label class="form-label small fw-bold">备注说明</label>
+                  <textarea class="form-control" id="qRemarks" rows="3" placeholder="简要说明报价包含内容或优势..."></textarea>
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="btn btn-primary px-4" id="submitQuoteBtn">提交报价</button>
+                </div>
+              </div>
+            </form>
+            
+            <div class="mt-4">
+              <h6 class="text-muted small fw-bold mb-2">您对该需求的已提交报价</h6>
+              <ul class="list-group list-group-flush small" id="myReqQuotes">
+                <!-- Previous quotes for this req -->
+              </ul>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      
     </div>
+  </div>
+</div>
 
-    <script>
-      // 统一 Cloudflare API 基础地址（与管理页一致）：生产同源 /api，本地/其他默认远端，可被 localStorage 覆盖
-      (function() {
-        const isProd = /(^|\.)visndt\.com$/i.test(location.hostname);
-        const defaultRemote = 'https://api.visndt.com';
-        let saved = '';
-        try { saved = (typeof localStorage !== 'undefined') ? (localStorage.getItem('API_BASE') || '') : ''; } catch {}
-        const allowInProd = new Set(['', 'https://api.visndt.com']);
-        if (isProd) {
-          window.API_BASE = allowInProd.has(saved) ? saved : '';
-        } else {
-          window.API_BASE = saved || defaultRemote;
-        }
-        if (location.protocol === 'https:' && /^http:\/\//i.test(window.API_BASE||'')) {
-          try { localStorage.removeItem('API_BASE'); } catch {}
-          window.API_BASE = isProd ? '' : defaultRemote;
-        }
-        window.API_BASE = String(window.API_BASE).replace(/\/$/, '');
-      })();
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function() {
+  const isProd = /(^|\.)visndt\.com$/i.test(location.hostname);
+  const defaultRemote = 'https://api.visndt.com';
+  let saved = ''; try { saved = localStorage.getItem('API_BASE') || ''; } catch {}
+  const allowInProd = new Set(['', 'https://api.visndt.com']);
+  window.API_BASE = (isProd ? (allowInProd.has(saved) ? saved : '') : (saved || defaultRemote)).replace(/\/$/, '');
+})();
 
-      async function apiFetch(path, options = {}) {
-        const url = window.API_BASE + path;
-        const headers = { 'Content-Type': 'application/json' };
-        if (options.headers) Object.assign(headers, options.headers);
-        const res = await fetch(url, { ...options, headers });
-        if (!res.ok) {
-          let errText = await res.text().catch(() => '');
-          throw new Error(`HTTP ${res.status}: ${errText || res.statusText}`);
-        }
-        const ct = res.headers.get('content-type') || '';
-        return ct.includes('application/json') ? res.json() : res.text();
-      }
-
-      const loginForm = document.getElementById('loginForm');
-      const logoutBtn = document.getElementById('logoutBtn');
-      const profileArea = document.getElementById('profileArea');
-      const quotesArea = document.getElementById('quotesArea');
-      const gotoEntryBtn = document.getElementById('gotoEntryBtn');
-
-      let session = null;
-
-      loginForm.addEventListener('submit', async (e) => {
+const App = {
+  pwd: '',
+  supplier: null,
+  reqs: [],
+  myQuotes: [],
+  
+  init() {
+    // Check URL param for pre-fill
+    const urlParams = new URLSearchParams(location.search);
+    if(urlParams.has('password')) {
+       document.getElementById('loginPwd').value = urlParams.get('password');
+    }
+    
+    document.getElementById('loginForm').addEventListener('submit', e => { e.preventDefault(); this.login(); });
+    document.getElementById('logoutBtn').addEventListener('click', () => location.reload());
+    
+    // Tabs
+    document.querySelectorAll('.nav-link[data-tab]').forEach(el => {
+      el.addEventListener('click', (e) => {
         e.preventDefault();
-        quotesArea.innerHTML = '';
-        profileArea.innerHTML = '';
-        document.getElementById('reqListArea').innerHTML = '';
-        const supPwd = document.getElementById('supPwd').value.trim();
-        const reqFilter = document.getElementById('reqIdFilter').value.trim();
-        if (!supPwd) return;
-
-        try {
-          // Session (identity)
-          const sess = await apiFetch('/api/suppliers/session', {
-            method: 'POST',
-            body: JSON.stringify({ password: supPwd })
-          });
-          session = { supplier: sess.supplier, password: supPwd };
-          logoutBtn.disabled = false;
-          renderProfile(session.supplier);
-
-          // Quotes
-          const params = new URLSearchParams();
-          params.set('supplier_access_password', supPwd);
-          params.set('supplier_id', session.supplier.SupplierID);
-          if (reqFilter) params.set('requirement_id', reqFilter);
-          const quotes = await apiFetch('/api/quotes?' + params.toString());
-          renderQuotes(Array.isArray(quotes) ? quotes : []);
-
-          // Requirements list
-          await loadRequirementsList(supPwd);
-        } catch (err) {
-          session = null;
-          logoutBtn.disabled = true;
-          const div = document.createElement('div');
-          div.className = 'alert alert-danger';
-          div.textContent = '登录或查询失败：' + err.message;
-          profileArea.appendChild(div);
-        }
+        document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+        el.classList.add('active');
+        
+        document.getElementById('tab-market').classList.add('d-none');
+        document.getElementById('tab-my-quotes').classList.add('d-none');
+        document.getElementById('detailView').classList.add('d-none');
+        
+        const tab = el.dataset.tab;
+        document.getElementById(`tab-${tab}`).classList.remove('d-none');
+        
+        if(tab === 'market') this.renderMarket();
+        if(tab === 'my-quotes') this.loadMyQuotes();
       });
-
-      logoutBtn.addEventListener('click', () => {
-        session = null;
-        logoutBtn.disabled = true;
-        profileArea.innerHTML = '';
-        quotesArea.innerHTML = '';
-        loginForm.reset();
+    });
+    
+    // Search
+    document.getElementById('marketSearch').addEventListener('input', () => this.renderMarket());
+    
+    // Back
+    document.getElementById('backToMarket').addEventListener('click', () => {
+      document.getElementById('detailView').classList.add('d-none');
+      document.getElementById('tab-market').classList.remove('d-none');
+    });
+    
+    // Quote Submit
+    document.getElementById('quoteForm').addEventListener('submit', e => { e.preventDefault(); this.submitQuote(); });
+  },
+  
+  async login() {
+    this.pwd = document.getElementById('loginPwd').value.trim();
+    if(!this.pwd) return;
+    
+    const btn = document.querySelector('#loginForm button');
+    btn.disabled = true; btn.textContent = '登录中...';
+    
+    try {
+      const res = await fetch(window.API_BASE + '/api/suppliers/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: this.pwd })
       });
-
-      if (gotoEntryBtn) {
-        gotoEntryBtn.addEventListener('click', () => {
-          const v = (document.getElementById('reqIdFilter').value||'').trim();
-          if (!v) { alert('请先填写需求ID筛选'); return; }
-          const url = new URL('entry.html', window.location.origin);
-          url.searchParams.set('id', v);
-          window.location.href = url.toString();
-        });
-      }
-
-      function renderProfile(s) {
-        const card = document.createElement('div');
-        card.className = 'card shadow-sm';
-        card.innerHTML = `
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-              <h2 class="h5 mb-0">我的资料</h2>
-              <span class="badge bg-secondary mono">${escapeHtml(s.SupplierID)}</span>
+      
+      if (!res.ok) throw new Error('密码错误或无法登录');
+      const json = await res.json();
+      this.supplier = json.supplier;
+      
+      document.getElementById('supName').textContent = this.supplier.CompanyName || this.supplier.Name;
+      
+      // Load Data
+      await this.loadMarket();
+      
+      // Show Portal
+      document.getElementById('view-login').classList.add('d-none');
+      document.getElementById('view-portal').classList.remove('d-none');
+      
+    } catch (e) {
+      alert(e.message);
+    } finally {
+      btn.disabled = false; btn.textContent = '登录';
+    }
+  },
+  
+  async loadMarket() {
+    try {
+      const res = await fetch(window.API_BASE + '/api/requirements?limit=100'); // Load plenty
+      const json = await res.json();
+      this.reqs = Array.isArray(json) ? json : (json.items || []);
+      this.renderMarket();
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  
+  renderMarket() {
+    const q = document.getElementById('marketSearch').value.trim().toLowerCase();
+    const list = this.reqs.filter(r => {
+      if (q && !((r.Title||'').toLowerCase().includes(q))) return false;
+      return true;
+    });
+    
+    document.getElementById('marketGrid').innerHTML = list.map(r => {
+      const id = r.RequirementID || r.id;
+      const isOpen = (typeof r.AllowOpenQuotes !== 'undefined') ? r.AllowOpenQuotes : r.allow_open_quotes;
+      return `
+        <div class="col-md-6 col-xl-4">
+          <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+              <div class="d-flex justify-content-between mb-2">
+                <span class="badge bg-light text-dark border">${r.PrimaryCategory||r.primaryCategory}</span>
+                ${isOpen ? '<span class="badge bg-success bg-opacity-10 text-success">开放报价</span>' : '<span class="badge bg-secondary bg-opacity-10 text-secondary">暂不开放</span>'}
+              </div>
+              <h6 class="card-title text-truncate mb-1 fw-bold">${r.Title||r.title}</h6>
+              <div class="small text-muted mb-3">预算: <span class="text-primary fw-bold">${r.BudgetRange||r.budget_range}</span></div>
+              <button class="btn btn-sm btn-outline-primary w-100" onclick="App.viewDetail('${id}')">查看详情与报价</button>
             </div>
-            <div class="mt-3">
-              <div><strong>名称：</strong>${escapeHtml(s.Name || '')}</div>
-              <div><strong>单位：</strong>${escapeHtml(s.Company || '')}</div>
-            </div>
-          </div>`;
-        profileArea.appendChild(card);
-      }
+          </div>
+        </div>
+      `;
+    }).join('');
+  },
+  
+  async loadMyQuotes() {
+    try {
+      const url = window.API_BASE + `/api/quotes?supplier_access_password=${encodeURIComponent(this.pwd)}&supplier_id=${this.supplier.SupplierID}`;
+      const res = await fetch(url);
+      const json = await res.json();
+      this.myQuotes = Array.isArray(json) ? json : (json.items || []);
+      
+      document.getElementById('myQuotesBody').innerHTML = this.myQuotes.map(q => `
+        <tr>
+          <td class="font-monospace small">${q.RequirementID||q.requirement_id}</td>
+          <td class="fw-bold">${q.Price||q.amount}</td>
+          <td class="text-truncate" style="max-width:150px;">${q.Remarks||q.remarks||'-'}</td>
+          <td><span class="badge bg-secondary">${q.Status||q.status}</span></td>
+          <td class="small text-muted">${(q.CreatedAt||q.created_at||'').split('T')[0]}</td>
+        </tr>
+      `).join('') || '<tr><td colspan="5" class="text-center text-muted">暂无报价</td></tr>';
+    } catch (e) {
+      console.error(e);
+    }
+  },
+  
+  async viewDetail(id) {
+    // Switch view
+    document.getElementById('tab-market').classList.add('d-none');
+    document.getElementById('detailView').classList.remove('d-none');
+    
+    // Load Full Detail (with contacts)
+    try {
+      const res = await fetch(window.API_BASE + `/api/requirements/${encodeURIComponent(id)}?supplier_access_password=${encodeURIComponent(this.pwd)}`);
+      const data = await res.json();
+      
+      document.getElementById('detTitle').textContent = data.Title||data.title;
+      document.getElementById('detId').textContent = id;
+      document.getElementById('detCat').textContent = data.PrimaryCategory||data.primaryCategory;
+      document.getElementById('detBudget').textContent = data.BudgetRange||data.budget_range;
+      document.getElementById('detDate').textContent = (data.PublishedAt||data.published_at||'').split('T')[0];
+      
+      document.getElementById('detCompany').textContent = data.ContactCompany||data.contact_company||'-';
+      document.getElementById('detContact').textContent = data.ContactName||data.contact_name||'-';
+      document.getElementById('detPhone').textContent = data.ContactPhone||data.contact_phone||'-';
+      document.getElementById('detEmail').textContent = data.ContactEmail||data.contact_email||'-';
+      
+      document.getElementById('detDesc').innerHTML = (data.PublicPreview||data.public_preview||'').replace(/\n/g, '<br>');
+      
+      // Setup Quote Form
+      document.getElementById('quoteReqId').value = id;
+      document.getElementById('qPrice').value = '';
+      document.getElementById('qRemarks').value = '';
+      
+      // Check if allowed
+      const isOpen = (typeof data.AllowOpenQuotes !== 'undefined') ? data.AllowOpenQuotes : data.allow_open_quotes;
+      document.getElementById('submitQuoteBtn').disabled = !isOpen;
+      document.getElementById('submitQuoteBtn').textContent = isOpen ? '提交报价' : '该需求暂不开放报价';
+      
+      // Load previous quotes for THIS requirement
+      this.loadQuotesForReq(id);
+      
+    } catch (e) {
+      alert('加载详情失败: ' + e.message);
+    }
+  },
+  
+  async loadQuotesForReq(reqId) {
+    try {
+      const url = window.API_BASE + `/api/quotes?requirement_id=${reqId}&supplier_access_password=${encodeURIComponent(this.pwd)}&supplier_id=${this.supplier.SupplierID}`;
+      const res = await fetch(url);
+      const json = await res.json();
+      const list = Array.isArray(json) ? json : [];
+      
+      document.getElementById('myReqQuotes').innerHTML = list.map(q => `
+        <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center">
+           <span>${q.Price||q.amount} <span class="text-muted ms-2">(${q.Status||q.status})</span></span>
+           <span class="text-muted">${(q.CreatedAt||q.created_at||'').split('T')[0]}</span>
+        </li>
+      `).join('') || '<li class="list-group-item bg-transparent text-muted">暂无历史报价</li>';
+      
+    } catch {}
+  },
+  
+  async submitQuote() {
+    const btn = document.getElementById('submitQuoteBtn');
+    btn.disabled = true;
+    
+    const body = {
+      requirement_id: document.getElementById('quoteReqId').value,
+      price: document.getElementById('qPrice').value,
+      currency: document.getElementById('qCurrency').value,
+      remarks: document.getElementById('qRemarks').value,
+      supplier_id: this.supplier.SupplierID,
+      supplier_access_password: this.pwd // Pass for auth verification
+    };
+    
+    try {
+      const res = await fetch(window.API_BASE + '/api/quotes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      
+      if (!res.ok) throw new Error('提交失败');
+      
+      alert('报价提交成功！');
+      document.getElementById('qPrice').value = '';
+      document.getElementById('qRemarks').value = '';
+      this.loadQuotesForReq(body.requirement_id); // Refresh list
+      
+    } catch (e) {
+      alert(e.message);
+    } finally {
+      btn.disabled = false;
+    }
+  }
+};
 
-      function renderQuotes(quotes) {
-        const card = document.createElement('div');
-        card.className = 'card shadow-sm';
-        const rows = quotes.map((q, i) => `
-          <tr>
-            <td class="mono">${i + 1}</td>
-            <td class="mono">${escapeHtml(q.quote_id || '')}</td>
-            <td class="mono">${escapeHtml(q.requirement_id || '')}</td>
-            <td>${escapeHtml(q.price ?? q.amount ?? '')}</td>
-            <td>${escapeHtml(q.notes ?? q.remarks ?? '')}</td>
-            <td class="mono small">${escapeHtml(q.created_at || '')}</td>
-          </tr>`).join('');
-        card.innerHTML = `
-          <div class="card-body">
-            <h2 class="h5">我的报价记录（${quotes.length}）</h2>
-            <div class="table-responsive">
-              <table class="table table-sm align-middle">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>报价ID</th>
-                    <th>需求ID</th>
-                    <th>报价</th>
-                    <th>备注</th>
-                    <th>时间</th>
-                  </tr>
-                </thead>
-                <tbody>${rows || '<tr><td colspan="6" class="text-center text-muted">暂无记录</td></tr>'}</tbody>
-              </table>
-            </div>
-          </div>`;
-        quotesArea.appendChild(card);
-      }
-
-      async function loadRequirementsList(supPwd) {
-        try {
-          const r = await apiFetch('/api/requirements?limit=60');
-          const list = Array.isArray(r) ? r : (r.items || []);
-          renderRequirements(list, supPwd);
-        } catch (e) {
-          const div = document.createElement('div');
-          div.className = 'alert alert-warning';
-          div.textContent = '无法加载需求列表：' + e.message;
-          document.getElementById('reqListArea').appendChild(div);
-        }
-      }
-
-      function renderRequirements(items, supPwd) {
-        const area = document.getElementById('reqListArea');
-        const rows = (items||[]).map((it)=>{
-          const id = it.RequirementID || it.requirement_id || it.id || '';
-          const title = it.Title || it.title || '';
-          const status = it.Status || it.status || '';
-          const progress = it.Progress || it.progress || '';
-          const open = (typeof it.AllowOpenQuotes !== 'undefined') ? !!it.AllowOpenQuotes : !!it.allow_open_quotes;
-          return `
-            <tr data-id="${escapeHtml(id)}">
-              <td class="mono">${escapeHtml(id)}</td>
-              <td class="text-truncate" title="${escapeHtml(title)}">${escapeHtml(title)}</td>
-              <td>${escapeHtml(status)}</td>
-              <td>${escapeHtml(progress)}</td>
-              <td>${open ? '<span class="badge bg-success">开放报价</span>' : '<span class="badge bg-secondary">需密码</span>'}</td>
-              <td>
-                <button class="btn btn-outline-secondary btn-sm me-1" data-action="contact">查看联系方式</button>
-                <button class="btn btn-outline-primary btn-sm me-1" data-action="quotes">查看报价</button>
-                <button class="btn btn-outline-dark btn-sm" data-action="entry">入口</button>
-              </td>
-            </tr>`;
-        }).join('');
-        const card = document.createElement('div');
-        card.className = 'card shadow-sm';
-        card.innerHTML = `
-          <div class="card-body">
-            <h2 class="h5">需求列表</h2>
-            <div class="table-responsive">
-              <table class="table table-sm align-middle">
-                <thead><tr><th>需求ID</th><th>标题</th><th>状态</th><th>进度</th><th>在线报价</th><th>操作</th></tr></thead>
-                <tbody>${rows || '<tr><td colspan="6" class="text-center text-muted">暂无需求</td></tr>'}</tbody>
-              </table>
-            </div>
-          </div>`;
-        area.appendChild(card);
-
-        card.querySelectorAll('button[data-action="contact"]').forEach(btn => {
-          btn.addEventListener('click', async () => {
-            const tr = btn.closest('tr'); const id = tr?.dataset.id || '';
-            if (!id) return;
-            try {
-              const detail = await apiFetch(`/api/requirements/${encodeURIComponent(id)}?supplier_access_password=${encodeURIComponent(supPwd)}`);
-              showContactDetail(detail);
-            } catch (e) {
-              const div = document.createElement('div'); div.className='alert alert-danger'; div.textContent='获取联系方式失败：'+e.message; area.appendChild(div);
-            }
-          });
-        });
-        card.querySelectorAll('button[data-action="quotes"]').forEach(btn => {
-          btn.addEventListener('click', async () => {
-            const tr = btn.closest('tr'); const id = tr?.dataset.id || '';
-            if (!id) return;
-            try {
-              const qs = await apiFetch(`/api/quotes?requirement_id=${encodeURIComponent(id)}&supplier_access_password=${encodeURIComponent(supPwd)}`);
-              showRequirementQuotes(id, Array.isArray(qs) ? qs : []);
-            } catch (e) {
-              const div = document.createElement('div'); div.className='alert alert-danger'; div.textContent='获取报价失败：'+e.message; quotesArea.appendChild(div);
-            }
-          });
-        });
-        card.querySelectorAll('button[data-action="entry"]').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const tr = btn.closest('tr'); const id = tr?.dataset.id || '';
-            if (!id) return;
-            const url = new URL('entry.html', window.location.origin);
-            url.searchParams.set('id', id);
-            url.searchParams.set('supplier_access_password', supPwd);
-            window.location.href = url.toString();
-          });
-        });
-      }
-
-      function showContactDetail(detail) {
-        const area = document.getElementById('reqListArea');
-        const card = document.createElement('div');
-        card.className = 'card shadow-sm';
-        card.innerHTML = `
-          <div class="card-body">
-            <h2 class="h6">联系方式</h2>
-            <div><strong>联系人：</strong>${escapeHtml(detail.contact_name || detail.ContactName || '')}</div>
-            <div><strong>电话：</strong><span class="mono">${escapeHtml(detail.contact_phone || detail.ContactPhone || '')}</span></div>
-            <div><strong>公司：</strong>${escapeHtml(detail.contact_company || detail.ContactCompany || '')}</div>
-            <div><strong>邮箱：</strong>${escapeHtml(detail.contact_email || detail.ContactEmail || '')}</div>
-            <div><strong>部门：</strong>${escapeHtml(detail.contact_department || detail.ContactDepartment || '')}</div>
-          </div>`;
-        area.appendChild(card);
-      }
-
-      function showRequirementQuotes(reqId, quotes) {
-        const card = document.createElement('div');
-        card.className = 'card shadow-sm';
-        const rows = quotes.map((q, i) => `
-          <tr>
-            <td class="mono">${i + 1}</td>
-            <td class="mono">${escapeHtml(q.quote_id || q.QuoteID || '')}</td>
-            <td>${escapeHtml(q.supplier_name || q.SupplierCompanyName || '')}</td>
-            <td>${escapeHtml(q.amount ?? q.Price ?? '')}</td>
-            <td>${escapeHtml((q.currency || q.Currency || ''))}</td>
-            <td>${escapeHtml(q.remarks ?? q.Remarks ?? '')}</td>
-            <td class="mono small">${escapeHtml(q.created_at || q.CreatedAt || '')}</td>
-          </tr>`).join('');
-        card.innerHTML = `
-          <div class="card-body">
-            <h2 class="h6">需求 ${escapeHtml(reqId)} 的报价（${quotes.length}）</h2>
-            <div class="table-responsive">
-              <table class="table table-sm align-middle">
-                <thead><tr><th>#</th><th>报价ID</th><th>供应商</th><th>报价</th><th>币种</th><th>备注</th><th>时间</th></tr></thead>
-                <tbody>${rows || '<tr><td colspan="7" class="text-center text-muted">暂无报价</td></tr>'}</tbody>
-              </table>
-            </div>
-          </div>`;
-        document.getElementById('quotesArea').appendChild(card);
-      }
-
-      function escapeHtml(s) {
-        if (s === null || s === undefined) return '';
-        return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-      }
-    </script>
-  </body>
-  </html>
+document.addEventListener('DOMContentLoaded', () => App.init());
+</script>
+</body>
+</html>

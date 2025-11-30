@@ -1,42 +1,187 @@
 {{ define "main" }}
-  <article class="cf ph3 ph5-l pv3 pv4-l f4 tc-l center measure-wide lh-copy nested-links {{ $.Param "text_color" | compare.Default "mid-gray" }}">
-    {{ .Content }}
-  </article>
-
-  {{/* Define a section to pull recent posts from. For Hugo 0.20 this will default to the section with the most number of pages. */}}
-  {{ $mainSections := site.Params.mainSections | compare.Default (collections.Slice "post") }}
-  {{ $show_recent_posts := site.Params.ananke.show_recent_posts }}
-  {{ $section := collections.Where $.Site.RegularPages "Section" "in" $mainSections }}
-  {{ $section_count := len $section }}
-
-  {{ if and ($show_recent_posts) (compare.Ge $section_count 1) }}
-    <div class="pa3 pa4-ns w-100 w-70-ns center">
-      {{ $n_posts := $.Param "recent_posts_number" | compare.Default 3 }}
-
-      <section class="w-100 mw8">
-        {{/* Range through the first $n_posts items of the section */}}
-        {{ range (collections.First $n_posts $section) }}
-          <div class="w-100 mb4 relative">
-            {{ .Render "summary-with-image" }}
-          </div>
-        {{ end }}
-      </section>
-
-      {{ if compare.Ge $section_count (math.Add $n_posts 1) }}
-        <section class="w-100">
-          <h1 class="f3">{{ lang.Translate "more" }}</h1>
-          {{/* Now, range through the next four after the initial $n_posts items. Nest the requirements, "after" then "first" on the outside */}}
-          {{ range (collections.First 4 (collections.After $n_posts $section))  }}
-            <h2 class="f5 fw4 mb4 dib {{ compare.Conditional (compare.Eq $.Site.Language.LanguageDirection "rtl") "ml3" "mr3" }}">
-              <a href="{{ .RelPermalink }}" class="link black dim">
-                {{ .Title }}
-              </a>
-            </h2>
-          {{ end }}
-        </section>
-      {{ end }}
-
+<div class="w-100">
+  {{/* Hero Search Section */}}
+  <div class="bg-near-white pv4">
+    <div class="mw8 center ph3 tc">
+      <h1 class="f3 f2-l fw6 mb3 mid-gray">寻找最适合您的视觉检测方案</h1>
+      <form action="/search" method="get" class="flex justify-center mw7 center">
+        <input type="text" name="q" placeholder="输入关键词搜索产品、案例或资讯..." class="f5 input-reset bn fl black-80 bg-white pa3 lh-solid w-70 br3 br--left shadow-4 outline-0">
+        <button type="submit" class="f5 button-reset fl pv3 tc bn bg-blue hover-bg-dark-blue white pointer w-30 br3 br--right shadow-4 transition-colors">搜索</button>
+      </form>
+      <div class="mt3 f6 gray">
+        热门搜索: <a href="/search/?q=电子内窥镜" class="link gray hover-blue mh2">电子内窥镜</a> <a href="/search/?q=管道检测" class="link gray hover-blue mh2">管道检测</a> <a href="/search/?q=汽车维修" class="link gray hover-blue mh2">汽车维修</a>
+      </div>
     </div>
-  {{ end }}
-{{ end }}
+  </div>
 
+  {{/* 1. Carousel Section */}}
+  {{ with .Params.product_category_carousel }}
+    {{ if .enable }}
+    <div id="homeCarousel" class="carousel slide mb5" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        {{ range $i, $e := .carousel_images }}
+        <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="{{ $i }}" class="{{ if eq $i 0 }}active{{ end }}" aria-current="{{ if eq $i 0 }}true{{ end }}"></button>
+        {{ end }}
+      </div>
+      <div class="carousel-inner">
+        {{ range $i, $e := .carousel_images }}
+        <div class="carousel-item {{ if eq $i 0 }}active{{ end }}">
+          <div class="vh-50 vh-75-ns w-100 cover bg-center" style="background-image: url('{{ .image }}');">
+            <div class="h-100 w-100 bg-black-40 flex items-center justify-center">
+              <div class="tc white pa3">
+                <h2 class="f2 f1-m f-headline-l fw6 mb3 shadow-2">{{ .title }}</h2>
+                <p class="f4 f3-l mb4 shadow-2">{{ .description }}</p>
+                <a href="{{ .link }}" class="f6 f5-l link dim br-pill ph4 pv3 mb2 dib white bg-blue">了解更多</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {{ end }}
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#homeCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    {{ end }}
+  {{ end }}
+
+  {{/* 2. New Products Section */}}
+  {{ with .Params.new_product_recommendations }}
+    {{ if .enable }}
+    <section class="mw9 center ph3 ph5-l mb5">
+      <h2 class="f2 tc mb4 fw6 mid-gray">新品推荐</h2>
+      <div class="flex flex-wrap justify-center nl3 nr3">
+        {{ range .products }}
+          {{ if .display }}
+            {{/* Find the product page by slug/filename */}}
+            {{ $p := site.GetPage (printf "/products/vs/%s" .product) }}
+            {{ if not $p }}
+              {{ $p = site.GetPage (printf "/products/vis/%s" .product) }}
+            {{ end }}
+            
+            {{ if $p }}
+            <div class="w-100 w-50-m w-third-l ph3 mb4">
+              <div class="bg-white br3 shadow-4 overflow-hidden dim pointer h-100 flex flex-column">
+                <a href="{{ $p.RelPermalink }}" class="db h-100 link black">
+                  <div class="aspect-ratio aspect-ratio--4x3">
+                    {{/* Image Fallback Logic */}}
+                    {{ $bg := "" }}
+                    {{ if $p.Params.gallery }}
+                      {{ $bg = (index $p.Params.gallery 0).image }}
+                    {{ else }}
+                      {{/* Normalize path separators to slash and split */}}
+                      {{ $dir := replace $p.File.Dir "\\" "/" }}
+                      {{ $parts := split $dir "/" }}
+                      {{ $supplier := "" }}
+                      {{ if ge (len $parts) 2 }}
+                        {{ $supplier = index $parts 1 }}
+                      {{ end }}
+                      {{ $bg = printf "https://vispic.visndt.com/%s/%s/p-gallery-001.jpg" $supplier $p.Params.series }}
+                    {{ end }}
+                    
+                    <div class="aspect-ratio--object cover bg-center" style="background-image: url('{{ $bg }}'), url('https://via.placeholder.com/400x300?text=No+Image');"></div>
+                  </div>
+                  <div class="pa3 flex-auto">
+                    <h3 class="f4 fw6 mb2 truncate">{{ $p.Title }}</h3>
+                    <p class="f6 gray mb3 clamp-3">{{ $p.Summary | default $p.Params.seo_description }}</p>
+                    <div class="flex justify-between items-center mt-auto">
+                      <span class="f5 fw6 blue">{{ $p.Params.model }}</span>
+                      <span class="f7 bg-light-gray gray ph2 pv1 br2">{{ $p.Params.primary_category }}</span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+            {{ end }}
+          {{ end }}
+        {{ end }}
+      </div>
+    </section>
+    {{ end }}
+  {{ end }}
+
+  {{/* 3. Application Areas */}}
+  {{ with .Params.application_areas_display }}
+    {{ if .enable }}
+    <section class="bg-near-white pv5">
+      <div class="mw9 center ph3 ph5-l">
+        <h2 class="f2 tc mb5 fw6 mid-gray">应用领域</h2>
+        <div class="flex flex-wrap justify-center nl3 nr3">
+          {{ range .areas }}
+          <div class="w-100 w-50-m w-third-l ph3 mb4">
+            <div class="bg-white br3 shadow-4 overflow-hidden h-100 hover-shadow-up transition-all">
+              <a href="{{ .link }}" class="db link black h-100 flex flex-column">
+                <div class="aspect-ratio aspect-ratio--16x9">
+                   <div class="aspect-ratio--object cover bg-center" style="background-image: url('{{ .image }}');"></div>
+                   <div class="aspect-ratio--object bg-black-30 flex items-center justify-center">
+                     <i class="{{ .icon }} f1 white"></i>
+                   </div>
+                </div>
+                <div class="pa4 flex-auto tc">
+                  <h3 class="f3 fw6 mb3">{{ .title }}</h3>
+                  <p class="f5 gray lh-copy">{{ .summary }}</p>
+                </div>
+              </a>
+            </div>
+          </div>
+          {{ end }}
+        </div>
+      </div>
+    </section>
+    {{ end }}
+  {{ end }}
+
+  {{/* 4. Application Cases */}}
+  {{ with .Params.application_cases_display }}
+    {{ if .enable }}
+    <section class="mw9 center ph3 ph5-l pv5">
+      <h2 class="f2 tc mb5 fw6 mid-gray">应用案例</h2>
+      <div class="flex flex-wrap justify-center nl3 nr3">
+        {{ range .cases }}
+          {{ if .display }}
+            {{ $c := site.GetPage (printf "/cases/%s" .case) }}
+            {{ if $c }}
+            <div class="w-100 w-50-ns ph3 mb4">
+               <div class="flex flex-column flex-row-ns bg-white shadow-4 br3 overflow-hidden h-100">
+                 <div class="w-100 w-40-ns cover bg-center min-h-200" style="background-image: url('{{ with $c.Resources.GetMatch "featured*" }}{{ .RelPermalink }}{{ else }}https://via.placeholder.com/400x300{{ end }}');"></div>
+                 <div class="w-100 w-60-ns pa3 flex flex-column justify-center">
+                   <h3 class="f4 fw6 mb2"><a href="{{ $c.RelPermalink }}" class="link black hover-blue">{{ $c.Title }}</a></h3>
+                   <p class="f6 gray lh-copy mb3 clamp-2">{{ $c.Summary }}</p>
+                   <a href="{{ $c.RelPermalink }}" class="f6 link blue fw6 dim">阅读详情 &rarr;</a>
+                 </div>
+               </div>
+            </div>
+            {{ end }}
+          {{ end }}
+        {{ end }}
+      </div>
+    </section>
+    {{ end }}
+  {{ end }}
+
+  {{/* 5. Partners */}}
+  {{ with .Params.partner_companies_display }}
+    {{ if .enable }}
+    <section class="bg-white pv5">
+      <div class="mw9 center ph3 ph5-l">
+        <h2 class="f2 tc mb5 fw6 mid-gray">合作伙伴</h2>
+        <div class="flex flex-wrap justify-center items-center nl3 nr3">
+          {{ range .companies }}
+          <div class="w-50 w-third-m w-20-l ph3 mb4 tc">
+            <div class="pa3 grayscale hover-grayscale-0 transition-all">
+              <img src="{{ .logo }}" alt="{{ .company_name }}" class="mw-100 h3-l h2 object-contain">
+            </div>
+          </div>
+          {{ end }}
+        </div>
+      </div>
+    </section>
+    {{ end }}
+  {{ end }}
+</div>
+{{ end }}

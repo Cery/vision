@@ -3,275 +3,221 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>需求详情</title>
+  <title>需求详情 | Vision Market</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="/css/business.css" rel="stylesheet">
   <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;padding:24px;background:#f7f7f9;color:#222}
-    .layout{max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
-    .card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
-    .card-header{padding:14px 18px;border-bottom:1px solid #eef2f7;font-size:16px;font-weight:600}
-    .card-body{padding:18px}
-    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-    .row{display:flex;gap:12px;flex-wrap:wrap}
-    .kv{display:flex;gap:8px}
-    .kv .k{width:140px;color:#555}
-    .kv .v{flex:1}
-    .badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef2ff;color:#1d4ed8;font-weight:600;font-size:12px}
-    .ok{color:#065f46;background:#d1fae5;border:1px solid #a7f3d0;padding:8px 12px;border-radius:8px}
-    table{width:100%;border-collapse:collapse}
-    th,td{border:1px solid #e5e7eb;padding:8px 10px;text-align:left;font-size:13px}
-    th{background:#f3f4f6}
-    label{display:block;font-size:13px;color:#555;margin-bottom:6px}
-    input,select,textarea{width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid #cfd6de;border-radius:8px;background:#fff;font-size:14px}
-    textarea{min-height:100px}
-    button{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border:0;border-radius:8px;background:#2563eb;color:#fff;font-weight:600;cursor:pointer}
-    button.secondary{background:#111827;color:#fff}
-    .actions{display:flex;gap:12px;margin-top:12px}
-    .error{color:#b91c1c;background:#fee2e2;border:1px solid #fecaca;padding:8px 12px;border-radius:8px;display:none}
-    .muted{color:#666;font-size:12px}
+    .detail-header { background: #f8f9fa; padding: 2rem 0; border-bottom: 1px solid #e9ecef; }
+    .meta-item { display: flex; align-items: center; margin-bottom: 0.5rem; color: #6c757d; }
+    .meta-item i { width: 20px; text-align: center; margin-right: 8px; }
+    .param-table th { width: 40%; background-color: #f8f9fa; }
   </style>
-  <link rel="icon" href="data:,">
 </head>
 <body>
-  <div class="layout">
-    <div class="card">
-      <div class="card-header">访问角色</div>
-      <div class="card-body">
-        <div class="row" style="justify-content:space-between;align-items:center">
-          <div><span class="badge" id="roleBadge">—</span></div>
-          <div class="actions">
-            <button class="secondary" id="switchBtn">切换密码</button>
-            <button id="reloadBtn">刷新</button>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold text-primary" href="/static/market.html"><i class="fa-solid fa-globe me-2"></i>Vision Market</a>
+    <div class="ms-auto">
+       <a href="/static/market.html" class="btn btn-outline-secondary btn-sm">返回列表</a>
+    </div>
+  </div>
+</nav>
+
+<div id="loading" class="text-center py-5">
+  <div class="spinner-border text-primary" role="status"></div>
+  <div class="mt-2 text-muted">正在加载详情...</div>
+</div>
+
+<div id="content" class="d-none">
+  <!-- Header -->
+  <div class="detail-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="mb-2">
+            <span class="badge bg-primary me-2" id="catBadge">分类</span>
+            <span class="badge bg-secondary" id="statusBadge">状态</span>
+          </div>
+          <h1 class="fw-bold mb-3" id="reqTitle">需求标题</h1>
+          <div class="d-flex flex-wrap gap-4 small text-muted">
+            <span><i class="fa-regular fa-calendar me-1"></i>发布于 <span id="pubDate">-</span></span>
+            <span><i class="fa-solid fa-hashtag me-1"></i>编号: <span id="reqId">-</span></span>
           </div>
         </div>
-        <div class="muted" id="roleTip"></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">需求信息</div>
-      <div class="card-body">
-        <div class="grid" id="reqInfo"></div>
-      </div>
-    </div>
-
-    <div class="card" id="contactCard" style="display:none">
-      <div class="card-header">联系方式</div>
-      <div class="card-body">
-        <div class="grid" id="contactInfo"></div>
-      </div>
-    </div>
-
-    <div class="card" id="quotesCard" style="display:none">
-      <div class="card-header">收到的报价</div>
-      <div class="card-body">
-        <div class="actions"><button id="quotesRefresh">刷新报价</button></div>
-        <table>
-          <thead>
-            <tr>
-              <th>报价单号</th>
-              <th>供应商</th>
-              <th>电话</th>
-              <th>金额</th>
-              <th>币种</th>
-              <th>备注</th>
-              <th>状态</th>
-              <th>创建时间</th>
-            </tr>
-          </thead>
-          <tbody id="quotesTbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="card" id="supplierCard" style="display:none">
-      <div class="card-header">在线报价</div>
-      <div class="card-body">
-        <form id="quoteForm">
-          <div class="grid">
-            <div>
-              <label for="supplierName">供应商名称</label>
-              <input id="supplierName" />
-            </div>
-            <div>
-              <label for="supplierPhone">联系电话</label>
-              <input id="supplierPhone" />
-            </div>
-            <div>
-              <label for="amount">报价金额</label>
-              <input id="amount" type="number" step="0.01" />
-            </div>
-            <div>
-              <label for="currency">币种</label>
-              <select id="currency">
-                <option value="CNY">CNY</option>
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-              </select>
-            </div>
+        <div class="col-lg-4 d-flex flex-column justify-content-center align-items-lg-end mt-3 mt-lg-0">
+          <div class="fs-3 fw-bold text-primary mb-1" id="budgetRange">面议</div>
+          <div class="text-muted small mb-3">预算范围</div>
+          <div class="d-flex gap-2">
+             <button class="btn btn-primary" id="actionQuote">
+               <i class="fa-solid fa-paper-plane me-1"></i> 参与报价
+             </button>
+             <button class="btn btn-outline-secondary" id="actionEntry">
+               <i class="fa-solid fa-key me-1"></i> 凭密码查看
+             </button>
           </div>
-          <div style="margin-top:12px">
-            <label for="remarks">备注</label>
-            <textarea id="remarks"></textarea>
-          </div>
-          <div style="margin-top:12px" class="grid">
-            <div>
-              <label for="supplierAccess">供应商访问密码（可选）</label>
-              <input id="supplierAccess" />
-            </div>
-          </div>
-          <div class="actions">
-            <button type="submit" id="submitQuote">提交报价</button>
-          </div>
-          <div class="error" id="quoteErr"></div>
-          <div class="ok" id="quoteOk" style="display:none"></div>
-          <div class="muted" style="margin-top:8px">提示：如该需求开启“开放在线报价”，可不填密码直接提交；否则请提供需求密码或供应商密码。</div>
-        </form>
+        </div>
       </div>
     </div>
-
-    <div class="error" id="errBox" style="display:none"></div>
   </div>
 
-  <script>
-    function fmt(v){return v==null?'':String(v)}
-    function kv(k,v){const d=document.createElement('div');d.className='kv';const dk=document.createElement('div');dk.className='k';dk.textContent=k;const dv=document.createElement('div');dv.className='v';dv.textContent=fmt(v);d.appendChild(dk);d.appendChild(dv);return d}
-    function setErr(msg){const box=document.getElementById('errBox');box.textContent=msg;box.style.display=msg?'block':'none'}
+  <!-- Body -->
+  <div class="container py-5">
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="card shadow-sm mb-4 border-0">
+          <div class="card-body">
+            <h5 class="card-title border-bottom pb-2 mb-3">需求描述</h5>
+            <div class="card-text text-secondary" id="publicPreview">
+              <!-- Content -->
+            </div>
+          </div>
+        </div>
+        
+        <div class="card shadow-sm border-0" id="paramsCard">
+          <div class="card-body">
+            <h5 class="card-title border-bottom pb-2 mb-3">技术参数</h5>
+            <div class="table-responsive">
+              <table class="table table-bordered mb-0 param-table">
+                <tbody id="paramsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-4">
+        <div class="card shadow-sm border-0 mb-4">
+          <div class="card-body">
+            <h5 class="card-title mb-3">发布方信息</h5>
+            <div id="contactInfo">
+              <!-- Dynamic Content -->
+              <div class="alert alert-light border mb-0 small text-center text-muted">
+                <i class="fa-solid fa-lock me-1"></i> 联系方式仅对登录供应商或凭密码可见
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card shadow-sm border-0 bg-light">
+          <div class="card-body">
+            <h6 class="fw-bold mb-2"><i class="fa-solid fa-circle-info me-2 text-primary"></i>提示</h6>
+            <p class="small text-muted mb-0">
+              如果您是该需求的发布方，请使用 <a href="/static/entry-demand.html">发布方入口</a> 查看完整报价。<br><br>
+              如果您是供应商，请使用 <a href="/static/entry-supplier.html">供应商入口</a> 登录后参与报价。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    const state={id:'',password:'',supplierAccess:'',role:'public',requirement:null,quotes:[]}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function() {
+  const isProd = /(^|\.)visndt\.com$/i.test(location.hostname);
+  const defaultRemote = 'https://api.visndt.com';
+  let saved = ''; try { saved = localStorage.getItem('API_BASE') || ''; } catch {}
+  const allowInProd = new Set(['', 'https://api.visndt.com']);
+  window.API_BASE = (isProd ? (allowInProd.has(saved) ? saved : '') : (saved || defaultRemote)).replace(/\/$/, '');
+  if (location.protocol === 'https:' && /^http:\/\//i.test(window.API_BASE)) window.API_BASE = isProd ? '' : defaultRemote;
+})();
 
-    async function load(){
-      setErr('')
-      const url=new URL(location.href)
-      const id=url.searchParams.get('id')||''
-      const password=url.searchParams.get('password')||''
-      const supplierAccess=url.searchParams.get('supplier_access_password')||''
-      state.id=id;state.password=password;state.supplierAccess=supplierAccess
-      if(!id){setErr('缺少需求ID');return}
-      const api=new URL(`/api/requirements/${encodeURIComponent(id)}`, location.origin)
-      if(password) api.searchParams.set('password', password)
-      if(supplierAccess) api.searchParams.set('supplier_access_password', supplierAccess)
-      try{
-        const r=await fetch(api.toString(),{headers:{'Accept':'application/json'}})
-        if(!r.ok){const t=await r.text().catch(()=>'' );throw new Error(t||('加载失败 '+r.status))}
-        const data=await r.json()
-        state.role=data.role||'public'
-        state.requirement=data.requirement||{}
-        state.quotes=Array.isArray(data.quotes)?data.quotes:[]
-        render()
-      }catch(e){setErr('加载失败：'+(e&&e.message||e))}
+const App = {
+  id: new URLSearchParams(location.search).get('id'),
+  
+  async init() {
+    if (!this.id) {
+      alert('无效的需求ID');
+      location.href = '/static/market.html';
+      return;
     }
-
-    function render(){
-      document.getElementById('roleBadge').textContent=state.role
-      const tip=document.getElementById('roleTip')
-      const map={
-        demander:'当前为需求方视图：可查看收到的报价。',
-        supplier:'当前为供应商视图：可在线提交报价。',
-        guest:'当前为游客视图：可查看联系方式与基本信息。',
-        public:'当前为公共视图：仅展示公开信息。'
-      }
-      tip.textContent=map[state.role]||''
-
-      const info=document.getElementById('reqInfo');info.innerHTML=''
-      const r=state.requirement||{}
-      const infoFields=[
-        ['需求ID', r.RequirementID],
-        ['标题', r.Title],
-        ['状态', r.Status],
-        ['进度', r.Progress],
-        ['预算范围', r.BudgetRange],
-        ['发布时间', r.PublishedAt],
-        ['主类目', r.PrimaryCategory],
-        ['副类目', r.SecondaryCategory]
-      ]
-      infoFields.forEach(([k,v])=>info.appendChild(kv(k,v)))
-      if(r.PublicPreview) info.appendChild(kv('预览', r.PublicPreview))
-      if(r.Parameters && typeof r.Parameters==='object'){
-        const p=Object.entries(r.Parameters)
-        if(p.length){p.slice(0,12).forEach(([k,v])=>info.appendChild(kv('参数:'+k, typeof v==='object'?JSON.stringify(v):v)))}
-      }
-
-      const contact=document.getElementById('contactCard')
-      const contactInfo=document.getElementById('contactInfo');contactInfo.innerHTML=''
-      const hasContact=r.ContactName||r.ContactPhone||r.ContactCompany||r.ContactEmail||r.ContactDepartment
-      contact.style.display=hasContact?'block':'none'
-      if(hasContact){
-        if(r.ContactName) contactInfo.appendChild(kv('联系人', r.ContactName))
-        if(r.ContactPhone) contactInfo.appendChild(kv('电话', r.ContactPhone))
-        if(r.ContactCompany) contactInfo.appendChild(kv('公司', r.ContactCompany))
-        if(r.ContactEmail) contactInfo.appendChild(kv('邮箱', r.ContactEmail))
-        if(r.ContactDepartment) contactInfo.appendChild(kv('部门', r.ContactDepartment))
-      }
-
-      const quotesCard=document.getElementById('quotesCard')
-      const tbody=document.getElementById('quotesTbody');tbody.innerHTML=''
-      quotesCard.style.display=(state.role==='demander')?'block':'none'
-      if(state.role==='demander'){
-        const arr=Array.isArray(state.quotes)?state.quotes:[]
-        for(const q of arr){
-          const tr=document.createElement('tr')
-          const cells=[q.QuoteID,q.SupplierName,q.SupplierPhone,q.Amount,q.Currency,q.Remarks,q.Status,q.CreatedAt]
-          cells.forEach(c=>{const td=document.createElement('td');td.textContent=fmt(c);tr.appendChild(td)})
-          tbody.appendChild(tr)
-        }
-      }
-
-      const supplierCard=document.getElementById('supplierCard')
-      supplierCard.style.display=(state.role==='supplier' || (r.AllowOpenQuotes===true) || !!state.supplierAccess)?'block':'none'
+    await this.loadDetail();
+    this.bindEvents();
+  },
+  
+  async loadDetail() {
+    try {
+      const res = await fetch((window.API_BASE || '') + `/api/requirements/${encodeURIComponent(this.id)}`);
+      if (!res.ok) throw new Error('Load failed');
+      const data = await res.json();
+      this.render(data);
+    } catch (e) {
+      document.getElementById('loading').innerHTML = `<div class="text-danger">加载失败: ${e.message}</div>`;
     }
-
-    async function refreshQuotes(){
-      const u=new URL('/api/quotes', location.origin)
-      u.searchParams.set('requirement_id', state.id)
-      if(state.role==='demander' && state.password) u.searchParams.set('demander_password', state.password)
-      const r=await fetch(u.toString(),{headers:{'Accept':'application/json'}})
-      if(!r.ok){const t=await r.text().catch(()=>'' );throw new Error(t||('加载失败 '+r.status))}
-      const arr=await r.json()
-      state.quotes=Array.isArray(arr)?arr:[]
-      render()
+  },
+  
+  render(data) {
+    document.getElementById('loading').classList.add('d-none');
+    document.getElementById('content').classList.remove('d-none');
+    
+    // Header
+    document.title = `${data.Title || '详情'} | Vision Market`;
+    document.getElementById('reqTitle').textContent = data.Title || '无标题';
+    document.getElementById('reqId').textContent = data.RequirementID || this.id;
+    document.getElementById('catBadge').textContent = data.PrimaryCategory || data.primaryCategory || '未分类';
+    document.getElementById('statusBadge').textContent = data.Status || data.status || '未知';
+    document.getElementById('pubDate').textContent = (data.PublishedAt || data.published_at || '').split('T')[0];
+    document.getElementById('budgetRange').textContent = data.BudgetRange || data.budget_range || '面议';
+    
+    // Preview
+    const preview = data.PublicPreview || data.public_preview || '暂无描述';
+    document.getElementById('publicPreview').innerHTML = escapeHtml(preview).replace(/\n/g, '<br>');
+    
+    // Params
+    const params = data.ParametersJSON || data.parameters_json;
+    const tbody = document.getElementById('paramsBody');
+    if (params && Object.keys(params).length > 0) {
+      tbody.innerHTML = Object.entries(params).map(([k, v]) => `
+        <tr>
+          <th class="fw-normal text-muted">${escapeHtml(k)}</th>
+          <td>${escapeHtml(v)}</td>
+        </tr>
+      `).join('');
+    } else {
+      document.getElementById('paramsCard').classList.add('d-none');
     }
-
-    async function submitQuote(e){
-      e.preventDefault()
-      document.getElementById('quoteErr').style.display='none'
-      document.getElementById('quoteOk').style.display='none'
-      const supplier_name=(document.getElementById('supplierName').value||'').trim()
-      const supplier_phone=(document.getElementById('supplierPhone').value||'').trim()
-      const amount=parseFloat(document.getElementById('amount').value||'0')||0
-      const currency=(document.getElementById('currency').value||'CNY').trim()
-      const remarks=(document.getElementById('remarks').value||'').trim()
-      const supplier_access_password=(document.getElementById('supplierAccess').value||'').trim()
-      if(!supplier_name){showQuoteErr('请填写供应商名称');return}
-      if(!supplier_phone){showQuoteErr('请填写联系电话');return}
-      if(!(amount>0)){showQuoteErr('请填写有效的报价金额');return}
-      const payload={
-        requirement_id: state.id,
-        supplier_name,
-        supplier_phone,
-        amount,
-        currency,
-        remarks
-      }
-      if(supplier_access_password) payload.supplier_access_password=supplier_access_password
-      if(state.password) payload.password=state.password
-      const r=await fetch('/api/quotes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
-      if(!r.ok){const t=await r.text().catch(()=>'' );showQuoteErr(t||('提交失败 '+r.status));return}
-      const data=await r.json()
-      const ok=document.getElementById('quoteOk');ok.textContent='提交成功，报价单号：'+(data.QuoteID||'');ok.style.display='block'
-      try{await refreshQuotes()}catch{}
+    
+    // Contact Public Check
+    if (data.ContactPublic || data.contact_public) {
+      document.getElementById('contactInfo').innerHTML = `
+        <ul class="list-unstyled mb-0">
+          <li class="mb-2"><i class="fa-regular fa-building me-2 text-muted"></i>${escapeHtml(data.ContactCompany||data.contact_company||'-')}</li>
+          <li class="mb-2"><i class="fa-regular fa-user me-2 text-muted"></i>${escapeHtml(data.ContactName||data.contact_name||'-')}</li>
+        </ul>
+      `;
     }
-    function showQuoteErr(msg){const box=document.getElementById('quoteErr');box.textContent=msg;box.style.display='block'}
+    
+    // Buttons
+    const isOpen = (typeof data.AllowOpenQuotes !== 'undefined') ? data.AllowOpenQuotes : data.allow_open_quotes;
+    const btnQuote = document.getElementById('actionQuote');
+    if (!isOpen) {
+      btnQuote.classList.add('disabled');
+      btnQuote.innerHTML = '<i class="fa-solid fa-ban me-1"></i> 暂不开放报价';
+    }
+  },
+  
+  bindEvents() {
+    document.getElementById('actionEntry').addEventListener('click', () => {
+      location.href = `/static/entry.html?id=${encodeURIComponent(this.id)}`;
+    });
+    document.getElementById('actionQuote').addEventListener('click', () => {
+      if (document.getElementById('actionQuote').classList.contains('disabled')) return;
+      // Redirect to supplier portal with pre-fill intent, or entry.html
+      // Let's send them to entry.html which handles both general access and jumping to supplier flow if implemented
+      location.href = `/static/entry.html?id=${encodeURIComponent(this.id)}`;
+    });
+  }
+};
 
-    document.addEventListener('DOMContentLoaded',function(){
-      document.getElementById('reloadBtn').addEventListener('click',load)
-      document.getElementById('quotesRefresh').addEventListener('click',function(e){e.preventDefault();refreshQuotes().catch(err=>setErr('刷新失败：'+(err&&err.message||err)))})
-      document.getElementById('quoteForm').addEventListener('submit',submitQuote)
-      try{const u=new URL(location.href);const v=u.searchParams.get('supplier_access_password')||'';const el=document.getElementById('supplierAccess');if(el) el.value=v;}catch{}
-      document.getElementById('switchBtn').addEventListener('click',function(){
-        const u=new URL('entry.html', location.origin);u.searchParams.set('id', state.id);location.href=u.toString()
-      })
-      load()
-    })
-  </script>
+function escapeHtml(s) {
+  if (!s && s !== 0) return '';
+  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;'}[m]));
+}
+
+document.addEventListener('DOMContentLoaded', () => App.init());
+</script>
 </body>
 </html>

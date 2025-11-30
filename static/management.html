@@ -1,2532 +1,1196 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="
-  default-src 'self';
-  connect-src 'self' https://identity.netlify.com https://api.netlify.com https://api.visndt.com http://localhost:8787 http://127.0.0.1:8787 http://localhost:8888 http://127.0.0.1:8888 http://localhost:8000 http://127.0.0.1:8000;
-  script-src 'self' 'unsafe-inline' https://identity.netlify.com https://api.netlify.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://hm.baidu.com https://static.cloudflareinsights.com;
-  style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com;
-  img-src 'self' data: blob: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
-  font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;
-"> 
-
-    <title>运营管理 - VisNDT</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <!-- 本地字体回退，避免外链受限导致图标显示为问号 -->
-    <link rel="stylesheet" href="/css/vendor/font-awesome-fonts.css">
-    <link rel="preload" href="/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="/webfonts/fa-regular-400.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="/css/admin.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>需求中心管理后台</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="/css/admin.css" rel="stylesheet">
+  <style>
+    /* Inline overrides for specific layout needs */
+    body { overflow-x: hidden; }
+    .sidebar { min-height: 100vh; background: #212529; color: #fff; }
+    .sidebar .nav-link { color: rgba(255,255,255,.75); padding: .75rem 1rem; border-radius: 0; }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active { color: #fff; background: rgba(255,255,255,.1); }
+    .sidebar .nav-link i { width: 24px; text-align: center; margin-right: 8px; }
+    .main-content { padding: 20px; height: 100vh; overflow-y: auto; }
+    .card-stats { border-left: 4px solid var(--brand-primary); transition: transform .2s; }
+    .card-stats:hover { transform: translateY(-2px); }
+    .table-responsive { max-height: calc(100vh - 220px); overflow-y: auto; }
+    .modal-lg-xl { max-width: 1140px; }
+    #envInfoBar { font-size: 0.85rem; opacity: 0.8; }
+    .toast-container { position: fixed; top: 20px; right: 20px; z-index: 1060; }
+  </style>
 </head>
 <body>
-<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
-  <div class="container-fluid">
-    <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-      <i class="fa-solid fa-briefcase"></i>
-      <span>需求中心管理</span>
+
+<div class="d-flex">
+  <!-- Sidebar -->
+  <div class="sidebar d-flex flex-column flex-shrink-0 p-3" style="width: 260px;">
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+      <span class="fs-5 fw-bold">Vision Admin</span>
     </a>
-    <button class="btn btn-outline-light d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminOffcanvas" aria-controls="adminOffcanvas"><i class="fa-solid fa-bars"></i></button>
-    <div class="d-flex align-items-center gap-2 ms-auto">
-      <span class="badge bg-secondary">本地预览</span>
+    <div id="envInfoBar" class="mb-3 text-white-50 pb-3 border-bottom border-secondary">
+      API: 检测中...
+    </div>
+    <ul class="nav nav-pills flex-column mb-auto">
+      <li class="nav-item">
+        <a href="#" class="nav-link active" data-page="dashboard">
+          <i class="fa-solid fa-gauge"></i> 概览
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link" data-page="requirements">
+          <i class="fa-solid fa-list-check"></i> 需求管理
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link" data-page="demanders">
+          <i class="fa-solid fa-building-user"></i> 发布方管理
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link" data-page="suppliers">
+          <i class="fa-solid fa-handshake"></i> 供应商管理
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link" data-page="settings">
+          <i class="fa-solid fa-gear"></i> 设置
+        </a>
+      </li>
+    </ul>
+    <div class="dropdown border-top border-secondary pt-3">
+      <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fa-solid fa-user-shield me-2"></i>
+        <strong>管理员</strong>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+        <li><a class="dropdown-item" href="#" id="logoutBtn">退出登录</a></li>
+      </ul>
     </div>
   </div>
-</nav>
 
-<div class="offcanvas offcanvas-start" tabindex="-1" id="adminOffcanvas" aria-labelledby="adminOffcanvasLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="adminOffcanvasLabel">导航</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    <div class="mb-2 small text-muted">需求市场</div>
-    <nav class="nav flex-column">
-      <a class="nav-link" data-tab="requirementsSection" href="#">需求列表</a>
-      <button class="nav-link text-start sidenav-filter" data-filter="all" type="button">全部需求</button>
-      <button class="nav-link text-start sidenav-filter" data-filter="open" type="button">开放报价</button>
-      <button class="nav-link text-start sidenav-filter" data-filter="password" type="button">需密码</button>
-      <button class="nav-link text-start sidenav-filter" data-filter="approved" type="button">已批准</button>
-      <button class="nav-link text-start sidenav-filter" data-filter="progress_active" type="button">进行中</button>
-    </nav>
-    <div class="mt-3 mb-2 small text-muted">管理模块</div>
-    <nav class="nav flex-column">
-      <a class="nav-link" data-tab="demandersSection" href="#">需求方</a>
-      <a class="nav-link" data-tab="suppliersSection" href="#">供应商</a>
-    </nav>
-  </div>
-  </div>
-
-<!-- 欢迎页 / 登录确认 -->
-<div id="welcomeScreen" class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
+  <!-- Main Content -->
+  <div class="main-content flex-grow-1 bg-light">
+    
+    <!-- Dashboard View -->
+    <div id="view-dashboard" class="page-view">
+      <h2 class="h4 mb-4 border-bottom pb-2">仪表盘</h2>
+      <div class="row g-3 mb-4">
+        <div class="col-md-3">
+          <div class="card card-stats shadow-sm h-100">
+            <div class="card-body">
+              <h6 class="text-muted mb-2">总需求数</h6>
+              <div class="fs-3 fw-bold" id="dashTotalReq">-</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card card-stats shadow-sm h-100" style="border-left-color: #ffc107;">
+            <div class="card-body">
+              <h6 class="text-muted mb-2">待审核</h6>
+              <div class="fs-3 fw-bold" id="dashPendingReq">-</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card card-stats shadow-sm h-100" style="border-left-color: #198754;">
+            <div class="card-body">
+              <h6 class="text-muted mb-2">在线报价总数</h6>
+              <div class="fs-3 fw-bold" id="dashTotalQuotes">-</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card card-stats shadow-sm h-100" style="border-left-color: #0dcaf0;">
+            <div class="card-body">
+              <h6 class="text-muted mb-2">活跃供应商</h6>
+              <div class="fs-3 fw-bold" id="dashTotalSup">-</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       <div class="card shadow-sm">
-        <div class="card-body">
-          <h3 class="mb-3">管理员登录</h3>
-          <div class="mb-3">
-            <label class="form-label">管理员密钥</label>
-            <input id="adminKeyInput" type="password" class="form-control" placeholder="输入 ADMIN_KEY">
-          </div>
-          <button id="adminLoginBtn" class="btn btn-primary w-100"><i class="fa-solid fa-key me-1"></i> 确认登录</button>
-          <div class="mt-4" id="welcomeStats" style="display:none;">
-            <div class="row text-center">
-              <div class="col"><div class="small text-muted">需求总数</div><div class="h5 mb-0" id="statTotal">—</div></div>
-              <div class="col"><div class="small text-muted">开放报价</div><div class="h5 mb-0 text-success" id="statOpen">—</div></div>
-              <div class="col"><div class="small text-muted">需密码</div><div class="h5 mb-0 text-warning" id="statProtected">—</div></div>
-            </div>
+        <div class="card-header bg-white py-3">
+          <h5 class="card-title mb-0">最新动态</h5>
+        </div>
+        <div class="card-body p-0">
+          <div class="list-group list-group-flush" id="dashActivityList">
+            <div class="list-group-item text-muted py-3 text-center">加载中...</div>
           </div>
         </div>
-        <div class="card-footer small text-muted">登录后可查看统计、需求列表、需求方与供应商信息。</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- 主界面：登录后显示 -->
-<div id="adminApp" class="container-fluid mt-4" style="display:none;">
-  <div class="row">
-    <aside class="col-lg-2 d-none d-lg-block">
-      <div class="admin-sidenav rounded">
-        <div class="mb-2"><strong><i class="fa-solid fa-sliders me-1"></i> 菜单</strong></div>
-        <div class="mb-3 small text-muted">需求市场</div>
-        <nav class="nav flex-column">
-          <a class="nav-link active" data-tab="requirementsSection" href="#">需求列表</a>
-          <button class="nav-link text-start sidenav-filter" data-filter="all" type="button">全部需求</button>
-          <button class="nav-link text-start sidenav-filter" data-filter="open" type="button">开放报价</button>
-          <button class="nav-link text-start sidenav-filter" data-filter="password" type="button">需密码</button>
-          <button class="nav-link text-start sidenav-filter" data-filter="approved" type="button">已批准</button>
-          <button class="nav-link text-start sidenav-filter" data-filter="progress_active" type="button">进行中</button>
-        </nav>
-        <div class="mt-3 mb-2 small text-muted">管理模块</div>
-        <nav class="nav flex-column">
-          <a class="nav-link" data-tab="demandersSection" href="#">需求方</a>
-          <a class="nav-link" data-tab="suppliersSection" href="#">供应商</a>
-        </nav>
-      </div>
-    </aside>
-    <main class="col-lg-10">
-      <h1 class="mb-2">运营管理</h1>
-      <div id="envInfoBar" class="small text-muted mb-3">—</div>
-      <!-- 需求列表 -->
-      <section id="requirementsSection" class="card mb-4 shadow-sm">
-        <div class="card-body">
-          <h2 class="section-title">需求列表</h2>
-          <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
-            <div class="input-group" style="max-width:360px;">
-              <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
-              <input id="reqSearchInput" type="text" class="form-control" placeholder="按编号、标题、公司或联系人搜索">
-            </div>
-            <select id="reqStatusFilter" class="form-select form-select-sm" style="max-width:160px;">
-              <option value="">状态：全部</option>
-              <option value="公开">公开</option>
-              <option value="在线报价">在线报价</option>
-              <option value="隐私">隐私</option>
-              <option value="关闭">关闭</option>
-            </select>
-            <select id="reqOpenFilter" class="form-select form-select-sm" style="max-width:160px;">
-              <option value="">在线报价：全部</option>
-              <option value="true">开启</option>
-              <option value="false">关闭</option>
-            </select>
-            <select id="reqContactFilter" class="form-select form-select-sm" style="max-width:180px;">
-              <option value="">联系方式公开：全部</option>
-              <option value="true">公开</option>
-              <option value="false">不公开</option>
-            </select>
-            <button id="reqApplyFilter" class="btn btn-outline-primary btn-sm">应用筛选</button>
-          </div>
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <div class="small text-muted">视图切换</div>
-            <div class="btn-group btn-group-sm" role="group" aria-label="view switch">
-              <button id="reqViewTable" class="btn btn-outline-secondary active">列表视图</button>
-              <button id="reqViewCards" class="btn btn-outline-secondary">卡片视图</button>
-            </div>
-          </div>
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <div class="small text-muted">导出当前筛选结果</div>
-            <div class="btn-group btn-group-sm">
-              <button id="reqExportCsvBtn" class="btn btn-outline-primary"><i class="fa-solid fa-file-csv me-1"></i> 导出 CSV</button>
-              <button id="reqExportXlsxBtn" class="btn btn-outline-success"><i class="fa-solid fa-file-excel me-1"></i> 导出 XLSX</button>
-            </div>
-          </div>
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <div class="small text-muted">数据运维</div>
-            <div class="btn-group btn-group-sm">
-              <button id="seedSampleBtn" class="btn btn-primary"><i class="fa-solid fa-database me-1"></i> 导入示例数据</button>
-              <button id="cleanupInvalidBtn" class="btn btn-outline-danger"><i class="fa-solid fa-broom me-1"></i> 清理无效内容</button>
-              <button id="resetAndSyncBtn" class="btn btn-warning"><i class="fa-solid fa-arrows-rotate me-1"></i> 一键清理并同步</button>
-            </div>
-          </div>
-          <div class="d-flex align-items-center justify-content-between mb-3">
-            <div class="small text-muted">批量开关与默认密码</div>
-            <div class="btn-group btn-group-sm">
-              <button id="reqStatusOnlineBtn" class="btn btn-outline-primary"><i class="fa-solid fa-toggle-on me-1"></i> 全部设为在线报价</button>
-              <button id="reqStatusPrivateBtn" class="btn btn-outline-secondary"><i class="fa-solid fa-user-shield me-1"></i> 全部设为隐私</button>
-              <button id="reqStatusCloseBtn" class="btn btn-outline-secondary"><i class="fa-solid fa-ban me-1"></i> 全部设为关闭</button>
-              <button id="supPwdDefaultBtn" class="btn btn-outline-success"><i class="fa-solid fa-key me-1"></i> 供应商密码统一为 456789</button>
-            </div>
-          </div>
-          <div class="table-responsive" style="max-height:60vh; overflow:auto;">
-            <table class="table table-sm table-striped align-middle admin-table">
-              <thead class="table-light position-sticky top-0">
-                <tr>
-                  <th id="reqSortId" style="min-width:120px;">编号</th>
-                  <th style="min-width:240px;">标题</th>
-                  <th style="min-width:120px;">状态</th>
-                  <th style="min-width:120px;">进度</th>
-                  <th style="min-width:160px;">分类</th>
-                  <th style="min-width:120px;">预算</th>
-                  <th id="reqSortPublished" style="min-width:160px;">发布时间</th>
-                  <th style="min-width:120px;">在线报价</th>
-                  <th style="min-width:140px;">联系方式公开</th>
-                  <th style="min-width:120px;">审批</th>
-                  <th style="min-width:120px;">报价数量</th>
-                  <th style="min-width:160px;">操作</th>
-                </tr>
-              </thead>
-              <tbody id="reqTableBody"></tbody>
-            </table>
-          </div>
-          <div id="reqCardGrid" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 d-none"></div>
-          <div class="d-flex justify-content-between align-items-center mt-2">
-            <div class="small text-muted" id="reqPageHint">—</div>
-            <div class="btn-group">
-              <button id="reqPrevPage" class="btn btn-outline-secondary btn-sm" disabled>上一页</button>
-              <button id="reqNextPage" class="btn btn-outline-secondary btn-sm" disabled>下一页</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 需求方 -->
-      <section id="demandersSection" class="card mb-4 shadow-sm" style="display:none;">
-        <div class="card-body">
-          <h2 class="section-title">需求方</h2>
-          <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
-            <div class="input-group" style="max-width:360px;">
-              <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
-              <input id="demSearchInput" type="text" class="form-control" placeholder="按公司或联系人搜索">
-            </div>
-            <button id="demReloadAll" class="btn btn-outline-primary btn-sm">重新统计并加载</button>
-            <button id="demCreateBtn" class="btn btn-outline-success btn-sm">新增需求方</button>
-            <button id="demExportBtn" class="btn btn-outline-secondary btn-sm">导出CSV</button>
-            <div id="demStatsHint" class="small text-muted ms-2">—</div>
-          </div>
-          <div class="table-responsive">
-            <table class="table table-sm table-striped align-middle admin-table">
-              <thead class="table-light">
-                <tr>
-                  <th>公司</th>
-                  <th>联系人</th>
-                  <th>电话</th>
-                  <th>需求数量</th>
-                  <th>公开</th>
-                  <th>需密码</th>
-                  <th>密码</th>
-                  <th>操作</th>
-                </tr>
-              </thead>
-              <tbody id="demTableBody"></tbody>
-            </table>
-          </div>
-          <div class="d-flex align-items-center justify-content-between mt-2">
-            <div id="demPageInfo" class="small text-muted"></div>
-            <div class="btn-group btn-group-sm">
-              <button id="demPrevPage" class="btn btn-outline-secondary">上一页</button>
-              <button id="demNextPage" class="btn btn-outline-secondary">下一页</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 供应商 -->
-      <section id="suppliersSection" class="card mb-4 shadow-sm" style="display:none;">
-        <div class="card-body">
-          <h2 class="section-title">供应商</h2>
-          <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
-            <div class="input-group" style="max-width:360px;">
-              <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
-              <input id="supSearchInput" type="text" class="form-control" placeholder="按名称、系列或型号搜索">
-            </div>
-            <button id="supReloadBtn" class="btn btn-outline-primary btn-sm">重新加载</button>
-            <button id="supSyncBtn" class="btn btn-outline-success btn-sm">同步供应商</button>
-            <button id="supCreateBtn" class="btn btn-outline-success btn-sm">新增供应商</button>
-            <button id="supExportBtn" class="btn btn-outline-secondary btn-sm">导出CSV</button>
-            <div class="form-check ms-2">
-              <input class="form-check-input" type="checkbox" value="" id="supPublicOnly">
-              <label class="form-check-label" for="supPublicOnly">仅公开</label>
-            </div>
-          </div>
-          <div class="table-responsive">
-            <table class="table table-sm table-striped align-middle admin-table">
-              <thead class="table-light">
-                <tr>
-                  <th>名称</th>
-                  <th>联系人</th>
-                  <th>电话</th>
-                  <th>邮箱</th>
-                  <th>密码</th>
-                  <th>系列/型号数量</th>
-                  <th>操作</th>
-                </tr>
-              </thead>
-              <tbody id="supTableBody"></tbody>
-            </table>
-          </div>
-          <div class="d-flex align-items-center justify-content-between mt-2">
-            <div id="supPageInfo" class="small text-muted"></div>
-            <div class="btn-group btn-group-sm">
-              <button id="supPrevPage" class="btn btn-outline-secondary">上一页</button>
-              <button id="supNextPage" class="btn btn-outline-secondary">下一页</button>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
-</div>
-        <div class="row">
-            <div id="requirements" class="col-md-4">
-                <h2 class="section-title">需求列表</h2>
-                <div id="requirementsList" class="list-group"></div>
-                <div class="mt-4">
-                    <h2 class="section-title">需求管理</h2>
-                    <div class="small text-muted mb-2">可查看/设置明文密码、哈希与开放报价开关</div>
-                    <div id="adminPanel">
-                        <div class="mb-3">
-                            <label class="form-label">全局设置（应用到全部需求）</label>
-                            <input id="globalPasswordInput" type="text" class="form-control mb-2" placeholder="输入新密码（可选）">
-                            <select id="globalAllowOpenQuotes" class="form-select mb-2">
-                                <option value="">不变</option>
-                                <option value="true">开启全网可报价</option>
-                                <option value="false">关闭全网可报价（需密码）</option>
-                            </select>
-                            <select id="globalContactPublic" class="form-select mb-2">
-                                <option value="">不变</option>
-                                <option value="true">公开联系方式（脱敏显示）</option>
-                                <option value="false">不公开联系方式</option>
-                            </select>
-                            <button id="applyAllBtn" class="btn btn-outline-primary btn-sm">应用到全部需求</button>
-                        </div>
-                        <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-                            <div class="input-group" style="max-width:320px;">
-                                <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
-                                <input id="adminSearchInput" type="text" class="form-control" placeholder="按编号或标题搜索">
-                            </div>
-                            <div class="form-check ms-2">
-                                <input class="form-check-input" type="checkbox" value="" id="onlyOpenAdmin">
-                                <label class="form-check-label" for="onlyOpenAdmin">仅开放报价</label>
-                            </div>
-                            <div class="form-check ms-2">
-                                <input class="form-check-input" type="checkbox" value="" id="onlyMaskedAdmin">
-                                <label class="form-check-label" for="onlyMaskedAdmin">仅联系方式脱敏</label>
-                            </div>
-                            <div class="ms-2" style="min-width: 160px;">
-                                <select id="adminStatusFilter" class="form-select form-select-sm">
-                                    <option value="">状态：全部</option>
-                                    <option value="公开">公开</option>
-                                    <option value="隐私">隐私</option>
-                                    <option value="关闭">关闭</option>
-                                </select>
-                            </div>
-                            <div class="ms-2" style="min-width: 160px;">
-                                <select id="adminProgressFilter" class="form-select form-select-sm">
-                                    <option value="">进度：全部</option>
-                                    <option value="发布中">发布中</option>
-                                    <option value="接洽中">接洽中</option>
-                                    <option value="已完成">已完成</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="table-responsive" style="max-height: 420px; overflow:auto;">
-                            <table class="table table-sm table-striped align-middle admin-table">
-                                <thead class="table-light position-sticky top-0">
-                                    <tr>
-                                        <th>编号</th>
-                                        <th>标题</th>
-                                        <th>状态</th>
-                                        <th>进度</th>
-                                        <th>开放报价</th>
-                                        <th>公开联系方式</th>
-                                        <th>明文密码</th>
-                                        <th>哈希（截断）</th>
-                                        <th>操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="adminRequirementsBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-        </main>
       </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const requirementsList = document.getElementById('requirementsList');
-            const quotesPanel = document.getElementById('quotesPanel');
-            const selectedRequirement = document.getElementById('selectedRequirement');
-            const quotesList = document.getElementById('quotesList');
-            const exportCsvBtn = document.getElementById('exportCsvBtn');
-
-            let currentQuotes = [];
-
-            // 统一 Cloudflare API 基础地址（本地/生产），避免生产被 localStorage 覆盖到不安全地址
-            const isProd = /(^|\.)visndt\.com$/i.test(location.hostname);
-            const defaultRemote = 'https://api.visndt.com';
-            const defaultLocal = 'http://127.0.0.1:8787';
-            let saved = '';
-            try { saved = localStorage.getItem('API_BASE') || ''; } catch {}
-            // 生产域仅允许白名单（同源或 api.visndt.com），其他情况强制使用相对路径
-            const allowInProd = new Set(['', 'https://api.visndt.com']);
-            if (isProd) {
-                window.API_BASE = allowInProd.has(saved) ? saved : '';
-            } else {
-                // 本地优先使用本地 Worker 开发端口，避免远程 CORS 限制
-                window.API_BASE = saved || defaultLocal;
-            }
-            // 若为 HTTPS 页面且保存为 http://，清理以避免 Mixed Content 导致 Failed to fetch
-            if (location.protocol === 'https:' && /^http:\/\//i.test(window.API_BASE||'')) {
-                try { localStorage.removeItem('API_BASE'); } catch {}
-                window.API_BASE = isProd ? '' : defaultRemote;
-            }
-            // 统一去除末尾斜杠
-            window.API_BASE = String(window.API_BASE || '').replace(/\/$/, '');
-            // 统一 API 请求：自动附加持久化的管理员密钥（X-Admin-Key）
-            window.apiFetch = (path, opts = {}) => {
-                const headers = Object.assign({}, opts.headers || {});
-                const keyVar = (typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY) ? ADMIN_KEY : '';
-                const keyStore = (typeof localStorage !== 'undefined') ? (localStorage.getItem('ADMIN_KEY') || '') : '';
-                const keyInput = (typeof document !== 'undefined') ? (document.getElementById('adminKeyInput')?.value || '') : '';
-                const key = keyVar || keyStore || keyInput;
-                // 若调用方显式传了空的 X-Admin-Key，进行覆盖；否则在缺省时自动附加
-                const cur = headers['X-Admin-Key'];
-                if (key && (!cur || !String(cur).trim())) headers['X-Admin-Key'] = key;
-                return fetch(`${window.API_BASE}${path}`, { ...opts, headers });
-            };
-
-            try {
-                const el = document.getElementById('envInfoBar');
-                if (el) {
-                    const base = String(window.API_BASE||'');
-                    const apiText = base ? (base + '/api') : '(同源)/api';
-                    let k = '';
-                    try { k = (typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY) || (localStorage.getItem('ADMIN_KEY') || ''); } catch {}
-                    el.textContent = `API: ${apiText} · 密钥: ${k ? '已设置' : '未设置'}`;
-                }
-            } catch {}
-
-            function showToast(text, kind){
-                let c = document.getElementById('toastContainer');
-                if (!c){
-                    c = document.createElement('div');
-                    c.id = 'toastContainer';
-                    c.style.position = 'fixed';
-                    c.style.right = '16px';
-                    c.style.bottom = '16px';
-                    c.style.zIndex = '1090';
-                    document.body.appendChild(c);
-                }
-                const d = document.createElement('div');
-                d.className = 'alert ' + (kind==='success'?'alert-success':kind==='error'?'alert-danger':'alert-secondary');
-                d.style.marginTop = '8px';
-                d.textContent = String(text||'');
-                c.appendChild(d);
-                setTimeout(()=>{ try{ c.removeChild(d); }catch{} }, 1800);
-            }
-
-            async function updateRequirementStatus(reqId, newStatus){
-                try{
-                    const headers = { 'Content-Type': 'application/json' };
-                    const isAdmin = !!(typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY);
-                    if (isAdmin) headers['X-Admin-Key'] = ADMIN_KEY;
-                    let body = { status: String(newStatus||'') };
-                    if (!isAdmin){
-                        const pwd = window.prompt('请输入需求方密码');
-                        if (!pwd){ return false; }
-                        body.demander_password = pwd;
-                    }
-                    const resp = await window.apiFetch(`/api/requirements/${encodeURIComponent(reqId)}`, { method: 'PATCH', headers, body: JSON.stringify(body) });
-                    let data = {}; try { data = await resp.json(); } catch {}
-                    if (!resp.ok){
-                        const msg = data && (data.error || data.message) || '更新失败';
-                        showToast(msg, 'error');
-                        return false;
-                    }
-                    showToast('状态更新成功', 'success');
-                    return true;
-                }catch(e){
-                    showToast(e.message||'更新失败', 'error');
-                    return false;
-                }
-            }
-
-            async function updateRequirementProgress(reqId, newProgress){
-                try{
-                    const isAdmin = !!(typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY);
-                    let headers = { 'Content-Type': 'application/json' };
-                    let url = `/api/requirements/${encodeURIComponent(reqId)}`;
-                    let body = { progress: String(newProgress||'') };
-                    if (isAdmin){ headers['X-Admin-Key'] = ADMIN_KEY; url = `/api/admin/requirements/${encodeURIComponent(reqId)}`; }
-                    else {
-                        const pwd = window.prompt('请输入需求方密码');
-                        if (!pwd){ return false; }
-                        body.demander_password = pwd;
-                    }
-                    const resp = await window.apiFetch(url, { method: 'PATCH', headers, body: JSON.stringify(body) });
-                    let data = {}; try { data = await resp.json(); } catch {}
-                    if (!resp.ok){ showToast((data && (data.error||data.message)) || '更新失败', 'error'); return false; }
-                    showToast('进度更新成功', 'success');
-                    return true;
-                }catch(e){ showToast(e.message||'更新失败', 'error'); return false; }
-            }
-
-            async function updateRequirementOpenQuotes(reqId, flag){
-                try{
-                    if (!(typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY)){
-                        alert('请先输入管理员密钥并登录');
-                        return false;
-                    }
-                    const headers = { 'Content-Type': 'application/json', 'X-Admin-Key': ADMIN_KEY };
-                    const resp = await window.apiFetch(`/api/admin/requirements/${encodeURIComponent(reqId)}`, { method: 'PATCH', headers, body: JSON.stringify({ allow_open_quotes: !!flag }) });
-                    let data = {}; try { data = await resp.json(); } catch {}
-                    if (!resp.ok){ showToast((data && (data.error||data.message)) || '更新失败', 'error'); return false; }
-                    showToast('在线报价已更新', 'success');
-                    return true;
-                }catch(e){ showToast(e.message||'更新失败', 'error'); return false; }
-            }
-
-            async function updateRequirementContactPublic(reqId, flag){
-                try{
-                    const isAdmin = !!(typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY);
-                    let headers = { 'Content-Type': 'application/json' };
-                    let url = `/api/requirements/${encodeURIComponent(reqId)}`;
-                    let body = { contact_public: !!flag };
-                    if (isAdmin){ headers['X-Admin-Key'] = ADMIN_KEY; url = `/api/admin/requirements/${encodeURIComponent(reqId)}`; }
-                    else {
-                        const pwd = window.prompt('请输入需求方密码');
-                        if (!pwd){ return false; }
-                        body.demander_password = pwd;
-                    }
-                    const resp = await window.apiFetch(url, { method: 'PATCH', headers, body: JSON.stringify(body) });
-                    let data = {}; try { data = await resp.json(); } catch {}
-                    if (!resp.ok){ showToast((data && (data.error||data.message)) || '更新失败', 'error'); return false; }
-                    showToast('联系方式公开已更新', 'success');
-                    return true;
-                }catch(e){ showToast(e.message||'更新失败', 'error'); return false; }
-            }
-
-            // 加载并显示需求列表（Cloudflare D1）
-            window.apiFetch('/api/requirements')
-                .then(response => response.json())
-                .then(data => {
-                    const items = Array.isArray(data) ? data : (data.items || []);
-                    requirementsList.innerHTML = items.map(req => `
-                        <a href="#" class="list-group-item list-group-item-action" data-id="${req.RequirementID}">
-                            ${req.Title || req.RequirementID || '未命名需求'}
-                        </a>
-                    `).join('');
-                })
-                .catch(() => {
-                    requirementsList.innerHTML = '<div class="text-muted">无法加载需求列表，请检查 Cloudflare Workers/D1 部署。</div>';
-                });
-
-            // Handle requirement selection
-            requirementsList.addEventListener('click', e => {
-                e.preventDefault();
-                if (e.target.classList.contains('list-group-item')) {
-                    document.querySelectorAll('#requirementsList .list-group-item').forEach(el => el.classList.remove('active'));
-                    e.target.classList.add('active');
-                    const requirementID = e.target.dataset.id;
-                    selectedRequirement.textContent = `需求: ${e.target.textContent.trim()}`;
-                    quotesPanel.style.display = 'block';
-                    window.loadQuotes(requirementID);
-                }
-            });
-
-            // 加载某个需求的报价（需要管理员或密码访问）
-            window.loadQuotes = function loadQuotes(requirementID) {
-                window.apiFetch(`/api/quotes?requirement_id=${encodeURIComponent(requirementID)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        const items = Array.isArray(data) ? data : (data.items || []);
-                        currentQuotes = items;
-                        quotesList.innerHTML = items.map(quote => `
-                            <tr>
-                                <td>${quote.SupplierCompanyName || quote.supplier_name || ''}</td>
-                                <td>${quote.SupplierContact || ''}</td>
-                                <td>${quote.SupplierPhone || quote.supplier_phone || ''}</td>
-                                <td>${quote.Price || quote.amount || ''}</td>
-                                <td>
-                                    <select class="form-select form-select-sm" data-id="${quote.quote_id || quote.id || ''}" onchange="updateQuoteStatus(this)">
-                                        <option value="接洽中" ${(quote.Status||quote.status) === '接洽中' ? 'selected' : ''}>接洽中</option>
-                                        <option value="已中标" ${(quote.Status||quote.status) === '已中标' ? 'selected' : ''}>已中标</option>
-                                        <option value="未中标" ${(quote.Status||quote.status) === '未中标' ? 'selected' : ''}>未中标</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <button class="btn btn-danger btn-sm" onclick="deleteQuote('${quote.quote_id || quote.id || ''}')">删除</button>
-                                </td>
-                            </tr>
-                        `).join('');
-                    })
-                    .catch(() => {
-                        quotesList.innerHTML = '<tr><td colspan="6" class="text-danger">无法加载报价列表，请检查 Cloudflare Workers/D1 或本地 dev 环境。</td></tr>';
-                    });
-            }
-
-        // Export quotes to CSV
-        if (exportCsvBtn) {
-        exportCsvBtn.addEventListener('click', () => {
-          let csvContent = "data:text/csv;charset=utf-8,";
-          csvContent += "供应商,联系人,电话,报价(元),状态\n";
-          currentQuotes.forEach(quote => {
-            csvContent += `${quote.SupplierCompanyName},${quote.SupplierContact},${quote.SupplierPhone},${quote.Price},${quote.Status}\n`;
-          });
-
-          const encodedUri = encodeURI(csvContent);
-          const link = document.createElement("a");
-          link.setAttribute("href", encodedUri);
-          link.setAttribute("download", "quotes.csv");
-          document.body.appendChild(link);
-          link.click();
-        });
-        }
-        // 导出为 Excel（兼容 .xls）
-        (function addXlsExport(){
-          try {
-            const exportXlsBtn = document.createElement('button');
-            exportXlsBtn.className = 'btn btn-outline-success btn-sm ms-2';
-            exportXlsBtn.innerHTML = '<i class="fa-solid fa-file-excel me-1"></i> 导出为 Excel';
-            exportCsvBtn?.parentElement?.insertBefore(exportXlsBtn, exportCsvBtn?.nextSibling);
-            exportXlsBtn.addEventListener('click', () => {
-              const rows = (currentQuotes||[]).map(q =>
-                `<tr><td>${q.SupplierCompanyName||''}</td><td>${q.SupplierContact||''}</td><td>${q.SupplierPhone||''}</td><td>${q.Price||''}</td><td>${q.Status||''}</td></tr>`
-              ).join('');
-              const html = `<!DOCTYPE html><html><head><meta charset="utf-8" /></head><body><table border="1"><thead><tr><th>供应商</th><th>联系人</th><th>电话</th><th>报价(元)</th><th>状态</th></tr></thead><tbody>${rows}</tbody></table></body></html>`;
-              const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
-              const url = URL.createObjectURL(blob);
-              const a = document.createElement('a'); a.href = url; a.download = 'quotes.xls';
-              document.body.appendChild(a); a.click();
-              setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 0);
-            });
-          } catch {}
-        })();
-        });
-
-        // Update quote status
-        function updateQuoteStatus(selectElement) {
-            const quoteId = selectElement.dataset.id;
-            const status = selectElement.value;
-            window.apiFetch(`/api/quotes/${encodeURIComponent(quoteId)}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status }),
-            }).then(() => {
-                // 状态更新成功（可选：提示）
-            }).catch(() => {
-                alert('更新状态失败，请检查 Cloudflare API 配置');
-            });
-        }
-
-        // Delete quote
-        function deleteQuote(quoteId) {
-            if (confirm('Are you sure you want to delete this quote?')) {
-                window.apiFetch(`/api/quotes/${encodeURIComponent(quoteId)}`, {
-                    method: 'DELETE',
-                    headers: {},
-                }).then(() => {
-                    // Reload quotes
-                    const active = document.querySelector('#requirementsList .list-group-item.active');
-                    const requirementID = active ? active.dataset.id : '';
-                    if (requirementID) window.loadQuotes(requirementID);
-                }).catch(() => {
-                    alert('删除失败，请检查 Cloudflare API 配置');
-                });
-            }
-        }
-    </script>
-    <script>
-    // 侧栏与 offcanvas 导航联动：平滑滚动 + 高亮
-    (function() {
-      const sideNav = document.querySelector('.admin-sidenav .nav');
-      const offNav = document.querySelector('#adminOffcanvas .nav');
-      const links = document.querySelectorAll('.admin-sidenav .nav-link, #adminOffcanvas .nav-link');
-      const ids = ['overview','requirements','quotes','settings'];
-      const sections = ids.map(id => document.getElementById(id)).filter(Boolean);
-
-      links.forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          const id = link.getAttribute('href').replace('#','');
-          const el = document.getElementById(id);
-          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          const offEl = document.getElementById('adminOffcanvas');
-          if (offEl && offEl.classList.contains('show')) {
-            try { new bootstrap.Offcanvas(offEl).hide(); } catch(_) {}
-          }
-        });
-      });
-
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const id = entry.target.id;
-            document.querySelectorAll('.admin-sidenav .nav-link, #adminOffcanvas .nav-link').forEach(a => {
-              a.classList.toggle('active', a.getAttribute('href') === '#' + id);
-            });
-          }
-        });
-      }, { root: null, threshold: 0.25, rootMargin: '0px 0px -55% 0px' });
-
-      sections.forEach(sec => io.observe(sec));
-    })();
-    </script>
-<script>
-// 管理员面板逻辑（独立脚本块）
-(() => {
-  // 新版管理UI存在时，跳过旧版面板逻辑，避免重复绑定与报错
-  if (document.getElementById('requirementsSection')) {
-    return;
-  }
-  const adminLoginBtn = document.getElementById('adminLoginBtn');
-  const adminRequirementsBody = document.getElementById('adminRequirementsBody');
-  const applyAllBtn = document.getElementById('applyAllBtn');
-  let adminKey = '';
-
-  if (adminLoginBtn) {
-    adminLoginBtn.addEventListener('click', async () => {
-      adminKey = document.getElementById('adminKeyInput').value.trim();
-      if (!adminKey) { alert('请输入管理员密钥'); return; }
-      try {
-        // 持久化并同步全局密钥，后续统一由 apiFetch 自动附加
-        try { window.ADMIN_KEY = adminKey; localStorage.setItem('ADMIN_KEY', adminKey); } catch {}
-        const resp = await window.apiFetch('/api/admin/requirements');
-        const data = await resp.json();
-        if (!resp.ok) throw new Error((data.error || '加载失败') + (data.detail ? ('：' + data.detail) : ''));
-                    const items = data.items || [];
-                    window.adminItems = items;
-                    const renderAdminRows = (list) => {
-                      adminRequirementsBody.innerHTML = list.map(item => `
-                        <tr data-id="${item.RequirementID}">
-                            <td>${item.RequirementID}</td>
-                            <td class="text-truncate" style="max-width:160px;" title="${item.Title || ''}">${item.Title || ''}</td>
-                            <td>${item.Status || ''}</td>
-                            <td>${item.Progress || ''}</td>
-                            <td>
-                                <select class="form-select form-select-sm allow-open-select">
-                                    <option value="true" ${item.AllowOpenQuotes ? 'selected' : ''}>开启</option>
-                                    <option value="false" ${!item.AllowOpenQuotes ? 'selected' : ''}>关闭</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-select form-select-sm contact-public-select">
-                                    <option value="true" ${item.ContactPublic ? 'selected' : ''}>公开（脱敏）</option>
-                                    <option value="false" ${!item.ContactPublic ? 'selected' : ''}>不公开</option>
-                                </select>
-                            </td>
-                            <td><input type="text" class="form-control form-control-sm plain-pw" value="${item.ViewPasswordPlain || ''}" placeholder="明文密码"></td>
-                            <td class="small text-muted">${(item.ViewPasswordHash || '').slice(0, 12)}...</td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-primary" onclick="updateRequirementRow(this)">更新当前</button>
-                            </td>
-                        </tr>
-                    `).join('');
-                    };
-                    const adminSearchInput = document.getElementById('adminSearchInput');
-                    const onlyOpenAdmin = document.getElementById('onlyOpenAdmin');
-                    const onlyMaskedAdmin = document.getElementById('onlyMaskedAdmin');
-                    const adminStatusFilter = document.getElementById('adminStatusFilter');
-                    const adminProgressFilter = document.getElementById('adminProgressFilter');
-                    // 恢复筛选持久化
-                    try {
-                      const saved = JSON.parse(localStorage.getItem('adminFilters')||'{}');
-                      if (saved.search && adminSearchInput) adminSearchInput.value = saved.search;
-                      if (typeof saved.onlyOpen==='boolean' && onlyOpenAdmin) onlyOpenAdmin.checked = saved.onlyOpen;
-                      if (typeof saved.onlyMasked==='boolean' && onlyMaskedAdmin) onlyMaskedAdmin.checked = saved.onlyMasked;
-                      if (saved.status) adminStatusFilter.value = saved.status;
-                      if (saved.progress) adminProgressFilter.value = saved.progress;
-                    } catch {}
-                    const applyAdminFilter = () => {
-                      const q = (adminSearchInput?.value || '').trim().toLowerCase();
-                      const onlyOpen = !!onlyOpenAdmin?.checked;
-                      const onlyMasked = !!onlyMaskedAdmin?.checked;
-                      const statusSel = adminStatusFilter?.value || '';
-                      const progressSel = adminProgressFilter?.value || '';
-                      const filtered = (window.adminItems||[]).filter(it => {
-                        const id = (it.RequirementID || '').toLowerCase();
-                        const title = (it.Title || '').toLowerCase();
-                        const matchText = !q || id.includes(q) || title.includes(q);
-                        const matchOpen = !onlyOpen || !!it.AllowOpenQuotes;
-                        const matchMasked = !onlyMasked || !!it.ContactPublic;
-                        const matchStatus = !statusSel || (it.Status || '') === statusSel;
-                        const matchProgress = !progressSel || (it.Progress || '') === progressSel;
-                        return matchText && matchOpen && matchMasked && matchStatus && matchProgress;
-                      });
-                      renderAdminRows(filtered);
-                    };
-                    const persistFilters = () => {
-                      try {
-                        localStorage.setItem('adminFilters', JSON.stringify({
-                          search: adminSearchInput?.value || '',
-                          onlyOpen: !!onlyOpenAdmin?.checked,
-                          onlyMasked: !!onlyMaskedAdmin?.checked,
-                          status: adminStatusFilter?.value || '',
-                          progress: adminProgressFilter?.value || ''
-                        }));
-                      } catch {}
-                    };
-                    adminSearchInput?.addEventListener('input', () => { persistFilters(); applyAdminFilter(); });
-                    onlyOpenAdmin?.addEventListener('change', () => { persistFilters(); applyAdminFilter(); });
-                    onlyMaskedAdmin?.addEventListener('change', () => { persistFilters(); applyAdminFilter(); });
-                    adminStatusFilter?.addEventListener('change', () => { persistFilters(); applyAdminFilter(); });
-                    adminProgressFilter?.addEventListener('change', () => { persistFilters(); applyAdminFilter(); });
-                    renderAdminRows(items);
-      } catch (e) {
-        alert(e.message || '管理员接口调用失败');
-      }
-    });
-  }
-
-  if (applyAllBtn) {
-    applyAllBtn.addEventListener('click', async () => {
-      const persistedKey = (typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY) || (localStorage.getItem('ADMIN_KEY') || '');
-      if (!persistedKey) { alert('请先输入管理员密钥并点击“加载管理”'); return; }
-      const pw = document.getElementById('globalPasswordInput').value.trim();
-                const allowSel = document.getElementById('globalAllowOpenQuotes').value;
-                const contactSel = document.getElementById('globalContactPublic')?.value || '';
-                const payload = { applyToAll: true };
-                if (pw) payload.newPasswordPlain = pw;
-                if (allowSel === 'true') payload.allowOpenQuotes = true;
-                if (allowSel === 'false') payload.allowOpenQuotes = false;
-                if (contactSel === 'true') payload.contactPublic = true;
-                if (contactSel === 'false') payload.contactPublic = false;
-      try {
-        const resp = await window.apiFetch('/api/admin/requirements', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const data = await resp.json();
-        if (!resp.ok) throw new Error(data.error || '更新失败');
-        alert(`已更新 ${data.updated} 条需求`);
-      } catch (e) {
-        alert(e.message);
-      }
-    });
-  }
-})();
-
-// 单条更新函数（暴露到全局以供按钮调用）
-async function updateRequirementRow(btn) {
-  const tr = btn.closest('tr');
-  const reqId = tr?.dataset?.id || '';
-  const plainPw = tr?.querySelector('.plain-pw')?.value.trim() || '';
-  const allowOpen = tr?.querySelector('.allow-open-select')?.value === 'true';
-  const persistedKey = (typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY) || (localStorage.getItem('ADMIN_KEY') || '');
-  if (!reqId || !persistedKey) { alert('请确保需求编号与管理员密钥有效'); return; }
-  const payload = { requirementID: reqId, allowOpenQuotes: allowOpen };
-  if (plainPw) payload.newPasswordPlain = plainPw;
-  try {
-    const resp = await window.apiFetch('/api/admin/requirements', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    const data = await resp.json();
-    if (!resp.ok) throw new Error(data.error || '更新失败');
-    alert('已更新当前需求设置');
-  } catch (e) {
-    alert(e.message);
-  }
-}
-</script>
-<!-- Bootstrap JS（offcanvas/scrollspy） -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script>
-// 管理页：追加 XLSX 导出按钮（依赖 SheetJS）
-document.addEventListener('DOMContentLoaded', () => {
-  try {
-    const exportCsvBtn = document.getElementById('exportCsvBtn');
-    if (!exportCsvBtn || !window.XLSX) return;
-    const exportXlsxBtn = document.createElement('button');
-    exportXlsxBtn.className = 'btn btn-success btn-sm ms-2';
-    exportXlsxBtn.id = 'exportXlsxBtn';
-    exportXlsxBtn.innerHTML = '<i class="fa-solid fa-file-excel me-1"></i> 导出为 XLSX';
-    exportCsvBtn.parentElement?.insertBefore(exportXlsxBtn, exportCsvBtn.nextSibling);
-    exportXlsxBtn.addEventListener('click', () => {
-      const rows = (window.currentQuotes||[]).map(q => ({
-        供应商: q.SupplierCompanyName||'',
-        联系人: q.SupplierContact||'',
-        电话: q.SupplierPhone||'',
-        报价: q.Price||'',
-        状态: q.Status||''
-      }));
-      const wb = XLSX.utils.book_new();
-      const ws = XLSX.utils.json_to_sheet(rows);
-      XLSX.utils.book_append_sheet(wb, ws, '报价');
-      XLSX.writeFile(wb, 'quotes.xlsx');
-    });
-  } catch {}
-});
-</script>
-<script>
-// 系统设置：与后端 SystemConfig 联动
-document.addEventListener('DOMContentLoaded', () => {
-  const exportCsvBtn = document.getElementById('exportCsvBtn');
-  const exportXlsxBtn = document.getElementById('exportXlsxBtn');
-  const defaultExportFormat = document.getElementById('defaultExportFormat');
-  const defaultMaskedFilter = document.getElementById('defaultMaskedFilter');
-  const notifyEmail = document.getElementById('notifyEmail');
-  const notifySms = document.getElementById('notifySms');
-  const saveBtn = document.getElementById('saveAdminSettings');
-  const hint = document.getElementById('saveSettingsHint');
-
-  function applySettingsToUI(s){
-    if (!s) return;
-    if (defaultExportFormat) defaultExportFormat.value = s.DefaultExportFormat || s.defaultExportFormat || 'csv';
-    if (typeof s.DefaultMaskedFilter !== 'undefined' && defaultMaskedFilter) defaultMaskedFilter.checked = !!s.DefaultMaskedFilter;
-    if (typeof s.NotifyEmailEnabled !== 'undefined' && notifyEmail) notifyEmail.checked = !!s.NotifyEmailEnabled;
-    if (typeof s.NotifySmsEnabled !== 'undefined' && notifySms) notifySms.checked = !!s.NotifySmsEnabled;
-    // 导出按钮高亮切换
-    if (exportCsvBtn && exportXlsxBtn) {
-      const useCsv = (defaultExportFormat.value || 'csv') === 'csv';
-      exportCsvBtn.classList.toggle('btn-primary', useCsv);
-      exportCsvBtn.classList.toggle('btn-outline-primary', !useCsv);
-      exportXlsxBtn.classList.toggle('btn-outline-success', useCsv);
-    }
-    // 默认启用“仅联系方式脱敏”筛选
-    try {
-      const onlyMaskedAdmin = document.getElementById('onlyMaskedAdmin');
-      if (onlyMaskedAdmin && typeof s.DefaultMaskedFilter === 'boolean') {
-        onlyMaskedAdmin.checked = s.DefaultMaskedFilter;
-        onlyMaskedAdmin.dispatchEvent(new Event('change'));
-      }
-    } catch {}
-  }
-
-  async function loadSystemConfig() {
-    const key = (typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY) || (localStorage.getItem('ADMIN_KEY') || '');
-    if (!key) return;
-    try {
-      const resp = await window.apiFetch('/api/admin/system-config');
-      const data = await resp.json();
-      if (resp.ok && data && data.config) {
-        applySettingsToUI(data.config);
-      }
-    } catch {}
-  }
-
-  // 在“加载管理”后加载一次系统配置
-  document.getElementById('adminLoginBtn')?.addEventListener('click', () => {
-    setTimeout(loadSystemConfig, 300);
-  });
-
-  saveBtn?.addEventListener('click', async () => {
-    const key = (typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY) || (localStorage.getItem('ADMIN_KEY') || '');
-    if (!key) { alert('请先输入管理员密钥并点击“加载管理”'); return; }
-    const payload = {
-      SupplierGlobalPassword: document.getElementById('supplierGlobalPasswordInput')?.value || '',
-      DefaultExportFormat: defaultExportFormat?.value || 'csv',
-      DefaultMaskedFilter: !!defaultMaskedFilter?.checked,
-      NotifyEmailEnabled: !!notifyEmail?.checked,
-      NotifySmsEnabled: !!notifySms?.checked,
-    };
-    try {
-      const resp = await window.apiFetch('/api/admin/system-config', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const data = await resp.json();
-      if (!resp.ok) throw new Error(data.error || '保存失败');
-      hint.textContent = '已保存';
-      setTimeout(() => { hint.textContent = ''; }, 1500);
-    } catch (e) {
-      alert(e.message || '保存失败');
-    }
-  });
-});
-</script>
-<script>
-// 管理页新逻辑：登录、侧边切换、需求列表、需求方与供应商
-(() => {
-  let ADMIN_KEY = '';
-  let reqOffsetNext = '';
-  let reqOffsetStack = [];
-  let requirementsCache = [];
-
-  // 统一字段大小写与命名，避免后端返回 snake_case/camelCase 不一致导致“undefined”
-  function normalizeRequirement(it){
-    const n = {
-      RequirementID: it.RequirementID || it.requirement_id || it.id || '',
-      Title: it.Title || it.title || '',
-      Status: it.Status || it.status || '',
-      Progress: it.Progress || it.progress || '',
-      PrimaryCategory: it.PrimaryCategory || it.primary_category || '',
-      SecondaryCategory: it.SecondaryCategory || it.secondary_category || '',
-      BudgetRange: it.BudgetRange || it.budget_range || '',
-      ProcurementPlan: it.ProcurementPlan || it.procurement_plan || '',
-      Parameters: it.Parameters || it.parameters_json || {},
-      AllowOpenQuotes: (typeof it.AllowOpenQuotes !== 'undefined') ? !!it.AllowOpenQuotes : !!it.allow_open_quotes,
-      ContactPublic: (typeof it.ContactPublic !== 'undefined') ? !!it.ContactPublic : !!it.contact_public,
-      ContactCompany: it.ContactCompany || it.contact_company || '',
-      ContactName: it.ContactName || it.contact_name || '',
-      ContactPhone: it.ContactPhone || it.contact_phone || '',
-      ContactEmail: it.ContactEmail || it.contact_email || '',
-      ContactDepartment: it.ContactDepartment || it.contact_department || '',
-      ViewPasswordPlain: it.ViewPasswordPlain || it.view_password_plain || '',
-      ViewPasswordHash: it.ViewPasswordHash || it.view_password_hash || '',
-      PublicPreview: it.PublicPreview || it.public_preview || '',
-      PublishedAt: it.PublishedAt || it.published_at || '',
-      Approved: (function(){
-        const a = (typeof it.Approved !== 'undefined') ? it.Approved : it.approved;
-        if (typeof a === 'boolean') return a;
-        if (typeof a === 'number') return a === 1;
-        if (typeof a === 'string') return a === '1' || a.toLowerCase() === 'true';
-        return false;
-      })(),
-      ApprovedAt: it.ApprovedAt || it.approved_at || ''
-    };
-    return n;
-  }
-
-  function escapeHtml(s){return String(s).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;' }[m]));}
-
-  function formatDate(input){
-    if (!input) return '';
-    const d = new Date(input);
-    if (isNaN(d.getTime())) return '';
-    try {
-      if (Intl?.DateTimeFormat?.prototype?.formatToParts) {
-        const parts = new Intl.DateTimeFormat('zh-CN', { year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', hour12:false }).formatToParts(d);
-        const get = (t)=> parts.find(p=>p.type===t)?.value || '';
-        return `${get('year')}-${get('month')}-${get('day')} ${get('hour')}:${get('minute')}`;
-      }
-    } catch {}
-    const y = d.getFullYear();
-    const m = String(d.getMonth()+1).padStart(2,'0');
-    const day = String(d.getDate()).padStart(2,'0');
-    const hh = String(d.getHours()).padStart(2,'0');
-    const mm = String(d.getMinutes()).padStart(2,'0');
-    return `${y}-${m}-${day} ${hh}:${mm}`;
-  }
-
-  // 侧边/抽屉菜单切换（兼容左侧栏与 offcanvas）
-  const bindTabSwitch = (rootSel) => {
-    document.querySelectorAll(`${rootSel} .nav-link`).forEach(a => a.addEventListener('click', (e)=>{
-      e.preventDefault();
-      const tab=a.dataset.tab;
-      ['requirementsSection','demandersSection','suppliersSection'].forEach(id => {
-        const el=document.getElementById(id);
-        if (el) el.style.display = (id===tab) ? '' : 'none';
-      });
-      document.querySelectorAll(`${rootSel} .nav-link`).forEach(b => b.classList.toggle('active', b===a));
-    }));
-  };
-  bindTabSwitch('aside');
-  bindTabSwitch('#adminOffcanvas');
-  // 初始激活需求列表
-  document.querySelectorAll('aside .nav-link, #adminOffcanvas .nav-link').forEach(a => a.classList.toggle('active', a.dataset.tab==='requirementsSection'));
-  const reqSec=document.getElementById('requirementsSection');
-  const demSec=document.getElementById('demandersSection');
-  const supSec=document.getElementById('suppliersSection');
-  if (reqSec) reqSec.style.display='';
-  if (demSec) demSec.style.display='none';
-  if (supSec) supSec.style.display='none';
-
-  // 展示已登录界面（隐藏欢迎页）
-  function showAdminUI(){
-    const welcomeScreen = document.getElementById('welcomeScreen');
-    const adminApp = document.getElementById('adminApp');
-    if (welcomeScreen) welcomeScreen.style.display='none';
-    if (adminApp) adminApp.style.display='block';
-    // 隐藏旧版块，避免视觉冲突
-    try { const legacy = document.getElementById('requirements')?.closest('.row'); if (legacy) legacy.style.display = 'none'; } catch {}
-  }
-
-  // 自动登录：从本地存储读取管理员密钥，验证通过后直接进入管理页
-  async function autoLogin(){
-    if (!ADMIN_KEY) return;
-    try {
-      const resp = await window.apiFetch('/api/admin/requirements?limit=1', { headers: { 'X-Admin-Key': ADMIN_KEY } });
-      const text = await resp.text();
-      let data; try { data = JSON.parse(text); } catch { throw new Error('管理员接口不可用或返回非JSON'); }
-      if (!resp.ok) throw new Error(data.error || '验证失败');
-      showAdminUI();
-      await loadRequirementsPage(true);
-      loadSuppliers();
-    } catch (e) {
-      // 验证失败则清理失效的本地密钥
-      try { localStorage.removeItem('ADMIN_KEY'); } catch {}
-      ADMIN_KEY = '';
-    }
-  }
-
-  // 尝试从本地存储恢复管理员密钥（解决刷新/返回后退出的问题）
-  try {
-    const saved = localStorage.getItem('ADMIN_KEY') || '';
-    if (saved) { ADMIN_KEY = saved; autoLogin(); }
-  } catch {}
-
-  // 登录
-  const adminLoginBtn = document.getElementById('adminLoginBtn');
-  adminLoginBtn?.addEventListener('click', async () => {
-    const key = document.getElementById('adminKeyInput')?.value.trim();
-    if (!key) { alert('请输入管理员密钥'); return; }
-    try {
-      const resp = await window.apiFetch('/api/admin/requirements?limit=1', { headers: { 'X-Admin-Key': key } });
-      const text = await resp.text();
-      let data;
-      try { data = JSON.parse(text); } catch {
-        throw new Error('管理员接口不可用或返回非JSON，请检查 Cloudflare Workers/D1 部署或本地 dev 环境。');
-      }
-      if (!resp.ok) throw new Error((data.error || '验证失败') + (data.detail ? ('：' + data.detail) : ''));
-      ADMIN_KEY = key;
-      // 登录成功后持久化密钥，避免刷新或返回后退出
-      try { localStorage.setItem('ADMIN_KEY', key); } catch {}
-      showAdminUI();
-      await loadRequirementsPage(true);
-      // 预加载供应商
-      loadSuppliers();
-    } catch (e) {
-      alert(e.message || '管理员验证失败');
-    }
-  });
-
-  // 需求列表加载
-  async function loadRequirementsPage(initial=false){
-    const tbody = document.getElementById('reqTableBody');
-    const pageHint = document.getElementById('reqPageHint');
-    if (tbody) tbody.innerHTML = '<tr><td colspan="7" class="text-muted">加载中...</td></tr>';
-    const q = document.getElementById('reqSearchInput')?.value.trim() || '';
-    const statusSel = document.getElementById('reqStatusFilter')?.value || '';
-    const openSel = document.getElementById('reqOpenFilter')?.value || '';
-    const contactSel = document.getElementById('reqContactFilter')?.value || '';
-    const params = new URLSearchParams();
-    if (q) params.set('q', q);
-    if (statusSel) params.set('status', statusSel);
-    if (openSel) params.set('open', openSel);
-    if (contactSel) params.set('contact', contactSel);
-    params.set('limit', '20');
-    if (!initial && reqOffsetNext) params.set('offset', reqOffsetNext);
-    try {
-      const resp = await window.apiFetch(`/api/admin/requirements?${params.toString()}`, { headers: { 'X-Admin-Key': ADMIN_KEY } });
-      const text = await resp.text();
-      let data;
-      try { data = JSON.parse(text); } catch { throw new Error('管理员接口不可用或返回非JSON，请启动函数服务'); }
-      if (!resp.ok) throw new Error(data.error || '加载失败');
-      const items = data.items || [];
-      reqOffsetNext = data.offsetNext || '';
-      if (initial) { reqOffsetStack = []; }
-      requirementsCache = items.map(normalizeRequirement);
-      renderRequirements(requirementsCache);
-      updateStats(requirementsCache);
-      const prevBtn = document.getElementById('reqPrevPage');
-      const nextBtn = document.getElementById('reqNextPage');
-      if (prevBtn) prevBtn.disabled = reqOffsetStack.length === 0;
-      if (nextBtn) nextBtn.disabled = !reqOffsetNext;
-      if (pageHint) pageHint.textContent = `当前页：${items.length} 条，${reqOffsetNext ? '可下一页' : '无更多'}`;
-    } catch (e) {
-      if (tbody) tbody.innerHTML = `<tr><td colspan="7" class="text-danger">${e.message}</td></tr>`;
-    }
-  }
-
-  function renderRequirements(list){
-    const tbody=document.getElementById('reqTableBody');
-    if (!tbody) return;
-    let viewList = list;
-    try {
-      if (window.quickFilterMode === 'approved') {
-        viewList = list.filter(r => normalizeRequirement(r).Approved);
-      } else if (window.quickFilterMode === 'progress_active') {
-        viewList = list.filter(r => {
-          const x = normalizeRequirement(r).Progress || '';
-          return x === '发布中' || x === '接洽中';
-        });
-      }
-    } catch {}
-    try {
-      if (window.reqSortKey) {
-        const key = String(window.reqSortKey);
-        const order = String(window.reqSortOrder||'desc');
-        const arr = Array.from(viewList);
-        viewList = arr.sort((a,b)=>{
-          const na = normalizeRequirement(a);
-          const nb = normalizeRequirement(b);
-          let va = na[key];
-          let vb = nb[key];
-          if (key === 'PublishedAt') {
-            va = new Date(na.PublishedAt||'').getTime()||0;
-            vb = new Date(nb.PublishedAt||'').getTime()||0;
-          }
-          if (typeof va === 'string' && typeof vb === 'string') {
-            const cmp = va.localeCompare(vb);
-            return order==='asc' ? cmp : -cmp;
-          }
-          const diff = (va||0) - (vb||0);
-          return order==='asc' ? diff : -diff;
-        });
-      }
-    } catch {}
-    tbody.innerHTML = viewList.map(raw => {
-      const item = normalizeRequirement(raw);
-      const id = item.RequirementID;
-      const online = !!item.AllowOpenQuotes;
-      const contactP = !!item.ContactPublic;
-      const pubText = (function(){
-        const f = formatDate(item.PublishedAt||'');
-        return f && f.trim() ? f : '—';
-      })();
-      return `<tr data-id="${escapeHtml(id)}">
-        <td>${escapeHtml(id || '—')}</td>
-        <td class="text-truncate" title="${escapeHtml(item.Title||'未命名')}">${escapeHtml(item.Title||'未命名')}</td>
-        <td>
-          <select class="form-select form-select-sm req-status" data-prev="${escapeHtml(item.Status||'')}">
-            <option value="公开" ${item.Status==='公开'?'selected':''}>公开</option>
-            <option value="在线报价" ${item.Status==='在线报价'?'selected':''}>在线报价</option>
-            <option value="隐私" ${item.Status==='隐私'?'selected':''}>隐私</option>
-            <option value="关闭" ${item.Status==='关闭'?'selected':''}>关闭</option>
-          </select>
-        </td>
-        <td>
-          <select class="form-select form-select-sm req-progress" data-prev="${escapeHtml(item.Progress||'')}">
-            <option value="发布中" ${item.Progress==='发布中'?'selected':''}>发布中</option>
-            <option value="接洽中" ${item.Progress==='接洽中'?'selected':''}>接洽中</option>
-            <option value="已完成" ${item.Progress==='已完成'?'selected':''}>已完成</option>
-          </select>
-        </td>
-        <td class="text-truncate" title="${escapeHtml(item.PrimaryCategory||'')}">${escapeHtml(item.PrimaryCategory||'')}</td>
-        <td class="text-truncate" title="${escapeHtml(item.BudgetRange||'')}">${escapeHtml(item.BudgetRange||'')}</td>
-        <td>${escapeHtml(pubText)}</td>
-        <td>
-          <div class="form-check form-switch">
-            <input class="form-check-input req-open-toggle" type="checkbox" ${online?'checked':''}>
-          </div>
-        </td>
-        <td>
-          <div class="form-check form-switch">
-            <input class="form-check-input req-contact-toggle" type="checkbox" ${contactP?'checked':''}>
-          </div>
-        </td>
-        <td>
-          <button class="btn btn-sm ${item.Approved ? 'btn-success' : 'btn-outline-secondary'}" data-action="toggleApproved">${item.Approved ? '已批准' : '未批准'}</button>
-        </td>
-        <td data-qcount="loading">—</td>
-        <td>
-          <button class="btn btn-sm btn-outline-primary me-1" data-action="detail" ${id?'':'disabled'}>详情</button>
-          <button class="btn btn-sm btn-outline-secondary" data-action="quotes" ${id?'':'disabled'}>报价</button>
-          <button class="btn btn-sm btn-outline-danger ms-1" data-action="delete" ${id?'':'disabled'}>删除</button>
-        </td>
-      </tr>`;
-    }).join('');
-    tbody.querySelectorAll('tr').forEach(tr => {
-      const id=tr.dataset.id;
-      if (id) { loadQuoteCount(id, tr); }
-      tr.querySelector('[data-action="detail"]')?.addEventListener('click', ()=>{ if(id) showRequirementDetail(id); });
-      tr.querySelector('[data-action="quotes"]')?.addEventListener('click', ()=>{ if(id) showQuotesModal(id); });
-      const sel = tr.querySelector('.req-status');
-      if (sel && id){
-        sel.addEventListener('change', async ()=>{
-          const prev = sel.getAttribute('data-prev') || '';
-          const next = String(sel.value||'');
-          sel.disabled = true;
-          const ok = await updateRequirementStatus(id, next);
-          if (ok){
-            sel.setAttribute('data-prev', next);
-            try { loadRequirementsPage(true); } catch {}
-          } else {
-            sel.value = prev;
-          }
-          sel.disabled = false;
-        });
-      }
-      tr.querySelector('[data-action="toggleApproved"]')?.addEventListener('click', async ()=>{
-        if(!id) return;
-        const cur = (requirementsCache||[]).find(x=>x.RequirementID===id);
-        const newApproved = !(cur?.Approved);
-        try {
-          const r = await window.apiFetch(`/api/admin/requirements/${encodeURIComponent(id)}`, { method:'PATCH', headers:{ 'Content-Type':'application/json','X-Admin-Key': ADMIN_KEY }, body: JSON.stringify({ approved: newApproved ? 1 : 0, approved_at: newApproved ? new Date().toISOString() : null }) });
-          const dj = await r.json(); if(!r.ok) throw new Error(dj.error||'更新失败');
-          const btn = tr.querySelector('[data-action="toggleApproved"]');
-          if (btn) { btn.textContent = newApproved ? '已批准' : '未批准'; btn.className = 'btn btn-sm ' + (newApproved ? 'btn-success' : 'btn-outline-secondary'); }
-          if (cur) cur.Approved = newApproved;
-          updateStats(requirementsCache);
-        } catch(e) {
-          alert(e.message || '更新失败');
-        }
-      });
-      tr.querySelector('[data-action="delete"]')?.addEventListener('click', async ()=>{
-        if(!id) return;
-        if (!ADMIN_KEY) { alert('请先输入管理员密钥并登录'); return; }
-        const ok = confirm('确定要删除该需求吗？此操作不可撤销。');
-        if (!ok) return;
-        try {
-          const r = await window.apiFetch(`/api/admin/requirements/${encodeURIComponent(id)}`, { method:'DELETE', headers:{ 'X-Admin-Key': ADMIN_KEY } });
-          let dj = {}; try { dj = await r.json(); } catch {}
-          if (!r.ok) throw new Error(dj.error || '删除失败');
-          tr.remove();
-          requirementsCache = (requirementsCache||[]).filter(x=>x.RequirementID!==id);
-          updateStats(requirementsCache);
-        } catch(e) {
-          alert(e.message || '删除失败');
-        }
-      });
-    });
-    try { renderRequirementCards(list); } catch {}
-  }
-
-  function renderRequirementCards(list){
-    const grid = document.getElementById('reqCardGrid');
-    if (!grid) return;
-    let viewList = list;
-    try {
-      if (window.quickFilterMode === 'approved') {
-        viewList = list.filter(r => normalizeRequirement(r).Approved);
-      } else if (window.quickFilterMode === 'progress_active') {
-        viewList = list.filter(r => {
-          const x = normalizeRequirement(r).Progress || '';
-          return x === '发布中' || x === '接洽中';
-        });
-      }
-    } catch {}
-    grid.innerHTML = viewList.map(raw => {
-      const item = normalizeRequirement(raw);
-      const id = item.RequirementID;
-      const tags = [
-        item.AllowOpenQuotes ? '<span class="badge bg-success me-1">开放报价</span>' : '<span class="badge bg-secondary me-1">需密码</span>',
-        item.ContactPublic ? '<span class="badge bg-info text-dark me-1">公开联系方式</span>' : ''
-      ].join('');
-      const pubText = (function(){ const f = formatDate(item.PublishedAt||''); return f && f.trim() ? f : '—'; })();
-      return `<div class="col"><div class="card h-100"><div class="card-body d-flex flex-column">
-        <div class="d-flex align-items-center justify-content-between mb-2"><div class="small text-muted">${id||'—'}</div><div>${tags}</div></div>
-        <div class="fw-semibold mb-1 text-truncate" title="${escapeHtml(item.Title||'未命名')}">${escapeHtml(item.Title||'未命名')}</div>
-        <div class="small text-muted mb-2">状态：${escapeHtml(item.Status||'')} · 进度：${escapeHtml(item.Progress||'')}</div>
-        <div class="small">分类：${escapeHtml(item.PrimaryCategory||'')}<span class="text-muted">${item.SecondaryCategory?(' / '+escapeHtml(item.SecondaryCategory)):''}</span></div>
-        <div class="small">预算：${escapeHtml(item.BudgetRange||'')}</div>
-        <div class="small text-muted">发布时间：${escapeHtml(pubText)}</div>
-        <div class="mt-auto d-flex gap-2"><button class="btn btn-sm btn-outline-primary" data-action="detail" data-id="${escapeHtml(id)}" ${id?'':'disabled'}>详情</button><button class="btn btn-sm btn-outline-secondary" data-action="quotes" data-id="${escapeHtml(id)}" ${id?'':'disabled'}>报价</button></div>
-      </div></div></div>`;
-    }).join('');
-    grid.querySelectorAll('button[data-action="detail"]').forEach(btn => {
-      btn.addEventListener('click', () => { const id = btn.getAttribute('data-id')||''; if (id) showRequirementDetail(id); });
-    });
-    grid.querySelectorAll('button[data-action="quotes"]').forEach(btn => {
-      btn.addEventListener('click', () => { const id = btn.getAttribute('data-id')||''; if (id) showQuotesModal(id); });
-    });
-  }
-
-  try {
-    const btnTable = document.getElementById('reqViewTable');
-    const btnCards = document.getElementById('reqViewCards');
-    const tableWrap = document.querySelector('#requirementsSection .table-responsive');
-    const grid = document.getElementById('reqCardGrid');
-    if (btnTable && btnCards && tableWrap && grid) {
-      btnTable.addEventListener('click', () => {
-        btnTable.classList.add('active');
-        btnCards.classList.remove('active');
-        tableWrap.classList.remove('d-none');
-        grid.classList.add('d-none');
-      });
-      btnCards.addEventListener('click', () => {
-        btnCards.classList.add('active');
-        btnTable.classList.remove('active');
-        renderRequirementCards(requirementsCache||[]);
-        tableWrap.classList.add('d-none');
-        grid.classList.remove('d-none');
-      });
-    }
-  } catch {}
-
-  try {
-    window.reqSortKey = '';
-    window.reqSortOrder = 'desc';
-    const hId = document.getElementById('reqSortId');
-    const hPub = document.getElementById('reqSortPublished');
-    if (hId) {
-      hId.style.cursor = 'pointer';
-      hId.addEventListener('click', ()=>{
-        if (window.reqSortKey === 'RequirementID') {
-          window.reqSortOrder = window.reqSortOrder === 'asc' ? 'desc' : 'asc';
-        } else {
-          window.reqSortKey = 'RequirementID';
-          window.reqSortOrder = 'asc';
-        }
-        renderRequirements(requirementsCache||[]);
-      });
-    }
-    if (hPub) {
-      hPub.style.cursor = 'pointer';
-      hPub.addEventListener('click', ()=>{
-        if (window.reqSortKey === 'PublishedAt') {
-          window.reqSortOrder = window.reqSortOrder === 'asc' ? 'desc' : 'asc';
-        } else {
-          window.reqSortKey = 'PublishedAt';
-          window.reqSortOrder = 'desc';
-        }
-        renderRequirements(requirementsCache||[]);
-      });
-    }
-  } catch {}
-
-  try {
-    window.quickFilterMode = '';
-    document.querySelectorAll('.sidenav-filter').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const t = btn.getAttribute('data-filter');
-        const sStatus = document.getElementById('reqStatusFilter');
-        const sOpen = document.getElementById('reqOpenFilter');
-        const sContact = document.getElementById('reqContactFilter');
-        if (sStatus) sStatus.value = '';
-        if (sOpen) sOpen.value = '';
-        if (sContact) sContact.value = '';
-        if (t === 'all') {
-          window.quickFilterMode = '';
-        } else if (t === 'open') {
-          if (sOpen) sOpen.value = 'true';
-          window.quickFilterMode = '';
-        } else if (t === 'password') {
-          if (sOpen) sOpen.value = 'false';
-          window.quickFilterMode = '';
-        } else if (t === 'approved') {
-          window.quickFilterMode = 'approved';
-        } else if (t === 'progress_active') {
-          window.quickFilterMode = 'progress_active';
-        }
-        reqOffsetNext=''; reqOffsetStack=[];
-        loadRequirementsPage(true);
-      });
-    });
-    document.querySelectorAll('#adminOffcanvas .nav-link, #adminOffcanvas .sidenav-filter').forEach(el => {
-      el.addEventListener('click', () => {
-        const offEl = document.getElementById('adminOffcanvas');
-        try { new bootstrap.Offcanvas(offEl).hide(); } catch {}
-      });
-    });
-  } catch {}
-
-  async function loadQuoteCount(reqId, tr){
-    try{
-      const resp = await window.apiFetch(`/api/quotes?requirement_id=${encodeURIComponent(reqId)}`, { headers: { 'X-Admin-Key': ADMIN_KEY } });
-      const data = await resp.json();
-      const n = Array.isArray(data) ? data.length : ((data.items||[]).length);
-      const cell = tr.querySelector('[data-qcount]'); if(cell) cell.textContent = String(n);
-    } catch{
-      const cell = tr.querySelector('[data-qcount]'); if(cell) cell.textContent = '0';
-    }
-  }
-
-  function updateStats(items){
-    try {
-      const container = document.getElementById('adminStats') || (()=>{
-        const c=document.createElement('div');
-        c.id='adminStats';
-        c.className='mb-3 d-flex gap-3 flex-wrap';
-        const parent=document.querySelector('#requirementsSection .card-body');
-        parent.insertBefore(c, parent.querySelector('.d-flex.flex-wrap'));
-        return c;
-      })();
-      const total=items.length;
-      const norm = items.map(normalizeRequirement);
-      const openCount = norm.filter(x=>x.AllowOpenQuotes).length;
-      const publicCount = norm.filter(x=>x.PublishedAt || x.Status==='公开').length;
-      const approvedCount = norm.filter(x=>x.Approved).length;
-      container.innerHTML = `<div class="badge bg-primary">需求总数 ${total}</div><div class="badge bg-success">在线报价开启 ${openCount}</div><div class="badge bg-info text-dark">公开需求 ${publicCount}</div><div class="badge bg-warning text-dark">已批准 ${approvedCount}</div>`;
-    } catch{}
-  }
-
-  // 数据运维：导入示例与清理无效
-  (function bindOps(){
-    const seedBtn = document.getElementById('seedSampleBtn');
-    const cleanBtn = document.getElementById('cleanupInvalidBtn');
-    if (seedBtn) {
-      seedBtn.addEventListener('click', async () => {
-        if (!ADMIN_KEY) { alert('请先输入管理员密钥并点击“确认登录”'); return; }
-        seedBtn.disabled = true; const old = seedBtn.innerHTML; seedBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> 正在导入';
-        try {
-          const base = (location.origin + '/data');
-          const resp = await window.apiFetch(`/api/admin/dev-seed?base=${encodeURIComponent(base)}`, { method: 'POST', headers: { 'X-Admin-Key': ADMIN_KEY } });
-          const data = await resp.json();
-          if (!resp.ok) throw new Error(data.error || '导入失败');
-          alert(`导入完成：需求 ${data.counts?.requirements||0}，供应商 ${data.counts?.suppliers||0}，需求方 ${data.counts?.demanders||0}`);
-          await loadRequirementsPage(true);
-        } catch (e) {
-          alert(e.message || '导入示例数据失败');
-        } finally {
-          seedBtn.disabled = false; seedBtn.innerHTML = old;
-        }
-      });
-    }
-    if (cleanBtn) {
-      cleanBtn.addEventListener('click', async () => {
-        if (!ADMIN_KEY) { alert('请先输入管理员密钥并点击“确认登录”'); return; }
-        if (!confirm('确定要清理无效内容吗？将删除标题为空/undefined、缺失编号的记录及孤儿报价。')) return;
-        cleanBtn.disabled = true; const old = cleanBtn.innerHTML; cleanBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> 正在清理';
-        try {
-          const resp = await window.apiFetch('/api/admin/cleanup-invalid', { method: 'POST', headers: { 'X-Admin-Key': ADMIN_KEY } });
-          const data = await resp.json();
-          if (!resp.ok) throw new Error(data.error || '清理失败');
-          alert(`已清理：需求 ${data.deleted?.requirements||0} 条，报价 ${data.deleted?.quotes||0} 条`);
-          await loadRequirementsPage(true);
-        } catch (e) {
-          alert(e.message || '清理失败');
-        } finally {
-          cleanBtn.disabled = false; cleanBtn.innerHTML = old;
-        }
-      });
-    }
-
-    // 一键清理并同步：重置所有数据 -> 导入示例 -> 设置查看密码 -> 同步供应商
-    const resetBtn = document.getElementById('resetAndSyncBtn');
-    if (resetBtn) {
-      resetBtn.addEventListener('click', async () => {
-        if (!ADMIN_KEY) { alert('请先输入管理员密钥并点击“确认登录”'); return; }
-        if (!confirm('将清理所有后台数据、导入网站示例需求、统一设置查看密码为“123456”，并同步网站现有供应商数据。是否继续？')) return;
-        resetBtn.disabled = true; const old = resetBtn.innerHTML; resetBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> 正在处理';
-        try {
-          const base = (location.origin + '/data');
-          // Step 1: 重置所有表数据
-          const respReset = await window.apiFetch('/api/admin/reset-data?scope=all', { method: 'POST', headers: { 'X-Admin-Key': ADMIN_KEY } });
-          const dataReset = await respReset.json();
-          if (!respReset.ok) throw new Error(dataReset.error || '重置失败');
-
-          // Step 2: 导入网站前端示例数据（需求/供应商/需求方）
-          const respSeed = await window.apiFetch(`/api/admin/dev-seed?base=${encodeURIComponent(location.origin + '/data')}`, { method: 'POST', headers: { 'X-Admin-Key': ADMIN_KEY } });
-          const dataSeed = await respSeed.json();
-          if (!respSeed.ok) throw new Error(dataSeed.error || '导入示例失败');
-
-          // Step 3: 统一设置所有需求的查看密码为 123456
-          const respPwd = await window.apiFetch('/api/admin/requirements', { method: 'POST', headers: { 'Content-Type':'application/json','X-Admin-Key': ADMIN_KEY }, body: JSON.stringify({ applyToAll: true, newPasswordPlain: '123456' }) });
-          const dataPwd = await respPwd.json();
-          if (!respPwd.ok) throw new Error(dataPwd.error || '设置密码失败');
-
-          // Step 4: 同步供应商数据（与网站现有数据对接，支持增量 upsert）
-          const respSup = await window.apiFetch(`/api/admin/import-suppliers?base=${encodeURIComponent(location.origin + '/content/suppliers')}`, { method: 'POST', headers: { 'X-Admin-Key': ADMIN_KEY } });
-          const dataSup = await respSup.json();
-          if (!respSup.ok) throw new Error(dataSup.error || '供应商同步失败');
-
-          alert(`已完成：重置(${Object.values(dataReset.deleted||{}).reduce((a,b)=>a+Number(b||0),0)}条)，导入需求 ${dataSeed.counts?.requirements||0}，需求方 ${dataSeed.counts?.demanders||0}，供应商 ${dataSeed.counts?.suppliers||0}；已统一设置查看密码；供应商已同步。`);
-          await loadRequirementsPage(true);
-        } catch (e) {
-          alert(e.message || '一键清理并同步失败');
-        } finally {
-          resetBtn.disabled = false; resetBtn.innerHTML = old;
-        }
-      });
-    }
-    // 批量设置需求状态
-    const onlineBtn = document.getElementById('reqStatusOnlineBtn');
-    const privateBtn = document.getElementById('reqStatusPrivateBtn');
-    const closeBtn = document.getElementById('reqStatusCloseBtn');
-    async function setAllRequirementStatus(statusText) {
-      if (!ADMIN_KEY) { alert('请先输入管理员密钥并点击“确认登录”'); return; }
-      const ok = confirm(`将所有需求状态统一设置为“${statusText}”，确认继续？`);
-      if (!ok) return;
-      try {
-        const resp = await window.apiFetch('/api/admin/requirements', { method: 'POST', headers: { 'Content-Type':'application/json','X-Admin-Key': ADMIN_KEY }, body: JSON.stringify({ applyToAll: true, status: statusText }) });
-        const data = await resp.json();
-        if (!resp.ok) throw new Error(data.error || '批量设置失败');
-        alert('已更新所有需求状态');
-        await loadRequirementsPage(true);
-      } catch (e) {
-        alert(e.message || '批量设置失败');
-      }
-    }
-    if (onlineBtn) onlineBtn.addEventListener('click', ()=> setAllRequirementStatus('在线报价'));
-    if (privateBtn) privateBtn.addEventListener('click', ()=> setAllRequirementStatus('隐私'));
-    if (closeBtn) closeBtn.addEventListener('click', ()=> setAllRequirementStatus('关闭'));
-
-    // 供应商密码统一为 456789
-    const supPwdDefaultBtn = document.getElementById('supPwdDefaultBtn');
-    if (supPwdDefaultBtn) {
-      supPwdDefaultBtn.addEventListener('click', async () => {
-        if (!ADMIN_KEY) { alert('请先输入管理员密钥并点击“确认登录”'); return; }
-        if (!confirm('将所有供应商的通行密码统一设置为“456789”，是否继续？')) return;
-        supPwdDefaultBtn.disabled = true; const old = supPwdDefaultBtn.innerHTML; supPwdDefaultBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> 正在更新';
-        try {
-          const resp = await window.apiFetch('/api/admin/suppliers', { method: 'POST', headers: { 'Content-Type':'application/json','X-Admin-Key': ADMIN_KEY }, body: JSON.stringify({ applyToAll: true, newPasswordPlain: '456789' }) });
-          const data = await resp.json();
-          if (!resp.ok) throw new Error(data.error || '设置失败');
-          alert('已统一设置供应商通行密码');
-        } catch (e) {
-          alert(e.message || '设置失败');
-        } finally {
-          supPwdDefaultBtn.disabled = false; supPwdDefaultBtn.innerHTML = old;
-        }
-      });
-    }
-  })();
-
-  function ensureDetailModal(){
-    let m=document.getElementById('reqDetailModal');
-    if(m) return m;
-    m=document.createElement('div');
-    m.id='reqDetailModal';
-    m.className='modal fade';
-    m.innerHTML = `<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">需求详情</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"></div><div class="modal-footer"><span id="reqDetailHint" class="small text-muted me-auto"></span><button id="reqDetailSaveBtn" class="btn btn-primary">保存</button><button class="btn btn-secondary" data-bs-dismiss="modal">关闭</button></div></div></div>`;
-    document.body.appendChild(m);
-    return m;
-  }
-
-  function showRequirementDetail(id){
-    const item = (requirementsCache||[]).find(x=>x.RequirementID===id);
-    if(!item) return;
-    const modal = ensureDetailModal();
-    modal.querySelector('.modal-title').textContent = `需求 ${item.RequirementID}`;
-    modal.querySelector('.modal-body').innerHTML = `
-      <div class="row g-3">
-        <div class="col-md-7">
-          <label class="form-label small">标题</label>
-          <input id="reqTitleInput" class="form-control" value="${escapeHtml(item.Title||'')}" />
+    <!-- Requirements View -->
+    <div id="view-requirements" class="page-view d-none">
+      <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+        <h2 class="h4 mb-0">需求管理</h2>
+        <div class="btn-group">
+          <button class="btn btn-outline-secondary btn-sm" id="reqRefreshBtn"><i class="fa-solid fa-rotate"></i> 刷新</button>
+          <button class="btn btn-outline-success btn-sm" id="reqExportBtn"><i class="fa-solid fa-file-export"></i> 导出</button>
         </div>
-        <div class="col-md-5">
-          <label class="form-label small">企业（需求方公司）</label>
-          <input id="reqContactCompany" class="form-control" value="${escapeHtml(item.ContactCompany||'')}" />
-        </div>
-        <div class="col-md-4">
-          <label class="form-label small">状态</label>
-          <select id="reqStatusSelect" class="form-select">
-            <option value="公开" ${item.Status==='公开'?'selected':''}>公开</option>
-            <option value="隐私" ${item.Status==='隐私'?'selected':''}>隐私</option>
-            <option value="关闭" ${item.Status==='关闭'?'selected':''}>关闭</option>
-          </select>
-        </div>
-        <div class="col-md-4">
-          <label class="form-label small">进度</label>
-          <select id="reqProgressSelect" class="form-select">
-            <option value="发布中" ${item.Progress==='发布中'?'selected':''}>发布中</option>
-            <option value="接洽中" ${item.Progress==='接洽中'?'selected':''}>接洽中</option>
-            <option value="已完成" ${item.Progress==='已完成'?'selected':''}>已完成</option>
-          </select>
-        </div>
-        <div class="col-md-4 d-flex align-items-end">
-          <div class="form-check">
-            <input id="reqApproved" class="form-check-input" type="checkbox" ${item.Approved?'checked':''}>
-            <label class="form-check-label" for="reqApproved">已批准</label>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <label class="form-label small">主分类</label>
-          <input id="reqPrimaryCategory" class="form-control" value="${escapeHtml(item.PrimaryCategory||'')}" />
-        </div>
-        <div class="col-md-4">
-          <label class="form-label small">次分类</label>
-          <input id="reqSecondaryCategory" class="form-control" value="${escapeHtml(item.SecondaryCategory||'')}" />
-        </div>
-        <div class="col-md-4">
-          <label class="form-label small">预算范围</label>
-          <input id="reqBudgetRange" class="form-control" value="${escapeHtml(item.BudgetRange||'')}" />
-        </div>
-        <div class="col-md-4 d-flex align-items-end gap-3">
-          <div class="form-check">
-            <input id="reqAllowOpenQuotes" class="form-check-input" type="checkbox" ${item.AllowOpenQuotes?'checked':''}>
-            <label class="form-check-label" for="reqAllowOpenQuotes">开启在线报价</label>
-          </div>
-          <div class="form-check">
-            <input id="reqContactPublic" class="form-check-input" type="checkbox" ${item.ContactPublic?'checked':''}>
-            <label class="form-check-label" for="reqContactPublic">公开联系方式</label>
-          </div>
-        </div>
-        <div class="col-md-8">
-          <div id="openQuotesHint" class="alert alert-info py-2 px-3 small d-none">
-            当前需求启用在线报价，外部页面将引导供应商在线提交报价，建议勿公开联系方式。
-          </div>
-          <div id="contactPublicHint" class="alert alert-secondary py-2 px-3 small d-none">
-            已选择公开联系方式：联系人与电话将在公开页展示。
-          </div>
-        </div>
-        <div class="col-md-4">
-          <label class="form-label small">查看密码（明文）</label>
-          <input id="reqViewPassword" class="form-control" value="${escapeHtml(item.ViewPasswordPlain||'')}" />
-        </div>
-        <div class="col-md-4">
-          <label class="form-label small">报价密码（供应商）</label>
-          <input id="reqQuotePassword" class="form-control" value="${escapeHtml(item.quote_password||'')}" />
-        </div>
-        <div class="col-md-4">
-          <label class="form-label small">查看密码（游客）</label>
-          <input id="reqViewPasswordAlt" class="form-control" value="${escapeHtml(item.view_password||'')}" />
-        </div>
-        <div id="contactFieldsGroup" class="col-12">
-          <div class="row g-3">
-            <div class="col-md-4">
-              <label class="form-label small">联系人</label>
-              <input id="reqContactName" class="form-control" value="${escapeHtml(item.ContactName||'')}" />
+      </div>
+
+      <div class="card shadow-sm mb-3">
+        <div class="card-body py-2">
+          <div class="row g-2 align-items-center">
+            <div class="col-md-3">
+              <div class="input-group input-group-sm">
+                <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+                <input type="text" class="form-control" id="reqSearch" placeholder="搜索标题/ID/公司">
+              </div>
             </div>
-            <div class="col-md-4">
-              <label class="form-label small">联系电话</label>
-              <input id="reqContactPhone" class="form-control" value="${escapeHtml(item.ContactPhone||'')}" />
+            <div class="col-md-2">
+              <select class="form-select form-select-sm" id="reqFilterStatus">
+                <option value="">全部状态</option>
+                <option value="pending">待审核 (Status!=公开)</option>
+                <option value="active">进行中 (发布中/接洽中)</option>
+                <option value="closed">已结束</option>
+              </select>
             </div>
-            <div class="col-md-6">
-              <label class="form-label small">联系邮箱</label>
-              <input id="reqContactEmail" class="form-control" value="${escapeHtml(item.ContactEmail||'')}" />
-            </div>
-            <div class="col-md-6">
-              <label class="form-label small">部门</label>
-              <input id="reqContactDept" class="form-control" value="${escapeHtml(item.ContactDepartment||'')}" />
+            <div class="col-md-auto ms-auto">
+               <small class="text-muted" id="reqCountHint">共 - 条</small>
             </div>
           </div>
         </div>
-        <div class="col-md-12">
-          <label class="form-label small">公开预览（对外展示简述）</label>
-          <textarea id="reqPublicPreview" class="form-control" rows="3">${escapeHtml(item.PublicPreview||item.public_preview||'')}</textarea>
+      </div>
+
+      <div class="card shadow-sm border-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0 admin-table">
+            <thead class="table-light position-sticky top-0">
+              <tr>
+                <th style="min-width:100px;">编号</th>
+                <th style="min-width:200px;">标题</th>
+                <th style="min-width:150px;">发布方</th>
+                <th style="min-width:100px;">状态</th>
+                <th style="min-width:100px;">进度</th>
+                <th style="min-width:100px;">报价</th>
+                <th style="min-width:80px;">前台</th>
+                <th style="min-width:160px;">操作</th>
+              </tr>
+            </thead>
+            <tbody id="reqTableBody"></tbody>
+          </table>
         </div>
-        <div class="col-md-12">
-          <label class="form-label small">采购计划</label>
-          <textarea id="reqProcurementPlan" class="form-control" rows="2">${escapeHtml(item.ProcurementPlan||'')}</textarea>
+        <div class="card-footer py-2">
+           <nav>
+             <ul class="pagination pagination-sm justify-content-end mb-0" id="reqPagination"></ul>
+           </nav>
         </div>
-        <div class="col-md-12">
-          <label class="form-label small">关键参数（JSON）</label>
-          <textarea id="reqParametersJson" class="form-control" rows="3">${escapeHtml(typeof item.Parameters==='string' ? item.Parameters : JSON.stringify(item.Parameters||{}, null, 2))}</textarea>
+      </div>
+    </div>
+
+    <!-- Demanders View -->
+    <div id="view-demanders" class="page-view d-none">
+      <h2 class="h4 mb-4 border-bottom pb-2">发布方管理</h2>
+      <div class="alert alert-info py-2 small">
+        <i class="fa-solid fa-circle-info me-1"></i> 发布方信息由发布需求时自动收集。在此可管理其查看密码及联系方式。
+      </div>
+      <div class="card shadow-sm">
+         <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center">
+            <input type="text" class="form-control form-control-sm w-auto" id="demSearch" placeholder="搜索公司或联系人">
+            <button class="btn btn-sm btn-outline-secondary" id="demRefreshBtn"><i class="fa-solid fa-rotate"></i></button>
+         </div>
+         <div class="table-responsive">
+           <table class="table table-hover align-middle mb-0 admin-table">
+             <thead class="table-light">
+               <tr>
+                 <th>公司名称</th>
+                 <th>联系人</th>
+                 <th>电话</th>
+                 <th>需求数</th>
+                 <th>公开联系方式</th>
+                 <th>查看密码</th>
+                 <th>操作</th>
+               </tr>
+             </thead>
+             <tbody id="demTableBody"></tbody>
+           </table>
+         </div>
+      </div>
+    </div>
+
+    <!-- Suppliers View -->
+    <div id="view-suppliers" class="page-view d-none">
+      <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+        <h2 class="h4 mb-0">供应商管理</h2>
+        <button class="btn btn-primary btn-sm" id="supAddBtn"><i class="fa-solid fa-plus"></i> 新增供应商</button>
+      </div>
+      <div class="card shadow-sm">
+        <div class="card-header bg-white py-2">
+           <div class="row g-2">
+             <div class="col-auto"><input type="text" class="form-control form-control-sm" id="supSearch" placeholder="搜索供应商"></div>
+             <div class="col-auto"><button class="btn btn-sm btn-outline-secondary" id="supRefreshBtn"><i class="fa-solid fa-rotate"></i></button></div>
+           </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0 admin-table">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>供应商名称</th>
+                <th>联系人</th>
+                <th>电话</th>
+                <th>通行密码</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="supTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings View -->
+    <div id="view-settings" class="page-view d-none">
+      <h2 class="h4 mb-4 border-bottom pb-2">设置</h2>
+      <div class="row g-4">
+        <div class="col-md-6">
+           <div class="card shadow-sm h-100">
+             <div class="card-header bg-white fw-bold">管理员密钥</div>
+             <div class="card-body">
+               <div class="mb-3">
+                 <label class="form-label">API Base URL</label>
+                 <div class="input-group">
+                   <input type="text" class="form-control" id="settingApiBase" placeholder="例如 http://127.0.0.1:8787">
+                   <button class="btn btn-outline-secondary" type="button" id="saveApiBaseBtn">保存</button>
+                   <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"></button>
+                   <ul class="dropdown-menu dropdown-menu-end">
+                     <li><a class="dropdown-item" href="#" onclick="App.setApiBase('http://127.0.0.1:8787')">设为本地 (Local)</a></li>
+                     <li><a class="dropdown-item" href="#" onclick="App.setApiBase('https://api.visndt.com')">设为线上 (Prod)</a></li>
+                     <li><hr class="dropdown-divider"></li>
+                     <li><a class="dropdown-item" href="#" onclick="App.setApiBase('')">重置 (自动检测)</a></li>
+                   </ul>
+                 </div>
+                 <div class="form-text">本地测试请使用 http://127.0.0.1:8787</div>
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">Admin Key (X-Admin-Key)</label>
+                 <div class="input-group">
+                   <input type="password" class="form-control" id="settingAdminKey">
+                   <button class="btn btn-outline-secondary" type="button" id="saveKeyBtn">保存本地</button>
+                 </div>
+                 <div class="form-text">此密钥存储在本地浏览器中，用于通过 API 验证。</div>
+               </div>
+             </div>
+           </div>
         </div>
         <div class="col-md-6">
-          <label class="form-label small">发布时间</label>
-          <input id="reqPublishedAt" type="datetime-local" class="form-control" value="${escapeHtml((item.PublishedAt||'').replace('Z',''))}" />
+           <div class="card shadow-sm h-100">
+             <div class="card-header bg-white fw-bold">全局控制</div>
+             <div class="card-body">
+               <p class="text-muted">更多全局配置（如审批流开关、通知设置）将在后续版本开放。</p>
+             </div>
+           </div>
         </div>
-        <div class="col-md-12">
-          <div class="small text-muted">发布时间：${formatDate(item.PublishedAt||'')}；需求ID：${item.RequirementID}</div>
-        </div>
-      </div>`;
-    modal.querySelector('.modal-body').dataset.reqId = item.RequirementID;
-    new bootstrap.Modal(modal).show();
-    // 开关联动：公开联系方式 vs 在线报价
-    try {
-      const chkOpen = document.getElementById('reqAllowOpenQuotes');
-      const chkPublic = document.getElementById('reqContactPublic');
-      const group = document.getElementById('contactFieldsGroup');
-      const openHint = document.getElementById('openQuotesHint');
-      const publicHint = document.getElementById('contactPublicHint');
-      const updateVis = ()=>{
-        const openOn = !!chkOpen?.checked;
-        const publicOn = !!chkPublic?.checked;
-        if (openHint) openHint.classList.toggle('d-none', !openOn);
-        if (publicHint) publicHint.classList.toggle('d-none', !publicOn);
-        // 不公开时隐藏联系方式输入区域（管理员仍可在此编辑，但默认隐藏）
-        if (group) group.classList.toggle('d-none', !publicOn);
-      };
-      updateVis();
-      chkOpen?.addEventListener('change', updateVis);
-      chkPublic?.addEventListener('change', updateVis);
-    } catch{}
-    // 参数 JSON 即时校验提示
-    try {
-      const txt = document.getElementById('reqParametersJson');
-      if (txt) {
-        let hint = document.getElementById('reqParametersHint');
-        if (!hint) {
-          hint = document.createElement('div');
-          hint.id = 'reqParametersHint';
-          hint.className = 'form-text small';
-          txt.parentElement.appendChild(hint);
-        }
-        const check = ()=>{
-          const v = txt.value || '';
-          if (!v.trim()) { txt.classList.remove('is-invalid','is-valid'); hint.textContent=''; return; }
-          try { JSON.parse(v); txt.classList.add('is-valid'); txt.classList.remove('is-invalid'); hint.textContent='JSON格式正确'; }
-          catch(e){ txt.classList.add('is-invalid'); txt.classList.remove('is-valid'); hint.textContent = 'JSON格式错误：' + (e.message||''); }
-        };
-        txt.addEventListener('input', check);
-        check();
-      }
-    } catch{}
-  }
+      </div>
+    </div>
 
-  // 保存需求详情（管理员）
-  document.addEventListener('click', async (e)=>{
-    const btn = (e.target && e.target.id === 'reqDetailSaveBtn') ? e.target : null;
-    if (!btn) return;
-    const modal = document.getElementById('reqDetailModal');
-    const body = modal?.querySelector('.modal-body');
-    const id = body?.dataset.reqId || '';
-    const hint = document.getElementById('reqDetailHint'); if (hint) hint.textContent='';
-    const isAdmin = !!(typeof ADMIN_KEY !== 'undefined' && ADMIN_KEY);
-    let payload;
-    if (isAdmin) {
-      payload = {
-        title: document.getElementById('reqTitleInput')?.value || '',
-        status: document.getElementById('reqStatusSelect')?.value || '',
-        progress: document.getElementById('reqProgressSelect')?.value || '',
-        approved: !!document.getElementById('reqApproved')?.checked,
-        primary_category: document.getElementById('reqPrimaryCategory')?.value || '',
-        secondary_category: document.getElementById('reqSecondaryCategory')?.value || '',
-        budget_range: document.getElementById('reqBudgetRange')?.value || '',
-        allow_open_quotes: !!document.getElementById('reqAllowOpenQuotes')?.checked,
-        contact_public: !!document.getElementById('reqContactPublic')?.checked,
-        view_password_plain: document.getElementById('reqViewPassword')?.value || '',
-        quote_password: document.getElementById('reqQuotePassword')?.value || '',
-        view_password: document.getElementById('reqViewPasswordAlt')?.value || '',
-        contact_name: document.getElementById('reqContactName')?.value || '',
-        contact_phone: document.getElementById('reqContactPhone')?.value || '',
-        contact_company: document.getElementById('reqContactCompany')?.value || '',
-        contact_email: document.getElementById('reqContactEmail')?.value || '',
-        contact_department: document.getElementById('reqContactDept')?.value || '',
-        public_preview: document.getElementById('reqPublicPreview')?.value || '',
-        procurement_plan: document.getElementById('reqProcurementPlan')?.value || '',
-        published_at: (function(){
-          const v = document.getElementById('reqPublishedAt')?.value || '';
-          return v ? v.replace(' ', 'T') + 'Z' : '';
-        })(),
-        parameters_json: (function(){
-          const raw = document.getElementById('reqParametersJson')?.value || '';
-          if (!raw.trim()) return {};
-          try { return JSON.parse(raw); } catch (e) {
-            throw new Error('关键参数需为合法 JSON 格式');
-          }
-        })()
-      };
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container p-3"></div>
+
+<!-- Modals -->
+
+<!-- Requirement Edit Modal -->
+<div class="modal fade" id="reqEditModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">编辑需求</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="reqEditForm">
+           <input type="hidden" id="editReqId">
+           <div class="row g-3">
+             <div class="col-md-12">
+               <label class="form-label">标题</label>
+               <input type="text" class="form-control" id="editReqTitle" required>
+             </div>
+             <div class="col-md-6">
+               <label class="form-label">一级分类</label>
+               <input type="text" class="form-control" id="editReqCat1">
+             </div>
+             <div class="col-md-6">
+               <label class="form-label">预算范围</label>
+               <input type="text" class="form-control" id="editReqBudget">
+             </div>
+             <div class="col-md-6">
+               <label class="form-label">状态</label>
+               <select class="form-select" id="editReqStatus">
+                 <option value="公开">公开 (前台可见)</option>
+                 <option value="隐私">隐私 (仅密码可见)</option>
+                 <option value="待审核">待审核</option>
+                 <option value="关闭">关闭</option>
+               </select>
+             </div>
+             <div class="col-md-6">
+               <label class="form-label">进度</label>
+               <select class="form-select" id="editReqProgress">
+                 <option value="待发布">待发布</option>
+                 <option value="发布中">发布中</option>
+                 <option value="接洽中">接洽中</option>
+                 <option value="已完成">已完成</option>
+                 <option value="已终止">已终止</option>
+               </select>
+             </div>
+             <div class="col-md-6">
+               <div class="form-check mt-4">
+                 <input class="form-check-input" type="checkbox" id="editReqOpenQuotes">
+                 <label class="form-check-label" for="editReqOpenQuotes">允许在线报价</label>
+               </div>
+             </div>
+             <div class="col-md-6">
+               <div class="form-check mt-4">
+                 <input class="form-check-input" type="checkbox" id="editReqContactPublic">
+                 <label class="form-check-label" for="editReqContactPublic">公开联系方式</label>
+               </div>
+             </div>
+             <div class="col-md-12">
+               <label class="form-label">公开预览信息 (Public Preview)</label>
+               <textarea class="form-control" id="editReqPreview" rows="2"></textarea>
+             </div>
+             <div class="col-md-6">
+               <label class="form-label">查看密码 (View Password)</label>
+               <input type="text" class="form-control font-monospace" id="editReqPwd">
+             </div>
+           </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="reqSaveBtn">保存更改</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quotes List Modal -->
+<div class="modal fade" id="quotesModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">报价列表 <span id="quoteReqTitle" class="fs-6 text-muted ms-2"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex justify-content-between mb-3">
+           <div class="input-group input-group-sm w-auto">
+             <span class="input-group-text">状态筛选</span>
+             <select class="form-select" id="quoteFilterStatus">
+               <option value="">全部</option>
+               <option value="submitted">已提交</option>
+               <option value="reviewing">审核中</option>
+               <option value="approved">已通过</option>
+               <option value="won">中标</option>
+               <option value="rejected">已拒绝</option>
+             </select>
+           </div>
+           <div class="btn-group">
+             <button class="btn btn-sm btn-outline-success" id="quoteExportCsv">导出 CSV</button>
+             <button class="btn btn-sm btn-outline-success" id="quoteExportXlsx">导出 Excel</button>
+           </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-sm table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>供应商</th>
+                <th>联系人</th>
+                <th>金额</th>
+                <th>备注</th>
+                <th>时间</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="quoteTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Products List Modal -->
+<div class="modal fade" id="productsModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">产品列表 <span id="prodSupTitle" class="fs-6 text-muted ms-2"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="table table-sm table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>名称</th>
+                <th>型号</th>
+                <th>系列</th>
+                <th>分类</th>
+                <th>创建时间</th>
+              </tr>
+            </thead>
+            <tbody id="prodTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Requirements List (for Demander) Modal -->
+<div class="modal fade" id="demReqModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">发布需求列表 <span id="demReqTitle" class="fs-6 text-muted ms-2"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="table table-sm table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>标题</th>
+                <th>分类</th>
+                <th>预算</th>
+                <th>状态</th>
+                <th>进度</th>
+                <th>报价数</th>
+                <th>时间</th>
+              </tr>
+            </thead>
+            <tbody id="demReqTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Supplier Edit Modal -->
+<div class="modal fade" id="supEditModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">供应商编辑</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="supEditForm">
+          <input type="hidden" id="editSupId">
+          <div class="mb-3">
+            <label class="form-label">供应商名称</label>
+            <input type="text" class="form-control" id="editSupName" required>
+          </div>
+          <div class="row g-2 mb-3">
+             <div class="col-6">
+               <label class="form-label">联系人</label>
+               <input type="text" class="form-control" id="editSupContact">
+             </div>
+             <div class="col-6">
+               <label class="form-label">电话</label>
+               <input type="text" class="form-control" id="editSupPhone">
+             </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">通行密码 (Access Password)</label>
+            <input type="text" class="form-control font-monospace" id="editSupPwd" placeholder="留空则不修改">
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="editSupStatus" checked>
+            <label class="form-check-label" for="editSupStatus">账户启用</label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="supSaveBtn">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+// --- Global Config & Auth ---
+(function() {
+  const isProd = /(^|\.)visndt\.com$/i.test(location.hostname);
+  const defaultRemote = 'https://api.visndt.com';
+  let saved = '';
+  try { saved = localStorage.getItem('API_BASE') || ''; } catch {}
+  const allowInProd = new Set(['', 'https://api.visndt.com']);
+  
+  if (isProd) {
+    window.API_BASE = allowInProd.has(saved) ? saved : '';
+  } else {
+    // 自动检测：本地开发且无手动配置时，优先使用本地 Worker 地址
+    if (!saved && (location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+       window.API_BASE = 'http://127.0.0.1:8787';
     } else {
-      payload = {
-        status: document.getElementById('reqStatusSelect')?.value || '',
-        progress: document.getElementById('reqProgressSelect')?.value || '',
-        contact_public: !!document.getElementById('reqContactPublic')?.checked
-      };
-    }
-    try{
-      let url = `/api/admin/requirements/${encodeURIComponent(id)}`;
-      let headers = { 'Content-Type':'application/json' };
-      if (isAdmin) {
-        headers['X-Admin-Key'] = ADMIN_KEY;
-      } else {
-        const pwd = window.prompt('请输入需求方密码');
-        if (!pwd) throw new Error('需要需求方密码');
-        payload.demander_password = pwd;
-        url = `/api/requirements/${encodeURIComponent(id)}`;
-      }
-      const resp = await window.apiFetch(url, { method:'PATCH', headers, body: JSON.stringify(payload) });
-      const data = await resp.json();
-      if (!resp.ok) throw new Error(data.error||'保存失败');
-      if (hint) hint.textContent='已保存';
-      // 刷新列表数据
-      await loadRequirementsPage(true);
-      setTimeout(()=>{ if(hint) hint.textContent=''; }, 1200);
-    } catch (err) {
-      if (hint) hint.textContent = err.message || '保存失败';
-      setTimeout(()=>{ if(hint) hint.textContent=''; }, 2000);
-    }
-  });
-
-  function ensureQuotesModal(){
-    let m=document.getElementById('quotesModal');
-    if(m) return m;
-    m=document.createElement('div');
-    m.id='quotesModal';
-    m.className='modal fade';
-    m.innerHTML = `<div class="modal-dialog modal-xl"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">报价列表</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="d-flex align-items-center justify-content-between mb-2"><div class="input-group input-group-sm" style="max-width:220px;"><span class="input-group-text">状态</span><select id="quotesStatusFilter" class="form-select form-select-sm"><option value="">全部</option><option value="submitted">已提交</option><option value="reviewing">审核中</option><option value="approved">已通过</option><option value="rejected">已拒绝</option><option value="won">中标</option><option value="lost">未中</option></select></div></div><div class="table-responsive" style="max-height:60vh; overflow:auto;"><table class="table table-sm table-striped table-hover align-middle"><thead class="position-sticky top-0"><tr><th style="min-width:260px;">供应商</th><th>联系人</th><th>电话</th><th>金额</th><th>币种</th><th>备注</th><th>创建时间</th><th>更新时间</th><th>状态</th><th>操作</th></tr></thead><tbody id="quotesModalBody"></tbody></table></div></div><div class="modal-footer"><div class="me-auto small text-muted">导出当前报价</div><button id="quotesExportCsvBtn" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-file-csv me-1"></i> 导出 CSV</button><button id="quotesExportXlsxBtn" class="btn btn-outline-success btn-sm"><i class="fa-solid fa-file-excel me-1"></i> 导出 XLSX</button><button class="btn btn-secondary" data-bs-dismiss="modal">关闭</button></div></div></div>`;
-    document.body.appendChild(m);
-    return m;
-  }
-
-  // 显示币种为中文：CNY->元，其它常见币种做基础映射
-  function displayCurrency(code){
-    const v=String(code||'').trim().toUpperCase();
-    if(!v) return '';
-    if(v==='CNY') return '元';
-    if(v==='USD') return '美元';
-    if(v==='EUR') return '欧元';
-    return code||'';
-  }
-
-  async function showQuotesModal(id){
-    const modal = ensureQuotesModal();
-    modal.querySelector('.modal-title').textContent = `报价列表 - ${id}`;
-    const body = modal.querySelector('#quotesModalBody');
-    const filterEl = modal.querySelector('#quotesStatusFilter');
-    body.innerHTML = '<tr><td colspan="5" class="text-muted">加载中...</td></tr>';
-    try {
-      const resp = await window.apiFetch(`/api/quotes?requirement_id=${encodeURIComponent(id)}`, { headers: { 'X-Admin-Key': ADMIN_KEY } });
-      const text = await resp.text();
-      let data; try { data = JSON.parse(text); } catch { data = { items: [] }; }
-      const items = Array.isArray(data) ? data : (data.items || []);
-      window.currentQuotesOriginal = items;
-      window.currentQuotes = items;
-      const render = (list) => {
-        body.innerHTML = (list||[]).map(q => {
-          const qid = q.quote_id || q.QuoteID || '';
-          const cur = q.status || q.Status || 'submitted';
-          const amt = (q.amount ?? q.Price ?? '');
-          const curcy = q.currency || q.Currency || 'CNY';
-          const remarks = q.remarks || q.Remarks || '';
-          const created = q.created_at || q.CreatedAt || '';
-          const updated = q.updated_at || q.UpdatedAt || '';
-          const company = q.SupplierCompanyName||q.supplier_name||'';
-          return `<tr data-qid="${escapeHtml(qid)}">
-            <td style="min-width:260px;">
-              <div class="fw-semibold text-truncate" title="${escapeHtml(company)}">${escapeHtml(company)}</div>
-              <div class="small text-muted">ID: ${escapeHtml(qid||'—')}</div>
-            </td>
-            <td>${escapeHtml(q.SupplierContact||'')}</td>
-            <td>${escapeHtml(q.SupplierPhone||q.supplier_phone||'')}</td>
-            <td>${escapeHtml(amt)}</td>
-            <td>${escapeHtml(displayCurrency(curcy))}</td>
-            <td class="text-truncate" title="${escapeHtml(remarks)}">${escapeHtml(remarks)}</td>
-            <td>${escapeHtml(created)}</td>
-            <td>${escapeHtml(updated)}</td>
-            <td>
-              <div class="d-flex align-items-center gap-2">
-                <select class="form-select form-select-sm" data-field="status">
-                  <option value="submitted" ${cur==='submitted'?'selected':''}>已提交</option>
-                  <option value="reviewing" ${cur==='reviewing'?'selected':''}>审核中</option>
-                  <option value="approved" ${cur==='approved'?'selected':''}>已通过</option>
-                  <option value="rejected" ${cur==='rejected'?'selected':''}>已拒绝</option>
-                  <option value="won" ${cur==='won'?'selected':''}>中标</option>
-                  <option value="lost" ${cur==='lost'?'selected':''}>未中</option>
-                </select>
-                <button class="btn btn-sm btn-outline-primary" data-action="saveQuote">更新</button>
-              </div>
-            </td>
-            <td>
-              <button class="btn btn-sm btn-outline-danger" data-action="deleteQuote">删除</button>
-            </td>
-          </tr>`;
-        }).join('') || '<tr><td colspan="10" class="text-muted">暂无报价</td></tr>';
-        body.querySelectorAll('button[data-action="saveQuote"]').forEach(btn => {
-          btn.addEventListener('click', async ()=>{
-            const tr = btn.closest('tr'); const qid = tr?.dataset.qid||'';
-            const statusSel = tr?.querySelector('select[data-field="status"]');
-            const status = statusSel?.value || 'reviewing';
-            try {
-              const r = await window.apiFetch(`/api/quotes/${encodeURIComponent(qid)}`, { method:'PATCH', headers:{ 'Content-Type':'application/json','X-Admin-Key': ADMIN_KEY }, body: JSON.stringify({ status }) });
-              const dj = await r.json(); if(!r.ok) throw new Error(dj.error||'更新失败');
-              btn.textContent='已更新'; setTimeout(()=>{btn.textContent='更新';},1200);
-            } catch(e){ btn.textContent='失败'; setTimeout(()=>{btn.textContent='更新';},1200); }
-          });
-        });
-        body.querySelectorAll('button[data-action="deleteQuote"]').forEach(btn => {
-          btn.addEventListener('click', async ()=>{
-            const tr = btn.closest('tr'); const qid = tr?.dataset.qid||'';
-            if(!qid) return;
-            try {
-              const r = await window.apiFetch(`/api/quotes/${encodeURIComponent(qid)}`, { method:'DELETE', headers:{ 'X-Admin-Key': ADMIN_KEY } });
-              const dj = await r.json(); if(!r.ok) throw new Error(dj.error||'删除失败');
-              tr.remove();
-              window.currentQuotesOriginal = (window.currentQuotesOriginal||[]).filter(x => (x.quote_id || x.QuoteID) !== qid);
-              window.currentQuotes = (window.currentQuotes||[]).filter(x => (x.quote_id || x.QuoteID) !== qid);
-            } catch(e){ btn.textContent='失败'; setTimeout(()=>{btn.textContent='删除';},1200); }
-          });
-        });
-      };
-      render(items);
-      if (filterEl) {
-        filterEl.onchange = () => {
-          const val = filterEl.value || '';
-          const src = window.currentQuotesOriginal || items || [];
-          const filtered = val ? src.filter(q => (q.status || q.Status || '') === val) : src.slice();
-          window.currentQuotes = filtered;
-          render(filtered);
-        };
-      }
-      const btnCsv = modal.querySelector('#quotesExportCsvBtn');
-      const btnXlsx = modal.querySelector('#quotesExportXlsxBtn');
-      if (btnCsv) {
-        btnCsv.onclick = () => {
-          const headers = ['报价ID','供应商','联系人','电话','金额','币种','备注','创建时间','更新时间','状态'];
-          const rows = (window.currentQuotes||[]).map(q => [
-            q.quote_id || q.QuoteID || '',
-            q.SupplierCompanyName||q.supplier_name||'',
-            q.SupplierContact||'',
-            q.SupplierPhone||q.supplier_phone||'',
-            (q.amount ?? q.Price ?? ''),
-            displayCurrency(q.currency || q.Currency || 'CNY'),
-            (q.remarks || q.Remarks || ''),
-            (q.created_at || q.CreatedAt || ''),
-            (q.updated_at || q.UpdatedAt || ''),
-            (q.Status || q.status || '')
-          ]);
-          const csv = [headers, ...rows].map(r => r.map(v => String(v).replace(/"/g,'""')).map(v => /,|\n|"/.test(v) ? `"${v}"` : v).join(',')).join('\n');
-          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a'); a.href = url; a.download = `quotes_${id}.csv`; document.body.appendChild(a); a.click();
-          setTimeout(()=>{URL.revokeObjectURL(url); a.remove();},0);
-        };
-      }
-      if (btnXlsx && window.XLSX) {
-        btnXlsx.onclick = () => {
-          const rows = (window.currentQuotes||[]).map(q => ({
-            报价ID: q.quote_id || q.QuoteID || '',
-            供应商: q.SupplierCompanyName||q.supplier_name||'',
-            联系人: q.SupplierContact||'',
-            电话: q.SupplierPhone||q.supplier_phone||'',
-            金额: (q.amount ?? q.Price ?? ''),
-            币种: displayCurrency(q.currency || q.Currency || 'CNY'),
-            备注: (q.remarks || q.Remarks || ''),
-            创建时间: (q.created_at || q.CreatedAt || ''),
-            更新时间: (q.updated_at || q.UpdatedAt || ''),
-            状态: (q.Status || q.status || '')
-          }));
-          const wb = XLSX.utils.book_new();
-          const ws = XLSX.utils.json_to_sheet(rows);
-          XLSX.utils.book_append_sheet(wb, ws, '报价');
-          XLSX.writeFile(wb, `quotes_${id}.xlsx`);
-        };
-      }
-    } catch {
-      body.innerHTML = '<tr><td colspan="5" class="text-danger">无法加载报价列表</td></tr>';
-    }
-    new bootstrap.Modal(modal).show();
-  }
-
-  document.getElementById('reqApplyFilter')?.addEventListener('click', ()=>{ reqOffsetNext=''; reqOffsetStack=[]; loadRequirementsPage(true); });
-  document.getElementById('reqPrevPage')?.addEventListener('click', ()=>{ reqOffsetNext=''; reqOffsetStack=[]; loadRequirementsPage(true); });
-  document.getElementById('reqNextPage')?.addEventListener('click', async ()=>{ if(!reqOffsetNext) return; reqOffsetStack.push(reqOffsetNext); await loadRequirementsPage(false); });
-
-  // 需求方统计
-  function aggregateDemanders(items){
-    const map=new Map();
-    items.map(normalizeRequirement).forEach(it=>{
-      const company=(it.ContactCompany||'未留公司').trim();
-      const rec=map.get(company) || { company, contact: it.ContactName || '', phone: it.ContactPhone || '', count:0, public:false, needPw:false };
-      rec.count++;
-      rec.public = rec.public || !!it.ContactPublic;
-      rec.needPw = rec.needPw || !it.AllowOpenQuotes;
-      rec.contact = rec.contact || it.ContactName || '';
-      rec.phone = rec.phone || it.ContactPhone || '';
-      map.set(company, rec);
-    });
-    return Array.from(map.values()).sort((a,b)=> b.count - a.count);
-  }
-  function renderDemanders(items){
-    const body=document.getElementById('demTableBody'); if (!body) return;
-    const stats=aggregateDemanders(items);
-    const query=(document.getElementById('demSearchInput')?.value || '').trim().toLowerCase();
-    const list = stats.filter(d=> !query || (d.company.toLowerCase().includes(query) || d.contact.toLowerCase().includes(query)));
-    body.innerHTML = list.map(d => `<tr><td>${escapeHtml(d.company)}</td><td>${escapeHtml(d.contact)}</td><td>${escapeHtml(d.phone)}</td><td>${d.count}</td><td>${d.public?'公开':'不公开'}</td><td>${d.needPw?'需要':'不需要'}</td><td><button class="btn btn-sm btn-outline-primary" data-company="${escapeHtml(d.company)}" data-action="viewDem">查看需求</button></td></tr>`).join('');
-    body.querySelectorAll('button[data-action="viewDem"]').forEach(btn => {
-      btn.addEventListener('click', ()=>{
-        const company = btn.getAttribute('data-company');
-        const rel = items.filter(x=> (x.ContactCompany||'') === company);
-        showDemandList(company, rel);
-      });
-    });
-  }
-  function showDemandList(company, list){
-    const modal = ensureDetailModal();
-    modal.querySelector('.modal-title').textContent = `需求方：${company}`;
-    modal.querySelector('.modal-body').innerHTML = `<ul class="list-group">${list.map(it=>`<li class="list-group-item d-flex justify-content-between align-items-center"><span class="text-truncate" style="max-width:60%;">${escapeHtml(it.Title||it.RequirementID||'未命名')}</span><span class="small text-muted">${it.RequirementID}</span><div><button class="btn btn-sm btn-outline-secondary me-1" onclick="(function(id){ var u=new URL('/static/entry.html', window.location.origin); u.searchParams.set('id', id); window.location.href=u.toString(); })('${it.RequirementID}')">入口</button><button class="btn btn-sm btn-outline-primary" onclick="(${showRequirementDetail.toString()})('${it.RequirementID}')">详情</button></div></li>`).join('')}</ul>`;
-    new bootstrap.Modal(modal).show();
-  }
-  // 改为从管理接口拉取需求方列表
-  document.getElementById('demSearchInput')?.addEventListener('input', ()=>loadDemandersIndex(true));
-  document.getElementById('demReloadAll')?.addEventListener('click', ()=>loadDemandersIndex(true));
-
-  // 供应商索引
-  let suppliersCache=[];
-  let supOffsetNext='';
-  let supOffsetStack=[];
-  async function loadSuppliers(initial=false){
-    try{
-      // 仅从管理接口加载，移除静态索引回退，保证单一数据源
-      const urlObj = new URL('/api/admin/suppliers', window.location.origin);
-      const onlyPublic = !!document.getElementById('supPublicOnly')?.checked;
-      const search = (document.getElementById('supSearchInput')?.value||'').trim();
-      if (onlyPublic) urlObj.searchParams.set('public','true');
-      if (search) urlObj.searchParams.set('q', search);
-      urlObj.searchParams.set('limit','20');
-      if (!initial && supOffsetNext) urlObj.searchParams.set('offset', supOffsetNext);
-      const respApi = await window.apiFetch(`/api/admin/suppliers?${urlObj.searchParams.toString()}`, { headers: { 'X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') } });
-      if (!respApi.ok) {
-        const errText = await respApi.text();
-        throw new Error(errText || '加载供应商失败');
-      }
-      const d = await respApi.json();
-      const items = Array.isArray(d) ? d : (d.items||[]);
-      suppliersCache = items.map(it => {
-        const meta = (function(){ try { return typeof it.metadata_json==='object' ? it.metadata_json : JSON.parse(it.metadata_json||'{}'); } catch { return {}; } })();
-        const products = Array.isArray(meta.products) ? meta.products : [];
-        const seriesCount = (function(){ try { return Array.from(new Set(products.map(p=>String(p.series||'').trim()).filter(Boolean))).length; } catch { return 0; } })();
-        const modelsCount = products.length || 0;
-        return {
-          id: it.supplier_id || it.id || '',
-          title: it.company || it.CompanyName || it.Title || '',
-          contact: it.name || it.ContactName || it.Contact || '',
-          phone: it.contact_phone || it.Phone || '',
-          email: it.contact_email || it.Email || '',
-          password: it.access_password_plain || it.Password || '',
-          series: seriesCount,
-          models: modelsCount,
-          uri: (meta && meta.website) || it.Website || it.Uri || ''
-        };
-      });
-      supOffsetNext = d.offsetNext || '';
-      if (initial) supOffsetStack = [];
-      renderSuppliers();
-      const pageInfo=document.getElementById('supPageInfo');
-      const prevBtn=document.getElementById('supPrevPage');
-      const nextBtn=document.getElementById('supNextPage');
-      if (pageInfo) pageInfo.textContent = `当前页：${suppliersCache.length} 条，${supOffsetNext ? '可下一页' : '无更多'}`;
-      if (prevBtn) prevBtn.disabled = supOffsetStack.length === 0;
-      if (nextBtn) nextBtn.disabled = !supOffsetNext;
-    } catch(e){
-      const body=document.getElementById('supTableBody');
-      if (body) body.innerHTML = `<tr><td colspan="6" class="text-danger">${e.message}</td></tr>`;
+       window.API_BASE = saved || defaultRemote;
     }
   }
-  function renderSuppliers(){
-    const body=document.getElementById('supTableBody'); if (!body) return;
-    const q=(document.getElementById('supSearchInput')?.value || '').trim().toLowerCase();
-    const list = suppliersCache.filter(s => !q || s.title.toLowerCase().includes(q) || String(s.series).includes(q) || String(s.models).includes(q));
-    body.innerHTML = list.map(s=>`<tr data-id="${escapeHtml(s.id||'')}" data-title="${escapeHtml(s.title)}" data-phone="${escapeHtml(s.phone)}" data-email="${escapeHtml(s.email)}" data-uri="${escapeHtml(s.uri||'')}" data-pass="${escapeHtml(s.password||'')}"><td><a href="${s.uri||'#'}" target="_blank">${escapeHtml(s.title)}</a></td><td>${escapeHtml(s.contact)}</td><td>${escapeHtml(s.phone)}</td><td>${escapeHtml(s.email)}</td><td>${escapeHtml(s.password||'')}</td><td>${s.series + s.models}</td><td><a class="btn btn-sm btn-outline-secondary me-2" href="${s.uri||'#'}" target="_blank">打开</a><button class="btn btn-sm btn-outline-primary me-2" data-action="editSup">编辑</button><button class="btn btn-sm btn-outline-danger" data-action="delSup">删除</button></td></tr>`).join('');
-    body.querySelectorAll('button[data-action="editSup"]').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const tr=btn.closest('tr');
-        const item={ id: tr?.dataset.id||'', CompanyName: tr?.dataset.title||'', Title: tr?.dataset.title||'', ContactName: '', Phone: tr?.dataset.phone||'', Email: tr?.dataset.email||'', ContactPublic:false, Password:'', PasswordHash:'', Website: tr?.dataset.uri||'' };
-        showSupEditor(item);
-      });
-    });
-    body.querySelectorAll('button[data-action="delSup"]').forEach(btn=>{
-      btn.addEventListener('click', async ()=>{
-        const tr=btn.closest('tr'); const id=tr?.dataset.id||''; if (!id) return;
-        if (!confirm('确认删除该供应商？')) return;
-        try{
-          const resp=await window.apiFetch(`/api/admin/suppliers/${encodeURIComponent(id)}`, { method:'DELETE', headers:{ 'X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') } });
-          const data=await resp.json(); if(!resp.ok) throw new Error(data.error||'删除失败');
-          await loadSuppliers(true);
-        }catch(e){ alert(e.message||'删除失败'); }
-      });
-    });
+  // Force http clean up
+  if (location.protocol === 'https:' && /^http:\/\//i.test(window.API_BASE)) {
+    window.API_BASE = isProd ? '' : defaultRemote;
   }
-  document.getElementById('supSearchInput')?.addEventListener('input', ()=>loadSuppliers(true));
-  document.getElementById('supReloadBtn')?.addEventListener('click', ()=>loadSuppliers(true));
-  document.getElementById('supPublicOnly')?.addEventListener('change', ()=>loadSuppliers(true));
-  document.getElementById('supCreateBtn')?.addEventListener('click', ()=>{ showSupEditor({ id:'', CompanyName:'', Title:'', ContactName:'', Phone:'', Email:'', ContactPublic:false, Password:'', PasswordHash:'', Website:'' }); });
-  document.getElementById('supExportBtn')?.addEventListener('click', async ()=>{
-    try{
-      if (!window.ADMIN_KEY && typeof ADMIN_KEY === 'undefined') { alert('请先输入管理员密钥并点击“确认登录”'); return; }
-      const search=(document.getElementById('supSearchInput')?.value||'').trim();
-      const onlyPublic = !!document.getElementById('supPublicOnly')?.checked;
-      const params=new URLSearchParams(); if (search) params.set('q', search); if (onlyPublic) params.set('public','true');
-      const resp=await window.apiFetch(`/api/admin/suppliers/export?${params.toString()}`, { headers:{ 'X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') } });
-      const text=await resp.text(); if (!resp.ok) throw new Error('导出失败');
-      const blob=new Blob([text], { type:'text/csv;charset=utf-8;' }); const href=URL.createObjectURL(blob);
-      const a=document.createElement('a'); a.href=href; a.download='suppliers.csv'; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(href); a.remove();},0);
-    }catch(e){ alert(e.message||'导出失败'); }
-  });
-  // 同步供应商：从网站 data/suppliers.json 增量 upsert 到后台
-  document.getElementById('supSyncBtn')?.addEventListener('click', async ()=>{
-    try {
-      if (!window.ADMIN_KEY && typeof ADMIN_KEY === 'undefined') { alert('请先输入管理员密钥并点击“确认登录”'); return; }
-      const btn = document.getElementById('supSyncBtn'); if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> 同步中'; }
-      const base = (location.origin + '/content/suppliers');
-      const resp = await window.apiFetch(`/api/admin/import-suppliers?base=${encodeURIComponent(base)}`, { method: 'POST', headers: { 'X-Admin-Key': (typeof ADMIN_KEY!=='undefined'?ADMIN_KEY:'') } });
-      const data = await resp.json();
-      if (!resp.ok) throw new Error(data.error || '同步失败');
-      alert(`已同步供应商：${data.upserted||0} 条`);
-      await loadSuppliers(true);
-    } catch (e) {
-      alert(e.message || '同步失败');
-    } finally {
-      const btn = document.getElementById('supSyncBtn'); if (btn) { btn.disabled = false; btn.innerHTML = '同步供应商'; }
-    }
-  });
-  document.getElementById('supPrevPage')?.addEventListener('click', ()=>{
-    if (supOffsetStack.length){
-      supOffsetNext = supOffsetStack.pop();
-      loadSuppliers(false);
-    }
-  });
-  document.getElementById('supNextPage')?.addEventListener('click', ()=>{
-    if (supOffsetNext){
-      supOffsetStack.push(supOffsetNext);
-      loadSuppliers(false);
-    }
-  });
-
-  // 初始化（未登录时默认显示需求列表）
-  document.addEventListener('DOMContentLoaded', ()=>{
-    try { const legacy = document.getElementById('requirements')?.closest('.row'); if (legacy) legacy.style.display = 'none'; } catch {}
-    document.querySelectorAll('aside .nav-link').forEach(a => a.classList.toggle('active', a.dataset.tab==='requirementsSection'));
-    const reqSec=document.getElementById('requirementsSection');
-    const demSec=document.getElementById('demandersSection');
-    const supSec=document.getElementById('suppliersSection');
-    if (reqSec) reqSec.style.display='';
-    if (demSec) demSec.style.display='none';
-    if (supSec) supSec.style.display='none';
-    // 默认尝试加载供应商索引（登录前也可浏览）
-    loadSuppliers(true);
-  });
-
-  // 在侧边菜单切换时触发对应数据加载
-  document.querySelectorAll('aside .nav-link, #adminOffcanvas .nav-link').forEach(a => a.addEventListener('click', ()=>{
-    const tab=a.dataset.tab;
-    if (tab==='requirementsSection') {
-      try { loadRequirementsPage(true); } catch {}
-    } else if (tab==='demandersSection') {
-      try { loadDemandersIndex(true); } catch {}
-    } else if (tab==='suppliersSection') {
-      try { loadSuppliers(); } catch {}
-    }
-  }));
-
-  // 统一导出：需求列表 CSV/XLSX
-  function exportRequirementsToCSV(items){
-    const headers = ['编号','标题','状态','进度','主分类','次分类','预算','在线报价','联系方式公开','企业','联系人','电话','邮箱','部门','发布时间'];
-    const rows = (items||[]).map(it => {
-      const r = normalizeRequirement(it);
-      return [
-        r.RequirementID||'',
-        r.Title||'',
-        r.Status||'',
-        r.Progress||'',
-        r.PrimaryCategory||'',
-        r.SecondaryCategory||'',
-        r.BudgetRange||'',
-        r.AllowOpenQuotes ? '开启' : '关闭',
-        r.ContactPublic ? '公开' : '不公开',
-        r.ContactCompany||'',
-        r.ContactName||'',
-        r.ContactPhone||'',
-        r.ContactEmail||'',
-        r.ContactDepartment||'',
-        formatDate(r.PublishedAt||'')
-      ];
-    });
-    const csv = [headers, ...rows].map(r => r.map(v => String(v).replace(/"/g,'""')).map(v => /,|\n|"/.test(v) ? `"${v}"` : v).join(',')).join('\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = 'requirements.csv'; document.body.appendChild(a); a.click();
-    setTimeout(()=>{URL.revokeObjectURL(url); a.remove();},0);
-  }
-  function exportRequirementsToXLSX(items){
-    if (!window.XLSX) { alert('XLSX 库未加载'); return; }
-    const rows = (items||[]).map(it => {
-      const r = normalizeRequirement(it);
-      return ({
-        编号: r.RequirementID||'',
-        标题: r.Title||'',
-        状态: r.Status||'',
-        进度: r.Progress||'',
-        主分类: r.PrimaryCategory||'',
-        次分类: r.SecondaryCategory||'',
-        预算: r.BudgetRange||'',
-        在线报价: r.AllowOpenQuotes ? '开启' : '关闭',
-        联系方式公开: r.ContactPublic ? '公开' : '不公开',
-        企业: r.ContactCompany||'',
-        联系人: r.ContactName||'',
-        电话: r.ContactPhone||'',
-        邮箱: r.ContactEmail||'',
-        部门: r.ContactDepartment||'',
-        发布时间: formatDate(r.PublishedAt||'')
-      });
-    });
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.json_to_sheet(rows);
-    XLSX.utils.book_append_sheet(wb, ws, '需求');
-    XLSX.writeFile(wb, 'requirements.xlsx');
-  }
-  document.getElementById('reqExportCsvBtn')?.addEventListener('click', ()=>exportRequirementsToCSV((typeof requirementsCache!=='undefined'?requirementsCache:[])));
-  document.getElementById('reqExportXlsxBtn')?.addEventListener('click', ()=>exportRequirementsToXLSX((typeof requirementsCache!=='undefined'?requirementsCache:[])));
-
-  // 供应商管理编辑器
-  function ensureSupEditor(){
-    let panel=document.getElementById('supEditorPanel');
-    if (!panel){
-      panel=document.createElement('div'); panel.id='supEditorPanel'; panel.className='mt-3';
-      panel.innerHTML = `
-        <div class="border rounded p-3">
-          <div class="row g-2">
-            <div class="col-md-4"><label class="form-label small">公司/名称</label><input id="supCompany" class="form-control form-control-sm" /></div>
-            <div class="col-md-3"><label class="form-label small">联系人</label><input id="supContact" class="form-control form-control-sm" /></div>
-            <div class="col-md-3"><label class="form-label small">电话</label><input id="supPhone" class="form-control form-control-sm" /></div>
-            <div class="col-md-2"><label class="form-label small">邮箱</label><input id="supEmail" class="form-control form-control-sm" /></div>
-            <div class="col-md-4"><label class="form-label small">官网/链接</label><input id="supWebsite" class="form-control form-control-sm" /></div>
-            <div class="col-md-3"><div class="form-check mt-2"><input class="form-check-input" type="checkbox" id="supPublic"><label class="form-check-label" for="supPublic">公开联系方式</label></div></div>
-            <div class="col-md-3"><label class="form-label small">明文密码</label><input id="supPassword" class="form-control form-control-sm" /></div>
-            <div class="col-md-6 d-flex align-items-end justify-content-end gap-2">
-              <button id="supSaveBtn" class="btn btn-primary btn-sm">保存</button>
-              <button id="supCancelBtn" class="btn btn-secondary btn-sm">取消</button>
-              <span id="supSaveHint" class="small text-muted ms-2"></span>
-            </div>
-          </div>
-        </div>`;
-      const sec=document.getElementById('suppliersSection'); sec?.querySelector('.card-body')?.appendChild(panel);
-    }
-    return panel;
-  }
-  function showSupEditor(item){
-    const panel=ensureSupEditor();
-    panel.dataset.id = item.id||'';
-    document.getElementById('supCompany').value = item.CompanyName || item.Title || '';
-    document.getElementById('supContact').value = item.ContactName || '';
-    document.getElementById('supPhone').value = item.Phone || '';
-    document.getElementById('supEmail').value = item.Email || '';
-    document.getElementById('supWebsite').value = item.Website || '';
-    document.getElementById('supPublic').checked = !!item.ContactPublic;
-    document.getElementById('supPassword').value = item.Password || '';
-  }
-  document.addEventListener('click', async (e)=>{
-    const saveBtn = (e.target && e.target.id === 'supSaveBtn') ? e.target : null;
-    const cancelBtn = (e.target && e.target.id === 'supCancelBtn') ? e.target : null;
-    if (saveBtn){
-      const hint=document.getElementById('supSaveHint');
-      const panel=document.getElementById('supEditorPanel'); const id=panel?.dataset.id||'';
-      const payload={
-        name: document.getElementById('supContact').value.trim(),
-        company: document.getElementById('supCompany').value.trim(),
-        contact_phone: document.getElementById('supPhone').value.trim(),
-        contact_email: document.getElementById('supEmail').value.trim(),
-        access_password_plain: document.getElementById('supPassword').value,
-        status: 'active',
-        metadata_json: {
-          contact_public: !!document.getElementById('supPublic').checked,
-          website: document.getElementById('supWebsite').value.trim()
-        }
-      };
-      try{
-        const resp=await window.apiFetch(`/api/admin/suppliers/upsert`, { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify({ id, ...payload }) });
-        const data=await resp.json();
-        if(!resp.ok) throw new Error(data.error||'保存失败');
-        hint.textContent='已保存';
-        await loadSuppliers();
-        setTimeout(()=>{hint.textContent='';},1200);
-      }catch(err){ hint.textContent = err.message||'保存失败'; setTimeout(()=>{hint.textContent='';},2000); }
-    } else if (cancelBtn){
-      const panel=document.getElementById('supEditorPanel'); if(panel) panel.dataset.id='';
-      ['supCompany','supContact','supPhone','supEmail','supWebsite','supPassword'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
-      const chk=document.getElementById('supPublic'); if(chk) chk.checked=false;
-    }
-  });
-
-  // 需求方管理：列表 + 编辑
-  let demandersCache=[];
-  let demOffsetNext='';
-  let demOffsetStack=[];
-  async function loadDemandersIndex(initial=false){
-    const tbody=document.getElementById('demTableBody');
-    if (tbody) tbody.innerHTML = '<tr><td colspan="7" class="text-muted">加载中...</td></tr>';
-    const q=(document.getElementById('demSearchInput')?.value||'').trim();
-    const url=new URL('/api/admin/demanders', window.location.origin);
-    if (q) url.searchParams.set('q', q);
-    url.searchParams.set('limit','20');
-    if (!initial && demOffsetNext) url.searchParams.set('offset', demOffsetNext);
-    try{
-      const resp=await window.apiFetch(`/api/admin/demanders?${url.searchParams.toString()}`);
-      const data=await resp.json();
-      if (!resp.ok) throw new Error(data.error||'加载失败');
-      const items = Array.isArray(data) ? data : (data.items || []);
-      demandersCache = items.map(d => ({
-        id: d.demander_id || d.id || '',
-        CompanyName: d.company || d.CompanyName || '',
-        ContactName: d.name || d.ContactName || '',
-        Phone: d.contact_phone || d.Phone || '',
-        Email: d.contact_email || d.Email || '',
-        ContactPublic: (d.metadata_json && (typeof d.metadata_json==='object' ? !!d.metadata_json.contact_public : false)) || !!d.ContactPublic,
-        AllowOpenQuotes: (d.metadata_json && (typeof d.metadata_json==='object' ? !!d.metadata_json.allow_open_quotes : false)) || !!d.AllowOpenQuotes,
-        RequirementCount: Number(d.requirement_count||0),
-        Password: (function(){ try { return (typeof d.metadata_json==='object' ? d.metadata_json.password_plain : JSON.parse(d.metadata_json||'{}').password_plain) || ''; } catch { return ''; } })()
-      }));
-      demOffsetNext = (Array.isArray(data)?'':(data.offsetNext||''));
-      if (initial) demOffsetStack = [];
-      renderDemandersIndex();
-      const pageInfo=document.getElementById('demPageInfo');
-      const prevBtn=document.getElementById('demPrevPage');
-      const nextBtn=document.getElementById('demNextPage');
-      if (pageInfo) pageInfo.textContent = `当前页：${demandersCache.length} 条，${demOffsetNext ? '可下一页' : '无更多'}`;
-      if (prevBtn) prevBtn.disabled = demOffsetStack.length === 0;
-      if (nextBtn) nextBtn.disabled = !demOffsetNext;
-    }catch(e){
-      if (tbody) tbody.innerHTML = `<tr><td colspan="7" class="text-danger">${e.message||'无法加载需求方列表'}</td></tr>`;
-    }
-  }
-  function renderDemandersIndex(){
-    const body=document.getElementById('demTableBody'); if(!body) return;
-    const query=(document.getElementById('demSearchInput')?.value||'').trim().toLowerCase();
-    const list=(demandersCache||[]).filter(d=> !query || (String(d.CompanyName||'').toLowerCase().includes(query) || String(d.ContactName||'').toLowerCase().includes(query)));
-    body.innerHTML = list.map(d=>`<tr data-id="${escapeHtml(d.id||'')}" data-company="${escapeHtml(d.CompanyName||'')}"><td>${escapeHtml(d.CompanyName||'')}</td><td>${escapeHtml(d.ContactName||'')}</td><td>${escapeHtml(d.Phone||'')}</td><td>${Number(d.RequirementCount||0)}</td><td>${d.ContactPublic?'公开':'不公开'}</td><td>${d.AllowOpenQuotes? '不需要' : '需要'}</td><td>${escapeHtml(d.Password||'')}</td><td><button class="btn btn-sm btn-outline-secondary me-2" data-action="viewDemReqs">查看需求</button><button class="btn btn-sm btn-outline-primary me-2" data-action="editDem">编辑</button><button class="btn btn-sm btn-outline-danger" data-action="delDem">删除</button></td></tr>`).join('') || '<tr><td colspan="8" class="text-muted">暂无数据</td></tr>';
-    body.querySelectorAll('button[data-action="editDem"]').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const tr = btn.closest('tr'); const id=tr?.dataset.id||'';
-        const item = (demandersCache||[]).find(x=> String(x.id||'')===String(id));
-        showDemEditor(item||{ id:'', CompanyName:'', ContactName:'', Phone:'', Email:'', ContactPublic:false, AllowOpenQuotes:false, Password:'', PasswordHash:'' });
-      });
-    });
-    body.querySelectorAll('button[data-action="delDem"]').forEach(btn=>{
-      btn.addEventListener('click', async ()=>{
-        const tr = btn.closest('tr'); const id=tr?.dataset.id||'';
-        if (!id) return;
-        if (!confirm('确认删除该需求方？')) return;
-        try {
-          const resp=await window.apiFetch(`/api/admin/demanders/${encodeURIComponent(id)}`, { method:'DELETE' });
-          const data=await resp.json();
-          if (!resp.ok) throw new Error(data.error||'删除失败');
-          await loadDemandersIndex(true);
-        } catch (e) { alert(e.message||'删除失败'); }
-      });
-    });
-    body.querySelectorAll('button[data-action="viewDemReqs"]').forEach(btn=>{
-      btn.addEventListener('click', async ()=>{
-        const tr = btn.closest('tr'); const company=tr?.dataset.company||'';
-        if (!company) return;
-        try{
-          const resp=await window.apiFetch(`/api/admin/requirements?q=${encodeURIComponent(company)}`);
-          const data=await resp.json();
-          const items = Array.isArray(data) ? data : (data.items||[]);
-          const list = (items||[]).map(it=>({ RequirementID: it.requirement_id || it.RequirementID || '', Title: it.title || it.Title || ''}));
-          const modal = ensureDetailModal();
-          modal.querySelector('.modal-title').textContent = `需求方：${company}`;
-          modal.querySelector('.modal-body').innerHTML = `<ul class="list-group">${list.map(it=>`<li class="list-group-item d-flex justify-content-between align-items-center"><span class="text-truncate" style="max-width:60%;">${escapeHtml(it.Title||it.RequirementID||'未命名')}</span><span class="small text-muted">${it.RequirementID}</span><div><button class="btn btn-sm btn-outline-secondary me-1" onclick="(function(id){ var u=new URL('/static/entry.html', window.location.origin); u.searchParams.set('id', id); window.location.href=u.toString(); })('${it.RequirementID}')">入口</button><button class="btn btn-sm btn-outline-primary" onclick="(${showRequirementDetail.toString()})('${it.RequirementID}')">详情</button></div></li>`).join('')}</ul>`;
-          new bootstrap.Modal(modal).show();
-        }catch(e){ alert(e.message||'加载需求失败'); }
-      });
-    });
-  }
-  document.getElementById('demSearchInput')?.addEventListener('input', ()=>loadDemandersIndex(true));
-  document.getElementById('demReloadAll')?.addEventListener('click', async ()=>{
-    try {
-      if (!window.ADMIN_KEY && typeof ADMIN_KEY === 'undefined') { alert('请先输入管理员密钥并点击“确认登录”'); return; }
-      const btn=document.getElementById('demReloadAll'); if (btn) { btn.disabled=true; btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span> 统计中'; }
-      const resp=await window.apiFetch('/api/admin/import-demanders', { method:'POST' });
-      const data=await resp.json();
-      if (!resp.ok) throw new Error(data.error||'统计失败');
-      alert(`已聚合需求方：${data.upserted||0} 条`);
-      await loadDemandersIndex(true);
-      await loadDemStats();
-    } catch (e) {
-      alert(e.message||'统计失败');
-    } finally {
-      const btn=document.getElementById('demReloadAll'); if (btn) { btn.disabled=false; btn.innerHTML='重新统计并加载'; }
-    }
-  });
-  document.getElementById('demExportBtn')?.addEventListener('click', async ()=>{
-    try{
-      if (!window.ADMIN_KEY && typeof ADMIN_KEY === 'undefined') { alert('请先输入管理员密钥并点击“确认登录”'); return; }
-      const q=(document.getElementById('demSearchInput')?.value||'').trim();
-      const url = `/api/admin/demanders/export${q?`?q=${encodeURIComponent(q)}`:''}`;
-      const resp=await window.apiFetch(url);
-      const text=await resp.text();
-      if (!resp.ok) throw new Error('导出失败');
-      const blob = new Blob([text], { type:'text/csv;charset=utf-8;' });
-      const href = URL.createObjectURL(blob);
-      const a=document.createElement('a'); a.href=href; a.download='demanders.csv'; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(href); a.remove();},0);
-    }catch(e){ alert(e.message||'导出失败'); }
-  });
-  async function loadDemStats(){
-    try{
-      const resp=await window.apiFetch('/api/admin/demanders/stats');
-      const d=await resp.json();
-      if (!resp.ok) throw new Error(d.error||'统计失败');
-      const el=document.getElementById('demStatsHint'); if (el) el.textContent = `总数 ${d.total||0}，公开 ${d.public||0}，需密码 ${d.password||0}，开放报价 ${d.openQuotes||0}`;
-    }catch(e){ const el=document.getElementById('demStatsHint'); if (el) el.textContent = '统计加载失败'; }
-  }
-  document.getElementById('demCreateBtn')?.addEventListener('click', ()=>{
-    showDemEditor({ id:'', CompanyName:'', ContactName:'', Phone:'', Email:'', ContactPublic:false, AllowOpenQuotes:false, Password:'', PasswordHash:'' });
-  });
-  document.getElementById('demPrevPage')?.addEventListener('click', ()=>{
-    if (demOffsetStack.length){ demOffsetNext = demOffsetStack.pop(); loadDemandersIndex(false); }
-  });
-  document.getElementById('demNextPage')?.addEventListener('click', ()=>{
-    if (demOffsetNext){ demOffsetStack.push(demOffsetNext); loadDemandersIndex(false); }
-  });
-
-  function ensureDemEditor(){
-    let panel=document.getElementById('demEditorPanel');
-    if (!panel){
-      panel=document.createElement('div'); panel.id='demEditorPanel'; panel.className='mt-3';
-      panel.innerHTML = `
-        <div class="border rounded p-3">
-          <div class="row g-2">
-            <div class="col-md-4"><label class="form-label small">公司</label><input id="demCompany" class="form-control form-control-sm" /></div>
-            <div class="col-md-3"><label class="form-label small">联系人</label><input id="demContact" class="form-control form-control-sm" /></div>
-            <div class="col-md-3"><label class="form-label small">电话</label><input id="demPhone" class="form-control form-control-sm" /></div>
-            <div class="col-md-2"><label class="form-label small">邮箱</label><input id="demEmail" class="form-control form-control-sm" /></div>
-            <div class="col-md-3"><div class="form-check mt-2"><input class="form-check-input" type="checkbox" id="demPublic"><label class="form-check-label" for="demPublic">公开联系方式</label></div></div>
-            <div class="col-md-3"><label class="form-label small">明文密码</label><input id="demPassword" class="form-control form-control-sm" /></div>
-            <div class="col-md-6 d-flex align-items-end justify-content-end gap-2">
-              <button id="demSaveBtn" class="btn btn-primary btn-sm">保存</button>
-              <button id="demCancelBtn" class="btn btn-secondary btn-sm">取消</button>
-              <span id="demSaveHint" class="small text-muted ms-2"></span>
-            </div>
-          </div>
-        </div>`;
-      const sec=document.getElementById('demandersSection'); sec?.querySelector('.card-body')?.appendChild(panel);
-    }
-    return panel;
-  }
-  function showDemEditor(item){
-    const panel=ensureDemEditor();
-    panel.dataset.id = item.id||'';
-    document.getElementById('demCompany').value = item.CompanyName||'';
-    document.getElementById('demContact').value = item.ContactName||'';
-    document.getElementById('demPhone').value = item.Phone||'';
-    document.getElementById('demEmail').value = item.Email||'';
-    document.getElementById('demPublic').checked = !!item.ContactPublic;
-    document.getElementById('demPassword').value = item.Password||'';
-  }
-  document.addEventListener('click', async (e)=>{
-    const saveBtn = (e.target && e.target.id === 'demSaveBtn') ? e.target : null;
-    const cancelBtn = (e.target && e.target.id === 'demCancelBtn') ? e.target : null;
-    if (saveBtn){
-      const hint=document.getElementById('demSaveHint');
-      const panel=document.getElementById('demEditorPanel'); const id=panel?.dataset.id||'';
-      const payload={
-        name: document.getElementById('demContact').value.trim(),
-        company: document.getElementById('demCompany').value.trim(),
-        contact_phone: document.getElementById('demPhone').value.trim(),
-        contact_email: document.getElementById('demEmail').value.trim(),
-        metadata_json: {
-          contact_public: !!document.getElementById('demPublic').checked,
-          password_plain: document.getElementById('demPassword').value
-        }
-      };
-      try{
-        const isCreate = !id;
-        const url = isCreate ? '/api/admin/demanders' : `/api/admin/demanders/${encodeURIComponent(id)}`;
-        const method = isCreate ? 'POST' : 'PATCH';
-        const resp=await window.apiFetch(url, { method, headers:{ 'Content-Type':'application/json' }, body: JSON.stringify(payload) });
-        const data=await resp.json();
-        if(!resp.ok) throw new Error(data.error||'保存失败');
-        hint.textContent='已保存';
-        await loadDemandersIndex(true);
-        setTimeout(()=>{hint.textContent='';},1200);
-      }catch(err){ hint.textContent = err.message||'保存失败'; setTimeout(()=>{hint.textContent='';},2000); }
-    } else if (cancelBtn){
-      const panel=document.getElementById('demEditorPanel'); if(panel) panel.dataset.id='';
-      ['demCompany','demContact','demPhone','demEmail','demPassword'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
-      const chk=document.getElementById('demPublic'); if(chk) chk.checked=false;
-    }
-  });
+  window.API_BASE = String(window.API_BASE).replace(/\/$/, '');
+  
+  window.ADMIN_KEY = '';
+  try { window.ADMIN_KEY = localStorage.getItem('ADMIN_KEY') || 'admin123456'; } catch {}
 })();
+
+async function apiFetch(path, options = {}) {
+  const url = (window.API_BASE || '') + path;
+  const headers = { 
+    'Content-Type': 'application/json',
+    'X-Admin-Key': window.ADMIN_KEY
+  };
+  if (options.headers) Object.assign(headers, options.headers);
+  
+  try {
+    const res = await fetch(url, { ...options, headers });
+    if (!res.ok) {
+      const txt = await res.text().catch(()=>'');
+      let msg = txt;
+      try { msg = JSON.parse(txt).error || txt; } catch {}
+      // 如果是 401，提示检查密钥
+      if (res.status === 401) msg += ' (请在设置中检查 Admin Key)';
+      throw new Error(`Request failed (${res.status}): ${msg}`);
+    }
+    const ct = res.headers.get('content-type') || '';
+    return ct.includes('application/json') ? res.json() : res.text();
+  } catch (e) {
+    // 捕获网络错误（如连接被拒绝）
+    if (e instanceof TypeError && (e.message === 'Failed to fetch' || e.message.includes('NetworkError'))) {
+      throw new Error(`无法连接到服务器 (${url})，请检查 API 地址配置或后端服务是否启动。`);
+    }
+    throw e;
+  }
+}
+
+function showToast(msg, type='info') {
+  const container = document.querySelector('.toast-container');
+  const el = document.createElement('div');
+  el.className = `toast align-items-center text-white bg-${type === 'error' ? 'danger' : (type==='success'?'success':'primary')} border-0`;
+  el.setAttribute('role', 'alert');
+  el.setAttribute('aria-live', 'assertive');
+  el.setAttribute('aria-atomic', 'true');
+  el.innerHTML = `<div class="d-flex"><div class="toast-body">${msg}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>`;
+  container.appendChild(el);
+  const t = new bootstrap.Toast(el, { delay: 3000 });
+  t.show();
+  el.addEventListener('hidden.bs.toast', () => el.remove());
+}
+
+function escapeHtml(s) {
+  if (s === null || s === undefined) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;'}[c]));
+}
+
+// --- App Logic ---
+const App = {
+  state: {
+    reqList: [],
+    demList: [],
+    supList: [],
+    quotesCache: [],
+    productsCache: [],
+    demReqCache: [],
+    currentReqId: null
+  },
+  
+  init() {
+    this.bindNav();
+    this.bindAuth();
+    this.updateEnvInfo();
+    this.loadDashboard(); // Initial load
+    
+    // Req bindings
+    document.getElementById('reqRefreshBtn').onclick = () => this.loadRequirements();
+    document.getElementById('reqFilterStatus').onchange = () => this.renderRequirements();
+    document.getElementById('reqSearch').oninput = () => this.renderRequirements();
+    document.getElementById('reqSaveBtn').onclick = () => this.saveRequirement();
+    
+    // Dem bindings
+    document.getElementById('demRefreshBtn').onclick = () => this.loadDemanders();
+    document.getElementById('demSearch').oninput = () => this.renderDemanders();
+    
+    // Sup bindings
+    document.getElementById('supRefreshBtn').onclick = () => this.loadSuppliers();
+    document.getElementById('supSearch').oninput = () => this.renderSuppliers();
+    document.getElementById('supAddBtn').onclick = () => this.openSupModal();
+    document.getElementById('supSaveBtn').onclick = () => this.saveSupplier();
+    
+    // Quote bindings
+    document.getElementById('quoteFilterStatus').onchange = () => this.renderQuotes();
+    document.getElementById('quoteExportCsv').onclick = () => this.exportQuotes('csv');
+    document.getElementById('quoteExportXlsx').onclick = () => this.exportQuotes('xlsx');
+  },
+  
+  bindNav() {
+    document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+        
+        const page = link.dataset.page;
+        document.querySelectorAll('.page-view').forEach(v => v.classList.add('d-none'));
+        document.getElementById(`view-${page}`).classList.remove('d-none');
+        
+        if (page === 'requirements') this.loadRequirements();
+        if (page === 'demanders') this.loadDemanders();
+        if (page === 'suppliers') this.loadSuppliers();
+        if (page === 'dashboard') this.loadDashboard();
+        if (page === 'settings') this.loadSettings();
+      });
+    });
+  },
+  
+  bindAuth() {
+    document.getElementById('logoutBtn').onclick = () => {
+      if(confirm('确定退出登录？(只会清除页面状态，不会清除 AdminKey)')) {
+        location.reload();
+      }
+    };
+    
+    // API Base Setting
+    document.getElementById('settingApiBase').value = window.API_BASE || '';
+    document.getElementById('saveApiBaseBtn').onclick = () => {
+       const val = document.getElementById('settingApiBase').value.trim();
+       this.setApiBase(val);
+    };
+
+    document.getElementById('settingAdminKey').value = window.ADMIN_KEY;
+    document.getElementById('saveKeyBtn').onclick = () => {
+      const k = document.getElementById('settingAdminKey').value.trim();
+      if(k) {
+        localStorage.setItem('ADMIN_KEY', k);
+        window.ADMIN_KEY = k;
+        showToast('密钥已保存', 'success');
+        this.updateEnvInfo();
+      }
+    };
+  },
+  
+  setApiBase(val) {
+      if (val) {
+          localStorage.setItem('API_BASE', val);
+          window.API_BASE = val;
+          showToast('API 地址已更新，即将刷新...', 'success');
+      } else {
+          localStorage.removeItem('API_BASE');
+          showToast('API 配置已重置，即将刷新...', 'success');
+      }
+      setTimeout(() => location.reload(), 1000);
+  },
+  
+  updateEnvInfo() {
+    const base = window.API_BASE ? window.API_BASE : '同源/Default';
+    const hasKey = !!window.ADMIN_KEY;
+    document.getElementById('envInfoBar').innerHTML = `
+      <div class="px-3">
+        <div>API: <span class="text-white">${escapeHtml(base)}</span></div>
+        <div>Key: <span class="${hasKey?'text-success':'text-danger'}">${hasKey?'已配置':'未配置'}</span></div>
+      </div>
+    `;
+  },
+  
+  // --- Dashboard ---
+  async loadDashboard() {
+    try {
+      // Parallel fetch for speed
+      const [reqs, sups] = await Promise.all([
+        apiFetch('/api/requirements?limit=1000'),
+        apiFetch('/api/admin/suppliers?limit=1000') // Assuming admin endpoint exists, else fallback
+      ]);
+      
+      const rList = Array.isArray(reqs) ? reqs : (reqs.items || []);
+      const sList = Array.isArray(sups) ? sups : (sups.items || []);
+      
+      const totalReq = rList.length;
+      const pendingReq = rList.filter(r => (r.Status||r.status) !== '公开').length;
+      const totalQuotes = rList.reduce((acc, r) => acc + (Number(r.QuoteCount||r.quote_count)||0), 0);
+      
+      document.getElementById('dashTotalReq').textContent = totalReq;
+      document.getElementById('dashPendingReq').textContent = pendingReq;
+      document.getElementById('dashTotalQuotes').textContent = totalQuotes;
+      document.getElementById('dashTotalSup').textContent = sList.length;
+      
+      // Recent activity (Mock based on latest requirements)
+      const recent = rList.slice(0, 5);
+      document.getElementById('dashActivityList').innerHTML = recent.map(r => `
+        <div class="list-group-item py-2">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="text-truncate me-2">
+              <span class="badge bg-secondary me-2">${escapeHtml(r.Status||r.status)}</span>
+              ${escapeHtml(r.Title||r.title)}
+            </div>
+            <small class="text-muted text-nowrap">${(r.PublishedAt||r.published_at||'').split('T')[0]}</small>
+          </div>
+        </div>
+      `).join('') || '<div class="list-group-item text-muted text-center">无数据</div>';
+      
+    } catch (e) {
+      console.error(e);
+      showToast('仪表盘数据加载失败', 'error');
+    }
+  },
+  
+  // --- Requirements ---
+  async loadRequirements() {
+    try {
+      const res = await apiFetch('/api/requirements?limit=200'); // Load enough for admin
+      this.state.reqList = Array.isArray(res) ? res : (res.items || []);
+      this.renderRequirements();
+    } catch (e) {
+      showToast('需求列表加载失败: ' + e.message, 'error');
+    }
+  },
+  
+  renderRequirements() {
+    const tbody = document.getElementById('reqTableBody');
+    const filter = document.getElementById('reqFilterStatus').value;
+    const search = document.getElementById('reqSearch').value.trim().toLowerCase();
+    
+    let list = this.state.reqList.filter(r => {
+      const status = (r.Status || r.status || '').trim();
+      const progress = (r.Progress || r.progress || '').trim();
+      
+      if (filter === 'pending' && status === '公开') return false;
+      if (filter === 'active' && (progress !== '发布中' && progress !== '接洽中')) return false;
+      if (filter === 'closed' && (status !== '关闭' && progress !== '已完成' && progress !== '已终止')) return false;
+      
+      if (search) {
+        const txt = `${r.RequirementID} ${r.Title} ${r.ContactCompany}`.toLowerCase();
+        if (!txt.includes(search)) return false;
+      }
+      return true;
+    });
+    
+    document.getElementById('reqCountHint').textContent = `共 ${list.length} 条`;
+    
+    tbody.innerHTML = list.map(r => {
+      const id = r.RequirementID || r.id;
+      const status = r.Status || r.status || '未知';
+      const progress = r.Progress || r.progress || '待发布';
+      const isOpen = (typeof r.AllowOpenQuotes !== 'undefined') ? r.AllowOpenQuotes : r.allow_open_quotes;
+      const qCount = r.QuoteCount || r.quote_count || 0;
+      
+      let statusBadge = 'bg-secondary';
+      if (status === '公开') statusBadge = 'bg-success';
+      if (status === '关闭') statusBadge = 'bg-dark';
+      
+      return `
+        <tr>
+          <td class="font-monospace small">${escapeHtml(id)}</td>
+          <td>
+            <div class="fw-bold text-truncate" style="max-width: 200px;" title="${escapeHtml(r.Title)}">${escapeHtml(r.Title)}</div>
+          </td>
+          <td>
+            <div class="small text-truncate" style="max-width: 150px;" title="${escapeHtml(r.ContactCompany)}">${escapeHtml(r.ContactCompany)}</div>
+          </td>
+          <td><span class="badge ${statusBadge}">${escapeHtml(status)}</span></td>
+          <td><span class="badge bg-light text-dark border">${escapeHtml(progress)}</span></td>
+          <td>${qCount > 0 ? `<a href="#" class="text-decoration-none" onclick="App.openQuotes('${id}')">${qCount}</a>` : '-'}</td>
+          <td>${isOpen ? '<i class="fa-solid fa-check text-success" title="开放报价"></i>' : '<span class="text-muted">-</span>'}</td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary py-0" onclick="App.editRequirement('${id}')">编辑</button>
+            ${status !== '公开' ? `<button class="btn btn-sm btn-outline-success py-0 ms-1" onclick="App.quickApprove('${id}')">批准</button>` : ''}
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+  
+  async quickApprove(id) {
+    if (!confirm('确定批准该需求并公开显示？\n(将设置状态为公开、进度为发布中、允许在线报价)')) return;
+    try {
+      await apiFetch(`/api/admin/requirements/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          status: '公开',
+          progress: '发布中',
+          allow_open_quotes: true,
+          contact_public: true
+        })
+      });
+      showToast('已批准发布', 'success');
+      this.loadRequirements();
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+  },
+  
+  editRequirement(id) {
+    const r = this.state.reqList.find(x => (x.RequirementID || x.id) == id);
+    if (!r) return;
+    
+    document.getElementById('editReqId').value = id;
+    document.getElementById('editReqTitle').value = r.Title || r.title || '';
+    document.getElementById('editReqCat1').value = r.PrimaryCategory || r.primary_category || '';
+    document.getElementById('editReqBudget').value = r.BudgetRange || r.budget_range || '';
+    document.getElementById('editReqStatus').value = r.Status || r.status || '待审核';
+    document.getElementById('editReqProgress').value = r.Progress || r.progress || '待发布';
+    document.getElementById('editReqPreview').value = r.PublicPreview || r.public_preview || '';
+    document.getElementById('editReqOpenQuotes').checked = (typeof r.AllowOpenQuotes !== 'undefined') ? r.AllowOpenQuotes : r.allow_open_quotes;
+    document.getElementById('editReqContactPublic').checked = (typeof r.ContactPublic !== 'undefined') ? r.ContactPublic : r.contact_public;
+    
+    // Extract View Password from metadata if possible, or just show empty/placeholder
+    // Assuming API might return it in a specific field for admin or we parse metadata
+    let pwd = '';
+    try {
+      const meta = typeof r.metadata_json === 'string' ? JSON.parse(r.metadata_json) : r.metadata_json;
+      if (meta && meta.view_password) pwd = meta.view_password;
+    } catch {}
+    document.getElementById('editReqPwd').value = pwd;
+    
+    new bootstrap.Modal(document.getElementById('reqEditModal')).show();
+  },
+  
+  async saveRequirement() {
+    const id = document.getElementById('editReqId').value;
+    const body = {
+      title: document.getElementById('editReqTitle').value,
+      primary_category: document.getElementById('editReqCat1').value,
+      budget_range: document.getElementById('editReqBudget').value,
+      status: document.getElementById('editReqStatus').value,
+      progress: document.getElementById('editReqProgress').value,
+      public_preview: document.getElementById('editReqPreview').value,
+      allow_open_quotes: document.getElementById('editReqOpenQuotes').checked,
+      contact_public: document.getElementById('editReqContactPublic').checked,
+      // Special handling for view password update if backend supports it via this endpoint
+      view_password: document.getElementById('editReqPwd').value
+    };
+    
+    try {
+      await apiFetch(`/api/admin/requirements/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(body)
+      });
+      showToast('保存成功', 'success');
+      bootstrap.Modal.getInstance(document.getElementById('reqEditModal')).hide();
+      this.loadRequirements();
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+  },
+  
+  // --- Quotes ---
+  async openQuotes(reqId) {
+    this.state.currentReqId = reqId;
+    const modal = new bootstrap.Modal(document.getElementById('quotesModal'));
+    document.getElementById('quoteReqTitle').textContent = `(${reqId})`;
+    document.getElementById('quoteTableBody').innerHTML = '<tr><td colspan="8" class="text-center text-muted py-3">加载中...</td></tr>';
+    modal.show();
+    
+    try {
+      const res = await apiFetch(`/api/quotes?requirement_id=${reqId}`);
+      this.state.quotesCache = Array.isArray(res) ? res : (res.items || []);
+      this.renderQuotes();
+    } catch (e) {
+      document.getElementById('quoteTableBody').innerHTML = `<tr><td colspan="8" class="text-center text-danger py-3">${e.message}</td></tr>`;
+    }
+  },
+  
+  renderQuotes() {
+    const filter = document.getElementById('quoteFilterStatus').value;
+    const list = this.state.quotesCache.filter(q => !filter || (q.Status||q.status) === filter);
+    const tbody = document.getElementById('quoteTableBody');
+    
+    if (list.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-3">暂无报价</td></tr>';
+      return;
+    }
+    
+    tbody.innerHTML = list.map(q => {
+      const qid = q.QuoteID || q.quote_id;
+      const status = q.Status || q.status || 'submitted';
+      return `
+        <tr>
+          <td class="font-monospace small">${qid}</td>
+          <td>${escapeHtml(q.SupplierCompanyName || q.supplier_name)}</td>
+          <td>${escapeHtml(q.SupplierContact || '')}</td>
+          <td>${escapeHtml(q.Price || q.amount || '-')}</td>
+          <td class="text-truncate" style="max-width:150px;" title="${escapeHtml(q.Remarks||q.remarks)}">${escapeHtml(q.Remarks||q.remarks||'')}</td>
+          <td class="small text-muted">${(q.CreatedAt||q.created_at||'').replace('T',' ').substring(0,16)}</td>
+          <td>
+            <select class="form-select form-select-sm py-0" style="width:auto;" onchange="App.updateQuoteStatus('${qid}', this.value)">
+               <option value="submitted" ${status==='submitted'?'selected':''}>已提交</option>
+               <option value="reviewing" ${status==='reviewing'?'selected':''}>审核中</option>
+               <option value="approved" ${status==='approved'?'selected':''}>已通过</option>
+               <option value="rejected" ${status==='rejected'?'selected':''}>已拒绝</option>
+               <option value="won" ${status==='won'?'selected':''}>中标</option>
+            </select>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-outline-danger py-0" onclick="App.deleteQuote('${qid}')">删除</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+  
+  async updateQuoteStatus(qid, status) {
+    try {
+      await apiFetch(`/api/quotes/${qid}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status })
+      });
+      showToast('状态已更新', 'success');
+      // Update local cache
+      const q = this.state.quotesCache.find(x => (x.QuoteID||x.quote_id) == qid);
+      if(q) q.Status = status;
+    } catch (e) {
+      showToast('更新失败: ' + e.message, 'error');
+    }
+  },
+  
+  async deleteQuote(qid) {
+    if(!confirm('确定删除此报价？')) return;
+    try {
+      await apiFetch(`/api/quotes/${qid}`, { method: 'DELETE' });
+      this.state.quotesCache = this.state.quotesCache.filter(x => (x.QuoteID||x.quote_id) != qid);
+      this.renderQuotes();
+      showToast('报价已删除', 'success');
+    } catch (e) {
+      showToast('删除失败: ' + e.message, 'error');
+    }
+  },
+  
+  exportQuotes(type) {
+    const list = this.state.quotesCache; // Export all loaded (or should it be filtered? let's do all for now)
+    if (!list.length) return showToast('无数据可导出', 'info');
+    
+    const rows = list.map(q => ({
+      ID: q.QuoteID || q.quote_id,
+      Supplier: q.SupplierCompanyName || q.supplier_name,
+      Contact: q.SupplierContact,
+      Phone: q.SupplierPhone,
+      Price: q.Price || q.amount,
+      Remarks: q.Remarks || q.remarks,
+      Status: q.Status || q.status,
+      Date: q.CreatedAt || q.created_at
+    }));
+    
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Quotes");
+    
+    if (type === 'csv') {
+      XLSX.writeFile(wb, `Quotes_${this.state.currentReqId}.csv`);
+    } else {
+      XLSX.writeFile(wb, `Quotes_${this.state.currentReqId}.xlsx`);
+    }
+  },
+  
+  // --- Demanders ---
+  async loadDemanders() {
+    try {
+      const res = await apiFetch('/api/admin/demanders');
+      this.state.demList = Array.isArray(res) ? res : (res.items || []);
+      this.renderDemanders();
+    } catch (e) {
+      showToast('加载失败: ' + e.message, 'error');
+    }
+  },
+  
+  renderDemanders() {
+    const search = document.getElementById('demSearch').value.trim().toLowerCase();
+    const list = this.state.demList.filter(d => {
+      if (search && !((d.company||'').toLowerCase().includes(search) || (d.name||'').toLowerCase().includes(search))) return false;
+      return true;
+    });
+    
+    document.getElementById('demTableBody').innerHTML = list.map(d => {
+      // Extract password safely
+      let pwd = '';
+      try { pwd = (d.metadata_json?.password_plain) || (JSON.parse(d.metadata_json||'{}').password_plain) || ''; } catch {}
+      const company = escapeHtml(d.company || d.CompanyName);
+      
+      return `
+        <tr>
+          <td>${company}</td>
+          <td>${escapeHtml(d.name || d.ContactName)}</td>
+          <td>${escapeHtml(d.contact_phone || d.Phone)}</td>
+          <td>${d.requirement_count || 0}</td>
+          <td>${d.contact_public ? '是' : '否'}</td>
+          <td class="font-monospace text-primary">${escapeHtml(pwd)}</td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary py-0" onclick="App.viewDemanderRequirements('${company}')">需求详情</button>
+          </td>
+        </tr>
+      `;
+    }).join('') || '<tr><td colspan="7" class="text-center text-muted">暂无数据</td></tr>';
+  },
+  
+  async viewDemanderRequirements(company) {
+      const modal = new bootstrap.Modal(document.getElementById('demReqModal'));
+      document.getElementById('demReqTitle').textContent = `(${company})`;
+      document.getElementById('demReqTableBody').innerHTML = '<tr><td colspan="8" class="text-center text-muted py-3">加载中...</td></tr>';
+      modal.show();
+      
+      try {
+          const res = await apiFetch(`/api/requirements?contact_company=${encodeURIComponent(company)}`);
+          this.state.demReqCache = Array.isArray(res) ? res : (res.items || []);
+          
+          if (this.state.demReqCache.length === 0) {
+               document.getElementById('demReqTableBody').innerHTML = '<tr><td colspan="8" class="text-center text-muted py-3">该发布方暂无需求</td></tr>';
+          } else {
+               document.getElementById('demReqTableBody').innerHTML = this.state.demReqCache.map(r => `
+                  <tr>
+                      <td class="font-monospace small">${r.RequirementID}</td>
+                      <td>${escapeHtml(r.Title)}</td>
+                      <td>${escapeHtml(r.PrimaryCategory)}</td>
+                      <td>${escapeHtml(r.BudgetRange)}</td>
+                      <td><span class="badge bg-secondary">${r.Status}</span></td>
+                      <td>${r.Progress}</td>
+                      <td>${r.QuoteCount||0}</td>
+                      <td class="small">${(r.PublishedAt||'').split('T')[0]}</td>
+                  </tr>
+               `).join('');
+          }
+      } catch (e) {
+          document.getElementById('demReqTableBody').innerHTML = `<tr><td colspan="8" class="text-center text-danger py-3">${e.message}</td></tr>`;
+      }
+  },
+  
+  // --- Suppliers ---
+  async loadSuppliers() {
+    try {
+      const res = await apiFetch('/api/admin/suppliers');
+      this.state.supList = Array.isArray(res) ? res : (res.items || []);
+      this.renderSuppliers();
+    } catch (e) {
+      showToast('加载失败: ' + e.message, 'error');
+    }
+  },
+  
+  renderSuppliers() {
+    const search = document.getElementById('supSearch').value.trim().toLowerCase();
+    const list = this.state.supList.filter(s => {
+      if (search && !((s.CompanyName||s.company||'').toLowerCase().includes(search))) return false;
+      return true;
+    });
+    
+    document.getElementById('supTableBody').innerHTML = list.map(s => {
+      const id = s.SupplierID || s.id;
+      return `
+        <tr>
+          <td class="font-monospace small">${escapeHtml(id)}</td>
+          <td>${escapeHtml(s.CompanyName || s.company)}</td>
+          <td>${escapeHtml(s.ContactName || s.name)}</td>
+          <td>${escapeHtml(s.Phone || s.contact_phone)}</td>
+          <td class="font-monospace text-success fw-bold">${escapeHtml(s.AccessPassword || s.access_password_plain || '')}</td>
+          <td><span class="badge bg-success">正常</span></td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary py-0 me-1" onclick="App.editSupplier('${id}')">编辑</button>
+            <button class="btn btn-sm btn-outline-info py-0" onclick="App.viewSupplierProducts('${id}', '${escapeHtml(s.CompanyName||s.company)}')">产品</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+  
+  async viewSupplierProducts(supId, supName) {
+      const modal = new bootstrap.Modal(document.getElementById('productsModal'));
+      document.getElementById('prodSupTitle').textContent = `(${supName})`;
+      document.getElementById('prodTableBody').innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3">加载中...</td></tr>';
+      modal.show();
+      
+      try {
+          const res = await apiFetch(`/api/admin/products?supplier_id=${supId}`);
+          const list = Array.isArray(res) ? res : (res.items || []);
+          
+          if (list.length === 0) {
+               document.getElementById('prodTableBody').innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3">暂无产品</td></tr>';
+          } else {
+               document.getElementById('prodTableBody').innerHTML = list.map(p => `
+                  <tr>
+                      <td class="font-monospace small">${p.ProductID || p.product_id}</td>
+                      <td>${escapeHtml(p.Name || p.name)}</td>
+                      <td>${escapeHtml(p.Model || p.model)}</td>
+                      <td>${escapeHtml(p.Series || p.series)}</td>
+                      <td>${escapeHtml(p.PrimaryCategory || p.primary_category)}</td>
+                      <td class="small">${(p.CreatedAt||'').split('T')[0]}</td>
+                  </tr>
+               `).join('');
+          }
+      } catch (e) {
+           document.getElementById('prodTableBody').innerHTML = `<tr><td colspan="6" class="text-center text-danger py-3">${e.message}</td></tr>`;
+      }
+  },
+
+  openSupModal(id = null) {
+    if (id) {
+      // Edit mode
+      const s = this.state.supList.find(x => (x.SupplierID || x.id) == id);
+      if (!s) return;
+      document.getElementById('editSupId').value = id;
+      document.getElementById('editSupName').value = s.CompanyName || s.company || '';
+      document.getElementById('editSupContact').value = s.ContactName || s.name || '';
+      document.getElementById('editSupPhone').value = s.Phone || s.contact_phone || '';
+      document.getElementById('editSupPwd').value = s.AccessPassword || s.access_password_plain || '';
+    } else {
+      // Add mode
+      document.getElementById('editSupId').value = '';
+      document.getElementById('supEditForm').reset();
+    }
+    new bootstrap.Modal(document.getElementById('supEditModal')).show();
+  },
+  
+  editSupplier(id) { this.openSupModal(id); },
+  
+  async saveSupplier() {
+    const id = document.getElementById('editSupId').value;
+    const body = {
+      id: id,
+      company: document.getElementById('editSupName').value,
+      name: document.getElementById('editSupContact').value,
+      contact_phone: document.getElementById('editSupPhone').value,
+      access_password_plain: document.getElementById('editSupPwd').value,
+      status: document.getElementById('editSupStatus').checked ? 'active' : 'inactive'
+    };
+    
+    try {
+      await apiFetch('/api/admin/suppliers/upsert', {
+        method: 'POST',
+        body: JSON.stringify(body)
+      });
+      showToast('供应商保存成功', 'success');
+      bootstrap.Modal.getInstance(document.getElementById('supEditModal')).hide();
+      this.loadSuppliers();
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+  },
+  
+  loadSettings() {
+    // Just view refresh
+  }
+};
+
+// Expose to window
+window.App = App;
+document.addEventListener('DOMContentLoaded', () => App.init());
+
 </script>
 </body>
 </html>
-      const prog = tr.querySelector('.req-progress');
-      if (prog && id){
-        prog.addEventListener('change', async ()=>{
-          const prev = prog.getAttribute('data-prev') || '';
-          const next = String(prog.value||'');
-          prog.disabled = true;
-          const ok = await updateRequirementProgress(id, next);
-          if (ok){
-            prog.setAttribute('data-prev', next);
-            try { loadRequirementsPage(true); } catch {}
-          } else {
-            prog.value = prev;
-          }
-          prog.disabled = false;
-        });
-      }
-      const togOpen = tr.querySelector('.req-open-toggle');
-      if (togOpen && id){
-        togOpen.addEventListener('change', async ()=>{
-          const next = !!togOpen.checked;
-          togOpen.disabled = true;
-          const ok = await updateRequirementOpenQuotes(id, next);
-          if (!ok){ togOpen.checked = !next; }
-          try { updateStats(requirementsCache); } catch {}
-          togOpen.disabled = false;
-        });
-      }
-      const togContact = tr.querySelector('.req-contact-toggle');
-      if (togContact && id){
-        togContact.addEventListener('change', async ()=>{
-          const next = !!togContact.checked;
-          togContact.disabled = true;
-          const ok = await updateRequirementContactPublic(id, next);
-          if (!ok){ togContact.checked = !next; }
-          try { updateStats(requirementsCache); } catch {}
-          togContact.disabled = false;
-        });
-      }

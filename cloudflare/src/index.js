@@ -105,6 +105,23 @@ export default {
         )`).run();
         await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_suppliers_name ON suppliers(name)').run();
 
+        // Products
+        await env.DB.prepare(`CREATE TABLE IF NOT EXISTS products (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          product_id TEXT UNIQUE,
+          supplier_id TEXT,
+          name TEXT,
+          model TEXT,
+          series TEXT,
+          primary_category TEXT,
+          summary TEXT,
+          parameters_json TEXT,
+          created_at TEXT,
+          updated_at TEXT,
+          FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id) ON DELETE CASCADE
+        )`).run();
+        await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_products_supplier ON products(supplier_id)').run();
+
         // Demanders
         await env.DB.prepare(`CREATE TABLE IF NOT EXISTS demanders (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -663,6 +680,35 @@ export default {
       const offsetNext = items.length >= limit ? String(offset + limit) : '';
       return json({ items, offsetNext });
     }
+    // Admin: suppliers single upsert
+    if (isApi('admin/suppliers/upsert') && request.method === 'POST') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const data = await bodyJSON(request);
+      const now = new Date().toISOString();
+      const supplier_id = (String(data.supplier_id || data.company || '').trim()) || ('S-' + now.replace(/[-:T.Z]/g,''));
+      const name = String(data.name || '').trim();
+      const company = String(data.company || '').trim();
+      const phone = String(data.contact_phone || '').trim();
+      const email = String(data.contact_email || '').trim();
+      const pass = String(data.access_password_plain || '').trim();
+      const status = String(data.status || 'active').trim();
+      const meta = JSON.stringify(data.metadata_json || {});
+      try {
+        await env.DB.prepare(`INSERT INTO suppliers (
+          supplier_id, name, company, contact_phone, contact_email, access_password_plain, status, metadata_json, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+        .bind(supplier_id, name, company, phone, email, pass, status, meta, now, now).run();
+        return json({ ok: true, supplier_id });
+      } catch (e) {
+        try {
+          await env.DB.prepare(`UPDATE suppliers SET name = ?, company = ?, contact_phone = ?, contact_email = ?, access_password_plain = ?, status = ?, metadata_json = ?, updated_at = ? WHERE supplier_id = ?`)
+            .bind(name, company, phone, email, pass, status, meta, now, supplier_id).run();
+          return json({ ok: true, supplier_id });
+        } catch (err) {
+          return json({ error: 'UpsertSupplierFailed', detail: String(err && err.message || err) }, 500);
+        }
+      }
+    }
     // Admin: bulk update suppliers (apply-to-all)
     if (isApi('admin/suppliers') && request.method === 'POST') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
@@ -831,35 +877,7 @@ export default {
       }
     }
 
-    // Admin: suppliers single upsert
-    if (isApi('admin/suppliers/upsert') && request.method === 'POST') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-      const data = await bodyJSON(request);
-      const now = new Date().toISOString();
-      const supplier_id = (String(data.supplier_id || data.company || '').trim()) || ('S-' + now.replace(/[-:T.Z]/g,''));
-      const name = String(data.name || '').trim();
-      const company = String(data.company || '').trim();
-      const phone = String(data.contact_phone || '').trim();
-      const email = String(data.contact_email || '').trim();
-      const pass = String(data.access_password_plain || '').trim();
-      const status = String(data.status || 'active').trim();
-      const meta = JSON.stringify(data.metadata_json || {});
-      try {
-        await env.DB.prepare(`INSERT INTO suppliers (
-          supplier_id, name, company, contact_phone, contact_email, access_password_plain, status, metadata_json, created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-        .bind(supplier_id, name, company, phone, email, pass, status, meta, now, now).run();
-        return json({ ok: true, supplier_id });
-      } catch (e) {
-        try {
-          await env.DB.prepare(`UPDATE suppliers SET name = ?, company = ?, contact_phone = ?, contact_email = ?, access_password_plain = ?, status = ?, metadata_json = ?, updated_at = ? WHERE supplier_id = ?`)
-            .bind(name, company, phone, email, pass, status, meta, now, supplier_id).run();
-          return json({ ok: true, supplier_id });
-        } catch (err) {
-          return json({ error: 'UpsertSupplierFailed', detail: String(err && err.message || err) }, 500);
-        }
-      }
-    }
+
     // Admin: suppliers delete
     if (isApi('admin/suppliers/') && request.method === 'DELETE') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
@@ -904,6 +922,50 @@ export default {
       });
       const csv = [headers, ...rows].map(r => r.map(esc).join(',')).join('\n');
       return new Response(csv, { headers: { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': 'attachment; filename="suppliers.csv"' } });
+    }
+
+    // Admin: list/create products
+    if (isApi('admin/products') && request.method === 'GET') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const supplier_id = url.searchParams.get('supplier_id');
+      let q = 'SELECT * FROM products';
+      const where = [];
+      const binds = [];
+      if (supplier_id) { where.push('supplier_id = ?'); binds.push(supplier_id); }
+      if (where.length) q += ' WHERE ' + where.join(' AND ');
+      q += ' ORDER BY created_at DESC LIMIT 100';
+      const { results } = await env.DB.prepare(q).bind(...binds).all();
+      const items = (results || []).map(p => ({
+        product_id: p.product_id,
+        supplier_id: p.supplier_id,
+        name: p.name,
+        model: p.model,
+        series: p.series,
+        primary_category: p.primary_category,
+        summary: p.summary,
+        parameters_json: parseJSONSafe(p.parameters_json),
+        created_at: p.created_at
+      }));
+      return json(items);
+    }
+    if ((isApi('products') || isApi('admin/products')) && request.method === 'POST') {
+      // Allow admin or supplier (if I implement supplier auth check here, but for simulation admin key is used)
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401); 
+      const data = await bodyJSON(request);
+      const now = new Date().toISOString();
+      const product_id = data.ProductID || data.product_id || ('PROD-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*1000));
+      const supplier_id = data.SupplierID || data.supplier_id;
+      if (!supplier_id) return json({ error: 'MissingSupplierID' }, 400);
+      
+      await env.DB.prepare(`INSERT INTO products (
+        product_id, supplier_id, name, model, series, primary_category, summary, parameters_json, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+      .bind(
+        product_id, supplier_id, data.Name || data.name || '', data.Model || data.model || '', 
+        data.Series || data.series || '', data.PrimaryCategory || data.primary_category || '', 
+        data.Summary || data.summary || '', JSON.stringify(data.Parameters || data.parameters_json || {}), now, now
+      ).run();
+      return json({ ok: true, product_id });
     }
 
     // Admin: system config
@@ -1220,6 +1282,31 @@ export default {
       return json({ items });
     }
 
+    // Demanders: session by publisher password (login-like)
+    if (isApi('demanders/session') && request.method === 'POST') {
+      const data = await bodyJSON(request);
+      const pass = String(data.password || '').trim();
+      if (!pass) return json({ error: 'MissingPassword' }, 400);
+      const like = `%"password_plain":"${pass}"%`;
+      const { results } = await env.DB.prepare('SELECT demander_id, name, company FROM demanders WHERE metadata_json LIKE ?').bind(like).all();
+      if (!results || !results.length) return json({ error: 'Unauthorized' }, 401);
+      const d = results[0];
+      return json({ ok: true, demander: { DemanderID: d.demander_id, Name: d.name, Company: d.company } });
+    }
+
+    // Demanders: list requirements for a company authorized by demander password
+    if (isApi('demanders/requirements') && request.method === 'GET') {
+      const company = (url.searchParams.get('company') || '').trim();
+      const pass = (url.searchParams.get('password') || '').trim();
+      if (!company || !pass) return json({ error: 'MissingParams' }, 400);
+      const like = `%"password_plain":"${pass}"%`;
+      const { results: demRows } = await env.DB.prepare('SELECT 1 FROM demanders WHERE company = ? AND metadata_json LIKE ?').bind(company, like).all();
+      if (!demRows || !demRows.length) return json({ error: 'Unauthorized' }, 401);
+      const { results } = await env.DB.prepare('SELECT requirement_id, title, status FROM requirements WHERE contact_company = ? ORDER BY created_at DESC LIMIT 100').bind(company).all();
+      const items = (results || []).map(r => ({ RequirementID: r.requirement_id, Title: r.title, Status: r.status }));
+      return json({ items });
+    }
+
     return json({ error: 'NotFound' }, 404);
 
     function parseJSONSafe(s) { try { return JSON.parse(s || '{}'); } catch { return {}; } }
@@ -1338,27 +1425,3 @@ export default {
     }
   }
 };
-    // Demanders: session by publisher password (login-like)
-    if (isApi('demanders/session') && request.method === 'POST') {
-      const data = await bodyJSON(request);
-      const pass = String(data.password || '').trim();
-      if (!pass) return json({ error: 'MissingPassword' }, 400);
-      const like = `%"password_plain":"${pass}"%`;
-      const { results } = await env.DB.prepare('SELECT demander_id, name, company FROM demanders WHERE metadata_json LIKE ?').bind(like).all();
-      if (!results || !results.length) return json({ error: 'Unauthorized' }, 401);
-      const d = results[0];
-      return json({ ok: true, demander: { DemanderID: d.demander_id, Name: d.name, Company: d.company } });
-    }
-
-    // Demanders: list requirements for a company authorized by demander password
-    if (isApi('demanders/requirements') && request.method === 'GET') {
-      const company = (url.searchParams.get('company') || '').trim();
-      const pass = (url.searchParams.get('password') || '').trim();
-      if (!company || !pass) return json({ error: 'MissingParams' }, 400);
-      const like = `%"password_plain":"${pass}"%`;
-      const { results: demRows } = await env.DB.prepare('SELECT 1 FROM demanders WHERE company = ? AND metadata_json LIKE ?').bind(company, like).all();
-      if (!demRows || !demRows.length) return json({ error: 'Unauthorized' }, 401);
-      const { results } = await env.DB.prepare('SELECT requirement_id, title, status FROM requirements WHERE contact_company = ? ORDER BY created_at DESC LIMIT 100').bind(company).all();
-      const items = (results || []).map(r => ({ RequirementID: r.requirement_id, Title: r.title, Status: r.status }));
-      return json({ items });
-    }

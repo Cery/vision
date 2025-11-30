@@ -3,108 +3,183 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>发布需求</title>
+  <title>发布需求 | Vision Market</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="/css/business.css" rel="stylesheet">
 </head>
-<body class="bg-light">
-  <div class="container py-4">
-    <h3 class="mb-3">发布新需求</h3>
-    <div id="alert" class="alert d-none" role="alert"></div>
-    <form id="publishForm" class="row g-3">
-      <div class="col-md-6">
-        <label class="form-label">标题</label>
-        <input name="Title" class="form-control" required />
-      </div>
-      <div class="col-md-6">
-        <label class="form-label">一级分类</label>
-        <input name="primaryCategory" class="form-control" required />
-      </div>
-      <div class="col-md-4">
-        <label class="form-label">联系人</label>
-        <input name="contactName" class="form-control" required />
-      </div>
-      <div class="col-md-4">
-        <label class="form-label">联系电话</label>
-        <input name="contactPhone" class="form-control" required />
-      </div>
-      <div class="col-md-4">
-        <label class="form-label">公司</label>
-        <input name="contactCompany" class="form-control" />
-      </div>
-      <div class="col-md-6">
-        <label class="form-label">公开预览</label>
-        <textarea name="PublicPreview" class="form-control" rows="2"></textarea>
-      </div>
-      <div class="col-md-6">
-        <label class="form-label">预算范围</label>
-        <input name="BudgetRange" class="form-control" />
-      </div>
-      <div class="col-md-12">
-        <div class="form-check">
-          <input name="ContactPublic" id="ContactPublic" type="checkbox" class="form-check-input">
-          <label for="ContactPublic" class="form-check-label">公开联系方式</label>
-        </div>
-      </div>
-      <div class="col-12">
-        <button class="btn btn-primary" type="submit">发布</button>
-      </div>
-    </form>
+<body>
 
-    <div id="result" class="mt-4 d-none">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">发布成功</h5>
-          <p class="mb-1">需求ID：<span id="resId" class="fw-semibold"></span> <button id="copyIdBtn" class="btn btn-sm btn-outline-secondary ms-2">复制ID</button></p>
-          <p class="mb-1">需求方管理密码：<span id="resPwd" class="fw-bold text-danger"></span> <button id="copyPwdBtn" class="btn btn-sm btn-outline-secondary ms-2">复制密码</button></p>
-          <div class="mt-2">
-            <button id="gotoEntryBtn" class="btn btn-primary btn-sm">进入入口页</button>
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold text-primary" href="/static/market.html"><i class="fa-solid fa-globe me-2"></i>Vision Market</a>
+    <div class="ms-auto">
+       <a href="/static/market.html" class="btn btn-outline-secondary btn-sm">返回列表</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <h3 class="mb-4 fw-bold border-bottom pb-3">发布新采购需求</h3>
+          
+          <div id="alert" class="alert d-none" role="alert"></div>
+          
+          <form id="publishForm" class="row g-3">
+            <div class="col-12">
+              <h5 class="text-primary mb-3"><i class="fa-regular fa-file-lines me-2"></i>基本信息</h5>
+            </div>
+            <div class="col-md-12">
+              <label class="form-label">需求标题 <span class="text-danger">*</span></label>
+              <input name="Title" class="form-control" required placeholder="例如：内窥镜设备采购项目" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">产品分类 <span class="text-danger">*</span></label>
+              <select name="primaryCategory" class="form-select" required>
+                <option value="">请选择...</option>
+                <option value="电子内窥镜">电子内窥镜</option>
+                <option value="光纤内窥镜">光纤内窥镜</option>
+                <option value="硬性内窥镜">硬性内窥镜</option>
+                <option value="工业内窥镜">工业内窥镜</option>
+                <option value="其他">其他</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">预算范围</label>
+              <input name="BudgetRange" class="form-control" placeholder="例如：50万-100万" />
+            </div>
+            <div class="col-md-12">
+              <label class="form-label">需求描述 / 公开预览</label>
+              <textarea name="PublicPreview" class="form-control" rows="3" placeholder="简要描述您的采购需求，主要参数要求等..."></textarea>
+            </div>
+
+            <div class="col-12 mt-4">
+              <h5 class="text-primary mb-3"><i class="fa-regular fa-address-card me-2"></i>联系方式</h5>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">公司名称</label>
+              <input name="contactCompany" class="form-control" required />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">联系人 <span class="text-danger">*</span></label>
+              <input name="contactName" class="form-control" required />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">联系电话 <span class="text-danger">*</span></label>
+              <input name="contactPhone" class="form-control" required />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">联系邮箱</label>
+              <input name="contactEmail" class="form-control" />
+            </div>
+            <div class="col-md-12">
+              <div class="form-check bg-light p-3 rounded border">
+                <input name="ContactPublic" id="ContactPublic" type="checkbox" class="form-check-input">
+                <label for="ContactPublic" class="form-check-label small">
+                  <strong>公开联系方式</strong><br>
+                  <span class="text-muted">选中后，注册供应商可直接查看您的联系方式。否则仅通过平台代转或需密码查看。</span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="col-12 mt-4 text-end">
+              <button class="btn btn-primary px-5" type="submit">立即发布</button>
+            </div>
+          </form>
+
+          <div id="result" class="mt-4 d-none">
+            <div class="alert alert-success border-0 shadow-sm">
+              <h4 class="alert-heading"><i class="fa-solid fa-circle-check me-2"></i>发布成功！</h4>
+              <p>您的需求已提交系统。请保存以下信息用于后续管理。</p>
+              <hr>
+              <div class="mb-3">
+                <label class="small text-muted fw-bold">需求ID</label>
+                <div class="input-group">
+                  <input type="text" class="form-control font-monospace bg-white" id="resId" readonly>
+                  <button class="btn btn-outline-secondary" id="copyIdBtn">复制</button>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="small text-muted fw-bold text-danger">查看密码 (View Password)</label>
+                <div class="input-group">
+                  <input type="text" class="form-control font-monospace bg-white text-danger fw-bold" id="resPwd" readonly>
+                  <button class="btn btn-outline-danger" id="copyPwdBtn">复制</button>
+                </div>
+                <div class="form-text">凭此密码在“发布方入口”查看收到的报价。</div>
+              </div>
+              <div class="d-grid gap-2">
+                <button id="gotoEntryBtn" class="btn btn-primary">前往发布方入口</button>
+              </div>
+            </div>
           </div>
-          <p class="text-muted small mt-2">请妥善保管此密码，用于查看收到的报价与管理需求进度。</p>
         </div>
       </div>
     </div>
   </div>
+</div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+(function() {
+  const isProd = /(^|\.)visndt\.com$/i.test(location.hostname);
+  const defaultRemote = 'https://api.visndt.com';
+  let saved = ''; try { saved = localStorage.getItem('API_BASE') || ''; } catch {}
+  const allowInProd = new Set(['', 'https://api.visndt.com']);
+  window.API_BASE = (isProd ? (allowInProd.has(saved) ? saved : '') : (saved || defaultRemote)).replace(/\/$/, '');
+  if (location.protocol === 'https:' && /^http:\/\//i.test(window.API_BASE)) window.API_BASE = isProd ? '' : defaultRemote;
+})();
+
 async function apiFetch(url, opts){
-  const r = await fetch(url, { ...opts, headers: { 'Content-Type':'application/json', ...(opts && opts.headers||{}) } });
+  const r = await fetch((window.API_BASE||'') + url, { ...opts, headers: { 'Content-Type':'application/json', ...(opts && opts.headers||{}) } });
   return r;
 }
+
 function showAlert(msg, type){
   const a = document.getElementById('alert');
-  a.textContent = msg; a.className = 'alert alert-' + (type||'info'); a.classList.remove('d-none');
+  a.innerHTML = msg; a.className = 'alert alert-' + (type||'info'); a.classList.remove('d-none');
+  if(type==='danger') a.scrollIntoView({behavior:'smooth'});
 }
-  const form = document.getElementById('publishForm');
-  form.addEventListener('submit', async (e)=>{
+
+const form = document.getElementById('publishForm');
+form.addEventListener('submit', async (e)=>{
   e.preventDefault();
   const fd = new FormData(form);
-  const payload = Object.fromEntries(fd.entries());
+  // Convert checkboxes
+  const payload = {};
+  fd.forEach((v,k) => payload[k] = v);
+  payload.ContactPublic = document.getElementById('ContactPublic').checked;
+  
+  const btn = form.querySelector('button[type="submit"]');
+  btn.disabled = true; btn.textContent = '提交中...';
+  
   try{
     const resp = await apiFetch('/api/requirements', { method:'POST', body: JSON.stringify(payload) });
     let data = {}; try{ data = await resp.json(); } catch{}
-    if(!resp.ok){ showAlert((data && (data.error||data.message))||'发布失败','danger'); return; }
-    document.getElementById('resId').textContent = data.requirement_id || data.RequirementID || '';
-    document.getElementById('resPwd').textContent = data.DemanderPassword || data.ViewPassword || '';
+    
+    if(!resp.ok){ 
+      throw new Error((data && (data.error||data.message))||'发布失败');
+    }
+    
+    form.classList.add('d-none');
+    document.getElementById('resId').value = data.requirement_id || data.RequirementID || '';
+    document.getElementById('resPwd').value = data.ViewPassword || data.DemanderPassword || ''; // Backend field name varies, covering bases
     document.getElementById('result').classList.remove('d-none');
-    showAlert('需求发布成功','success');
-    try{
-      const id = document.getElementById('resId').textContent.trim();
-      const pwd = document.getElementById('resPwd').textContent.trim();
-      document.getElementById('copyIdBtn')?.addEventListener('click', async ()=>{
-        await navigator.clipboard.writeText(id);
-        showAlert('已复制需求ID','success');
-      });
-      document.getElementById('copyPwdBtn')?.addEventListener('click', async ()=>{
-        await navigator.clipboard.writeText(pwd);
-        showAlert('已复制管理密码','success');
-      });
-      document.getElementById('gotoEntryBtn')?.addEventListener('click', ()=>{
-        const url = new URL('entry.html', window.location.origin);
-        url.searchParams.set('id', id);
-        window.location.href = url.toString();
-      });
-    }catch{}
-  }catch(err){ showAlert(err.message||'发布失败','danger'); }
+    
+    document.getElementById('copyIdBtn').onclick = () => { navigator.clipboard.writeText(document.getElementById('resId').value); };
+    document.getElementById('copyPwdBtn').onclick = () => { navigator.clipboard.writeText(document.getElementById('resPwd').value); };
+    
+    document.getElementById('gotoEntryBtn').onclick = () => {
+      const pwd = document.getElementById('resPwd').value;
+      location.href = `/static/entry-demand.html?password=${encodeURIComponent(pwd)}`;
+    };
+    
+  }catch(err){ 
+    showAlert('<i class="fa-solid fa-circle-exclamation me-2"></i>' + (err.message||'发布失败'), 'danger');
+    btn.disabled = false; btn.textContent = '立即发布';
+  }
 });
 </script>
 </body>

@@ -3,211 +3,283 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>需求市场</title>
+  <title>需求市场 | Vision Market</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/business.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="/css/business.css" rel="stylesheet">
   <style>
-    .card-title{font-weight:600}
-    .tag{display:inline-block;padding:.2rem .5rem;border:1px solid #e5e7eb;border-radius:999px;font-size:.75rem;color:#6b7280;margin-right:.25rem}
-    .grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:16px}
-    .sidebar{position:sticky;top:16px;align-self:flex-start;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border:1px solid #e5e7eb;border-radius:12px}
-    .menu{padding:12px}
-    .menu .heading{font-weight:700;color:#2563eb;margin:6px 0}
-    .menu .list{list-style:none;padding:0;margin:0}
-    .menu .list li{margin:4px 0}
-    .menu .list button{width:100%;text-align:left;padding:8px 10px;border:0;background:transparent;border-radius:8px;color:#111827;cursor:pointer}
-    .menu .list button.active{background:#eef2ff}
-    .menu .list button:hover{background:#f3f4f6}
-    @media (max-width: 992px){.grid{grid-template-columns:1fr}}
+    .hero-section { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 4rem 0; margin-bottom: 2rem; }
+    .filter-sidebar { position: sticky; top: 20px; }
+    .card-req { transition: all 0.2s; border: 1px solid #f1f5f9; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .card-req:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-color: #e2e8f0; }
+    .badge-soft-primary { background-color: #eff6ff; color: #1d4ed8; }
+    .badge-soft-success { background-color: #f0fdf4; color: #15803d; }
+    .badge-soft-secondary { background-color: #f1f5f9; color: #475569; }
+    .nav-pills .nav-link.active { background-color: #2563eb; }
   </style>
 </head>
 <body>
-  <div class="container py-3">
-    <div class="d-flex align-items-center justify-content-between mb-3">
-      <h1 class="h4 mb-0">需求市场</h1>
-      <div class="d-flex gap-2">
-        <a class="btn btn-outline-primary btn-sm" href="/static/entry-demand.html">发布方入口</a>
-        <a class="btn btn-outline-secondary btn-sm" href="/static/entry-supplier.html">供应商入口</a>
-      </div>
-    </div>
-    <div class="grid">
-      <aside class="sidebar">
-        <div class="menu">
-          <div class="heading">快速筛选</div>
-          <ul class="list">
-            <li><button data-filter="all" class="active">全部</button></li>
-            <li><button data-filter="open">开放报价</button></li>
-            <li><button data-filter="password">需密码</button></li>
-            <li><button data-filter="approved">已批准</button></li>
-            <li><button data-filter="progress_active">进行中</button></li>
-          </ul>
-          <div class="heading" style="margin-top:12px">产品类型</div>
-          <ul class="list">
-            <li><button data-type="">全部类型</button></li>
-            <li><button data-type="电子内窥镜">电子内窥镜</button></li>
-            <li><button data-type="光纤内窥镜">光纤内窥镜</button></li>
-            <li><button data-type="硬性内窥镜">硬性内窥镜</button></li>
-          </ul>
-          <div class="heading" style="margin-top:12px">状态</div>
-          <ul class="list">
-            <li><button data-status="">全部状态</button></li>
-            <li><button data-status="公开">公开</button></li>
-            <li><button data-status="隐私">隐私</button></li>
-            <li><button data-status="关闭">关闭</button></li>
-          </ul>
-          <div class="heading" style="margin-top:12px">搜索</div>
-          <div class="input-group input-group-sm">
-            <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
-            <input id="searchInput" type="text" class="form-control" placeholder="按标题或公司搜索">
-          </div>
-          <div class="form-check mt-2">
-            <input class="form-check-input" type="checkbox" id="openOnlyChk">
-            <label class="form-check-label" for="openOnlyChk">仅接受在线报价</label>
-          </div>
-        </div>
-      </aside>
-      <main>
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <div class="small text-muted" id="statsHint">—</div>
-          <div class="btn-group btn-group-sm">
-            <button id="refreshBtn" class="btn btn-outline-secondary">刷新</button>
-          </div>
-        </div>
-        <div id="cardGrid" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3"></div>
-      </main>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold text-primary d-flex align-items-center" href="/static/market.html">
+      <i class="fa-solid fa-layer-group me-2 fs-4"></i>
+      <span>Vision Market</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto align-items-center">
+        <li class="nav-item"><a class="nav-link" href="/static/publish.html"><i class="fa-regular fa-pen-to-square me-1"></i>发布需求</a></li>
+        <li class="nav-item mx-2"><span class="text-muted opacity-25">|</span></li>
+        <li class="nav-item"><a class="btn btn-outline-dark btn-sm" href="/static/entry-demand.html">发布方入口</a></li>
+        <li class="nav-item ms-2"><a class="btn btn-primary btn-sm" href="/static/entry-supplier.html">供应商入口</a></li>
+      </ul>
     </div>
   </div>
+</nav>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
-  <script>
-    (function() {
-      const isProd = /(^|\.)visndt\.com$/i.test(location.hostname);
-      const defaultRemote = 'https://api.visndt.com';
-      let saved = '';
-      try { saved = (typeof localStorage !== 'undefined') ? (localStorage.getItem('API_BASE') || '') : ''; } catch {}
-      const allowInProd = new Set(['', 'https://api.visndt.com']);
-      if (isProd) {
-        window.API_BASE = allowInProd.has(saved) ? saved : '';
-      } else {
-        window.API_BASE = saved || defaultRemote;
-      }
-      if (location.protocol === 'https:' && /^http:\/\//i.test(window.API_BASE||'')) {
-        try { localStorage.removeItem('API_BASE'); } catch {}
-        window.API_BASE = isProd ? '' : defaultRemote;
-      }
-    })();
+<div class="hero-section">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <h1 class="display-5 fw-bold mb-3">精准对接医疗与工业采购需求</h1>
+        <p class="lead mb-4 text-white-50">连接 500+ 优质供应商，实时在线报价，透明高效。</p>
+        <div class="input-group input-group-lg bg-white rounded-3 p-1">
+          <span class="input-group-text border-0 bg-transparent ps-3"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+          <input type="text" class="form-control border-0 shadow-none" id="searchInput" placeholder="搜索关键词、编号...">
+          <button class="btn btn-primary rounded-2 px-4" type="button" id="searchBtn">搜索</button>
+        </div>
+      </div>
+      <div class="col-lg-5 offset-lg-1 d-none d-lg-block">
+        <div class="row g-3">
+          <div class="col-6"><div class="p-4 bg-white bg-opacity-10 rounded-3 border border-white border-opacity-10 text-center"><div class="fs-2 fw-bold" id="statReq">-</div><div class="small text-white-50">活跃需求</div></div></div>
+          <div class="col-6"><div class="p-4 bg-white bg-opacity-10 rounded-3 border border-white border-opacity-10 text-center"><div class="fs-2 fw-bold" id="statQuote">-</div><div class="small text-white-50">累计报价</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    const state = { items: [], filter: 'all', type: '', status: '', openOnly: false, query: '' };
-
-    function normalize(it){
-      return {
-        id: it.RequirementID || it.requirement_id || it.id || '',
-        title: it.Title || it.title || '未命名',
-        status: it.Status || it.status || '',
-        progress: it.Progress || it.progress || '',
-        primary: it.PrimaryCategory || it.primary_category || '',
-        secondary: it.SecondaryCategory || it.secondary_category || '',
-        budget: it.BudgetRange || it.budget_range || '',
-        open: (typeof it.AllowOpenQuotes !== 'undefined') ? !!it.AllowOpenQuotes : !!it.allow_open_quotes,
-        contactPublic: (typeof it.ContactPublic !== 'undefined') ? !!it.ContactPublic : !!it.contact_public,
-        preview: it.PublicPreview || it.public_preview || '',
-        company: it.ContactCompany || it.contact_company || '',
-        publishedAt: it.PublishedAt || it.published_at || ''
-      };
-    }
-
-    function formatDate(input){
-      if (!input) return '';
-      const d = new Date(input);
-      if (isNaN(d.getTime())) return '';
-      const y = d.getFullYear(); const m = String(d.getMonth()+1).padStart(2,'0'); const day = String(d.getDate()).padStart(2,'0');
-      return `${y}-${m}-${day}`;
-    }
-
-    async function load(){
-      const params = new URLSearchParams();
-      params.set('limit', '60');
-      params.set('approved', '1');
-      const url = (window.API_BASE || '') + '/api/requirements?' + params.toString();
-      const r = await fetch(url);
-      const t = await r.text();
-      let data; try { data = JSON.parse(t); } catch { data = { items: [] }; }
-      const items = Array.isArray(data) ? data : (data.items || []);
-      state.items = items.map(normalize);
-      render();
-    }
-
-    function applyFilters(list){
-      let v = list;
-      if (state.filter === 'open') v = v.filter(x => x.open);
-      else if (state.filter === 'password') v = v.filter(x => !x.open);
-      else if (state.filter === 'approved') v = v.filter(x => x.status === '公开' || x.status === '在线报价');
-      else if (state.filter === 'progress_active') v = v.filter(x => x.progress === '发布中' || x.progress === '接洽中');
-      if (state.openOnly) v = v.filter(x => x.open);
-      if (state.status) v = v.filter(x => x.status === state.status);
-      if (state.type) v = v.filter(x => x.primary === state.type || x.secondary === state.type);
-      const q = state.query.trim().toLowerCase();
-      if (q) v = v.filter(x => String(x.id).toLowerCase().includes(q) || String(x.title).toLowerCase().includes(q) || String(x.company).toLowerCase().includes(q));
-      return v;
-    }
-
-    function render(){
-      const grid = document.getElementById('cardGrid');
-      const list = applyFilters(state.items);
-      document.getElementById('statsHint').textContent = `当前 ${list.length} 条`;
-      grid.innerHTML = list.map(item => {
-        const tags = [
-          item.open ? '<span class="tag">开放报价</span>' : '<span class="tag">需密码</span>',
-          item.contactPublic ? '<span class="tag">公开联系方式</span>' : ''
-        ].join('');
-        const cat = [item.primary, item.secondary].filter(Boolean).join(' / ');
-        return `<div class="col"><div class="card h-100"><div class="card-body d-flex flex-column">
-          <div class="d-flex justify-content-between align-items-center mb-1"><div class="small text-muted">${item.id}</div><div>${tags}</div></div>
-          <div class="card-title text-truncate" title="${escapeHtml(item.title)}">${escapeHtml(item.title)}</div>
-          <div class="small text-muted">状态：${escapeHtml(item.status)} · 进度：${escapeHtml(item.progress)}</div>
-          <div class="small">分类：${escapeHtml(cat)}</div>
-          <div class="small">预算：${escapeHtml(item.budget)}</div>
-          <div class="small text-muted">发布时间：${escapeHtml(formatDate(item.publishedAt))}</div>
-          <div class="mt-auto d-flex gap-2">
-            <a class="btn btn-sm btn-outline-primary" href="/static/view.html?id=${encodeURIComponent(item.id)}">查看详情</a>
-            <a class="btn btn-sm btn-outline-secondary" href="/static/entry.html?id=${encodeURIComponent(item.id)}">进入入口</a>
+<div class="container pb-5">
+  <div class="row g-4">
+    <!-- Sidebar -->
+    <div class="col-lg-3">
+      <div class="filter-sidebar">
+        
+        <div class="card border-0 shadow-sm mb-3">
+          <div class="card-body p-0">
+            <div class="list-group list-group-flush rounded-3">
+              <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center active" data-cat="">
+                <span><i class="fa-solid fa-border-all me-2 w-20"></i>全部需求</span>
+              </a>
+              <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-cat="电子内窥镜">
+                <span><i class="fa-solid fa-microchip me-2 w-20"></i>电子内窥镜</span>
+              </a>
+              <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-cat="光纤内窥镜">
+                <span><i class="fa-solid fa-wave-square me-2 w-20"></i>光纤内窥镜</span>
+              </a>
+              <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-cat="硬性内窥镜">
+                <span><i class="fa-solid fa-ruler-horizontal me-2 w-20"></i>硬性内窥镜</span>
+              </a>
+              <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-cat="工业内窥镜">
+                <span><i class="fa-solid fa-industry me-2 w-20"></i>工业内窥镜</span>
+              </a>
+            </div>
           </div>
-        </div></div></div>`;
-      }).join('');
+        </div>
+
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-white fw-bold py-3">状态筛选</div>
+          <div class="card-body">
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" value="open" id="checkOpen">
+              <label class="form-check-label" for="checkOpen">
+                仅显示开放报价
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="active" id="checkActive" checked>
+              <label class="form-check-label" for="checkActive">
+                仅显示进行中
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-4 text-center">
+          <a href="/static/publish.html" class="btn btn-primary w-100 py-2 shadow-sm">
+            <i class="fa-solid fa-plus me-2"></i>发布新需求
+          </a>
+          <div class="mt-2 small text-muted">无需注册，发布即生成管理密码</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-lg-9">
+      <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded-3 shadow-sm border">
+        <div class="d-flex align-items-center">
+           <span class="text-muted small me-2">排序:</span>
+           <select class="form-select form-select-sm border-0 bg-light" style="width: 140px;" id="sortSelect">
+             <option value="newest">最新发布</option>
+             <option value="budget_desc">预算从高到低</option>
+           </select>
+        </div>
+        <div class="small text-muted" id="resultCount">加载中...</div>
+      </div>
+      
+      <div class="row row-cols-1 g-3" id="reqGrid">
+        <!-- List Items -->
+      </div>
+      
+      <div class="mt-5 text-center d-none" id="loadMoreContainer">
+        <button class="btn btn-light text-primary border px-4" id="loadMoreBtn">加载更多</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function() {
+  const isProd = /(^|\.)visndt\.com$/i.test(location.hostname);
+  const defaultRemote = 'https://api.visndt.com';
+  let saved = ''; try { saved = localStorage.getItem('API_BASE') || ''; } catch {}
+  const allowInProd = new Set(['', 'https://api.visndt.com']);
+  window.API_BASE = (isProd ? (allowInProd.has(saved) ? saved : '') : (saved || defaultRemote)).replace(/\/$/, '');
+})();
+
+const App = {
+  data: [],
+  filtered: [],
+  
+  async init() {
+    await this.loadData();
+    this.bindEvents();
+  },
+  
+  async loadData() {
+    try {
+      // Fetch approved requirements
+      const url = (window.API_BASE || '') + '/api/requirements?limit=100&approved=1';
+      const res = await fetch(url);
+      const json = await res.json();
+      this.data = Array.isArray(json) ? json : (json.items || []);
+      
+      // Update stats
+      document.getElementById('statReq').textContent = this.data.length;
+      const quotes = this.data.reduce((sum, r) => sum + (r.QuoteCount||r.quote_count||0), 0);
+      document.getElementById('statQuote').textContent = quotes;
+      
+      this.applyFilters();
+    } catch (e) {
+      document.getElementById('reqGrid').innerHTML = `<div class="text-center py-5 text-muted">加载失败: ${e.message}</div>`;
     }
-
-    function escapeHtml(s){return String(s).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[m]));}
-
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('.menu .list button[data-filter]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.menu .list button[data-filter]').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          state.filter = btn.getAttribute('data-filter') || 'all';
-          render();
-        });
+  },
+  
+  bindEvents() {
+    // Search
+    const doSearch = () => this.applyFilters();
+    document.getElementById('searchBtn').addEventListener('click', doSearch);
+    document.getElementById('searchInput').addEventListener('input', doSearch);
+    document.getElementById('sortSelect').addEventListener('change', doSearch);
+    document.getElementById('checkOpen').addEventListener('change', doSearch);
+    document.getElementById('checkActive').addEventListener('change', doSearch);
+    
+    // Category Links
+    document.querySelectorAll('.list-group-item[data-cat]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelectorAll('.list-group-item[data-cat]').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+        this.applyFilters();
       });
-      document.querySelectorAll('.menu .list button[data-type]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.menu .list button[data-type]').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          state.type = btn.getAttribute('data-type') || '';
-          render();
-        });
-      });
-      document.querySelectorAll('.menu .list button[data-status]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.menu .list button[data-status]').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          state.status = btn.getAttribute('data-status') || '';
-          render();
-        });
-      });
-      document.getElementById('searchInput').addEventListener('input', (e) => { state.query = e.target.value || ''; render(); });
-      document.getElementById('openOnlyChk').addEventListener('change', (e) => { state.openOnly = !!e.target.checked; render(); });
-      document.getElementById('refreshBtn').addEventListener('click', load);
-      load();
     });
-  </script>
+  },
+  
+  applyFilters() {
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    const cat = document.querySelector('.list-group-item.active').dataset.cat;
+    const onlyOpen = document.getElementById('checkOpen').checked;
+    const onlyActive = document.getElementById('checkActive').checked;
+    const sort = document.getElementById('sortSelect').value;
+    
+    let list = this.data.filter(item => {
+      if (q && !((item.Title||'').toLowerCase().includes(q) || (item.RequirementID||'').toLowerCase().includes(q))) return false;
+      if (cat && (item.PrimaryCategory||item.primaryCategory) !== cat) return false;
+      
+      const isOpen = (typeof item.AllowOpenQuotes !== 'undefined') ? item.AllowOpenQuotes : item.allow_open_quotes;
+      const progress = item.Progress || item.progress || '';
+      
+      if (onlyOpen && !isOpen) return false;
+      if (onlyActive && progress !== '发布中' && progress !== '接洽中') return false;
+      
+      return true;
+    });
+    
+    // Sort
+    list.sort((a, b) => {
+      if (sort === 'newest') return new Date(b.PublishedAt||b.published_at) - new Date(a.PublishedAt||a.published_at);
+      // Budget heuristic parsing
+      const getBudget = (s) => parseFloat((s||'').replace(/[^\d.]/g, '')) || 0;
+      if (sort === 'budget_desc') return getBudget(b.BudgetRange||b.budget_range) - getBudget(a.BudgetRange||a.budget_range);
+      return 0;
+    });
+    
+    this.filtered = list;
+    this.render();
+  },
+  
+  render() {
+    const grid = document.getElementById('reqGrid');
+    document.getElementById('resultCount').textContent = `找到 ${this.filtered.length} 个需求`;
+    
+    if (this.filtered.length === 0) {
+      grid.innerHTML = `<div class="text-center py-5 text-muted col-12">未找到匹配需求</div>`;
+      return;
+    }
+    
+    grid.innerHTML = this.filtered.map(item => {
+      const id = item.RequirementID || item.id;
+      const isOpen = (typeof item.AllowOpenQuotes !== 'undefined') ? item.AllowOpenQuotes : item.allow_open_quotes;
+      const progress = item.Progress || item.progress || '未知';
+      const date = (item.PublishedAt || item.published_at || '').split('T')[0];
+      
+      return `
+        <div class="col">
+          <div class="card card-req h-100 p-3">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                 <div class="mb-2">
+                   <span class="badge badge-soft-primary me-1">${item.PrimaryCategory||item.primaryCategory}</span>
+                   ${isOpen ? '<span class="badge badge-soft-success"><i class="fa-solid fa-check me-1"></i>可报价</span>' : ''}
+                 </div>
+                 <h5 class="card-title mb-1">
+                   <a href="/static/view.html?id=${encodeURIComponent(id)}" class="text-dark text-decoration-none stretched-link">${escapeHtml(item.Title||item.title)}</a>
+                 </h5>
+                 <div class="text-muted small mb-2">
+                   <span class="me-3"><i class="fa-regular fa-calendar me-1"></i>${date}</span>
+                   <span><i class="fa-solid fa-hashtag me-1"></i>${id}</span>
+                 </div>
+              </div>
+              <div class="text-end">
+                 <div class="fs-5 fw-bold text-primary">${escapeHtml(item.BudgetRange||item.budget_range||'面议')}</div>
+                 <div class="small text-muted">${progress}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+};
+
+function escapeHtml(s) { return String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;'}[m])); }
+
+document.addEventListener('DOMContentLoaded', () => App.init());
+</script>
 </body>
 </html>

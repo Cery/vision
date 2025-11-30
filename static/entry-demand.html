@@ -1,330 +1,305 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>发布方入口｜我的需求与报价</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-      body { background: #f7f7f7; }
-      .container-narrow { max-width: 880px; }
-      .card + .card { margin-top: 1rem; }
-      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
-      .small-muted { color: #6c757d; font-size: .9rem; }
-    </style>
-  </head>
-  <body>
-    <div class="container container-narrow py-4">
-      <header class="mb-4 d-flex align-items-center justify-content-between">
-        <div>
-          <h1 class="h4 mb-1">发布方入口</h1>
-          <div class="small-muted">仅输入查看密码即可访问对应需求与报价</div>
-        </div>
-        <div>
-          <a href="/" class="btn btn-outline-secondary btn-sm">返回首页</a>
-        </div>
-      </header>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>发布方入口 | Vision Market</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f3f4f6; min-height: 100vh; }
+    .auth-box { max-width: 400px; margin: 100px auto; }
+    .portal-container { max-width: 1200px; margin: 30px auto; }
+    .sidebar { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .list-group-item { border: none; border-bottom: 1px solid #f3f4f6; }
+    .list-group-item:last-child { border-bottom: none; }
+    .list-group-item.active { background-color: #eef2ff; color: #4f46e5; font-weight: 600; border-color: transparent; }
+  </style>
+</head>
+<body>
 
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <form id="queryForm" class="row g-3">
-            <div class="col-12 col-md-8">
-              <label class="form-label">发布方密码或查看密码 <span class="text-danger">*</span></label>
-              <input type="password" class="form-control" id="viewPwd" placeholder="发布方专用密码或单条需求查看密码" required>
-            </div>
-            <div class="col-12 col-md-4 d-flex align-items-end">
-              <button type="submit" class="btn btn-primary w-100">查询我的需求</button>
-            </div>
-          </form>
-          <div id="reqChoiceArea" class="mt-3"></div>
+<!-- Login View -->
+<div id="view-login" class="container">
+  <div class="card auth-box shadow-sm border-0">
+    <div class="card-body p-4">
+      <h4 class="fw-bold text-center mb-4">发布方入口</h4>
+      <form id="loginForm">
+        <div class="mb-3">
+          <label class="form-label text-muted small fw-bold">查看密码 (View Password)</label>
+          <input type="password" class="form-control" id="loginPwd" required placeholder="请输入您的需求查看密码">
+          <div class="form-text">输入单条需求的查看密码，或企业会话密码</div>
+        </div>
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary">进入管理</button>
+        </div>
+        <div class="text-center mt-3">
+          <a href="/static/market.html" class="text-decoration-none small">返回需求市场</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Portal View -->
+<div id="view-portal" class="container portal-container d-none">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h4 class="fw-bold mb-0">我的需求与报价</h4>
+      <div class="small text-muted" id="portalSubtitle">-</div>
+    </div>
+    <button class="btn btn-outline-secondary btn-sm" id="logoutBtn">退出</button>
+  </div>
+
+  <div class="row g-4">
+    <!-- Sidebar List -->
+    <div class="col-lg-4">
+      <div class="sidebar">
+        <div class="p-3 border-bottom bg-light fw-bold text-muted small">需求列表</div>
+        <div class="list-group list-group-flush" id="reqList">
+          <!-- Items -->
         </div>
       </div>
-
-      <div class="d-flex justify-content-end mt-3">
-        <button type="button" id="exportBtn" class="btn btn-outline-secondary btn-sm" disabled>导出报价 CSV</button>
-      </div>
-      <div id="resultArea" class="mt-2"></div>
     </div>
 
-    <script>
-      // 统一 Cloudflare API 基础地址（与管理页一致）：生产同源 /api，本地/其他默认远端，可被 localStorage 覆盖
-      (function() {
-        const isProd = /(^|\.)visndt\.com$/i.test(location.hostname);
-        const defaultRemote = 'https://api.visndt.com';
-        let saved = '';
-        try { saved = (typeof localStorage !== 'undefined') ? (localStorage.getItem('API_BASE') || '') : ''; } catch {}
-        const allowInProd = new Set(['', 'https://api.visndt.com']);
-        if (isProd) {
-          window.API_BASE = allowInProd.has(saved) ? saved : '';
-        } else {
-          window.API_BASE = saved || defaultRemote;
-        }
-        if (location.protocol === 'https:' && /^http:\/\//i.test(window.API_BASE||'')) {
-          try { localStorage.removeItem('API_BASE'); } catch {}
-          window.API_BASE = isProd ? '' : defaultRemote;
-        }
-        window.API_BASE = String(window.API_BASE).replace(/\/$/, '');
-      })();
-
-      async function apiFetch(path, options = {}) {
-        const url = window.API_BASE + path;
-        const headers = { 'Content-Type': 'application/json' };
-        if (options.headers) Object.assign(headers, options.headers);
-        const res = await fetch(url, { ...options, headers });
-        if (!res.ok) {
-          let errText = await res.text().catch(() => '');
-          throw new Error(`HTTP ${res.status}: ${errText || res.statusText}`);
-        }
-        const ct = res.headers.get('content-type') || '';
-        return ct.includes('application/json') ? res.json() : res.text();
-      }
-
-      const form = document.getElementById('queryForm');
-      const resultArea = document.getElementById('resultArea');
-      const exportBtn = document.getElementById('exportBtn');
-      const reqChoiceArea = document.getElementById('reqChoiceArea');
-      let lastQuotes = [];
-      let currentReqId = '';
-
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        resultArea.innerHTML = '';
-        exportBtn.disabled = true;
-        lastQuotes = [];
-        const viewPwd = document.getElementById('viewPwd').value.trim();
-        if (!viewPwd) return;
-
-        const load = (html) => {
-          const div = document.createElement('div');
-          div.className = 'alert alert-info';
-          div.innerHTML = html;
-          resultArea.appendChild(div);
-        };
-        load('正在查询，请稍候…'); reqChoiceArea.innerHTML = '';
-
-        try {
-          // 优先使用发布方密码会话
-          let session = null;
-          try {
-            session = await apiFetch(`/api/demanders/session`, { method:'POST', body: JSON.stringify({ password: viewPwd }) });
-          } catch {}
-          resultArea.innerHTML = '';
-          if (session && session.ok && session.demander && session.demander.Company) {
-            const company = session.demander.Company;
-            const list = await apiFetch(`/api/demanders/requirements?company=${encodeURIComponent(company)}&password=${encodeURIComponent(viewPwd)}`);
-            const items = Array.isArray(list?.items) ? list.items : [];
-            if (!items.length) {
-              const warn = document.createElement('div'); warn.className='alert alert-warning'; warn.textContent='当前发布方暂无需求记录。'; resultArea.appendChild(warn);
-              return;
-            }
-            // 选择或直接加载第一条
-            if (items.length === 1) {
-              currentReqId = items[0].RequirementID;
-              const url = new URL('entry.html', window.location.origin);
-              url.searchParams.set('id', currentReqId);
-              window.location.href = url.toString();
-            } else {
-              renderReqChoiceDemander(items, viewPwd);
-            }
-            return;
-          }
-          // 回退到查看密码工作流
-          const list = await apiFetch(`/api/requirements/by-password?view_password=${encodeURIComponent(viewPwd)}`);
-          const items = Array.isArray(list?.items) ? list.items : [];
-          if (!items.length) {
-            const div = document.createElement('div');
-            div.className = 'alert alert-warning';
-            div.textContent = '未找到与该密码关联的需求。';
-            resultArea.appendChild(div);
-            return;
-          }
-          if (items.length === 1) {
-            currentReqId = items[0].RequirementID;
-            const url = new URL('entry.html', window.location.origin);
-            url.searchParams.set('id', currentReqId);
-            window.location.href = url.toString();
-          } else {
-            renderReqChoice(items, viewPwd);
-          }
-        } catch (err) {
-          resultArea.innerHTML = '';
-          const div = document.createElement('div');
-          div.className = 'alert alert-danger';
-          div.textContent = '查询失败：' + err.message;
-          resultArea.appendChild(div);
-        }
-      });
-
-      async function loadDetailAndQuotes(reqId, viewPwd) {
-        const detail = await apiFetch(`/api/requirements/${encodeURIComponent(reqId)}?view_password=${encodeURIComponent(viewPwd)}`);
-        const quotes = await apiFetch(`/api/quotes?requirement_id=${encodeURIComponent(reqId)}&view_password=${encodeURIComponent(viewPwd)}`);
-        lastQuotes = Array.isArray(quotes) ? quotes : [];
-        if (exportBtn) exportBtn.disabled = lastQuotes.length === 0;
-        resultArea.innerHTML = '';
-        renderDetail(detail);
-        renderQuotes(lastQuotes);
-      }
-
-      async function loadDetailAndQuotesDemander(reqId, demPwd) {
-        const detail = await apiFetch(`/api/requirements/${encodeURIComponent(reqId)}?view_password=&supplier_access_password=&demander_password=${encodeURIComponent(demPwd)}`);
-        const quotes = await apiFetch(`/api/quotes?requirement_id=${encodeURIComponent(reqId)}&demander_password=${encodeURIComponent(demPwd)}`);
-        lastQuotes = Array.isArray(quotes) ? quotes : [];
-        if (exportBtn) exportBtn.disabled = lastQuotes.length === 0;
-        resultArea.innerHTML = '';
-        renderDetail(detail);
-        renderQuotes(lastQuotes);
-      }
-
-      function renderReqChoice(items, viewPwd) {
-        const card = document.createElement('div');
-        card.className = 'card shadow-sm';
-        const rows = items.map((it) => `
-          <tr>
-            <td class="mono">${escapeHtml(it.RequirementID || '')}</td>
-            <td>${escapeHtml(it.Title || '')}</td>
-            <td>${escapeHtml(it.Status || '')}</td>
-            <td><button class="btn btn-outline-primary btn-sm" data-id="${escapeHtml(it.RequirementID || '')}">进入入口</button></td>
-          </tr>`).join('');
-        card.innerHTML = `
+    <!-- Main Content -->
+    <div class="col-lg-8">
+      <div id="detailContainer" class="d-none">
+        <div class="card shadow-sm border-0 mb-4">
           <div class="card-body">
-            <h2 class="h6">该查看密码关联多个需求，请选择：</h2>
-            <div class="table-responsive">
-              <table class="table table-sm align-middle">
-                <thead><tr><th>需求ID</th><th>标题</th><th>状态</th><th>操作</th></tr></thead>
-                <tbody>${rows}</tbody>
-              </table>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="badge bg-primary" id="detStatus">-</span>
+              <span class="text-muted small" id="detDate">-</span>
             </div>
-          </div>`;
-        reqChoiceArea.appendChild(card);
-        card.querySelectorAll('button[data-id]').forEach(btn => {
-          btn.addEventListener('click', async () => {
-            currentReqId = btn.getAttribute('data-id') || '';
-            const url = new URL('entry.html', window.location.origin);
-            url.searchParams.set('id', currentReqId);
-            window.location.href = url.toString();
-          });
+            <h3 class="card-title mb-3" id="detTitle">-</h3>
+            <div class="row g-3 mb-3">
+              <div class="col-sm-6"><small class="text-muted d-block">编号</small><span id="detId">-</span></div>
+              <div class="col-sm-6"><small class="text-muted d-block">分类</small><span id="detCat">-</span></div>
+              <div class="col-sm-6"><small class="text-muted d-block">预算</small><span id="detBudget">-</span></div>
+              <div class="col-sm-6"><small class="text-muted d-block">浏览量</small><span id="detViews">-</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">收到的报价 <span class="badge bg-light text-dark ms-2 border" id="quoteCount">0</span></h5>
+            <div class="btn-group">
+              <button class="btn btn-sm btn-outline-success" id="exportCsv">导出 CSV</button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>供应商</th>
+                  <th>报价金额</th>
+                  <th>备注</th>
+                  <th>时间</th>
+                </tr>
+              </thead>
+              <tbody id="quoteBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <div id="emptyState" class="text-center py-5 text-muted">
+        <i class="fa-regular fa-folder-open fa-3x mb-3 opacity-50"></i>
+        <p>请从左侧选择一个需求查看详情</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+(function() {
+  const isProd = /(^|\.)visndt\.com$/i.test(location.hostname);
+  const defaultRemote = 'https://api.visndt.com';
+  let saved = ''; try { saved = localStorage.getItem('API_BASE') || ''; } catch {}
+  const allowInProd = new Set(['', 'https://api.visndt.com']);
+  window.API_BASE = (isProd ? (allowInProd.has(saved) ? saved : '') : (saved || defaultRemote)).replace(/\/$/, '');
+})();
+
+const App = {
+  pwd: '',
+  items: [],
+  quotes: [],
+  
+  init() {
+    // Check URL param for direct access or pre-fill
+    const urlParams = new URLSearchParams(location.search);
+    if(urlParams.has('password')) {
+       document.getElementById('loginPwd').value = urlParams.get('password');
+    }
+    
+    document.getElementById('loginForm').addEventListener('submit', e => {
+      e.preventDefault();
+      this.login();
+    });
+    
+    document.getElementById('logoutBtn').addEventListener('click', () => location.reload());
+    document.getElementById('exportCsv').addEventListener('click', () => this.exportQuotes());
+  },
+  
+  async login() {
+    this.pwd = document.getElementById('loginPwd').value.trim();
+    if(!this.pwd) return;
+    
+    const btn = document.querySelector('#loginForm button');
+    btn.disabled = true; btn.textContent = '验证中...';
+    
+    try {
+      // Strategy: Try to fetch requirements using this password
+      // If it's a company session password, we might need a different endpoint, 
+      // but currently the backend likely supports ?view_password= or ?demander_password=
+      // We'll try the general "by-password" or "session" logic.
+      
+      let list = [];
+      let isSession = false;
+      
+      // 1. Try Session
+      try {
+        const sessRes = await fetch(window.API_BASE + '/api/demanders/session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: this.pwd })
         });
+        if (sessRes.ok) {
+          const sess = await sessRes.json();
+          if (sess.demander) {
+            // It's a master password, fetch all requirements for this company
+            const company = sess.demander.Company;
+            const reqRes = await fetch(window.API_BASE + `/api/demanders/requirements?company=${encodeURIComponent(company)}&password=${encodeURIComponent(this.pwd)}`);
+            const reqJson = await reqRes.json();
+            list = Array.isArray(reqJson.items) ? reqJson.items : [];
+            isSession = true;
+            document.getElementById('portalSubtitle').textContent = sess.demander.Company;
+          }
+        }
+      } catch {}
+      
+      // 2. If not session, try single view password
+      if (!isSession) {
+        const res = await fetch(window.API_BASE + `/api/requirements/by-password?view_password=${encodeURIComponent(this.pwd)}`);
+        if (res.ok) {
+          const json = await res.json();
+          list = Array.isArray(json.items) ? json.items : [];
+          if (list.length > 0) {
+            document.getElementById('portalSubtitle').textContent = '单条访问模式';
+          }
+        }
       }
+      
+      if (list.length === 0) throw new Error('未找到关联的需求或密码错误');
+      
+      this.items = list;
+      this.showPortal();
+      this.renderList();
+      
+      // Auto select if only one
+      if (this.items.length === 1) {
+        this.selectReq(this.items[0].RequirementID || this.items[0].id);
+      }
+      
+    } catch (e) {
+      alert(e.message);
+    } finally {
+      btn.disabled = false; btn.textContent = '进入管理';
+    }
+  },
+  
+  showPortal() {
+    document.getElementById('view-login').classList.add('d-none');
+    document.getElementById('view-portal').classList.remove('d-none');
+  },
+  
+  renderList() {
+    const container = document.getElementById('reqList');
+    container.innerHTML = this.items.map(item => {
+      const id = item.RequirementID || item.id;
+      return `
+        <button class="list-group-item list-group-item-action py-3" onclick="App.selectReq('${id}')" data-id="${id}">
+          <div class="d-flex w-100 justify-content-between mb-1">
+            <small class="text-muted font-monospace">${id}</small>
+            <span class="badge bg-light text-dark border">${item.Status||item.status}</span>
+          </div>
+          <div class="fw-bold text-truncate">${item.Title||item.title}</div>
+        </button>
+      `;
+    }).join('');
+  },
+  
+  async selectReq(id) {
+    // Highlight sidebar
+    document.querySelectorAll('#reqList .list-group-item').forEach(el => el.classList.remove('active'));
+    document.querySelector(`#reqList button[data-id="${id}"]`)?.classList.add('active');
+    
+    const item = this.items.find(x => (x.RequirementID||x.id) == id);
+    if (!item) return;
+    
+    // Render Info
+    document.getElementById('emptyState').classList.add('d-none');
+    document.getElementById('detailContainer').classList.remove('d-none');
+    
+    document.getElementById('detTitle').textContent = item.Title||item.title;
+    document.getElementById('detId').textContent = id;
+    document.getElementById('detStatus').textContent = item.Status||item.status;
+    document.getElementById('detDate').textContent = (item.PublishedAt||item.published_at||'').split('T')[0];
+    document.getElementById('detCat').textContent = item.PrimaryCategory||item.primaryCategory;
+    document.getElementById('detBudget').textContent = item.BudgetRange||item.budget_range;
+    
+    // Load Quotes
+    this.quotes = [];
+    document.getElementById('quoteBody').innerHTML = '<tr><td colspan="4" class="text-center py-3 text-muted">加载中...</td></tr>';
+    
+    try {
+      // Try fetching quotes with the password we have (either view_password or demander_password logic handled by backend usually via same param or separate)
+      // We pass view_password as a query param which works for both usually if backend is smart, or we try both
+      const url = window.API_BASE + `/api/quotes?requirement_id=${id}&view_password=${encodeURIComponent(this.pwd)}&demander_password=${encodeURIComponent(this.pwd)}`;
+      const res = await fetch(url);
+      const json = await res.json();
+      this.quotes = Array.isArray(json) ? json : (json.items || []);
+      this.renderQuotes();
+    } catch {
+      document.getElementById('quoteBody').innerHTML = '<tr><td colspan="4" class="text-center py-3 text-danger">加载报价失败</td></tr>';
+    }
+  },
+  
+  renderQuotes() {
+    document.getElementById('quoteCount').textContent = this.quotes.length;
+    if (this.quotes.length === 0) {
+      document.getElementById('quoteBody').innerHTML = '<tr><td colspan="4" class="text-center py-3 text-muted">暂无报价</td></tr>';
+      return;
+    }
+    
+    document.getElementById('quoteBody').innerHTML = this.quotes.map(q => `
+      <tr>
+        <td>${q.SupplierCompanyName || q.supplier_name || '未知供应商'}</td>
+        <td class="fw-bold text-primary">${q.Price || q.amount}</td>
+        <td class="text-truncate" style="max-width: 200px;" title="${q.Remarks||q.remarks}">${q.Remarks||q.remarks||'-'}</td>
+        <td class="small text-muted">${(q.CreatedAt||q.created_at||'').split('T')[0]}</td>
+      </tr>
+    `).join('');
+  },
+  
+  exportQuotes() {
+    if (this.quotes.length === 0) return alert('无数据可导出');
+    const rows = this.quotes.map(q => ({
+      Supplier: q.SupplierCompanyName || q.supplier_name,
+      Price: q.Price || q.amount,
+      Remarks: q.Remarks || q.remarks,
+      Date: q.CreatedAt || q.created_at
+    }));
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Quotes");
+    XLSX.writeFile(wb, `Quotes.xlsx`);
+  }
+};
 
-      function renderReqChoiceDemander(items, demPwd) {
-        const card = document.createElement('div');
-        card.className = 'card shadow-sm';
-        const rows = items.map((it) => `
-          <tr>
-            <td class="mono">${escapeHtml(it.RequirementID || '')}</td>
-            <td>${escapeHtml(it.Title || '')}</td>
-            <td>${escapeHtml(it.Status || '')}</td>
-            <td><button class="btn btn-outline-primary btn-sm" data-id="${escapeHtml(it.RequirementID || '')}">进入入口</button></td>
-          </tr>`).join('');
-        card.innerHTML = `
-          <div class="card-body">
-            <h2 class="h6">该发布方关联多个需求，请选择：</h2>
-            <div class="table-responsive">
-              <table class="table table-sm align-middle">
-                <thead><tr><th>需求ID</th><th>标题</th><th>状态</th><th>操作</th></tr></thead>
-                <tbody>${rows}</tbody>
-              </table>
-            </div>
-          </div>`;
-        reqChoiceArea.appendChild(card);
-        card.querySelectorAll('button[data-id]').forEach(btn => {
-          btn.addEventListener('click', async () => {
-            currentReqId = btn.getAttribute('data-id') || '';
-            const url = new URL('entry.html', window.location.origin);
-            url.searchParams.set('id', currentReqId);
-            window.location.href = url.toString();
-          });
-        });
-      }
-
-      function renderDetail(detail) {
-        const card = document.createElement('div');
-        card.className = 'card shadow-sm';
-        card.innerHTML = `
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-              <h2 class="h5 mb-0">需求详情</h2>
-              <span class="badge bg-secondary mono">${detail.RequirementID || ''}</span>
-            </div>
-            <div class="mt-3">
-              <div><strong>标题：</strong>${escapeHtml(detail.Title || '')}</div>
-              <div><strong>分类：</strong>${escapeHtml(detail.primaryCategory || '')}</div>
-              <div><strong>联系人：</strong>${escapeHtml(detail.contactName || '')}</div>
-              <div><strong>电话：</strong><span class="mono">${escapeHtml(detail.contactPhone || '')}</span></div>
-            </div>
-          </div>`;
-        resultArea.appendChild(card);
-      }
-
-      function renderQuotes(quotes) {
-        const card = document.createElement('div');
-        card.className = 'card shadow-sm';
-        const rows = quotes.map((q, i) => `
-          <tr>
-            <td class="mono">${i + 1}</td>
-            <td class="mono">${escapeHtml(q.quote_id || '')}</td>
-            <td>${escapeHtml(q.supplier_name || q.supplier_id || '')}</td>
-            <td>${escapeHtml(q.price ?? q.amount ?? '')}</td>
-            <td>${escapeHtml(q.notes ?? q.remarks ?? '')}</td>
-            <td class="mono small">${escapeHtml(q.created_at || '')}</td>
-          </tr>`).join('');
-        card.innerHTML = `
-          <div class="card-body">
-            <h2 class="h5">报价列表（${quotes.length}）</h2>
-            <div class="table-responsive">
-              <table class="table table-sm align-middle">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>报价ID</th>
-                    <th>供应商</th>
-                    <th>报价</th>
-                    <th>备注</th>
-                    <th>时间</th>
-                  </tr>
-                </thead>
-                <tbody>${rows || '<tr><td colspan="6" class="text-center text-muted">暂无报价</td></tr>'}</tbody>
-              </table>
-            </div>
-          </div>`;
-        resultArea.appendChild(card);
-      }
-
-      if (exportBtn) {
-        exportBtn.addEventListener('click', () => {
-          if (!lastQuotes.length) return;
-          const headers = ['quote_id','supplier_id','supplier_name','price','notes','created_at'];
-          const lines = [headers.join(',')];
-          lastQuotes.forEach(q => {
-            const row = headers.map(h => {
-              if (h === 'price') return escapeCsv(q.price ?? q.amount ?? '');
-              if (h === 'notes') return escapeCsv(q.notes ?? q.remarks ?? '');
-              return escapeCsv(q[h]);
-            });
-            lines.push(row.join(','));
-          });
-          const blob = new Blob(["\ufeff" + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `quotes_${Date.now()}.csv`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        });
-      }
-
-      function escapeHtml(s) {
-        if (s === null || s === undefined) return '';
-        return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-      }
-      function escapeCsv(s) {
-        if (s === null || s === undefined) return '';
-        s = String(s);
-        if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
-        return s;
-      }
-    </script>
-  </body>
-  </html>
+document.addEventListener('DOMContentLoaded', () => App.init());
+</script>
+</body>
+</html>
