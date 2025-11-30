@@ -18,7 +18,16 @@ export default {
       'http://localhost:8000', 'http://127.0.0.1:8000',
       'http://localhost:1314', 'http://127.0.0.1:1314'
     ]);
-    const allowOrigin = (origin && allowedOrigins.has(origin)) ? origin : 'https://visndt.com';
+    let allowOrigin = 'https://visndt.com';
+    if (origin) {
+      try {
+        const o = new URL(origin);
+        const h = String(o.hostname || '').toLowerCase();
+        if (allowedOrigins.has(origin) || h === 'localhost' || h === '127.0.0.1' || h.endsWith('.workers.dev')) {
+          allowOrigin = origin;
+        }
+      } catch {}
+    }
     const baseHeaders = {
       'Access-Control-Allow-Origin': allowOrigin,
       'Access-Control-Allow-Methods': 'GET,POST,PATCH,DELETE,OPTIONS',
@@ -192,6 +201,18 @@ export default {
     const path = url.pathname;
     const isFn = (p) => path.startsWith(`/.netlify/functions/${p}`);
     const isApi = (p) => path.startsWith(`/api/${p}`);
+
+    // Health check
+    if (isApi('health') && request.method === 'GET') {
+      try {
+        const req = await env.DB.prepare('SELECT COUNT(1) as c FROM requirements').all();
+        const sup = await env.DB.prepare('SELECT COUNT(1) as c FROM suppliers').all();
+        const dem = await env.DB.prepare('SELECT COUNT(1) as c FROM demanders').all();
+        return json({ ok: true, db: { requirements: (req.results?.[0]?.c)||0, suppliers: (sup.results?.[0]?.c)||0, demanders: (dem.results?.[0]?.c)||0 } });
+      } catch (e) {
+        return json({ ok: true });
+      }
+    }
 
     // Admin: verify via header token (GET/POST) or body password (POST only)
     if (isApi('admin/verify') && (request.method === 'POST' || request.method === 'GET')) {
@@ -402,7 +423,10 @@ export default {
         sets.push('quote_password = ?'); binds.push(String(data.quote_password || '').trim());
       }
       if (canUse.has('view_password') && typeof data.view_password === 'string') {
-        sets.push('view_password = ?'); binds.push(String(data.view_password || '').trim());
+        const vp = String(data.view_password || '').trim();
+        sets.push('view_password = ?'); binds.push(vp);
+        // Keep legacy plain password in sync for publisher portal compatibility
+        sets.push('view_password_plain = ?'); binds.push(vp);
       }
 
       if (!sets.length) return json({ error: 'NoFields' }, 400);
@@ -411,7 +435,26 @@ export default {
       const sql = `UPDATE requirements SET ${sets.join(', ')} WHERE requirement_id = ?`;
       const stmt = env.DB.prepare(sql).bind(...binds, reqId);
       const info = await stmt.run();
+      // Sync demander password when view_password_plain updated by admin
       if (info.changes > 0) {
+        try {
+          if (isAdmin && (Object.prototype.hasOwnProperty.call(data, 'view_password_plain') || Object.prototype.hasOwnProperty.call(data, 'view_password'))) {
+            const { results: reqRows } = await env.DB.prepare('SELECT contact_company FROM requirements WHERE requirement_id = ?').bind(reqId).all();
+            const company = (reqRows && reqRows[0] && reqRows[0].contact_company) || '';
+            if (company) {
+              const { results: demRows } = await env.DB.prepare('SELECT demander_id, metadata_json FROM demanders WHERE company = ?').bind(company).all();
+              if (demRows && demRows.length) {
+                const d = demRows[0];
+                let meta = {};
+                try { meta = JSON.parse(d.metadata_json || '{}'); } catch {}
+                meta.password_plain = String((Object.prototype.hasOwnProperty.call(data,'view_password') ? data.view_password : data.view_password_plain) || '');
+                const nowIso = new Date().toISOString();
+                await env.DB.prepare('UPDATE demanders SET metadata_json = ?, updated_at = ? WHERE demander_id = ?')
+                  .bind(JSON.stringify(meta), nowIso, d.demander_id).run();
+              }
+            }
+          }
+        } catch {}
         return json({ ok: true, requirement_id: reqId });
       }
       return json({ error: 'UpdateFailed' }, 404);
@@ -596,6 +639,20 @@ export default {
         if (!sets.length) return json({ error: 'NoFields' }, 400);
         const stmt = env.DB.prepare(`UPDATE requirements SET ${sets.join(', ')}`);
         await stmt.bind(...binds).run();
+        // Sync all demanders password when newPasswordPlain provided
+        try {
+          if (data.newPasswordPlain) {
+            const { results: dems } = await env.DB.prepare('SELECT demander_id, metadata_json FROM demanders').all();
+            const nowIso = new Date().toISOString();
+            for (const d of (dems || [])) {
+              let meta = {};
+              try { meta = JSON.parse(d.metadata_json || '{}'); } catch {}
+              meta.password_plain = String(data.newPasswordPlain);
+              await env.DB.prepare('UPDATE demanders SET metadata_json = ?, updated_at = ? WHERE demander_id = ?')
+                .bind(JSON.stringify(meta), nowIso, d.demander_id).run();
+            }
+          }
+        } catch {}
         // D1 doesn't return affected count; best-effort: return ok=true
         return json({ updated: 'all' });
       }
@@ -611,6 +668,25 @@ export default {
         if (!sets.length) return json({ error: 'NoFields' }, 400);
         const stmt = env.DB.prepare(`UPDATE requirements SET ${sets.join(', ')} WHERE requirement_id = ?`).bind(...binds, String(data.requirementID));
         await stmt.run();
+        // Sync demander password when updating single requirement with view_password_plain
+        try {
+          if (Object.prototype.hasOwnProperty.call(data, 'view_password_plain') || Object.prototype.hasOwnProperty.call(data, 'view_password')) {
+            const { results: reqRows } = await env.DB.prepare('SELECT contact_company FROM requirements WHERE requirement_id = ?').bind(String(data.requirementID)).all();
+            const company = (reqRows && reqRows[0] && reqRows[0].contact_company) || '';
+            if (company) {
+              const { results: demRows } = await env.DB.prepare('SELECT demander_id, metadata_json FROM demanders WHERE company = ?').bind(company).all();
+              if (demRows && demRows.length) {
+                const d = demRows[0];
+                let meta = {};
+                try { meta = JSON.parse(d.metadata_json || '{}'); } catch {}
+                meta.password_plain = String((Object.prototype.hasOwnProperty.call(data,'view_password') ? data.view_password : data.view_password_plain) || '');
+                const nowIso = new Date().toISOString();
+                await env.DB.prepare('UPDATE demanders SET metadata_json = ?, updated_at = ? WHERE demander_id = ?')
+                  .bind(JSON.stringify(meta), nowIso, d.demander_id).run();
+              }
+            }
+          }
+        } catch {}
         return json({ ok: true });
       }
       return json({ error: 'InvalidRequest' }, 400);

@@ -814,12 +814,24 @@ const App = {
           <td>
             <button class="btn btn-sm btn-outline-primary py-0" onclick="App.editRequirement('${id}')">编辑</button>
             ${status !== '公开' ? `<button class="btn btn-sm btn-outline-success py-0 ms-1" onclick="App.quickApprove('${id}')">批准</button>` : ''}
+            <button class="btn btn-sm btn-outline-danger py-0 ms-1" onclick="App.deleteRequirement('${id}')">删除</button>
           </td>
         </tr>
       `;
     }).join('');
   },
   
+  async deleteRequirement(id) {
+    if(!confirm('确定要删除该需求吗？此操作不可恢复，且会删除关联的报价信息。')) return;
+    try {
+      await apiFetch(`/api/admin/requirements/${id}`, { method: 'DELETE' });
+      showToast('需求已删除', 'success');
+      this.loadRequirements();
+    } catch (e) {
+      showToast('删除失败: ' + e.message, 'error');
+    }
+  },
+
   async quickApprove(id) {
     if (!confirm('确定批准该需求并公开显示？\n(将设置状态为公开、进度为发布中、允许在线报价)')) return;
     try {
@@ -1035,12 +1047,24 @@ const App = {
           <td class="font-monospace text-primary">${escapeHtml(pwd)}</td>
           <td>
             <button class="btn btn-sm btn-outline-primary py-0" onclick="App.viewDemanderRequirements('${company}')">需求详情</button>
+            <button class="btn btn-sm btn-outline-danger py-0 ms-1" onclick="App.deleteDemander('${d.demander_id}')">删除</button>
           </td>
         </tr>
       `;
     }).join('') || '<tr><td colspan="7" class="text-center text-muted">暂无数据</td></tr>';
   },
   
+  async deleteDemander(id) {
+    if(!confirm('确定要删除该发布方吗？')) return;
+    try {
+      await apiFetch(`/api/admin/demanders/${id}`, { method: 'DELETE' });
+      showToast('发布方已删除', 'success');
+      this.loadDemanders();
+    } catch (e) {
+      showToast('删除失败: ' + e.message, 'error');
+    }
+  },
+
   async viewDemanderRequirements(company) {
       const modal = new bootstrap.Modal(document.getElementById('demReqModal'));
       document.getElementById('demReqTitle').textContent = `(${company})`;
@@ -1103,12 +1127,24 @@ const App = {
           <td>
             <button class="btn btn-sm btn-outline-primary py-0 me-1" onclick="App.editSupplier('${id}')">编辑</button>
             <button class="btn btn-sm btn-outline-info py-0" onclick="App.viewSupplierProducts('${id}', '${escapeHtml(s.CompanyName||s.company)}')">产品</button>
+            <button class="btn btn-sm btn-outline-danger py-0 ms-1" onclick="App.deleteSupplier('${id}')">删除</button>
           </td>
         </tr>
       `;
     }).join('');
   },
   
+  async deleteSupplier(id) {
+    if(!confirm('确定要删除该供应商吗？')) return;
+    try {
+      await apiFetch(`/api/admin/suppliers/${id}`, { method: 'DELETE' });
+      showToast('供应商已删除', 'success');
+      this.loadSuppliers();
+    } catch (e) {
+      showToast('删除失败: ' + e.message, 'error');
+    }
+  },
+
   async viewSupplierProducts(supId, supName) {
       const modal = new bootstrap.Modal(document.getElementById('productsModal'));
       document.getElementById('prodSupTitle').textContent = `(${supName})`;
