@@ -100,7 +100,12 @@
   if (isProd) {
     window.API_BASE = allowInProd.has(saved) ? saved : '';
   } else {
-    window.API_BASE = saved || defaultRemote;
+    // 自动检测：本地开发且无手动配置时，优先使用本地 Worker 地址
+    if (!saved && (location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+       window.API_BASE = 'http://127.0.0.1:8787';
+    } else {
+       window.API_BASE = saved || defaultRemote;
+    }
   }
   if (location.protocol === 'https:' && /^http:\/\//i.test(window.API_BASE||'')) {
     try { localStorage.removeItem('API_BASE'); } catch {}
@@ -126,7 +131,12 @@ async function refreshRequirementsList() {
   const listEl = document.getElementById('requirementsList');
   const items = await listRequirements();
   if (!items.length) {
-    alert('暂无实时数据或服务未配置。');
+    listEl.innerHTML = `
+      <div class="alert alert-info d-flex align-items-center">
+        <i class="fa-solid fa-circle-info me-2"></i>
+        <div>暂无实时需求数据，或服务连接失败。</div>
+      </div>
+    `;
     return;
   }
   listEl.innerHTML = items.map(item => `
