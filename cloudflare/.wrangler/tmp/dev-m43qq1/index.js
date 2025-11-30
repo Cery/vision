@@ -1124,10 +1124,22 @@ var src_default = {
     }
     if (isApi("admin/dev-seed") && request.method === "POST") {
       if (!requireAdmin(request)) return json({ error: "Unauthorized" }, 401);
-      const base = url.searchParams.get("base") || "http://127.0.0.1:5500/data";
-      const reqs = await fetchJsonSafe(`${base}/requirements.json`);
-      let sups = await fetchJsonSafe(`${base}/suppliers.json`);
-      const dems = await fetchJsonSafe(`${base}/demanders.json`);
+      let reqs = [], sups = [], dems = [];
+      let base = url.searchParams.get("base") || "http://127.0.0.1:5500/data";
+      try {
+        const body = await request.json();
+        console.log("DevSeed Body Keys:", Object.keys(body));
+        if (body.requirements) reqs = body.requirements;
+        if (body.suppliers) sups = body.suppliers;
+        if (body.demanders) dems = body.demanders;
+      } catch (e) {
+        console.error("Body Parse Error:", e);
+      }
+      if (!reqs.length && !sups.length && !dems.length) {
+        reqs = await fetchJsonSafe(`${base}/requirements.json`);
+        sups = await fetchJsonSafe(`${base}/suppliers.json`);
+        dems = await fetchJsonSafe(`${base}/demanders.json`);
+      }
       const now = (/* @__PURE__ */ new Date()).toISOString();
       for (const r of reqs || []) {
         try {
@@ -1161,7 +1173,8 @@ var src_default = {
             r.created_at || now,
             r.updated_at || now
           ).run();
-        } catch {
+        } catch (err) {
+          console.error("Seed Error (Req):", err.message, r.RequirementID);
         }
       }
       if (!Array.isArray(sups) || !sups.length) {
@@ -1652,7 +1665,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-yAkNAN/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-Nn0bot/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -1684,7 +1697,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-yAkNAN/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-Nn0bot/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;

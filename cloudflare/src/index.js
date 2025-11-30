@@ -1064,10 +1064,27 @@ export default {
     // Admin: dev seed from static JSON files (local development helper)
     if (isApi('admin/dev-seed') && request.method === 'POST') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-      const base = url.searchParams.get('base') || 'http://127.0.0.1:5500/data';
-      const reqs = await fetchJsonSafe(`${base}/requirements.json`);
-      let sups = await fetchJsonSafe(`${base}/suppliers.json`);
-      const dems = await fetchJsonSafe(`${base}/demanders.json`);
+      
+      let reqs = [], sups = [], dems = [];
+      let base = url.searchParams.get('base') || 'http://127.0.0.1:5500/data';
+
+      // Try reading from body first
+      try {
+        const body = await request.json();
+        console.log('DevSeed Body Keys:', Object.keys(body));
+        if (body.requirements) reqs = body.requirements;
+        if (body.suppliers) sups = body.suppliers;
+        if (body.demanders) dems = body.demanders;
+      } catch (e) {
+        console.error('Body Parse Error:', e);
+      }
+
+      // If body is empty, try fetching from base URL
+      if (!reqs.length && !sups.length && !dems.length) {
+        reqs = await fetchJsonSafe(`${base}/requirements.json`);
+        sups = await fetchJsonSafe(`${base}/suppliers.json`);
+        dems = await fetchJsonSafe(`${base}/demanders.json`);
+      }
 
       const now = new Date().toISOString();
       // Seed requirements
@@ -1085,9 +1102,12 @@ export default {
             r.ContactPublic ? 1 : 0, r.AllowOpenQuotes ? 1 : 0, JSON.stringify(r.Parameters || {}), r.PublishedAt || now, r.BudgetRange || '', r.procurementPlan || '',
             r.Progress || '', r.ViewPasswordPlain || '', r.created_at || now, r.updated_at || now
           ).run();
-        } catch {}
+        } catch (err) {
+           console.error('Seed Error (Req):', err.message, r.RequirementID);
+        }
       }
 
+      // Seed suppliers
       if (!Array.isArray(sups) || !sups.length) {
         const siteBase = String(base).replace(/\/?data\/?$/i, '');
         const idx = await fetchJsonSafe(`${siteBase}/index.json`);

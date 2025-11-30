@@ -84,6 +84,25 @@
           <button class="btn btn-sm btn-outline-secondary" onclick="refreshRequirementsList()"><i class="fa-solid fa-rotate me-1"></i>实时拉取最新需求</button>
           <button id="exportReqCsvBtn" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-file-csv me-1"></i> 导出当前筛选 CSV</button>
           <button id="exportReqXlsBtn" class="btn btn-sm btn-outline-success"><i class="fa-solid fa-file-excel me-1"></i> 导出 Excel</button>
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              <i class="fa-solid fa-gear me-1"></i> API设置
+            </button>
+            <ul class="dropdown-menu p-3" style="min-width: 300px;">
+              <li class="mb-2">
+                <label class="form-label small">API 地址</label>
+                <input type="text" class="form-control form-control-sm" id="apiBaseInput" placeholder="https://api.visndt.com">
+              </li>
+              <li class="d-grid gap-2">
+                <button class="btn btn-sm btn-primary" onclick="saveApiBase()">保存并刷新</button>
+                <button class="btn btn-sm btn-outline-secondary" onclick="resetApiBase()">重置为默认</button>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li class="small text-muted">
+                当前: <span id="currentApiBase">自动检测</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -112,7 +131,31 @@
     window.API_BASE = isProd ? '' : defaultRemote;
   }
   window.API_BASE = String(window.API_BASE).replace(/\/$/, '');
+  
+  // Update UI
+  document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('apiBaseInput');
+    const label = document.getElementById('currentApiBase');
+    if (input) input.value = window.API_BASE;
+    if (label) label.textContent = window.API_BASE || '同源/自动';
+  });
 })();
+
+window.saveApiBase = function() {
+  const val = document.getElementById('apiBaseInput').value.trim();
+  if (val) {
+    localStorage.setItem('API_BASE', val);
+  } else {
+    localStorage.removeItem('API_BASE');
+  }
+  location.reload();
+};
+
+window.resetApiBase = function() {
+  localStorage.removeItem('API_BASE');
+  location.reload();
+};
+
 window.apiFetch = window.apiFetch || ((path, opts={}) => fetch(`${window.API_BASE}${path}`, opts));
 // 从 Netlify Function 拉取最新需求列表（实时）
 async function listRequirements() {
