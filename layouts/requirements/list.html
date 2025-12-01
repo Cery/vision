@@ -653,7 +653,7 @@ function renderQuoteForm(data) {
       <div id="quoteWrap" style="display:none;">
       <form id="quoteForm" name="requirement-quote" data-netlify="true">
         <input type="hidden" name="RequirementID" value="${data.id}">
-        <input type="hidden" name="ViewPassword" value="">
+        <!-- 仅供应商授权，无单条查看密码 -->
         <div class="row g-3">
           <div class="col-md-6">
             <label class="form-label">公司名称</label>
@@ -760,58 +760,42 @@ document.addEventListener('submit', (e) => {
 // 覆盖原有的验证函数，以兼容“查看密码”与“供应商通行密码”两种方式
 window.verifyRequirementPassword = async function(requirementID) {
   const pw = document.getElementById('viewPasswordInput')?.value || '';
-  if (!pw) { alert('请输入查看密码或供应商通行密码'); return; }
+  if (!pw) { alert('请输入供应商通行密码'); return; }
   try {
-    // 先尝试查看密码
-    let resp = await window.apiFetch(`/api/requirements/${encodeURIComponent(requirementID)}?view_password=${encodeURIComponent(pw)}`);
-    let data = null; let used = 'view';
+    // 仅供应商通行密码解锁
+    const resp = await window.apiFetch(`/api/requirements/${encodeURIComponent(requirementID)}?supplier_access_password=${encodeURIComponent(pw)}`);
     if (resp.ok) {
-      data = await resp.json().catch(()=>null);
-    }
-    // 若失败或未返回敏感字段，再尝试供应商通行密码
-    if (!resp.ok || !(data && (data.ContactName || data.ContactPhone || data.ContactCompany))) {
-      resp = await window.apiFetch(`/api/requirements/${encodeURIComponent(requirementID)}?supplier_access_password=${encodeURIComponent(pw)}`);
-      used = 'supplier';
-      if (resp.ok) data = await resp.json().catch(()=>null);
-    }
-
-    if (resp.ok && data && (data.ContactName || data.ContactPhone || data.ContactCompany)) {
-      // 显示联系方式
-      document.getElementById('contactUnlocked')?.setAttribute('style','');
-      document.getElementById('cName')?.replaceChildren(document.createTextNode(data.ContactName || ''));
-      document.getElementById('cPhone')?.replaceChildren(document.createTextNode(data.ContactPhone || ''));
-      const cc = document.getElementById('cCompany'); if (cc) cc.replaceChildren(document.createTextNode(data.ContactCompany || ''));
-      const ce = document.getElementById('cEmail'); if (ce) ce.replaceChildren(document.createTextNode(data.ContactEmail || ''));
-      const cd = document.getElementById('cDept'); if (cd) cd.replaceChildren(document.createTextNode(data.ContactDepartment || ''));
-
-      // 将密码注入报价表单隐藏字段
-      const form = document.getElementById('quoteForm');
-  if (form) {
-        if (used === 'view') {
-          let vp = form.querySelector('input[name="ViewPassword"]');
-          if (!vp) { vp = document.createElement('input'); vp.type='hidden'; vp.name='ViewPassword'; form.appendChild(vp); }
-          vp.value = pw;
-        } else {
+      const data = await resp.json().catch(()=>null);
+      if (data && (data.ContactName || data.ContactPhone || data.ContactCompany)) {
+        // 显示联系方式
+        document.getElementById('contactUnlocked')?.setAttribute('style','');
+        document.getElementById('cName')?.replaceChildren(document.createTextNode(data.ContactName || ''));
+        document.getElementById('cPhone')?.replaceChildren(document.createTextNode(data.ContactPhone || ''));
+        const cc = document.getElementById('cCompany'); if (cc) cc.replaceChildren(document.createTextNode(data.ContactCompany || ''));
+        const ce = document.getElementById('cEmail'); if (ce) ce.replaceChildren(document.createTextNode(data.ContactEmail || ''));
+        const cd = document.getElementById('cDept'); if (cd) cd.replaceChildren(document.createTextNode(data.ContactDepartment || ''));
+        // 将密码注入报价表单隐藏字段（仅供应商通行密码）
+        const form = document.getElementById('quoteForm');
+        if (form) {
           let sp = form.querySelector('input[name="SupplierAccessPassword"]');
           if (!sp) { sp = document.createElement('input'); sp.type='hidden'; sp.name='SupplierAccessPassword'; form.appendChild(sp); }
           sp.value = pw;
+          form.querySelector('button[type="submit"]')?.removeAttribute('disabled');
+          form.querySelectorAll('input, textarea, select')?.forEach(el => el.removeAttribute('disabled'));
         }
-        // 允许提交输入
-        form.querySelector('button[type="submit"]')?.removeAttribute('disabled');
-        form.querySelectorAll('input, textarea, select')?.forEach(el => el.removeAttribute('disabled'));
+        // 更新授权提示
+        try {
+          const hint = document.getElementById('authHint');
+          const txt = '已授权（供应商密码）';
+          if (hint) { hint.className = 'alert alert-success d-flex align-items-center gap-2 p-2'; hint.querySelector('span')?.replaceChildren(document.createTextNode(txt)); }
+        } catch {}
+        // 刷新报价列表
+        if (typeof window.loadQuotes === 'function') window.loadQuotes(requirementID);
+      } else {
+        alert('验证失败：供应商通行密码不正确');
       }
-
-      // 更新授权提示
-      try {
-        const hint = document.getElementById('authHint');
-        const txt = used==='supplier' ? '已授权（供应商密码）' : '已授权（查看密码）';
-        if (hint) { hint.className = 'alert alert-success d-flex align-items-center gap-2 p-2'; hint.querySelector('span')?.replaceChildren(document.createTextNode(txt)); }
-      } catch {}
-
-      // 刷新报价列表，兼容两种授权
-      if (typeof window.loadQuotes === 'function') window.loadQuotes(requirementID);
     } else {
-      alert('验证失败：查看密码或供应商通行密码不正确');
+      alert('验证失败：供应商通行密码不正确');
     }
   } catch (e) {
     console.error(e);
@@ -830,14 +814,12 @@ function displayCurrency(code){
   return code||'';
 }
 window.loadQuotes = async function(requirementID) {
-  const listEl = document.getElementById('quotesList');
+  const form = document.getElementById('quoteForm');
   if (!listEl) return;
   listEl.innerHTML = '<div class="text-muted">加载报价...</div>';
   try {
-    const form = document.getElementById('quoteForm');
-    const vp = form?.querySelector('input[name="ViewPassword"]')?.value || '';
     const sp = form?.querySelector('input[name="SupplierAccessPassword"]')?.value || '';
-    const extra = `${vp?`&view_password=${encodeURIComponent(vp)}`:''}${sp?`&supplier_access_password=${encodeURIComponent(sp)}`:''}`;
+    const extra = `${sp?`&supplier_access_password=${encodeURIComponent(sp)}`:''}`;
     const resp = await window.apiFetch(`/api/quotes?requirement_id=${encodeURIComponent(requirementID)}${extra}`);
     if (!resp.ok) throw new Error('Bad response');
     const items = await resp.json();
