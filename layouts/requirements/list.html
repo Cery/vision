@@ -161,23 +161,35 @@ window.apiFetch = window.apiFetch || ((path, opts={}) => fetch(`${window.API_BAS
 async function listRequirements() {
   try {
     const res = await window.apiFetch('/api/requirements');
-    if (!res.ok) throw new Error('网络错误');
+    if (!res.ok) throw new Error('网络错误 ' + res.status);
     const data = await res.json();
     return Array.isArray(data) ? data : [];
   } catch (e) {
     console.error('拉取失败', e);
-    return [];
+    throw e; // Re-throw to handle in caller
   }
 }
 
 async function refreshRequirementsList() {
   const listEl = document.getElementById('requirementsList');
-  const items = await listRequirements();
+  let items = [];
+  try {
+    items = await listRequirements();
+  } catch(e) {
+    listEl.innerHTML = `
+      <div class="alert alert-danger d-flex align-items-center">
+        <i class="fa-solid fa-circle-exclamation me-2"></i>
+        <div>拉取数据失败: ${e.message} (API: ${window.API_BASE})</div>
+      </div>
+    `;
+    return;
+  }
+
   if (!items.length) {
     listEl.innerHTML = `
       <div class="alert alert-info d-flex align-items-center">
         <i class="fa-solid fa-circle-info me-2"></i>
-        <div>暂无实时需求数据，或服务连接失败。</div>
+        <div>暂无实时需求数据。</div>
       </div>
     `;
     return;

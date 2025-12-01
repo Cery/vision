@@ -96,7 +96,7 @@
     X-Frame-Options = "DENY"
     X-XSS-Protection = "1; mode=block"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://identity.netlify.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://hm.baidu.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; img-src 'self' data: blob: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://picsum.photos https://fastly.picsum.photos; font-src 'self' data: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.gstatic.com; connect-src 'self' https://identity.netlify.com https://api.netlify.com https://api.visndt.com"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://identity.netlify.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://hm.baidu.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; img-src 'self' data: blob: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://picsum.photos https://fastly.picsum.photos; font-src 'self' data: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.gstatic.com; connect-src 'self' http://127.0.0.1:8787 https://identity.netlify.com https://api.netlify.com https://api.visndt.com"
 
 # Identity and Git Gateway Redirects
 [[redirects]]
