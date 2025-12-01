@@ -115,7 +115,7 @@
   const defaultRemote = 'https://api.visndt.com';
   let saved = '';
   try { saved = (typeof localStorage !== 'undefined') ? (localStorage.getItem('API_BASE') || '') : ''; } catch {}
-  const allowInProd = new Set(['', 'https://api.visndt.com']);
+  const allowInProd = { has: (v) => { if (v === '') return true; return /^https:\/\//i.test(String(v||'')); } };
   if (isProd) {
     window.API_BASE = allowInProd.has(saved) ? saved : '';
   } else {

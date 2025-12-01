@@ -580,7 +580,13 @@
   const defaultRemote = 'https://api.visndt.com';
   let saved = '';
   try { saved = localStorage.getItem('API_BASE') || ''; } catch {}
-  const allowInProd = new Set(['', 'https://api.visndt.com']);
+  // 生产环境允许任意 https 地址或同源
+  const allowInProd = {
+    has: (v) => {
+      if (v === '') return true; // 同源
+      return /^https:\/\//i.test(String(v||''));
+    }
+  };
   
   if (isProd) {
     window.API_BASE = allowInProd.has(saved) ? saved : '';
@@ -803,7 +809,7 @@ const App = {
   // --- Requirements ---
   async loadRequirements() {
     try {
-      const res = await apiFetch('/api/requirements?limit=200'); // Load enough for admin
+      const res = await apiFetch('/api/admin/requirements?limit=200');
       this.state.reqList = Array.isArray(res) ? res : (res.items || []);
       this.renderRequirements();
     } catch (e) {
@@ -831,9 +837,34 @@ const App = {
       return true;
     });
     
-    document.getElementById('reqCountHint').textContent = `共 ${list.length} 条`;
-    
-    tbody.innerHTML = list.map(r => {
+    // 分区：未审核、已审核公开、已关闭、过期
+    const now = Date.now();
+    const getDate = (s) => { try { return new Date(s).getTime(); } catch { return 0; } };
+    const isApproved = (r.Approved === 1) || String(r.approved||'').trim()==='1';
+    const statusOf = (r.Status || r.status || '').trim();
+    const progressOf = (r.Progress || r.progress || '').trim();
+    const pubAt = getDate(r.PublishedAt || r.published_at || r.created_at);
+    const expired = (statusOf === '公开') && (now - pubAt > 1000*60*60*24*120); // 120天
+
+    const groups = {
+      pending: [],
+      public: [],
+      closed: [],
+      expired: []
+    };
+
+    for (const r of list) {
+      const st = (r.Status || r.status || '').trim();
+      const pr = (r.Progress || r.progress || '').trim();
+      const pAt = getDate(r.PublishedAt || r.published_at || r.created_at);
+      const isExp = (st === '公开') && (now - pAt > 1000*60*60*24*120);
+      if (!isApproved || (st !== '公开')) groups.pending.push(r);
+      else if (isExp) groups.expired.push(r);
+      else if (st === '关闭' || pr === '已完成' || pr === '已终止') groups.closed.push(r);
+      else groups.public.push(r);
+    }
+
+    const renderRows = (arr) => arr.map(r => {
       const id = r.RequirementID || r.id;
       const status = r.Status || r.status || '未知';
       const progress = r.Progress || r.progress || '待发布';
@@ -865,6 +896,22 @@ const App = {
         </tr>
       `;
     }).join('');
+
+    const parts = [];
+    const section = (title, arr) => {
+      if (!arr.length) return '';
+      return `
+        <tr class="table-light"><td colspan="8" class="fw-bold">${title}（${arr.length}）</td></tr>
+        ${renderRows(arr)}
+      `;
+    };
+    parts.push(section('未审核/待公开', groups.pending));
+    parts.push(section('已审核公开', groups.public));
+    parts.push(section('已关闭/已完成', groups.closed));
+    parts.push(section('已过期（120天）', groups.expired));
+
+    document.getElementById('reqCountHint').textContent = `共 ${list.length} 条`;
+    tbody.innerHTML = parts.filter(Boolean).join('') || '<tr><td colspan="8" class="text-center text-muted">暂无数据</td></tr>';
   },
   
   async deleteRequirement(id) {
@@ -887,7 +934,9 @@ const App = {
           status: '公开',
           progress: '发布中',
           allow_open_quotes: true,
-          contact_public: true
+          contact_public: true,
+          approved: 1,
+          approved_at: new Date().toISOString()
         })
       });
       showToast('已批准发布', 'success');

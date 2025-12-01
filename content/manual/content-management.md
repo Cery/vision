@@ -109,3 +109,42 @@ gallery:
   - **未授权**：只能看到需求概览，联系方式脱敏。
   - **授权查看**：输入“单条需求查看密码”或“供应商通行密码”后，解锁完整联系方式。
 - **API 配置**：在需求列表页底部支持手动切换 API 地址（本地开发/线上环境），方便调试。
+
+---
+
+## 四、生产环境部署与验证
+
+### 1. API 基础地址与切换
+- 生产环境默认同源 API（`window.API_BASE=''`，调用 `fetch('/api/...')`）。
+- 支持保存任意 `https://` 开头的远程 API 地址，或重置为同源：
+  - 前台：`/requirements/` 页面底部“API设置”内可一键设为本地 `http://127.0.0.1:8787`、线上 `https://api.visndt.com`、或同源。
+  - 后台：`/management.html → 设置 → API Base URL`，点击“保存”，或通过下拉菜单快速切换。
+
+### 2. 发布→审核→展示 全流程
+- 发布需求：`POST /api/requirements` 返回 `RequirementID` 与 `ViewPassword`。
+- 审核公开：在后台“需求管理”搜索该编号，点击“批准发布”，系统会设置：
+  - `approved=1`、`approved_at=ISO时间`
+  - `status='公开'`、`progress='发布中'`
+  - `allow_open_quotes=true`、`contact_public=true`
+- 前台展示：`GET /api/requirements` 仅加载“已审核且公开”的需求。
+- 详情与密码：在弹窗中用 `view_password` 或 `supplier_access_password` 解锁联系人与报价表单。
+
+### 3. 管理后台分区显示（运营可视化）
+- 未审核/待公开：新发布未审核或状态非“公开”。
+- 已审核公开：通过审核且“公开”。
+- 已关闭/已完成：`status='关闭'` 或 `progress` 为“已完成/已终止”。
+- 已过期：公开状态且发布时间超过 120 天（可调整）。
+
+### 4. Cloudflare Worker 配置项核对
+- 绑定：`env.DB`（D1 数据库，生产与预览分别配置）；路由 `/api/*` 指向该 Worker。
+- 变量：
+  - `ADMIN_KEY`：管理员密钥，管理后台通过 `X-Admin-Key` 访问管理员接口。
+  - `SYNC_BASE_URL`：定时同步数据来源（默认 `https://www.visndt.com/data`）。
+  - `DEFAULT_SUPPLIER_PASSWORD`：供应商通行密码默认值（用于初始化）。
+  - `DEFAULT_REQUIREMENT_PASSWORD`：查看密码默认值（用于初始化）。
+- 定时任务：`scheduled` 任务从 `SYNC_BASE_URL` 拉取数据并 `INSERT OR IGNORE`。
+
+### 5. 故障排查要点
+- 后台报 401：检查后台“设置”里保存的 `Admin Key` 是否与生产环境变量一致。
+- 前台列表空：确认已“批准发布”；或检查 API 地址是否同源/可达、CSP `connect-src` 是否允许该域。
+- 数据未入库：发布接口返回非 `ok` 时查看错误描述；Worker 日志查看 SQL 执行情况。
