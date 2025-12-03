@@ -848,11 +848,6 @@ const App = {
     // 分区：未审核、已审核公开、已关闭、过期
     const now = Date.now();
     const getDate = (s) => { try { return new Date(s).getTime(); } catch { return 0; } };
-    const isApproved = (r.Approved === 1) || String(r.approved||'').trim()==='1';
-    const statusOf = (r.Status || r.status || '').trim();
-    const progressOf = (r.Progress || r.progress || '').trim();
-    const pubAt = getDate(r.PublishedAt || r.published_at || r.created_at);
-    const expired = (statusOf === '公开') && (now - pubAt > 1000*60*60*24*120); // 120天
 
     const groups = {
       pending: [],
@@ -862,6 +857,7 @@ const App = {
     };
 
     for (const r of list) {
+      const isApproved = (r.Approved === 1) || String(r.approved||'').trim()==='1';
       const st = (r.Status || r.status || '').trim();
       const pr = (r.Progress || r.progress || '').trim();
       const pAt = getDate(r.PublishedAt || r.published_at || r.created_at);
