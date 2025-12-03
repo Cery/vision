@@ -129,6 +129,11 @@
                 </div>
               </div>
             </div>
+
+            <div class="mb-3">
+              <h6 class="text-muted small fw-bold mb-2">技术参数</h6>
+              <div class="row g-2" id="detParams"></div>
+            </div>
             
             <h6 class="text-muted small fw-bold mb-2">详细描述</h6>
             <div class="bg-light p-3 rounded text-secondary mb-4" id="detDesc"></div>
@@ -333,9 +338,9 @@ const App = {
     document.getElementById('detailView').classList.remove('d-none');
     
     // Load Full Detail (with contacts)
-    try {
-      const res = await fetch(window.API_BASE + `/api/requirements/${encodeURIComponent(id)}?supplier_access_password=${encodeURIComponent(this.pwd)}`);
-      const data = await res.json();
+      try {
+        const res = await fetch(window.API_BASE + `/api/requirements/${encodeURIComponent(id)}?supplier_access_password=${encodeURIComponent(this.pwd)}`);
+        const data = await res.json();
       
       document.getElementById('detTitle').textContent = data.Title||data.title;
       document.getElementById('detId').textContent = id;
@@ -349,6 +354,17 @@ const App = {
       document.getElementById('detEmail').textContent = data.ContactEmail||data.contact_email||'-';
       
       document.getElementById('detDesc').innerHTML = (data.PublicPreview||data.public_preview||'').replace(/\n/g, '<br>');
+      const params = data.ParametersJSON || data.parameters_json || data.Parameters || {};
+      const pDom = document.getElementById('detParams');
+      const pKeys = Object.keys(params);
+      pDom.innerHTML = pKeys.length ? pKeys.map(k => `
+        <div class=\"col-md-6\">
+          <div class=\"bg-light border rounded p-2 d-flex justify-content-between\">
+            <span class=\"text-muted small\">${k}</span>
+            <span class=\"small\">${params[k]}</span>
+          </div>
+        </div>
+      `).join('') : '';
       
       // Setup Quote Form
       document.getElementById('quoteReqId').value = id;

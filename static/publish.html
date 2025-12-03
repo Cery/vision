@@ -140,16 +140,25 @@ const form = document.getElementById('publishForm');
 form.addEventListener('submit', async (e)=>{
   e.preventDefault();
   const fd = new FormData(form);
-  // Convert checkboxes
   const payload = {};
   fd.forEach((v,k) => payload[k] = v);
-  payload.ContactPublic = document.getElementById('ContactPublic').checked;
+  const body = {
+    title: payload.Title,
+    primary_category: payload.primaryCategory,
+    budget_range: payload.BudgetRange,
+    public_preview: payload.PublicPreview,
+    contact_company: payload.contactCompany,
+    contact_name: payload.contactName,
+    contact_phone: payload.contactPhone,
+    contact_email: payload.contactEmail,
+    contact_public: document.getElementById('ContactPublic').checked
+  };
   
   const btn = form.querySelector('button[type="submit"]');
   btn.disabled = true; btn.textContent = '提交中...';
   
   try{
-    const resp = await apiFetch('/api/requirements', { method:'POST', body: JSON.stringify(payload) });
+    const resp = await apiFetch('/api/requirements', { method:'POST', body: JSON.stringify(body) });
     let data = {}; try{ data = await resp.json(); } catch{}
     
     if(!resp.ok){ 

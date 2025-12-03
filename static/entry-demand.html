@@ -66,19 +66,20 @@
       <div id="detailContainer" class="d-none">
         <div class="card shadow-sm border-0 mb-4">
           <div class="card-body">
-            <div class="d-flex justify-content-between mb-2">
-              <span class="badge bg-primary" id="detStatus">-</span>
-              <span class="text-muted small" id="detDate">-</span>
-            </div>
-            <h3 class="card-title mb-3" id="detTitle">-</h3>
-            <div class="row g-3 mb-3">
-              <div class="col-sm-6"><small class="text-muted d-block">编号</small><span id="detId">-</span></div>
-              <div class="col-sm-6"><small class="text-muted d-block">分类</small><span id="detCat">-</span></div>
-              <div class="col-sm-6"><small class="text-muted d-block">预算</small><span id="detBudget">-</span></div>
-              <div class="col-sm-6"><small class="text-muted d-block">浏览量</small><span id="detViews">-</span></div>
-            </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="badge bg-primary" id="detStatus">-</span>
+            <span class="text-muted small" id="detDate">-</span>
           </div>
+          <h3 class="card-title mb-3" id="detTitle">-</h3>
+          <div class="row g-3 mb-3">
+            <div class="col-sm-6"><small class="text-muted d-block">编号</small><span id="detId">-</span></div>
+            <div class="col-sm-6"><small class="text-muted d-block">分类</small><span id="detCat">-</span></div>
+            <div class="col-sm-6"><small class="text-muted d-block">预算</small><span id="detBudget">-</span></div>
+            <div class="col-sm-6"><small class="text-muted d-block">浏览量</small><span id="detViews">-</span></div>
+          </div>
+          <div id="detParams" class="row g-2"></div>
         </div>
+      </div>
 
         <div class="card shadow-sm border-0">
           <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
@@ -250,6 +251,22 @@ const App = {
     document.getElementById('detCat').textContent = item.PrimaryCategory||item.primaryCategory;
     document.getElementById('detBudget').textContent = item.BudgetRange||item.budget_range;
     
+    const params = item.Parameters || item.parameters_json || item.ParametersJSON || {};
+    const pKeys = Object.keys(params);
+    const pDom = document.getElementById('detParams');
+    if (pKeys.length) {
+      pDom.innerHTML = pKeys.map(k => `
+        <div class="col-md-6">
+          <div class="bg-light border rounded p-2 d-flex justify-content-between">
+            <span class="text-muted small">${escapeHtml(k)}</span>
+            <span class="small">${escapeHtml(params[k])}</span>
+          </div>
+        </div>
+      `).join('');
+    } else {
+      pDom.innerHTML = '';
+    }
+
     // Load Quotes
     this.quotes = [];
     document.getElementById('quoteBody').innerHTML = '<tr><td colspan="4" class="text-center py-3 text-muted">加载中...</td></tr>';

@@ -152,6 +152,29 @@
                 <option value="closed">已结束</option>
               </select>
             </div>
+            <div class="col-md-2">
+              <select class="form-select form-select-sm" id="reqSortField">
+                <option value="created_at">按时间</option>
+                <option value="quote_count">按报价数</option>
+                <option value="status">按状态</option>
+                <option value="progress">按进度</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <select class="form-select form-select-sm" id="reqSortOrder">
+                <option value="desc">降序</option>
+                <option value="asc">升序</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <select class="form-select form-select-sm" id="reqPageSize">
+                <option value="10">每页 10</option>
+                <option value="20">每页 20</option>
+                <option value="50">每页 50</option>
+                <option value="100">每页 100</option>
+                <option value="all">全部</option>
+              </select>
+            </div>
             <div class="col-md-auto ms-auto">
                <small class="text-muted" id="reqCountHint">共 - 条</small>
             </div>
@@ -316,6 +339,22 @@
                <label class="form-label">标题</label>
                <input type="text" class="form-control" id="editReqTitle" required>
              </div>
+            <div class="col-md-6">
+              <label class="form-label">公司名称</label>
+              <input type="text" class="form-control" id="editReqContactCompany">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">联系人</label>
+              <input type="text" class="form-control" id="editReqContactName">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">联系电话</label>
+              <input type="text" class="form-control" id="editReqContactPhone">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">联系邮箱</label>
+              <input type="text" class="form-control" id="editReqContactEmail">
+            </div>
              <div class="col-md-6">
                <label class="form-label">一级分类</label>
                <input type="text" class="form-control" id="editReqCat1">
@@ -659,6 +698,8 @@ function escapeHtml(s) {
 const App = {
   state: {
     reqList: [],
+    reqPagination: { page: 1, size: 10 },
+    reqSort: { field: 'created_at', order: 'desc' },
     demList: [],
     supList: [],
     quotesCache: [],
@@ -667,17 +708,20 @@ const App = {
     currentReqId: null
   },
   
-  init() {
-    this.bindNav();
-    this.bindAuth();
-    this.updateEnvInfo();
-    this.loadDashboard(); // Initial load
-    
-    // Req bindings
-    document.getElementById('reqRefreshBtn').onclick = () => this.loadRequirements();
-    document.getElementById('reqFilterStatus').onchange = () => this.renderRequirements();
-    document.getElementById('reqSearch').oninput = () => this.renderRequirements();
-    document.getElementById('reqSaveBtn').onclick = () => this.saveRequirement();
+    init() {
+      this.bindNav();
+      this.bindAuth();
+      this.updateEnvInfo();
+      this.loadDashboard(); // Initial load
+      
+      // Req bindings
+      document.getElementById('reqRefreshBtn').onclick = () => this.loadRequirements();
+      document.getElementById('reqFilterStatus').onchange = () => this.renderRequirements();
+      document.getElementById('reqSearch').oninput = () => this.renderRequirements();
+      document.getElementById('reqSortField').onchange = () => { this.state.reqSort.field = document.getElementById('reqSortField').value; this.renderRequirements(); };
+      document.getElementById('reqSortOrder').onchange = () => { this.state.reqSort.order = document.getElementById('reqSortOrder').value; this.renderRequirements(); };
+      document.getElementById('reqPageSize').onchange = () => { const v = document.getElementById('reqPageSize').value; this.state.reqPagination.size = (v==='all') ? 'all' : Number(v); this.state.reqPagination.page = 1; this.renderRequirements(); };
+      document.getElementById('reqSaveBtn').onclick = () => this.saveRequirement();
     
     // Dem bindings
     document.getElementById('demRefreshBtn').onclick = () => this.loadDemanders();
@@ -844,29 +888,25 @@ const App = {
       }
       return true;
     });
-    
-    // 分区：未审核、已审核公开、已关闭、过期
-    const now = Date.now();
+    const sortField = this.state.reqSort.field;
+    const sortOrder = this.state.reqSort.order;
     const getDate = (s) => { try { return new Date(s).getTime(); } catch { return 0; } };
-
-    const groups = {
-      pending: [],
-      public: [],
-      closed: [],
-      expired: []
+    const toNum = (v) => Number(v)||0;
+    const sortVal = (r) => {
+      if (sortField === 'created_at') return getDate(r.PublishedAt || r.published_at || r.created_at);
+      if (sortField === 'quote_count') return toNum(r.QuoteCount || r.quote_count);
+      if (sortField === 'status') return (r.Status || r.status || '').trim();
+      if (sortField === 'progress') return (r.Progress || r.progress || '').trim();
+      return getDate(r.PublishedAt || r.published_at || r.created_at);
     };
-
-    for (const r of list) {
-      const isApproved = (r.Approved === 1) || String(r.approved||'').trim()==='1';
-      const st = (r.Status || r.status || '').trim();
-      const pr = (r.Progress || r.progress || '').trim();
-      const pAt = getDate(r.PublishedAt || r.published_at || r.created_at);
-      const isExp = (st === '公开') && (now - pAt > 1000*60*60*24*120);
-      if (!isApproved || (st !== '公开')) groups.pending.push(r);
-      else if (isExp) groups.expired.push(r);
-      else if (st === '关闭' || pr === '已完成' || pr === '已终止') groups.closed.push(r);
-      else groups.public.push(r);
-    }
+    list.sort((a,b) => {
+      const va = sortVal(a);
+      const vb = sortVal(b);
+      if (typeof va === 'string' || typeof vb === 'string') {
+        return sortOrder === 'asc' ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
+      }
+      return sortOrder === 'asc' ? (va - vb) : (vb - va);
+    });
 
     const renderRows = (arr) => arr.map(r => {
       const id = r.RequirementID || r.id;
@@ -901,21 +941,73 @@ const App = {
       `;
     }).join('');
 
-    const parts = [];
-    const section = (title, arr) => {
-      if (!arr.length) return '';
-      return `
-        <tr class="table-light"><td colspan="8" class="fw-bold">${title}（${arr.length}）</td></tr>
-        ${renderRows(arr)}
-      `;
-    };
-    parts.push(section('未审核/待公开', groups.pending));
-    parts.push(section('已审核公开', groups.public));
-    parts.push(section('已关闭/已完成', groups.closed));
-    parts.push(section('已过期（120天）', groups.expired));
+    const size = this.state.reqPagination.size;
+    const page = this.state.reqPagination.page;
+    if (size === 'all') {
+      const now = Date.now();
+      const groups = { pending: [], public: [], closed: [], expired: [] };
+      for (const r of list) {
+        const st = (r.Status || r.status || '').trim();
+        const pr = (r.Progress || r.progress || '').trim();
+        const pAt = getDate(r.PublishedAt || r.published_at || r.created_at);
+        const isApproved = (r.Approved === 1) || String(r.approved||'').trim()==='1';
+        const isExp = (st === '公开') && (now - pAt > 1000*60*60*24*120);
+        if (!isApproved || (st !== '公开')) groups.pending.push(r);
+        else if (isExp) groups.expired.push(r);
+        else if (st === '关闭' || pr === '已完成' || pr === '已终止') groups.closed.push(r);
+        else groups.public.push(r);
+      }
+      const parts = [];
+      const section = (title, arr) => {
+        if (!arr.length) return '';
+        return `
+          <tr class="table-light"><td colspan="8" class="fw-bold">${title}（${arr.length}）</td></tr>
+          ${renderRows(arr)}
+        `;
+      };
+      parts.push(section('未审核/待公开', groups.pending));
+      parts.push(section('已审核公开', groups.public));
+      parts.push(section('已关闭/已完成', groups.closed));
+      parts.push(section('已过期（120天）', groups.expired));
+      document.getElementById('reqPagination').innerHTML = '';
+      document.getElementById('reqCountHint').textContent = `共 ${list.length} 条`;
+      tbody.innerHTML = parts.filter(Boolean).join('') || '<tr><td colspan="8" class="text-center text-muted">暂无数据</td></tr>';
+    } else {
+      const total = list.length;
+      const pages = Math.max(1, Math.ceil(total / size));
+      const p = Math.min(Math.max(1, page), pages);
+      this.state.reqPagination.page = p;
+      const start = (p - 1) * size;
+      const paged = list.slice(start, start + size);
+      document.getElementById('reqCountHint').textContent = `共 ${total} 条 · 第 ${p}/${pages} 页 · 每页 ${size}`;
+      tbody.innerHTML = paged.length ? renderRows(paged) : '<tr><td colspan="8" class="text-center text-muted">暂无数据</td></tr>';
+      this.renderReqPagination(total);
+    }
+  },
 
-    document.getElementById('reqCountHint').textContent = `共 ${list.length} 条`;
-    tbody.innerHTML = parts.filter(Boolean).join('') || '<tr><td colspan="8" class="text-center text-muted">暂无数据</td></tr>';
+  renderReqPagination(total) {
+    const size = this.state.reqPagination.size;
+    if (size === 'all') { document.getElementById('reqPagination').innerHTML = ''; return; }
+    const pages = Math.max(1, Math.ceil(total / size));
+    const page = this.state.reqPagination.page;
+    if (pages <= 1) { document.getElementById('reqPagination').innerHTML = ''; return; }
+    let html = '';
+    html += `<li class="page-item ${page===1?'disabled':''}"><a class="page-link" href="#" onclick="App.gotoReqPage(${page-1})">上一页</a></li>`;
+    for (let i = 1; i <= pages; i++) {
+      html += `<li class="page-item ${i===page?'active':''}"><a class="page-link" href="#" onclick="App.gotoReqPage(${i})">${i}</a></li>`;
+    }
+    html += `<li class="page-item ${page===pages?'disabled':''}"><a class="page-link" href="#" onclick="App.gotoReqPage(${page+1})">下一页</a></li>`;
+    document.getElementById('reqPagination').innerHTML = html;
+  },
+
+  gotoReqPage(n) {
+    const size = this.state.reqPagination.size;
+    if (size === 'all') return;
+    const total = this.state.reqList.length;
+    const pages = Math.max(1, Math.ceil(total / size));
+    const p = Math.min(Math.max(1, n), pages);
+    this.state.reqPagination.page = p;
+    this.renderRequirements();
   },
   
   async deleteRequirement(id) {
@@ -956,6 +1048,10 @@ const App = {
     
     document.getElementById('editReqId').value = id;
     document.getElementById('editReqTitle').value = r.Title || r.title || '';
+    document.getElementById('editReqContactCompany').value = r.ContactCompany || r.contact_company || '';
+    document.getElementById('editReqContactName').value = r.ContactName || r.contact_name || '';
+    document.getElementById('editReqContactPhone').value = r.ContactPhone || r.contact_phone || '';
+    document.getElementById('editReqContactEmail').value = r.ContactEmail || r.contact_email || '';
     document.getElementById('editReqCat1').value = r.PrimaryCategory || r.primary_category || '';
     document.getElementById('editReqBudget').value = r.BudgetRange || r.budget_range || '';
     document.getElementById('editReqStatus').value = r.Status || r.status || '待审核';
@@ -971,6 +1067,10 @@ const App = {
     const id = document.getElementById('editReqId').value;
     const body = {
       title: document.getElementById('editReqTitle').value,
+      contact_company: document.getElementById('editReqContactCompany').value,
+      contact_name: document.getElementById('editReqContactName').value,
+      contact_phone: document.getElementById('editReqContactPhone').value,
+      contact_email: document.getElementById('editReqContactEmail').value,
       primary_category: document.getElementById('editReqCat1').value,
       budget_range: document.getElementById('editReqBudget').value,
       status: document.getElementById('editReqStatus').value,
