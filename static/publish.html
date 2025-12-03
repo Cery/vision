@@ -101,14 +101,7 @@
                   <input type="text" class="form-control font-monospace bg-white" id="resId" readonly>
                   <button class="btn btn-outline-secondary" id="copyIdBtn">复制</button>
                 </div>
-              </div>
-              <div class="mb-3">
-                <label class="small text-muted fw-bold text-danger">查看密码 (View Password)</label>
-                <div class="input-group">
-                  <input type="text" class="form-control font-monospace bg-white text-danger fw-bold" id="resPwd" readonly>
-                  <button class="btn btn-outline-danger" id="copyPwdBtn">复制</button>
-                </div>
-                <div class="form-text">凭此密码在“发布方入口”查看收到的报价。</div>
+                <div class="form-text text-muted">请妥善保存需求ID，用于后续查询进度。</div>
               </div>
               <div class="d-grid gap-2">
                 <button id="gotoEntryBtn" class="btn btn-primary">前往发布方入口</button>
@@ -165,15 +158,12 @@ form.addEventListener('submit', async (e)=>{
     
     form.classList.add('d-none');
     document.getElementById('resId').value = data.requirement_id || data.RequirementID || '';
-    document.getElementById('resPwd').value = data.ViewPassword || data.DemanderPassword || ''; // Backend field name varies, covering bases
     document.getElementById('result').classList.remove('d-none');
     
     document.getElementById('copyIdBtn').onclick = () => { navigator.clipboard.writeText(document.getElementById('resId').value); };
-    document.getElementById('copyPwdBtn').onclick = () => { navigator.clipboard.writeText(document.getElementById('resPwd').value); };
     
     document.getElementById('gotoEntryBtn').onclick = () => {
-      const pwd = document.getElementById('resPwd').value;
-      location.href = `/static/entry-demand.html?password=${encodeURIComponent(pwd)}`;
+      location.href = `/static/entry-demand.html`;
     };
     
   }catch(err){ 

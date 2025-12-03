@@ -1,4 +1,5 @@
 ---
+supplier_id: "vis"
 title: "天津维森科技有限公司"
 address: "天津市河西区"
 type: "贸易商"

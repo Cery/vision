@@ -205,7 +205,7 @@
                  <th>电话</th>
                  <th>需求数</th>
                  <th>公开联系方式</th>
-                 <th>查看密码</th>
+                 <th>会话密码</th>
                  <th>操作</th>
                </tr>
              </thead>
@@ -356,14 +356,10 @@
                </div>
              </div>
              <div class="col-md-12">
-               <label class="form-label">公开预览信息 (Public Preview)</label>
-               <textarea class="form-control" id="editReqPreview" rows="2"></textarea>
-             </div>
-             <div class="col-md-6">
-               <label class="form-label">查看密码 (View Password)</label>
-               <input type="text" class="form-control font-monospace" id="editReqPwd">
-             </div>
-           </div>
+              <label class="form-label">公开预览信息 (Public Preview)</label>
+              <textarea class="form-control" id="editReqPreview" rows="2"></textarea>
+            </div>
+          </div>
         </form>
       </div>
       <div class="modal-footer">
@@ -583,24 +579,27 @@
   // 生产环境允许任意 https 地址或同源
   const allowInProd = {
     has: (v) => {
-      if (v === '') return true; // 同源
-      return /^https:\/\//i.test(String(v||''));
+      if (!v) return true; // Allow empty (same origin)
+      // Allow https, localhost, 127.0.0.1
+      return /^https:\/\//i.test(v) || /localhost|127\.0\.0\.1/.test(v);
     }
   };
   
   if (isProd) {
+    // In production, trust saved value if it passes check, otherwise default to empty (same origin)
     window.API_BASE = allowInProd.has(saved) ? saved : '';
   } else {
-    // 自动检测：本地开发且无手动配置时，优先使用本地 Worker 地址
+    // Local dev
     if (!saved && (location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
        window.API_BASE = 'http://127.0.0.1:8787';
     } else {
        window.API_BASE = saved || defaultRemote;
     }
   }
-  // Force http clean up
-  if (location.protocol === 'https:' && /^http:\/\//i.test(window.API_BASE)) {
-    window.API_BASE = isProd ? '' : defaultRemote;
+  // Only force clean up mixed content (http API on https Page), but allow localhost
+  if (location.protocol === 'https:' && /^http:\/\//i.test(window.API_BASE) && !/localhost|127\.0\.0\.1/.test(window.API_BASE)) {
+    console.warn('Mixed content blocked: HTTP API on HTTPS page');
+    window.API_BASE = ''; 
   }
   window.API_BASE = String(window.API_BASE).replace(/\/$/, '');
   
@@ -810,10 +809,19 @@ const App = {
   async loadRequirements() {
     try {
       const res = await apiFetch('/api/admin/requirements?limit=200');
-      this.state.reqList = Array.isArray(res) ? res : (res.items || []);
+      const items = Array.isArray(res) ? res : (res.items || []);
+      this.state.reqList = items;
+      
+      if (items.length === 0) {
+         console.warn('loadRequirements: No items returned from API');
+         // showToast('未加载到需求数据', 'info');
+      }
       this.renderRequirements();
     } catch (e) {
+      console.error('loadRequirements error:', e);
       showToast('需求列表加载失败: ' + e.message, 'error');
+      // If auth error, prompt user
+      if (e.message.includes('401')) showToast('请检查设置中的 Admin Key', 'error');
     }
   },
   
@@ -960,15 +968,6 @@ const App = {
     document.getElementById('editReqOpenQuotes').checked = (typeof r.AllowOpenQuotes !== 'undefined') ? r.AllowOpenQuotes : r.allow_open_quotes;
     document.getElementById('editReqContactPublic').checked = (typeof r.ContactPublic !== 'undefined') ? r.ContactPublic : r.contact_public;
     
-    // Extract View Password from metadata if possible, or just show empty/placeholder
-    // Assuming API might return it in a specific field for admin or we parse metadata
-    let pwd = '';
-    try {
-      const meta = typeof r.metadata_json === 'string' ? JSON.parse(r.metadata_json) : r.metadata_json;
-      if (meta && meta.view_password) pwd = meta.view_password;
-    } catch {}
-    document.getElementById('editReqPwd').value = pwd;
-    
     new bootstrap.Modal(document.getElementById('reqEditModal')).show();
   },
   
@@ -982,9 +981,7 @@ const App = {
       progress: document.getElementById('editReqProgress').value,
       public_preview: document.getElementById('editReqPreview').value,
       allow_open_quotes: document.getElementById('editReqOpenQuotes').checked,
-      contact_public: document.getElementById('editReqContactPublic').checked,
-      // Special handling for view password update if backend supports it via this endpoint
-      view_password: document.getElementById('editReqPwd').value
+      contact_public: document.getElementById('editReqContactPublic').checked
     };
     
     try {

@@ -67,6 +67,19 @@ summary: "本文档详细说明了平台内容的更新、删除及图片资源�
 若产品文件位于 `content/products/vis/WS-F4525.md`，且系列为 `F-series`，系统将自动加载：
 `https://vispic.visndt.com/vis/F-series/p-gallery-001.jpg`
 
+### 4. 供应商ID（supplier_id）规范
+- **定义**：用于定位该供应商的产品与图册路径的唯一短标识。
+- **设置方式**：在供应商 `.md` 文件 Front Matter 中添加 `supplier_id` 字段；若未设置，默认使用文件名作为 ID（如 `vis.md → vis`）。
+- **命名规则**：
+  - 使用英文字母、数字与短横线（`a-z0-9-`），建议全小写；
+  - 长度建议 ≤ 16；
+  - 保持稳定，不随公司名变化而改动；
+- **路径映射**：
+  - 内容：`content/products/[supplier_id]/[型号].md`
+  - 本地图册：`static/images/products/[supplier_id]/[系列名]/p-gallery-001.jpg`
+  - 云端图册 (R2)：`https://vispic.visndt.com/[supplier_id]/[系列名]/p-gallery-001.jpg`
+- **示例**：天津维森科技使用 `supplier_id: vis`（文件：`content/suppliers/vis.md`），其产品目录应为 `content/products/vis/`，图册目录为 `static/images/products/vis/[系列名]/`。
+
 ### 3. 手动指定
 若需特殊指定图片，可在 `.md` 文件的 Front Matter 中使用 `gallery` 字段覆盖自动逻辑：
 ```yaml
