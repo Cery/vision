@@ -13,6 +13,12 @@ binding = "DB"
 database_name = "vision-demand-market"
 database_id = "5a6d590d-43a2-482c-84ec-8ea0e9012632"
 
+# R2 binding
+[[r2_buckets]]
+binding = "VISPIC"
+bucket_name = "vispic"
+preview_bucket_name = "vispic-dev"
+
 # 敏感配置请使用 Secrets 管理：
 # 运行 `wrangler secret put ADMIN_KEY` 设置管理员密钥，不要在 toml 明文保存。
 

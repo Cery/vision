@@ -72,7 +72,9 @@
     function fmtDate(s){try{const d=new Date(s);return d.toLocaleDateString()}catch{return s}}
     async function load(){
       try{
-        const r=await fetch('data/news.json');
+        // Try dynamic API first, fallback to static file
+        const api = window.location.hostname === 'localhost' ? 'http://127.0.0.1:8787/api/data/news.json' : '/api/data/news.json';
+        const r=await fetch(api).catch(() => fetch('data/news.json'));
         const d=await r.json();
         state.items=(d.items||[]).slice().sort((a,b)=> new Date(b.date)-new Date(a.date));
         render();

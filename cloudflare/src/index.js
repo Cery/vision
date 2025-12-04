@@ -66,17 +66,27 @@ export default {
           progress TEXT,
           view_password_plain TEXT,
           view_password_hash TEXT,
+          quote_password TEXT,
+          view_password TEXT,
+          is_featured INTEGER DEFAULT 0,
+          is_urgent INTEGER DEFAULT 0,
+          admin_notes TEXT,
+          tags TEXT,
           created_at TEXT,
           updated_at TEXT
         )`).run();
         await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_requirements_reqid ON requirements(requirement_id)').run();
         await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_requirements_phone ON requirements(contact_phone)').run();
         await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_requirements_progress ON requirements(progress)').run();
-        // Lightweight migrations: add columns if missing
+        // Lightweight migrations
         try { await env.DB.prepare('ALTER TABLE requirements ADD COLUMN approved INTEGER').run(); } catch {}
         try { await env.DB.prepare('ALTER TABLE requirements ADD COLUMN approved_at TEXT').run(); } catch {}
         try { await env.DB.prepare('ALTER TABLE requirements ADD COLUMN quote_password TEXT').run(); } catch {}
         try { await env.DB.prepare('ALTER TABLE requirements ADD COLUMN view_password TEXT').run(); } catch {}
+        try { await env.DB.prepare('ALTER TABLE requirements ADD COLUMN is_featured INTEGER DEFAULT 0').run(); } catch {}
+        try { await env.DB.prepare('ALTER TABLE requirements ADD COLUMN is_urgent INTEGER DEFAULT 0').run(); } catch {}
+        try { await env.DB.prepare('ALTER TABLE requirements ADD COLUMN admin_notes TEXT').run(); } catch {}
+        try { await env.DB.prepare('ALTER TABLE requirements ADD COLUMN tags TEXT').run(); } catch {}
 
         // Quotes
         await env.DB.prepare(`CREATE TABLE IF NOT EXISTS quotes (
@@ -120,16 +130,40 @@ export default {
           product_id TEXT UNIQUE,
           supplier_id TEXT,
           name TEXT,
+          slug TEXT UNIQUE,
           model TEXT,
           series TEXT,
           primary_category TEXT,
+          secondary_category TEXT,
           summary TEXT,
+          description TEXT,
           parameters_json TEXT,
+          cover_image TEXT,
+          gallery_json TEXT,
+          documents_json TEXT,
+          seo_title TEXT,
+          seo_keywords TEXT,
+          seo_description TEXT,
+          status TEXT,
+          is_featured INTEGER,
           created_at TEXT,
           updated_at TEXT,
           FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id) ON DELETE CASCADE
         )`).run();
         await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_products_supplier ON products(supplier_id)').run();
+        await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_products_slug ON products(slug)').run();
+        // Migrations for products
+        try { await env.DB.prepare('ALTER TABLE products ADD COLUMN slug TEXT UNIQUE').run(); } catch {}
+        try { await env.DB.prepare('ALTER TABLE products ADD COLUMN secondary_category TEXT').run(); } catch {}
+        try { await env.DB.prepare('ALTER TABLE products ADD COLUMN description TEXT').run(); } catch {}
+        try { await env.DB.prepare('ALTER TABLE products ADD COLUMN cover_image TEXT').run(); } catch {}
+        try { await env.DB.prepare('ALTER TABLE products ADD COLUMN gallery_json TEXT').run(); } catch {}
+        try { await env.DB.prepare('ALTER TABLE products ADD COLUMN documents_json TEXT').run(); } catch {}
+        try { await env.DB.prepare('ALTER TABLE products ADD COLUMN seo_title TEXT').run(); } catch {}
+        try { await env.DB.prepare('ALTER TABLE products ADD COLUMN seo_keywords TEXT').run(); } catch {}
+        try { await env.DB.prepare('ALTER TABLE products ADD COLUMN seo_description TEXT').run(); } catch {}
+        try { await env.DB.prepare('ALTER TABLE products ADD COLUMN status TEXT').run(); } catch {}
+        try { await env.DB.prepare('ALTER TABLE products ADD COLUMN is_featured INTEGER').run(); } catch {}
 
         // Demanders
         await env.DB.prepare(`CREATE TABLE IF NOT EXISTS demanders (
@@ -151,6 +185,86 @@ export default {
           value_json TEXT,
           updated_at TEXT
         )`).run();
+
+        // News
+        await env.DB.prepare(`CREATE TABLE IF NOT EXISTS news (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          news_id TEXT UNIQUE,
+          title TEXT,
+          slug TEXT UNIQUE,
+          summary TEXT,
+          content TEXT,
+          cover_image TEXT,
+          category TEXT,
+          tags TEXT,
+          author TEXT,
+          status TEXT,
+          seo_title TEXT,
+          seo_keywords TEXT,
+          seo_description TEXT,
+          published_at TEXT,
+          created_at TEXT,
+          updated_at TEXT
+        )`).run();
+        await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_news_cat ON news(category)').run();
+        await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_news_slug ON news(slug)').run();
+
+        // Cases
+        await env.DB.prepare(`CREATE TABLE IF NOT EXISTS cases (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          case_id TEXT UNIQUE,
+          title TEXT,
+          slug TEXT UNIQUE,
+          summary TEXT,
+          content TEXT,
+          cover_image TEXT,
+          industry TEXT,
+          related_product_id TEXT,
+          status TEXT,
+          seo_title TEXT,
+          seo_keywords TEXT,
+          seo_description TEXT,
+          published_at TEXT,
+          created_at TEXT,
+          updated_at TEXT
+        )`).run();
+        await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_cases_slug ON cases(slug)').run();
+
+        // Exhibitions
+        await env.DB.prepare(`CREATE TABLE IF NOT EXISTS exhibitions (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          exhibition_id TEXT UNIQUE,
+          title TEXT,
+          slug TEXT UNIQUE,
+          location TEXT,
+          start_date TEXT,
+          end_date TEXT,
+          booth_number TEXT,
+          description TEXT,
+          cover_image TEXT,
+          status TEXT,
+          seo_title TEXT,
+          seo_keywords TEXT,
+          seo_description TEXT,
+          created_at TEXT,
+          updated_at TEXT
+        )`).run();
+        await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_exhibitions_slug ON exhibitions(slug)').run();
+
+        // Assets
+        await env.DB.prepare(`CREATE TABLE IF NOT EXISTS assets (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          asset_id TEXT UNIQUE,
+          filename TEXT,
+          r2_key TEXT,
+          public_url TEXT,
+          file_type TEXT,
+          file_size INTEGER,
+          alt_text TEXT,
+          uploaded_by TEXT,
+          created_at TEXT
+        )`).run();
+
       } catch (e) {
         // Best-effort; if schema fails, subsequent queries will surface errors.
       }
@@ -228,6 +342,93 @@ export default {
         return json({ ok: true });
       }
       return json({ ok: false, error: 'Unauthorized' }, 401);
+    }
+
+    // Public: Dynamic News Data (Syncs DB to Frontend)
+    if (url.pathname.endsWith('/data/news.json') || isApi('news/public')) {
+       try {
+          const { results: news } = await env.DB.prepare("SELECT * FROM news WHERE status='published' ORDER BY published_at DESC").all();
+          const { results: exhs } = await env.DB.prepare("SELECT * FROM exhibitions WHERE status='published' ORDER BY start_date DESC").all();
+          // Merge and format
+          const items = [];
+          for(const n of (news||[])) {
+             items.push({
+                id: n.news_id,
+                title: n.title,
+                date: n.published_at,
+                category: n.category,
+                summary: n.summary,
+                hero: n.cover_image,
+                link: `/news/${n.slug || n.news_id}`
+             });
+          }
+          for(const e of (exhs||[])) {
+             items.push({
+                id: e.exhibition_id,
+                title: e.title,
+                date: e.start_date, // Use start date
+                category: '展会活动', // Fixed category for exhibitions
+                summary: e.summary || `${e.location} | ${e.booth_number}`,
+                hero: e.cover_image,
+                link: `/exhibitions/${e.slug || e.exhibition_id}`
+             });
+          }
+          // Sort by date desc
+          items.sort((a,b) => new Date(b.date) - new Date(a.date));
+          return json({ items });
+       } catch(e) { return json({ error: e.message }, 500); }
+    }
+
+    // Admin: Login
+    if (isApi('admin/login') && request.method === 'POST') {
+      const data = await bodyJSON(request);
+      const user = String(data.username || '').trim();
+      const pass = String(data.password || '').trim();
+      
+      // Hardcoded for this specific request, in production use Env
+      const validUser = env.ADMIN_USER || 'visndt';
+      const validPass = env.ADMIN_PASSWORD || '@Aa123456';
+      
+      if (user === validUser && pass === validPass) {
+         // Generate a simple token (in real world, use JWT or signed token)
+         // Here we just return the password as the key since our requireAdmin checks env.ADMIN_KEY
+         // But wait, requireAdmin checks X-Admin-Key header against env.ADMIN_KEY.
+         // We should probably return env.ADMIN_KEY if login success.
+         return json({ ok: true, token: env.ADMIN_KEY || 'admin123456' });
+      }
+      return json({ error: 'InvalidCredentials' }, 401);
+    }
+
+    // Admin: Dashboard Stats
+    if (isApi('admin/stats') && request.method === 'GET') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      try {
+        const { results: reqRes } = await env.DB.prepare("SELECT COUNT(1) as total, SUM(CASE WHEN status != '公开' THEN 1 ELSE 0 END) as pending FROM requirements").all();
+        const { results: prodRes } = await env.DB.prepare("SELECT COUNT(1) as total FROM products").all();
+        const { results: supRes } = await env.DB.prepare("SELECT COUNT(1) as total FROM suppliers").all();
+        const { results: newsRes } = await env.DB.prepare("SELECT COUNT(1) as total FROM news").all();
+        const { results: caseRes } = await env.DB.prepare("SELECT COUNT(1) as total FROM cases").all();
+        const { results: exhRes } = await env.DB.prepare("SELECT COUNT(1) as total FROM exhibitions").all();
+        const { results: quoteRes } = await env.DB.prepare("SELECT COUNT(1) as total FROM quotes").all();
+        
+        return json({
+          requirements: {
+            total: reqRes?.[0]?.total || 0,
+            pending: reqRes?.[0]?.pending || 0
+          },
+          products: prodRes?.[0]?.total || 0,
+          suppliers: supRes?.[0]?.total || 0,
+          news: {
+            total: (newsRes?.[0]?.total || 0) + (exhRes?.[0]?.total || 0),
+            articles: newsRes?.[0]?.total || 0,
+            exhibitions: exhRes?.[0]?.total || 0
+          },
+          cases: caseRes?.[0]?.total || 0,
+          quotes: quoteRes?.[0]?.total || 0
+        });
+      } catch (e) {
+        return json({ error: e.message }, 500);
+      }
     }
 
     // Create Requirement (alias for compatibility)
@@ -591,6 +792,48 @@ export default {
       return json({ ok: true, supplier: { SupplierID: s.supplier_id, Name: s.name, Company: s.company } });
     }
 
+    // Admin: Assets (R2)
+    if (isApi('admin/assets') && request.method === 'GET') {
+       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+       try {
+         const limit = parseInt(url.searchParams.get('limit') || '20');
+         const cursor = url.searchParams.get('cursor');
+         const prefix = url.searchParams.get('prefix'); // folder
+         const options = { limit };
+         if(cursor) options.cursor = cursor;
+         if(prefix) options.prefix = prefix;
+         
+         const listed = await env.VISPIC.list(options);
+         const items = listed.objects.map(o => ({
+            key: o.key,
+            size: o.size,
+            uploaded: o.uploaded,
+            public_url: `https://visndt.com/${o.key}`
+         }));
+         return json({ items, cursor: listed.cursor, truncated: listed.truncated });
+       } catch(e) { return json({ error: e.message }, 500); }
+    }
+
+    if (isApi('admin/assets') && request.method === 'PUT') {
+       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+       const key = url.searchParams.get('key');
+       if(!key) return json({ error: 'MissingKey' }, 400);
+       try {
+         await env.VISPIC.put(key, request.body);
+         return json({ ok: true, key, public_url: `https://visndt.com/${key}` });
+       } catch(e) { return json({ error: e.message }, 500); }
+    }
+    
+    if (isApi('admin/assets') && request.method === 'DELETE') {
+       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+       const key = url.searchParams.get('key');
+       if(!key) return json({ error: 'MissingKey' }, 400);
+       try {
+         await env.VISPIC.delete(key);
+         return json({ ok: true });
+       } catch(e) { return json({ error: e.message }, 500); }
+    }
+
     // Admin: list/update requirements
     if (isFn('adminListRequirements') && request.method === 'GET' || isApi('admin/requirements') && request.method === 'GET') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
@@ -695,7 +938,7 @@ export default {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       const id = path.split('/').pop();
       const data = await bodyJSON(request);
-      const fields = ['title','public_preview','primary_category','secondary_category','approved','approved_at','status','contact_name','contact_phone','contact_company','contact_email','contact_department','contact_public','allow_open_quotes','parameters_json','published_at','budget_range','procurement_plan','progress','view_password_plain','quote_password','view_password'];
+      const fields = ['title','public_preview','primary_category','secondary_category','approved','approved_at','status','contact_name','contact_phone','contact_company','contact_email','contact_department','contact_public','allow_open_quotes','parameters_json','published_at','budget_range','procurement_plan','progress','view_password_plain','quote_password','view_password','is_featured','is_urgent','admin_notes','tags'];
       const sets = [];
       const binds = [];
       for (const f of fields) {
@@ -1004,6 +1247,40 @@ export default {
     if (isApi('admin/products') && request.method === 'GET') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       const supplier_id = url.searchParams.get('supplier_id');
+      const product_id = path.split('/').pop(); // Check if it's /admin/products/:id pattern handled below or here
+      // Actually the pattern matcher isApi('admin/products') matches /admin/products...
+      // Let's check if there's an ID in the path for DETAIL view
+      const parts = path.split('/');
+      const possibleId = parts[parts.length-1];
+      if (possibleId && possibleId !== 'products') {
+         // It is a detail request
+         const { results } = await env.DB.prepare('SELECT * FROM products WHERE product_id = ?').bind(possibleId).all();
+         if (!results || !results.length) return json({ error: 'NotFound' }, 404);
+         const p = results[0];
+         return json({
+            product_id: p.product_id,
+            supplier_id: p.supplier_id,
+            name: p.name,
+            slug: p.slug,
+            model: p.model,
+            series: p.series,
+            primary_category: p.primary_category,
+            secondary_category: p.secondary_category,
+            summary: p.summary,
+            description: p.description,
+            parameters_json: parseJSONSafe(p.parameters_json),
+            cover_image: p.cover_image,
+            gallery_json: parseJSONSafe(p.gallery_json),
+            documents_json: parseJSONSafe(p.documents_json),
+            seo_title: p.seo_title,
+            seo_keywords: p.seo_keywords,
+            seo_description: p.seo_description,
+            status: p.status,
+            is_featured: !!p.is_featured,
+            created_at: p.created_at
+         });
+      }
+
       let q = 'SELECT * FROM products';
       const where = [];
       const binds = [];
@@ -1015,17 +1292,21 @@ export default {
         product_id: p.product_id,
         supplier_id: p.supplier_id,
         name: p.name,
+        slug: p.slug,
         model: p.model,
         series: p.series,
         primary_category: p.primary_category,
+        secondary_category: p.secondary_category,
         summary: p.summary,
+        cover_image: p.cover_image,
+        status: p.status,
+        is_featured: !!p.is_featured,
         parameters_json: parseJSONSafe(p.parameters_json),
         created_at: p.created_at
       }));
       return json(items);
     }
     if ((isApi('products') || isApi('admin/products')) && request.method === 'POST') {
-      // Allow admin or supplier (if I implement supplier auth check here, but for simulation admin key is used)
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401); 
       const data = await bodyJSON(request);
       const now = new Date().toISOString();
@@ -1034,14 +1315,138 @@ export default {
       if (!supplier_id) return json({ error: 'MissingSupplierID' }, 400);
       
       await env.DB.prepare(`INSERT INTO products (
-        product_id, supplier_id, name, model, series, primary_category, summary, parameters_json, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+        product_id, supplier_id, name, slug, model, series, primary_category, secondary_category, summary, description, parameters_json, cover_image, gallery_json, documents_json, seo_title, seo_keywords, seo_description, status, is_featured, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
       .bind(
-        product_id, supplier_id, data.Name || data.name || '', data.Model || data.model || '', 
-        data.Series || data.series || '', data.PrimaryCategory || data.primary_category || '', 
-        data.Summary || data.summary || '', JSON.stringify(data.Parameters || data.parameters_json || {}), now, now
+        product_id, supplier_id, 
+        data.Name || data.name || '', 
+        data.Slug || data.slug || null,
+        data.Model || data.model || '', 
+        data.Series || data.series || '', 
+        data.PrimaryCategory || data.primary_category || '', 
+        data.SecondaryCategory || data.secondary_category || '',
+        data.Summary || data.summary || '', 
+        data.Description || data.description || '',
+        JSON.stringify(data.Parameters || data.parameters_json || {}),
+        data.CoverImage || data.cover_image || '',
+        JSON.stringify(data.Gallery || data.gallery_json || []),
+        JSON.stringify(data.Documents || data.documents_json || []),
+        data.SeoTitle || data.seo_title || '',
+        data.SeoKeywords || data.seo_keywords || '',
+        data.SeoDescription || data.seo_description || '',
+        data.Status || data.status || 'active',
+        (data.IsFeatured || data.is_featured) ? 1 : 0,
+        now, now
       ).run();
       return json({ ok: true, product_id });
+    }
+
+    // Admin: News CRUD
+    if (isApi('admin/news') && request.method === 'GET') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const parts = path.split('/');
+      const possibleId = parts[parts.length-1];
+      if (possibleId && possibleId !== 'news') {
+        const { results } = await env.DB.prepare('SELECT * FROM news WHERE news_id = ? OR id = ?').bind(possibleId, possibleId).all();
+        if (!results || !results.length) return json({ error: 'NotFound' }, 404);
+        return json(results[0]);
+      }
+      const { results } = await env.DB.prepare('SELECT * FROM news ORDER BY created_at DESC LIMIT 100').all();
+      return json(results || []);
+    }
+    if (isApi('admin/news') && request.method === 'POST') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const data = await bodyJSON(request);
+      const now = new Date().toISOString();
+      const news_id = 'NEWS-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*1000);
+      await env.DB.prepare(`INSERT INTO news (
+        news_id, title, slug, summary, content, cover_image, category, tags, author, status, seo_title, seo_keywords, seo_description, published_at, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+      .bind(
+        news_id, data.title||'', data.slug||null, data.summary||'', data.content||'', data.cover_image||'', 
+        data.category||'', JSON.stringify(data.tags||[]), data.author||'', data.status||'draft',
+        data.seo_title||'', data.seo_keywords||'', data.seo_description||'', data.published_at||now, now, now
+      ).run();
+      return json({ ok: true, news_id });
+    }
+    if (isApi('admin/news/') && request.method === 'PATCH') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const id = path.split('/').pop();
+      const data = await bodyJSON(request);
+      const fields = ['title','slug','summary','content','cover_image','category','tags','author','status','seo_title','seo_keywords','seo_description','published_at'];
+      const sets = [];
+      const binds = [];
+      for (const f of fields) {
+        if (f in data) {
+          let val = data[f];
+          if (f === 'tags' && typeof val === 'object') val = JSON.stringify(val);
+          sets.push(`${f} = ?`);
+          binds.push(val);
+        }
+      }
+      sets.push('updated_at = ?'); binds.push(new Date().toISOString());
+      if (!sets.length) return json({ error: 'NoFields' }, 400);
+      await env.DB.prepare(`UPDATE news SET ${sets.join(', ')} WHERE news_id = ?`).bind(...binds, id).run();
+      return json({ ok: true });
+    }
+    if (isApi('admin/news/') && request.method === 'DELETE') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const id = path.split('/').pop();
+      await env.DB.prepare('DELETE FROM news WHERE news_id = ?').bind(id).run();
+      return json({ ok: true });
+    }
+
+    // Admin: Cases CRUD
+    if (isApi('admin/cases') && request.method === 'GET') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const parts = path.split('/');
+      const possibleId = parts[parts.length-1];
+      if (possibleId && possibleId !== 'cases') {
+        const { results } = await env.DB.prepare('SELECT * FROM cases WHERE case_id = ?').bind(possibleId).all();
+        if (!results || !results.length) return json({ error: 'NotFound' }, 404);
+        return json(results[0]);
+      }
+      const { results } = await env.DB.prepare('SELECT * FROM cases ORDER BY created_at DESC LIMIT 100').all();
+      return json(results || []);
+    }
+    if (isApi('admin/cases') && request.method === 'POST') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const data = await bodyJSON(request);
+      const now = new Date().toISOString();
+      const case_id = 'CASE-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*1000);
+      await env.DB.prepare(`INSERT INTO cases (
+        case_id, title, slug, summary, content, cover_image, industry, related_product_id, status, seo_title, seo_keywords, seo_description, published_at, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+      .bind(
+        case_id, data.title||'', data.slug||null, data.summary||'', data.content||'', data.cover_image||'', 
+        data.industry||'', data.related_product_id||'', data.status||'draft',
+        data.seo_title||'', data.seo_keywords||'', data.seo_description||'', data.published_at||now, now, now
+      ).run();
+      return json({ ok: true, case_id });
+    }
+    if (isApi('admin/cases/') && request.method === 'PATCH') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const id = path.split('/').pop();
+      const data = await bodyJSON(request);
+      const fields = ['title','slug','summary','content','cover_image','industry','related_product_id','status','seo_title','seo_keywords','seo_description','published_at'];
+      const sets = [];
+      const binds = [];
+      for (const f of fields) {
+        if (f in data) {
+          sets.push(`${f} = ?`);
+          binds.push(data[f]);
+        }
+      }
+      sets.push('updated_at = ?'); binds.push(new Date().toISOString());
+      if (!sets.length) return json({ error: 'NoFields' }, 400);
+      await env.DB.prepare(`UPDATE cases SET ${sets.join(', ')} WHERE case_id = ?`).bind(...binds, id).run();
+      return json({ ok: true });
+    }
+    if (isApi('admin/cases/') && request.method === 'DELETE') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const id = path.split('/').pop();
+      await env.DB.prepare('DELETE FROM cases WHERE case_id = ?').bind(id).run();
+      return json({ ok: true });
     }
 
     // Admin: system config
@@ -1059,6 +1464,50 @@ export default {
       await env.DB.prepare('INSERT INTO system_config (key, value_json, updated_at) VALUES (?, ?, ?) ON CONFLICT(key) DO UPDATE SET value_json = ?, updated_at = ?')
         .bind('default', value, now, value, now).run();
       return json({ ok: true });
+    }
+
+    // Admin: Seed Content (News, Exhibitions, Products, Cases)
+    if (isApi('admin/seed-content') && request.method === 'POST') {
+       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+       try {
+          const now = new Date().toISOString();
+          // Seed News
+          const newsCount = (await env.DB.prepare('SELECT COUNT(1) as c FROM news').first()).c;
+          if (newsCount === 0) {
+             await env.DB.prepare(`INSERT INTO news (news_id, title, slug, category, summary, content, status, published_at, created_at, updated_at) VALUES 
+             ('n1', '工业内窥镜在航空发动机检测中的应用', 'aero-engine-inspection', '技术文章', '探讨工业内窥镜在航空发动机叶片裂纹检测中的关键作用。', '详细内容...', 'published', '${now}', '${now}', '${now}'),
+             ('n2', 'Vision NDT 发布全新 P60 系列', 'new-p60-release', '公司动态', '最新一代高清工业内窥镜P60正式发布，搭载AI缺陷识别功能。', '详细内容...', 'published', '${now}', '${now}', '${now}'),
+             ('n3', '2025年无损检测行业发展趋势', 'ndt-trends-2025', '行业资讯', '数字化、智能化将成为无损检测行业发展的主旋律。', '详细内容...', 'published', '${now}', '${now}', '${now}')
+             `).run();
+          }
+          
+          // Seed Exhibitions
+          const exhCount = (await env.DB.prepare('SELECT COUNT(1) as c FROM exhibitions').first()).c;
+          if (exhCount === 0) {
+             await env.DB.prepare(`INSERT INTO exhibitions (exhibition_id, title, slug, location, booth_number, start_date, end_date, status, summary, created_at, updated_at) VALUES 
+             ('e1', '2025上海国际无损检测展', 'shanghai-ndt-2025', '上海新国际博览中心', 'W1-A203', '2025-10-20', '2025-10-23', 'published', '诚邀莅临参观交流', '${now}', '${now}')
+             `).run();
+          }
+          
+          // Seed Products
+          const prodCount = (await env.DB.prepare('SELECT COUNT(1) as c FROM products').first()).c;
+          if (prodCount === 0) {
+             await env.DB.prepare(`INSERT INTO products (product_id, name, slug, model, series, primary_category, status, summary, is_featured, created_at, updated_at) VALUES 
+             ('p1', 'P60 高清工业内窥镜', 'p60-borescope', 'P60-2015', 'P系列', '工业内窥镜', 'active', '1080P高清，360度转向', 1, '${now}', '${now}'),
+             ('p2', 'F40 便携式内窥镜', 'f40-portable', 'F40-1510', 'F系列', '工业内窥镜', 'active', '轻便易携带，超长续航', 0, '${now}', '${now}')
+             `).run();
+          }
+
+          // Seed Cases
+          const caseCount = (await env.DB.prepare('SELECT COUNT(1) as c FROM cases').first()).c;
+          if (caseCount === 0) {
+             await env.DB.prepare(`INSERT INTO cases (case_id, title, slug, industry, status, summary, published_at, created_at, updated_at) VALUES 
+             ('c1', '某航空公司发动机孔探案例', 'airline-engine-inspection', '航空航天', 'published', '使用P60进行发动机内部叶片损伤检测，提高效率30%。', '${now}', '${now}', '${now}')
+             `).run();
+          }
+          
+          return json({ ok: true, message: 'Seeded missing content' });
+       } catch(e) { return json({ error: e.message }, 500); }
     }
 
     // Admin: dev seed from static JSON files (local development helper)
@@ -1401,6 +1850,273 @@ export default {
       const { results } = await env.DB.prepare('SELECT requirement_id, title, status FROM requirements WHERE contact_company = ? ORDER BY created_at DESC LIMIT 100').bind(company).all();
       const items = (results || []).map(r => ({ RequirementID: r.requirement_id, Title: r.title, Status: r.status }));
       return json({ items });
+    }
+
+    // Admin: Assets Management
+    if (isApi('admin/assets') && request.method === 'GET') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const type = url.searchParams.get('type');
+      const limit = Math.min(Math.max(parseInt(url.searchParams.get('limit') || '50', 10) || 50, 1), 200);
+      const offset = Math.max(parseInt(url.searchParams.get('offset') || '0', 10) || 0, 0);
+      let q = 'SELECT * FROM assets';
+      const where = [];
+      const binds = [];
+      if (type) { where.push('file_type LIKE ?'); binds.push(`${type}%`); }
+      if (where.length) q += ' WHERE ' + where.join(' AND ');
+      q += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
+      binds.push(limit, offset);
+      const { results } = await env.DB.prepare(q).bind(...binds).all();
+      return json(results || []);
+    }
+
+    if (isApi('admin/assets') && request.method === 'POST') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const data = await bodyJSON(request);
+      const now = new Date().toISOString();
+      const asset_id = 'AST-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*10000);
+      // Fallback: if R2 is not available, we expect 'public_url' to be provided or we mock it
+      let public_url = data.public_url || '';
+      
+      // Mock behavior for development environment without R2 if no URL provided
+      if (!public_url) {
+         public_url = `https://via.placeholder.com/150?text=${encodeURIComponent(data.filename||'Asset')}`;
+      }
+
+      await env.DB.prepare(`INSERT INTO assets (
+        asset_id, filename, r2_key, public_url, file_type, file_size, alt_text, uploaded_by, created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+      .bind(
+        asset_id, data.filename || 'unknown', data.r2_key || '', public_url, 
+        data.file_type || 'image/jpeg', data.file_size || 0, data.alt_text || '', 'admin', now
+      ).run();
+      
+      return json({ ok: true, asset: { asset_id, public_url, filename: data.filename } });
+    }
+    
+    if (isApi('admin/assets/') && request.method === 'DELETE') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const id = path.split('/').pop();
+      await env.DB.prepare('DELETE FROM assets WHERE asset_id = ?').bind(id).run();
+      return json({ ok: true });
+    }
+
+    // Admin: Products Create
+    if (isApi('admin/products') && request.method === 'POST') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const data = await bodyJSON(request);
+      const now = new Date().toISOString();
+      const product_id = data.product_id || ('PROD-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*10000));
+      
+      try {
+         const fields = ['product_id','supplier_id','name','slug','model','series','primary_category','secondary_category','summary','description','parameters_json','cover_image','gallery_json','documents_json','seo_title','seo_keywords','seo_description','status','is_featured','created_at','updated_at'];
+         const vals = [
+             product_id, data.supplier_id||'', data.name||'', data.slug||'', data.model||'', data.series||'', data.primary_category||'', data.secondary_category||'',
+             data.summary||'', data.description||'', JSON.stringify(data.parameters_json||{}), data.cover_image||'', JSON.stringify(data.gallery_json||[]), JSON.stringify(data.documents_json||[]),
+             data.seo_title||'', data.seo_keywords||'', data.seo_description||'', data.status||'offline', data.is_featured?1:0, now, now
+         ];
+         const placeholders = fields.map(()=>'?').join(',');
+         await env.DB.prepare(`INSERT INTO products (${fields.join(',')}) VALUES (${placeholders})`).bind(...vals).run();
+         return json({ ok: true, product_id });
+      } catch (e) {
+         return json({ error: 'CreateFailed', detail: e.message }, 500);
+      }
+    }
+
+    // Admin: Products List
+    if (isApi('admin/products') && request.method === 'GET') {
+       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+       const supplier_id = url.searchParams.get('supplier_id');
+       let q = 'SELECT * FROM products';
+       const binds = [];
+       if (supplier_id) { q += ' WHERE supplier_id = ?'; binds.push(supplier_id); }
+       q += ' ORDER BY created_at DESC LIMIT 100';
+       const { results } = await env.DB.prepare(q).bind(...binds).all();
+       const items = (results || []).map(p => ({
+           ...p,
+           parameters_json: parseJSONSafe(p.parameters_json),
+           gallery_json: parseJSONSafe(p.gallery_json),
+           documents_json: parseJSONSafe(p.documents_json)
+       }));
+       return json(items);
+    }
+
+    // Admin: Product Search (for association)
+    if (isApi('admin/products/search') && request.method === 'GET') {
+       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+       const q = (url.searchParams.get('q') || '').trim();
+       if (!q) return json([]);
+       const like = `%${q}%`;
+       const { results } = await env.DB.prepare('SELECT product_id, name, model FROM products WHERE name LIKE ? OR model LIKE ? LIMIT 20').bind(like, like).all();
+       return json(results || []);
+    }
+
+    // Admin: Supplier Search
+    if (isApi('admin/suppliers/search') && request.method === 'GET') {
+       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+       const q = (url.searchParams.get('q') || '').trim();
+       if (!q) return json([]);
+       const like = `%${q}%`;
+       const { results } = await env.DB.prepare('SELECT supplier_id, company, name FROM suppliers WHERE company LIKE ? OR name LIKE ? LIMIT 20').bind(like, like).all();
+       return json(results || []);
+    }
+
+    // Admin: Products Update/Delete
+    if (isApi('admin/products/') && request.method === 'PATCH') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const id = path.split('/').pop();
+      const data = await bodyJSON(request);
+      const fields = ['name','slug','model','series','primary_category','secondary_category','summary','description','parameters_json','cover_image','gallery_json','documents_json','seo_title','seo_keywords','seo_description','status','is_featured'];
+      const sets = [];
+      const binds = [];
+      for (const f of fields) {
+        if (f in data) { 
+            let val = data[f];
+            if (f.endsWith('_json') && typeof val === 'object') val = JSON.stringify(val);
+            sets.push(`${f} = ?`); 
+            binds.push(val); 
+        }
+      }
+      sets.push('updated_at = ?'); binds.push(new Date().toISOString());
+      if (!sets.length) return json({ error: 'NoFields' }, 400);
+      const stmt = env.DB.prepare(`UPDATE products SET ${sets.join(', ')} WHERE product_id = ?`).bind(...binds, id);
+      await stmt.run();
+      return json({ ok: true });
+    }
+
+    if (isApi('admin/products/') && request.method === 'DELETE') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const id = path.split('/').pop();
+      await env.DB.prepare('DELETE FROM products WHERE product_id = ?').bind(id).run();
+      return json({ ok: true });
+    }
+
+    // Admin: News
+    if (isApi('admin/news') && request.method === 'GET') {
+        if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+        const { results } = await env.DB.prepare('SELECT * FROM news ORDER BY created_at DESC LIMIT 100').all();
+        return json(results || []);
+    }
+    if (isApi('admin/news') && request.method === 'POST') {
+        if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+        const data = await bodyJSON(request);
+        const now = new Date().toISOString();
+        const news_id = 'NEWS-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*1000);
+        const fields = ['news_id','title','slug','summary','content','cover_image','category','tags','author','status','seo_keywords','seo_description','published_at','created_at','updated_at'];
+        const vals = [news_id, data.title||'', data.slug||'', data.summary||'', data.content||'', data.cover_image||'', data.category||'', data.tags||'', 'Admin', data.status||'draft', data.seo_keywords||'', data.seo_description||'', now, now, now];
+        const placeholders = fields.map(()=>'?').join(',');
+        await env.DB.prepare(`INSERT INTO news (${fields.join(',')}) VALUES (${placeholders})`).bind(...vals).run();
+        return json({ ok: true, news_id });
+    }
+    if (isApi('admin/news/') && request.method === 'GET') {
+        const id = path.split('/').pop();
+        const item = await env.DB.prepare('SELECT * FROM news WHERE news_id = ?').bind(id).first();
+        return json(item || {});
+    }
+    if (isApi('admin/news/') && request.method === 'PATCH') {
+        if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+        const id = path.split('/').pop();
+        const data = await bodyJSON(request);
+        const fields = [];
+        const vals = [];
+        for(const k of ['title','slug','summary','content','cover_image','category','tags','status','seo_keywords','seo_description']) {
+            if (data[k] !== undefined) { fields.push(`${k} = ?`); vals.push(data[k]); }
+        }
+        fields.push('updated_at = ?'); vals.push(new Date().toISOString());
+        vals.push(id);
+        await env.DB.prepare(`UPDATE news SET ${fields.join(',')} WHERE news_id = ?`).bind(...vals).run();
+        return json({ ok: true });
+    }
+    if (isApi('admin/news/') && request.method === 'DELETE') {
+        if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+        const id = path.split('/').pop();
+        await env.DB.prepare('DELETE FROM news WHERE news_id = ?').bind(id).run();
+        return json({ ok: true });
+    }
+
+    // Admin: Cases
+    if (isApi('admin/cases') && request.method === 'GET') {
+        if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+        const { results } = await env.DB.prepare('SELECT * FROM cases ORDER BY created_at DESC LIMIT 100').all();
+        return json(results || []);
+    }
+    if (isApi('admin/cases') && request.method === 'POST') {
+        if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+        const data = await bodyJSON(request);
+        const now = new Date().toISOString();
+        const case_id = 'CASE-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*1000);
+        const fields = ['case_id','title','slug','summary','content','cover_image','industry','related_product_id','status','seo_keywords','seo_description','published_at','created_at','updated_at'];
+        const vals = [case_id, data.title||'', data.slug||'', data.summary||'', data.content||'', data.cover_image||'', data.industry||'', data.related_product_id||'', data.status||'draft', data.seo_keywords||'', data.seo_description||'', now, now, now];
+        const placeholders = fields.map(()=>'?').join(',');
+        await env.DB.prepare(`INSERT INTO cases (${fields.join(',')}) VALUES (${placeholders})`).bind(...vals).run();
+        return json({ ok: true, case_id });
+    }
+    if (isApi('admin/cases/') && request.method === 'GET') {
+        const id = path.split('/').pop();
+        const item = await env.DB.prepare('SELECT * FROM cases WHERE case_id = ?').bind(id).first();
+        return json(item || {});
+    }
+    if (isApi('admin/cases/') && request.method === 'PATCH') {
+        if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+        const id = path.split('/').pop();
+        const data = await bodyJSON(request);
+        const fields = [];
+        const vals = [];
+        for(const k of ['title','slug','summary','content','cover_image','industry','related_product_id','status','seo_keywords','seo_description']) {
+            if (data[k] !== undefined) { fields.push(`${k} = ?`); vals.push(data[k]); }
+        }
+        fields.push('updated_at = ?'); vals.push(new Date().toISOString());
+        vals.push(id);
+        await env.DB.prepare(`UPDATE cases SET ${fields.join(',')} WHERE case_id = ?`).bind(...vals).run();
+        return json({ ok: true });
+    }
+    if (isApi('admin/cases/') && request.method === 'DELETE') {
+        if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+        const id = path.split('/').pop();
+        await env.DB.prepare('DELETE FROM cases WHERE case_id = ?').bind(id).run();
+        return json({ ok: true });
+    }
+
+    // Admin: Exhibitions
+    if (isApi('admin/exhibitions') && request.method === 'GET') {
+        if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+        const { results } = await env.DB.prepare('SELECT * FROM exhibitions ORDER BY created_at DESC LIMIT 100').all();
+        return json(results || []);
+    }
+    if (isApi('admin/exhibitions') && request.method === 'POST') {
+        if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+        const data = await bodyJSON(request);
+        const now = new Date().toISOString();
+        const ex_id = 'EXH-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*1000);
+        const fields = ['exhibition_id','title','slug','location','start_date','end_date','booth_number','description','cover_image','status','seo_keywords','seo_description','created_at','updated_at'];
+        const vals = [ex_id, data.title||'', data.slug||'', data.location||'', data.start_date||'', data.end_date||'', data.booth_number||'', data.description||'', data.cover_image||'', data.status||'draft', data.seo_keywords||'', data.seo_description||'', now, now];
+        const placeholders = fields.map(()=>'?').join(',');
+        await env.DB.prepare(`INSERT INTO exhibitions (${fields.join(',')}) VALUES (${placeholders})`).bind(...vals).run();
+        return json({ ok: true, exhibition_id: ex_id });
+    }
+    if (isApi('admin/exhibitions/') && request.method === 'GET') {
+        const id = path.split('/').pop();
+        const item = await env.DB.prepare('SELECT * FROM exhibitions WHERE exhibition_id = ?').bind(id).first();
+        return json(item || {});
+    }
+    if (isApi('admin/exhibitions/') && request.method === 'PATCH') {
+        if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+        const id = path.split('/').pop();
+        const data = await bodyJSON(request);
+        const fields = [];
+        const vals = [];
+        for(const k of ['title','slug','location','start_date','end_date','booth_number','description','cover_image','status','seo_keywords','seo_description']) {
+            if (data[k] !== undefined) { fields.push(`${k} = ?`); vals.push(data[k]); }
+        }
+        fields.push('updated_at = ?'); vals.push(new Date().toISOString());
+        vals.push(id);
+        await env.DB.prepare(`UPDATE exhibitions SET ${fields.join(',')} WHERE exhibition_id = ?`).bind(...vals).run();
+        return json({ ok: true });
+    }
+    if (isApi('admin/exhibitions/') && request.method === 'DELETE') {
+        if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+        const id = path.split('/').pop();
+        await env.DB.prepare('DELETE FROM exhibitions WHERE exhibition_id = ?').bind(id).run();
+        return json({ ok: true });
     }
 
     return json({ error: 'NotFound' }, 404);

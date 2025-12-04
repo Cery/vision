@@ -1,14 +1,1523 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VisNDT 管理中心</title>
-    <script>
-        window.location.href = 'admin-home.html';
-    </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>需求中心管理后台</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="css/admin.css" rel="stylesheet">
+  <style>
+    /* Inline overrides for specific layout needs */
+    body { overflow-x: hidden; }
+    .sidebar { min-height: 100vh; background: #212529; color: #fff; }
+    .sidebar .nav-link { color: rgba(255,255,255,.75); padding: .75rem 1rem; border-radius: 0; }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active { color: #fff; background: rgba(255,255,255,.1); }
+    .sidebar .nav-link i { width: 24px; text-align: center; margin-right: 8px; }
+    .main-content { padding: 20px; height: 100vh; overflow-y: auto; }
+    .card-stats { border-left: 4px solid var(--brand-primary); transition: transform .2s; }
+    .card-stats:hover { transform: translateY(-2px); }
+    .table-responsive { max-height: calc(100vh - 220px); overflow-y: auto; }
+    .modal-lg-xl { max-width: 1140px; }
+    #envInfoBar { font-size: 0.85rem; opacity: 0.8; }
+    .toast-container { position: fixed; top: 20px; right: 20px; z-index: 1060; }
+  </style>
 </head>
 <body>
-    <p>正在跳转到管理中心...</p>
+
+<div class="d-flex">
+  <!-- Sidebar -->
+  <div class="sidebar d-flex flex-column flex-shrink-0 p-3" style="width: 260px;">
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+      <span class="fs-5 fw-bold">Vision Admin</span>
+    </a>
+    <div id="envInfoBar" class="mb-3 text-white-50 pb-3 border-bottom border-secondary">
+      API: 检测中...
+    </div>
+    <ul class="nav nav-pills flex-column mb-auto">
+      <li class="nav-item">
+        <a href="#" class="nav-link active" data-page="dashboard">
+          <i class="fa-solid fa-gauge"></i> 仪表盘
+        </a>
+      </li>
+
+      <li class="nav-header text-uppercase text-white-50 small fw-bold mt-3 mb-1 px-3" style="font-size:0.75rem;">运营中心</li>
+      <li>
+        <a href="#" class="nav-link" data-page="requirements">
+          <i class="fa-solid fa-list-check"></i> 需求市场
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link" data-page="quotes">
+          <i class="fa-solid fa-comments-dollar"></i> 报价管理
+        </a>
+      </li>
+
+      <li class="nav-header text-uppercase text-white-50 small fw-bold mt-3 mb-1 px-3" style="font-size:0.75rem;">内容中心</li>
+      <li>
+        <a href="#" class="nav-link" data-page="products">
+          <i class="fa-solid fa-box"></i> 产品库
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link" data-page="news">
+          <i class="fa-regular fa-newspaper"></i> 新闻资讯
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link" data-page="cases">
+          <i class="fa-solid fa-book-open"></i> 应用案例
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link" data-page="exhibitions">
+          <i class="fa-solid fa-calendar-day"></i> 展会活动
+        </a>
+      </li>
+
+      <li class="nav-header text-uppercase text-white-50 small fw-bold mt-3 mb-1 px-3" style="font-size:0.75rem;">资源中心</li>
+      <li>
+        <a href="#" class="nav-link" data-page="assets">
+          <i class="fa-regular fa-images"></i> 媒体库
+        </a>
+      </li>
+
+      <li class="nav-header text-uppercase text-white-50 small fw-bold mt-3 mb-1 px-3" style="font-size:0.75rem;">系统设置</li>
+      <li>
+        <a href="#" class="nav-link" data-page="suppliers">
+          <i class="fa-solid fa-handshake"></i> 供应商管理
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link" data-page="demanders">
+          <i class="fa-solid fa-building-user"></i> 发布方管理
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link" data-page="settings">
+          <i class="fa-solid fa-gear"></i> 设置
+        </a>
+      </li>
+    </ul>
+    <div class="dropdown border-top border-secondary pt-3">
+      <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fa-solid fa-user-shield me-2"></i>
+        <strong>管理员</strong>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+        <li><a class="dropdown-item" href="#" id="logoutBtn">退出登录</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content flex-grow-1 bg-light">
+    
+    <!-- Login Overlay -->
+    <div id="login-overlay" class="position-fixed top-0 start-0 w-100 h-100 bg-dark d-flex align-items-center justify-content-center" style="z-index: 2000;">
+      <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+        <div class="text-center mb-4">
+          <h3 class="fw-bold">Vision Admin</h3>
+          <p class="text-muted">请输入管理凭证</p>
+        </div>
+        <form id="loginForm">
+          <div class="mb-3">
+            <label class="form-label">用户名</label>
+            <input type="text" class="form-control" id="loginUser" required autofocus>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">密码</label>
+            <input type="password" class="form-control" id="loginPass" required>
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">登录</button>
+          </div>
+        </form>
+        <div class="mt-3 text-center">
+           <small class="text-muted" id="loginMsg"></small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard View -->
+    <div id="view-dashboard" class="page-view">
+      <h2 class="h4 mb-4 border-bottom pb-2">仪表盘</h2>
+      <div class="row g-3 mb-4">
+        <!-- Row 1 -->
+        <div class="col-md-3">
+          <div class="card card-stats shadow-sm h-100">
+            <div class="card-body">
+              <h6 class="text-muted mb-2">总需求数</h6>
+              <div class="fs-3 fw-bold" id="dashTotalReq">-</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card card-stats shadow-sm h-100" style="border-left-color: #ffc107;">
+            <div class="card-body">
+              <h6 class="text-muted mb-2">待审核需求</h6>
+              <div class="fs-3 fw-bold" id="dashPendingReq">-</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card card-stats shadow-sm h-100" style="border-left-color: #198754;">
+            <div class="card-body">
+              <h6 class="text-muted mb-2">在线报价</h6>
+              <div class="fs-3 fw-bold" id="dashTotalQuotes">-</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card card-stats shadow-sm h-100" style="border-left-color: #0dcaf0;">
+            <div class="card-body">
+              <h6 class="text-muted mb-2">供应商总数</h6>
+              <div class="fs-3 fw-bold" id="dashTotalSup">-</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Row 2 -->
+        <div class="col-md-3">
+          <div class="card card-stats shadow-sm h-100" style="border-left-color: #dc3545;">
+            <div class="card-body">
+              <h6 class="text-muted mb-2">产品总数</h6>
+              <div class="fs-3 fw-bold" id="dashTotalProducts">-</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card card-stats shadow-sm h-100" style="border-left-color: #6610f2;">
+            <div class="card-body">
+              <h6 class="text-muted mb-2">新闻资讯</h6>
+              <div class="fs-3 fw-bold" id="dashTotalNews">-</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card card-stats shadow-sm h-100" style="border-left-color: #fd7e14;">
+            <div class="card-body">
+              <h6 class="text-muted mb-2">展会活动</h6>
+              <div class="fs-3 fw-bold" id="dashTotalExhibitions">-</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card card-stats shadow-sm h-100" style="border-left-color: #20c997;">
+            <div class="card-body">
+              <h6 class="text-muted mb-2">应用案例</h6>
+              <div class="fs-3 fw-bold" id="dashTotalCases">-</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+          <h5 class="card-title mb-0">最新动态</h5>
+        </div>
+        <div class="card-body p-0">
+          <div class="list-group list-group-flush" id="dashActivityList">
+            <div class="list-group-item text-muted py-3 text-center">加载中...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Requirements View -->
+    <div id="view-requirements" class="page-view d-none">
+      <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+        <h2 class="h4 mb-0">需求管理</h2>
+        <div class="btn-group">
+          <button class="btn btn-outline-secondary btn-sm" id="reqRefreshBtn"><i class="fa-solid fa-rotate"></i> 刷新</button>
+          <button class="btn btn-outline-success btn-sm" id="reqExportBtn"><i class="fa-solid fa-file-export"></i> 导出</button>
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-3">
+        <div class="card-body py-2">
+          <div class="row g-2 align-items-center">
+            <div class="col-md-3">
+              <div class="input-group input-group-sm">
+                <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+                <input type="text" class="form-control" id="reqSearch" placeholder="搜索标题/ID/公司">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <select class="form-select form-select-sm" id="reqFilterStatus">
+                <option value="">全部状态</option>
+                <option value="pending">待审核 (Status!=公开)</option>
+                <option value="active">进行中 (发布中/接洽中)</option>
+                <option value="closed">已结束</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <select class="form-select form-select-sm" id="reqSortField">
+                <option value="created_at">按时间</option>
+                <option value="quote_count">按报价数</option>
+                <option value="status">按状态</option>
+                <option value="progress">按进度</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <select class="form-select form-select-sm" id="reqSortOrder">
+                <option value="desc">降序</option>
+                <option value="asc">升序</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <select class="form-select form-select-sm" id="reqPageSize">
+                <option value="10">每页 10</option>
+                <option value="20">每页 20</option>
+                <option value="50">每页 50</option>
+                <option value="100">每页 100</option>
+                <option value="all">全部</option>
+              </select>
+            </div>
+            <div class="col-md-auto ms-auto">
+               <small class="text-muted" id="reqCountHint">共 - 条</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm border-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0 admin-table">
+            <thead class="table-light position-sticky top-0">
+              <tr>
+                <th style="min-width:100px;">编号</th>
+                <th style="min-width:200px;">标题</th>
+                <th style="min-width:150px;">发布方</th>
+                <th style="min-width:100px;">分类</th>
+                <th style="min-width:100px;">状态</th>
+                <th style="min-width:100px;">进度</th>
+                <th style="min-width:100px;">报价</th>
+                <th style="min-width:80px;">前台</th>
+                <th style="min-width:100px;">时间</th>
+                <th style="min-width:160px;">操作</th>
+              </tr>
+            </thead>
+            <tbody id="reqTableBody"></tbody>
+          </table>
+        </div>
+        <div class="card-footer py-2">
+           <nav>
+             <ul class="pagination pagination-sm justify-content-end mb-0" id="reqPagination"></ul>
+           </nav>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quotes View -->
+    <div id="view-quotes" class="page-view d-none">
+       <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+         <h2 class="h4 mb-0">报价管理</h2>
+         <div class="btn-group">
+           <button class="btn btn-outline-secondary btn-sm" id="quotesPageRefreshBtn"><i class="fa-solid fa-rotate"></i> 刷新</button>
+         </div>
+       </div>
+       <div class="alert alert-light border">
+         <i class="fa-solid fa-info-circle text-primary"></i> 提示：此处显示所有报价记录。如需按需求查看，请前往“需求管理”点击对应需求的报价数。
+       </div>
+       <div class="card shadow-sm">
+         <div class="table-responsive">
+           <table class="table table-hover align-middle mb-0 admin-table">
+             <thead class="table-light">
+               <tr>
+                 <th>ID</th>
+                 <th>需求</th>
+                 <th>供应商</th>
+                 <th>金额</th>
+                 <th>状态</th>
+                 <th>时间</th>
+                 <th>操作</th>
+               </tr>
+             </thead>
+             <tbody id="quotesPageTableBody"></tbody>
+           </table>
+         </div>
+       </div>
+    </div>
+
+    <!-- Products View -->
+    <div id="view-products" class="page-view d-none">
+      <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+        <h2 class="h4 mb-0">产品库</h2>
+        <div class="btn-group">
+           <button class="btn btn-outline-primary btn-sm" onclick="App.triggerBatchImport()"><i class="fa-solid fa-file-import"></i> 批量导入 MD</button>
+           <button class="btn btn-primary btn-sm" onclick="App.openProductEditor()"><i class="fa-solid fa-plus"></i> 新增产品</button>
+        </div>
+        <input type="file" id="prodBatchInput" multiple accept=".md" hidden onchange="App.handleBatchImport(this)">
+      </div>
+      <div class="card shadow-sm mb-3">
+        <div class="card-body py-2">
+           <div class="row g-2 align-items-center">
+             <div class="col-md-4">
+               <div class="input-group input-group-sm">
+                 <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+                 <input type="text" class="form-control" id="prodSearch" placeholder="搜索产品名称/型号">
+               </div>
+             </div>
+             <div class="col-auto ms-auto">
+                <button class="btn btn-sm btn-outline-secondary" onclick="App.loadProducts()"><i class="fa-solid fa-rotate"></i> 刷新</button>
+             </div>
+           </div>
+        </div>
+      </div>
+      <div class="row g-3" id="prodGrid"></div>
+    </div>
+
+    <!-- News View -->
+    <div id="view-news" class="page-view d-none">
+      <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+        <h2 class="h4 mb-0">新闻资讯</h2>
+        <button class="btn btn-primary btn-sm" onclick="App.openNewsEditor()"><i class="fa-solid fa-plus"></i> 发布新闻</button>
+      </div>
+      <div class="card shadow-sm">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0 admin-table">
+            <thead class="table-light">
+              <tr>
+                <th>标题</th>
+                <th>分类</th>
+                <th>状态</th>
+                <th>发布时间</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="newsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cases View -->
+    <div id="view-cases" class="page-view d-none">
+      <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+        <h2 class="h4 mb-0">应用案例</h2>
+        <button class="btn btn-primary btn-sm" onclick="App.openCaseEditor()"><i class="fa-solid fa-plus"></i> 发布案例</button>
+      </div>
+      <div class="card shadow-sm">
+        <div class="table-responsive">
+           <table class="table table-hover align-middle mb-0 admin-table">
+             <thead class="table-light">
+               <tr>
+                 <th>标题</th>
+                 <th>行业</th>
+                 <th>关联产品</th>
+                 <th>状态</th>
+                 <th>发布时间</th>
+                 <th>操作</th>
+               </tr>
+             </thead>
+             <tbody id="caseTableBody"></tbody>
+           </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exhibitions View -->
+    <div id="view-exhibitions" class="page-view d-none">
+      <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+        <h2 class="h4 mb-0">展会活动</h2>
+        <button class="btn btn-primary btn-sm" onclick="App.openExhibitionEditor()"><i class="fa-solid fa-plus"></i> 发布展会</button>
+      </div>
+      <div class="card shadow-sm">
+        <div class="table-responsive">
+           <table class="table table-hover align-middle mb-0 admin-table">
+             <thead class="table-light">
+               <tr>
+                 <th>标题</th>
+                 <th>地点</th>
+                 <th>时间</th>
+                 <th>展位号</th>
+                 <th>状态</th>
+                 <th>操作</th>
+               </tr>
+             </thead>
+             <tbody id="exhibitionTableBody"></tbody>
+           </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Demanders View -->
+    <div id="view-demanders" class="page-view d-none">
+      <h2 class="h4 mb-4 border-bottom pb-2">发布方管理</h2>
+      <div class="alert alert-info py-2 small">
+        <i class="fa-solid fa-circle-info me-1"></i> 发布方信息由发布需求时自动收集。在此可管理其查看密码及联系方式。
+      </div>
+      <div class="card shadow-sm">
+         <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center">
+            <input type="text" class="form-control form-control-sm w-auto" id="demSearch" placeholder="搜索公司或联系人">
+            <button class="btn btn-sm btn-outline-secondary" id="demRefreshBtn"><i class="fa-solid fa-rotate"></i></button>
+         </div>
+         <div class="table-responsive">
+           <table class="table table-hover align-middle mb-0 admin-table">
+             <thead class="table-light">
+               <tr>
+                 <th>公司名称</th>
+                 <th>联系人</th>
+                 <th>电话</th>
+                 <th>需求数</th>
+                 <th>公开联系方式</th>
+                 <th>会话密码</th>
+                 <th>操作</th>
+               </tr>
+             </thead>
+             <tbody id="demTableBody"></tbody>
+           </table>
+         </div>
+      </div>
+    </div>
+
+    <!-- Suppliers View -->
+    <div id="view-suppliers" class="page-view d-none">
+      <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+        <h2 class="h4 mb-0">供应商管理</h2>
+        <button class="btn btn-primary btn-sm" id="supAddBtn"><i class="fa-solid fa-plus"></i> 新增供应商</button>
+      </div>
+      <div class="card shadow-sm">
+        <div class="card-header bg-white py-2">
+           <div class="row g-2">
+             <div class="col-auto"><input type="text" class="form-control form-control-sm" id="supSearch" placeholder="搜索供应商"></div>
+             <div class="col-auto"><button class="btn btn-sm btn-outline-secondary" id="supRefreshBtn"><i class="fa-solid fa-rotate"></i></button></div>
+           </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0 admin-table">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>供应商名称</th>
+                <th>联系人</th>
+                <th>电话</th>
+                <th>通行密码</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="supTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Assets View -->
+    <div id="view-assets" class="page-view d-none">
+      <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+        <h2 class="h4 mb-0">媒体库</h2>
+        <button class="btn btn-primary btn-sm" onclick="document.getElementById('assetUploadInput').click()">
+          <i class="fa-solid fa-cloud-arrow-up"></i> 上传文件
+        </button>
+        <input type="file" id="assetUploadInput" hidden onchange="App.uploadAsset(this)">
+      </div>
+
+      <div class="card shadow-sm mb-3">
+        <div class="card-body py-2">
+           <div class="row g-2 align-items-center">
+             <div class="col-auto">
+               <select class="form-select form-select-sm" id="assetFilterType" onchange="App.loadAssets()">
+                 <option value="">全部类型</option>
+                 <option value="image">图片</option>
+                 <option value="video">视频</option>
+                 <option value="application">文档</option>
+               </select>
+             </div>
+             <div class="col-auto ms-auto">
+                <button class="btn btn-sm btn-outline-secondary" onclick="App.loadAssets()"><i class="fa-solid fa-rotate"></i> 刷新</button>
+             </div>
+           </div>
+        </div>
+      </div>
+
+      <div class="row g-3" id="assetGrid"></div>
+      
+      <div class="d-flex justify-content-center mt-4">
+         <button class="btn btn-sm btn-outline-primary" id="assetLoadMoreBtn" onclick="App.loadAssets(true)">加载更多</button>
+      </div>
+    </div>
+
+    <!-- Settings View -->
+    <div id="view-settings" class="page-view d-none">
+      <h2 class="h4 mb-4 border-bottom pb-2">设置</h2>
+      <div class="row g-4">
+        <div class="col-md-6">
+           <div class="card shadow-sm h-100">
+             <div class="card-header bg-white fw-bold">管理员密钥</div>
+             <div class="card-body">
+               <div class="mb-3">
+                 <label class="form-label">API Base URL</label>
+                 <div class="input-group">
+                   <input type="text" class="form-control" id="settingApiBase" placeholder="例如 http://127.0.0.1:8787">
+                   <button class="btn btn-outline-secondary" type="button" id="saveApiBaseBtn">保存</button>
+                   <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"></button>
+                   <ul class="dropdown-menu dropdown-menu-end">
+                     <li><a class="dropdown-item" href="#" onclick="App.setApiBase('http://127.0.0.1:8787')">设为本地 (Local)</a></li>
+                     <li><a class="dropdown-item" href="#" onclick="App.setApiBase('https://api.visndt.com')">设为线上 (Prod)</a></li>
+                     <li><hr class="dropdown-divider"></li>
+                     <li><a class="dropdown-item" href="#" onclick="App.setApiBase('')">重置 (自动检测)</a></li>
+                   </ul>
+                 </div>
+                 <div class="form-text">本地测试请使用 http://127.0.0.1:8787</div>
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">Admin Key (X-Admin-Key)</label>
+                 <div class="input-group">
+                   <input type="password" class="form-control" id="settingAdminKey">
+                   <button class="btn btn-outline-secondary" type="button" id="saveKeyBtn">保存本地</button>
+                 </div>
+                 <div class="form-text">此密钥存储在本地浏览器中，用于通过 API 验证。</div>
+               </div>
+             </div>
+           </div>
+        </div>
+        <div class="col-md-6">
+           <div class="card shadow-sm h-100">
+             <div class="card-header bg-white fw-bold">全局控制</div>
+             <div class="card-body">
+               <p class="text-muted">更多全局配置（如审批流开关、通知设置）将在后续版本开放。</p>
+             </div>
+           </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container p-3"></div>
+
+<!-- Modals -->
+
+<!-- Requirement Edit Modal -->
+<div class="modal fade" id="reqEditModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">编辑需求</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="reqEditForm">
+           <input type="hidden" id="editReqId">
+           <div class="row g-3">
+             <div class="col-md-12">
+               <label class="form-label">标题</label>
+               <input type="text" class="form-control" id="editReqTitle" required>
+             </div>
+            <div class="col-md-6">
+              <label class="form-label">公司名称</label>
+              <input type="text" class="form-control" id="editReqContactCompany">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">联系人</label>
+              <input type="text" class="form-control" id="editReqContactName">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">联系电话</label>
+              <input type="text" class="form-control" id="editReqContactPhone">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">联系邮箱</label>
+              <input type="text" class="form-control" id="editReqContactEmail">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">联系部门</label>
+              <input type="text" class="form-control" id="editReqContactDepartment">
+            </div>
+             <div class="col-md-6">
+               <label class="form-label">一级分类</label>
+               <input type="text" class="form-control" id="editReqCat1">
+             </div>
+             <div class="col-md-6">
+               <label class="form-label">预算范围</label>
+               <input type="text" class="form-control" id="editReqBudget">
+             </div>
+             <div class="col-md-6">
+               <label class="form-label">状态</label>
+               <select class="form-select" id="editReqStatus">
+                 <option value="公开">公开 (前台可见)</option>
+                 <option value="隐私">隐私 (仅密码可见)</option>
+                 <option value="待审核">待审核</option>
+                 <option value="关闭">关闭</option>
+               </select>
+             </div>
+             <div class="col-md-6">
+               <label class="form-label">进度</label>
+               <select class="form-select" id="editReqProgress">
+                 <option value="待发布">待发布</option>
+                 <option value="发布中">发布中</option>
+                 <option value="接洽中">接洽中</option>
+                 <option value="已完成">已完成</option>
+                 <option value="已终止">已终止</option>
+               </select>
+             </div>
+             <div class="col-md-6">
+               <div class="form-check mt-4">
+                 <input class="form-check-input" type="checkbox" id="editReqOpenQuotes">
+                 <label class="form-check-label" for="editReqOpenQuotes">允许在线报价</label>
+               </div>
+             </div>
+             <div class="col-md-6">
+               <div class="form-check mt-4">
+                 <input class="form-check-input" type="checkbox" id="editReqContactPublic">
+                 <label class="form-check-label" for="editReqContactPublic">公开联系方式</label>
+               </div>
+             </div>
+             <div class="col-md-12">
+               <label class="form-label">需求详情 (Description)</label>
+               <textarea class="form-control font-monospace" id="editReqDesc" rows="5"></textarea>
+             </div>
+             <div class="col-md-12">
+              <label class="form-label">公开预览信息 (Public Preview)</label>
+              <textarea class="form-control" id="editReqPreview" rows="2"></textarea>
+            </div>
+            <div class="col-md-12 border-top pt-3 mt-3">
+              <h6 class="text-muted mb-3">运营设置</h6>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="editReqFeatured">
+                    <label class="form-check-label" for="editReqFeatured">推荐 (Featured)</label>
+                  </div>
+                  <div class="form-check form-switch mt-2">
+                    <input class="form-check-input" type="checkbox" id="editReqUrgent">
+                    <label class="form-check-label" for="editReqUrgent">加急 (Urgent)</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">内部备注 (Admin Notes)</label>
+                  <textarea class="form-control" id="editReqAdminNotes" rows="2" placeholder="仅管理员可见"></textarea>
+                </div>
+                <div class="col-md-12">
+                  <label class="form-label">标签 (Tags)</label>
+                  <input type="text" class="form-control" id="editReqTags" placeholder="用逗号分隔，例如：医疗,内窥镜,急单">
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="reqSaveBtn">保存更改</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quotes List Modal -->
+<div class="modal fade" id="quotesModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">报价列表 <span id="quoteReqTitle" class="fs-6 text-muted ms-2"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex justify-content-between mb-3">
+           <div class="input-group input-group-sm w-auto">
+             <span class="input-group-text">状态筛选</span>
+             <select class="form-select" id="quoteFilterStatus">
+               <option value="">全部</option>
+               <option value="submitted">已提交</option>
+               <option value="reviewing">审核中</option>
+               <option value="approved">已通过</option>
+               <option value="won">中标</option>
+               <option value="rejected">已拒绝</option>
+             </select>
+           </div>
+           <div class="btn-group">
+             <button class="btn btn-sm btn-outline-success" id="quoteExportCsv">导出 CSV</button>
+             <button class="btn btn-sm btn-outline-success" id="quoteExportXlsx">导出 Excel</button>
+           </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-sm table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>供应商</th>
+                <th>联系人</th>
+                <th>金额</th>
+                <th>备注</th>
+                <th>时间</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="quoteTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Products List Modal -->
+<div class="modal fade" id="productsModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">产品列表 <span id="prodSupTitle" class="fs-6 text-muted ms-2"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="table table-sm table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>名称</th>
+                <th>型号</th>
+                <th>系列</th>
+                <th>分类</th>
+                <th>创建时间</th>
+              </tr>
+            </thead>
+            <tbody id="prodTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Product Edit Modal -->
+<div class="modal fade" id="prodEditModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">编辑产品</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="prodEditForm">
+          <input type="hidden" id="editProdId">
+          <div class="row g-3">
+             <!-- Left: Basic Info -->
+             <div class="col-md-4 border-end">
+               <h6 class="text-muted border-bottom pb-2 mb-3">基本信息</h6>
+               <div class="mb-3">
+                 <label class="form-label">产品名称 <span class="text-danger">*</span></label>
+                 <input type="text" class="form-control" id="editProdName" required oninput="App.generateSlug(this.value, 'editProdSlug')">
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">Slug (URL标识) <span class="text-danger">*</span></label>
+                 <input type="text" class="form-control font-monospace" id="editProdSlug" required>
+                 <div class="form-text small">例如: industrial-endoscope-p50</div>
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">所属供应商</label>
+                 <select class="form-select" id="editProdSupplier"></select>
+               </div>
+               <div class="row g-2 mb-3">
+                 <div class="col-6">
+                   <label class="form-label">型号</label>
+                   <input type="text" class="form-control" id="editProdModel">
+                 </div>
+                 <div class="col-6">
+                   <label class="form-label">系列</label>
+                   <input type="text" class="form-control" id="editProdSeries">
+                 </div>
+               </div>
+               <div class="row g-2 mb-3">
+                 <div class="col-6">
+                   <label class="form-label">一级分类</label>
+                   <input type="text" class="form-control" id="editProdCat1">
+                 </div>
+                 <div class="col-6">
+                   <label class="form-label">二级分类</label>
+                   <input type="text" class="form-control" id="editProdCat2">
+                 </div>
+               </div>
+               <div class="mb-3">
+                  <label class="form-label">封面图 URL</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="editProdCover">
+                    <button class="btn btn-outline-secondary" type="button" onclick="App.openAssetPicker('editProdCover')">选择</button>
+                  </div>
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">状态</label>
+                 <div class="form-check form-switch">
+                   <input class="form-check-input" type="checkbox" id="editProdStatus" checked>
+                   <label class="form-check-label" for="editProdStatus">上架 (Active)</label>
+                 </div>
+                 <div class="form-check form-switch mt-2">
+                   <input class="form-check-input" type="checkbox" id="editProdFeatured">
+                   <label class="form-check-label" for="editProdFeatured">首页推荐 (Featured)</label>
+                 </div>
+               </div>
+             </div>
+             
+             <!-- Middle: Content -->
+             <div class="col-md-5 border-end">
+               <h6 class="text-muted border-bottom pb-2 mb-3">详细内容</h6>
+               <div class="mb-3">
+                 <label class="form-label">简短摘要</label>
+                 <textarea class="form-control" id="editProdSummary" rows="3"></textarea>
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">详细介绍 (HTML/Markdown)</label>
+                 <textarea class="form-control font-monospace" id="editProdDesc" rows="10"></textarea>
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">技术参数 (JSON)</label>
+                 <textarea class="form-control font-monospace" id="editProdParams" rows="5" placeholder='{"Resolution":"1080P", "Length":"2m"}'></textarea>
+               </div>
+             </div>
+             
+             <!-- Right: SEO & Assets -->
+             <div class="col-md-3">
+               <h6 class="text-muted border-bottom pb-2 mb-3">SEO 设置</h6>
+               <div class="mb-3">
+                 <label class="form-label">SEO 标题</label>
+                 <input type="text" class="form-control" id="editProdSeoTitle" placeholder="留空默认使用产品名">
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">SEO 关键词</label>
+                 <textarea class="form-control" id="editProdSeoKeywords" rows="2"></textarea>
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">SEO 描述</label>
+                 <textarea class="form-control" id="editProdSeoDesc" rows="3"></textarea>
+               </div>
+               
+               <h6 class="text-muted border-bottom pb-2 mb-3 mt-4">关联资源</h6>
+               <div class="mb-3">
+                 <label class="form-label">图集 (JSON Array)</label>
+                 <textarea class="form-control font-monospace" id="editProdGallery" rows="2" placeholder='["url1", "url2"]'></textarea>
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">文档 (JSON Array)</label>
+                 <textarea class="form-control font-monospace" id="editProdDocs" rows="2" placeholder='[{"name":"手册","url":"..."}]'></textarea>
+               </div>
+             </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" onclick="App.saveProduct()">保存产品</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- News Edit Modal -->
+<div class="modal fade" id="newsEditModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">编辑新闻</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="newsEditForm">
+          <input type="hidden" id="editNewsId">
+          <div class="row g-3">
+             <div class="col-md-8">
+               <div class="mb-3">
+                 <label class="form-label">标题 <span class="text-danger">*</span></label>
+                 <input type="text" class="form-control" id="editNewsTitle" required oninput="App.generateSlug(this.value, 'editNewsSlug')">
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">Slug</label>
+                 <input type="text" class="form-control font-monospace" id="editNewsSlug">
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">正文内容</label>
+                 <textarea class="form-control font-monospace" id="editNewsContent" rows="15"></textarea>
+               </div>
+             </div>
+             <div class="col-md-4">
+               <div class="mb-3">
+                 <label class="form-label">分类</label>
+                 <input type="text" class="form-control" id="editNewsCategory" list="newsCatList">
+                 <datalist id="newsCatList">
+                   <option value="公司动态">
+                   <option value="行业资讯">
+                   <option value="技术前沿">
+                 </datalist>
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">摘要</label>
+                 <textarea class="form-control" id="editNewsSummary" rows="3"></textarea>
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">封面图</label>
+                 <div class="input-group">
+                    <input type="text" class="form-control" id="editNewsCover">
+                    <button class="btn btn-outline-secondary" type="button" onclick="App.openAssetPicker('editNewsCover')">选择</button>
+                 </div>
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">状态</label>
+                 <select class="form-select" id="editNewsStatus">
+                   <option value="draft">草稿</option>
+                   <option value="published">已发布</option>
+                 </select>
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">SEO 关键词</label>
+                 <input type="text" class="form-control" id="editNewsSeoKeywords">
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">SEO 描述</label>
+                 <textarea class="form-control" id="editNewsSeoDesc" rows="2"></textarea>
+               </div>
+             </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" onclick="App.saveNews()">保存新闻</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Case Edit Modal -->
+<div class="modal fade" id="caseEditModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">编辑案例</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="caseEditForm">
+          <input type="hidden" id="editCaseId">
+          <div class="row g-3">
+             <div class="col-md-8">
+               <div class="mb-3">
+                 <label class="form-label">案例标题 <span class="text-danger">*</span></label>
+                 <input type="text" class="form-control" id="editCaseTitle" required oninput="App.generateSlug(this.value, 'editCaseSlug')">
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">Slug</label>
+                 <input type="text" class="form-control font-monospace" id="editCaseSlug">
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">案例详情</label>
+                 <textarea class="form-control font-monospace" id="editCaseContent" rows="15"></textarea>
+               </div>
+             </div>
+             <div class="col-md-4">
+               <div class="mb-3">
+                 <label class="form-label">所属行业</label>
+                 <input type="text" class="form-control" id="editCaseIndustry" list="industryList">
+                 <datalist id="industryList">
+                   <option value="航空航天">
+                   <option value="汽车制造">
+                   <option value="石油化工">
+                   <option value="电力能源">
+                 </datalist>
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">关联产品 ID</label>
+                 <input type="text" class="form-control" id="editCaseRelProd" placeholder="输入 ProductID">
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">摘要</label>
+                 <textarea class="form-control" id="editCaseSummary" rows="3"></textarea>
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">封面图</label>
+                 <div class="input-group">
+                    <input type="text" class="form-control" id="editCaseCover">
+                    <button class="btn btn-outline-secondary" type="button" onclick="App.openAssetPicker('editCaseCover')">选择</button>
+                 </div>
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">状态</label>
+                 <select class="form-select" id="editCaseStatus">
+                   <option value="draft">草稿</option>
+                   <option value="published">已发布</option>
+                 </select>
+               </div>
+               <div class="mb-3">
+                 <label class="form-label">SEO 关键词</label>
+                 <input type="text" class="form-control" id="editCaseSeoKeywords">
+               </div>
+             </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" onclick="App.saveCase()">保存案例</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Asset Picker Modal (Simple) -->
+<div class="modal fade" id="assetPickerModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">选择文件</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3" id="assetPickerGrid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Requirements List (for Demander) Modal -->
+<div class="modal fade" id="demReqModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">发布需求列表 <span id="demReqTitle" class="fs-6 text-muted ms-2"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="table table-sm table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>标题</th>
+                <th>分类</th>
+                <th>预算</th>
+                <th>状态</th>
+                <th>进度</th>
+                <th>报价数</th>
+                <th>时间</th>
+              </tr>
+            </thead>
+            <tbody id="demReqTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 发布方编辑 Modal -->
+<div class="modal fade" id="demEditModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">编辑/添加发布方</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="demEditForm">
+          <input type="hidden" id="editDemId">
+          <div class="mb-3">
+            <label class="form-label">公司名称</label>
+            <input type="text" class="form-control" id="editDemCompany" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">联系人</label>
+            <input type="text" class="form-control" id="editDemName">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">电话</label>
+            <input type="text" class="form-control" id="editDemPhone">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">邮箱</label>
+            <input type="email" class="form-control" id="editDemEmail">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">部门</label>
+            <input type="text" class="form-control" id="editDemDept">
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-danger fw-bold">企业会话密码 (Password)</label>
+            <input type="text" class="form-control font-monospace" id="editDemPwd" placeholder="设置后用于发布方入口登录">
+            <div class="form-text">设置后，发布方可通过此密码登录“发布方入口”查看该企业所有需求。</div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" onclick="App.saveDemander()">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Supplier Edit Modal -->
+<div class="modal fade" id="supEditModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">供应商编辑</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="supEditForm">
+          <input type="hidden" id="editSupId">
+          <div class="mb-3">
+            <label class="form-label">供应商名称</label>
+            <input type="text" class="form-control" id="editSupName" required>
+          </div>
+          <div class="row g-2 mb-3">
+             <div class="col-6">
+               <label class="form-label">联系人</label>
+               <input type="text" class="form-control" id="editSupContact">
+             </div>
+             <div class="col-6">
+               <label class="form-label">电话</label>
+               <input type="text" class="form-control" id="editSupPhone">
+             </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">通行密码 (Access Password)</label>
+            <input type="text" class="form-control font-monospace" id="editSupPwd" placeholder="留空则不修改">
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="editSupStatus" checked>
+            <label class="form-check-label" for="editSupStatus">账户启用</label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="supSaveBtn">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Product Edit Modal -->
+<div class="modal fade" id="prodEditModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">产品编辑</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="prodEditForm">
+          <input type="hidden" id="editProdId">
+          <div class="row g-3">
+            <div class="col-md-8">
+              <label class="form-label">产品名称</label>
+              <input type="text" class="form-control" id="editProdName" oninput="App.generateSlug(this.value, 'editProdSlug')">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Slug (URL)</label>
+              <input type="text" class="form-control" id="editProdSlug">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">供应商</label>
+              <select class="form-select" id="editProdSupplier"></select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">型号</label>
+              <input type="text" class="form-control" id="editProdModel">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">系列</label>
+              <input type="text" class="form-control" id="editProdSeries">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">一级分类</label>
+              <input type="text" class="form-control" id="editProdCat1">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">二级分类</label>
+              <input type="text" class="form-control" id="editProdCat2">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">封面图</label>
+              <div class="input-group">
+                 <input type="text" class="form-control" id="editProdCover">
+                 <button class="btn btn-outline-secondary" type="button" onclick="App.openAssetPicker('editProdCover')">选择</button>
+              </div>
+            </div>
+            <div class="col-12">
+               <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="editProdStatus" checked>
+                  <label class="form-check-label" for="editProdStatus">上架 (Active)</label>
+               </div>
+               <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="editProdFeatured">
+                  <label class="form-check-label" for="editProdFeatured">推荐 (Featured)</label>
+               </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">简述 (Summary)</label>
+              <textarea class="form-control" id="editProdSummary" rows="2"></textarea>
+            </div>
+            <div class="col-12">
+              <label class="form-label">详细描述 (Markdown)</label>
+              <textarea class="form-control" id="editProdDesc" rows="5"></textarea>
+            </div>
+            <div class="col-12">
+              <label class="form-label">参数 (JSON)</label>
+              <textarea class="form-control font-monospace small" id="editProdParams" rows="3">{}</textarea>
+            </div>
+            <div class="col-12 border-top pt-2 mt-2">
+              <h6>SEO设置</h6>
+              <div class="row g-2">
+                 <div class="col-md-6"><input type="text" class="form-control form-control-sm" id="editProdSeoTitle" placeholder="Title"></div>
+                 <div class="col-md-6"><input type="text" class="form-control form-control-sm" id="editProdSeoKeywords" placeholder="Keywords"></div>
+                 <div class="col-12"><textarea class="form-control form-control-sm" id="editProdSeoDesc" rows="2" placeholder="Description"></textarea></div>
+              </div>
+            </div>
+            <div class="col-12 border-top pt-2 mt-2">
+               <h6>图集 & 文档 (JSON)</h6>
+               <div class="row g-2">
+                 <div class="col-md-6">
+                    <label class="small text-muted">图集 (Array of URLs)</label>
+                    <textarea class="form-control font-monospace small" id="editProdGallery" rows="2">[]</textarea>
+                 </div>
+                 <div class="col-md-6">
+                    <label class="small text-muted">文档 (Array of Objects)</label>
+                    <textarea class="form-control font-monospace small" id="editProdDocs" rows="2">[]</textarea>
+                 </div>
+               </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" onclick="App.saveProduct()">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- News Edit Modal -->
+<div class="modal fade" id="newsEditModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">新闻编辑</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="newsEditForm">
+          <input type="hidden" id="editNewsId">
+          <div class="row g-3">
+            <div class="col-md-8">
+              <label class="form-label">标题</label>
+              <input type="text" class="form-control" id="editNewsTitle" oninput="App.generateSlug(this.value, 'editNewsSlug')">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Slug</label>
+              <input type="text" class="form-control" id="editNewsSlug">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">分类</label>
+              <select class="form-select" id="editNewsCategory">
+                 <option value="Company">公司动态</option>
+                 <option value="Industry">行业资讯</option>
+                 <option value="Product">产品发布</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">状态</label>
+              <select class="form-select" id="editNewsStatus">
+                 <option value="draft">草稿</option>
+                 <option value="published">发布</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label">封面图</label>
+              <div class="input-group">
+                 <input type="text" class="form-control" id="editNewsCover">
+                 <button class="btn btn-outline-secondary" type="button" onclick="App.openAssetPicker('editNewsCover')">选择</button>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">摘要</label>
+              <textarea class="form-control" id="editNewsSummary" rows="2"></textarea>
+            </div>
+            <div class="col-12">
+              <label class="form-label">内容 (Markdown)</label>
+              <textarea class="form-control" id="editNewsContent" rows="8"></textarea>
+            </div>
+            <div class="col-12 border-top pt-2">
+               <h6>SEO</h6>
+               <div class="row g-2">
+                  <div class="col-md-6"><input type="text" class="form-control form-control-sm" id="editNewsSeoKeywords" placeholder="Keywords"></div>
+                  <div class="col-md-6"><textarea class="form-control form-control-sm" id="editNewsSeoDesc" rows="1" placeholder="Description"></textarea></div>
+               </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" onclick="App.saveNews()">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Case Edit Modal -->
+<div class="modal fade" id="caseEditModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">案例编辑</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="caseEditForm">
+          <input type="hidden" id="editCaseId">
+          <div class="row g-3">
+            <div class="col-md-8">
+              <label class="form-label">标题</label>
+              <input type="text" class="form-control" id="editCaseTitle" oninput="App.generateSlug(this.value, 'editCaseSlug')">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Slug</label>
+              <input type="text" class="form-control" id="editCaseSlug">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">行业</label>
+              <input type="text" class="form-control" id="editCaseIndustry">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">关联产品ID</label>
+              <input type="text" class="form-control" id="editCaseRelProd" placeholder="PROD-...">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">状态</label>
+              <select class="form-select" id="editCaseStatus">
+                 <option value="draft">草稿</option>
+                 <option value="published">发布</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label">封面图</label>
+              <div class="input-group">
+                 <input type="text" class="form-control" id="editCaseCover">
+                 <button class="btn btn-outline-secondary" type="button" onclick="App.openAssetPicker('editCaseCover')">选择</button>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">摘要</label>
+              <textarea class="form-control" id="editCaseSummary" rows="2"></textarea>
+            </div>
+            <div class="col-12">
+              <label class="form-label">内容 (Markdown)</label>
+              <textarea class="form-control" id="editCaseContent" rows="8"></textarea>
+            </div>
+            <div class="col-12 border-top pt-2">
+               <h6>SEO</h6>
+               <div class="row g-2">
+                  <div class="col-12"><input type="text" class="form-control form-control-sm" id="editCaseSeoKeywords" placeholder="Keywords"></div>
+               </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" onclick="App.saveCase()">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Exhibition Edit Modal -->
+<div class="modal fade" id="exhibitionEditModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">展会编辑</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="exhibitionEditForm">
+          <input type="hidden" id="editExId">
+          <div class="row g-3">
+            <div class="col-md-8">
+              <label class="form-label">标题</label>
+              <input type="text" class="form-control" id="editExTitle" oninput="App.generateSlug(this.value, 'editExSlug')">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Slug</label>
+              <input type="text" class="form-control" id="editExSlug">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">地点</label>
+              <input type="text" class="form-control" id="editExLocation">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">展位号</label>
+              <input type="text" class="form-control" id="editExBooth">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">开始时间</label>
+              <input type="date" class="form-control" id="editExStart">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">结束时间</label>
+              <input type="date" class="form-control" id="editExEnd">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">状态</label>
+              <select class="form-select" id="editExStatus">
+                 <option value="draft">草稿</option>
+                 <option value="published">发布</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label">封面图</label>
+              <div class="input-group">
+                 <input type="text" class="form-control" id="editExCover">
+                 <button class="btn btn-outline-secondary" type="button" onclick="App.openAssetPicker('editExCover')">选择</button>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">介绍 (Markdown)</label>
+              <textarea class="form-control" id="editExDesc" rows="5"></textarea>
+            </div>
+            <div class="col-12 border-top pt-2">
+               <h6>SEO</h6>
+               <div class="row g-2">
+                  <div class="col-12"><input type="text" class="form-control form-control-sm" id="editExSeoKeywords" placeholder="Keywords"></div>
+               </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" onclick="App.saveExhibition()">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Asset Picker Modal -->
+<div class="modal fade" id="assetPickerModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">选择图片</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-2" id="assetPickerGrid">
+           <div class="col-12 text-center">加载中...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="js/admin.js"></script>
 </body>
 </html>

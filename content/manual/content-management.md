@@ -94,7 +94,7 @@ gallery:
 需求市场模块基于 Cloudflare D1 数据库与 Workers 服务运行，支持实时发布、报价与管理。
 
 ### 1. 管理后台
-访问地址：`/management.html` (本地开发时为 `http://localhost:1313/management.html`)
+访问地址：`/admin/` (本地开发时为 `http://localhost:1313/admin/`)
 
 ### 2. 核心功能说明
 
