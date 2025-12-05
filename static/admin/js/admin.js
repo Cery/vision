@@ -207,12 +207,15 @@ const App = {
   },
   
   bindAuth() {
-    document.getElementById('logoutBtn').onclick = () => {
-      if(confirm('确定退出登录？')) {
-        localStorage.removeItem('ADMIN_KEY');
-        location.reload();
-      }
-    };
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.onclick = () => {
+        if(confirm('确定退出登录？')) {
+          localStorage.removeItem('ADMIN_KEY');
+          location.reload();
+        }
+      };
+    }
     
     // API Base Setting
     document.getElementById('settingApiBase').value = window.API_BASE || '';
