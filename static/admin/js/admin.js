@@ -28,6 +28,10 @@
     window.API_BASE = ''; 
   }
   window.API_BASE = String(window.API_BASE).replace(/\/$/, '');
+  if (isProd && window.API_BASE && /visndt\.com$/i.test(window.API_BASE) && !/api\.visndt\.com$/i.test(window.API_BASE)) {
+    window.API_BASE = defaultRemote;
+    try { localStorage.setItem('API_BASE', window.API_BASE); } catch {}
+  }
   
   window.ADMIN_KEY = '';
   try { window.ADMIN_KEY = localStorage.getItem('ADMIN_KEY') || 'admin123456'; } catch {}
@@ -50,6 +54,17 @@ async function apiFetch(path, options = {}) {
       try { msg = JSON.parse(txt).error || txt; } catch {}
       if (ctErr.includes('text/html')) msg = '站点返回了 HTML 页面，可能 API 地址不正确';
       if (res.status === 401) msg += ' (请在设置中检查 Admin Key)';
+      if (ctErr.includes('text/html') && /https:\/\/(?:www\.)?visndt\.com/i.test(url) && !/api\.visndt\.com/i.test(url)) {
+        const fbUrl = 'https://api.visndt.com' + path;
+        const fbRes = await fetch(fbUrl, { ...options, headers });
+        if (fbRes.ok) {
+          window.API_BASE = 'https://api.visndt.com';
+          try { localStorage.setItem('API_BASE', window.API_BASE); } catch {}
+          if (window.App && typeof App.updateEnvInfo === 'function') App.updateEnvInfo();
+          const ct = fbRes.headers.get('content-type') || '';
+          return ct.includes('application/json') ? fbRes.json() : fbRes.text();
+        }
+      }
       throw new Error(`Request failed (${res.status}): ${msg}`);
     }
     const ct = res.headers.get('content-type') || '';
