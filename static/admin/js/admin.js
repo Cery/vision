@@ -13,8 +13,7 @@
   };
   
   if (isProd) {
-    // In production, trust saved value if it passes check, otherwise default to empty (same origin)
-    window.API_BASE = allowInProd.has(saved) ? saved : '';
+    window.API_BASE = saved ? (allowInProd.has(saved) ? saved : defaultRemote) : defaultRemote;
   } else {
     // Local dev
     if (!saved && (location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:')) {
@@ -46,9 +45,10 @@ async function apiFetch(path, options = {}) {
     const res = await fetch(url, { ...options, headers });
     if (!res.ok) {
       const txt = await res.text().catch(()=>'');
+      const ctErr = res.headers.get('content-type') || '';
       let msg = txt;
       try { msg = JSON.parse(txt).error || txt; } catch {}
-      // 如果是 401，提示检查密钥
+      if (ctErr.includes('text/html')) msg = '站点返回了 HTML 页面，可能 API 地址不正确';
       if (res.status === 401) msg += ' (请在设置中检查 Admin Key)';
       throw new Error(`Request failed (${res.status}): ${msg}`);
     }
