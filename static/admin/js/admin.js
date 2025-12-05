@@ -208,7 +208,8 @@ const App = {
   
   bindAuth() {
     document.getElementById('logoutBtn').onclick = () => {
-      if(confirm('确定退出登录？(只会清除页面状态，不会清除 AdminKey)')) {
+      if(confirm('确定退出登录？')) {
+        localStorage.removeItem('ADMIN_KEY');
         location.reload();
       }
     };
