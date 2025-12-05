@@ -17,7 +17,7 @@
     window.API_BASE = allowInProd.has(saved) ? saved : '';
   } else {
     // Local dev
-    if (!saved && (location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+    if (!saved && (location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:')) {
        window.API_BASE = 'http://127.0.0.1:8787';
     } else {
        window.API_BASE = saved || defaultRemote;
@@ -96,6 +96,8 @@ const App = {
     productsCache: [],
     demReqCache: [],
     currentReqId: null
+  },
+  
   init() {
       this.checkLogin();
       this.bindNav();
@@ -128,15 +130,31 @@ const App = {
             }
          });
       });
-    },
-    
-    this.loadDashboard(); // Initial load
+
+      this.loadDashboard(); // Initial load
 
     // Login binding
     document.getElementById('loginForm').onsubmit = (e) => {
       e.preventDefault();
       this.login();
     };
+    
+    // API Select binding
+    const apiSel = document.getElementById('loginApiSelect');
+    if(apiSel) {
+       // Set initial value
+       // If window.API_BASE is empty (prod same origin), we might want to show something or 'Custom'
+       // But for now let's just match if possible
+       if (window.API_BASE) apiSel.value = window.API_BASE;
+       
+       apiSel.onchange = () => {
+          const val = apiSel.value;
+          localStorage.setItem('API_BASE', val);
+          window.API_BASE = val;
+          this.updateEnvInfo();
+          showToast('API 地址已切换: ' + val);
+       };
+    }
 
     // Req bindings
     document.getElementById('reqRefreshBtn').onclick = () => this.loadRequirements();

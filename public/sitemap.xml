@@ -5,8 +5,8 @@
   
   
   <url>
-    <loc>//:1316/applications/aerospace/</loc>
-    <lastmod>2025-06-28T23:14:20&#43;08:00</lastmod>
+    <loc>http://localhost:1313/applications/aerospace/</loc>
+    <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -18,8 +18,8 @@
   
   
   <url>
-    <loc>//:1316/product_categories/electronic-endoscope/</loc>
-    <lastmod>2025-07-04T01:53:40&#43;08:00</lastmod>
+    <loc>http://localhost:1313/product_categories/electronic-endoscope/</loc>
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -31,8 +31,8 @@
   
   
   <url>
-    <loc>//:1316/product_categories/electronic-endoscope/industrial-video-endoscope/</loc>
-    <lastmod>2025-07-04T01:53:40&#43;08:00</lastmod>
+    <loc>http://localhost:1313/product_categories/electronic-endoscope/industrial-video-endoscope/</loc>
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -44,8 +44,8 @@
   
   
   <url>
-    <loc>//:1316/product_categories/fiber-endoscope/flexible-fiber/</loc>
-    <lastmod>2025-07-04T01:53:40&#43;08:00</lastmod>
+    <loc>http://localhost:1313/product_categories/fiber-endoscope/flexible-fiber/</loc>
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -57,8 +57,8 @@
   
   
   <url>
-    <loc>//:1316/product_categories/optical-endoscope/rigid-optical/</loc>
-    <lastmod>2025-07-04T01:53:40&#43;08:00</lastmod>
+    <loc>http://localhost:1313/product_categories/optical-endoscope/rigid-optical/</loc>
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -70,21 +70,8 @@
   
   
   <url>
-    <loc>//:1316/categories/industry-news/</loc>
-    <lastmod>2025-06-15T14:56:17&#43;08:00</lastmod>
+    <loc>http://localhost:1313/categories/industry-news/</loc>
     
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>//:1316/applications/energy/</loc>
-    <lastmod>2025-06-28T23:14:20&#43;08:00</lastmod>
     
     
     
@@ -96,8 +83,8 @@
   
   
   <url>
-    <loc>//:1316/product_categories/electronic-endoscope/industrial-pipeline-endoscope/</loc>
-    <lastmod>2025-07-04T01:53:40&#43;08:00</lastmod>
+    <loc>http://localhost:1313/applications/energy/</loc>
+    <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -109,8 +96,8 @@
   
   
   <url>
-    <loc>//:1316/product_categories/fiber-endoscope/</loc>
-    <lastmod>2025-07-04T01:53:40&#43;08:00</lastmod>
+    <loc>http://localhost:1313/product_categories/electronic-endoscope/industrial-pipeline-endoscope/</loc>
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -122,8 +109,8 @@
   
   
   <url>
-    <loc>//:1316/product_categories/fiber-endoscope/rigid-fiber/</loc>
-    <lastmod>2025-07-04T01:53:40&#43;08:00</lastmod>
+    <loc>http://localhost:1313/product_categories/fiber-endoscope/</loc>
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -135,8 +122,8 @@
   
   
   <url>
-    <loc>//:1316/categories/exhibition-news/</loc>
-    <lastmod>2025-06-15T14:56:17&#43;08:00</lastmod>
+    <loc>http://localhost:1313/product_categories/fiber-endoscope/rigid-fiber/</loc>
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -148,21 +135,8 @@
   
   
   <url>
-    <loc>//:1316/applications/automotive/</loc>
-    <lastmod>2025-06-28T23:14:20&#43;08:00</lastmod>
+    <loc>http://localhost:1313/categories/exhibition-news/</loc>
     
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>//:1316/product_categories/optical-endoscope/</loc>
-    <lastmod>2025-07-04T01:53:40&#43;08:00</lastmod>
     
     
     
@@ -174,8 +148,8 @@
   
   
   <url>
-    <loc>//:1316/product_categories/electronic-endoscope/crawler-robot/</loc>
-    <lastmod>2025-07-04T01:53:40&#43;08:00</lastmod>
+    <loc>http://localhost:1313/applications/automotive/</loc>
+    <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -187,8 +161,8 @@
   
   
   <url>
-    <loc>//:1316/categories/tech-news/</loc>
-    <lastmod>2025-06-15T14:56:17&#43;08:00</lastmod>
+    <loc>http://localhost:1313/product_categories/optical-endoscope/</loc>
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -200,8 +174,8 @@
   
   
   <url>
-    <loc>//:1316/applications/machinery/</loc>
-    <lastmod>2025-06-28T23:14:20&#43;08:00</lastmod>
+    <loc>http://localhost:1313/product_categories/electronic-endoscope/crawler-robot/</loc>
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -213,21 +187,8 @@
   
   
   <url>
-    <loc>//:1316/categories/company-news/</loc>
-    <lastmod>2025-06-15T14:56:17&#43;08:00</lastmod>
+    <loc>http://localhost:1313/categories/tech-news/</loc>
     
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>//:1316/applications/casting/</loc>
-    <lastmod>2025-06-28T23:14:20&#43;08:00</lastmod>
     
     
     
@@ -239,8 +200,8 @@
   
   
   <url>
-    <loc>//:1316/applications/research/</loc>
-    <lastmod>2025-06-28T23:14:20&#43;08:00</lastmod>
+    <loc>http://localhost:1313/applications/machinery/</loc>
+    <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -252,36 +213,8 @@
   
   
   <url>
-    <loc>//:1316/product_categories/</loc>
-    <lastmod>2025-07-13T20:14:08&#43;08:00</lastmod>
+    <loc>http://localhost:1313/categories/company-news/</loc>
     
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>//:1316/products/sim-sup/sim-cam-x1/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
-    
-    
-    
-    
-
-    
-    
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>//:1316/news/exhibition/2025-shanghai-ndt-expo/</loc>
-    <lastmod>2025-11-10T03:03:06&#43;09:00</lastmod>
     
     
     
@@ -293,8 +226,8 @@
   
   
   <url>
-    <loc>//:1316/tags/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/applications/casting/</loc>
+    <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -306,8 +239,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E6%97%A0%E6%8D%9F%E6%A3%80%E6%B5%8B/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/applications/research/</loc>
+    <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -319,8 +252,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%B1%95%E4%BC%9A/</loc>
-    <lastmod>2025-11-10T03:03:06&#43;09:00</lastmod>
+    <loc>http://localhost:1313/product_categories/</loc>
+    <lastmod>2024-01-01T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -332,8 +265,38 @@
   
   
   <url>
-    <loc>//:1316/categories/%E5%B1%95%E4%BC%9A%E8%B5%84%E8%AE%AF/</loc>
-    <lastmod>2025-11-10T03:03:06&#43;09:00</lastmod>
+    <loc>http://localhost:1313/products/sim-sup/sim-cam-x1/</loc>
+    <lastmod>2025-11-30T10:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/</loc>
+    <lastmod>2025-11-30T10:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+    
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/news/exhibition/2025-shanghai-ndt-expo/</loc>
+    <lastmod>2025-11-12T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -345,8 +308,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E6%99%BA%E8%83%BD%E5%88%B6%E9%80%A0/</loc>
-    <lastmod>2025-11-10T03:03:06&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2025-11-12T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -358,8 +321,8 @@
   
   
   <url>
-    <loc>//:1316/news/industry/2025-industrial-ndt-trends/</loc>
-    <lastmod>2025-11-10T03:03:06&#43;09:00</lastmod>
+    <loc>http://localhost:1313/categories/</loc>
+    <lastmod>2025-11-12T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -371,8 +334,8 @@
   
   
   <url>
-    <loc>//:1316/tags/ai%E8%AF%86%E5%88%AB/</loc>
-    <lastmod>2025-11-10T03:03:06&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E6%97%A0%E6%8D%9F%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-11-12T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -384,8 +347,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E8%85%90%E8%9A%80%E6%A3%80%E6%B5%8B/</loc>
-    <lastmod>2025-11-10T03:03:06&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E5%B1%95%E4%BC%9A/</loc>
+    <lastmod>2025-11-12T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -397,8 +360,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5/</loc>
-    <lastmod>2025-11-10T03:03:06&#43;09:00</lastmod>
+    <loc>http://localhost:1313/categories/%E5%B1%95%E4%BC%9A%E8%B5%84%E8%AE%AF/</loc>
+    <lastmod>2025-11-12T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -410,8 +373,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2025-11-10T03:03:06&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E6%99%BA%E8%83%BD%E5%88%B6%E9%80%A0/</loc>
+    <lastmod>2025-11-12T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -423,8 +386,8 @@
   
   
   <url>
-    <loc>//:1316/cases/case-pipeline-inspection/</loc>
-    <lastmod>2025-11-10T03:03:06&#43;09:00</lastmod>
+    <loc>http://localhost:1313/news/</loc>
+    <lastmod>2025-11-12T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -436,8 +399,8 @@
   
   
   <url>
-    <loc>//:1316/categories/%E8%A1%8C%E4%B8%9A%E8%B5%84%E8%AE%AF/</loc>
-    <lastmod>2025-11-10T03:03:06&#43;09:00</lastmod>
+    <loc>http://localhost:1313/news/industry/2025-industrial-ndt-trends/</loc>
+    <lastmod>2025-11-10T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -449,8 +412,8 @@
   
   
   <url>
-    <loc>//:1316/categories/%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B/</loc>
-    <lastmod>2025-11-11T10:46:19&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/ai%E8%AF%86%E5%88%AB/</loc>
+    <lastmod>2025-11-10T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -462,8 +425,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E6%99%BA%E8%83%BD%E8%AF%86%E5%88%AB/</loc>
-    <lastmod>2025-11-10T03:03:06&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E8%85%90%E8%9A%80%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-11-10T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -475,8 +438,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%B7%A5%E8%89%BA%E4%BC%98%E5%8C%96/</loc>
-    <lastmod>2025-11-11T10:46:19&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5/</loc>
+    <lastmod>2025-11-10T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -488,8 +451,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E7%84%8A%E7%BC%9D%E6%A3%80%E6%B5%8B/</loc>
-    <lastmod>2025-11-11T10:46:19&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <lastmod>2025-11-10T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -501,8 +464,8 @@
   
   
   <url>
-    <loc>//:1316/cases/case-weld-quality/</loc>
-    <lastmod>2025-11-11T10:46:19&#43;09:00</lastmod>
+    <loc>http://localhost:1313/cases/case-pipeline-inspection/</loc>
+    <lastmod>2025-11-10T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -514,8 +477,8 @@
   
   
   <url>
-    <loc>//:1316/news/tech-article/2025-ai-defect-detection/</loc>
-    <lastmod>2025-11-10T03:03:06&#43;09:00</lastmod>
+    <loc>http://localhost:1313/categories/%E8%A1%8C%E4%B8%9A%E8%B5%84%E8%AE%AF/</loc>
+    <lastmod>2025-11-10T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -527,8 +490,8 @@
   
   
   <url>
-    <loc>//:1316/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/</loc>
-    <lastmod>2025-11-10T03:03:06&#43;09:00</lastmod>
+    <loc>http://localhost:1313/cases/</loc>
+    <lastmod>2025-11-10T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -540,8 +503,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</loc>
-    <lastmod>2025-11-10T03:03:06&#43;09:00</lastmod>
+    <loc>http://localhost:1313/categories/%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B/</loc>
+    <lastmod>2025-11-10T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -553,8 +516,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6/</loc>
-    <lastmod>2025-11-11T10:46:19&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E6%99%BA%E8%83%BD%E8%AF%86%E5%88%AB/</loc>
+    <lastmod>2025-11-10T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -566,8 +529,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%AE%89%E5%85%A8%E8%BF%90%E8%A1%8C/</loc>
-    <lastmod>2025-11-10T03:03:06&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E5%B7%A5%E8%89%BA%E4%BC%98%E5%8C%96/</loc>
+    <lastmod>2025-11-08T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -579,8 +542,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%82%A8%E7%BD%90%E6%A3%80%E6%B5%8B/</loc>
-    <lastmod>2025-11-10T03:03:06&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E7%84%8A%E7%BC%9D%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-11-08T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -592,8 +555,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E8%85%90%E8%9A%80%E7%9B%91%E6%B5%8B/</loc>
-    <lastmod>2025-11-10T03:03:06&#43;09:00</lastmod>
+    <loc>http://localhost:1313/cases/case-weld-quality/</loc>
+    <lastmod>2025-11-08T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -605,8 +568,8 @@
   
   
   <url>
-    <loc>//:1316/cases/case-petrochemical-corrosion/</loc>
-    <lastmod>2025-11-10T03:03:06&#43;09:00</lastmod>
+    <loc>http://localhost:1313/news/tech-article/2025-ai-defect-detection/</loc>
+    <lastmod>2025-11-08T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -618,7 +581,98 @@
   
   
   <url>
-    <loc>//:1316/suppliers/%E6%A0%B7%E4%BE%8B%E4%BE%9B%E5%BA%94%E5%95%86/</loc>
+    <loc>http://localhost:1313/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/</loc>
+    <lastmod>2025-11-08T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</loc>
+    <lastmod>2025-11-08T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6/</loc>
+    <lastmod>2025-11-08T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%AE%89%E5%85%A8%E8%BF%90%E8%A1%8C/</loc>
+    <lastmod>2025-11-05T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E5%82%A8%E7%BD%90%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-11-05T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/tags/%E8%85%90%E8%9A%80%E7%9B%91%E6%B5%8B/</loc>
+    <lastmod>2025-11-05T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/cases/case-petrochemical-corrosion/</loc>
+    <lastmod>2025-11-05T00:00:00&#43;00:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/suppliers/</loc>
     <lastmod>2025-11-04T21:03:42&#43;09:00</lastmod>
     
     
@@ -631,8 +685,8 @@
   
   
   <url>
-    <loc>//:1316/cases/case-aero-engine-blade/</loc>
-    <lastmod>2025-11-11T10:46:19&#43;09:00</lastmod>
+    <loc>http://localhost:1313/suppliers/%E6%A0%B7%E4%BE%8B%E4%BE%9B%E5%BA%94%E5%95%86/</loc>
+    <lastmod>2025-11-04T21:03:42&#43;09:00</lastmod>
     
     
     
@@ -644,8 +698,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%BE%AE%E8%A3%82%E7%BA%B9/</loc>
-    <lastmod>2025-11-11T10:46:19&#43;09:00</lastmod>
+    <loc>http://localhost:1313/cases/case-aero-engine-blade/</loc>
+    <lastmod>2025-11-03T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -657,8 +711,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%BE%AE%E5%9E%8B%E5%86%85%E7%AA%A5/</loc>
-    <lastmod>2025-11-11T10:46:19&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E5%BE%AE%E8%A3%82%E7%BA%B9/</loc>
+    <lastmod>2025-11-03T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -670,8 +724,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%8F%B6%E7%89%87%E6%A3%80%E6%B5%8B/</loc>
-    <lastmod>2025-11-11T10:46:19&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E5%BE%AE%E5%9E%8B%E5%86%85%E7%AA%A5/</loc>
+    <lastmod>2025-11-03T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -683,8 +737,8 @@
   
   
   <url>
-    <loc>//:1316/tags/bga/</loc>
-    <lastmod>2025-11-11T10:46:19&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E5%8F%B6%E7%89%87%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-11-03T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -696,8 +750,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E7%84%8A%E7%82%B9/</loc>
-    <lastmod>2025-11-11T10:46:19&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/bga/</loc>
+    <lastmod>2025-07-28T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -709,8 +763,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E8%89%AF%E7%8E%87%E6%8F%90%E5%8D%87/</loc>
-    <lastmod>2025-11-11T10:46:19&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E7%84%8A%E7%82%B9/</loc>
+    <lastmod>2025-07-28T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -722,8 +776,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%A4%96%E8%A7%82%E6%A3%80%E6%B5%8B/</loc>
-    <lastmod>2025-11-11T10:46:19&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E8%89%AF%E7%8E%87%E6%8F%90%E5%8D%87/</loc>
+    <lastmod>2025-07-28T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -735,8 +789,8 @@
   
   
   <url>
-    <loc>//:1316/cases/2025-microelectronics-bga-inspection/</loc>
-    <lastmod>2025-11-11T10:46:19&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E5%A4%96%E8%A7%82%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-07-28T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -748,8 +802,8 @@
   
   
   <url>
-    <loc>//:1316/tags/ai%E6%A3%80%E6%B5%8B/</loc>
-    <lastmod>2025-11-11T10:46:19&#43;09:00</lastmod>
+    <loc>http://localhost:1313/cases/2025-microelectronics-bga-inspection/</loc>
+    <lastmod>2025-07-28T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -761,8 +815,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E9%BD%BF%E8%BD%AE%E7%AE%B1/</loc>
-    <lastmod>2025-11-11T10:46:19&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/ai%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-07-28T09:00:00&#43;08:00</lastmod>
     
     
     
@@ -774,8 +828,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E9%A3%8E%E7%94%B5/</loc>
-    <lastmod>2025-11-11T10:46:19&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E9%BD%BF%E8%BD%AE%E7%AE%B1/</loc>
+    <lastmod>2025-07-28T09:00:00&#43;08:00</lastmod>
     
     
     
@@ -787,8 +841,8 @@
   
   
   <url>
-    <loc>//:1316/cases/2025-wind-turbine-gearbox-inspection/</loc>
-    <lastmod>2025-11-11T10:46:19&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E9%A3%8E%E7%94%B5/</loc>
+    <lastmod>2025-07-28T09:00:00&#43;08:00</lastmod>
     
     
     
@@ -800,8 +854,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2025-11-11T10:46:19&#43;09:00</lastmod>
+    <loc>http://localhost:1313/cases/2025-wind-turbine-gearbox-inspection/</loc>
+    <lastmod>2025-07-28T09:00:00&#43;08:00</lastmod>
     
     
     
@@ -813,7 +867,20 @@
   
   
   <url>
-    <loc>//:1316/news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/</loc>
+    <loc>http://localhost:1313/tags/%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <lastmod>2025-07-28T09:00:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/</loc>
     <lastmod>2025-07-27T16:00:00&#43;08:00</lastmod>
     
     
@@ -826,7 +893,7 @@
   
   
   <url>
-    <loc>//:1316/tags/%E7%AB%9E%E4%BA%89%E6%A0%BC%E5%B1%80/</loc>
+    <loc>http://localhost:1313/tags/%E7%AB%9E%E4%BA%89%E6%A0%BC%E5%B1%80/</loc>
     <lastmod>2025-07-27T16:00:00&#43;08:00</lastmod>
     
     
@@ -839,7 +906,7 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%B8%82%E5%9C%BA%E5%88%86%E6%9E%90/</loc>
+    <loc>http://localhost:1313/tags/%E5%B8%82%E5%9C%BA%E5%88%86%E6%9E%90/</loc>
     <lastmod>2025-07-27T16:00:00&#43;08:00</lastmod>
     
     
@@ -852,7 +919,7 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%B8%82%E5%9C%BA%E9%A2%84%E6%B5%8B/</loc>
+    <loc>http://localhost:1313/tags/%E5%B8%82%E5%9C%BA%E9%A2%84%E6%B5%8B/</loc>
     <lastmod>2025-07-27T16:00:00&#43;08:00</lastmod>
     
     
@@ -865,7 +932,7 @@
   
   
   <url>
-    <loc>//:1316/tags/%E8%A1%8C%E4%B8%9A%E8%B6%8B%E5%8A%BF/</loc>
+    <loc>http://localhost:1313/tags/%E8%A1%8C%E4%B8%9A%E8%B6%8B%E5%8A%BF/</loc>
     <lastmod>2025-07-27T16:00:00&#43;08:00</lastmod>
     
     
@@ -878,7 +945,7 @@
   
   
   <url>
-    <loc>//:1316/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/</loc>
+    <loc>http://localhost:1313/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/</loc>
     <lastmod>2025-07-27T14:30:00&#43;08:00</lastmod>
     
     
@@ -891,7 +958,7 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%86%85%E7%AA%A5%E9%95%9C%E6%8A%80%E6%9C%AF/</loc>
+    <loc>http://localhost:1313/tags/%E5%86%85%E7%AA%A5%E9%95%9C%E6%8A%80%E6%9C%AF/</loc>
     <lastmod>2025-07-27T14:30:00&#43;08:00</lastmod>
     
     
@@ -904,7 +971,7 @@
   
   
   <url>
-    <loc>//:1316/news/2025-07-27-%E5%86%85%E7%AA%A5%E9%95%9C%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/</loc>
+    <loc>http://localhost:1313/news/2025-07-27-%E5%86%85%E7%AA%A5%E9%95%9C%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/</loc>
     <lastmod>2025-07-27T14:30:00&#43;08:00</lastmod>
     
     
@@ -917,7 +984,7 @@
   
   
   <url>
-    <loc>//:1316/tags/%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96/</loc>
+    <loc>http://localhost:1313/tags/%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96/</loc>
     <lastmod>2025-07-27T14:30:00&#43;08:00</lastmod>
     
     
@@ -930,7 +997,7 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/</loc>
+    <loc>http://localhost:1313/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/</loc>
     <lastmod>2025-07-27T14:30:00&#43;08:00</lastmod>
     
     
@@ -943,7 +1010,7 @@
   
   
   <url>
-    <loc>//:1316/cases/2025-07-27-%E6%B1%BD%E8%BD%A6%E5%8F%91%E5%8A%A8%E6%9C%BA%E7%BC%B8%E4%BD%93%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/</loc>
+    <loc>http://localhost:1313/cases/2025-07-27-%E6%B1%BD%E8%BD%A6%E5%8F%91%E5%8A%A8%E6%9C%BA%E7%BC%B8%E4%BD%93%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/</loc>
     <lastmod>2025-07-27T10:30:00&#43;08:00</lastmod>
     
     
@@ -956,7 +1023,7 @@
   
   
   <url>
-    <loc>//:1316/tags/%E6%88%90%E5%8A%9F%E6%A1%88%E4%BE%8B/</loc>
+    <loc>http://localhost:1313/tags/%E6%88%90%E5%8A%9F%E6%A1%88%E4%BE%8B/</loc>
     <lastmod>2025-07-16T10:00:00&#43;08:00</lastmod>
     
     
@@ -969,7 +1036,7 @@
   
   
   <url>
-    <loc>//:1316/tags/%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA/</loc>
+    <loc>http://localhost:1313/tags/%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA/</loc>
     <lastmod>2025-07-16T10:00:00&#43;08:00</lastmod>
     
     
@@ -982,7 +1049,7 @@
   
   
   <url>
-    <loc>//:1316/cases/2025-07-16-%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA%E5%8F%B6%E7%89%87%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/</loc>
+    <loc>http://localhost:1313/cases/2025-07-16-%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA%E5%8F%B6%E7%89%87%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/</loc>
     <lastmod>2025-07-16T10:00:00&#43;08:00</lastmod>
     
     
@@ -995,8 +1062,8 @@
   
   
   <url>
-    <loc>//:1316/news/industry/2025-07-14-industrial-endoscope-market-growth/</loc>
-    <lastmod>2025-07-27T19:05:25&#43;08:00</lastmod>
+    <loc>http://localhost:1313/news/industry/2025-07-14-industrial-endoscope-market-growth/</loc>
+    <lastmod>2025-07-14T10:30:00&#43;08:00</lastmod>
     
     
     
@@ -1008,8 +1075,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E8%88%AA%E7%A9%BA%E8%88%AA%E5%A4%A9/</loc>
-    <lastmod>2025-07-27T19:05:25&#43;08:00</lastmod>
+    <loc>http://localhost:1313/tags/%E8%88%AA%E7%A9%BA%E8%88%AA%E5%A4%A9/</loc>
+    <lastmod>2025-07-11T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1021,8 +1088,8 @@
   
   
   <url>
-    <loc>//:1316/categories/%E5%B1%95%E4%BC%9A%E4%BF%A1%E6%81%AF/</loc>
-    <lastmod>2025-07-27T19:05:25&#43;08:00</lastmod>
+    <loc>http://localhost:1313/categories/%E5%B1%95%E4%BC%9A%E4%BF%A1%E6%81%AF/</loc>
+    <lastmod>2025-07-11T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1034,8 +1101,8 @@
   
   
   <url>
-    <loc>//:1316/news/exhibition/exhibition-template-example/</loc>
-    <lastmod>2025-07-27T19:05:25&#43;08:00</lastmod>
+    <loc>http://localhost:1313/news/exhibition/exhibition-template-example/</loc>
+    <lastmod>2025-07-11T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1047,8 +1114,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E7%8F%A0%E6%B5%B7%E8%88%AA%E5%B1%95/</loc>
-    <lastmod>2025-07-27T19:05:25&#43;08:00</lastmod>
+    <loc>http://localhost:1313/tags/%E7%8F%A0%E6%B5%B7%E8%88%AA%E5%B1%95/</loc>
+    <lastmod>2025-07-11T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1060,8 +1127,8 @@
   
   
   <url>
-    <loc>//:1316/manual/</loc>
-    <lastmod>2025-12-03T17:14:06&#43;09:00</lastmod>
+    <loc>http://localhost:1313/manual/</loc>
+    <lastmod>2025-02-09T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -1073,8 +1140,8 @@
   
   
   <url>
-    <loc>//:1316/manual/content-management/</loc>
-    <lastmod>2025-12-03T17:14:06&#43;09:00</lastmod>
+    <loc>http://localhost:1313/manual/content-management/</loc>
+    <lastmod>2025-02-09T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -1086,8 +1153,8 @@
   
   
   <url>
-    <loc>//:1316/cooperation/</loc>
-    <lastmod>2025-11-30T23:19:58&#43;09:00</lastmod>
+    <loc>http://localhost:1313/cooperation/</loc>
+    <lastmod>2025-02-09T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -1099,8 +1166,8 @@
   
   
   <url>
-    <loc>//:1316/products/vis/ws-o3020/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/products/vis/ws-o3020/</loc>
+    <lastmod>2025-01-27T15:45:00&#43;08:00</lastmod>
     
     
     
@@ -1146,8 +1213,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%85%89%E5%AD%A6%E6%88%90%E5%83%8F/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E5%85%89%E5%AD%A6%E6%88%90%E5%83%8F/</loc>
+    <lastmod>2025-01-27T15:45:00&#43;08:00</lastmod>
     
     
     
@@ -1159,8 +1226,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E7%A1%AC%E6%80%A7%E6%8E%A2%E5%A4%B4/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E7%A1%AC%E6%80%A7%E6%8E%A2%E5%A4%B4/</loc>
+    <lastmod>2025-01-27T15:45:00&#43;08:00</lastmod>
     
     
     
@@ -1172,8 +1239,8 @@
   
   
   <url>
-    <loc>//:1316/products/vis/ws-f4525/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/products/vis/ws-f4525/</loc>
+    <lastmod>2025-01-27T14:30:00&#43;08:00</lastmod>
     
     
     
@@ -1219,8 +1286,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%85%89%E7%BA%A4%E6%88%90%E5%83%8F/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E5%85%89%E7%BA%A4%E6%88%90%E5%83%8F/</loc>
+    <lastmod>2025-01-27T14:30:00&#43;08:00</lastmod>
     
     
     
@@ -1232,8 +1299,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E6%9F%94%E6%80%A7%E6%8E%A2%E5%A4%B4/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E6%9F%94%E6%80%A7%E6%8E%A2%E5%A4%B4/</loc>
+    <lastmod>2025-01-27T14:30:00&#43;08:00</lastmod>
     
     
     
@@ -1245,8 +1312,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/tags/%E7%94%B5%E5%AD%90%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <lastmod>2025-01-20T17:00:00&#43;08:00</lastmod>
     
     
     
@@ -1258,8 +1325,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%8F%91%E5%8A%A8%E6%9C%BA/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/tags/%E5%8F%91%E5%8A%A8%E6%9C%BA/</loc>
+    <lastmod>2025-01-20T17:00:00&#43;08:00</lastmod>
     
     
     
@@ -1271,8 +1338,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E7%BC%B8%E4%BD%93%E6%A3%80%E6%B5%8B/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/tags/%E7%BC%B8%E4%BD%93%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-01-20T17:00:00&#43;08:00</lastmod>
     
     
     
@@ -1284,8 +1351,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E6%B1%BD%E8%BD%A6/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/tags/%E6%B1%BD%E8%BD%A6/</loc>
+    <lastmod>2025-01-20T17:00:00&#43;08:00</lastmod>
     
     
     
@@ -1297,8 +1364,8 @@
   
   
   <url>
-    <loc>//:1316/requirements/req-20250120-002/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/requirements/req-20250120-002/</loc>
+    <lastmod>2025-01-20T17:00:00&#43;08:00</lastmod>
     
     
     
@@ -1310,8 +1377,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E9%AB%98%E7%AB%AF%E8%AE%BE%E5%A4%87/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/requirements/</loc>
+    <lastmod>2025-01-20T17:00:00&#43;08:00</lastmod>
     
     
     
@@ -1323,8 +1390,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E8%88%AA%E7%A9%BA/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/tags/%E9%AB%98%E7%AB%AF%E8%AE%BE%E5%A4%87/</loc>
+    <lastmod>2025-01-20T16:30:00&#43;08:00</lastmod>
     
     
     
@@ -1336,8 +1403,8 @@
   
   
   <url>
-    <loc>//:1316/requirements/req-20250120-001/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/tags/%E8%88%AA%E7%A9%BA/</loc>
+    <lastmod>2025-01-20T16:30:00&#43;08:00</lastmod>
     
     
     
@@ -1349,8 +1416,21 @@
   
   
   <url>
-    <loc>//:1316/products/vis/vis-t10100/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/requirements/req-20250120-001/</loc>
+    <lastmod>2025-01-20T16:30:00&#43;08:00</lastmod>
+    
+    
+    
+    
+
+    
+  </url>
+  
+  
+  
+  <url>
+    <loc>http://localhost:1313/products/vis/vis-t10100/</loc>
+    <lastmod>2025-01-15T14:00:00&#43;08:00</lastmod>
     
     
     
@@ -1362,21 +1442,21 @@
     
     
     <image:image>
-      <image:loc>//:1316/images/products/F-series/F-main.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/F-series/F-main.jpg</image:loc>
       <image:title>VIS-T2815工业视频内窥镜主图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>//:1316/images/products/F-series/F-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/F-series/F-2.jpg</image:loc>
       <image:title>VIS-T2815内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>//:1316/images/products/F-series/FX-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/F-series/FX-1.jpg</image:loc>
       <image:title>VIS-T2815内窥镜</image:title>
     </image:image>
     
@@ -1389,8 +1469,8 @@
   
   
   <url>
-    <loc>//:1316/products/vis/vis-t27140/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/products/vis/vis-t27140/</loc>
+    <lastmod>2025-01-15T14:00:00&#43;08:00</lastmod>
     
     
     
@@ -1402,21 +1482,21 @@
     
     
     <image:image>
-      <image:loc>//:1316/images/products/F-series/F-main.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/F-series/F-main.jpg</image:loc>
       <image:title>VIS-T2815工业视频内窥镜主图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>//:1316/images/products/F-series/F-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/F-series/F-2.jpg</image:loc>
       <image:title>VIS-T2815内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>//:1316/images/products/F-series/FX-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/F-series/FX-1.jpg</image:loc>
       <image:title>VIS-T2815内窥镜</image:title>
     </image:image>
     
@@ -1429,8 +1509,8 @@
   
   
   <url>
-    <loc>//:1316/products/vis/vis-t2810/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/products/vis/vis-t2810/</loc>
+    <lastmod>2025-01-15T14:00:00&#43;08:00</lastmod>
     
     
     
@@ -1442,21 +1522,21 @@
     
     
     <image:image>
-      <image:loc>//:1316/images/products/F-series/F-main.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/F-series/F-main.jpg</image:loc>
       <image:title>VIS-T2815工业视频内窥镜主图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>//:1316/images/products/F-series/F-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/F-series/F-2.jpg</image:loc>
       <image:title>VIS-T2815内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>//:1316/images/products/F-series/FX-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/F-series/FX-1.jpg</image:loc>
       <image:title>VIS-T2815内窥镜</image:title>
     </image:image>
     
@@ -1469,8 +1549,8 @@
   
   
   <url>
-    <loc>//:1316/products/vis/vis-t2815/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/products/vis/vis-t2815/</loc>
+    <lastmod>2025-01-15T14:00:00&#43;08:00</lastmod>
     
     
     
@@ -1482,21 +1562,21 @@
     
     
     <image:image>
-      <image:loc>//:1316/images/products/F-series/F-main.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/F-series/F-main.jpg</image:loc>
       <image:title>VIS-T2815工业视频内窥镜主图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>//:1316/images/products/F-series/F-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/F-series/F-2.jpg</image:loc>
       <image:title>VIS-T2815内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>//:1316/images/products/F-series/FX-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/F-series/FX-1.jpg</image:loc>
       <image:title>VIS-T2815内窥镜</image:title>
     </image:image>
     
@@ -1509,8 +1589,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E5%B7%A5%E4%B8%9A%E6%A3%80%E6%B5%8B/</loc>
+    <lastmod>2025-01-15T14:00:00&#43;08:00</lastmod>
     
     
     
@@ -1522,8 +1602,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E6%B1%BD%E8%BD%A6%E5%88%B6%E9%80%A0/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E6%B1%BD%E8%BD%A6%E5%88%B6%E9%80%A0/</loc>
+    <lastmod>2025-01-15T14:00:00&#43;08:00</lastmod>
     
     
     
@@ -1535,8 +1615,8 @@
   
   
   <url>
-    <loc>//:1316/requirements/req-20250115-001/</loc>
-    <lastmod>2025-11-07T13:36:21&#43;09:00</lastmod>
+    <loc>http://localhost:1313/requirements/req-20250115-001/</loc>
+    <lastmod>2025-01-15T10:30:00&#43;08:00</lastmod>
     
     
     
@@ -1548,8 +1628,8 @@
   
   
   <url>
-    <loc>//:1316/requirements/publish/</loc>
-    <lastmod>2025-11-07T13:36:21&#43;09:00</lastmod>
+    <loc>http://localhost:1313/requirements/publish/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1561,8 +1641,8 @@
   
   
   <url>
-    <loc>//:1316/categories/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/categories/%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1574,8 +1654,8 @@
   
   
   <url>
-    <loc>//:1316/categories/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/categories/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1587,8 +1667,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E5%85%89%E7%BA%A4%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1600,8 +1680,8 @@
   
   
   <url>
-    <loc>//:1316/categories/%E5%85%89%E5%AD%A6%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/categories/%E5%85%89%E5%AD%A6%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1613,8 +1693,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%85%89%E5%AD%A6%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E5%85%89%E5%AD%A6%E5%86%85%E7%AA%A5%E9%95%9C/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1626,8 +1706,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E4%BC%9A%E8%AE%AE/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/tags/%E4%BC%9A%E8%AE%AE/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1639,8 +1719,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E6%8A%80%E6%9C%AF/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/tags/%E6%8A%80%E6%9C%AF/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1652,8 +1732,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E6%8A%80%E6%9C%AF%E5%8F%91%E5%B1%95/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/tags/%E6%8A%80%E6%9C%AF%E5%8F%91%E5%B1%95/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1665,8 +1745,8 @@
   
   
   <url>
-    <loc>//:1316/news/tech-article/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/news/tech-article/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1678,8 +1758,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E6%A3%80%E6%B5%8B%E6%8A%80%E6%9C%AF/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/tags/%E6%A3%80%E6%B5%8B%E6%8A%80%E6%9C%AF/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1691,8 +1771,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E4%BA%A4%E6%B5%81%E6%B4%BB%E5%8A%A8/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/tags/%E4%BA%A4%E6%B5%81%E6%B4%BB%E5%8A%A8/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1704,8 +1784,8 @@
   
   
   <url>
-    <loc>//:1316/products/vis/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/products/vis/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1719,8 +1799,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E6%B7%B1%E5%9C%B3%E5%BE%AE%E8%A7%86/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E6%B7%B1%E5%9C%B3%E5%BE%AE%E8%A7%86/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1732,8 +1812,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/tags/%E7%AE%97%E6%B3%95/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1745,8 +1825,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E8%A1%8C%E4%B8%9A%E5%8A%A8%E6%80%81/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/tags/%E8%A1%8C%E4%B8%9A%E5%8A%A8%E6%80%81/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1758,8 +1838,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E8%A1%8C%E4%B8%9A%E5%B3%B0%E4%BC%9A/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/tags/%E8%A1%8C%E4%B8%9A%E5%B3%B0%E4%BC%9A/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1771,8 +1851,8 @@
   
   
   <url>
-    <loc>//:1316/news/industry/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/news/industry/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1784,8 +1864,8 @@
   
   
   <url>
-    <loc>//:1316/requirements/my/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/requirements/my/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1797,8 +1877,8 @@
   
   
   <url>
-    <loc>//:1316/requirements/hall/</loc>
-    <lastmod>2025-11-11T14:15:35&#43;09:00</lastmod>
+    <loc>http://localhost:1313/requirements/hall/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1810,8 +1890,8 @@
   
   
   <url>
-    <loc>//:1316/news/exhibition/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/news/exhibition/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1823,8 +1903,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E6%94%BF%E7%AD%96%E6%B3%95%E8%A7%84/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/tags/%E6%94%BF%E7%AD%96%E6%B3%95%E8%A7%84/</loc>
+    <lastmod>2025-01-15T10:00:00&#43;08:00</lastmod>
     
     
     
@@ -1836,8 +1916,8 @@
   
   
   <url>
-    <loc>//:1316/requirements/req-20250115-002/</loc>
-    <lastmod>2025-11-07T13:36:21&#43;09:00</lastmod>
+    <loc>http://localhost:1313/requirements/req-20250115-002/</loc>
+    <lastmod>2025-01-15T09:15:00&#43;08:00</lastmod>
     
     
     
@@ -1849,8 +1929,8 @@
   
   
   <url>
-    <loc>//:1316/requirements/req-20250115-003/</loc>
-    <lastmod>2025-11-07T13:36:21&#43;09:00</lastmod>
+    <loc>http://localhost:1313/requirements/req-20250115-003/</loc>
+    <lastmod>2025-01-15T08:45:00&#43;08:00</lastmod>
     
     
     
@@ -1862,8 +1942,8 @@
   
   
   <url>
-    <loc>//:1316/products/vis/ws-p3915/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/products/vis/ws-p3915/</loc>
+    <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
     
@@ -1875,28 +1955,28 @@
     
     
     <image:image>
-      <image:loc>//:1316/images/products/P60/P-MAIN.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-MAIN.jpg</image:loc>
       <image:title>WS-P3915高清工业视频内窥镜主图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>//:1316/images/products/P60/P-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
       <image:title>WS-P3915工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>//:1316/images/products/P60/P-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
       <image:title>WS-P3915工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>//:1316/images/products/P60/P-3.svg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-3.svg</image:loc>
       <image:title>WS-P3915工业内窥镜</image:title>
     </image:image>
     
@@ -1909,8 +1989,8 @@
   
   
   <url>
-    <loc>//:1316/products/vis/ws-p6020/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/products/vis/ws-p6020/</loc>
+    <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
     
@@ -1922,28 +2002,28 @@
     
     
     <image:image>
-      <image:loc>//:1316/images/products/P60/P-MAIN.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-MAIN.jpg</image:loc>
       <image:title>WS-P6020高清工业视频内窥镜主图</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>//:1316/images/products/P60/P-1.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-1.jpg</image:loc>
       <image:title>WS-P6020工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>//:1316/images/products/P60/P-2.jpg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-2.jpg</image:loc>
       <image:title>WS-P6020工业内窥镜</image:title>
     </image:image>
     
     
     
     <image:image>
-      <image:loc>//:1316/images/products/P60/P-3.svg</image:loc>
+      <image:loc>http://localhost:1313/images/products/P60/P-3.svg</image:loc>
       <image:title>WS-P6020工业内窥镜</image:title>
     </image:image>
     
@@ -1956,8 +2036,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E6%A0%87%E5%87%86%E6%8E%A2%E5%A4%B4/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E6%A0%87%E5%87%86%E6%8E%A2%E5%A4%B4/</loc>
+    <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
     
@@ -1969,8 +2049,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E8%B6%85%E8%BF%9C%E6%99%AF%E6%B7%B1/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E8%B6%85%E8%BF%9C%E6%99%AF%E6%B7%B1/</loc>
+    <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
     
@@ -1982,8 +2062,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%A4%A7%E7%9B%B4%E5%BE%84%E6%8E%A2%E5%A4%B4/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E5%A4%A7%E7%9B%B4%E5%BE%84%E6%8E%A2%E5%A4%B4/</loc>
+    <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
     
@@ -1995,8 +2075,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E5%9B%9B%E6%96%B9%E5%90%91%E5%AF%BC%E5%90%91/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E5%9B%9B%E6%96%B9%E5%90%91%E5%AF%BC%E5%90%91/</loc>
+    <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
     
@@ -2008,8 +2088,8 @@
   
   
   <url>
-    <loc>//:1316/tags/%E9%87%8D%E5%9E%8B%E6%9C%BA%E6%A2%B0/</loc>
-    <lastmod>2025-11-30T19:54:05&#43;09:00</lastmod>
+    <loc>http://localhost:1313/tags/%E9%87%8D%E5%9E%8B%E6%9C%BA%E6%A2%B0/</loc>
+    <lastmod>2025-01-01T12:00:00&#43;08:00</lastmod>
     
     
     
@@ -2021,8 +2101,8 @@
   
   
   <url>
-    <loc>//:1316/</loc>
-    <lastmod>2025-06-29T15:27:09&#43;08:00</lastmod>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2025-01-01T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -2034,8 +2114,8 @@
   
   
   <url>
-    <loc>//:1316/news/tech-article/tech-article-1/</loc>
-    <lastmod>2025-07-20T17:57:59&#43;08:00</lastmod>
+    <loc>http://localhost:1313/news/tech-article/tech-article-1/</loc>
+    <lastmod>2024-03-22T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -2047,21 +2127,8 @@
   
   
   <url>
-    <loc>//:1316/manual/%E5%8F%AF%E8%A7%86%E5%8C%96%E5%90%8E%E5%8F%B0%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88/</loc>
-    
-    
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>//:1316/manual/%E5%8F%AF%E8%A7%86%E5%8C%96%E5%90%8E%E5%8F%B0%E6%89%A7%E8%A1%8C%E6%96%B9%E6%A1%88/</loc>
-    
+    <loc>http://localhost:1313/applications/</loc>
+    <lastmod>2024-03-20T00:00:00&#43;00:00</lastmod>
     
     
     
@@ -2073,7 +2140,7 @@
   
   
   <url>
-    <loc>//:1316/manual/%E9%98%B6%E6%AE%B5%E5%8C%96%E5%AE%8C%E5%B7%A5%E6%8A%A5%E5%91%8A/</loc>
+    <loc>http://localhost:1313/manual/%E5%8F%AF%E8%A7%86%E5%8C%96%E5%90%8E%E5%8F%B0%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88/</loc>
     
     
     
@@ -2086,7 +2153,7 @@
   
   
   <url>
-    <loc>//:1316/12/</loc>
+    <loc>http://localhost:1313/manual/%E5%8F%AF%E8%A7%86%E5%8C%96%E5%90%8E%E5%8F%B0%E6%89%A7%E8%A1%8C%E6%96%B9%E6%A1%88/</loc>
     
     
     
@@ -2099,23 +2166,8 @@
   
   
   <url>
-    <loc>//:1316/products/</loc>
-    <lastmod>2025-06-11T10:32:10&#43;08:00</lastmod>
+    <loc>http://localhost:1313/manual/%E9%98%B6%E6%AE%B5%E5%8C%96%E5%AE%8C%E5%B7%A5%E6%8A%A5%E5%91%8A/</loc>
     
-    
-    
-    
-
-    
-    
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>//:1316/requirements/req-20251105-0001/</loc>
-    <lastmod>2025-11-07T13:36:21&#43;09:00</lastmod>
     
     
     
@@ -2127,21 +2179,8 @@
   
   
   <url>
-    <loc>//:1316/suppliers/</loc>
-    <lastmod>2025-07-27T19:05:25&#43;08:00</lastmod>
+    <loc>http://localhost:1313/12/</loc>
     
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>//:1316/suppliers/vsndt/</loc>
-    <lastmod>2025-11-10T03:03:06&#43;09:00</lastmod>
     
     
     
@@ -2153,21 +2192,8 @@
   
   
   <url>
-    <loc>//:1316/search/</loc>
-    <lastmod>2025-06-13T14:22:19&#43;08:00</lastmod>
+    <loc>http://localhost:1313/requirements/req-20251105-0001/</loc>
     
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>//:1316/categories/</loc>
-    <lastmod>2025-06-15T14:56:17&#43;08:00</lastmod>
     
     
     
@@ -2179,21 +2205,8 @@
   
   
   <url>
-    <loc>//:1316/suppliers/vis/</loc>
-    <lastmod>2025-12-03T17:14:06&#43;09:00</lastmod>
+    <loc>http://localhost:1313/suppliers/vsndt/</loc>
     
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>//:1316/requirements/</loc>
-    <lastmod>2025-11-07T13:36:21&#43;09:00</lastmod>
     
     
     
@@ -2205,21 +2218,8 @@
   
   
   <url>
-    <loc>//:1316/cases/</loc>
-    <lastmod>2025-07-04T14:52:41&#43;08:00</lastmod>
+    <loc>http://localhost:1313/search/</loc>
     
-    
-    
-    
-
-    
-  </url>
-  
-  
-  
-  <url>
-    <loc>//:1316/applications/</loc>
-    <lastmod>2025-07-04T14:52:41&#43;08:00</lastmod>
     
     
     
@@ -2231,8 +2231,8 @@
   
   
   <url>
-    <loc>//:1316/news/</loc>
-    <lastmod>2025-07-15T02:04:50&#43;08:00</lastmod>
+    <loc>http://localhost:1313/suppliers/vis/</loc>
+    
     
     
     
