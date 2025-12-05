@@ -25,6 +25,35 @@
 </head>
 <body>
 
+<!-- Mobile Sidebar Backdrop -->
+<div id="sidebarBackdrop"></div>
+
+<!-- Login Overlay -->
+<div id="login-overlay" class="position-fixed top-0 start-0 w-100 h-100 bg-dark d-flex align-items-center justify-content-center" style="z-index: 2000;">
+  <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+    <div class="text-center mb-4">
+      <h3 class="fw-bold">Vision Admin</h3>
+      <p class="text-muted">请输入管理凭证</p>
+    </div>
+    <form id="loginForm">
+      <div class="mb-3">
+        <label class="form-label">用户名</label>
+        <input type="text" class="form-control" id="loginUser" required autofocus>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">密码</label>
+        <input type="password" class="form-control" id="loginPass" required>
+      </div>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary">登录</button>
+      </div>
+    </form>
+    <div class="mt-3 text-center">
+       <small class="text-muted" id="loginMsg"></small>
+    </div>
+  </div>
+</div>
+
 <div class="d-flex">
   <!-- Sidebar -->
   <div class="sidebar d-flex flex-column flex-shrink-0 p-3" style="width: 260px;">
@@ -113,30 +142,9 @@
   <!-- Main Content -->
   <div class="main-content flex-grow-1 bg-light">
     
-    <!-- Login Overlay -->
-    <div id="login-overlay" class="position-fixed top-0 start-0 w-100 h-100 bg-dark d-flex align-items-center justify-content-center" style="z-index: 2000;">
-      <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
-        <div class="text-center mb-4">
-          <h3 class="fw-bold">Vision Admin</h3>
-          <p class="text-muted">请输入管理凭证</p>
-        </div>
-        <form id="loginForm">
-          <div class="mb-3">
-            <label class="form-label">用户名</label>
-            <input type="text" class="form-control" id="loginUser" required autofocus>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">密码</label>
-            <input type="password" class="form-control" id="loginPass" required>
-          </div>
-          <div class="d-grid">
-            <button type="submit" class="btn btn-primary">登录</button>
-          </div>
-        </form>
-        <div class="mt-3 text-center">
-           <small class="text-muted" id="loginMsg"></small>
-        </div>
-      </div>
+    <div class="d-flex align-items-center d-md-none mb-3 pb-2 border-bottom">
+       <button class="btn btn-outline-secondary btn-sm me-3" id="mobileNavToggle"><i class="fa-solid fa-bars"></i></button>
+       <span class="fw-bold">Vision Admin</span>
     </div>
 
     <!-- Dashboard View -->

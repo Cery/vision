@@ -96,16 +96,43 @@ const App = {
     productsCache: [],
     demReqCache: [],
     currentReqId: null
-  },
-  
-    init() {
-    this.checkLogin();
-    this.bindNav();
+  init() {
+      this.checkLogin();
+      this.bindNav();
       this.bindAuth();
       this.updateEnvInfo();
-      this.loadDashboard(); // Initial load
       
-      // Login binding
+      // Mobile Nav
+      const toggle = document.getElementById('mobileNavToggle');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      const sidebar = document.querySelector('.sidebar');
+      
+      if (toggle) {
+         toggle.onclick = () => {
+            sidebar.classList.add('show');
+            backdrop.classList.add('show');
+         };
+      }
+      if (backdrop) {
+         backdrop.onclick = () => {
+            sidebar.classList.remove('show');
+            backdrop.classList.remove('show');
+         };
+      }
+      // Close on link click (mobile)
+      document.querySelectorAll('.sidebar .nav-link').forEach(l => {
+         l.addEventListener('click', () => {
+            if(window.innerWidth < 769) {
+               sidebar.classList.remove('show');
+               backdrop.classList.remove('show');
+            }
+         });
+      });
+    },
+    
+    this.loadDashboard(); // Initial load
+
+    // Login binding
     document.getElementById('loginForm').onsubmit = (e) => {
       e.preventDefault();
       this.login();
