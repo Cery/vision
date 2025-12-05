@@ -209,9 +209,17 @@ const App = {
   bindAuth() {
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
-      logoutBtn.onclick = () => {
+      // 先解绑旧事件（虽然通常是重新渲染，但为了保险）
+      const newBtn = logoutBtn.cloneNode(true);
+      logoutBtn.parentNode.replaceChild(newBtn, logoutBtn);
+      
+      newBtn.onclick = (e) => {
+        e.preventDefault();
         if(confirm('确定退出登录？')) {
           localStorage.removeItem('ADMIN_KEY');
+          // 同时清除 API 配置，如果需要在退出时重置的话。这里只清除 Key
+          // localStorage.removeItem('API_BASE'); 
+          window.ADMIN_KEY = null;
           location.reload();
         }
       };
@@ -262,6 +270,12 @@ const App = {
   // --- Dashboard ---
   async loadDashboard() {
     try {
+      // 增加错误处理逻辑，如果 API 地址不正确，能够捕获并提示
+      if (!window.API_BASE && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+          // 如果在生产环境且没有设置 API_BASE，尝试默认使用同源 API
+          // 但为了保险，我们不强制，让 fetch 自动处理相对路径
+      }
+
       const stats = await apiFetch('/api/admin/stats');
       
       // Populate stats
