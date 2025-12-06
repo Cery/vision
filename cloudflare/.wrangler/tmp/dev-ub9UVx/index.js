@@ -404,10 +404,8 @@ var src_default = {
             id: e.exhibition_id,
             title: e.title,
             date: e.start_date,
-            // Use start date
             category: "\u5C55\u4F1A\u6D3B\u52A8",
-            // Fixed category for exhibitions
-            summary: e.summary || `${e.location} | ${e.booth_number}`,
+            summary: e.description || `${e.location} | ${e.booth_number}`,
             hero: e.cover_image,
             link: `/exhibitions/${e.slug || e.exhibition_id}`
           });
@@ -1622,7 +1620,7 @@ var src_default = {
         }
         const exhCount = (await env.DB.prepare("SELECT COUNT(1) as c FROM exhibitions").first()).c;
         if (exhCount === 0) {
-          await env.DB.prepare(`INSERT INTO exhibitions (exhibition_id, title, slug, location, booth_number, start_date, end_date, status, summary, created_at, updated_at) VALUES 
+          await env.DB.prepare(`INSERT INTO exhibitions (exhibition_id, title, slug, location, booth_number, start_date, end_date, status, description, created_at, updated_at) VALUES 
              ('e1', '2025\u4E0A\u6D77\u56FD\u9645\u65E0\u635F\u68C0\u6D4B\u5C55', 'shanghai-ndt-2025', '\u4E0A\u6D77\u65B0\u56FD\u9645\u535A\u89C8\u4E2D\u5FC3', 'W1-A203', '2025-10-20', '2025-10-23', 'published', '\u8BDA\u9080\u8385\u4E34\u53C2\u89C2\u4EA4\u6D41', '${now}', '${now}')
              `).run();
         }
@@ -1945,6 +1943,136 @@ var src_default = {
         return json({ ok: true, upserted });
       } catch (e) {
         return json({ error: "ImportDemandersFailed", detail: String(e && e.message || e) }, 500);
+      }
+    }
+    if (isApi("admin/import-news") && request.method === "POST") {
+      if (!requireAdmin(request)) return json({ error: "Unauthorized" }, 401);
+      try {
+        const base = url.searchParams.get("base") || env.SYNC_BASE_URL || "https://www.visndt.com/data";
+        const siteBase = String(base).replace(/\/?data\/?$/i, "");
+        const idx = await fetchJsonSafe(`${siteBase}/index.json`);
+        const list = Array.isArray(idx) ? idx : [];
+        const items = list.filter((i) => {
+          const t = String(i.type || i.section || "").toLowerCase();
+          return t === "news" || String(i.section || "").toLowerCase() === "news";
+        });
+        let upserted = 0;
+        for (const i of items) {
+          const p = i.params || {};
+          const uri = String(i.uri || "").trim();
+          const slug = String(p.slug || (uri.split("/").filter(Boolean).pop() || "") || "").trim();
+          const now = (/* @__PURE__ */ new Date()).toISOString();
+          const vals = [
+            i.title || p.title || "",
+            slug || null,
+            p.summary || i.summary || "",
+            "",
+            p.cover_image || p.hero || "",
+            p.category || i.category || "",
+            JSON.stringify(p.tags || []),
+            p.author || "",
+            "published",
+            p.seo_title || "",
+            p.seo_keywords || "",
+            p.seo_description || "",
+            p.date || i.date || now,
+            now,
+            now
+          ];
+          await env.DB.prepare(`INSERT INTO news (title, slug, summary, content, cover_image, category, tags, author, status, seo_title, seo_keywords, seo_description, published_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(slug) DO UPDATE SET title=excluded.title, summary=excluded.summary, content=excluded.content, cover_image=excluded.cover_image, category=excluded.category, tags=excluded.tags, author=excluded.author, status=excluded.status, seo_title=excluded.seo_title, seo_keywords=excluded.seo_keywords, seo_description=excluded.seo_description, published_at=excluded.published_at, updated_at=excluded.updated_at`).bind(...vals).run();
+          upserted++;
+        }
+        return json({ ok: true, upserted });
+      } catch (e) {
+        return json({ error: "ImportNewsFailed", detail: String(e && e.message || e) }, 500);
+      }
+    }
+    if (isApi("admin/import-cases") && request.method === "POST") {
+      if (!requireAdmin(request)) return json({ error: "Unauthorized" }, 401);
+      try {
+        const base = url.searchParams.get("base") || env.SYNC_BASE_URL || "https://www.visndt.com/data";
+        const siteBase = String(base).replace(/\/?data\/?$/i, "");
+        const idx = await fetchJsonSafe(`${siteBase}/index.json`);
+        const list = Array.isArray(idx) ? idx : [];
+        const items = list.filter((i) => {
+          const t = String(i.type || i.section || "").toLowerCase();
+          return t === "cases" || String(i.section || "").toLowerCase() === "cases";
+        });
+        let upserted = 0;
+        for (const i of items) {
+          const p = i.params || {};
+          const uri = String(i.uri || "").trim();
+          const slug = String(p.slug || (uri.split("/").filter(Boolean).pop() || "") || "").trim();
+          const now = (/* @__PURE__ */ new Date()).toISOString();
+          const vals = [
+            i.title || p.title || "",
+            slug || null,
+            p.summary || i.summary || "",
+            "",
+            p.cover_image || p.hero || "",
+            p.industry || i.category || "",
+            "",
+            "published",
+            p.seo_title || "",
+            p.seo_keywords || "",
+            p.seo_description || "",
+            p.date || i.date || now,
+            now,
+            now
+          ];
+          await env.DB.prepare(`INSERT INTO cases (title, slug, summary, content, cover_image, industry, related_product_id, status, seo_title, seo_keywords, seo_description, published_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(slug) DO UPDATE SET title=excluded.title, summary=excluded.summary, content=excluded.content, cover_image=excluded.cover_image, industry=excluded.industry, related_product_id=excluded.related_product_id, status=excluded.status, seo_title=excluded.seo_title, seo_keywords=excluded.seo_keywords, seo_description=excluded.seo_description, published_at=excluded.published_at, updated_at=excluded.updated_at`).bind(...vals).run();
+          upserted++;
+        }
+        return json({ ok: true, upserted });
+      } catch (e) {
+        return json({ error: "ImportCasesFailed", detail: String(e && e.message || e) }, 500);
+      }
+    }
+    if (isApi("admin/import-products") && request.method === "POST") {
+      if (!requireAdmin(request)) return json({ error: "Unauthorized" }, 401);
+      try {
+        const base = url.searchParams.get("base") || env.SYNC_BASE_URL || "https://www.visndt.com/data";
+        const siteBase = String(base).replace(/\/?data\/?$/i, "");
+        const idx = await fetchJsonSafe(`${siteBase}/index.json`);
+        const list = Array.isArray(idx) ? idx : [];
+        const items = list.filter((i) => {
+          const t = String(i.type || i.section || "").toLowerCase();
+          return t === "products" || String(i.section || "").toLowerCase() === "products";
+        });
+        let upserted = 0;
+        for (const i of items) {
+          const p = i.params || {};
+          const uri = String(i.uri || "").trim();
+          const slug = String(p.slug || (uri.split("/").filter(Boolean).pop() || "") || "").trim();
+          const now = (/* @__PURE__ */ new Date()).toISOString();
+          const vals = [
+            p.supplier_id || "",
+            i.title || p.title || "",
+            slug || null,
+            p.model || "",
+            p.series || "",
+            p.primary_category || p.category || "",
+            p.secondary_category || "",
+            p.summary || i.summary || "",
+            p.description || "",
+            JSON.stringify(p.parameters || {}),
+            p.cover_image || p.hero || "",
+            JSON.stringify(p.gallery || []),
+            JSON.stringify(p.documents || []),
+            p.seo_title || "",
+            p.seo_keywords || "",
+            p.seo_description || "",
+            p.status || "active",
+            p.is_featured ? 1 : 0,
+            now,
+            now
+          ];
+          await env.DB.prepare(`INSERT INTO products (supplier_id, name, slug, model, series, primary_category, secondary_category, summary, description, parameters_json, cover_image, gallery_json, documents_json, seo_title, seo_keywords, seo_description, status, is_featured, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(slug) DO UPDATE SET supplier_id=excluded.supplier_id, name=excluded.name, model=excluded.model, series=excluded.series, primary_category=excluded.primary_category, secondary_category=excluded.secondary_category, summary=excluded.summary, description=excluded.description, parameters_json=excluded.parameters_json, cover_image=excluded.cover_image, gallery_json=excluded.gallery_json, documents_json=excluded.documents_json, seo_title=excluded.seo_title, seo_keywords=excluded.seo_keywords, seo_description=excluded.seo_description, status=excluded.status, is_featured=excluded.is_featured, updated_at=excluded.updated_at`).bind(...vals).run();
+          upserted++;
+        }
+        return json({ ok: true, upserted });
+      } catch (e) {
+        return json({ error: "ImportProductsFailed", detail: String(e && e.message || e) }, 500);
       }
     }
     if (isApi("requirements/by-password") && request.method === "GET") {

@@ -68,10 +68,28 @@ async function apiFetch(path, options = {}) {
       throw new Error(`Request failed (${res.status}): ${msg}`);
     }
     const ct = res.headers.get('content-type') || '';
-    return ct.includes('application/json') ? res.json() : res.text();
+    if (ct.includes('application/json')) return res.json();
+    if (ct.includes('text/html')) {
+      const base = String(window.API_BASE||'');
+      if (/visndt\.com$/i.test(base)) {
+        const fb = 'https://vision-api.v-easechoice.workers.dev';
+        window.API_BASE = fb;
+        try { localStorage.setItem('API_BASE', window.API_BASE); } catch {}
+        if (window.App && typeof App.updateEnvInfo === 'function') App.updateEnvInfo();
+        return apiFetch(path, options);
+      }
+    }
+    return res.text();
   } catch (e) {
-    // 捕获网络错误（如连接被拒绝）
     if (e instanceof TypeError && (e.message === 'Failed to fetch' || e.message.includes('NetworkError'))) {
+      const base = String(window.API_BASE||'');
+      if (/^https:\/\/api\.visndt\.com$/i.test(base)) {
+        const fb = 'https://vision-api.v-easechoice.workers.dev';
+        window.API_BASE = fb;
+        try { localStorage.setItem('API_BASE', window.API_BASE); } catch {}
+        if (window.App && typeof App.updateEnvInfo === 'function') App.updateEnvInfo();
+        return apiFetch(path, options);
+      }
       throw new Error(`无法连接到服务器 (${url})，请检查 API 地址配置或后端服务是否启动。`);
     }
     throw e;
@@ -399,34 +417,14 @@ const App = {
   // --- Quotes Page ---
   async loadQuotesPage() {
      try {
-       const res = await apiFetch('/api/admin/quotes?limit=500'); // New endpoint needed or filter existing? 
-       // Assuming we fetch all quotes for now. Actually there is no list all quotes endpoint in index.js yet for admin
-       // But we can reuse /api/quotes if it allows listing all without reqId for admin. 
-       // Let's assume /api/quotes returns all if no reqId and is admin.
-       // Checking index.js: `if (isApi('quotes') && request.method === 'GET') ... if (!reqId) ...` -> returns 400 MissingParams.
-       // So we need to update index.js or add a new endpoint. 
-       // For now, let's mock empty or try.
-       // Wait, I can use `await env.DB.prepare('SELECT * FROM quotes ORDER BY created_at DESC LIMIT 100').all()` in a new endpoint.
-       // For this turn, I will implement a client-side workaround or just placeholder.
-       // Actually, let's look at `loadDashboard` -> it fetches reqs. 
-       // I'll leave it empty for now and ask user or implement later.
-       // Actually, let's try fetching requirements and aggregating quotes? No, too slow.
-       // Let's assuming I will implement `/api/admin/quotes` later.
-       // For now, let's just show "Functionality pending backend update" or try to fetch if available.
-       
-       // Temporary: Fetch requirements and show quotes from them? 
-       // Better: I will add `if (isApi('admin/quotes') ...` in next turn or assume it exists. 
-       // Let's implement the UI logic assuming the API returns list.
-       
-       const res2 = await apiFetch('/api/quotes?all=true'); // Try this convention?
-       // If fails, show error.
-       const items = Array.isArray(res2) ? res2 : (res2.items || []);
-       this.state.quotesCache = items;
-       this.renderQuotesPage();
+      const res2 = await apiFetch('/api/quotes?all=true');
+      const items = Array.isArray(res2) ? res2 : (res2.items || []);
+      this.state.quotesCache = items;
+      this.renderQuotesPage();
      } catch (e) {
-       document.getElementById('quotesPageTableBody').innerHTML = `<tr><td colspan="7" class="text-center text-danger py-3">加载失败: ${e.message} (需后端支持 /api/quotes?all=true)</td></tr>`;
-     }
-  },
+      document.getElementById('quotesPageTableBody').innerHTML = `<tr><td colspan="7" class="text-center text-danger py-3">加载失败: ${e.message}</td></tr>`;
+      }
+   },
 
   renderQuotesPage() {
     const tbody = document.getElementById('quotesPageTableBody');
@@ -458,6 +456,11 @@ const App = {
       
       const res = await apiFetch('/api/admin/products');
       this.state.productsCache = Array.isArray(res) ? res : (res.items || []);
+      // 空列表时提示同步
+      if (!this.state.productsCache.length) {
+        const tbody = document.getElementById('prodTableBody');
+        if (tbody) tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-3">暂无产品 · <button class="btn btn-sm btn-outline-primary" onclick="App.syncProducts()">同步官网内容</button></td></tr>';
+      }
       this.renderProducts();
     } catch (e) {
       showToast('产品加载失败: ' + e.message, 'error');
@@ -529,6 +532,14 @@ const App = {
     showToast(`导入完成: 成功 ${success}, 失败 ${fail}`, fail > 0 ? 'warning' : 'success');
     input.value = '';
     this.loadProducts();
+  },
+
+  async syncProducts() {
+    try {
+      await apiFetch('/api/admin/import-products', { method: 'POST' });
+      showToast('已同步产品', 'success');
+      this.loadProducts();
+    } catch (e) { showToast(e.message, 'error'); }
   },
   
   parseMarkdown(text) {
@@ -742,7 +753,7 @@ const App = {
         const list = Array.isArray(res) ? res : (res.items || []);
         const tbody = document.getElementById('newsTableBody');
         if (!list.length) {
-           tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">暂无新闻</td></tr>';
+           tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">暂无新闻 · <button class="btn btn-sm btn-outline-primary" onclick="App.syncNews()">同步官网内容</button></td></tr>';
            return;
         }
         tbody.innerHTML = list.map(n => `
@@ -760,6 +771,14 @@ const App = {
      } catch (e) {
         showToast('加载新闻失败: ' + e.message, 'error');
      }
+  },
+
+  async syncNews() {
+     try {
+        await apiFetch('/api/admin/import-news', { method: 'POST' });
+        showToast('已同步新闻', 'success');
+        this.loadNews();
+     } catch (e) { showToast(e.message, 'error'); }
   },
   
   async openNewsEditor(id = null) {
@@ -818,7 +837,7 @@ const App = {
         const list = Array.isArray(res) ? res : (res.items || []);
         const tbody = document.getElementById('caseTableBody');
         if (!list.length) {
-           tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3">暂无案例</td></tr>';
+           tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3">暂无案例 · <button class="btn btn-sm btn-outline-primary" onclick="App.syncCases()">同步官网内容</button></td></tr>';
            return;
         }
         tbody.innerHTML = list.map(c => `
@@ -837,6 +856,14 @@ const App = {
      } catch (e) {
         showToast('加载案例失败: ' + e.message, 'error');
      }
+  },
+
+  async syncCases() {
+     try {
+        await apiFetch('/api/admin/import-cases', { method: 'POST' });
+        showToast('已同步案例', 'success');
+        this.loadCases();
+     } catch (e) { showToast(e.message, 'error'); }
   },
 
   async openCaseEditor(id = null) {
@@ -967,7 +994,7 @@ const App = {
       if (filter === 'closed' && (status !== '关闭' && progress !== '已完成' && progress !== '已终止')) return false;
       
       if (search) {
-        const txt = `${r.RequirementID} ${r.Title} ${r.ContactCompany}`.toLowerCase();
+        const txt = `${r.RequirementID||r.requirement_id||''} ${(r.Title||r.title||'')} ${(r.ContactCompany||r.contact_company||'')}`.toLowerCase();
         if (!txt.includes(search)) return false;
       }
       return true;
@@ -993,7 +1020,7 @@ const App = {
     });
 
     const renderRows = (arr) => arr.map(r => {
-      const id = r.RequirementID || r.id;
+      const id = r.RequirementID || r.requirement_id || r.id;
       const status = r.Status || r.status || '未知';
       const progress = r.Progress || r.progress || '待发布';
       const isOpen = (typeof r.AllowOpenQuotes !== 'undefined') ? r.AllowOpenQuotes : r.allow_open_quotes;
@@ -1010,14 +1037,14 @@ const App = {
         <tr>
           <td class="font-monospace small">${escapeHtml(id)}</td>
           <td>
-            <div class="fw-bold text-truncate" style="max-width: 200px;" title="${escapeHtml(r.Title)}">
+            <div class="fw-bold text-truncate" style="max-width: 200px;" title="${escapeHtml(r.Title||r.title)}">
                ${isFeat ? '<i class="fa-solid fa-star text-warning me-1" title="推荐"></i>' : ''}
                ${isUrg ? '<i class="fa-solid fa-fire text-danger me-1" title="加急"></i>' : ''}
-               ${escapeHtml(r.Title)}
+               ${escapeHtml(r.Title||r.title)}
             </div>
           </td>
           <td>
-            <div class="small text-truncate" style="max-width: 150px;" title="${escapeHtml(r.ContactCompany)}">${escapeHtml(r.ContactCompany)}</div>
+            <div class="small text-truncate" style="max-width: 150px;" title="${escapeHtml(r.ContactCompany||r.contact_company)}">${escapeHtml(r.ContactCompany||r.contact_company)}</div>
           </td>
           <td><small>${escapeHtml(r.PrimaryCategory || r.primary_category || '-')}</small></td>
           <td><span class="badge ${statusBadge}">${escapeHtml(status)}</span></td>
