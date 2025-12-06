@@ -14,6 +14,10 @@
   
   if (isProd) {
     window.API_BASE = saved ? (allowInProd.has(saved) ? saved : defaultRemote) : defaultRemote;
+    if (/workers\.dev/i.test(String(window.API_BASE))) {
+      window.API_BASE = defaultRemote;
+      try { localStorage.setItem('API_BASE', window.API_BASE); } catch {}
+    }
   } else {
     // Local dev
     if (!saved && (location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:')) {
@@ -83,13 +87,23 @@ async function apiFetch(path, options = {}) {
   } catch (e) {
     if (e instanceof TypeError && (e.message === 'Failed to fetch' || e.message.includes('NetworkError'))) {
       const base = String(window.API_BASE||'');
-      if (/^https:\/\/api\.visndt\.com$/i.test(base)) {
-        const fb = 'https://vision-api.v-easechoice.workers.dev';
-        window.API_BASE = fb;
-        try { localStorage.setItem('API_BASE', window.API_BASE); } catch {}
-        if (window.App && typeof App.updateEnvInfo === 'function') App.updateEnvInfo();
-        return apiFetch(path, options);
-      }
+      try {
+        const host = new URL(base).hostname;
+        if (/^api\.visndt\.com$/i.test(host)) {
+          const fb = 'https://vision-api.v-easechoice.workers.dev';
+          window.API_BASE = fb;
+          try { localStorage.setItem('API_BASE', window.API_BASE); } catch {}
+          if (window.App && typeof App.updateEnvInfo === 'function') App.updateEnvInfo();
+          return apiFetch(path, options);
+        }
+        if (/workers\.dev$/i.test(host)) {
+          const fb = 'https://api.visndt.com';
+          window.API_BASE = fb;
+          try { localStorage.setItem('API_BASE', window.API_BASE); } catch {}
+          if (window.App && typeof App.updateEnvInfo === 'function') App.updateEnvInfo();
+          return apiFetch(path, options);
+        }
+      } catch {}
       throw new Error(`无法连接到服务器 (${url})，请检查 API 地址配置或后端服务是否启动。`);
     }
     throw e;

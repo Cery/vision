@@ -1465,15 +1465,19 @@ var src_default = {
     }
     if (isApi("admin/news") && request.method === "GET") {
       if (!requireAdmin(request)) return json({ error: "Unauthorized" }, 401);
-      const parts = path.split("/");
-      const possibleId = parts[parts.length - 1];
-      if (possibleId && possibleId !== "news") {
-        const { results: results2 } = await env.DB.prepare("SELECT * FROM news WHERE news_id = ? OR id = ?").bind(possibleId, possibleId).all();
-        if (!results2 || !results2.length) return json({ error: "NotFound" }, 404);
-        return json(results2[0]);
+      try {
+        const parts = path.split("/");
+        const possibleId = parts[parts.length - 1];
+        if (possibleId && possibleId !== "news") {
+          const { results: results2 } = await env.DB.prepare("SELECT * FROM news WHERE news_id = ? OR id = ?").bind(possibleId, possibleId).all();
+          if (!results2 || !results2.length) return json({ error: "NotFound" }, 404);
+          return json(results2[0]);
+        }
+        const { results } = await env.DB.prepare("SELECT * FROM news ORDER BY created_at DESC LIMIT 100").all();
+        return json(results || []);
+      } catch (e) {
+        return json([]);
       }
-      const { results } = await env.DB.prepare("SELECT * FROM news ORDER BY created_at DESC LIMIT 100").all();
-      return json(results || []);
     }
     if (isApi("admin/news") && request.method === "POST") {
       if (!requireAdmin(request)) return json({ error: "Unauthorized" }, 401);
@@ -1531,15 +1535,19 @@ var src_default = {
     }
     if (isApi("admin/cases") && request.method === "GET") {
       if (!requireAdmin(request)) return json({ error: "Unauthorized" }, 401);
-      const parts = path.split("/");
-      const possibleId = parts[parts.length - 1];
-      if (possibleId && possibleId !== "cases") {
-        const { results: results2 } = await env.DB.prepare("SELECT * FROM cases WHERE case_id = ?").bind(possibleId).all();
-        if (!results2 || !results2.length) return json({ error: "NotFound" }, 404);
-        return json(results2[0]);
+      try {
+        const parts = path.split("/");
+        const possibleId = parts[parts.length - 1];
+        if (possibleId && possibleId !== "cases") {
+          const { results: results2 } = await env.DB.prepare("SELECT * FROM cases WHERE case_id = ?").bind(possibleId).all();
+          if (!results2 || !results2.length) return json({ error: "NotFound" }, 404);
+          return json(results2[0]);
+        }
+        const { results } = await env.DB.prepare("SELECT * FROM cases ORDER BY created_at DESC LIMIT 100").all();
+        return json(results || []);
+      } catch (e) {
+        return json([]);
       }
-      const { results } = await env.DB.prepare("SELECT * FROM cases ORDER BY created_at DESC LIMIT 100").all();
-      return json(results || []);
     }
     if (isApi("admin/cases") && request.method === "POST") {
       if (!requireAdmin(request)) return json({ error: "Unauthorized" }, 401);
