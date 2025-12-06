@@ -5,7 +5,7 @@ account_id = "594a18b97389b68fbc9769ab0cb47df7"
 workers_dev = true
 
 # Routes: 将 Worker 绑定到子域和主域路径前缀
-routes = ["api.visndt.com/*", "visndt.com/api/*", "www.visndt.com/api/*"]
+# routes 暂时移除，使用 workers.dev 进行部署与验证；待 API Token 权限完善后再绑定到域名
 
 # D1 binding
 [[d1_databases]]

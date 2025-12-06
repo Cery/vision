@@ -403,13 +403,14 @@ export default {
     if (isApi('admin/stats') && request.method === 'GET') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       try {
+        try { await ensureSchema(env); } catch {}
         const { results: reqRes } = await env.DB.prepare("SELECT COUNT(1) as total, SUM(CASE WHEN status != '公开' THEN 1 ELSE 0 END) as pending FROM requirements").all();
-        const { results: prodRes } = await env.DB.prepare("SELECT COUNT(1) as total FROM products").all();
-        const { results: supRes } = await env.DB.prepare("SELECT COUNT(1) as total FROM suppliers").all();
-        const { results: newsRes } = await env.DB.prepare("SELECT COUNT(1) as total FROM news").all();
-        const { results: caseRes } = await env.DB.prepare("SELECT COUNT(1) as total FROM cases").all();
-        const { results: exhRes } = await env.DB.prepare("SELECT COUNT(1) as total FROM exhibitions").all();
-        const { results: quoteRes } = await env.DB.prepare("SELECT COUNT(1) as total FROM quotes").all();
+        const { results: prodRes } = await (async()=>{ try { return await env.DB.prepare("SELECT COUNT(1) as total FROM products").all(); } catch { return { results:[{ total:0 }] }; } })();
+        const { results: supRes } = await (async()=>{ try { return await env.DB.prepare("SELECT COUNT(1) as total FROM suppliers").all(); } catch { return { results:[{ total:0 }] }; } })();
+        const { results: newsRes } = await (async()=>{ try { return await env.DB.prepare("SELECT COUNT(1) as total FROM news").all(); } catch { return { results:[{ total:0 }] }; } })();
+        const { results: caseRes } = await (async()=>{ try { return await env.DB.prepare("SELECT COUNT(1) as total FROM cases").all(); } catch { return { results:[{ total:0 }] }; } })();
+        const { results: exhRes } = await (async()=>{ try { return await env.DB.prepare("SELECT COUNT(1) as total FROM exhibitions").all(); } catch { return { results:[{ total:0 }] }; } })();
+        const { results: quoteRes } = await (async()=>{ try { return await env.DB.prepare("SELECT COUNT(1) as total FROM quotes").all(); } catch { return { results:[{ total:0 }] }; } })();
         
         return json({
           requirements: {
@@ -803,14 +804,14 @@ export default {
          if(cursor) options.cursor = cursor;
          if(prefix) options.prefix = prefix;
          
-         const listed = await env.VISPIC.list(options);
-         const items = listed.objects.map(o => ({
-            key: o.key,
-            size: o.size,
-            uploaded: o.uploaded,
-            public_url: `https://visndt.com/${o.key}`
-         }));
-         return json({ items, cursor: listed.cursor, truncated: listed.truncated });
+        const listed = await env.VISPIC.list(options);
+        const items = listed.objects.map(o => ({
+           key: o.key,
+           size: o.size,
+           uploaded: o.uploaded,
+           public_url: `/api/assets/${encodeURIComponent(o.key)}`
+        }));
+        return json({ items, cursor: listed.cursor, truncated: listed.truncated });
        } catch(e) { return json({ error: e.message }, 500); }
     }
 
@@ -819,8 +820,8 @@ export default {
        const key = url.searchParams.get('key');
        if(!key) return json({ error: 'MissingKey' }, 400);
        try {
-         await env.VISPIC.put(key, request.body);
-         return json({ ok: true, key, public_url: `https://visndt.com/${key}` });
+        await env.VISPIC.put(key, request.body);
+        return json({ ok: true, key, public_url: `/api/assets/${encodeURIComponent(key)}` });
        } catch(e) { return json({ error: e.message }, 500); }
     }
     
@@ -829,8 +830,9 @@ export default {
        const key = url.searchParams.get('key');
        if(!key) return json({ error: 'MissingKey' }, 400);
        try {
-         await env.VISPIC.delete(key);
-         return json({ ok: true });
+        await env.VISPIC.delete(key);
+        try { await env.DB.prepare('DELETE FROM assets WHERE r2_key = ?').bind(key).run(); } catch {}
+        return json({ ok: true });
        } catch(e) { return json({ error: e.message }, 500); }
     }
 
@@ -1857,16 +1859,40 @@ export default {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       const type = url.searchParams.get('type');
       const limit = Math.min(Math.max(parseInt(url.searchParams.get('limit') || '50', 10) || 50, 1), 200);
-      const offset = Math.max(parseInt(url.searchParams.get('offset') || '0', 10) || 0, 0);
-      let q = 'SELECT * FROM assets';
-      const where = [];
-      const binds = [];
-      if (type) { where.push('file_type LIKE ?'); binds.push(`${type}%`); }
-      if (where.length) q += ' WHERE ' + where.join(' AND ');
-      q += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
-      binds.push(limit, offset);
-      const { results } = await env.DB.prepare(q).bind(...binds).all();
-      return json(results || []);
+      const cursor = url.searchParams.get('cursor') || undefined;
+      const items = [];
+      let next = '';
+      try {
+        if (env.VISPIC && typeof env.VISPIC.list === 'function') {
+          const opts = { limit };
+          if (cursor) opts.cursor = cursor;
+          const list = await env.VISPIC.list(opts);
+          for (const o of (list.objects || [])) {
+            const key = o.key;
+            const isTypeOk = type ? ((o.httpMetadata && o.httpMetadata.contentType || '').startsWith(type)) : true;
+            if (!isTypeOk) continue;
+            const public_url = `/api/assets/${encodeURIComponent(key)}`;
+            items.push({ key, size: o.size || 0, public_url });
+          }
+          next = list.truncated && list.cursor ? list.cursor : '';
+        } else {
+          const off = Math.max(parseInt(url.searchParams.get('offset') || '0', 10) || 0, 0);
+          let q = 'SELECT * FROM assets';
+          const where = [];
+          const binds = [];
+          if (type) { where.push('file_type LIKE ?'); binds.push(`${type}%`); }
+          if (where.length) q += ' WHERE ' + where.join(' AND ');
+          q += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
+          binds.push(limit, off);
+          const { results } = await env.DB.prepare(q).bind(...binds).all();
+          for (const r of (results || [])) {
+            const key = r.r2_key || '';
+            const public_url = r.public_url || (key ? `/api/assets/${encodeURIComponent(key)}` : '');
+            items.push({ key, size: r.file_size || 0, public_url });
+          }
+        }
+      } catch {}
+      return json({ items, offsetNext: next });
     }
 
     if (isApi('admin/assets') && request.method === 'POST') {
@@ -1874,30 +1900,110 @@ export default {
       const data = await bodyJSON(request);
       const now = new Date().toISOString();
       const asset_id = 'AST-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*10000);
-      // Fallback: if R2 is not available, we expect 'public_url' to be provided or we mock it
       let public_url = data.public_url || '';
-      
-      // Mock behavior for development environment without R2 if no URL provided
+      let r2_key = data.r2_key || '';
+      let file_type = data.file_type || 'application/octet-stream';
+      let file_size = data.file_size || 0;
+      try {
+        if (!public_url && env.VISPIC && typeof env.VISPIC.put === 'function') {
+          let bytes = null;
+          if (typeof data.file_base64 === 'string' && data.file_base64) {
+            let s = data.file_base64;
+            const i = s.indexOf(',');
+            if (i >= 0) { s = s.slice(i+1); }
+            const bin = atob(s);
+            const arr = new Uint8Array(bin.length);
+            for (let j = 0; j < bin.length; j++) arr[j] = bin.charCodeAt(j);
+            bytes = arr;
+          } else if (typeof data.data_url === 'string' && data.data_url) {
+            const p = String(data.data_url);
+            const i = p.indexOf(',');
+            const head = i >= 0 ? p.slice(0, i) : '';
+            file_type = head.replace(/^data:/,'').replace(/;base64$/,'') || file_type;
+            let s = i >= 0 ? p.slice(i+1) : p;
+            const bin = atob(s);
+            const arr = new Uint8Array(bin.length);
+            for (let j = 0; j < bin.length; j++) arr[j] = bin.charCodeAt(j);
+            bytes = arr;
+          } else if (typeof data.url === 'string' && data.url) {
+            const resp = await fetch(data.url);
+            file_type = resp.headers.get('content-type') || file_type;
+            bytes = await resp.arrayBuffer();
+          }
+          if (bytes) {
+            const baseName = (data.filename || 'asset').replace(/[^a-zA-Z0-9._-]/g,'_');
+            const y = now.slice(0,7).replace('-','/');
+            r2_key = `assets/${y}/${asset_id}-${baseName}`;
+            await env.VISPIC.put(r2_key, bytes, { httpMetadata: { contentType: file_type } });
+            const obj = await env.VISPIC.get(r2_key);
+            file_size = (obj && obj.size) || (bytes.byteLength || 0);
+            public_url = `/api/assets/${encodeURIComponent(r2_key)}`;
+          }
+        }
+      } catch {}
       if (!public_url) {
-         public_url = `https://via.placeholder.com/150?text=${encodeURIComponent(data.filename||'Asset')}`;
+        public_url = `https://via.placeholder.com/150?text=${encodeURIComponent(data.filename||'Asset')}`;
       }
-
       await env.DB.prepare(`INSERT INTO assets (
         asset_id, filename, r2_key, public_url, file_type, file_size, alt_text, uploaded_by, created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-      .bind(
-        asset_id, data.filename || 'unknown', data.r2_key || '', public_url, 
-        data.file_type || 'image/jpeg', data.file_size || 0, data.alt_text || '', 'admin', now
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+        asset_id, data.filename || 'unknown', r2_key, public_url,
+        file_type, file_size, data.alt_text || '', 'admin', now
       ).run();
-      
       return json({ ok: true, asset: { asset_id, public_url, filename: data.filename } });
     }
     
-    if (isApi('admin/assets/') && request.method === 'DELETE') {
+    if (isApi('admin/assets') && request.method === 'PUT') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const key = url.searchParams.get('key') || '';
+      if (!key) return json({ error: 'MissingKey' }, 400);
+      const ct = request.headers.get('content-type') || 'application/octet-stream';
+      let ok = false;
+      let size = 0;
+      try {
+        if (env.VISPIC && typeof env.VISPIC.put === 'function') {
+          await env.VISPIC.put(key, request.body, { httpMetadata: { contentType: ct } });
+          const obj = await env.VISPIC.get(key);
+          size = (obj && obj.size) || 0;
+          ok = true;
+        }
+      } catch {}
+      if (!ok) return json({ error: 'UploadFailed' }, 500);
+      const now = new Date().toISOString();
+      const asset_id = 'AST-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*10000);
+      const public_url = `/api/assets/${encodeURIComponent(key)}`;
+      await env.DB.prepare(`INSERT INTO assets (
+        asset_id, filename, r2_key, public_url, file_type, file_size, alt_text, uploaded_by, created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+        asset_id, key.split('/').pop(), key, public_url, ct, size, '', 'admin', now
+      ).run();
+      return json({ ok: true, key, public_url });
+    }
+    if (isApi('admin/assets') && request.method === 'DELETE') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const key = url.searchParams.get('key');
+      if (key) {
+        try { if (env.VISPIC && typeof env.VISPIC.delete === 'function') await env.VISPIC.delete(key); } catch {}
+        try { await env.DB.prepare('DELETE FROM assets WHERE r2_key = ?').bind(key).run(); } catch {}
+        return json({ ok: true });
+      }
       const id = path.split('/').pop();
-      await env.DB.prepare('DELETE FROM assets WHERE asset_id = ?').bind(id).run();
+      try { await env.DB.prepare('DELETE FROM assets WHERE asset_id = ?').bind(id).run(); } catch {}
       return json({ ok: true });
+    }
+    if (isApi('assets/') && request.method === 'GET') {
+      const k = decodeURIComponent(path.replace('/api/assets/',''));
+      if (!k) return new Response('Not Found', { status: 404, headers: baseHeaders });
+      try {
+        const obj = await env.VISPIC.get(k);
+        if (!obj || !obj.body) return new Response('Not Found', { status: 404, headers: baseHeaders });
+        const h = new Headers(baseHeaders);
+        const ct = obj.httpMetadata && obj.httpMetadata.contentType || 'application/octet-stream';
+        h.set('Content-Type', ct);
+        return new Response(obj.body, { status: 200, headers: h });
+      } catch (e) {
+        return new Response('Not Found', { status: 404, headers: baseHeaders });
+      }
     }
 
     // Admin: Products Create

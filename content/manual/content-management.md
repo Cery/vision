@@ -191,3 +191,65 @@ gallery:
 - 后台报 401：检查后台“设置”里保存的 `Admin Key` 是否与生产环境变量一致。
 - 前台列表空：确认已“批准发布”；或检查 API 地址是否同源/可达、CSP `connect-src` 是否允许该域。
 - 数据未入库：发布接口返回非 `ok` 时查看错误描述；Worker 日志查看 SQL 执行情况。
+
+### 6. Cloudflare Workers 路由与生产发布
+
+- 路由与入口：
+  - `wrangler.toml` 中设置 `main = "src/index.js"` 作为 Worker 主入口。
+  - 生产路由示例：`routes = ["api.visndt.com/*", "visndt.com/api/*", "www.visndt.com/api/*"]`（确保发布后已在 Cloudflare 端生效）。
+  - 绑定资源：`env.DB`（D1）、`env.VISPIC`（R2），在本地与生产均需正确绑定。
+- 发布前准备：
+  - 安装 Node.js 与 Wrangler：`npm i -g wrangler` 或使用 `npx wrangler`。
+  - 登录（OAuth 浏览器授权）：`npx wrangler login`；若浏览器无法打开或授权失败，见下文“登录与网络故障处理”。
+  - 设置密钥（Secrets）：运行 `npx wrangler secret put ADMIN_KEY`，输入管理员密钥（供后台以 `X-Admin-Key` 调用）。如需后台登录密码，设置 `ADMIN_PASSWORD`。
+- 发布到生产：
+  - 在项目根目录执行：`npx wrangler publish --config "cloudflare/wrangler.toml"`
+  - 完成后 Cloudflare 将把 `/api/*` 路由绑定到该 Worker。
+- 发布后验证：
+  - `GET https://api.visndt.com/api/health`（健康检查）。
+  - `GET https://api.visndt.com/api/admin/stats`，请求头需携带 `X-Admin-Key: <你的密钥>`。
+  - `GET https://api.visndt.com/api/admin/assets?limit=1`，确认媒体库接口可用。
+- 前端联动与自动纠偏：
+  - 管理页“设置”支持切换 API Base（本地/线上/同源）。
+  - 后台 JS 在生产环境具备自动纠偏逻辑：当同源 `visndt.com/api/...` 返回 HTML/404 时，会回退至 `https://api.visndt.com` 并持久化。
+
+ ### Cloudflare 创建 API Token
+
+### 7. 媒体库上传（R2）与读取
+
+- 上传：`PUT /api/admin/assets?key=<路径>`（请求体为文件流；需 `X-Admin-Key`）。
+- 列表：`GET /api/admin/assets?limit=20&cursor=<可选>`（返回 `items` 含 `key/size/uploaded/public_url`）。
+- 删除：`DELETE /api/admin/assets?key=<路径>`（同时删除 R2 与数据库记录）。
+- 公开读取：`GET /api/assets/<key>`（按 `Content-Type` 流式返回）。
+- 链接规范：接口统一返回相对链接 `public_url: /api/assets/<encoded key>`，便于前端直接使用。
+
+### 8. 一键部署脚本（推荐）
+
+- 脚本位置：`scripts/deploy-workers.ps1`
+- 用法：
+  - 干运行预览：`powershell -NoProfile -ExecutionPolicy Bypass -File scripts/deploy-workers.ps1 -DryRun`
+  - 正式发布：`powershell -NoProfile -ExecutionPolicy Bypass -File scripts/deploy-workers.ps1 -AdminKey "<你的管理员密钥>"`
+  - 可选参数：`-AdminPassword`（后台登录口令）、`-SkipVerify`（跳过验证）、`-ApiBase`（默认 `https://api.visndt.com/api`）。
+- 脚本流程：检查 `npx` → 登录（或跳过）→ 设置 Secrets → 发布 → 调用 `health`/`admin/stats`/`admin/assets` 验证。
+
+### 9. 登录与网络故障处理（OAuth 页面无法打开）
+
+- 症状：访问 `https://welcome.developers.workers.dev/wrangler-oauth-consent-granted` 超时（`ERR_CONNECTION_TIMED_OUT`）。
+- 判定：通常为本地网络/防火墙/代理导致的外网连接问题，与项目配置无关。
+- 处理建议：
+  - 检查系统代理与企业防火墙策略，临时关闭拦截或加入白名单。
+  - 更换网络（热点/家庭宽带）或使用加速。
+  - 使用 API Token 免浏览器授权的登录方式：
+    - 在 Cloudflare Dashboard → My Profile → API Tokens 创建自定义 Token，授予 Workers/R2/D1 所需权限。
+    - 将 Token 作为环境变量加入命令行会话：
+      - Windows PowerShell：`$env:CLOUDFLARE_API_TOKEN = "<你的Token>"`
+      -（可选）设置账号：`$env:CLOUDFLARE_ACCOUNT_ID = "<你的AccountID>"`
+    - 之后直接运行：`npx wrangler publish --config "cloudflare/wrangler.toml"`
+    - 验证：`npx wrangler whoami` 会显示基于 Token 的登录信息。
+  - 若使用旧方法（`CLOUDFLARE_API_KEY` + `CLOUDFLARE_EMAIL`），请优先改为 `CLOUDFLARE_API_TOKEN`（旧方法已不推荐）。
+
+### 10. 安全与合规
+
+- 切勿在仓库明文保存密钥；使用 `wrangler secret put` 或 CI 注入环境变量。
+- 前端代码不应记录或回显管理员密钥；所有管理接口由后台以 `X-Admin-Key` 校验。
+- R2 公共读取仅限 `GET /api/assets/<key>` 路径，避免直接暴露存储桶域名与签名链接。

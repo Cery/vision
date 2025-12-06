@@ -80,6 +80,16 @@ async function apiFetch(path, options = {}) {
 
 function showToast(msg, type='info') {
   const container = document.querySelector('.toast-container');
+  if (!window.bootstrap || !bootstrap.Toast) {
+    // 无 Bootstrap 时降级为轻量提示
+    const el = document.createElement('div');
+    el.className = `position-fixed top-0 end-0 m-3 px-3 py-2 rounded text-white bg-${type === 'error' ? 'danger' : (type==='success'?'success':'primary')}`;
+    el.style.zIndex = '1060';
+    el.textContent = String(msg);
+    container.appendChild(el);
+    setTimeout(() => { el.remove(); }, 3000);
+    return;
+  }
   const el = document.createElement('div');
   el.className = `toast align-items-center text-white bg-${type === 'error' ? 'danger' : (type==='success'?'success':'primary')} border-0`;
   el.setAttribute('role', 'alert');
@@ -301,7 +311,7 @@ const App = {
       
       document.getElementById('dashTotalProducts').textContent = stats.products || 0;
       document.getElementById('dashTotalNews').textContent = stats.news?.articles || 0; // Assuming 'articles' is news count
-      document.getElementById('dashTotalExhibitions').textContent = stats.news?.exhibitions || 0;
+      // 展会已从前台移除，不再展示该统计
       document.getElementById('dashTotalCases').textContent = stats.cases || 0;
       
       // Check if empty and prompt seed
@@ -337,7 +347,7 @@ const App = {
   },
 
   async seedContent() {
-     if(!confirm('确定要生成测试数据吗？(News, Exhibitions, Products, Cases)')) return;
+     if(!confirm('确定要生成测试数据吗？(News, Products, Cases)')) return;
      try {
         await apiFetch('/api/admin/seed-content', { method: 'POST' });
         showToast('测试数据已生成', 'success');
@@ -618,8 +628,8 @@ const App = {
      // Load suppliers for dropdown
      if (!this.state.supList.length) await this.loadSuppliers();
      const supSelect = document.getElementById('editProdSupplier');
-     supSelect.innerHTML = '<option value="">请选择供应商...</option>' + 
-        this.state.supList.map(s => `<option value="${s.supplier_id}">${escapeHtml(s.company || s.name)}</option>`).join('');
+    supSelect.innerHTML = '<option value="">请选择供应商...</option>' + 
+       this.state.supList.map(s => `<option value="${s.supplier_id}">${escapeHtml(s.company || s.name)}</option>`).join('');
      
      if (id) {
         // Edit
@@ -878,84 +888,7 @@ const App = {
      try { await apiFetch(`/api/admin/cases/${id}`, { method: 'DELETE' }); this.loadCases(); } catch(e) { showToast(e.message, 'error'); }
   },
 
-  // --- Exhibitions ---
-  async loadExhibitions() {
-     try {
-        const res = await apiFetch('/api/admin/exhibitions');
-        const list = Array.isArray(res) ? res : (res.items || []);
-        const tbody = document.getElementById('exhibitionTableBody');
-        if (!list.length) {
-           tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3">暂无展会</td></tr>';
-           return;
-        }
-        tbody.innerHTML = list.map(e => `
-           <tr>
-             <td>${escapeHtml(e.title)}</td>
-             <td>${escapeHtml(e.location)}</td>
-             <td><small>${(e.start_date||'').split('T')[0]} ~ ${(e.end_date||'').split('T')[0]}</small></td>
-             <td>${escapeHtml(e.booth_number)}</td>
-             <td><span class="badge ${e.status==='published'?'bg-success':'bg-secondary'}">${escapeHtml(e.status)}</span></td>
-             <td>
-                <button class="btn btn-sm btn-outline-primary py-0" onclick="App.openExhibitionEditor('${e.exhibition_id}')">编辑</button>
-                <button class="btn btn-sm btn-outline-danger py-0 ms-1" onclick="App.deleteExhibition('${e.exhibition_id}')">删除</button>
-             </td>
-           </tr>
-        `).join('');
-     } catch (e) {
-        showToast('加载展会失败: ' + e.message, 'error');
-     }
-  },
-
-  async openExhibitionEditor(id = null) {
-     if (id) {
-        try {
-           const e = await apiFetch(`/api/admin/exhibitions/${id}`);
-           document.getElementById('editExId').value = e.exhibition_id;
-           document.getElementById('editExTitle').value = e.title || '';
-           document.getElementById('editExSlug').value = e.slug || '';
-           document.getElementById('editExLocation').value = e.location || '';
-           document.getElementById('editExBooth').value = e.booth_number || '';
-           document.getElementById('editExStart').value = (e.start_date||'').split('T')[0];
-           document.getElementById('editExEnd').value = (e.end_date||'').split('T')[0];
-           document.getElementById('editExStatus').value = e.status || 'draft';
-           document.getElementById('editExDesc').value = e.description || '';
-           document.getElementById('editExCover').value = e.cover_image || '';
-           document.getElementById('editExSeoKeywords').value = e.seo_keywords || '';
-        } catch(e) { return showToast(e.message, 'error'); }
-     } else {
-        document.getElementById('exhibitionEditForm').reset();
-        document.getElementById('editExId').value = '';
-     }
-     new bootstrap.Modal(document.getElementById('exhibitionEditModal')).show();
-  },
-
-  async saveExhibition() {
-     const id = document.getElementById('editExId').value;
-     const body = {
-        title: document.getElementById('editExTitle').value,
-        slug: document.getElementById('editExSlug').value,
-        location: document.getElementById('editExLocation').value,
-        booth_number: document.getElementById('editExBooth').value,
-        start_date: document.getElementById('editExStart').value,
-        end_date: document.getElementById('editExEnd').value,
-        status: document.getElementById('editExStatus').value,
-        description: document.getElementById('editExDesc').value,
-        cover_image: document.getElementById('editExCover').value,
-        seo_keywords: document.getElementById('editExSeoKeywords').value,
-     };
-     try {
-        if (id) await apiFetch(`/api/admin/exhibitions/${id}`, { method: 'PATCH', body: JSON.stringify(body) });
-        else await apiFetch('/api/admin/exhibitions', { method: 'POST', body: JSON.stringify(body) });
-        showToast('保存成功', 'success');
-        bootstrap.Modal.getInstance(document.getElementById('exhibitionEditModal')).hide();
-        this.loadExhibitions();
-     } catch(e) { showToast(e.message, 'error'); }
-  },
-
-  async deleteExhibition(id) {
-     if(!confirm('确定删除？')) return;
-     try { await apiFetch(`/api/admin/exhibitions/${id}`, { method: 'DELETE' }); this.loadExhibitions(); } catch(e) { showToast(e.message, 'error'); }
-  },
+  
   
   // --- Helpers ---
   generateSlug(text, targetId) {
@@ -1528,6 +1461,25 @@ const App = {
     try {
       const res = await apiFetch('/api/admin/suppliers');
       this.state.supList = Array.isArray(res) ? res : (res.items || []);
+      if (!this.state.supList.length) {
+        try {
+          const r = await fetch('/data/suppliers.json');
+          if (r.ok) {
+            const j = await r.json();
+            const raw = Array.isArray(j) ? j : (j.items || []);
+            this.state.supList = raw.map(s => ({
+              supplier_id: s.SupplierID || s.supplier_id || s.id || '',
+              company: s.Company || s.company || s.Name || s.name || '',
+              name: s.Name || s.name || '',
+              contact_phone: s.ContactPhone || s.contact_phone || '',
+              contact_email: s.ContactEmail || s.contact_email || '',
+              access_password_plain: s.AccessPassword || s.access_password_plain || '',
+              status: s.Status || s.status || 'active',
+              metadata_json: s.metadata || s.metadata_json || {}
+            }));
+          }
+        } catch {}
+      }
       this.renderSuppliers();
     } catch (e) {
       showToast('加载失败: ' + e.message, 'error');
