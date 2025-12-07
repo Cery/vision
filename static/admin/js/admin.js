@@ -331,8 +331,20 @@ const App = {
       document.getElementById('dashTotalCases').textContent = stats.cases || 0;
       
       // Check if empty and prompt seed
+      // 构建同步信息提示
+      const sync = stats.sync || {};
+      const infoPieces = [];
+      if (sync.base) infoPieces.push(`源: ${escapeHtml(sync.base)}`);
+      ['products','news','cases'].forEach(k => {
+        const s = sync[k] || {};
+        if (typeof s.upserted !== 'undefined') infoPieces.push(`${k} 导入: ${s.upserted}`);
+      });
+      if (sync.updated_at) infoPieces.push(`时间: ${String(sync.updated_at).replace('T',' ').slice(0,19)}`);
+      const syncInfoHtml = infoPieces.length ? `<div class="list-group-item small text-muted">${infoPieces.join(' · ')}</div>` : '';
+
       if (!stats.requirements.total && !stats.products && !stats.news.total) {
          document.getElementById('dashActivityList').innerHTML = `
+           ${syncInfoHtml}
            <div class="list-group-item text-center py-4">
               <p class="text-muted mb-3">系统暂无数据</p>
               <button class="btn btn-sm btn-primary" onclick="App.seedContent()">一键填充测试数据</button>
@@ -343,7 +355,7 @@ const App = {
           const reqs = await apiFetch('/api/requirements?limit=5');
           const rList = Array.isArray(reqs) ? reqs : (reqs.items || []);
           
-          document.getElementById('dashActivityList').innerHTML = rList.map(r => `
+          const itemsHtml = rList.map(r => `
             <div class="list-group-item py-2">
               <div class="d-flex justify-content-between align-items-center">
                 <div class="text-truncate me-2">
@@ -354,6 +366,7 @@ const App = {
               </div>
             </div>
           `).join('') || '<div class="list-group-item text-muted text-center">无数据</div>';
+          document.getElementById('dashActivityList').innerHTML = syncInfoHtml + itemsHtml;
       }
       
     } catch (e) {

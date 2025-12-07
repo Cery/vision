@@ -32,7 +32,7 @@ export default {
     const baseHeaders = {
       'Access-Control-Allow-Origin': allowOrigin,
       'Access-Control-Allow-Methods': 'GET,POST,PATCH,DELETE,OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key',
+      'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key, x-admin-key',
       'Vary': 'Origin'
     };
     if (request.method === 'OPTIONS') {
@@ -314,8 +314,14 @@ export default {
     }
 
     const path = url.pathname;
-    const isFn = (p) => path.startsWith(`/.netlify/functions/${p}`);
-    const isApi = (p) => path.startsWith(`/api/${p}`);
+    const isFn = (p) => {
+      const base = `/.netlify/functions/${String(p).replace(/^\/+/, '').replace(/\/+$/, '')}`;
+      return path === base || path.startsWith(base + '/');
+    };
+    const isApi = (p) => {
+      const base = `/api/${String(p).replace(/^\/+/, '').replace(/\/+$/, '')}`;
+      return path === base || path.startsWith(base + '/');
+    };
 
     // Health check
     if (isApi('health') && request.method === 'GET') {
@@ -513,6 +519,11 @@ export default {
         const { results: caseRes } = await (async()=>{ try { return await env.DB.prepare("SELECT COUNT(1) as total FROM cases").all(); } catch { return { results:[{ total:0 }] }; } })();
         const { results: exhRes } = await (async()=>{ try { return await env.DB.prepare("SELECT COUNT(1) as total FROM exhibitions").all(); } catch { return { results:[{ total:0 }] }; } })();
         const { results: quoteRes } = await (async()=>{ try { return await env.DB.prepare("SELECT COUNT(1) as total FROM quotes").all(); } catch { return { results:[{ total:0 }] }; } })();
+        let syncMeta = {};
+        try {
+          const row = await env.DB.prepare('SELECT value_json FROM system_config WHERE key = ?').bind('sync_meta').first();
+          if (row && row.value_json) syncMeta = JSON.parse(row.value_json || '{}');
+        } catch {}
         
         return json({
           requirements: {
@@ -527,7 +538,8 @@ export default {
             exhibitions: exhRes?.[0]?.total || 0
           },
           cases: caseRes?.[0]?.total || 0,
-          quotes: quoteRes?.[0]?.total || 0
+          quotes: quoteRes?.[0]?.total || 0,
+          sync: syncMeta
         });
       } catch (e) {
         return json({ error: e.message }, 500);
@@ -1584,8 +1596,7 @@ export default {
       const parts = path.split('/');
       const possibleId = parts[parts.length-1];
       if (possibleId && possibleId !== 'products') {
-         // It is a detail request
-         const { results } = await env.DB.prepare('SELECT * FROM products WHERE product_id = ?').bind(possibleId).all();
+         const { results } = await env.DB.prepare('SELECT * FROM products WHERE product_id = ? OR slug = ?').bind(possibleId, possibleId).all();
          if (!results || !results.length) return json({ error: 'NotFound' }, 404);
          const p = results[0];
          return json({
@@ -1617,7 +1628,9 @@ export default {
       const binds = [];
       if (supplier_id) { where.push('supplier_id = ?'); binds.push(supplier_id); }
       if (where.length) q += ' WHERE ' + where.join(' AND ');
-      q += ' ORDER BY created_at DESC LIMIT 100';
+      const limitAdminProd = Math.min(parseInt(url.searchParams.get('limit')||'100',10)||100, 1000);
+      q += ' ORDER BY created_at DESC LIMIT ?';
+      binds.push(limitAdminProd);
       const { results } = await env.DB.prepare(q).bind(...binds).all();
       const items = (results || []).map(p => ({
         product_id: p.product_id,
@@ -1637,40 +1650,7 @@ export default {
       }));
       return json(items);
     }
-    if ((isApi('products') || isApi('admin/products')) && request.method === 'POST') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401); 
-      const data = await bodyJSON(request);
-      const now = new Date().toISOString();
-      const product_id = data.ProductID || data.product_id || ('PROD-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*1000));
-      const supplier_id = data.SupplierID || data.supplier_id;
-      if (!supplier_id) return json({ error: 'MissingSupplierID' }, 400);
-      
-      await env.DB.prepare(`INSERT INTO products (
-        product_id, supplier_id, name, slug, model, series, primary_category, secondary_category, summary, description, parameters_json, cover_image, gallery_json, documents_json, seo_title, seo_keywords, seo_description, status, is_featured, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-      .bind(
-        product_id, supplier_id, 
-        data.Name || data.name || '', 
-        data.Slug || data.slug || null,
-        data.Model || data.model || '', 
-        data.Series || data.series || '', 
-        data.PrimaryCategory || data.primary_category || '', 
-        data.SecondaryCategory || data.secondary_category || '',
-        data.Summary || data.summary || '', 
-        data.Description || data.description || '',
-        JSON.stringify(data.Parameters || data.parameters_json || {}),
-        data.CoverImage || data.cover_image || '',
-        JSON.stringify(data.Gallery || data.gallery_json || []),
-        JSON.stringify(data.Documents || data.documents_json || []),
-        data.SeoTitle || data.seo_title || '',
-        data.SeoKeywords || data.seo_keywords || '',
-        data.SeoDescription || data.seo_description || '',
-        data.Status || data.status || 'active',
-        (data.IsFeatured || data.is_featured) ? 1 : 0,
-        now, now
-      ).run();
-      return json({ ok: true, product_id });
-    }
+    // Unify products POST handler under /api/admin/products (moved below)
 
     // Admin: News CRUD
     if (isApi('admin/news') && request.method === 'GET') {
@@ -1679,11 +1659,12 @@ export default {
         const parts = path.split('/');
         const possibleId = parts[parts.length-1];
         if (possibleId && possibleId !== 'news') {
-          const { results } = await env.DB.prepare('SELECT * FROM news WHERE news_id = ? OR id = ?').bind(possibleId, possibleId).all();
+          const { results } = await env.DB.prepare('SELECT * FROM news WHERE news_id = ? OR id = ? OR slug = ?').bind(possibleId, possibleId, possibleId).all();
           if (!results || !results.length) return json({ error: 'NotFound' }, 404);
           return json(results[0]);
         }
-        const { results } = await env.DB.prepare('SELECT * FROM news ORDER BY created_at DESC LIMIT 100').all();
+        const limitAdminNews = Math.min(parseInt(url.searchParams.get('limit')||'100',10)||100, 1000);
+        const { results } = await env.DB.prepare('SELECT * FROM news ORDER BY created_at DESC LIMIT ?').bind(limitAdminNews).all();
         return json(results || []);
       } catch (e) {
         return json([]);
@@ -1694,17 +1675,17 @@ export default {
       const data = await bodyJSON(request);
       const now = new Date().toISOString();
       const news_id = 'NEWS-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*1000);
-      await env.DB.prepare(`INSERT INTO news (
-        news_id, title, slug, summary, content, cover_image, category, tags, author, status, seo_title, seo_keywords, seo_description, published_at, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-      .bind(
-        news_id, data.title||'', data.slug||null, data.summary||'', data.content||'', data.cover_image||'', 
+      const fields = ['news_id','title','slug','summary','content','cover_image','category','tags','author','status','seo_title','seo_keywords','seo_description','published_at','created_at','updated_at'];
+      const vals = [
+        news_id, data.title||'', data.slug||null, data.summary||'', data.content||'', data.cover_image||'',
         data.category||'', JSON.stringify(data.tags||[]), data.author||'', data.status||'draft',
         data.seo_title||'', data.seo_keywords||'', data.seo_description||'', data.published_at||now, now, now
-      ).run();
+      ];
+      const placeholders = fields.map(()=>'?').join(',');
+      await env.DB.prepare(`INSERT INTO news (${fields.join(',')}) VALUES (${placeholders}) ON CONFLICT(slug) DO UPDATE SET title=excluded.title, summary=excluded.summary, content=excluded.content, cover_image=excluded.cover_image, category=excluded.category, tags=excluded.tags, author=excluded.author, status=excluded.status, seo_title=excluded.seo_title, seo_keywords=excluded.seo_keywords, seo_description=excluded.seo_description, published_at=excluded.published_at, updated_at=excluded.updated_at`).bind(...vals).run();
       return json({ ok: true, news_id });
     }
-    if (isApi('admin/news/') && request.method === 'PATCH') {
+    if (isApi('admin/news') && request.method === 'PATCH') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       const id = path.split('/').pop();
       const data = await bodyJSON(request);
@@ -1721,13 +1702,13 @@ export default {
       }
       sets.push('updated_at = ?'); binds.push(new Date().toISOString());
       if (!sets.length) return json({ error: 'NoFields' }, 400);
-      await env.DB.prepare(`UPDATE news SET ${sets.join(', ')} WHERE news_id = ?`).bind(...binds, id).run();
+      await env.DB.prepare(`UPDATE news SET ${sets.join(', ')} WHERE news_id = ? OR slug = ?`).bind(...binds, id, id).run();
       return json({ ok: true });
     }
-    if (isApi('admin/news/') && request.method === 'DELETE') {
+    if (isApi('admin/news') && request.method === 'DELETE') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       const id = path.split('/').pop();
-      await env.DB.prepare('DELETE FROM news WHERE news_id = ?').bind(id).run();
+      await env.DB.prepare('DELETE FROM news WHERE news_id = ? OR slug = ?').bind(id, id).run();
       return json({ ok: true });
     }
 
@@ -1738,11 +1719,12 @@ export default {
         const parts = path.split('/');
         const possibleId = parts[parts.length-1];
         if (possibleId && possibleId !== 'cases') {
-          const { results } = await env.DB.prepare('SELECT * FROM cases WHERE case_id = ?').bind(possibleId).all();
+          const { results } = await env.DB.prepare('SELECT * FROM cases WHERE case_id = ? OR slug = ?').bind(possibleId, possibleId).all();
           if (!results || !results.length) return json({ error: 'NotFound' }, 404);
           return json(results[0]);
         }
-        const { results } = await env.DB.prepare('SELECT * FROM cases ORDER BY created_at DESC LIMIT 100').all();
+        const limitAdminCases = Math.min(parseInt(url.searchParams.get('limit')||'100',10)||100, 1000);
+        const { results } = await env.DB.prepare('SELECT * FROM cases ORDER BY created_at DESC LIMIT ?').bind(limitAdminCases).all();
         return json(results || []);
       } catch (e) {
         return json([]);
@@ -1753,17 +1735,17 @@ export default {
       const data = await bodyJSON(request);
       const now = new Date().toISOString();
       const case_id = 'CASE-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*1000);
-      await env.DB.prepare(`INSERT INTO cases (
-        case_id, title, slug, summary, content, cover_image, industry, related_product_id, status, seo_title, seo_keywords, seo_description, published_at, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-      .bind(
-        case_id, data.title||'', data.slug||null, data.summary||'', data.content||'', data.cover_image||'', 
+      const fields = ['case_id','title','slug','summary','content','cover_image','industry','related_product_id','status','seo_title','seo_keywords','seo_description','published_at','created_at','updated_at'];
+      const vals = [
+        case_id, data.title||'', data.slug||null, data.summary||'', data.content||'', data.cover_image||'',
         data.industry||'', data.related_product_id||'', data.status||'draft',
         data.seo_title||'', data.seo_keywords||'', data.seo_description||'', data.published_at||now, now, now
-      ).run();
+      ];
+      const placeholders = fields.map(()=>'?').join(',');
+      await env.DB.prepare(`INSERT INTO cases (${fields.join(',')}) VALUES (${placeholders}) ON CONFLICT(slug) DO UPDATE SET title=excluded.title, summary=excluded.summary, content=excluded.content, cover_image=excluded.cover_image, industry=excluded.industry, related_product_id=excluded.related_product_id, status=excluded.status, seo_title=excluded.seo_title, seo_keywords=excluded.seo_keywords, seo_description=excluded.seo_description, published_at=excluded.published_at, updated_at=excluded.updated_at`).bind(...vals).run();
       return json({ ok: true, case_id });
     }
-    if (isApi('admin/cases/') && request.method === 'PATCH') {
+    if (isApi('admin/cases') && request.method === 'PATCH') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       const id = path.split('/').pop();
       const data = await bodyJSON(request);
@@ -1778,13 +1760,13 @@ export default {
       }
       sets.push('updated_at = ?'); binds.push(new Date().toISOString());
       if (!sets.length) return json({ error: 'NoFields' }, 400);
-      await env.DB.prepare(`UPDATE cases SET ${sets.join(', ')} WHERE case_id = ?`).bind(...binds, id).run();
+      await env.DB.prepare(`UPDATE cases SET ${sets.join(', ')} WHERE case_id = ? OR slug = ?`).bind(...binds, id, id).run();
       return json({ ok: true });
     }
-    if (isApi('admin/cases/') && request.method === 'DELETE') {
+    if (isApi('admin/cases') && request.method === 'DELETE') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       const id = path.split('/').pop();
-      await env.DB.prepare('DELETE FROM cases WHERE case_id = ?').bind(id).run();
+      await env.DB.prepare('DELETE FROM cases WHERE case_id = ? OR slug = ?').bind(id, id).run();
       return json({ ok: true });
     }
 
@@ -2178,6 +2160,16 @@ export default {
           await env.DB.prepare(`INSERT INTO news (title, slug, summary, content, cover_image, category, tags, author, status, seo_title, seo_keywords, seo_description, published_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(slug) DO UPDATE SET title=excluded.title, summary=excluded.summary, content=excluded.content, cover_image=excluded.cover_image, category=excluded.category, tags=excluded.tags, author=excluded.author, status=excluded.status, seo_title=excluded.seo_title, seo_keywords=excluded.seo_keywords, seo_description=excluded.seo_description, published_at=excluded.published_at, updated_at=excluded.updated_at`).bind(...vals).run();
           upserted++;
         }
+        try {
+          const now = new Date().toISOString();
+          let prev = {};
+          try { const r = await env.DB.prepare('SELECT value_json FROM system_config WHERE key = ?').bind('sync_meta').first(); prev = r && r.value_json ? JSON.parse(r.value_json || '{}') : {}; } catch {}
+          prev.base = base;
+          prev.news = { upserted, updated_at: now };
+          prev.updated_at = now;
+          const v = JSON.stringify(prev);
+          await env.DB.prepare('INSERT INTO system_config (key, value_json, updated_at) VALUES (?, ?, ?) ON CONFLICT(key) DO UPDATE SET value_json = ?, updated_at = ?').bind('sync_meta', v, now, v, now).run();
+        } catch {}
         return json({ ok: true, upserted });
       } catch (e) {
         return json({ error: 'ImportNewsFailed', detail: String(e && e.message || e) }, 500);
@@ -2220,6 +2212,16 @@ export default {
           await env.DB.prepare(`INSERT INTO cases (title, slug, summary, content, cover_image, industry, related_product_id, status, seo_title, seo_keywords, seo_description, published_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(slug) DO UPDATE SET title=excluded.title, summary=excluded.summary, content=excluded.content, cover_image=excluded.cover_image, industry=excluded.industry, related_product_id=excluded.related_product_id, status=excluded.status, seo_title=excluded.seo_title, seo_keywords=excluded.seo_keywords, seo_description=excluded.seo_description, published_at=excluded.published_at, updated_at=excluded.updated_at`).bind(...vals).run();
           upserted++;
         }
+        try {
+          const now = new Date().toISOString();
+          let prev = {};
+          try { const r = await env.DB.prepare('SELECT value_json FROM system_config WHERE key = ?').bind('sync_meta').first(); prev = r && r.value_json ? JSON.parse(r.value_json || '{}') : {}; } catch {}
+          prev.base = base;
+          prev.cases = { upserted, updated_at: now };
+          prev.updated_at = now;
+          const v = JSON.stringify(prev);
+          await env.DB.prepare('INSERT INTO system_config (key, value_json, updated_at) VALUES (?, ?, ?) ON CONFLICT(key) DO UPDATE SET value_json = ?, updated_at = ?').bind('sync_meta', v, now, v, now).run();
+        } catch {}
         return json({ ok: true, upserted });
       } catch (e) {
         return json({ error: 'ImportCasesFailed', detail: String(e && e.message || e) }, 500);
@@ -2268,6 +2270,16 @@ export default {
           await env.DB.prepare(`INSERT INTO products (supplier_id, name, slug, model, series, primary_category, secondary_category, summary, description, parameters_json, cover_image, gallery_json, documents_json, seo_title, seo_keywords, seo_description, status, is_featured, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(slug) DO UPDATE SET supplier_id=excluded.supplier_id, name=excluded.name, model=excluded.model, series=excluded.series, primary_category=excluded.primary_category, secondary_category=excluded.secondary_category, summary=excluded.summary, description=excluded.description, parameters_json=excluded.parameters_json, cover_image=excluded.cover_image, gallery_json=excluded.gallery_json, documents_json=excluded.documents_json, seo_title=excluded.seo_title, seo_keywords=excluded.seo_keywords, seo_description=excluded.seo_description, status=excluded.status, is_featured=excluded.is_featured, updated_at=excluded.updated_at`).bind(...vals).run();
           upserted++;
         }
+        try {
+          const now = new Date().toISOString();
+          let prev = {};
+          try { const r = await env.DB.prepare('SELECT value_json FROM system_config WHERE key = ?').bind('sync_meta').first(); prev = r && r.value_json ? JSON.parse(r.value_json || '{}') : {}; } catch {}
+          prev.base = base;
+          prev.products = { upserted, updated_at: now };
+          prev.updated_at = now;
+          const v = JSON.stringify(prev);
+          await env.DB.prepare('INSERT INTO system_config (key, value_json, updated_at) VALUES (?, ?, ?) ON CONFLICT(key) DO UPDATE SET value_json = ?, updated_at = ?').bind('sync_meta', v, now, v, now).run();
+        } catch {}
         return json({ ok: true, upserted });
       } catch (e) {
         return json({ error: 'ImportProductsFailed', detail: String(e && e.message || e) }, 500);
@@ -2534,40 +2546,41 @@ export default {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       const data = await bodyJSON(request);
       const now = new Date().toISOString();
-      const product_id = data.product_id || ('PROD-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*10000));
-      
+      const product_id = data.ProductID || data.product_id || ('PROD-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*10000));
+      const supplier_id = data.SupplierID || data.supplier_id || '';
+      const name = data.Name || data.name || '';
+      const slug = data.Slug || data.slug || null;
+      const model = data.Model || data.model || '';
+      const series = data.Series || data.series || '';
+      const primary_category = data.PrimaryCategory || data.primary_category || '';
+      const secondary_category = data.SecondaryCategory || data.secondary_category || '';
+      const summary = data.Summary || data.summary || '';
+      const description = data.Description || data.description || '';
+      const parameters_json = JSON.stringify(data.Parameters || data.parameters_json || {});
+      const cover_image = data.CoverImage || data.cover_image || '';
+      const gallery_json = JSON.stringify(data.Gallery || data.gallery_json || []);
+      const documents_json = JSON.stringify(data.Documents || data.documents_json || []);
+      const seo_title = data.SeoTitle || data.seo_title || '';
+      const seo_keywords = data.SeoKeywords || data.seo_keywords || '';
+      const seo_description = data.SeoDescription || data.seo_description || '';
+      const status = (data.Status || data.status || 'active');
+      const is_featured = (data.IsFeatured || data.is_featured) ? 1 : 0;
+
       try {
-         const fields = ['product_id','supplier_id','name','slug','model','series','primary_category','secondary_category','summary','description','parameters_json','cover_image','gallery_json','documents_json','seo_title','seo_keywords','seo_description','status','is_featured','created_at','updated_at'];
-         const vals = [
-             product_id, data.supplier_id||'', data.name||'', data.slug||'', data.model||'', data.series||'', data.primary_category||'', data.secondary_category||'',
-             data.summary||'', data.description||'', JSON.stringify(data.parameters_json||{}), data.cover_image||'', JSON.stringify(data.gallery_json||[]), JSON.stringify(data.documents_json||[]),
-             data.seo_title||'', data.seo_keywords||'', data.seo_description||'', data.status||'offline', data.is_featured?1:0, now, now
-         ];
-         const placeholders = fields.map(()=>'?').join(',');
-         await env.DB.prepare(`INSERT INTO products (${fields.join(',')}) VALUES (${placeholders})`).bind(...vals).run();
-         return json({ ok: true, product_id });
+        const fields = 'product_id, supplier_id, name, slug, model, series, primary_category, secondary_category, summary, description, parameters_json, cover_image, gallery_json, documents_json, seo_title, seo_keywords, seo_description, status, is_featured, created_at, updated_at';
+        const vals = [product_id, supplier_id, name, slug, model, series, primary_category, secondary_category, summary, description, parameters_json, cover_image, gallery_json, documents_json, seo_title, seo_keywords, seo_description, status, is_featured, now, now];
+        if (slug) {
+          await env.DB.prepare(`INSERT INTO products (${fields}) VALUES (${new Array(21).fill('?').join(',')}) ON CONFLICT(slug) DO UPDATE SET supplier_id=excluded.supplier_id, name=excluded.name, model=excluded.model, series=excluded.series, primary_category=excluded.primary_category, secondary_category=excluded.secondary_category, summary=excluded.summary, description=excluded.description, parameters_json=excluded.parameters_json, cover_image=excluded.cover_image, gallery_json=excluded.gallery_json, documents_json=excluded.documents_json, seo_title=excluded.seo_title, seo_keywords=excluded.seo_keywords, seo_description=excluded.seo_description, status=excluded.status, is_featured=excluded.is_featured, updated_at=excluded.updated_at`).bind(...vals).run();
+        } else {
+          await env.DB.prepare(`INSERT INTO products (${fields}) VALUES (${new Array(21).fill('?').join(',')}) ON CONFLICT(product_id) DO UPDATE SET supplier_id=excluded.supplier_id, name=excluded.name, slug=excluded.slug, model=excluded.model, series=excluded.series, primary_category=excluded.primary_category, secondary_category=excluded.secondary_category, summary=excluded.summary, description=excluded.description, parameters_json=excluded.parameters_json, cover_image=excluded.cover_image, gallery_json=excluded.gallery_json, documents_json=excluded.documents_json, seo_title=excluded.seo_title, seo_keywords=excluded.seo_keywords, seo_description=excluded.seo_description, status=excluded.status, is_featured=excluded.is_featured, updated_at=excluded.updated_at`).bind(...vals).run();
+        }
+        return json({ ok: true, product_id });
       } catch (e) {
-         return json({ error: 'CreateFailed', detail: e.message }, 500);
+        return json({ error: 'CreateFailed', detail: e.message }, 500);
       }
     }
 
-    // Admin: Products List
-    if (isApi('admin/products') && request.method === 'GET') {
-       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-       const supplier_id = url.searchParams.get('supplier_id');
-       let q = 'SELECT * FROM products';
-       const binds = [];
-       if (supplier_id) { q += ' WHERE supplier_id = ?'; binds.push(supplier_id); }
-       q += ' ORDER BY created_at DESC LIMIT 100';
-       const { results } = await env.DB.prepare(q).bind(...binds).all();
-       const items = (results || []).map(p => ({
-           ...p,
-           parameters_json: parseJSONSafe(p.parameters_json),
-           gallery_json: parseJSONSafe(p.gallery_json),
-           documents_json: parseJSONSafe(p.documents_json)
-       }));
-       return json(items);
-    }
+    // Products list endpoint consolidated at 1578 GET handler
 
     // Admin: Product Search (for association)
     if (isApi('admin/products/search') && request.method === 'GET') {
@@ -2590,7 +2603,7 @@ export default {
     }
 
     // Admin: Products Update/Delete
-    if (isApi('admin/products/') && request.method === 'PATCH') {
+    if (isApi('admin/products') && request.method === 'PATCH') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       const id = path.split('/').pop();
       const data = await bodyJSON(request);
@@ -2607,103 +2620,18 @@ export default {
       }
       sets.push('updated_at = ?'); binds.push(new Date().toISOString());
       if (!sets.length) return json({ error: 'NoFields' }, 400);
-      const stmt = env.DB.prepare(`UPDATE products SET ${sets.join(', ')} WHERE product_id = ?`).bind(...binds, id);
+      const stmt = env.DB.prepare(`UPDATE products SET ${sets.join(', ')} WHERE product_id = ? OR slug = ?`).bind(...binds, id, id);
       await stmt.run();
       return json({ ok: true });
     }
 
-    if (isApi('admin/products/') && request.method === 'DELETE') {
+    if (isApi('admin/products') && request.method === 'DELETE') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       const id = path.split('/').pop();
-      await env.DB.prepare('DELETE FROM products WHERE product_id = ?').bind(id).run();
+      await env.DB.prepare('DELETE FROM products WHERE product_id = ? OR slug = ?').bind(id, id).run();
       return json({ ok: true });
     }
 
-    // Admin: News
-    if (isApi('admin/news') && request.method === 'GET') {
-        if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-        const { results } = await env.DB.prepare('SELECT * FROM news ORDER BY created_at DESC LIMIT 100').all();
-        return json(results || []);
-    }
-    if (isApi('admin/news') && request.method === 'POST') {
-        if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-        const data = await bodyJSON(request);
-        const now = new Date().toISOString();
-        const news_id = 'NEWS-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*1000);
-        const fields = ['news_id','title','slug','summary','content','cover_image','category','tags','author','status','seo_keywords','seo_description','published_at','created_at','updated_at'];
-        const vals = [news_id, data.title||'', data.slug||'', data.summary||'', data.content||'', data.cover_image||'', data.category||'', data.tags||'', 'Admin', data.status||'draft', data.seo_keywords||'', data.seo_description||'', now, now, now];
-        const placeholders = fields.map(()=>'?').join(',');
-        await env.DB.prepare(`INSERT INTO news (${fields.join(',')}) VALUES (${placeholders})`).bind(...vals).run();
-        return json({ ok: true, news_id });
-    }
-    if (isApi('admin/news/') && request.method === 'GET') {
-        const id = path.split('/').pop();
-        const item = await env.DB.prepare('SELECT * FROM news WHERE news_id = ?').bind(id).first();
-        return json(item || {});
-    }
-    if (isApi('admin/news/') && request.method === 'PATCH') {
-        if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-        const id = path.split('/').pop();
-        const data = await bodyJSON(request);
-        const fields = [];
-        const vals = [];
-        for(const k of ['title','slug','summary','content','cover_image','category','tags','status','seo_keywords','seo_description']) {
-            if (data[k] !== undefined) { fields.push(`${k} = ?`); vals.push(data[k]); }
-        }
-        fields.push('updated_at = ?'); vals.push(new Date().toISOString());
-        vals.push(id);
-        await env.DB.prepare(`UPDATE news SET ${fields.join(',')} WHERE news_id = ?`).bind(...vals).run();
-        return json({ ok: true });
-    }
-    if (isApi('admin/news/') && request.method === 'DELETE') {
-        if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-        const id = path.split('/').pop();
-        await env.DB.prepare('DELETE FROM news WHERE news_id = ?').bind(id).run();
-        return json({ ok: true });
-    }
-
-    // Admin: Cases
-    if (isApi('admin/cases') && request.method === 'GET') {
-        if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-        const { results } = await env.DB.prepare('SELECT * FROM cases ORDER BY created_at DESC LIMIT 100').all();
-        return json(results || []);
-    }
-    if (isApi('admin/cases') && request.method === 'POST') {
-        if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-        const data = await bodyJSON(request);
-        const now = new Date().toISOString();
-        const case_id = 'CASE-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*1000);
-        const fields = ['case_id','title','slug','summary','content','cover_image','industry','related_product_id','status','seo_keywords','seo_description','published_at','created_at','updated_at'];
-        const vals = [case_id, data.title||'', data.slug||'', data.summary||'', data.content||'', data.cover_image||'', data.industry||'', data.related_product_id||'', data.status||'draft', data.seo_keywords||'', data.seo_description||'', now, now, now];
-        const placeholders = fields.map(()=>'?').join(',');
-        await env.DB.prepare(`INSERT INTO cases (${fields.join(',')}) VALUES (${placeholders})`).bind(...vals).run();
-        return json({ ok: true, case_id });
-    }
-    if (isApi('admin/cases/') && request.method === 'GET') {
-        const id = path.split('/').pop();
-        const item = await env.DB.prepare('SELECT * FROM cases WHERE case_id = ?').bind(id).first();
-        return json(item || {});
-    }
-    if (isApi('admin/cases/') && request.method === 'PATCH') {
-        if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-        const id = path.split('/').pop();
-        const data = await bodyJSON(request);
-        const fields = [];
-        const vals = [];
-        for(const k of ['title','slug','summary','content','cover_image','industry','related_product_id','status','seo_keywords','seo_description']) {
-            if (data[k] !== undefined) { fields.push(`${k} = ?`); vals.push(data[k]); }
-        }
-        fields.push('updated_at = ?'); vals.push(new Date().toISOString());
-        vals.push(id);
-        await env.DB.prepare(`UPDATE cases SET ${fields.join(',')} WHERE case_id = ?`).bind(...vals).run();
-        return json({ ok: true });
-    }
-    if (isApi('admin/cases/') && request.method === 'DELETE') {
-        if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-        const id = path.split('/').pop();
-        await env.DB.prepare('DELETE FROM cases WHERE case_id = ?').bind(id).run();
-        return json({ ok: true });
-    }
 
     // Admin: Exhibitions
     if (isApi('admin/exhibitions') && request.method === 'GET') {
