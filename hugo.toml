@@ -70,7 +70,7 @@ paginate = 12
       weight = 53
   [[menu.main]]
     name = "需求市场"
-    url = "/requirements"
+    url = "/markets"
     weight = 60
 
     # 需求市场子菜单

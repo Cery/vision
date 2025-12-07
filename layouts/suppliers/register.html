@@ -7,7 +7,7 @@
   </div>
   <div class="row g-4">
     <div class="col-lg-8">
-      <form id="supplierRegisterForm" class="card shadow-sm border-0">
+      <form id="supplierRegisterForm" class="card shadow-sm border-0 needs-validation" novalidate>
         <div class="card-body p-4">
           <div class="mb-4">
             <h5 class="fw-semibold">企业信息</h5>
@@ -45,11 +45,19 @@
               </div>
               <div class="col-md-4">
                 <label class="form-label">联系电话</label>
-                <input type="text" class="form-control" id="contactPhone" required>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fa-solid fa-phone"></i></span>
+                  <input type="tel" class="form-control" id="contactPhone" required placeholder="例如：13800000000" pattern="^\+?[0-9][0-9\s-]{6,}$">
+                  <div class="invalid-feedback">请输入有效的联系电话</div>
+                </div>
               </div>
               <div class="col-md-6">
                 <label class="form-label">电子邮箱</label>
-                <input type="email" class="form-control" id="contactEmail" required>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fa-regular fa-envelope"></i></span>
+                  <input type="email" class="form-control" id="contactEmail" required placeholder="例如：name@example.com">
+                  <div class="invalid-feedback">请输入有效的邮箱地址</div>
+                </div>
               </div>
               <div class="col-md-6">
                 <label class="form-label">供应商通行密码</label>
@@ -125,6 +133,8 @@
 <style>
 .form-text{font-size:.85rem;color:#6c757d}
 .fw-semibold{font-weight:600}
+.card.shadow-sm{border-radius:.75rem}
+.input-group .input-group-text{background:#f8f9fa}
 </style>
 
 <script>
@@ -147,7 +157,15 @@
   document.addEventListener('DOMContentLoaded',function(){
     const companyFull = document.getElementById('companyFull');
     const hint = document.getElementById('companyCheckHint');
+    const form = document.getElementById('supplierRegisterForm');
     companyFull.addEventListener('blur', async function(){
+      const v = this.value.trim();
+      hint.textContent='';
+      if(!v) return;
+      const res = await checkCompany(v);
+      if(res.exists){ hint.textContent='该公司已存在，无法重复注册'; hint.className='form-text text-danger'; } else { hint.textContent='可注册'; hint.className='form-text text-success'; }
+    });
+    companyFull.addEventListener('change', async function(){
       const v = this.value.trim();
       hint.textContent='';
       if(!v) return;
@@ -157,6 +175,7 @@
     document.getElementById('supplierRegisterForm').addEventListener('submit', async function(e){
       e.preventDefault();
       const btn=document.getElementById('submitBtn'); btn.disabled=true; btn.textContent='提交中...';
+      if (!form.checkValidity()) { form.classList.add('was-validated'); btn.disabled=false; btn.textContent='提交入驻申请'; return; }
       const company = companyFull.value.trim();
       const exists = await checkCompany(company);
       if(exists.exists){ btn.disabled=false; btn.textContent='提交入驻申请'; return alert('公司已存在，无法重复注册'); }
@@ -194,4 +213,3 @@
 })();
 </script>
 {{ end }}
-

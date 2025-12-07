@@ -31,7 +31,7 @@
                                     {{ $currentSecondaryCategory := "" }}
 
                                     <a href="{{ "products" | absURL }}" class="btn btn-sm btn-primary fw-bold shadow-sm primary-btn all-btn {{ if not $currentPrimaryCategory }}active{{ end }}">
-                                        <i class="fas fa-home me-1"></i>全部分类
+                                        <i class="fa-solid fa-house me-1"></i>全部分类
                                     </a>
 
                                     {{ $allProducts := where .Site.RegularPages "Type" "products" }}
@@ -127,7 +127,7 @@
                                 <small class="text-muted">当前筛选：无</small>
                             </div>
                             <button type="button" class="btn btn-sm btn-outline-secondary" onclick="resetFilters()">
-                                <i class="fas fa-undo me-1"></i>重置
+                                <i class="fa-solid fa-rotate-left me-1"></i>重置
                             </button>
                         </div>
                     </div>
@@ -135,7 +135,7 @@
                     <!-- 产品参数筛选 -->
                     <div class="filter-section">
                         <h5 class="card-title mb-3">
-                            <i class="fas fa-sliders-h me-2 text-success"></i>产品参数
+                            <i class="fa-solid fa-sliders me-2 text-success"></i>产品参数
                             <small class="text-muted ms-2">根据产品类型显示相关参数</small>
                         </h5>
 
@@ -607,7 +607,7 @@
     <div class="row">
         <div class="col-12">
             <div class="alert alert-info text-center py-5" role="alert">
-                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <i class="fa-solid fa-magnifying-glass fa-3x text-muted mb-3"></i>
                 <h4 class="alert-heading">暂无产品</h4>
                 <p class="mb-0">当前筛选条件下没有找到相关产品，请尝试调整筛选条件。</p>
                 <hr>
@@ -1792,9 +1792,7 @@ document.addEventListener('DOMContentLoaded', function() {
 (function(){
   const Bases = [
     (typeof window !== 'undefined' && window.API_BASE) ? String(window.API_BASE).replace(/\/$/,'') : '',
-    'https://api.visndt.com',
-    'https://visndt.com',
-    'https://www.visndt.com'
+    'https://api.visndt.com'
   ];
   function card(p){
     const img = p.cover_image || '/images/products/placeholder.svg';

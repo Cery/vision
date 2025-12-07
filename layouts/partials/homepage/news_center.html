@@ -129,7 +129,7 @@
                         <div class="news-section border-bottom">
                             <div class="section-header bg-light px-3 py-2 d-flex justify-content-between align-items-center">
                                 <h3 class="h6 mb-0 text-primary fw-bold">
-                                    <i class="fas fa-calendar-alt me-2"></i>展会资讯
+                                    <i class="fa-solid fa-calendar-days me-2"></i>展会资讯
                                 </h3>
                                 <a href="/news/" class="text-primary text-decoration-none small fw-medium">更多 →</a>
                             </div>
@@ -208,7 +208,7 @@
                         <div class="news-section">
                             <div class="section-header bg-light px-3 py-2 d-flex justify-content-between align-items-center">
                                 <h3 class="h6 mb-0 text-success fw-bold">
-                                    <i class="fas fa-cogs me-2"></i>技术文章
+                                    <i class="fa-solid fa-gears me-2"></i>技术文章
                                 </h3>
                                 <a href="/news/" class="text-success text-decoration-none small fw-medium">更多 →</a>
                             </div>
@@ -274,16 +274,12 @@
   const isLocal = host === 'localhost' || host === '127.0.0.1';
   const base = (typeof window !== 'undefined' && window.API_BASE) ? String(window.API_BASE).replace(/\/$/,'') : '';
   const Bases = isLocal ? [
-    '',
-    base,
     'https://api.visndt.com',
-    'https://visndt.com',
-    'https://www.visndt.com'
+    base,
+    ''
   ] : [
     base,
-    'https://api.visndt.com',
-    'https://visndt.com',
-    'https://www.visndt.com'
+    'https://api.visndt.com'
   ];
   function fill(selector, items){
     const el = document.querySelector(selector);

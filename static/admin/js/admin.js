@@ -171,11 +171,14 @@ const App = {
 
       this.loadDashboard(); // Initial load
 
+      const syncAllBtn = document.getElementById('syncAllBtn');
+      if (syncAllBtn) syncAllBtn.onclick = () => this.syncAll();
+
     // Login binding
-    document.getElementById('loginForm').onsubmit = (e) => {
-      e.preventDefault();
-      this.login();
-    };
+      document.getElementById('loginForm').onsubmit = (e) => {
+        e.preventDefault();
+        this.login();
+      };
     
     // API Select binding
     const apiSel = document.getElementById('loginApiSelect');
@@ -389,6 +392,7 @@ const App = {
         this.checkLogin(); // Update UI
         showToast('登录成功', 'success');
         this.loadDashboard(); // Reload data
+        this.ensureFirstLoginSync();
       } else {
         throw new Error('无效的响应');
       }
@@ -396,6 +400,18 @@ const App = {
       msg.textContent = '登录失败: ' + e.message;
       msg.className = 'text-danger';
     }
+  },
+
+  ensureFirstLoginSync() {
+    try {
+      const k = 'SYNC_DONE_AT';
+      const v = localStorage.getItem(k) || '';
+      if (!v) {
+        this.syncAll().then(() => {
+          localStorage.setItem(k, String(Date.now()));
+        }).catch(() => {});
+      }
+    } catch (_) {}
   },
   
   checkLogin() {
@@ -774,6 +790,22 @@ const App = {
         showToast('已同步新闻', 'success');
         this.loadNews();
      } catch (e) { showToast(e.message, 'error'); }
+  },
+
+  async syncAll() {
+    try {
+      if (!confirm('同步全部内容（产品/新闻/案例）？')) return;
+      showToast('开始同步产品', 'info');
+      await this.syncProducts();
+      showToast('开始同步新闻', 'info');
+      await this.syncNews();
+      showToast('开始同步案例', 'info');
+      await this.syncCases();
+      showToast('全部同步完成', 'success');
+      this.loadDashboard();
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
   },
   
   async openNewsEditor(id = null) {

@@ -330,10 +330,10 @@
 
         getTypeIcon(type) {
             const iconMap = {
-                'product': 'fas fa-cube',
-                'article': 'fas fa-newspaper',
-                'case': 'fas fa-briefcase',
-                'all': 'fas fa-search'
+                'product': 'fa-solid fa-cube',
+                'article': 'fa-solid fa-newspaper',
+                'case': 'fa-solid fa-briefcase',
+                'all': 'fa-solid fa-magnifying-glass'
             };
             return iconMap[type] || 'fas fa-file';
         }
