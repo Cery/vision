@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-	<meta name="generator" content="Hugo 0.147.1"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1319&amp;path=livereload" data-no-instant defer></script>
+	<meta name="generator" content="Hugo 0.147.1"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>首页 - 维森·视觉检测仪器</title>
@@ -27,19 +27,19 @@
 
 
 <meta property="og:type" content="website">
-<meta property="og:url" content="http://localhost:1319/">
+<meta property="og:url" content="http://localhost:1313/">
 <meta property="og:title" content="维森视觉检测仪器">
 <meta property="og:description" content="欢迎访问我们的网站！我们是专业内窥镜产品和资讯推广平台！">
-<meta property="og:image" content="http://localhost:1319/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta property="og:image" content="http://localhost:1313/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 <meta property="og:site_name" content="维森视觉检测仪器">
 <meta property="og:locale" content="zh_CN">
 
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="http://localhost:1319/">
+<meta name="twitter:url" content="http://localhost:1313/">
 <meta name="twitter:title" content="维森视觉检测仪器">
 <meta name="twitter:description" content="欢迎访问我们的网站！我们是专业内窥镜产品和资讯推广平台！">
-<meta name="twitter:image" content="http://localhost:1319/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta name="twitter:image" content="http://localhost:1313/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 
 
 
@@ -48,8 +48,8 @@
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "维森视觉检测仪器",
-  "url": "http:\/\/localhost:1319\/",
-  "logo": "http:\/\/localhost:1319\/images\/assets\/brand\/logos\/brand_logos_logo-dark_original_v1.svg",
+  "url": "http:\/\/localhost:1313\/",
+  "logo": "http:\/\/localhost:1313\/images\/assets\/brand\/logos\/brand_logos_logo-dark_original_v1.svg",
   "description": "专业的视觉检测设备信息与资讯发布平台，提供工业内窥镜、检测相机等产品信息，为制造业提供优质的检测解决方案",
   "contactPoint": {
     "@type": "ContactPoint",
@@ -62,7 +62,7 @@
 
 
 
-<link rel="canonical" href="http://localhost:1319/">
+<link rel="canonical" href="http://localhost:1313/">
 
 
 <link rel="icon" type="image/svg+xml" href="./images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
@@ -70,11 +70,9 @@
 <link rel="mask-icon" href="./images/assets/brand/icons/brand_icons_favicon_original_v1.svg" color="#1976d2">
 <link rel="apple-touch-icon" href="./images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
 
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link href="./css/vendor/bootstrap.min.css" rel="stylesheet">
+<link href="./css/vendor/font-awesome.min.css" rel="stylesheet">
+<link href="./css/vendor/font-awesome-fonts.css" rel="stylesheet">
 
 
 <link href="./css/unified-theme.css" rel="stylesheet">
@@ -83,6 +81,8 @@
 
 <link href="./css/custom.css" rel="stylesheet">
 <link href="./css/news-filters.css" rel="stylesheet">
+
+<script src="./js/vendor/bootstrap.bundle.min.js"></script>
 
 <script>
   
@@ -94,6 +94,18 @@
         document.documentElement.setAttribute('data-theme', theme);
       }
     } catch (e) {   }
+  })();
+</script>
+
+<script>
+  
+  (function(){
+    try {
+      var host = location.hostname;
+      var isLocal = host === 'localhost' || host === '127.0.0.1';
+      var override = localStorage.getItem('API_BASE');
+      window.API_BASE = override || (isLocal ? 'http://127.0.0.1:8787' : 'https://api.visndt.com');
+    } catch(e){}
   })();
 </script>
 
@@ -211,6 +223,11 @@
         color: var(--text-primary) !important;
         transition: var(--transition-normal) !important;
     }
+
+     
+    .search-modal-content { overflow: hidden; }
+    .search-modal-body { overflow: auto; max-height: 70vh; }
+    .search-results-container { position: relative; max-height: 60vh; overflow: auto; }
 
     .search-input-field:focus {
         background-color: var(--bg-primary) !important;
@@ -562,15 +579,16 @@
 
      
     .search-suggestions {
-        position: absolute;
-        z-index: 1000;
+        position: relative;
+        z-index: 2;
         background-color: white;
         border: 1px solid #ddd;
         border-top: none;
-        max-height: 300px;
+        max-height: 60vh;
         overflow-y: auto;
         width: 100%;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin-top: var(--spacing-sm);
     }
 
     .search-suggestion-item {
@@ -1039,6 +1057,7 @@
 </script>
 <script src="./js/image-handler.js"></script>
 <script src="./js/carousel-handler.js"></script>
+
     
 </head>
 <body>
@@ -2214,7 +2233,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="ad-card">
-                    <a href="http://localhost:1319/products/sim-sup/sim-cam-x1/" class="ad-link">
+                    <a href="http://localhost:1313/products/sim-sup/sim-cam-x1/" class="ad-link">
                         
                         
                             <div class="ad-image-wrapper">
@@ -2252,7 +2271,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="ad-card">
-                    <a href="http://localhost:1319/products/vis/ws-o3020/" class="ad-link">
+                    <a href="http://localhost:1313/products/vis/ws-o3020/" class="ad-link">
                         
                         
                             
@@ -2290,7 +2309,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="ad-card">
-                    <a href="http://localhost:1319/products/vis/ws-f4525/" class="ad-link">
+                    <a href="http://localhost:1313/products/vis/ws-f4525/" class="ad-link">
                         
                         
                             
@@ -2484,7 +2503,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="area-content">
                         <h3 class="area-title">航空航天</h3>
                         <p class="area-summary">为航空航天领域提供高精度无损检测解决方案，确保飞行器安全性和可靠性</p>
-                        <a href="http://localhost:1319/applications/aerospace/" class="btn btn-outline-primary">了解更多</a>
+                        <a href="http://localhost:1313/applications/aerospace/" class="btn btn-outline-primary">了解更多</a>
                     </div>
                 </div>
             </div>
@@ -2502,7 +2521,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="area-content">
                         <h3 class="area-title">能源电力</h3>
                         <p class="area-summary">助力能源电力设备安全运行监测，保障电力系统稳定可靠</p>
-                        <a href="http://localhost:1319/applications/energy/" class="btn btn-outline-primary">了解更多</a>
+                        <a href="http://localhost:1313/applications/energy/" class="btn btn-outline-primary">了解更多</a>
                     </div>
                 </div>
             </div>
@@ -2520,7 +2539,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="area-content">
                         <h3 class="area-title">汽车制造</h3>
                         <p class="area-summary">汽车制造质量控制全程监测方案，确保汽车产品质量和安全性</p>
-                        <a href="http://localhost:1319/applications/automotive/" class="btn btn-outline-primary">了解更多</a>
+                        <a href="http://localhost:1313/applications/automotive/" class="btn btn-outline-primary">了解更多</a>
                     </div>
                 </div>
             </div>
@@ -2538,7 +2557,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="area-content">
                         <h3 class="area-title">机械制造</h3>
                         <p class="area-summary">机械制造质量检测与工艺优化，提升机械产品精度和可靠性</p>
-                        <a href="http://localhost:1319/applications/machinery/" class="btn btn-outline-primary">了解更多</a>
+                        <a href="http://localhost:1313/applications/machinery/" class="btn btn-outline-primary">了解更多</a>
                     </div>
                 </div>
             </div>
@@ -2556,7 +2575,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="area-content">
                         <h3 class="area-title">精密铸造</h3>
                         <p class="area-summary">精密铸造工艺过程质量控制，确保铸件质量和工艺稳定性</p>
-                        <a href="http://localhost:1319/applications/casting/" class="btn btn-outline-primary">了解更多</a>
+                        <a href="http://localhost:1313/applications/casting/" class="btn btn-outline-primary">了解更多</a>
                     </div>
                 </div>
             </div>
@@ -2574,7 +2593,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="area-content">
                         <h3 class="area-title">科学研究</h3>
                         <p class="area-summary">科研实验检测分析专业解决方案，支持科学研究和技术创新</p>
-                        <a href="http://localhost:1319/applications/research/" class="btn btn-outline-primary">了解更多</a>
+                        <a href="http://localhost:1313/applications/research/" class="btn btn-outline-primary">了解更多</a>
                     </div>
                 </div>
             </div>
@@ -2730,7 +2749,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <img src="./images/content/news/covers/news_covers_news-1_original_v1.jpeg" alt="2025年工业内窥与无损检测技术发展趋势" class="news-thumbnail">
                             </div>
                             <div class="news-content flex-grow-1">
-                                <h4 class="news-title mb-1"><a href="http://localhost:1319/news/industry/2025-industrial-ndt-trends/" class="text-dark text-decoration-none hover-primary">2025年工业内窥与无损检测技术发展趋势</a></h4>
+                                <h4 class="news-title mb-1"><a href="http://localhost:1313/news/industry/2025-industrial-ndt-trends/" class="text-dark text-decoration-none hover-primary">2025年工业内窥与无损检测技术发展趋势</a></h4>
                                 <p class="news-summary mb-1">聚焦高清成像、智能识别与远程协作三大趋势，推动工业检测智能化升级。</p>
                                 <small class="news-date">2025-11-10</small>
                             </div>
@@ -2741,7 +2760,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <img src="./images/content/news/covers/news_covers_news-1_original_v1.jpeg" alt="2025年工业内窥镜市场发展趋势分析报告" class="news-thumbnail">
                             </div>
                             <div class="news-content flex-grow-1">
-                                <h4 class="news-title mb-1"><a href="http://localhost:1319/news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/" class="text-dark text-decoration-none hover-primary">2025年工业内窥镜市场发展趋势分析报告</a></h4>
+                                <h4 class="news-title mb-1"><a href="http://localhost:1313/news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/" class="text-dark text-decoration-none hover-primary">2025年工业内窥镜市场发展趋势分析报告</a></h4>
                                 <p class="news-summary mb-1">深度分析2025年全球工业内窥镜市场发展现状、技术趋势、竞争格局及未来发展机遇，为行业从业者提供权威的市场洞察</p>
                                 <small class="news-date">2025-07-27</small>
                             </div>
@@ -2752,7 +2771,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <img src="./images/content/news/covers/news_covers_news-1_original_v1.jpeg" alt="工业内窥镜市场迎来快速增长期 - 无损检测行业最新发展动态" class="news-thumbnail">
                             </div>
                             <div class="news-content flex-grow-1">
-                                <h4 class="news-title mb-1"><a href="http://localhost:1319/news/industry/2025-07-14-industrial-endoscope-market-growth/" class="text-dark text-decoration-none hover-primary">工业内窥镜市场迎来快速增长期 - 无损检测行业最新发展动态</a></h4>
+                                <h4 class="news-title mb-1"><a href="http://localhost:1313/news/industry/2025-07-14-industrial-endoscope-market-growth/" class="text-dark text-decoration-none hover-primary">工业内窥镜市场迎来快速增长期 - 无损检测行业最新发展动态</a></h4>
                                 <p class="news-summary mb-1">本文深入分析了工业内窥镜在无损检测领域的最新发展趋势，探讨了相关技术创新、市场动态和未来发展方向，为行业从业者提供有价值的参考信息。</p>
                                 <small class="news-date">2025-07-14</small>
                             </div>
@@ -2781,7 +2800,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 
                                 <div class="news-item-compact d-flex justify-content-between align-items-start py-2 border-bottom border-light">
                                     <div class="item-content flex-grow-1 pe-2">
-                                        <a href="http://localhost:1319/news/exhibition/2025-shanghai-ndt-expo/" class="item-title text-dark text-decoration-none hover-primary d-block fw-medium">2025上海国际无损检测与智能制造展览会</a>
+                                        <a href="http://localhost:1313/news/exhibition/2025-shanghai-ndt-expo/" class="item-title text-dark text-decoration-none hover-primary d-block fw-medium">2025上海国际无损检测与智能制造展览会</a>
                                         <small class="item-summary text-muted d-block mt-1">展会聚焦智能检测、机器视觉与内窥技术，行业品牌齐聚，发布多项创新成果。</small>
                                     </div>
                                     <div class="item-meta text-end flex-shrink-0">
@@ -2808,7 +2827,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 
                                 <div class="news-item-compact d-flex justify-content-between align-items-start py-2 border-bottom border-light">
                                     <div class="item-content flex-grow-1 pe-2">
-                                        <a href="http://localhost:1319/news/tech-article/2025-ai-defect-detection/" class="item-title text-dark text-decoration-none hover-success d-block fw-medium">基于AI的缺陷识别在工业内窥中的应用实践</a>
+                                        <a href="http://localhost:1313/news/tech-article/2025-ai-defect-detection/" class="item-title text-dark text-decoration-none hover-success d-block fw-medium">基于AI的缺陷识别在工业内窥中的应用实践</a>
                                         <small class="item-summary text-muted d-block mt-1">介绍将深度学习用于内窥图像缺陷识别的落地流程与效果评估。</small>
                                     </div>
                                     <div class="item-meta text-end flex-shrink-0">
@@ -2819,7 +2838,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 
                                 <div class="news-item-compact d-flex justify-content-between align-items-start py-2 border-bottom border-light">
                                     <div class="item-content flex-grow-1 pe-2">
-                                        <a href="http://localhost:1319/news/2025-07-27-%E5%86%85%E7%AA%A5%E9%95%9C%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/" class="item-title text-dark text-decoration-none hover-success d-block fw-medium">内窥镜图像处理算法优化技术详解</a>
+                                        <a href="http://localhost:1313/news/2025-07-27-%E5%86%85%E7%AA%A5%E9%95%9C%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/" class="item-title text-dark text-decoration-none hover-success d-block fw-medium">内窥镜图像处理算法优化技术详解</a>
                                         <small class="item-summary text-muted d-block mt-1">深入探讨内窥镜图像处理中的关键算法，包括图像增强、噪声抑制、边缘检测等 …</small>
                                     </div>
                                     <div class="item-meta text-end flex-shrink-0">
@@ -2830,7 +2849,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 
                                 <div class="news-item-compact d-flex justify-content-between align-items-start py-2 border-bottom border-light">
                                     <div class="item-content flex-grow-1 pe-2">
-                                        <a href="http://localhost:1319/news/tech-article/tech-article-1/" class="item-title text-dark text-decoration-none hover-success d-block fw-medium">工业内窥镜图像处理算法优化技术研究</a>
+                                        <a href="http://localhost:1313/news/tech-article/tech-article-1/" class="item-title text-dark text-decoration-none hover-success d-block fw-medium">工业内窥镜图像处理算法优化技术研究</a>
                                         <small class="item-summary text-muted d-block mt-1">深入探讨工业内窥镜图像处理算法的优化方法，提升检测精度和效率</small>
                                     </div>
                                     <div class="item-meta text-end flex-shrink-0">
@@ -2848,6 +2867,79 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 </section>
+<script>
+(function(){
+  const host = location.hostname;
+  const isLocal = host === 'localhost' || host === '127.0.0.1';
+  const base = (typeof window !== 'undefined' && window.API_BASE) ? String(window.API_BASE).replace(/\/$/,'') : '';
+  const Bases = isLocal ? [base, ''] : [
+    base,
+    'https://api.visndt.com',
+    'https://visndt.com',
+    'https://www.visndt.com'
+  ];
+  function fill(selector, items){
+    const el = document.querySelector(selector);
+    if (!el) return;
+    el.innerHTML = items.map(n => (
+      `<div class="news-item d-flex mb-2">`
+      + `<div class="news-image me-3 flex-shrink-0"><img src="${n.cover_image||'/images/news/news-1.jpeg'}" alt="${n.title}" class="news-thumbnail"></div>`
+      + `<div class="news-content flex-grow-1">`
+      + `<h4 class="news-title mb-1"><a href="./news/${n.slug||n.id}" class="text-dark text-decoration-none hover-primary">${n.title}</a></h4>`
+      + `<p class="news-summary mb-1">${(n.summary||'').slice(0,80)}</p>`
+      + `<small class="news-date">${(n.published_at||'').slice(0,10)}</small>`
+      + `</div></div>`
+    )).join('');
+  }
+  function compact(selector, items, badge){
+    const el = document.querySelector(selector);
+    if (!el) return;
+    el.innerHTML = items.map(n => (
+      `<div class="news-item-compact d-flex justify-content-between align-items-start py-2 border-bottom border-light">`
+      + `<div class="item-content flex-grow-1 pe-2">`
+      + `<a href="./news/${n.slug||n.id}" class="item-title text-dark text-decoration-none d-block fw-medium">${n.title}</a>`
+      + `<small class="item-summary text-muted d-block mt-1">${(n.summary||'').slice(0,35)}</small>`
+      + `</div>`
+      + `<div class="item-meta text-end flex-shrink-0">`
+      + `<small class="item-date text-muted d-block">${(n.published_at||'').slice(5,10)}</small>`
+      + `<span class="badge bg-primary bg-opacity-10 text-primary mt-1">${badge}</span>`
+      + `</div></div>`
+    )).join('');
+  }
+  function fetchWithTimeout(url, ms){
+    return new Promise((resolve, reject) => {
+      const ctrl = new AbortController();
+      const to = setTimeout(() => { try{ ctrl.abort(); }catch{}; reject(new Error('timeout')); }, ms||5000);
+      fetch(url, { signal: ctrl.signal }).then(resolve).catch(reject).finally(() => clearTimeout(to));
+    });
+  }
+  async function fetchCat(cat, limit){
+    const qs = `category=${encodeURIComponent(cat)}&limit=${limit}`;
+    for (const base of Bases) {
+      const prefix = base ? base.replace(/\/$/,'') : '';
+      const u = prefix ? `${prefix}/api/news?${qs}` : `/api/news?${qs}`;
+      try {
+        const r = await fetchWithTimeout(u, 6000);
+        if (!r.ok) throw new Error(`status ${r.status}`);
+        const j = await r.json();
+        const arr = Array.isArray(j) ? j : (j.items || []);
+        if (arr && arr.length) return arr;
+      } catch {}
+    }
+    return [];
+  }
+  document.addEventListener('DOMContentLoaded', async function(){
+    try {
+      const [industry, exh, tech] = await Promise.all([
+        fetchCat('行业资讯',5), fetchCat('展会资讯',5), fetchCat('技术文章',3)
+      ]);
+      if (industry.length) fill('.col-lg-7 .card-body', industry);
+      if (exh.length) compact('.col-lg-5 .news-section:nth-child(1) .section-content', exh, '展会');
+      if (tech.length) compact('.col-lg-5 .news-section:nth-child(2) .section-content', tech, '技术');
+    } catch {}
+  });
+})();
+</script>
 
 <style>
  
@@ -3257,6 +3349,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 }
 </style>
+
     <section class="application-cases py-5">
     <div class="container">
         
@@ -3284,7 +3377,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="card border-0 shadow-sm h-100 featured-case">
                     <div class="row g-0 h-100">
                         <div class="col-md-6">
-                            <a href="http://localhost:1319/cases/case-pipeline-inspection/" class="d-block h-100">
+                            <a href="http://localhost:1313/cases/case-pipeline-inspection/" class="d-block h-100">
                                 
                                 <img src="./images/cases/case-2.jpg" class="img-fluid h-100 w-100" alt="管道内腐蚀检测与维护优化案例" style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
                                 
@@ -3328,7 +3421,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </div>
 
                                 <h4 class="card-title h5 mb-2">
-                                    <a href="http://localhost:1319/cases/case-pipeline-inspection/" class="text-decoration-none text-dark">管道内腐蚀检测与维护优化案例</a>
+                                    <a href="http://localhost:1313/cases/case-pipeline-inspection/" class="text-decoration-none text-dark">管道内腐蚀检测与维护优化案例</a>
                                 </h4>
                                 <p class="card-text flex-grow-1 small text-muted">通过工业内窥镜与AI识别技术进行长输管道内腐蚀检测，显著提升巡检效率与可靠性。</p>
                                 <div class="mt-auto">
@@ -3336,7 +3429,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <small class="text-muted">
                                             <i class="fas fa-industry me-1"></i>石油化工
                                         </small>
-                                        <a href="http://localhost:1319/cases/case-pipeline-inspection/" class="btn btn-primary btn-sm">查看详情</a>
+                                        <a href="http://localhost:1313/cases/case-pipeline-inspection/" class="btn btn-primary btn-sm">查看详情</a>
                                     </div>
                                 </div>
                             </div>
@@ -3354,7 +3447,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="card border-0 shadow-sm h-100">
                             <div class="row g-0 align-items-center">
                                 <div class="col-3">
-                                    <a href="http://localhost:1319/cases/case-weld-quality/" class="d-block">
+                                    <a href="http://localhost:1313/cases/case-weld-quality/" class="d-block">
                                         
                                         <img src="./images/cases/case-2.jpg" class="case-thumb" alt="焊缝质量缺陷检测与工艺优化案例" loading="lazy">
                                         
@@ -3364,7 +3457,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <div class="card-body p-2">
                                         <div class="case-content">
                                             <h6 class="case-title mb-1">
-                                                <a href="http://localhost:1319/cases/case-weld-quality/" class="text-decoration-none text-dark">焊缝质量缺陷检测与工艺优化案例</a>
+                                                <a href="http://localhost:1313/cases/case-weld-quality/" class="text-decoration-none text-dark">焊缝质量缺陷检测与工艺优化案例</a>
                                             </h6>
 
                                             
@@ -3387,7 +3480,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                                 <small class="text-muted">
                                                     汽车制造
                                                 </small>
-                                                <a href="http://localhost:1319/cases/case-weld-quality/" class="case-link">
+                                                <a href="http://localhost:1313/cases/case-weld-quality/" class="case-link">
                                                     <i class="fas fa-arrow-right"></i>
                                                 </a>
                                             </div>
@@ -3402,7 +3495,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="card border-0 shadow-sm h-100">
                             <div class="row g-0 align-items-center">
                                 <div class="col-3">
-                                    <a href="http://localhost:1319/cases/case-petrochemical-corrosion/" class="d-block">
+                                    <a href="http://localhost:1313/cases/case-petrochemical-corrosion/" class="d-block">
                                         
                                         <img src="./images/cases/case-2.jpg" class="case-thumb" alt="石化储罐内壁腐蚀监测与维护案例" loading="lazy">
                                         
@@ -3412,7 +3505,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <div class="card-body p-2">
                                         <div class="case-content">
                                             <h6 class="case-title mb-1">
-                                                <a href="http://localhost:1319/cases/case-petrochemical-corrosion/" class="text-decoration-none text-dark">石化储罐内壁腐蚀监测与维护案例</a>
+                                                <a href="http://localhost:1313/cases/case-petrochemical-corrosion/" class="text-decoration-none text-dark">石化储罐内壁腐蚀监测与维护案例</a>
                                             </h6>
 
                                             
@@ -3435,7 +3528,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                                 <small class="text-muted">
                                                     石油化工
                                                 </small>
-                                                <a href="http://localhost:1319/cases/case-petrochemical-corrosion/" class="case-link">
+                                                <a href="http://localhost:1313/cases/case-petrochemical-corrosion/" class="case-link">
                                                     <i class="fas fa-arrow-right"></i>
                                                 </a>
                                             </div>
@@ -3450,7 +3543,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="card border-0 shadow-sm h-100">
                             <div class="row g-0 align-items-center">
                                 <div class="col-3">
-                                    <a href="http://localhost:1319/cases/case-aero-engine-blade/" class="d-block">
+                                    <a href="http://localhost:1313/cases/case-aero-engine-blade/" class="d-block">
                                         
                                         <img src="./images/cases/case-2.jpg" class="case-thumb" alt="航空发动机叶片内部缺陷检测案例" loading="lazy">
                                         
@@ -3460,7 +3553,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <div class="card-body p-2">
                                         <div class="case-content">
                                             <h6 class="case-title mb-1">
-                                                <a href="http://localhost:1319/cases/case-aero-engine-blade/" class="text-decoration-none text-dark">航空发动机叶片内部缺陷检测案例</a>
+                                                <a href="http://localhost:1313/cases/case-aero-engine-blade/" class="text-decoration-none text-dark">航空发动机叶片内部缺陷检测案例</a>
                                             </h6>
 
                                             
@@ -3483,7 +3576,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                                 <small class="text-muted">
                                                     航空航天
                                                 </small>
-                                                <a href="http://localhost:1319/cases/case-aero-engine-blade/" class="case-link">
+                                                <a href="http://localhost:1313/cases/case-aero-engine-blade/" class="case-link">
                                                     <i class="fas fa-arrow-right"></i>
                                                 </a>
                                             </div>
@@ -6167,16 +6260,17 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
       </div>
     </div>
-    
     <script>
       var _hmt = _hmt || [];
       (function() {
-        var hm = document.createElement("script");
-        hm.src = "https://hm.baidu.com/hm.js?90cc6b96ca32b2455d73fa05c28fd923";
-        var s = document.getElementsByTagName("script")[0]; 
+        var host = window.location.hostname;
+        if (host === 'localhost' || host === '127.0.0.1') return;
+        var hm = document.createElement('script');
+        hm.src = 'https://hm.baidu.com/hm.js?90cc6b96ca32b2455d73fa05c28fd923';
+        var s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(hm, s);
       })();
-      </script>
+    </script>
       
 
     
@@ -6300,6 +6394,7 @@ style="position: fixed; right: 32px; bottom: 48px; z-index: 999; display: none; 
 }
 </style>
   </footer>
+
 
     
     

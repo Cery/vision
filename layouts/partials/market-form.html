@@ -5,23 +5,16 @@
   </div>
   <div class="card-body">
     <form name="requirement" method="POST" data-netlify="true" id="requirementForm">
-      <!-- Netlify 必需的隐藏字段 -->
       <input type="hidden" name="form-name" value="requirement" />
-      <!-- 生成的唯一ID -->
       <input type="hidden" id="requirement-id" name="requirementID" value="">
-      <!-- 发布方式（公开/在线报价） -->
       <input type="hidden" id="publish-status" name="Status" value="公开">
-      <!-- 密码（明文，初期阶段保存在 Netlify 表单；后期在函数中哈希存储） -->
       <input type="hidden" id="view-password" name="viewPassword" value="">
 
-      <!-- 发布标题 -->
       <div class="mb-3">
         <label class="form-label"><i class="fa-solid fa-heading me-1 text-secondary"></i>发布标题</label>
         <input type="text" name="Title" class="form-control" placeholder="发动机缸盖检查电子内窥镜采购需求" required>
       </div>
 
-
-      <!-- 产品分类（原一级分类） -->
       <div class="mb-3">
         <label class="form-label"><i class="fa-solid fa-tags me-1 text-secondary"></i>产品分类</label>
         <select name="primaryCategory" id="primaryCategory" class="form-select" required onchange="updateCategoryParams()">
@@ -31,11 +24,7 @@
         </select>
       </div>
 
-      <!-- 二级分类项不展示（按需求） -->
-
-      <!-- 分类参数选项 -->
       <div id="categoryParams" class="mb-3">
-        <!-- 电子内窥镜 参数 -->
         <div id="params-electronic" class="card mb-3">
           <div class="card-header d-flex align-items-center gap-2">
             <i class="fa-solid fa-camera text-primary"></i>
@@ -101,7 +90,6 @@
             </div>
           </div>
         </div>
-        <!-- 光纤内窥镜 参数 -->
         <div id="params-fiber" class="card mb-3" style="display:none;">
           <div class="card-header d-flex align-items-center gap-2">
             <i class="fa-solid fa-lightbulb text-warning"></i>
@@ -144,7 +132,6 @@
             </div>
           </div>
         </div>
-        <!-- 光学内窥镜 参数 -->
         <div id="params-optic" class="card mb-3" style="display:none;">
           <div class="card-header d-flex align-items-center gap-2">
             <i class="fa-solid fa-microscope text-success"></i>
@@ -180,13 +167,11 @@
         </div>
       </div>
 
-      <!-- 详细说明 / 参数 -->
       <div class="mb-3">
         <label class="form-label"><i class="fa-solid fa-list-check me-1 text-secondary"></i>详细说明 / 参数</label>
         <textarea name="parameters" id="parameters" class="form-control" rows="4" placeholder="可留空，系统会根据上方选项生成概要"></textarea>
       </div>
 
-      <!-- 可选补充（折叠） -->
       <div class="card mb-3">
         <div class="card-header d-flex align-items-center justify-content-between">
           <div class="d-flex align-items-center gap-2">
@@ -215,7 +200,6 @@
         </div>
       </div>
 
-      <!-- 预算与采购计划 -->
       <div class="row g-3 mb-3">
         <div class="col-md-6">
           <label class="form-label"><i class="fa-solid fa-coins me-1 text-secondary"></i>预算范围</label>
@@ -237,9 +221,6 @@
         </div>
       </div>
 
-      <!-- 需求详细说明（已移除重复项，保留上方“详细说明/参数”） -->
-
-      <!-- 发布方信息（移动到底部发布方式上方） -->
       <div class="card mb-3">
         <div class="card-header d-flex align-items-center gap-2">
           <i class="fa-solid fa-id-card text-secondary"></i>
@@ -271,7 +252,6 @@
         </div>
       </div>
 
-      <!-- 发布方式（底部） -->
       <div class="mb-3 pt-3 border-top">
         <label class="form-label d-block"><i class="fa-solid fa-globe me-1 text-secondary"></i>发布方式</label>
         <div class="btn-group publish-mode-group d-flex justify-content-center" role="group" aria-label="发布方式">
@@ -288,7 +268,6 @@
         <div class="form-text">接受在线报价：联系方式不公开，供应商提交方案即可。</div>
       </div>
 
-      <!-- 编号与密码预览 -->
       <div class="row g-3 mb-3" id="idPreview" style="display:none;">
         <div class="col-md-6">
           <label class="form-label">需求编号</label>
@@ -310,7 +289,6 @@
 </div>
 
 <script>
-// 统一 API 基础地址（本地与线上）
 (function(){
   const DEFAULT_API_BASE_PROD = 'https://api.visndt.com';
   const DEFAULT_API_BASE_DEV = 'http://127.0.0.1:8787';
@@ -320,32 +298,25 @@
   window.API_BASE = window.API_BASE || override || (isLocal ? DEFAULT_API_BASE_DEV : DEFAULT_API_BASE_PROD);
   window.apiFetch = window.apiFetch || ((path, opts={}) => fetch(`${window.API_BASE}${path}`, opts));
 })();
-// 生成简单唯一ID（可替换为更复杂算法）
-function generateRequirementID() {
+function generateRequirementID(){
   const date = new Date();
   const ds = date.toISOString().slice(0,10).replace(/-/g,'');
   const rand = Math.floor(Math.random()*9000)+1000;
   return `REQ-${ds}-${rand}`;
 }
-
-// 生成查看密码（6位随机）
-function generateViewPassword() {
+function generateViewPassword(){
   const chars = 'ABCDEFGHJKMNPQRSTWXYZ23456789';
   let pw = '';
   for (let i=0;i<6;i++) pw += chars.charAt(Math.floor(Math.random()*chars.length));
   return pw;
 }
-
-// 根据分类显示参数块
-function updateCategoryParams() {
+function updateCategoryParams(){
   const cat = document.getElementById('primaryCategory').value;
   document.getElementById('params-electronic').style.display = (cat === '电子内窥镜') ? '' : 'none';
   document.getElementById('params-fiber').style.display = (cat === '光纤内窥镜') ? '' : 'none';
   document.getElementById('params-optic').style.display = (cat === '光学内窥镜') ? '' : 'none';
 }
-
-// 汇总可见参数为文本，写入 parameters 文本域
-function buildParametersSummary() {
+function buildParametersSummary(){
   const container = document.getElementById('categoryParams');
   const visibleCards = Array.from(container.querySelectorAll('.card')).filter(c => c.style.display !== 'none');
   const parts = [];
@@ -361,28 +332,18 @@ function buildParametersSummary() {
   });
   return parts.join('\n');
 }
-
-function generateAndSubmitRequirement() {
+function generateAndSubmitRequirement(){
+  const form = document.getElementById('requirementForm');
   const id = generateRequirementID();
   const pw = generateViewPassword();
-
   document.getElementById('requirement-id').value = id;
   document.getElementById('view-password').value = pw;
-
-  // 生成参数概要（若用户未手动填写）
   const paramsEl = document.getElementById('parameters');
-  if (paramsEl && !paramsEl.value.trim()) {
-    paramsEl.value = buildParametersSummary();
-  }
-
-  // 显示编号与密码预览，提示用户记录
+  if (paramsEl && !paramsEl.value.trim()) paramsEl.value = buildParametersSummary();
   const preview = document.getElementById('idPreview');
   document.getElementById('requirement-id-preview').value = id;
   document.getElementById('view-password-preview').value = pw;
   preview.style.display = '';
-
-  // 构建数据并调用后端函数创建需求
-  const form = document.getElementById('requirementForm');
   const fd = new FormData(form);
   const payload = {
     requirementID: id,
@@ -434,45 +395,35 @@ function generateAndSubmitRequirement() {
       const plan = (fd.get('procurementPlan') || '').toString().trim();
       if (plan) params['ProcurementPlan'] = plan;
       if (raw) {
-        try {
-          const parsed = JSON.parse(raw);
-          Object.assign(params, parsed);
-        } catch {
-          params['text'] = raw;
-        }
+        try { const parsed = JSON.parse(raw); Object.assign(params, parsed); }
+        catch { params['text'] = raw; }
       }
       return params;
     })(),
   };
-
   const btn = form.querySelector('button.btn-primary');
   const origText = btn?.innerHTML;
   if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> 发布中…'; }
-  
-  window.apiFetch('/api/requirements', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  }).then(r => r.json())
+  window.apiFetch('/api/markets', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+  }).then(r => r.ok ? r.json() : window.apiFetch('/api/requirements', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }).then(rr => rr.json()))
     .then(res => {
       if (res && res.RequirementID) {
         document.getElementById('requirement-id-preview').value = res.RequirementID;
         document.getElementById('view-password-preview').value = res.ViewPassword || pw;
         preview.style.display = '';
-        // 成功提示
         const ok = document.createElement('div');
         ok.className = 'alert alert-success mt-3';
-        ok.innerHTML = `<i class="fa-solid fa-check-circle me-1"></i> 需求发布成功！请妥善保存编号与查看密码。`;
+        ok.innerHTML = '<i class="fa-solid fa-check-circle me-1"></i> 需求发布成功！请妥善保存编号与查看密码。';
         form.appendChild(ok);
       } else {
         throw new Error(res?.error || '发布失败');
       }
     })
     .catch(err => {
-      console.error('Create requirement error:', err);
       const el = document.createElement('div');
       el.className = 'alert alert-danger mt-3';
-      el.textContent = `发布失败：${err.message || err}`;
+      el.textContent = '发布失败：' + (err.message || err);
       form.appendChild(el);
     })
     .finally(() => { if (btn) { btn.disabled = false; btn.innerHTML = origText; } });

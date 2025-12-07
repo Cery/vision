@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1319&amp;path=livereload" data-no-instant defer></script>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>应用案例 - 维森·视觉检测仪器</title>
@@ -26,25 +26,25 @@
 
 
 <meta property="og:type" content="article">
-<meta property="og:url" content="http://localhost:1319/cases/">
+<meta property="og:url" content="http://localhost:1313/cases/">
 <meta property="og:title" content="应用案例 - 维森视觉检测仪器">
 <meta property="og:description" content="专业的视觉检测设备信息与资讯发布平台，提供工业内窥镜、检测相机等产品信息，为制造业提供优质的检测解决方案">
-<meta property="og:image" content="http://localhost:1319/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta property="og:image" content="http://localhost:1313/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 <meta property="og:site_name" content="维森视觉检测仪器">
 <meta property="og:locale" content="zh_CN">
 
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="http://localhost:1319/cases/">
+<meta name="twitter:url" content="http://localhost:1313/cases/">
 <meta name="twitter:title" content="应用案例 - 维森视觉检测仪器">
 <meta name="twitter:description" content="专业的视觉检测设备信息与资讯发布平台，提供工业内窥镜、检测相机等产品信息，为制造业提供优质的检测解决方案">
-<meta name="twitter:image" content="http://localhost:1319/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta name="twitter:image" content="http://localhost:1313/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 
 
 
 
 
-<link rel="canonical" href="http://localhost:1319/cases/">
+<link rel="canonical" href="http://localhost:1313/cases/">
 
 
 <link rel="icon" type="image/svg+xml" href="../images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
@@ -52,11 +52,9 @@
 <link rel="mask-icon" href="../images/assets/brand/icons/brand_icons_favicon_original_v1.svg" color="#1976d2">
 <link rel="apple-touch-icon" href="../images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
 
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link href="../css/vendor/bootstrap.min.css" rel="stylesheet">
+<link href="../css/vendor/font-awesome.min.css" rel="stylesheet">
+<link href="../css/vendor/font-awesome-fonts.css" rel="stylesheet">
 
 
 <link href="../css/unified-theme.css" rel="stylesheet">
@@ -65,6 +63,8 @@
 
 <link href="../css/custom.css" rel="stylesheet">
 <link href="../css/news-filters.css" rel="stylesheet">
+
+<script src="../js/vendor/bootstrap.bundle.min.js"></script>
 
 <script>
   
@@ -76,6 +76,18 @@
         document.documentElement.setAttribute('data-theme', theme);
       }
     } catch (e) {   }
+  })();
+</script>
+
+<script>
+  
+  (function(){
+    try {
+      var host = location.hostname;
+      var isLocal = host === 'localhost' || host === '127.0.0.1';
+      var override = localStorage.getItem('API_BASE');
+      window.API_BASE = override || (isLocal ? 'http://127.0.0.1:8787' : 'https://api.visndt.com');
+    } catch(e){}
   })();
 </script>
 
@@ -193,6 +205,11 @@
         color: var(--text-primary) !important;
         transition: var(--transition-normal) !important;
     }
+
+     
+    .search-modal-content { overflow: hidden; }
+    .search-modal-body { overflow: auto; max-height: 70vh; }
+    .search-results-container { position: relative; max-height: 60vh; overflow: auto; }
 
     .search-input-field:focus {
         background-color: var(--bg-primary) !important;
@@ -544,15 +561,16 @@
 
      
     .search-suggestions {
-        position: absolute;
-        z-index: 1000;
+        position: relative;
+        z-index: 2;
         background-color: white;
         border: 1px solid #ddd;
         border-top: none;
-        max-height: 300px;
+        max-height: 60vh;
         overflow-y: auto;
         width: 100%;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin-top: var(--spacing-sm);
     }
 
     .search-suggestion-item {
@@ -1021,6 +1039,7 @@
 </script>
 <script src="../js/image-handler.js"></script>
 <script src="../js/carousel-handler.js"></script>
+
     
 </head>
 <body>
@@ -1546,7 +1565,7 @@
                      data-date="2025-11-10"
                      data-title="管道内腐蚀检测与维护优化案例">
                     <div class="card h-100 shadow-sm hover-card">
-                        <a href="http://localhost:1319/cases/case-pipeline-inspection/" class="card-img-link">
+                        <a href="http://localhost:1313/cases/case-pipeline-inspection/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 <img src="../images/cases/case-2.jpg" class="card-img-top object-fit-cover" alt="管道内腐蚀检测与维护优化案例" style="height: 200px;">
@@ -1564,7 +1583,7 @@
                                 
                             </div>
                             <h5 class="card-title case-title">
-                                <a href="http://localhost:1319/cases/case-pipeline-inspection/" class="text-decoration-none text-dark hover-primary">管道内腐蚀检测与维护优化案例</a>
+                                <a href="http://localhost:1313/cases/case-pipeline-inspection/" class="text-decoration-none text-dark hover-primary">管道内腐蚀检测与维护优化案例</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 case-summary">通过工业内窥镜与AI识别技术进行长输管道内腐蚀检测，显著提升巡检效率与可靠性。</p>
@@ -1583,7 +1602,7 @@
                      data-date="2025-11-08"
                      data-title="焊缝质量缺陷检测与工艺优化案例">
                     <div class="card h-100 shadow-sm hover-card">
-                        <a href="http://localhost:1319/cases/case-weld-quality/" class="card-img-link">
+                        <a href="http://localhost:1313/cases/case-weld-quality/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 <img src="../images/cases/case-2.jpg" class="card-img-top object-fit-cover" alt="焊缝质量缺陷检测与工艺优化案例" style="height: 200px;">
@@ -1601,7 +1620,7 @@
                                 
                             </div>
                             <h5 class="card-title case-title">
-                                <a href="http://localhost:1319/cases/case-weld-quality/" class="text-decoration-none text-dark hover-primary">焊缝质量缺陷检测与工艺优化案例</a>
+                                <a href="http://localhost:1313/cases/case-weld-quality/" class="text-decoration-none text-dark hover-primary">焊缝质量缺陷检测与工艺优化案例</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 case-summary">针对复杂焊缝开展内窥检测与工艺参数优化，显著降低返修率。</p>
@@ -1620,7 +1639,7 @@
                      data-date="2025-11-05"
                      data-title="石化储罐内壁腐蚀监测与维护案例">
                     <div class="card h-100 shadow-sm hover-card">
-                        <a href="http://localhost:1319/cases/case-petrochemical-corrosion/" class="card-img-link">
+                        <a href="http://localhost:1313/cases/case-petrochemical-corrosion/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 <img src="../images/cases/case-2.jpg" class="card-img-top object-fit-cover" alt="石化储罐内壁腐蚀监测与维护案例" style="height: 200px;">
@@ -1638,7 +1657,7 @@
                                 
                             </div>
                             <h5 class="card-title case-title">
-                                <a href="http://localhost:1319/cases/case-petrochemical-corrosion/" class="text-decoration-none text-dark hover-primary">石化储罐内壁腐蚀监测与维护案例</a>
+                                <a href="http://localhost:1313/cases/case-petrochemical-corrosion/" class="text-decoration-none text-dark hover-primary">石化储罐内壁腐蚀监测与维护案例</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 case-summary">通过定期内窥检查与腐蚀评估模型，实现储罐安全运行与维护成本优化。</p>
@@ -1657,7 +1676,7 @@
                      data-date="2025-11-03"
                      data-title="航空发动机叶片内部缺陷检测案例">
                     <div class="card h-100 shadow-sm hover-card">
-                        <a href="http://localhost:1319/cases/case-aero-engine-blade/" class="card-img-link">
+                        <a href="http://localhost:1313/cases/case-aero-engine-blade/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 <img src="../images/cases/case-2.jpg" class="card-img-top object-fit-cover" alt="航空发动机叶片内部缺陷检测案例" style="height: 200px;">
@@ -1675,7 +1694,7 @@
                                 
                             </div>
                             <h5 class="card-title case-title">
-                                <a href="http://localhost:1319/cases/case-aero-engine-blade/" class="text-decoration-none text-dark hover-primary">航空发动机叶片内部缺陷检测案例</a>
+                                <a href="http://localhost:1313/cases/case-aero-engine-blade/" class="text-decoration-none text-dark hover-primary">航空发动机叶片内部缺陷检测案例</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 case-summary">利用微型内窥系统检测叶片内部微裂纹与异物，提升航空器可靠性。</p>
@@ -1694,7 +1713,7 @@
                      data-date="2025-07-28"
                      data-title="微电子BGA焊点缺陷检测案例">
                     <div class="card h-100 shadow-sm hover-card">
-                        <a href="http://localhost:1319/cases/2025-microelectronics-bga-inspection/" class="card-img-link">
+                        <a href="http://localhost:1313/cases/2025-microelectronics-bga-inspection/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 <img src="../images/applications/microelectronics-inspection.svg" class="card-img-top object-fit-cover" alt="微电子BGA焊点缺陷检测案例" style="height: 200px;">
@@ -1714,7 +1733,7 @@
                                 
                             </div>
                             <h5 class="card-title case-title">
-                                <a href="http://localhost:1319/cases/2025-microelectronics-bga-inspection/" class="text-decoration-none text-dark hover-primary">微电子BGA焊点缺陷检测案例</a>
+                                <a href="http://localhost:1313/cases/2025-microelectronics-bga-inspection/" class="text-decoration-none text-dark hover-primary">微电子BGA焊点缺陷检测案例</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 case-summary">在微电子装配环节对BGA焊点进行空洞、桥连与虚焊识别，提升良率。</p>
@@ -1733,7 +1752,7 @@
                      data-date="2025-07-28"
                      data-title="风电齿轮箱缺陷检测案例">
                     <div class="card h-100 shadow-sm hover-card">
-                        <a href="http://localhost:1319/cases/2025-wind-turbine-gearbox-inspection/" class="card-img-link">
+                        <a href="http://localhost:1313/cases/2025-wind-turbine-gearbox-inspection/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 <img src="../images/cases/wind-turbine-gearbox-inspection-2025-01.svg" class="card-img-top object-fit-cover" alt="风电齿轮箱缺陷检测案例" style="height: 200px;">
@@ -1753,7 +1772,7 @@
                                 
                             </div>
                             <h5 class="card-title case-title">
-                                <a href="http://localhost:1319/cases/2025-wind-turbine-gearbox-inspection/" class="text-decoration-none text-dark hover-primary">风电齿轮箱缺陷检测案例</a>
+                                <a href="http://localhost:1313/cases/2025-wind-turbine-gearbox-inspection/" class="text-decoration-none text-dark hover-primary">风电齿轮箱缺陷检测案例</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 case-summary">利用工业内窥镜与AI识别进行风电齿轮箱齿面裂纹与磨损检测，提升维护效率与可靠性。</p>
@@ -1772,7 +1791,7 @@
                      data-date="2025-07-27"
                      data-title="汽车发动机缸体内部缺陷检测案例">
                     <div class="card h-100 shadow-sm hover-card">
-                        <a href="http://localhost:1319/cases/2025-07-27-%E6%B1%BD%E8%BD%A6%E5%8F%91%E5%8A%A8%E6%9C%BA%E7%BC%B8%E4%BD%93%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/" class="card-img-link">
+                        <a href="http://localhost:1313/cases/2025-07-27-%E6%B1%BD%E8%BD%A6%E5%8F%91%E5%8A%A8%E6%9C%BA%E7%BC%B8%E4%BD%93%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 <img src="../images/cases/case-2.jpg" class="card-img-top object-fit-cover" alt="汽车发动机缸体内部缺陷检测案例" style="height: 200px;">
@@ -1794,7 +1813,7 @@
                                 
                             </div>
                             <h5 class="card-title case-title">
-                                <a href="http://localhost:1319/cases/2025-07-27-%E6%B1%BD%E8%BD%A6%E5%8F%91%E5%8A%A8%E6%9C%BA%E7%BC%B8%E4%BD%93%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/" class="text-decoration-none text-dark hover-primary">汽车发动机缸体内部缺陷检测案例</a>
+                                <a href="http://localhost:1313/cases/2025-07-27-%E6%B1%BD%E8%BD%A6%E5%8F%91%E5%8A%A8%E6%9C%BA%E7%BC%B8%E4%BD%93%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/" class="text-decoration-none text-dark hover-primary">汽车发动机缸体内部缺陷检测案例</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 case-summary">采用高清电子内窥镜对汽车发动机缸体进行全面检测，成功发现并定位内部缺陷，为客户节省大量维修成本</p>
@@ -1813,7 +1832,7 @@
                      data-date="2025-07-16"
                      data-title="航空发动机叶片内部缺陷检测成功案例">
                     <div class="card h-100 shadow-sm hover-card">
-                        <a href="http://localhost:1319/cases/2025-07-16-%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA%E5%8F%B6%E7%89%87%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/" class="card-img-link">
+                        <a href="http://localhost:1313/cases/2025-07-16-%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA%E5%8F%B6%E7%89%87%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 <img src="../images/cases/case-2.jpg" class="card-img-top object-fit-cover" alt="航空发动机叶片内部缺陷检测成功案例" style="height: 200px;">
@@ -1827,7 +1846,7 @@
                                 
                             </div>
                             <h5 class="card-title case-title">
-                                <a href="http://localhost:1319/cases/2025-07-16-%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA%E5%8F%B6%E7%89%87%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/" class="text-decoration-none text-dark hover-primary">航空发动机叶片内部缺陷检测成功案例</a>
+                                <a href="http://localhost:1313/cases/2025-07-16-%E8%88%AA%E7%A9%BA%E5%8F%91%E5%8A%A8%E6%9C%BA%E5%8F%B6%E7%89%87%E6%A3%80%E6%B5%8B%E6%A1%88%E4%BE%8B/" class="text-decoration-none text-dark hover-primary">航空发动机叶片内部缺陷检测成功案例</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 case-summary">采用高精度工业内窥镜成功检测航空发动机叶片内部微小缺陷，提高检测效率60%，确保飞行安全。</p>
@@ -1848,6 +1867,13 @@
                     <h5>未找到匹配的案例</h5>
                     <p>请尝试调整筛选条件</p>
                 </div>
+            </div>
+
+            
+            <div class="d-grid my-3">
+                <button id="cases-load-more" class="btn btn-outline-primary">
+                    <i class="fas fa-plus-circle me-1"></i> 加载更多
+                </button>
             </div>
 
             
@@ -2494,6 +2520,100 @@ function updateCaseCount() {
 
 
 </script>
+<script>
+(function(){
+  const Bases = [
+    (typeof window !== 'undefined' && window.API_BASE) ? String(window.API_BASE).replace(/\/$/,'') : '',
+    'https://api.visndt.com',
+    'https://visndt.com',
+    'https://www.visndt.com'
+  ];
+  let page = 1;
+  const limit = 12;
+  function tile(c){
+    const img = c.cover_image || '/images/cases/case-1.webp';
+    const slug = c.slug || c.id || '';
+    return `
+    <div class="col-lg-6 col-xl-4 mb-4 case-item"
+         data-primary-category=""
+         data-application-field="${c.industry||''}"
+         data-application-scenario=""
+         data-date="${(c.published_at||'').slice(0,10)}"
+         data-title="${c.title||''}">
+      <div class="card h-100 shadow-sm hover-card">
+        <a href="../cases/${slug}" class="card-img-link">
+          <div class="card-img-wrapper">
+            <img src="${img}" class="card-img-top object-fit-cover" alt="${c.title||''}" style="height: 200px;">
+          </div>
+        </a>
+        <div class="card-body d-flex flex-column">
+          <div class="mb-2">${c.industry?(`<span class=\"badge bg-success me-1\">${c.industry}</span>`):''}</div>
+          <h5 class="card-title case-title"><a href="../cases/${slug}" class="text-decoration-none text-dark hover-primary">${c.title||''}</a></h5>
+          ${c.summary?`<p class="card-text text-muted flex-grow-1 case-summary">${c.summary}</p>`:''}
+          <div class="mt-auto"><small class="text-muted"><i class="far fa-calendar-alt me-1"></i>${(c.published_at||'').slice(0,10)}</small></div>
+        </div>
+      </div>
+    </div>`;
+  }
+  function fetchWithTimeout(url, ms){
+    return new Promise((resolve, reject) => {
+      const ctrl = new AbortController();
+      const to = setTimeout(() => { try{ ctrl.abort(); }catch{}; reject(new Error('timeout')); }, ms||5000);
+      fetch(url, { signal: ctrl.signal }).then(resolve).catch(reject).finally(() => clearTimeout(to));
+    });
+  }
+  async function fetchCases(params){
+    const qs = new URLSearchParams(params||{ page, limit }).toString();
+    for (const base of Bases) {
+      const prefix = base ? base.replace(/\/$/,'') : '';
+      const u = prefix ? `${prefix}/api/cases?${qs}` : `/api/cases?${qs}`;
+      try {
+        const r = await fetchWithTimeout(u, 6000);
+        if (!r.ok) throw new Error(`status ${r.status}`);
+        const j = await r.json();
+        const arr = Array.isArray(j) ? j : (j.items || []);
+        if (arr && arr.length) return arr;
+      } catch {}
+    }
+    return [];
+  }
+  document.addEventListener('DOMContentLoaded', async function(){
+    try{
+      const items = await fetchCases({ page, limit });
+      if(!items.length) return;
+      const wrap = document.getElementById('cases-container');
+      if(!wrap) return;
+      wrap.innerHTML = items.map(tile).join('');
+      const info = document.getElementById('case-count-info');
+      if(info) info.textContent = `共 ${items.length} 个案例`;
+      const moreBtn = document.getElementById('cases-load-more');
+      if (moreBtn) {
+        moreBtn.onclick = async function(){
+          page += 1;
+          const next = await fetchCases({ page, limit });
+          if(!next.length) return;
+          const wrap = document.getElementById('cases-container');
+          if(!wrap) return;
+          wrap.insertAdjacentHTML('beforeend', next.map(tile).join(''));
+          const info = document.getElementById('case-count-info');
+          if(info) info.textContent = `共 ${(document.querySelectorAll('.case-item')||[]).length} 个案例`;
+        };
+      }
+    }catch{}
+  });
+})();
+</script>
+<script>
+(function(){
+  document.addEventListener('DOMContentLoaded', function(){
+    const info = document.createElement('div');
+    info.className = 'alert alert-info mt-2';
+    info.innerHTML = '<i class="fas fa-wifi me-2"></i>已接入在线数据：行业过滤有效，其他高级参数以静态数据为准';
+    const sidebar = document.querySelector('.col-lg-3 .card .card-body');
+    if (sidebar) sidebar.appendChild(info);
+  });
+})();
+</script>
 
 <style>
  
@@ -2777,16 +2897,17 @@ function updateCaseCount() {
         </div>
       </div>
     </div>
-    
     <script>
       var _hmt = _hmt || [];
       (function() {
-        var hm = document.createElement("script");
-        hm.src = "https://hm.baidu.com/hm.js?90cc6b96ca32b2455d73fa05c28fd923";
-        var s = document.getElementsByTagName("script")[0]; 
+        var host = window.location.hostname;
+        if (host === 'localhost' || host === '127.0.0.1') return;
+        var hm = document.createElement('script');
+        hm.src = 'https://hm.baidu.com/hm.js?90cc6b96ca32b2455d73fa05c28fd923';
+        var s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(hm, s);
       })();
-      </script>
+    </script>
       
 
     
@@ -2910,6 +3031,7 @@ style="position: fixed; right: 32px; bottom: 48px; z-index: 999; display: none; 
 }
 </style>
   </footer>
+
 
     
     

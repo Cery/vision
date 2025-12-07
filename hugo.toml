@@ -192,7 +192,7 @@ enableGitInfo = true
 
 # 输出配置
 [outputs]
-  home = ["HTML", "RSS", "SearchIndex"]
+  home = ["HTML", "RSS", "SearchIndex", "JSON"]
   section = ["HTML", "RSS", "ProductIndex"]
 
 # Markup配置 - 优化中文处理

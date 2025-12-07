@@ -1,0 +1,22 @@
+{{- $pages := where .Site.RegularPages "Type" "in" (slice "news" "cases" "products") -}}
+{{- $sorted := sort $pages "Date" "desc" -}}
+{{- $.Scratch.Set "items" (slice) -}}
+{{- range $sorted -}}
+  {{- $section := .Section -}}
+  {{- if eq $section "" -}}
+    {{- $section = .Type -}}
+  {{- end -}}
+  {{- $.Scratch.Add "items" (dict
+      "title" .Title
+      "section" $section
+      "uri" .RelPermalink
+      "date" (printf "%s" .Date)
+      "params" (.Params | default dict)
+  ) -}}
+{{- end -}}
+{{- $items := $.Scratch.Get "items" -}}
+{{- jsonify (dict
+    "generatedAt" (now)
+    "total" (len $items)
+    "items" $items
+) -}}

@@ -4,8 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>需求市场 | Vision Market</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="/css/vendor/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/vendor/font-awesome.min.css" rel="stylesheet">
+  <link href="/css/vendor/font-awesome-fonts.css" rel="stylesheet">
   <link href="/css/business.css" rel="stylesheet">
   <style>
     .hero-section { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 4rem 0; margin-bottom: 2rem; }
@@ -142,7 +143,7 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/vendor/bootstrap.bundle.min.js"></script>
 <script>
 (function() {
   const isProd = /(^|\.)visndt\.com$/i.test(location.hostname);
@@ -163,9 +164,9 @@ const App = {
   
   async loadData() {
     try {
-      // Fetch approved requirements
-      const url = (window.API_BASE || '') + '/api/requirements?limit=100&approved=1';
-      const res = await fetch(url);
+      const base = (window.API_BASE || '');
+      let res = await fetch(base + '/api/markets?limit=100&approved=1');
+      if (!res.ok) res = await fetch(base + '/api/requirements?limit=100&approved=1');
       const json = await res.json();
       this.data = Array.isArray(json) ? json : (json.items || []);
       
@@ -176,7 +177,19 @@ const App = {
       
       this.applyFilters();
     } catch (e) {
-      document.getElementById('reqGrid').innerHTML = `<div class="text-center py-5 text-muted">加载失败: ${e.message}</div>`;
+      try {
+        window.API_BASE = 'https://api.visndt.com';
+        let res2 = await fetch((window.API_BASE || '') + '/api/markets?limit=100&approved=1');
+        if (!res2.ok) res2 = await fetch((window.API_BASE || '') + '/api/requirements?limit=100&approved=1');
+        const json2 = await res2.json();
+        this.data = Array.isArray(json2) ? json2 : (json2.items || []);
+        document.getElementById('statReq').textContent = this.data.length;
+        const quotes2 = this.data.reduce((sum, r) => sum + (r.QuoteCount||r.quote_count||0), 0);
+        document.getElementById('statQuote').textContent = quotes2;
+        this.applyFilters();
+      } catch(err) {
+        document.getElementById('reqGrid').innerHTML = `<div class="text-center py-5 text-muted">加载失败: ${err.message}</div>`;
+      }
     }
   },
   

@@ -33,7 +33,7 @@ class RequirementCenter {
     // 检查API服务状态
     async checkApiStatus() {
         try {
-            const response = await fetch(`${this.apiBase}/api/requirements`, { method: 'GET' });
+            const response = await fetch(`${this.apiBase}/api/markets`, { method: 'GET' });
             if (response.ok) {
                 console.log('✅ API服务连接正常');
                 this.apiAvailable = true;
@@ -588,7 +588,7 @@ ${data.description}
 
     // 保存到本地存储
     saveToLocalStorage(data) {
-        const requirements = JSON.parse(localStorage.getItem('requirements') || '[]');
+        const requirements = JSON.parse(localStorage.getItem('markets') || '[]');
         requirements.unshift(data);
 
         // 只保留最新的50条记录
@@ -596,7 +596,7 @@ ${data.description}
             requirements.splice(50);
         }
 
-        localStorage.setItem('requirements', JSON.stringify(requirements));
+        localStorage.setItem('markets', JSON.stringify(requirements));
         console.log('💾 需求已保存到本地存储');
     }
 
@@ -615,7 +615,10 @@ ${data.description}
 
     // 从API加载需求
     async loadFromApi() {
-        const response = await fetch(`${this.apiBase}/api/requirements`);
+        let response = await fetch(`${this.apiBase}/api/markets`);
+        if (!response.ok) {
+            response = await fetch(`${this.apiBase}/api/requirements`);
+        }
         if (!response.ok) {
             throw new Error('API请求失败');
         }
@@ -625,7 +628,7 @@ ${data.description}
 
     // 从本地存储或示例数据加载
     async loadFromLocalStorage() {
-        const localRequirements = JSON.parse(localStorage.getItem('requirements') || '[]');
+        const localRequirements = JSON.parse(localStorage.getItem('markets') || localStorage.getItem('requirements') || '[]');
         this.requirements = localRequirements;
         if (this.requirements.length) {
             this.renderRequirements();
@@ -1105,20 +1108,24 @@ async function verifyRequirementPassword(requirementID) {
     if (!pw) { alert('请输入授权密码'); return; }
     const api = (window.requirementCenter && window.requirementCenter.apiBase) || '';
     try {
-        let resp = await fetch(`${api}/api/requirements/${encodeURIComponent(requirementID)}?view_password=${encodeURIComponent(pw)}`);
-        let data = null;
-        if (resp.ok) data = await resp.json().catch(()=>null);
-        if (!resp.ok || !(data && (data.ContactName || data.ContactPhone || data.ContactCompany))) {
-            resp = await fetch(`${api}/api/requirements/${encodeURIComponent(requirementID)}?supplier_access_password=${encodeURIComponent(pw)}`);
-            if (resp.ok) data = await resp.json().catch(()=>null);
+        async function getDetail(qs){
+            let r = await fetch(`${api}/api/markets/${encodeURIComponent(requirementID)}${qs}`);
+            if (!r.ok) r = await fetch(`${api}/api/requirements/${encodeURIComponent(requirementID)}${qs}`);
+            if (!r.ok) return null;
+            try { return await r.json(); } catch { return null; }
         }
-        if (resp.ok && data && (data.ContactName || data.ContactPhone || data.ContactCompany)) {
+        let data = await getDetail(`?view_password=${encodeURIComponent(pw)}`);
+        if (!(data && (data.requirement || data))) {
+            data = await getDetail(`?supplier_access_password=${encodeURIComponent(pw)}`);
+        }
+        const det = data && (data.requirement || data) || null;
+        if (det && (det.ContactName || det.ContactPhone || det.ContactCompany)) {
             document.getElementById('contactUnlocked')?.setAttribute('style','');
-            document.getElementById('cName')?.replaceChildren(document.createTextNode(data.ContactName || ''));
-            document.getElementById('cPhone')?.replaceChildren(document.createTextNode(data.ContactPhone || ''));
-            const cc = document.getElementById('cCompany'); if (cc) cc.replaceChildren(document.createTextNode(data.ContactCompany || ''));
-            const ce = document.getElementById('cEmail'); if (ce) ce.replaceChildren(document.createTextNode(data.ContactEmail || ''));
-            const cd = document.getElementById('cDept'); if (cd) cd.replaceChildren(document.createTextNode(data.ContactDepartment || ''));
+            document.getElementById('cName')?.replaceChildren(document.createTextNode(det.ContactName || ''));
+            document.getElementById('cPhone')?.replaceChildren(document.createTextNode(det.ContactPhone || ''));
+            const cc = document.getElementById('cCompany'); if (cc) cc.replaceChildren(document.createTextNode(det.ContactCompany || ''));
+            const ce = document.getElementById('cEmail'); if (ce) ce.replaceChildren(document.createTextNode(det.ContactEmail || ''));
+            const cd = document.getElementById('cDept'); if (cd) cd.replaceChildren(document.createTextNode(det.ContactDepartment || ''));
         } else {
             alert('授权密码不正确或接口暂不可用');
         }

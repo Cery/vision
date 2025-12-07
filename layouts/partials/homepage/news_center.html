@@ -268,6 +268,79 @@
         </div>
     </div>
 </section>
+<script>
+(function(){
+  const host = location.hostname;
+  const isLocal = host === 'localhost' || host === '127.0.0.1';
+  const base = (typeof window !== 'undefined' && window.API_BASE) ? String(window.API_BASE).replace(/\/$/,'') : '';
+  const Bases = isLocal ? [base, ''] : [
+    base,
+    'https://api.visndt.com',
+    'https://visndt.com',
+    'https://www.visndt.com'
+  ];
+  function fill(selector, items){
+    const el = document.querySelector(selector);
+    if (!el) return;
+    el.innerHTML = items.map(n => (
+      `<div class="news-item d-flex mb-2">`
+      + `<div class="news-image me-3 flex-shrink-0"><img src="${n.cover_image||'/images/news/news-1.jpeg'}" alt="${n.title}" class="news-thumbnail"></div>`
+      + `<div class="news-content flex-grow-1">`
+      + `<h4 class="news-title mb-1"><a href="/news/${n.slug||n.id}" class="text-dark text-decoration-none hover-primary">${n.title}</a></h4>`
+      + `<p class="news-summary mb-1">${(n.summary||'').slice(0,80)}</p>`
+      + `<small class="news-date">${(n.published_at||'').slice(0,10)}</small>`
+      + `</div></div>`
+    )).join('');
+  }
+  function compact(selector, items, badge){
+    const el = document.querySelector(selector);
+    if (!el) return;
+    el.innerHTML = items.map(n => (
+      `<div class="news-item-compact d-flex justify-content-between align-items-start py-2 border-bottom border-light">`
+      + `<div class="item-content flex-grow-1 pe-2">`
+      + `<a href="/news/${n.slug||n.id}" class="item-title text-dark text-decoration-none d-block fw-medium">${n.title}</a>`
+      + `<small class="item-summary text-muted d-block mt-1">${(n.summary||'').slice(0,35)}</small>`
+      + `</div>`
+      + `<div class="item-meta text-end flex-shrink-0">`
+      + `<small class="item-date text-muted d-block">${(n.published_at||'').slice(5,10)}</small>`
+      + `<span class="badge bg-primary bg-opacity-10 text-primary mt-1">${badge}</span>`
+      + `</div></div>`
+    )).join('');
+  }
+  function fetchWithTimeout(url, ms){
+    return new Promise((resolve, reject) => {
+      const ctrl = new AbortController();
+      const to = setTimeout(() => { try{ ctrl.abort(); }catch{}; reject(new Error('timeout')); }, ms||5000);
+      fetch(url, { signal: ctrl.signal }).then(resolve).catch(reject).finally(() => clearTimeout(to));
+    });
+  }
+  async function fetchCat(cat, limit){
+    const qs = `category=${encodeURIComponent(cat)}&limit=${limit}`;
+    for (const base of Bases) {
+      const prefix = base ? base.replace(/\/$/,'') : '';
+      const u = prefix ? `${prefix}/api/news?${qs}` : `/api/news?${qs}`;
+      try {
+        const r = await fetchWithTimeout(u, 6000);
+        if (!r.ok) throw new Error(`status ${r.status}`);
+        const j = await r.json();
+        const arr = Array.isArray(j) ? j : (j.items || []);
+        if (arr && arr.length) return arr;
+      } catch {}
+    }
+    return [];
+  }
+  document.addEventListener('DOMContentLoaded', async function(){
+    try {
+      const [industry, exh, tech] = await Promise.all([
+        fetchCat('行业资讯',5), fetchCat('展会资讯',5), fetchCat('技术文章',3)
+      ]);
+      if (industry.length) fill('.col-lg-7 .card-body', industry);
+      if (exh.length) compact('.col-lg-5 .news-section:nth-child(1) .section-content', exh, '展会');
+      if (tech.length) compact('.col-lg-5 .news-section:nth-child(2) .section-content', tech, '技术');
+    } catch {}
+  });
+})();
+</script>
 
 <style>
 /* 主页新闻中心样式 - 优化布局对称性（标题样式已统一到全局section-titles.css） */

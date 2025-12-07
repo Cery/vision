@@ -1,0 +1,189 @@
+{{ define "main" }}
+<div class="container my-4">
+  <div class="row g-4">
+    <div class="col-lg-4">
+{{ partial "market-form.html" . }}
+    </div>
+    <div class="col-lg-8">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h2 class="mb-0 d-flex align-items-center gap-2">
+          <i class="fa-solid fa-store text-primary"></i>
+          需求市场
+        </h2>
+        <div class="d-flex flex-wrap gap-2">
+          <a href="/entry-demand.html" class="btn btn-sm btn-outline-primary">
+            <i class="fa-solid fa-user-tie me-1"></i> 发布方入口
+          </a>
+          <a href="/entry-supplier.html" class="btn btn-sm btn-outline-success">
+            <i class="fa-solid fa-industry me-1"></i> 供应商入口
+          </a>
+        </div>
+      </div>
+      <div class="row g-3 mb-3 align-items-center">
+        <div class="col-md-4">
+          <div class="input-group">
+            <span class="input-group-text"><i class="fa-solid fa-list"></i></span>
+            <select id="primaryFilter" class="form-select">
+              <option value="">全部分类</option>
+              <option value="电子内窥镜">电子内窥镜</option>
+              <option value="光纤内窥镜">光纤内窥镜</option>
+              <option value="光学内窥镜">光学内窥镜</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="input-group">
+            <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input type="text" id="marketsSearch" class="form-control" placeholder="搜索编号或标题，如 REQ-2025 或 电子内窥镜">
+            <button class="btn btn-outline-secondary" type="button" id="clearSearchBtn">清除</button>
+            <span class="input-group-text">
+              <input class="form-check-input mt-0" type="checkbox" value="" id="onlyOpenQuotesFilter" aria-label="仅开放报价">
+            </span>
+            <label class="input-group-text" for="onlyOpenQuotesFilter">仅开放报价</label>
+          </div>
+        </div>
+        <div class="col-md-12 d-flex flex-wrap align-items-center gap-2">
+          <select id="statusFilter" class="form-select form-select-sm" style="max-width:160px;">
+            <option value="">状态：全部</option>
+            <option value="公开">公开</option>
+            <option value="隐私">隐私</option>
+            <option value="关闭">关闭</option>
+          </select>
+          <select id="progressFilter" class="form-select form-select-sm" style="max-width:160px;">
+            <option value="">进度：全部</option>
+            <option value="发布中">发布中</option>
+            <option value="接洽中">接洽中</option>
+            <option value="已完成">已完成</option>
+          </select>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="onlyContactPublicFilter">
+            <label class="form-check-label" for="onlyContactPublicFilter">仅联系方式公开</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="groupByCompanyToggle">
+            <label class="form-check-label" for="groupByCompanyToggle">按企业分组分页</label>
+          </div>
+          <span id="companyFilterHint" class="badge bg-light text-dark border" style="display:none;"></span>
+        </div>
+      </div>
+      <div id="marketsList">
+        <div class="text-muted">加载最新需求...</div>
+      </div>
+      {{ partial "enhanced-pagination.html" (dict "context" . "containerId" "marketsList" "itemsPerPage" 6 "itemType" "需求") }}
+      <div id="marketsCompanyList" class="row g-3" style="display:none;"></div>
+      {{ partial "enhanced-pagination.html" (dict "context" . "containerId" "marketsCompanyList" "itemsPerPage" 10 "itemType" "企业组") }}
+      <div class="mt-3">
+        <div class="d-flex flex-wrap align-items-center gap-2">
+          <button class="btn btn-sm btn-outline-secondary" onclick="refreshMarketsList()"><i class="fa-solid fa-rotate me-1"></i>实时拉取最新需求</button>
+          <button id="exportReqCsvBtn" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-file-csv me-1"></i> 导出当前筛选 CSV</button>
+          <button id="exportReqXlsBtn" class="btn btn-sm btn-outline-success"><i class="fa-solid fa-file-excel me-1"></i> 导出 Excel</button>
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              <i class="fa-solid fa-gear me-1"></i> API设置
+            </button>
+            <ul class="dropdown-menu p-3" style="min-width: 300px;">
+              <li class="mb-2">
+                <label class="form-label small">API 地址</label>
+                <input type="text" class="form-control form-control-sm" id="apiBaseInput" placeholder="https://api.visndt.com">
+              </li>
+              <li class="d-grid gap-2">
+                <button class="btn btn-sm btn-primary" onclick="saveApiBase()">保存并刷新</button>
+                <button class="btn btn-sm btn-outline-secondary" onclick="resetApiBase()">重置为默认</button>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li class="small text-muted">
+                当前: <span id="currentApiBase">自动检测</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  const isProd = /(^|\.)visndt\.com$/i.test(location.hostname);
+  const defaultRemote = 'https://api.visndt.com';
+  let saved = '';
+  try { saved = (typeof localStorage !== 'undefined') ? (localStorage.getItem('API_BASE') || '') : ''; } catch {}
+  const allowInProd = { has: (v) => { if (v === '') return true; return /^https:\/\//i.test(String(v||'')); } };
+  if (isProd) {
+    window.API_BASE = allowInProd.has(saved) ? saved : '';
+  } else {
+    window.API_BASE = saved || defaultRemote;
+  }
+  if (location.protocol === 'https:' && /^http:\/\//i.test(window.API_BASE||'')) {
+    try { localStorage.removeItem('API_BASE'); } catch {}
+    window.API_BASE = isProd ? '' : defaultRemote;
+  }
+  window.API_BASE = String(window.API_BASE).replace(/\/$/, '');
+  document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('apiBaseInput');
+    const label = document.getElementById('currentApiBase');
+    if (input) input.value = window.API_BASE;
+    if (label) label.textContent = window.API_BASE || '同源/自动';
+  });
+})();
+
+window.saveApiBase = function() {
+  const val = document.getElementById('apiBaseInput').value.trim();
+  if (val) { localStorage.setItem('API_BASE', val); } else { localStorage.removeItem('API_BASE'); }
+  location.reload();
+};
+window.resetApiBase = function() { localStorage.removeItem('API_BASE'); location.reload(); };
+window.apiFetch = window.apiFetch || ((path, opts={}) => fetch(`${window.API_BASE}${path}`, opts));
+
+async function listMarkets() {
+  const tryFetch = async (base) => {
+    const r1 = await fetch(base + '/api/markets');
+    if (r1.ok) { const d = await r1.json(); return Array.isArray(d) ? d : (d.items || []); }
+    const r2 = await fetch(base + '/api/requirements');
+    if (r2.ok) { const d = await r2.json(); return Array.isArray(d) ? d : (d.items || []); }
+    return null;
+  };
+  const base1 = String(window.API_BASE || '');
+  let data = await tryFetch(base1);
+  if (data) return data;
+  window.API_BASE = 'https://api.visndt.com';
+  try { localStorage.setItem('API_BASE', window.API_BASE); } catch {}
+  data = await tryFetch(window.API_BASE);
+  if (data) return data;
+  throw new Error('网络错误或接口不可用');
+}
+
+async function refreshMarketsList() {
+  const listEl = document.getElementById('marketsList');
+  let items = [];
+  try { items = await listMarkets(); } catch(e) {
+    listEl.innerHTML = `<div class="alert alert-danger d-flex align-items-center"><i class="fa-solid fa-circle-exclamation me-2"></i><div>拉取数据失败: ${e.message} (API: ${window.API_BASE})</div></div>`;
+    return;
+  }
+  if (!items.length) {
+    listEl.innerHTML = `<div class="alert alert-info d-flex align-items-center"><i class="fa-solid fa-circle-info me-2"></i><div>暂无实时需求数据。</div></div>`;
+    return;
+  }
+  listEl.innerHTML = items.map(item => `
+    <div class="card mb-3 requirement-card" style="min-height: 160px;" data-id="${item.RequirementID}" data-status="${item.Status}" data-title="${(item.Title || '').toLowerCase()}" data-primary="${item.PrimaryCategory || ''}" data-secondary="${item.SecondaryCategory || ''}" data-dept="" data-budget="${item.BudgetRange || ''}" data-published="${item.PublishedAt || ''}" data-preview="${item.PublicPreview || ''}" data-contact-public="${item.ContactPublic || false}" data-contact-name="${item.ContactName || ''}" data-contact-phone="${item.ContactPhone || ''}" data-contact-company="${item.ContactCompany || ''}" data-allow-open="${item.AllowOpenQuotes || false}" data-progress="${item.Progress || '发布中'}" data-params='${JSON.stringify(item.Parameters || {})}'>
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <div class="mb-2">
+              <span class="badge bg-light text-dark border me-1">${item.PrimaryCategory||''}</span>
+              ${item.AllowOpenQuotes ? '<span class="badge bg-light text-success border"><i class="fa-solid fa-check me-1"></i>可报价</span>' : ''}
+            </div>
+            <h5 class="card-title mb-1">${item.Title||''}</h5>
+            <div class="text-muted small mb-2">
+              <span class="me-3"><i class="fa-regular fa-calendar me-1"></i>${(item.PublishedAt||'').split('T')[0]}</span>
+              <span><i class="fa-solid fa-hashtag me-1"></i>${item.RequirementID||''}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+document.addEventListener('DOMContentLoaded', () => refreshMarketsList());
+</script>
+{{ end }}

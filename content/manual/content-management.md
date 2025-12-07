@@ -1,17 +1,24 @@
 ---
-title: "内容管理手册"
-date: 2025-02-09
+title: "管理平台实施与运维手册（2025-12-06）"
+date: 2025-12-06
 draft: false
-summary: "本文档详细说明了平台内容的更新、删除及图片资源的管理规范。"
+summary: "纳入 A+B 索引策略与前台动态渲染，统一后台 CRUD 管理与字段映射，提供部署与故障排查指南。"
 ---
 
-# 内容管理手册
+# 管理平台实施与运维手册（2025-12-06）
 
-本文档旨在指导管理员如何维护 Vision 平台的内容，包括新闻、产品、案例的增删改，以及图片资源的上传与管理。
+本文档指导管理员如何维护 Vision 平台内容与运行，包括新闻、产品、案例的增删改、图片资源管理、A+B 数据索引策略、公共只读 API 前台动态渲染、后台 CRUD 管理与字段映射、部署与故障排查。
 
 ## 一、内容管理
 
 所有内容均以 **Markdown (.md)** 文件形式存储在 `content/` 目录下。
+
+同时，为实现“后台管理无需改项目文件”，管理端使用后端 CRUD 接口维护数据，前台列表页通过公共只读 API 动态渲染，静态 Markdown 作为回退与索引来源。
+
+### A+B 组合策略概要
+- A（主）索引：`/data/index.json`，模板 `layouts/data/list.json`，字段 `title|section|uri|params`（`section` 为空回退 `.Type`）。
+- B（备）API：`GET /api/news|cases|products`，列表页与首页脚本优先拉取，网络故障回退到静态列表。
+- 注意：`layouts/data/list.json` 文件名必须为 `list.json`，切勿改为 `list.json.json`。
 
 ### 1. 产品管理 (Products)
 - **路径**：`content/products/[供应商ID]/`
@@ -37,6 +44,19 @@ summary: "本文档详细说明了平台内容的更新、删除及图片资源�
 ### 3. 应用案例 (Cases)
 - **路径**：`content/cases/`
 - **管理方式**：同新闻资讯，注意关联对应的产品型号（如有）。
+
+### 4. 后台 CRUD 与字段映射（新增）
+- 管理端接口：
+  - 新闻：`GET/POST/PATCH/DELETE /api/admin/news`
+  - 案例：`GET/POST/PATCH/DELETE /api/admin/cases`
+  - 产品：`GET/POST/PATCH/DELETE /api/admin/products`
+  - 统计：`GET /api/admin/stats`
+  - 导入：`POST /api/admin/import-{news|cases|products}`（读取 `base/index.json`）
+- 请求头：`X-Admin-Key`（由 `/admin/js/admin.js` 注入）。
+- 字段映射：
+  - 新闻：`title`、`slug`、`summary`、`content`、`cover_image`、`category`（单值）、`tags`（逗号分隔）、`status`
+  - 案例：`title`、`slug`、`summary`、`content`、`cover_image`、`industry`、`status`
+  - 产品：`name(=title)`、`slug`、`summary`、`description(=content)`、`primary_category`、`model`、`series`、`cover_image`
 
 ---
 
@@ -248,7 +268,7 @@ gallery:
     - 验证：`npx wrangler whoami` 会显示基于 Token 的登录信息。
   - 若使用旧方法（`CLOUDFLARE_API_KEY` + `CLOUDFLARE_EMAIL`），请优先改为 `CLOUDFLARE_API_TOKEN`（旧方法已不推荐）。
 
-### 10. 安全与合规
+## 七、安全与合规
 
 - 切勿在仓库明文保存密钥；使用 `wrangler secret put` 或 CI 注入环境变量。
 - 前端代码不应记录或回显管理员密钥；所有管理接口由后台以 `X-Admin-Key` 校验。

@@ -4,8 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>发布需求 | Vision Market</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="/css/vendor/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/vendor/font-awesome.min.css" rel="stylesheet">
+  <link href="/css/vendor/font-awesome-fonts.css" rel="stylesheet">
   <link href="/css/business.css" rel="stylesheet">
 </head>
 <body>
@@ -114,7 +115,7 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/vendor/bootstrap.bundle.min.js"></script>
 <script>
 (function() {
   const isProd = /(^|\.)visndt\.com$/i.test(location.hostname);
@@ -143,25 +144,39 @@ form.addEventListener('submit', async (e)=>{
   const payload = {};
   fd.forEach((v,k) => payload[k] = v);
   const body = {
+    // markets 端点首选字段
+    Title: payload.Title,
+    PublicPreview: payload.PublicPreview,
+    primaryCategory: payload.primaryCategory,
+    secondaryCategory: '',
+    BudgetRange: payload.BudgetRange,
+    contactCompany: payload.contactCompany,
+    contactName: payload.contactName,
+    contactPhone: payload.contactPhone,
+    contactEmail: payload.contactEmail,
+    contact_public: document.getElementById('ContactPublic').checked,
+    // requirements 兼容字段
     title: payload.Title,
+    public_preview: payload.PublicPreview,
     primary_category: payload.primaryCategory,
     budget_range: payload.BudgetRange,
-    public_preview: payload.PublicPreview,
     contact_company: payload.contactCompany,
     contact_name: payload.contactName,
     contact_phone: payload.contactPhone,
-    contact_email: payload.contactEmail,
-    contact_public: document.getElementById('ContactPublic').checked
+    contact_email: payload.contactEmail
   };
   
   const btn = form.querySelector('button[type="submit"]');
   btn.disabled = true; btn.textContent = '提交中...';
   
   try{
-    const resp = await apiFetch('/api/requirements', { method:'POST', body: JSON.stringify(body) });
-    let data = {}; try{ data = await resp.json(); } catch{}
-    
-    if(!resp.ok){ 
+    let resp = await apiFetch('/api/markets', { method:'POST', body: JSON.stringify(body) });
+    let data = {}; let ok = resp.ok; try{ data = await resp.json(); } catch{}
+    if(!ok){
+      resp = await apiFetch('/api/requirements', { method:'POST', body: JSON.stringify(body) });
+      ok = resp.ok; try{ data = await resp.json(); } catch{}
+    }
+    if(!ok){
       throw new Error((data && (data.error||data.message))||'发布失败');
     }
     

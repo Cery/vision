@@ -16,7 +16,8 @@ export default {
       'http://localhost:1313', 'http://127.0.0.1:1313',
       'http://localhost:8888', 'http://127.0.0.1:8888',
       'http://localhost:8000', 'http://127.0.0.1:8000',
-      'http://localhost:1314', 'http://127.0.0.1:1314'
+      'http://localhost:1314', 'http://127.0.0.1:1314',
+      'http://localhost:1319', 'http://127.0.0.1:1319'
     ]);
     let allowOrigin = 'https://visndt.com';
     if (origin) {
@@ -379,6 +380,107 @@ export default {
        } catch(e) { return json({ error: e.message }, 500); }
     }
 
+    if (isApi('news') && request.method === 'GET') {
+      const cat = url.searchParams.get('category');
+      const page = Math.max(parseInt(url.searchParams.get('page')||'1',10)||1, 1);
+      const limit = Math.min(parseInt(url.searchParams.get('limit')||'20',10)||20, 200);
+      let baseSql = "FROM news WHERE status='published'";
+      const binds = [];
+      const countBinds = [];
+      if (cat) { baseSql += ' AND category = ?'; binds.push(cat); countBinds.push(cat); }
+      const { results: countRows } = await env.DB.prepare(`SELECT COUNT(1) AS total ${baseSql}`).bind(...countBinds).all();
+      const total = (countRows && countRows[0] && countRows[0].total) || 0;
+      const offset = (page - 1) * limit;
+      const { results } = await env.DB.prepare(`SELECT news_id, title, slug, summary, cover_image, category, tags, author, published_at ${baseSql} ORDER BY published_at DESC LIMIT ? OFFSET ?`).bind(...binds, limit, offset).all();
+      const items = (results||[]).map(n => ({
+        id: n.news_id,
+        title: n.title,
+        slug: n.slug,
+        summary: n.summary,
+        cover_image: n.cover_image,
+        category: n.category,
+        tags: n.tags,
+        author: n.author,
+        published_at: n.published_at
+      }));
+      return json({ items, page, limit, total });
+    }
+
+    if (isApi('cases') && request.method === 'GET') {
+      const ind = url.searchParams.get('industry');
+      const page = Math.max(parseInt(url.searchParams.get('page')||'1',10)||1, 1);
+      const limit = Math.min(parseInt(url.searchParams.get('limit')||'20',10)||20, 200);
+      let baseSql = "FROM cases WHERE status='published'";
+      const binds = [];
+      const countBinds = [];
+      if (ind) { baseSql += ' AND industry = ?'; binds.push(ind); countBinds.push(ind); }
+      const { results: countRows } = await env.DB.prepare(`SELECT COUNT(1) AS total ${baseSql}`).bind(...countBinds).all();
+      const total = (countRows && countRows[0] && countRows[0].total) || 0;
+      const offset = (page - 1) * limit;
+      const { results } = await env.DB.prepare(`SELECT case_id, title, slug, summary, cover_image, industry, related_product_id, published_at ${baseSql} ORDER BY published_at DESC LIMIT ? OFFSET ?`).bind(...binds, limit, offset).all();
+      const items = (results||[]).map(c => ({
+        id: c.case_id,
+        title: c.title,
+        slug: c.slug,
+        summary: c.summary,
+        cover_image: c.cover_image,
+        industry: c.industry,
+        related_product_id: c.related_product_id,
+        published_at: c.published_at
+      }));
+      return json({ items, page, limit, total });
+    }
+
+    if (isApi('products') && request.method === 'GET' && !path.startsWith('/api/admin/products')) {
+      const cat = url.searchParams.get('category');
+      const limit = Math.min(parseInt(url.searchParams.get('limit')||'100',10)||100, 200);
+      let sql = "SELECT product_id, supplier_id, name, slug, model, series, primary_category, secondary_category, summary, cover_image, seo_title, parameters_json FROM products WHERE status IN ('active','published')";
+      const binds = [];
+      if (cat) { sql += ' AND primary_category = ?'; binds.push(cat); }
+      sql += ' ORDER BY updated_at DESC LIMIT ?'; binds.push(limit);
+      const { results } = await env.DB.prepare(sql).bind(...binds).all();
+      const items = (results||[]).map(p => {
+        let params = {};
+        try { params = JSON.parse(p.parameters_json || '{}'); } catch {}
+        const norm = (k) => String(k||'').toLowerCase();
+        const getVal = (key) => {
+          if (Array.isArray(params)) {
+            const found = params.find(it => norm(it.name) === norm(key));
+            return found ? found.value : '';
+          }
+          return params[key] || '';
+        };
+        const map = {
+          probe_diameter: getVal('探头直径'),
+          viewing_angle: getVal('视向'),
+          light_source: getVal('光源'),
+          working_length: getVal('工作长度'),
+          screen_size: getVal('主机屏幕'),
+          battery_life: getVal('待机时长'),
+          resolution: getVal('分辨率'),
+          field_of_view: getVal('视场角'),
+          focal_length: getVal('焦距'),
+          guidance: getVal('导向'),
+          cable_material: getVal('插入管材质')
+        };
+        return {
+          id: p.product_id,
+          supplier_id: p.supplier_id,
+          name: p.name,
+          slug: p.slug,
+          model: p.model,
+          series: p.series,
+          primary_category: p.primary_category,
+          secondary_category: p.secondary_category,
+          summary: p.summary,
+          cover_image: p.cover_image,
+          seo_title: p.seo_title,
+          parameters: map
+        };
+      });
+      return json({ items });
+    }
+
     // Admin: Login
     if (isApi('admin/login') && request.method === 'POST') {
       const data = await bodyJSON(request);
@@ -482,6 +584,50 @@ export default {
       } catch {}
       return json({ ok: true, requirement_id, RequirementID: requirement_id, ViewPassword: view_password_plain, DemanderPassword: view_password_plain });
     }
+    if (isApi('markets') && request.method === 'POST') {
+      const data = await bodyJSON(request);
+      const requirement_id = String(data.requirementID || '').trim() || genRequirementID();
+      const now = new Date().toISOString();
+      const status = String(data.status || '').trim() || '公开';
+      const progress = String(data.progress || '').trim() || '发布中';
+      const contact_public = !!data.contact_public ? 1 : 0;
+      const allow_open_quotes = !!data.allow_open_quotes ? 1 : 0;
+      const parameters_json = JSON.stringify(data.Parameters || data.parameters || {});
+      let view_password_plain = String(data.view_password_plain || data.view_password || '').trim();
+      if (!view_password_plain) view_password_plain = genViewPassword(requirement_id);
+      const stmt = env.DB.prepare(
+        `INSERT INTO requirements (
+          requirement_id, title, public_preview, primary_category, secondary_category, approved, approved_at, status,
+          contact_name, contact_phone, contact_company, contact_email, contact_department,
+          contact_public, allow_open_quotes, parameters_json, published_at, budget_range, procurement_plan,
+          progress, view_password_plain, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      ).bind(
+        requirement_id, data.Title || '', data.PublicPreview || '', data.primaryCategory || '', data.secondaryCategory || '', 0, '', status,
+        data.contactName || '', data.contactPhone || '', data.contactCompany || '', data.contactEmail || '', data.contactDepartment || '',
+        contact_public, allow_open_quotes, parameters_json, data.PublishedAt || now, data.BudgetRange || '', data.procurementPlan || '',
+        progress, view_password_plain, now, now
+      );
+      await stmt.run();
+      try {
+        const meta = JSON.stringify({ contact_public: !!contact_public, allow_open_quotes: !!allow_open_quotes, password_plain: view_password_plain });
+        const demId = (data.contactCompany || '').trim() || (data.contactPhone || '').trim() || requirement_id;
+        await env.DB.prepare(`INSERT INTO demanders (
+          demander_id, name, company, contact_phone, contact_email, department, metadata_json, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(demander_id) DO UPDATE SET
+          name = excluded.name,
+          company = excluded.company,
+          contact_phone = excluded.contact_phone,
+          contact_email = excluded.contact_email,
+          department = excluded.department,
+          metadata_json = excluded.metadata_json,
+          updated_at = excluded.updated_at`).bind(
+          demId, data.contactName || '', data.contactCompany || '', data.contactPhone || '', data.contactEmail || '', data.contactDepartment || '', meta, now, now
+        ).run();
+      } catch {}
+      return json({ ok: true, requirement_id, RequirementID: requirement_id, ViewPassword: view_password_plain, DemanderPassword: view_password_plain });
+    }
 
     // List Requirements
     if (isApi('requirements') && request.method === 'GET' || isFn('listRequirements') && request.method === 'GET') {
@@ -506,6 +652,28 @@ export default {
         Parameters: (function(){ try { return JSON.parse(r.Parameters); } catch { return {}; } })()
       }));
       return json(items);
+    }
+    if (isApi('markets') && request.method === 'GET') {
+      const progress = url.searchParams.get('progress');
+      const category = url.searchParams.get('category');
+      const page = Math.max(parseInt(url.searchParams.get('page')||'1',10)||1, 1);
+      const limit = Math.min(parseInt(url.searchParams.get('limit')||'20',10)||20, 200);
+      let baseSql = "FROM requirements WHERE approved = 1 AND status = '公开'";
+      const binds = [];
+      const countBinds = [];
+      if (progress) { baseSql += ' AND progress = ?'; binds.push(progress); countBinds.push(progress); }
+      if (category) { baseSql += ' AND primary_category = ?'; binds.push(category); countBinds.push(category); }
+      const { results: countRows } = await env.DB.prepare(`SELECT COUNT(1) AS total ${baseSql}`).bind(...countBinds).all();
+      const total = (countRows && countRows[0] && countRows[0].total) || 0;
+      const offset = (page - 1) * limit;
+      const { results } = await env.DB.prepare(`SELECT requirement_id as RequirementID, title as Title, public_preview as PublicPreview, primary_category as PrimaryCategory, secondary_category as SecondaryCategory, approved as Approved, status as Status, contact_public as ContactPublic, contact_name as ContactName, contact_phone as ContactPhone, contact_company as ContactCompany, budget_range as BudgetRange, published_at as PublishedAt, progress as Progress, allow_open_quotes as AllowOpenQuotes, parameters_json as Parameters ${baseSql} ORDER BY created_at DESC LIMIT ? OFFSET ?`).bind(...binds, limit, offset).all();
+      const items = (results || []).map(r => ({
+        ...r,
+        ContactPublic: !!r.ContactPublic,
+        AllowOpenQuotes: !!r.AllowOpenQuotes,
+        Parameters: (function(){ try { return JSON.parse(r.Parameters); } catch { return {}; } })()
+      }));
+      return json({ items, page, limit, total });
     }
 
     // Requirement Detail
@@ -575,6 +743,64 @@ export default {
 
       return json({ role, requirement, quotes });
     }
+    if (isApi('markets/') && request.method === 'GET') {
+      const id = path.split('/').pop();
+      const stmt = env.DB.prepare('SELECT * FROM requirements WHERE requirement_id = ?').bind(id);
+      const { results } = await stmt.all();
+      if (!results || !results.length) return json({ error: 'NotFound' }, 404);
+      const r = results[0];
+      const anyPwd = url.searchParams.get('password') || '';
+      const supplierPwd = url.searchParams.get('supplier_access_password') || '';
+      const viewPwd = url.searchParams.get('view_password') || '';
+      let role = 'public';
+      if (anyPwd) {
+        try {
+          const { results: reqRows } = await env.DB.prepare('SELECT contact_company FROM requirements WHERE requirement_id = ?').bind(id).all();
+          const company = (reqRows && reqRows[0] && reqRows[0].contact_company) || '';
+          if (company) {
+            const like = `%"password_plain":"${anyPwd}"%`;
+            const { results: demRows } = await env.DB.prepare('SELECT 1 FROM demanders WHERE company = ? AND metadata_json LIKE ?').bind(company, like).all();
+            if (demRows && demRows.length) role = 'demander';
+          }
+        } catch {}
+      }
+      if (role === 'public' && anyPwd && typeof r.quote_password === 'string' && r.quote_password && anyPwd === r.quote_password) {
+        role = 'supplier';
+      }
+      if (role === 'public' && anyPwd && ((typeof r.view_password === 'string' && r.view_password && anyPwd === r.view_password) || (anyPwd === r.view_password_plain))) {
+        role = 'guest';
+      }
+      const showSensitiveLegacy = r.contact_public === 1 || (viewPwd && viewPwd === r.view_password_plain) || await verifySupplierPassword(env, supplierPwd);
+      const showSensitive = role !== 'public' ? true : showSensitiveLegacy;
+      const requirement = {
+        RequirementID: r.requirement_id,
+        Title: r.title,
+        PublicPreview: r.public_preview,
+        PrimaryCategory: r.primary_category,
+        SecondaryCategory: r.secondary_category,
+        Status: r.status,
+        BudgetRange: r.budget_range,
+        PublishedAt: r.published_at,
+        Progress: r.progress,
+        AllowOpenQuotes: !!r.allow_open_quotes,
+        Parameters: parseJSONSafe(r.parameters_json)
+      };
+      if (showSensitive) {
+        requirement.ContactName = r.contact_name;
+        requirement.ContactPhone = r.contact_phone;
+        requirement.ContactCompany = r.contact_company;
+        requirement.ContactEmail = r.contact_email;
+        requirement.ContactDepartment = r.contact_department;
+      }
+      let quotes = undefined;
+      if (role === 'demander') {
+        try {
+          const { results: qres } = await env.DB.prepare('SELECT quote_id as QuoteID, supplier_name as SupplierName, supplier_phone as SupplierPhone, amount as Amount, currency as Currency, remarks as Remarks, status as Status, created_at as CreatedAt FROM quotes WHERE requirement_id = ? ORDER BY created_at DESC LIMIT 200').bind(id).all();
+          quotes = qres || [];
+        } catch {}
+      }
+      return json({ role, requirement, quotes });
+    }
 
     // Update Requirement (Admin or Demander)
     if (isApi('requirements/') && request.method === 'PATCH') {
@@ -638,6 +864,66 @@ export default {
       const stmt = env.DB.prepare(sql).bind(...binds, reqId);
       const info = await stmt.run();
       // Sync demander password when view_password_plain updated by admin
+      if (info.changes > 0) {
+        try {
+          if (isAdmin && (Object.prototype.hasOwnProperty.call(data, 'view_password_plain') || Object.prototype.hasOwnProperty.call(data, 'view_password'))) {
+            const { results: reqRows } = await env.DB.prepare('SELECT contact_company FROM requirements WHERE requirement_id = ?').bind(reqId).all();
+            const company = (reqRows && reqRows[0] && reqRows[0].contact_company) || '';
+            if (company) {
+              const { results: demRows } = await env.DB.prepare('SELECT demander_id, metadata_json FROM demanders WHERE company = ?').bind(company).all();
+              if (demRows && demRows.length) {
+                const d = demRows[0];
+                let meta = {};
+                try { meta = JSON.parse(d.metadata_json || '{}'); } catch {}
+                meta.password_plain = String((Object.prototype.hasOwnProperty.call(data,'view_password') ? data.view_password : data.view_password_plain) || '');
+                const nowIso = new Date().toISOString();
+                await env.DB.prepare('UPDATE demanders SET metadata_json = ?, updated_at = ? WHERE demander_id = ?')
+                  .bind(JSON.stringify(meta), nowIso, d.demander_id).run();
+              }
+            }
+          }
+        } catch {}
+        return json({ ok: true, requirement_id: reqId });
+      }
+      return json({ error: 'UpdateFailed' }, 404);
+    }
+    if (isApi('markets/') && request.method === 'PATCH') {
+      const reqId = path.split('/').filter(p => p && p !== 'api' && p !== 'markets').shift();
+      if (!reqId) return json({ error: 'MissingRequirementID' }, 400);
+      const data = await bodyJSON(request);
+      let allowed = requireAdmin(request);
+      let isAdmin = allowed;
+      if (!allowed) {
+        const demPwd = String(data.demander_password || '').trim();
+        if (demPwd) {
+          try {
+            const { results: reqRows } = await env.DB.prepare('SELECT contact_company FROM requirements WHERE requirement_id = ?').bind(reqId).all();
+            const company = (reqRows && reqRows[0] && reqRows[0].contact_company) || '';
+            if (company) {
+              const like = `%"password_plain":"${demPwd}"%`;
+              const { results: demRows } = await env.DB.prepare('SELECT 1 FROM demanders WHERE company = ? AND metadata_json LIKE ?').bind(company, like).all();
+              if (demRows && demRows.length) allowed = true;
+            }
+          } catch {}
+        }
+      }
+      if (!allowed) return json({ error: 'Unauthorized' }, 401);
+      const fieldsAdmin = new Set(['status','progress','contact_public','view_password_plain', 'quote_password', 'view_password']);
+      const fieldsDemander = new Set(['status','progress','contact_public']);
+      const canUse = isAdmin ? fieldsAdmin : fieldsDemander;
+      const sets = [];
+      const binds = [];
+      if (canUse.has('status') && typeof data.status === 'string' && String(data.status).trim()) { sets.push('status = ?'); binds.push(String(data.status).trim()); }
+      if (canUse.has('progress') && typeof data.progress === 'string' && String(data.progress).trim()) { sets.push('progress = ?'); binds.push(String(data.progress).trim()); }
+      if (canUse.has('contact_public') && typeof data.contact_public !== 'undefined') { const v = !!data.contact_public ? 1 : 0; sets.push('contact_public = ?'); binds.push(v); }
+      if (canUse.has('view_password_plain') && typeof data.view_password_plain !== 'undefined') { sets.push('view_password_plain = ?'); binds.push(String(data.view_password_plain||'')); }
+      if (canUse.has('quote_password') && typeof data.quote_password === 'string') { sets.push('quote_password = ?'); binds.push(String(data.quote_password || '').trim()); }
+      if (canUse.has('view_password') && typeof data.view_password === 'string') { const vp = String(data.view_password || '').trim(); sets.push('view_password = ?'); binds.push(vp); sets.push('view_password_plain = ?'); binds.push(vp); }
+      if (!sets.length) return json({ error: 'NoFields' }, 400);
+      sets.push('updated_at = ?'); binds.push(new Date().toISOString());
+      const sql = `UPDATE requirements SET ${sets.join(', ')} WHERE requirement_id = ?`;
+      const stmt = env.DB.prepare(sql).bind(...binds, reqId);
+      const info = await stmt.run();
       if (info.changes > 0) {
         try {
           if (isAdmin && (Object.prototype.hasOwnProperty.call(data, 'view_password_plain') || Object.prototype.hasOwnProperty.call(data, 'view_password'))) {
@@ -837,7 +1123,7 @@ export default {
     }
 
     // Admin: list/update requirements
-    if (isFn('adminListRequirements') && request.method === 'GET' || isApi('admin/requirements') && request.method === 'GET') {
+    if (isFn('adminListRequirements') && request.method === 'GET' || isApi('admin/requirements') && request.method === 'GET' || isApi('admin/markets') && request.method === 'GET') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       // Basic search filters (optional)
       const q = (url.searchParams.get('q') || '').trim().toLowerCase();
@@ -869,7 +1155,7 @@ export default {
       const offsetNext = items.length === limit ? String(offset + items.length) : '';
       return json({ items, offsetNext });
     }
-    if (isFn('adminUpdateRequirement') && request.method === 'POST' || isApi('admin/requirements') && (request.method === 'POST')) {
+    if (isFn('adminUpdateRequirement') && request.method === 'POST' || isApi('admin/requirements') && (request.method === 'POST') || isApi('admin/markets') && (request.method === 'POST')) {
       // Apply-to-all update
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       const data = await bodyJSON(request);
@@ -936,7 +1222,7 @@ export default {
       }
       return json({ error: 'InvalidRequest' }, 400);
     }
-    if (isApi('admin/requirements/') && request.method === 'PATCH') {
+    if (isApi('admin/requirements/') && request.method === 'PATCH' || isApi('admin/markets/') && request.method === 'PATCH') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       const id = path.split('/').pop();
       const data = await bodyJSON(request);
@@ -954,7 +1240,7 @@ export default {
     }
 
     // Admin: delete a single requirement (and cascade delete quotes)
-    if (isApi('admin/requirements/') && request.method === 'DELETE') {
+    if (isApi('admin/requirements/') && request.method === 'DELETE' || isApi('admin/markets/') && request.method === 'DELETE') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       const id = path.split('/').pop();
       try {
@@ -1816,8 +2102,8 @@ export default {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       try {
         const base = url.searchParams.get('base') || env.SYNC_BASE_URL || 'https://www.visndt.com/data';
-        const siteBase = String(base).replace(/\/?data\/?$/i, '');
-        const idx = await fetchJsonSafe(`${siteBase}/index.json`);
+        const idxUrl = (String(base).endsWith('/')) ? (String(base) + 'index.json') : (String(base) + '/index.json');
+        const idx = await fetchJsonSafe(idxUrl);
         const list = Array.isArray(idx) ? idx : [];
         const items = list.filter(i => {
           const t = String(i.type || i.section || '').toLowerCase();
@@ -1859,8 +2145,8 @@ export default {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       try {
         const base = url.searchParams.get('base') || env.SYNC_BASE_URL || 'https://www.visndt.com/data';
-        const siteBase = String(base).replace(/\/?data\/?$/i, '');
-        const idx = await fetchJsonSafe(`${siteBase}/index.json`);
+        const idxUrl = (String(base).endsWith('/')) ? (String(base) + 'index.json') : (String(base) + '/index.json');
+        const idx = await fetchJsonSafe(idxUrl);
         const list = Array.isArray(idx) ? idx : [];
         const items = list.filter(i => {
           const t = String(i.type || i.section || '').toLowerCase();
@@ -1901,8 +2187,8 @@ export default {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       try {
         const base = url.searchParams.get('base') || env.SYNC_BASE_URL || 'https://www.visndt.com/data';
-        const siteBase = String(base).replace(/\/?data\/?$/i, '');
-        const idx = await fetchJsonSafe(`${siteBase}/index.json`);
+        const idxUrl = (String(base).endsWith('/')) ? (String(base) + 'index.json') : (String(base) + '/index.json');
+        const idx = await fetchJsonSafe(idxUrl);
         const list = Array.isArray(idx) ? idx : [];
         const items = list.filter(i => {
           const t = String(i.type || i.section || '').toLowerCase();
@@ -1945,8 +2231,50 @@ export default {
       }
     }
 
+    if (isApi('admin/debug-index') && request.method === 'GET') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      try {
+        const base = url.searchParams.get('base') || env.SYNC_BASE_URL || 'https://www.visndt.com/data';
+        const idxUrl = (String(base).endsWith('/')) ? (String(base) + 'index.json') : (String(base) + '/index.json');
+        const idx = await fetchJsonSafe(idxUrl);
+        const arr = Array.isArray(idx) ? idx : [];
+        const sample = arr.slice(0, 10).map(i => ({
+          title: i.title,
+          section: i.section || i.type,
+          uri: i.uri,
+          params: i.params ? Object.keys(i.params) : []
+        }));
+        return json({ ok: true, idxUrl, count: arr.length, sample });
+      } catch (e) {
+        return json({ ok: false, error: String(e && e.message || e) }, 500);
+      }
+    }
+
     // Public: list requirements by view password only (for publisher entrance without ID)
     if (isApi('requirements/by-password') && request.method === 'GET') {
+      const viewPwd = (url.searchParams.get('view_password') || '').trim();
+      if (!viewPwd) return json({ error: 'MissingPassword' }, 400);
+      const { results } = await env.DB.prepare('SELECT * FROM requirements WHERE view_password_plain = ? ORDER BY created_at DESC LIMIT 100').bind(viewPwd).all();
+      const items = (results || []).map(r => ({
+        RequirementID: r.requirement_id,
+        Title: r.title,
+        PrimaryCategory: r.primary_category,
+        SecondaryCategory: r.secondary_category,
+        Status: r.status,
+        BudgetRange: r.budget_range,
+        PublishedAt: r.published_at,
+        Progress: r.progress,
+        AllowOpenQuotes: !!r.allow_open_quotes,
+        Parameters: parseJSONSafe(r.parameters_json),
+        ContactName: r.contact_name,
+        ContactPhone: r.contact_phone,
+        ContactCompany: r.contact_company,
+        ContactEmail: r.contact_email,
+        ContactDepartment: r.contact_department
+      }));
+      return json({ items });
+    }
+    if (isApi('markets/by-password') && request.method === 'GET') {
       const viewPwd = (url.searchParams.get('view_password') || '').trim();
       if (!viewPwd) return json({ error: 'MissingPassword' }, 400);
       const { results } = await env.DB.prepare('SELECT * FROM requirements WHERE view_password_plain = ? ORDER BY created_at DESC LIMIT 100').bind(viewPwd).all();
@@ -1984,6 +2312,17 @@ export default {
 
     // Demanders: list requirements for a company authorized by demander password
     if (isApi('demanders/requirements') && request.method === 'GET') {
+      const company = (url.searchParams.get('company') || '').trim();
+      const pass = (url.searchParams.get('password') || '').trim();
+      if (!company || !pass) return json({ error: 'MissingParams' }, 400);
+      const like = `%"password_plain":"${pass}"%`;
+      const { results: demRows } = await env.DB.prepare('SELECT 1 FROM demanders WHERE company = ? AND metadata_json LIKE ?').bind(company, like).all();
+      if (!demRows || !demRows.length) return json({ error: 'Unauthorized' }, 401);
+      const { results } = await env.DB.prepare('SELECT requirement_id, title, status FROM requirements WHERE contact_company = ? ORDER BY created_at DESC LIMIT 100').bind(company).all();
+      const items = (results || []).map(r => ({ RequirementID: r.requirement_id, Title: r.title, Status: r.status }));
+      return json({ items });
+    }
+    if (isApi('demanders/markets') && request.method === 'GET') {
       const company = (url.searchParams.get('company') || '').trim();
       const pass = (url.searchParams.get('password') || '').trim();
       if (!company || !pass) return json({ error: 'MissingParams' }, 400);

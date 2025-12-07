@@ -12,9 +12,39 @@
 
 <!-- 应用领域卡片 -->
 <div class="container py-5">
+    {{ $featuresSet := slice }}
+    {{ $techSet := slice }}
+    {{ $titleSet := slice }}
+    {{ range .Pages }}
+      {{ $titleSet = $titleSet | append .Title }}
+      {{ if .Params.features }}{{ range .Params.features }}{{ $featuresSet = $featuresSet | append . }}{{ end }}{{ end }}
+      {{ if .Params.key_technologies }}{{ range .Params.key_technologies }}{{ $techSet = $techSet | append . }}{{ end }}{{ end }}
+    {{ end }}
+    {{ $featuresSet = uniq $featuresSet }}
+    {{ $techSet = uniq $techSet }}
+    {{ $titleSet = uniq $titleSet }}
+    <div class="mb-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="d-flex flex-wrap gap-2 align-items-center mb-2">
+            <input id="appSearchInput" type="search" class="form-control form-control-sm" placeholder="搜索应用领域或关键词" style="max-width:280px;">
+            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#appFilterChips" aria-expanded="false" aria-controls="appFilterChips">筛选标签</button>
+            <button id="appFilterReset" class="btn btn-outline-secondary btn-sm">重置</button>
+            <small class="text-muted ms-auto" id="appVisibleCount"></small>
+          </div>
+          <div id="appFilterChips" class="collapse">
+            <div class="d-flex flex-wrap gap-1">
+              {{ range $titleSet }}<button class="btn btn-sm btn-outline-dark filter-chip" data-filter-type="title" data-filter-value="{{ . }}">{{ . }}</button>{{ end }}
+              {{ range $featuresSet }}<button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="{{ . }}">{{ . }}</button>{{ end }}
+              {{ range $techSet }}<button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="{{ . }}">{{ . }}</button>{{ end }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="row g-4">
         {{ range .Pages }}
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 application-card-wrap" data-title="{{ .Title }}" data-features="{{ delimit (.Params.features | default (slice)) "," }}" data-tech="{{ delimit (.Params.key_technologies | default (slice)) "," }}">
             <div class="application-card h-100">
                 <div class="card-image">
                     {{ with .Params.icon }}
@@ -35,6 +65,11 @@
                     {{ else }}
                     <p class="card-summary">{{ .Summary }}</p>
                     {{ end }}
+                    {{ with .Params.features }}
+                    <div class="mt-1">
+                      {{ range . }}<span class="badge bg-light text-dark border me-1 mb-1">{{ . }}</span>{{ end }}
+                    </div>
+                    {{ end }}
                     <a href="{{ .Permalink }}" class="btn btn-outline-primary">了解更多</a>
                 </div>
             </div>
@@ -45,7 +80,7 @@
         {{ $icons := slice "fas fa-plane" "fas fa-bolt" "fas fa-car" "fas fa-cogs" "fas fa-industry" "fas fa-microscope" }}
         {{ $images := slice "/images/application/air-1.jpg" "/images/application/electric-1.jpg" "/images/application/pipe-1.jpg" "/images/application/air-2.jpg" "/images/application/electric-2.jpg" "/images/application/pipe-2.jpg" }}
         {{ range $index, $app := $applications }}
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 application-card-wrap" data-title="{{ $app }}" data-features="" data-tech="">
             <div class="application-card h-100">
                 <div class="card-image">
                     <div class="card-icon">
@@ -131,6 +166,9 @@
 </div>
 
 <style>
+.filter-chip.active{background:#1976d2;color:#fff;border-color:#1976d2}
+.application-card-wrap{transition:all .2s ease}
+.application-card-wrap[style*="display: none"]{opacity:0;transform:scale(.96)}
 /* 页面头部样式 */
 .page-header {
     background: #fafafa !important;
@@ -333,4 +371,35 @@
     }
 }
 </style>
+<script>
+function applyAppFilters(){
+  var q=(document.getElementById('appSearchInput')?.value||'').trim().toLowerCase();
+  var active=Array.from(document.querySelectorAll('.filter-chip.active')).map(function(b){return{t:b.dataset.filterType||'',v:(b.dataset.filterValue||'').toLowerCase()}});
+  var cards=document.querySelectorAll('.application-card-wrap');
+  var visible=0;
+  cards.forEach(function(c){
+    var title=(c.dataset.title||'').toLowerCase();
+    var feats=(c.dataset.features||'').toLowerCase();
+    var tech=(c.dataset.tech||'').toLowerCase();
+    var ok=true;
+    if(q){ ok = title.includes(q) || feats.includes(q) || tech.includes(q); }
+    active.forEach(function(f){
+      if(f.t==='title' && !title.includes(f.v)) ok=false;
+      if(f.t==='feature' && !feats.includes(f.v)) ok=false;
+      if(f.t==='tech' && !tech.includes(f.v)) ok=false;
+    });
+    c.style.display = ok ? '' : 'none';
+    if(ok) visible++;
+  });
+  var info=document.getElementById('appVisibleCount');
+  if(info) info.textContent='可见：'+visible;
+}
+function debounce(fn,wait){var t;return function(){clearTimeout(t);t=setTimeout(function(){fn()},wait)}}
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('.filter-chip').forEach(function(btn){btn.addEventListener('click',function(){this.classList.toggle('active');applyAppFilters()})});
+  var inp=document.getElementById('appSearchInput'); if(inp) inp.addEventListener('input',debounce(applyAppFilters,150));
+  var rst=document.getElementById('appFilterReset'); if(rst) rst.addEventListener('click',function(){ var i=document.getElementById('appSearchInput'); if(i) i.value=''; document.querySelectorAll('.filter-chip.active').forEach(function(b){b.classList.remove('active')}); applyAppFilters() });
+  applyAppFilters();
+});
+</script>
 {{ end }}

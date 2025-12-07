@@ -4,6 +4,7 @@ param(
   [string]$AdminPassword = "",
   [switch]$DryRun,
   [switch]$SkipVerify,
+  [switch]$Dev,
   [string]$ApiBase = "https://api.visndt.com/api"
 )
 
@@ -43,10 +44,16 @@ if (-not $whoamiOK) {
   }
 }
 
-if (-not $DryRun) {
+if (-not $DryRun -and -not $Dev) {
   if (-not $AdminKey) { $AdminKey = Read-Host "Enter ADMIN_KEY (required)" }
   if ($AdminKey) { Put-Secret -name 'ADMIN_KEY' -value $AdminKey -cfg $ConfigPath }
   if ($AdminPassword) { Put-Secret -name 'ADMIN_PASSWORD' -value $AdminPassword -cfg $ConfigPath }
+}
+
+if ($Dev) {
+  Write-Host "Starting local dev..." -ForegroundColor Cyan
+  if (-not (Exec "npx wrangler dev --config `"$ConfigPath`" --local --port 8787")) { Write-Host "Dev failed" -ForegroundColor Red; exit 1 }
+  exit 0
 }
 
 if ($DryRun) {

@@ -76,8 +76,7 @@ async function apiFetch(path, options = {}) {
     if (ct.includes('text/html')) {
       const base = String(window.API_BASE||'');
       if (/visndt\.com$/i.test(base)) {
-        const fb = 'https://vision-api.v-easechoice.workers.dev';
-        window.API_BASE = fb;
+        window.API_BASE = 'https://api.visndt.com';
         try { localStorage.setItem('API_BASE', window.API_BASE); } catch {}
         if (window.App && typeof App.updateEnvInfo === 'function') App.updateEnvInfo();
         return apiFetch(path, options);
@@ -86,24 +85,6 @@ async function apiFetch(path, options = {}) {
     return res.text();
   } catch (e) {
     if (e instanceof TypeError && (e.message === 'Failed to fetch' || e.message.includes('NetworkError'))) {
-      const base = String(window.API_BASE||'');
-      try {
-        const host = new URL(base).hostname;
-        if (/^api\.visndt\.com$/i.test(host)) {
-          const fb = 'https://vision-api.v-easechoice.workers.dev';
-          window.API_BASE = fb;
-          try { localStorage.setItem('API_BASE', window.API_BASE); } catch {}
-          if (window.App && typeof App.updateEnvInfo === 'function') App.updateEnvInfo();
-          return apiFetch(path, options);
-        }
-        if (/workers\.dev$/i.test(host)) {
-          const fb = 'https://api.visndt.com';
-          window.API_BASE = fb;
-          try { localStorage.setItem('API_BASE', window.API_BASE); } catch {}
-          if (window.App && typeof App.updateEnvInfo === 'function') App.updateEnvInfo();
-          return apiFetch(path, options);
-        }
-      } catch {}
       throw new Error(`无法连接到服务器 (${url})，请检查 API 地址配置或后端服务是否启动。`);
     }
     throw e;
@@ -977,8 +958,8 @@ const App = {
   // --- Requirements ---
   async loadRequirements() {
     try {
-      const res = await apiFetch('/api/admin/requirements?limit=200');
-      const items = Array.isArray(res) ? res : (res.items || []);
+      const itemsJson = await apiFetch('/api/admin/markets?limit=200').catch(() => apiFetch('/api/admin/requirements?limit=200'));
+      const items = Array.isArray(itemsJson) ? itemsJson : (itemsJson.items || []);
       this.state.reqList = items;
       
       if (items.length === 0) {
@@ -1147,7 +1128,11 @@ const App = {
   async deleteRequirement(id) {
     if(!confirm('确定要删除该需求吗？此操作不可恢复，且会删除关联的报价信息。')) return;
     try {
-      await apiFetch(`/api/admin/requirements/${id}`, { method: 'DELETE' });
+      try {
+        await apiFetch(`/api/admin/markets/${id}`, { method: 'DELETE' });
+      } catch (_) {
+        await apiFetch(`/api/admin/requirements/${id}`, { method: 'DELETE' });
+      }
       showToast('需求已删除', 'success');
       this.loadRequirements();
     } catch (e) {
@@ -1158,17 +1143,19 @@ const App = {
   async quickApprove(id) {
     if (!confirm('确定批准该需求并公开显示？\n(将设置状态为公开、进度为发布中、允许在线报价)')) return;
     try {
-      await apiFetch(`/api/admin/requirements/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({
-          status: '公开',
-          progress: '发布中',
-          allow_open_quotes: true,
-          contact_public: true,
-          approved: 1,
-          approved_at: new Date().toISOString()
-        })
-      });
+      const body = {
+        status: '公开',
+        progress: '发布中',
+        allow_open_quotes: true,
+        contact_public: true,
+        approved: 1,
+        approved_at: new Date().toISOString()
+      };
+      try {
+        await apiFetch(`/api/admin/markets/${id}`, { method: 'PATCH', body: JSON.stringify(body) });
+      } catch (_) {
+        await apiFetch(`/api/admin/requirements/${id}`, { method: 'PATCH', body: JSON.stringify(body) });
+      }
       showToast('已批准发布', 'success');
       this.loadRequirements();
     } catch (e) {
@@ -1219,10 +1206,11 @@ const App = {
     };
     
     try {
-      await apiFetch(`/api/admin/requirements/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify(body)
-      });
+      try {
+        await apiFetch(`/api/admin/markets/${id}`, { method: 'PATCH', body: JSON.stringify(body) });
+      } catch (_) {
+        await apiFetch(`/api/admin/requirements/${id}`, { method: 'PATCH', body: JSON.stringify(body) });
+      }
       showToast('保存成功', 'success');
       bootstrap.Modal.getInstance(document.getElementById('reqEditModal')).hide();
       this.loadRequirements();

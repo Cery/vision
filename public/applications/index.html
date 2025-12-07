@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1319&amp;path=livereload" data-no-instant defer></script>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>应用领域 - 维森·视觉检测仪器</title>
@@ -26,25 +26,25 @@
 
 
 <meta property="og:type" content="article">
-<meta property="og:url" content="http://localhost:1319/applications/">
+<meta property="og:url" content="http://localhost:1313/applications/">
 <meta property="og:title" content="应用领域 - 维森视觉检测仪器">
 <meta property="og:description" content="专业的视觉检测设备信息与资讯发布平台，提供工业内窥镜、检测相机等产品信息，为制造业提供优质的检测解决方案">
-<meta property="og:image" content="http://localhost:1319/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta property="og:image" content="http://localhost:1313/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 <meta property="og:site_name" content="维森视觉检测仪器">
 <meta property="og:locale" content="zh_CN">
 
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="http://localhost:1319/applications/">
+<meta name="twitter:url" content="http://localhost:1313/applications/">
 <meta name="twitter:title" content="应用领域 - 维森视觉检测仪器">
 <meta name="twitter:description" content="专业的视觉检测设备信息与资讯发布平台，提供工业内窥镜、检测相机等产品信息，为制造业提供优质的检测解决方案">
-<meta name="twitter:image" content="http://localhost:1319/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta name="twitter:image" content="http://localhost:1313/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 
 
 
 
 
-<link rel="canonical" href="http://localhost:1319/applications/">
+<link rel="canonical" href="http://localhost:1313/applications/">
 
 
 <link rel="icon" type="image/svg+xml" href="../images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
@@ -52,11 +52,9 @@
 <link rel="mask-icon" href="../images/assets/brand/icons/brand_icons_favicon_original_v1.svg" color="#1976d2">
 <link rel="apple-touch-icon" href="../images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
 
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link href="../css/vendor/bootstrap.min.css" rel="stylesheet">
+<link href="../css/vendor/font-awesome.min.css" rel="stylesheet">
+<link href="../css/vendor/font-awesome-fonts.css" rel="stylesheet">
 
 
 <link href="../css/unified-theme.css" rel="stylesheet">
@@ -65,6 +63,8 @@
 
 <link href="../css/custom.css" rel="stylesheet">
 <link href="../css/news-filters.css" rel="stylesheet">
+
+<script src="../js/vendor/bootstrap.bundle.min.js"></script>
 
 <script>
   
@@ -76,6 +76,18 @@
         document.documentElement.setAttribute('data-theme', theme);
       }
     } catch (e) {   }
+  })();
+</script>
+
+<script>
+  
+  (function(){
+    try {
+      var host = location.hostname;
+      var isLocal = host === 'localhost' || host === '127.0.0.1';
+      var override = localStorage.getItem('API_BASE');
+      window.API_BASE = override || (isLocal ? 'http://127.0.0.1:8787' : 'https://api.visndt.com');
+    } catch(e){}
   })();
 </script>
 
@@ -193,6 +205,11 @@
         color: var(--text-primary) !important;
         transition: var(--transition-normal) !important;
     }
+
+     
+    .search-modal-content { overflow: hidden; }
+    .search-modal-body { overflow: auto; max-height: 70vh; }
+    .search-results-container { position: relative; max-height: 60vh; overflow: auto; }
 
     .search-input-field:focus {
         background-color: var(--bg-primary) !important;
@@ -544,15 +561,16 @@
 
      
     .search-suggestions {
-        position: absolute;
-        z-index: 1000;
+        position: relative;
+        z-index: 2;
         background-color: white;
         border: 1px solid #ddd;
         border-top: none;
-        max-height: 300px;
+        max-height: 60vh;
         overflow-y: auto;
         width: 100%;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin-top: var(--spacing-sm);
     }
 
     .search-suggestion-item {
@@ -1021,6 +1039,7 @@
 </script>
 <script src="../js/image-handler.js"></script>
 <script src="../js/carousel-handler.js"></script>
+
     
 </head>
 <body>
@@ -1338,9 +1357,59 @@
 
 
 <div class="container py-5">
+    
+    
+    
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+    
+    
+    
+    <div class="mb-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="d-flex flex-wrap gap-2 align-items-center mb-2">
+            <input id="appSearchInput" type="search" class="form-control form-control-sm" placeholder="搜索应用领域或关键词" style="max-width:280px;">
+            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#appFilterChips" aria-expanded="false" aria-controls="appFilterChips">筛选标签</button>
+            <button id="appFilterReset" class="btn btn-outline-secondary btn-sm">重置</button>
+            <small class="text-muted ms-auto" id="appVisibleCount"></small>
+          </div>
+          <div id="appFilterChips" class="collapse">
+            <div class="d-flex flex-wrap gap-1">
+              <button class="btn btn-sm btn-outline-dark filter-chip" data-filter-type="title" data-filter-value="航空航天">航空航天</button><button class="btn btn-sm btn-outline-dark filter-chip" data-filter-type="title" data-filter-value="能源电力">能源电力</button><button class="btn btn-sm btn-outline-dark filter-chip" data-filter-type="title" data-filter-value="汽车制造">汽车制造</button><button class="btn btn-sm btn-outline-dark filter-chip" data-filter-type="title" data-filter-value="机械制造">机械制造</button><button class="btn btn-sm btn-outline-dark filter-chip" data-filter-type="title" data-filter-value="精密铸造">精密铸造</button><button class="btn btn-sm btn-outline-dark filter-chip" data-filter-type="title" data-filter-value="科学研究">科学研究</button>
+              <button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="超高精度检测要求">超高精度检测要求</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="严格的安全标准">严格的安全标准</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="复杂结构检测">复杂结构检测</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="材料多样性检测">材料多样性检测</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="全生命周期监测">全生命周期监测</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="高温高压环境检测">高温高压环境检测</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="连续运行监测">连续运行监测</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="预防性维护">预防性维护</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="远程检测能力">远程检测能力</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="多介质适应性">多介质适应性</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="全生产线质量控制">全生产线质量控制</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="多材料检测适应">多材料检测适应</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="高效批量检测">高效批量检测</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="精密尺寸测量">精密尺寸测量</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="自动化集成">自动化集成</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="精密加工质量控制">精密加工质量控制</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="工艺过程监控">工艺过程监控</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="装配质量验证">装配质量验证</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="维护检测服务">维护检测服务</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="铸件内部缺陷检测">铸件内部缺陷检测</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="模具质量检测">模具质量检测</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="熔炼过程监测">熔炼过程监测</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="后处理质量控制">后处理质量控制</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="高精度科研检测">高精度科研检测</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="多学科应用支持">多学科应用支持</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="实验过程监控">实验过程监控</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="数据采集分析">数据采集分析</button><button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="定制化解决方案">定制化解决方案</button>
+              <button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="高分辨率成像">高分辨率成像</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="缺陷自动识别">缺陷自动识别</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="3D重建技术">3D重建技术</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="实时检测分析">实时检测分析</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="数据追溯管理">数据追溯管理</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="耐高温探头技术">耐高温探头技术</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="防爆安全设计">防爆安全设计</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="无线传输技术">无线传输技术</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="腐蚀检测算法">腐蚀检测算法</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="热成像融合">热成像融合</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="高速成像技术">高速成像技术</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="AI缺陷识别">AI缺陷识别</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="自动化检测线">自动化检测线</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="多光谱成像">多光谱成像</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="实时数据分析">实时数据分析</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="高精度测量技术">高精度测量技术</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="表面质量评估">表面质量评估</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="几何尺寸检测">几何尺寸检测</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="装配间隙测量">装配间隙测量</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="磨损状态分析">磨损状态分析</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="高温成像技术">高温成像技术</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="缺陷识别算法">缺陷识别算法</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="材料成分分析">材料成分分析</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="工艺参数监控">工艺参数监控</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="超高分辨率成像">超高分辨率成像</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="多光谱分析技术">多光谱分析技术</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="实时数据采集">实时数据采集</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="图像处理算法">图像处理算法</button><button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="测量标定技术">测量标定技术</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="row g-4">
         
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 application-card-wrap" data-title="航空航天" data-features="超高精度检测要求,严格的安全标准,复杂结构检测,材料多样性检测,全生命周期监测" data-tech="高分辨率成像,缺陷自动识别,3D重建技术,实时检测分析,数据追溯管理">
             <div class="application-card h-100">
                 <div class="card-image">
                     
@@ -1357,12 +1426,17 @@
                     
                     <p class="card-summary">为航空航天领域提供高精度无损检测解决方案，确保飞行器安全性和可靠性</p>
                     
-                    <a href="http://localhost:1319/applications/aerospace/" class="btn btn-outline-primary">了解更多</a>
+                    
+                    <div class="mt-1">
+                      <span class="badge bg-light text-dark border me-1 mb-1">超高精度检测要求</span><span class="badge bg-light text-dark border me-1 mb-1">严格的安全标准</span><span class="badge bg-light text-dark border me-1 mb-1">复杂结构检测</span><span class="badge bg-light text-dark border me-1 mb-1">材料多样性检测</span><span class="badge bg-light text-dark border me-1 mb-1">全生命周期监测</span>
+                    </div>
+                    
+                    <a href="http://localhost:1313/applications/aerospace/" class="btn btn-outline-primary">了解更多</a>
                 </div>
             </div>
         </div>
         
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 application-card-wrap" data-title="能源电力" data-features="高温高压环境检测,连续运行监测,预防性维护,远程检测能力,多介质适应性" data-tech="耐高温探头技术,防爆安全设计,无线传输技术,腐蚀检测算法,热成像融合">
             <div class="application-card h-100">
                 <div class="card-image">
                     
@@ -1379,12 +1453,17 @@
                     
                     <p class="card-summary">助力能源电力设备安全运行监测，保障电力系统稳定可靠</p>
                     
-                    <a href="http://localhost:1319/applications/energy/" class="btn btn-outline-primary">了解更多</a>
+                    
+                    <div class="mt-1">
+                      <span class="badge bg-light text-dark border me-1 mb-1">高温高压环境检测</span><span class="badge bg-light text-dark border me-1 mb-1">连续运行监测</span><span class="badge bg-light text-dark border me-1 mb-1">预防性维护</span><span class="badge bg-light text-dark border me-1 mb-1">远程检测能力</span><span class="badge bg-light text-dark border me-1 mb-1">多介质适应性</span>
+                    </div>
+                    
+                    <a href="http://localhost:1313/applications/energy/" class="btn btn-outline-primary">了解更多</a>
                 </div>
             </div>
         </div>
         
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 application-card-wrap" data-title="汽车制造" data-features="全生产线质量控制,多材料检测适应,高效批量检测,精密尺寸测量,自动化集成" data-tech="高速成像技术,AI缺陷识别,自动化检测线,多光谱成像,实时数据分析">
             <div class="application-card h-100">
                 <div class="card-image">
                     
@@ -1401,12 +1480,17 @@
                     
                     <p class="card-summary">汽车制造质量控制全程监测方案，确保汽车产品质量和安全性</p>
                     
-                    <a href="http://localhost:1319/applications/automotive/" class="btn btn-outline-primary">了解更多</a>
+                    
+                    <div class="mt-1">
+                      <span class="badge bg-light text-dark border me-1 mb-1">全生产线质量控制</span><span class="badge bg-light text-dark border me-1 mb-1">多材料检测适应</span><span class="badge bg-light text-dark border me-1 mb-1">高效批量检测</span><span class="badge bg-light text-dark border me-1 mb-1">精密尺寸测量</span><span class="badge bg-light text-dark border me-1 mb-1">自动化集成</span>
+                    </div>
+                    
+                    <a href="http://localhost:1313/applications/automotive/" class="btn btn-outline-primary">了解更多</a>
                 </div>
             </div>
         </div>
         
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 application-card-wrap" data-title="机械制造" data-features="精密加工质量控制,复杂结构检测,工艺过程监控,装配质量验证,维护检测服务" data-tech="高精度测量技术,表面质量评估,几何尺寸检测,装配间隙测量,磨损状态分析">
             <div class="application-card h-100">
                 <div class="card-image">
                     
@@ -1423,12 +1507,17 @@
                     
                     <p class="card-summary">机械制造质量检测与工艺优化，提升机械产品精度和可靠性</p>
                     
-                    <a href="http://localhost:1319/applications/machinery/" class="btn btn-outline-primary">了解更多</a>
+                    
+                    <div class="mt-1">
+                      <span class="badge bg-light text-dark border me-1 mb-1">精密加工质量控制</span><span class="badge bg-light text-dark border me-1 mb-1">复杂结构检测</span><span class="badge bg-light text-dark border me-1 mb-1">工艺过程监控</span><span class="badge bg-light text-dark border me-1 mb-1">装配质量验证</span><span class="badge bg-light text-dark border me-1 mb-1">维护检测服务</span>
+                    </div>
+                    
+                    <a href="http://localhost:1313/applications/machinery/" class="btn btn-outline-primary">了解更多</a>
                 </div>
             </div>
         </div>
         
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 application-card-wrap" data-title="精密铸造" data-features="铸件内部缺陷检测,工艺过程监控,模具质量检测,熔炼过程监测,后处理质量控制" data-tech="高温成像技术,缺陷识别算法,3D重建技术,材料成分分析,工艺参数监控">
             <div class="application-card h-100">
                 <div class="card-image">
                     
@@ -1445,12 +1534,17 @@
                     
                     <p class="card-summary">精密铸造工艺过程质量控制，确保铸件质量和工艺稳定性</p>
                     
-                    <a href="http://localhost:1319/applications/casting/" class="btn btn-outline-primary">了解更多</a>
+                    
+                    <div class="mt-1">
+                      <span class="badge bg-light text-dark border me-1 mb-1">铸件内部缺陷检测</span><span class="badge bg-light text-dark border me-1 mb-1">工艺过程监控</span><span class="badge bg-light text-dark border me-1 mb-1">模具质量检测</span><span class="badge bg-light text-dark border me-1 mb-1">熔炼过程监测</span><span class="badge bg-light text-dark border me-1 mb-1">后处理质量控制</span>
+                    </div>
+                    
+                    <a href="http://localhost:1313/applications/casting/" class="btn btn-outline-primary">了解更多</a>
                 </div>
             </div>
         </div>
         
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 application-card-wrap" data-title="科学研究" data-features="高精度科研检测,多学科应用支持,实验过程监控,数据采集分析,定制化解决方案" data-tech="超高分辨率成像,多光谱分析技术,实时数据采集,图像处理算法,测量标定技术">
             <div class="application-card h-100">
                 <div class="card-image">
                     
@@ -1467,7 +1561,12 @@
                     
                     <p class="card-summary">科研实验检测分析专业解决方案，支持科学研究和技术创新</p>
                     
-                    <a href="http://localhost:1319/applications/research/" class="btn btn-outline-primary">了解更多</a>
+                    
+                    <div class="mt-1">
+                      <span class="badge bg-light text-dark border me-1 mb-1">高精度科研检测</span><span class="badge bg-light text-dark border me-1 mb-1">多学科应用支持</span><span class="badge bg-light text-dark border me-1 mb-1">实验过程监控</span><span class="badge bg-light text-dark border me-1 mb-1">数据采集分析</span><span class="badge bg-light text-dark border me-1 mb-1">定制化解决方案</span>
+                    </div>
+                    
+                    <a href="http://localhost:1313/applications/research/" class="btn btn-outline-primary">了解更多</a>
                 </div>
             </div>
         </div>
@@ -1541,6 +1640,9 @@
 </div>
 
 <style>
+.filter-chip.active{background:#1976d2;color:#fff;border-color:#1976d2}
+.application-card-wrap{transition:all .2s ease}
+.application-card-wrap[style*="display: none"]{opacity:0;transform:scale(.96)}
  
 .page-header {
     background: #fafafa !important;
@@ -1743,6 +1845,37 @@
     }
 }
 </style>
+<script>
+function applyAppFilters(){
+  var q=(document.getElementById('appSearchInput')?.value||'').trim().toLowerCase();
+  var active=Array.from(document.querySelectorAll('.filter-chip.active')).map(function(b){return{t:b.dataset.filterType||'',v:(b.dataset.filterValue||'').toLowerCase()}});
+  var cards=document.querySelectorAll('.application-card-wrap');
+  var visible=0;
+  cards.forEach(function(c){
+    var title=(c.dataset.title||'').toLowerCase();
+    var feats=(c.dataset.features||'').toLowerCase();
+    var tech=(c.dataset.tech||'').toLowerCase();
+    var ok=true;
+    if(q){ ok = title.includes(q) || feats.includes(q) || tech.includes(q); }
+    active.forEach(function(f){
+      if(f.t==='title' && !title.includes(f.v)) ok=false;
+      if(f.t==='feature' && !feats.includes(f.v)) ok=false;
+      if(f.t==='tech' && !tech.includes(f.v)) ok=false;
+    });
+    c.style.display = ok ? '' : 'none';
+    if(ok) visible++;
+  });
+  var info=document.getElementById('appVisibleCount');
+  if(info) info.textContent='可见：'+visible;
+}
+function debounce(fn,wait){var t;return function(){clearTimeout(t);t=setTimeout(function(){fn()},wait)}}
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('.filter-chip').forEach(function(btn){btn.addEventListener('click',function(){this.classList.toggle('active');applyAppFilters()})});
+  var inp=document.getElementById('appSearchInput'); if(inp) inp.addEventListener('input',debounce(applyAppFilters,150));
+  var rst=document.getElementById('appFilterReset'); if(rst) rst.addEventListener('click',function(){ var i=document.getElementById('appSearchInput'); if(i) i.value=''; document.querySelectorAll('.filter-chip.active').forEach(function(b){b.classList.remove('active')}); applyAppFilters() });
+  applyAppFilters();
+});
+</script>
 
     </main>
 
@@ -1835,16 +1968,17 @@
         </div>
       </div>
     </div>
-    
     <script>
       var _hmt = _hmt || [];
       (function() {
-        var hm = document.createElement("script");
-        hm.src = "https://hm.baidu.com/hm.js?90cc6b96ca32b2455d73fa05c28fd923";
-        var s = document.getElementsByTagName("script")[0]; 
+        var host = window.location.hostname;
+        if (host === 'localhost' || host === '127.0.0.1') return;
+        var hm = document.createElement('script');
+        hm.src = 'https://hm.baidu.com/hm.js?90cc6b96ca32b2455d73fa05c28fd923';
+        var s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(hm, s);
       })();
-      </script>
+    </script>
       
 
     
@@ -1968,6 +2102,7 @@ style="position: fixed; right: 32px; bottom: 48px; z-index: 999; display: none; 
 }
 </style>
   </footer>
+
 
     
     

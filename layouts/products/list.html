@@ -8,6 +8,11 @@
         <div class="col-12">
             <div class="card shadow-sm">
                 <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <button class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#productFilterPanel" aria-expanded="false" aria-controls="productFilterPanel">筛选条件</button>
+                        <small class="text-muted" id="product-count-info"></small>
+                    </div>
+                    <div id="productFilterPanel" class="collapse">
                     <!-- 产品分类筛选 -->
                     <div class="filter-section mb-4">
                         <h5 class="card-title mb-3">
@@ -20,12 +25,12 @@
                                 <span class="badge bg-primary me-2">一级分类</span>
                                 <small class="text-muted">选择产品主要类别</small>
                             </div>
-                            <div class="category-primary bg-gradient p-3 rounded-3 border-2 border-primary">
+                            <div class="category-primary bg-gradient p-2 rounded-3 border-2 border-primary">
                                 <div class="d-flex flex-wrap gap-2 align-items-center">
                                     {{ $currentPrimaryCategory := "" }}
                                     {{ $currentSecondaryCategory := "" }}
 
-                                    <a href="{{ "products" | absURL }}" class="btn btn-lg btn-primary fw-bold shadow-sm primary-btn all-btn {{ if not $currentPrimaryCategory }}active{{ end }}">
+                                    <a href="{{ "products" | absURL }}" class="btn btn-sm btn-primary fw-bold shadow-sm primary-btn all-btn {{ if not $currentPrimaryCategory }}active{{ end }}">
                                         <i class="fas fa-home me-1"></i>全部分类
                                     </a>
 
@@ -36,7 +41,7 @@
                                         {{ $category := . }}
                                         {{ $productsInCategory := where $allProducts "Params.primary_category" $category }}
                                         {{ if gt (len $productsInCategory) 0 }}
-                                            <a href='{{ printf "products?primary_category=%s" . | absURL }}' class="btn btn-lg btn-outline-primary fw-bold shadow-sm primary-btn {{ if eq $currentPrimaryCategory . }}active{{ end }}" data-category="{{ . }}">
+                                            <a href='{{ printf "products?primary_category=%s" . | absURL }}' class="btn btn-sm btn-outline-primary fw-bold shadow-sm primary-btn {{ if eq $currentPrimaryCategory . }}active{{ end }}" data-category="{{ . }}">
                                                 <i class="fas fa-folder me-1"></i>{{ . }}
                                                 <span class="badge bg-light text-dark ms-1">{{ len $productsInCategory }}</span>
                                             </a>
@@ -57,7 +62,7 @@
                                         {{ $category := . }}
                                         {{ $productsInCategory := where $allProducts "Params.primary_category" $category }}
                                         {{ if gt (len $productsInCategory) 0 }}
-                                            <a href='{{ printf "products?primary_category=%s" . | absURL }}' class="btn btn-lg btn-outline-primary fw-bold shadow-sm primary-btn {{ if eq $currentPrimaryCategory . }}active{{ end }}" data-category="{{ . }}">
+                                            <a href='{{ printf "products?primary_category=%s" . | absURL }}' class="btn btn-sm btn-outline-primary fw-bold shadow-sm primary-btn {{ if eq $currentPrimaryCategory . }}active{{ end }}" data-category="{{ . }}">
                                                 <i class="fas fa-folder me-1"></i>{{ . }}
                                                 <span class="badge bg-light text-dark ms-1">{{ len $productsInCategory }}</span>
                                             </a>
@@ -145,7 +150,7 @@
                                             <label class="form-label">
                                                 <i class="fas fa-circle me-1 text-primary"></i>探头直径
                                             </label>
-                                            <select class="form-select" id="probeDiameter">
+                                            <select class="form-select form-select-sm" id="probeDiameter">
                                                 <option value="">全部直径</option>
                                                 {{ $probeDiameter := slice }}
                                                 {{ range $allProducts }}
@@ -166,7 +171,7 @@
                                             <label class="form-label">
                                                 <i class="fas fa-eye me-1 text-primary"></i>视向
                                             </label>
-                                            <select class="form-select" id="viewingAngle">
+                                            <select class="form-select form-select-sm" id="viewingAngle">
                                                 <option value="">全部视向</option>
                                                 {{ $viewingAngle := slice }}
                                                 {{ range $allProducts }}
@@ -187,7 +192,7 @@
                                             <label class="form-label">
                                                 <i class="fas fa-lightbulb me-1 text-primary"></i>光源类型
                                             </label>
-                                            <select class="form-select" id="lightSource">
+                                            <select class="form-select form-select-sm" id="lightSource">
                                                 <option value="">全部光源</option>
                                                 {{ $lightSource := slice }}
                                                 {{ range $allProducts }}
@@ -208,7 +213,7 @@
                                             <label class="form-label">
                                                 <i class="fas fa-ruler me-1 text-primary"></i>长度
                                             </label>
-                                            <select class="form-select" id="workingLength">
+                                            <select class="form-select form-select-sm" id="workingLength">
                                                 <option value="">全部长度</option>
                                                 {{ $workingLengthOptions := slice }}
                                                 {{ range $allProducts }}
@@ -234,7 +239,7 @@
                                             <label class="form-label">
                                                 <i class="fas fa-desktop me-1 text-success"></i>主机屏幕
                                             </label>
-                                            <select class="form-select" id="screenSize">
+                                            <select class="form-select form-select-sm" id="screenSize">
                                                 <option value="">全部屏幕</option>
                                                 {{ $screenSizes := slice }}
                                                 {{ range $allProducts }}
@@ -257,7 +262,7 @@
                                             <label class="form-label">
                                                 <i class="fas fa-battery-three-quarters me-1 text-success"></i>待机时长
                                             </label>
-                                            <select class="form-select" id="batteryLife">
+                                            <select class="form-select form-select-sm" id="batteryLife">
                                                 <option value="">全部时长</option>
                                                 {{ $batteryLife := slice }}
                                                 {{ range $allProducts }}
@@ -280,7 +285,7 @@
                                             <label class="form-label">
                                                 <i class="fas fa-camera me-1 text-success"></i>像素
                                             </label>
-                                            <select class="form-select" id="resolution">
+                                            <select class="form-select form-select-sm" id="resolution">
                                                 <option value="">全部像素</option>
                                                 {{ $resolution := slice }}
                                                 {{ range $allProducts }}
@@ -431,6 +436,7 @@
                             <!-- 重置按钮 -->
                             <!-- 已移除底部的重置和应用筛选按钮，统一通过筛选变化自动应用或顶部操作 -->
                         </div>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -657,11 +663,12 @@ body {
     margin-bottom: 0.5rem;
 }
 
-.form-select {
-    font-size: 14px;
+    .form-select {
+    font-size: 13px;
     border-color: #e0e0e0;
     border-radius: 8px;
     transition: all 0.15s ease-in-out;
+    padding: 0.25rem 0.5rem;
 }
 
 .form-select:focus {
@@ -1791,6 +1798,132 @@ document.addEventListener('DOMContentLoaded', function() {
 
     applyAllFilters();
 });
+</script>
+<script>
+(function(){
+  const Bases = [
+    (typeof window !== 'undefined' && window.API_BASE) ? String(window.API_BASE).replace(/\/$/,'') : '',
+    'https://api.visndt.com',
+    'https://visndt.com',
+    'https://www.visndt.com'
+  ];
+  function card(p){
+    const img = p.cover_image || '/images/products/placeholder.svg';
+    const slug = p.slug || p.model || p.id || '';
+    const params = p.parameters || {};
+    return `
+    <div class="col-md-6 col-lg-4 mb-4 product-item product-card"
+         data-primary-category="${p.primary_category||''}"
+         data-secondary-category="${p.secondary_category||''}"
+         data-screen-size="${params.screen_size||''}"
+         data-battery-life="${params.battery_life||''}"
+         data-probe-diameter="${params.probe_diameter||''}"
+         data-viewing-angle="${params.viewing_angle||''}"
+         data-light-source="${params.light_source||''}"
+         data-resolution="${params.resolution||''}"
+         data-guidance="${params.guidance||''}"
+         data-cable-material="${params.cable_material||''}"
+         data-working-length="${params.working_length||''}"
+         data-field-of-view="${params.field_of_view||''}"
+         data-focal-length="${params.focal_length||''}">
+      <div class="card h-100 shadow-sm hover-shadow">
+        <a href="/products/${slug}" class="card-img-link">
+          <img src="${img}" alt="${p.name||p.model||''}" class="card-img-top object-fit-cover" style="height: 200px;">
+        </a>
+        <div class="card-body">
+          <h5 class="card-title"><a href="/products/${slug}" class="text-dark text-decoration-none hover-primary">${p.name||p.model||''}</a></h5>
+          <p class="card-text text-muted">${p.summary||''}</p>
+          <div class="product-meta"><small class="text-muted">${p.primary_category||''} ${p.series?('· '+p.series):''}</small></div>
+        </div>
+      </div>
+    </div>`;
+  }
+  function fetchWithTimeout(url, ms){
+    return new Promise((resolve, reject) => {
+      const ctrl = new AbortController();
+      const to = setTimeout(() => { try{ ctrl.abort(); }catch{}; reject(new Error('timeout')); }, ms||5000);
+      fetch(url, { signal: ctrl.signal }).then(resolve).catch(reject).finally(() => clearTimeout(to));
+    });
+  }
+  async function fetchProducts(params){
+    const qs = new URLSearchParams(params||{ limit: 48 }).toString();
+    for (const base of Bases) {
+      const prefix = base ? base.replace(/\/$/,'') : '';
+      const u = prefix ? `${prefix}/api/products?${qs}` : `/api/products?${qs}`;
+      try {
+        const r = await fetchWithTimeout(u, 6000);
+        if (!r.ok) throw new Error(`status ${r.status}`);
+        const j = await r.json();
+        const arr = Array.isArray(j) ? j : (j.items || []);
+        if (arr && arr.length) return arr;
+      } catch {}
+    }
+    return [];
+  }
+  function fillOptions(id, values){
+    const el = document.getElementById(id);
+    if(!el) return;
+    const existed = new Set(Array.from(el.options).map(o=>o.value));
+    Array.from(new Set((values||[]).filter(Boolean))).forEach(v=>{
+      if(!existed.has(v)){
+        const opt = document.createElement('option');
+        opt.value = v; opt.textContent = v; el.appendChild(opt);
+      }
+    });
+  }
+  function enableFilterSelects(){
+    document.querySelectorAll('.parameter-filters select').forEach(s => s.removeAttribute('disabled'));
+    document.querySelectorAll('.parameter-filters select').forEach(s => s.addEventListener('change', ()=>{ try{ if(typeof applyAllFilters==='function') applyAllFilters(); }catch{} }));
+  }
+  document.addEventListener('DOMContentLoaded', async function(){
+    try{
+      const items = await fetchProducts({ limit: 48 });
+      if(!items.length) return;
+      const wrap = document.getElementById('productList');
+      if(!wrap) return;
+      wrap.innerHTML = items.map(card).join('');
+      const info = document.getElementById('product-count-info');
+      if(info) info.textContent = `共 ${items.length} 个产品`;
+      const paramsList = items.map(x=>x.parameters||{});
+      fillOptions('probeDiameter', paramsList.map(p=>p.probe_diameter));
+      fillOptions('viewingAngle', paramsList.map(p=>p.viewing_angle));
+      fillOptions('lightSource', paramsList.map(p=>p.light_source));
+      fillOptions('workingLength', paramsList.map(p=>p.working_length));
+      fillOptions('screenSize', paramsList.map(p=>p.screen_size));
+      fillOptions('batteryLife', paramsList.map(p=>p.battery_life));
+      fillOptions('resolution', paramsList.map(p=>p.resolution));
+      fillOptions('electronicGuidance', paramsList.map(p=>p.guidance));
+      fillOptions('cableMaterial', paramsList.map(p=>p.cable_material));
+      fillOptions('fiberFieldOfView', paramsList.map(p=>p.field_of_view));
+      fillOptions('focalLength', paramsList.map(p=>p.focal_length));
+      fillOptions('opticalFieldOfView', paramsList.map(p=>p.field_of_view));
+      enableFilterSelects();
+      try{ if(typeof applyAllFilters==='function') applyAllFilters(); }catch{}
+      // 按分类按钮远程筛选
+      document.querySelectorAll('.primary-btn').forEach(btn => {
+        btn.addEventListener('click', async function(e){
+          e.preventDefault();
+          const href = this.getAttribute('href')||'';
+          const cat = href.includes('primary_category=') ? decodeURIComponent(href.split('primary_category=')[1]) : '';
+          const items2 = await fetchProducts({ category: cat||'', limit: 48 });
+          wrap.innerHTML = items2.map(card).join('');
+          if(info) info.textContent = `共 ${items2.length} 个产品`;
+          try{ if(typeof applyAllFilters==='function') applyAllFilters(); }catch{}
+        });
+      });
+      document.querySelectorAll('.secondary-btn').forEach(btn => {
+        btn.addEventListener('click', async function(e){
+          e.preventDefault();
+          const text = this.textContent.trim();
+          const items3 = await fetchProducts({ category: text||'', limit: 48 });
+          wrap.innerHTML = items3.map(card).join('');
+          if(info) info.textContent = `共 ${items3.length} 个产品`;
+          try{ if(typeof applyAllFilters==='function') applyAllFilters(); }catch{}
+        });
+      });
+    }catch{}
+  });
+})();
 </script>
 <!-- 外部list-filter.js在本页与内联脚本有命名冲突，已移除以避免覆盖 -->
 {{ end }}

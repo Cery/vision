@@ -9,13 +9,14 @@ class ContentManager {
         this.currentContent = null;
         this.editor = null;
         this.isOnline = this.detectEnvironment();
-        this.apiBase = this.isOnline ? '/api' : 'http://localhost:3002/api';
+        const base = (window.API_BASE || '').replace(/\/$/, '');
+        this.apiBase = base ? (base + '/api') : '/api';
         this.dashboardData = {
             products: [],
             news: [],
             cases: [],
             suppliers: [],
-            requirements: []
+            markets: []
         };
 
         this.init();
@@ -39,7 +40,7 @@ class ContentManager {
             this.loadContent('products'),
             this.loadContent('cases'),
             this.loadContent('suppliers'),
-            this.loadContent('requirements')
+            this.loadContent('markets')
         ]);
 
         this.updateStats();
@@ -146,24 +147,74 @@ class ContentManager {
     // 加载内容
     async loadContent(type) {
         try {
-            // 首先尝试从仪表板数据加载
             if (this.dashboardData[type] && this.dashboardData[type].length > 0) {
                 this.renderContentListFromDashboard(type);
                 return;
             }
-
-            // 如果仪表板数据为空，尝试从API加载
-            const response = await fetch(`${this.apiBase}/${type}/list`);
-            const data = await response.json();
-
-            if (data.success) {
-                this.renderContentList(type, data.data);
-            } else {
-                this.showError(`加载${type}内容失败: ${data.error}`);
-            }
+            const url = (() => {
+                if (type === 'news' || type === 'cases' || type === 'products') return `${this.apiBase}/admin/${type}`;
+                if (type === 'suppliers') return `${this.apiBase}/admin/${type}`;
+                if (type === 'markets') return `${this.apiBase}/markets`;
+                return '';
+            })();
+            if (!url) return;
+            const headers = { 'Content-Type': 'application/json' };
+            if (typeof window.ADMIN_KEY === 'string' && window.ADMIN_KEY) headers['X-Admin-Key'] = window.ADMIN_KEY;
+            const res = await fetch(url, { headers });
+            if (!res.ok) throw new Error(`加载失败 ${res.status}`);
+            const items = await res.json();
+            const converted = (items || []).map(it => {
+                if (type === 'news') {
+                    return {
+                        id: it.news_id || it.id,
+                        uri: `/news/${(it.slug || it.news_id || '').trim()}`,
+                        title: it.title || '',
+                        summary: it.summary || '',
+                        date: it.published_at || it.created_at || it.updated_at || '',
+                        params: { primary_category: it.category || '', tags: it.tags || '' },
+                        content: it.content || ''
+                    };
+                }
+                if (type === 'cases') {
+                    return {
+                        id: it.case_id || it.id,
+                        uri: `/cases/${(it.slug || it.case_id || '').trim()}`,
+                        title: it.title || '',
+                        summary: it.summary || '',
+                        date: it.published_at || it.created_at || it.updated_at || '',
+                        params: { industry: it.industry || '' },
+                        content: it.content || ''
+                    };
+                }
+                if (type === 'products') {
+                    const slug = it.slug || it.model || it.product_id || '';
+                    return {
+                        id: it.product_id || it.id,
+                        uri: `/products/${slug.trim()}`,
+                        title: it.name || it.title || '',
+                        summary: it.summary || '',
+                        date: it.published_at || it.created_at || it.updated_at || '',
+                        params: {
+                            primary_category: it.primary_category || '',
+                            model: it.model || '',
+                            series: it.series || ''
+                        },
+                        content: it.description || it.content || ''
+                    };
+                }
+                return {
+                    id: it.id || '',
+                    uri: it.uri || '',
+                    title: it.title || it.name || '',
+                    summary: it.summary || '',
+                    date: it.updated_at || it.created_at || '',
+                    params: {},
+                    content: it.content || ''
+                };
+            });
+            this.dashboardData[type] = converted;
+            this.renderContentListFromDashboard(type);
         } catch (error) {
-            console.error('加载内容失败:', error);
-            // 如果API失败，尝试从本地文件系统加载
             this.loadContentFromLocal(type);
         }
     }
@@ -237,7 +288,7 @@ class ContentManager {
                     path: '/suppliers/shenzhen-weishi.md'
                 }
             ],
-            requirements: [
+            markets: [
                 {
                     filename: 'REQ-20250120-001.md',
                     name: '航空发动机叶片检测设备采购需求',
@@ -249,7 +300,7 @@ class ContentManager {
                     urgency: 'high',
                     budget: '50-100万',
                     region: '华北',
-                    path: '/requirements/REQ-20250120-001.md'
+                    path: '/markets/REQ-20250120-001.md'
                 }
             ]
         };
@@ -537,7 +588,7 @@ class ContentManager {
             products: '产品',
             cases: '案例',
             suppliers: '供应商',
-            requirements: '需求'
+            markets: '需求市场'
         };
         return names[type] || type;
     }
@@ -688,9 +739,24 @@ draft: false
         
         // 解析front matter和内容
         const { frontMatter, body } = this.parseFrontMatter(content);
+        const seed = this.currentContent?.data || {};
+        const merged = { ...frontMatter };
+        merged.title = seed.title || merged.title || '';
+        merged.summary = seed.summary || merged.summary || '';
+        merged.featured_image = seed.cover_image || merged.featured_image || '';
+        if (type === 'news') {
+            merged.categories = merged.categories || seed.category || '';
+            merged.tags = merged.tags || seed.tags || '';
+        } else if (type === 'products') {
+            merged.category = merged.category || seed.params?.primary_category || '';
+            merged.model = merged.model || seed.params?.model || '';
+            merged.series = merged.series || seed.params?.series || '';
+        } else if (type === 'cases') {
+            merged.industry = merged.industry || seed.params?.industry || '';
+        }
         
         // 生成表单
-        this.generateMetaForm(type, frontMatter);
+        this.generateMetaForm(type, merged);
         
         // 设置编辑器内容
         if (this.editor) {
@@ -839,30 +905,24 @@ draft: false
     // 更新统计信息
     async updateStats() {
         try {
-            const [newsData, productsData, casesData, suppliersData, requirementsData] = await Promise.all([
-                fetch(`${this.apiBase}/news/list`).then(r => r.json()),
-                fetch(`${this.apiBase}/products/list`).then(r => r.json()),
-                fetch(`${this.apiBase}/cases/list`).then(r => r.json()),
-                fetch(`${this.apiBase}/suppliers/list`).then(r => r.json()),
-                fetch(`${this.apiBase}/requirements/list`).then(r => r.json())
-            ]);
-            
-            const newsCount = newsData.success ? newsData.count : 0;
-            const productsCount = productsData.success ? productsData.count : 0;
-            const casesCount = casesData.success ? casesData.count : 0;
+            const headers = { 'Content-Type': 'application/json' };
+            if (typeof window.ADMIN_KEY === 'string' && window.ADMIN_KEY) headers['X-Admin-Key'] = window.ADMIN_KEY;
+            const res = await fetch(`${this.apiBase}/admin/stats`, { headers });
+            if (!res.ok) throw new Error('stats');
+            const s = await res.json();
+            const newsCount = s.news?.total || 0;
+            const productsCount = s.products?.total || 0;
+            const casesCount = s.cases?.total || 0;
             const totalCount = newsCount + productsCount + casesCount;
-            
             document.getElementById('totalContent').textContent = totalCount;
             document.getElementById('newsCount').textContent = newsCount;
             document.getElementById('productsCount').textContent = productsCount;
             document.getElementById('casesCount').textContent = casesCount;
         } catch (error) {
-            console.error('更新统计信息失败:', error);
-            // 使用模拟数据
-            document.getElementById('totalContent').textContent = '58';
-            document.getElementById('newsCount').textContent = '24';
-            document.getElementById('productsCount').textContent = '34';
-            document.getElementById('casesCount').textContent = '5';
+            document.getElementById('totalContent').textContent = String((this.dashboardData.news.length + this.dashboardData.products.length + this.dashboardData.cases.length) || 0);
+            document.getElementById('newsCount').textContent = String(this.dashboardData.news.length || 0);
+            document.getElementById('productsCount').textContent = String(this.dashboardData.products.length || 0);
+            document.getElementById('casesCount').textContent = String(this.dashboardData.cases.length || 0);
         }
     }
 
@@ -1225,38 +1285,86 @@ tags: ["内窥镜", "检测设备"]
             this.showNotification('没有要保存的内容', 'warning');
             return;
         }
-
         try {
-            // 收集表单数据
             const formData = this.collectFormData();
-            const content = this.editor.getValue();
-
-            // 更新front matter
-            const updatedContent = this.updateFrontMatter(content, formData);
-
-            // 确定文件路径
-            const filePath = this.currentContent.isNew
-                ? this.generateFilePath(this.currentContent.type, formData)
-                : this.currentContent.path;
-
-            // 保存到服务器
-            const success = await this.saveToServer(filePath, updatedContent);
-
-            if (success) {
-                this.showNotification('保存成功', 'success');
-                this.currentContent.isNew = false;
-                this.currentContent.path = filePath;
-
-                // 刷新列表
-                await this.loadContent(this.currentContent.type);
-
-                // 关闭模态框
-                bootstrap.Modal.getInstance(document.getElementById('editorModal')).hide();
-            } else {
-                this.showNotification('保存失败', 'error');
+            const { body } = this.parseFrontMatter(this.editor ? this.editor.getValue() : '');
+            const type = this.currentContent.type;
+            const headers = { 'Content-Type': 'application/json' };
+            if (typeof window.ADMIN_KEY === 'string' && window.ADMIN_KEY) headers['X-Admin-Key'] = window.ADMIN_KEY;
+            // 表单校验
+            const title = (formData.title || '').trim();
+            if (!title || title.length < 2) {
+                this.showNotification('标题不能为空且需至少2个字符', 'warning');
+                return;
             }
+            if (type === 'news') {
+                const cat = Array.isArray(formData.categories) ? formData.categories[0] : (formData.categories || '').trim();
+                if (!cat) { this.showNotification('请选择新闻分类', 'warning'); return; }
+            }
+            if (type === 'products') {
+                const cat = (formData.category || '').trim();
+                const model = (formData.model || '').trim();
+                if (!cat) { this.showNotification('请选择产品类型', 'warning'); return; }
+                if (!model) { this.showNotification('请填写产品型号', 'warning'); return; }
+            }
+            if (type === 'cases') {
+                const ind = (formData.industry || '').trim();
+                if (!ind) { this.showNotification('请选择案例所属行业', 'warning'); return; }
+            }
+            let endpoint = `${this.apiBase}/admin/${type}`;
+            let method = 'POST';
+            let payload = {};
+            const slug = this.generateSlug(formData.title || this.currentContent.title || '');
+            if (type === 'news') {
+                payload = {
+                    title: formData.title,
+                    slug,
+                    summary: formData.summary || '',
+                    content: body || this.currentContent.data?.content || '',
+                    cover_image: formData.featured_image || '',
+                    category: Array.isArray(formData.categories) ? formData.categories[0] : formData.categories || '',
+                    tags: formData.tags || '',
+                    status: formData.draft ? 'draft' : 'published'
+                };
+            } else if (type === 'cases') {
+                payload = {
+                    title: formData.title,
+                    slug,
+                    summary: formData.summary || '',
+                    content: body || this.currentContent.data?.content || '',
+                    cover_image: formData.featured_image || '',
+                    industry: formData.industry || '',
+                    related_product_id: this.currentContent.data?.params?.related_product_id || '' ,
+                    status: formData.draft ? 'draft' : 'published'
+                };
+            } else if (type === 'products') {
+                payload = {
+                    name: formData.title,
+                    slug,
+                    summary: formData.summary || '',
+                    description: body || this.currentContent.data?.content || '',
+                    primary_category: formData.category || '',
+                    model: formData.model || '',
+                    series: formData.series || '',
+                    cover_image: formData.featured_image || ''
+                };
+            }
+            if (!this.currentContent.isNew && this.currentContent.data?.id) {
+                endpoint = `${endpoint}/${this.currentContent.data.id}`;
+                method = 'PATCH';
+            }
+            const res = await fetch(endpoint, { method, headers, body: JSON.stringify(payload) });
+            if (!res.ok) throw new Error(`保存失败 ${res.status}`);
+            const j = await res.json();
+            // 更新选中项ID
+            if (this.currentContent.isNew) {
+                const id = j.news_id || j.case_id || j.product_id || '';
+                this.currentContent.data = { ...(this.currentContent.data || {}), id };
+            }
+            this.showNotification('保存成功', 'success');
+            await this.loadContent(type);
+            bootstrap.Modal.getInstance(document.getElementById('editorModal')).hide();
         } catch (error) {
-            console.error('保存失败:', error);
             this.showNotification('保存失败: ' + error.message, 'error');
         }
     }
@@ -1359,29 +1467,20 @@ tags: ["内窥镜", "检测设备"]
             this.showNotification('没有要删除的内容', 'warning');
             return;
         }
-
-        if (!confirm('确定要删除这个内容吗？此操作不可撤销。')) {
-            return;
-        }
-
+        if (!confirm('确定要删除这个内容吗？此操作不可撤销。')) return;
         try {
-            const success = await this.deleteFromServer(this.currentContent.path);
-
-            if (success) {
-                this.showNotification('删除成功', 'success');
-
-                // 刷新列表
-                await this.loadContent(this.currentContent.type);
-
-                // 关闭模态框
-                bootstrap.Modal.getInstance(document.getElementById('editorModal')).hide();
-
-                this.currentContent = null;
-            } else {
-                this.showNotification('删除失败', 'error');
-            }
+            const type = this.currentContent.type;
+            const id = this.currentContent.data?.id;
+            if (!id) throw new Error('缺少ID');
+            const headers = { 'Content-Type': 'application/json' };
+            if (typeof window.ADMIN_KEY === 'string' && window.ADMIN_KEY) headers['X-Admin-Key'] = window.ADMIN_KEY;
+            const res = await fetch(`${this.apiBase}/admin/${type}/${id}`, { method: 'DELETE', headers });
+            if (!res.ok) throw new Error(`删除失败 ${res.status}`);
+            this.showNotification('删除成功', 'success');
+            await this.loadContent(type);
+            bootstrap.Modal.getInstance(document.getElementById('editorModal')).hide();
+            this.currentContent = null;
         } catch (error) {
-            console.error('删除失败:', error);
             this.showNotification('删除失败: ' + error.message, 'error');
         }
     }
@@ -1470,7 +1569,7 @@ tags: ["内窥镜", "检测设备"]
             products: 'box',
             cases: 'file-text',
             suppliers: 'building',
-            requirements: 'clipboard-data'
+            markets: 'clipboard-data'
         };
         return icons[type] || 'file';
     }
@@ -1478,32 +1577,20 @@ tags: ["内窥镜", "检测设备"]
     // 同步内容数据
     async syncContentData() {
         try {
-            // 获取当前显示的内容类型
             const currentType = this.currentSection;
-
             if (currentType && currentType !== 'dashboard') {
-                // 静默同步，不显示加载状态
-                const response = await fetch(`${this.apiBase}/${currentType}/list`);
-                const data = await response.json();
-
-                if (data.success) {
-                    // 检查数据是否有变化
-                    const currentData = this.dashboardData[currentType] || [];
-                    const newData = data.data || [];
-
-                    if (this.hasDataChanged(currentData, newData)) {
-                        // 更新仪表板数据
-                        this.dashboardData[currentType] = newData;
-
-                        // 重新渲染当前内容列表
-                        this.renderContentList(currentType, newData);
-
-                        // 更新统计信息
-                        this.updateStats();
-
-                        // 显示同步提示
-                        this.showSyncNotification('数据已同步更新');
-                    }
+                const headers = { 'Content-Type': 'application/json' };
+                if (typeof window.ADMIN_KEY === 'string' && window.ADMIN_KEY) headers['X-Admin-Key'] = window.ADMIN_KEY;
+                const response = await fetch(`${this.apiBase}/admin/${currentType}`, { headers });
+                if (!response.ok) return;
+                const items = await response.json();
+                const converted = (items || []).map(it => ({ title: it.title || it.name || '', filename: it.slug || it.id || '' }));
+                const currentData = this.dashboardData[currentType] || [];
+                if (this.hasDataChanged(currentData, converted)) {
+                    this.dashboardData[currentType] = converted;
+                    this.renderContentListFromDashboard(currentType);
+                    this.updateStats();
+                    this.showSyncNotification('数据已同步更新');
                 }
             }
         } catch (error) {
@@ -1575,7 +1662,7 @@ tags: ["内窥镜", "检测设备"]
                 this.loadContent('products'),
                 this.loadContent('cases'),
                 this.loadContent('suppliers'),
-                this.loadContent('requirements')
+                this.loadContent('markets')
             ]);
 
             this.updateStats();
