@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             };
                             img.onerror = function() {
                                 this.onerror = null;
-                                this.src = '/images/placeholder.jpg';
+                                this.src = '/images/placeholder.svg';
                             };
                             
                             imgWrapper.appendChild(img);
@@ -169,5 +169,5 @@ function closeSupplierModal() {
 // 处理图片加载错误
 function handleImageError(img) {
     img.onerror = null; // 防止无限循环
-    img.src = '/images/placeholder.jpg'; // 设置默认图片
+    img.src = '/images/placeholder.svg'; // 设置默认图片
 }

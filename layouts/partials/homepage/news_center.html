@@ -273,7 +273,13 @@
   const host = location.hostname;
   const isLocal = host === 'localhost' || host === '127.0.0.1';
   const base = (typeof window !== 'undefined' && window.API_BASE) ? String(window.API_BASE).replace(/\/$/,'') : '';
-  const Bases = isLocal ? [base, ''] : [
+  const Bases = isLocal ? [
+    '',
+    base,
+    'https://api.visndt.com',
+    'https://visndt.com',
+    'https://www.visndt.com'
+  ] : [
     base,
     'https://api.visndt.com',
     'https://visndt.com',

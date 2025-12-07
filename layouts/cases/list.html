@@ -103,7 +103,7 @@
             </div>
 
             <!-- 案例卡片容器 -->
-            <div class="row" id="cases-container">
+            <div class="row" id="casesList">
                 {{ range $index, $page := $casePages }}
                 <div class="col-lg-6 col-xl-4 mb-4 case-item"
                      data-primary-category="{{ delimit (.Params.primary_category | default (slice)) "," }}"
@@ -156,13 +156,6 @@
                     <h5>未找到匹配的案例</h5>
                     <p>请尝试调整筛选条件</p>
                 </div>
-            </div>
-
-            <!-- 加载更多（动态 API 分页） -->
-            <div class="d-grid my-3">
-                <button id="cases-load-more" class="btn btn-outline-primary">
-                    <i class="fas fa-plus-circle me-1"></i> 加载更多
-                </button>
             </div>
 
             <!-- 增强版分页 -->
@@ -413,100 +406,6 @@ function updateCaseCount() {
 }
 
 // goToPage函数已被增强版分页的goToEnhancedPage替代
-</script>
-<script>
-(function(){
-  const Bases = [
-    (typeof window !== 'undefined' && window.API_BASE) ? String(window.API_BASE).replace(/\/$/,'') : '',
-    'https://api.visndt.com',
-    'https://visndt.com',
-    'https://www.visndt.com'
-  ];
-  let page = 1;
-  const limit = 12;
-  function tile(c){
-    const img = c.cover_image || '/images/cases/case-1.webp';
-    const slug = c.slug || c.id || '';
-    return `
-    <div class="col-lg-6 col-xl-4 mb-4 case-item"
-         data-primary-category=""
-         data-application-field="${c.industry||''}"
-         data-application-scenario=""
-         data-date="${(c.published_at||'').slice(0,10)}"
-         data-title="${c.title||''}">
-      <div class="card h-100 shadow-sm hover-card">
-        <a href="/cases/${slug}" class="card-img-link">
-          <div class="card-img-wrapper">
-            <img src="${img}" class="card-img-top object-fit-cover" alt="${c.title||''}" style="height: 200px;">
-          </div>
-        </a>
-        <div class="card-body d-flex flex-column">
-          <div class="mb-2">${c.industry?(`<span class=\"badge bg-success me-1\">${c.industry}</span>`):''}</div>
-          <h5 class="card-title case-title"><a href="/cases/${slug}" class="text-decoration-none text-dark hover-primary">${c.title||''}</a></h5>
-          ${c.summary?`<p class="card-text text-muted flex-grow-1 case-summary">${c.summary}</p>`:''}
-          <div class="mt-auto"><small class="text-muted"><i class="far fa-calendar-alt me-1"></i>${(c.published_at||'').slice(0,10)}</small></div>
-        </div>
-      </div>
-    </div>`;
-  }
-  function fetchWithTimeout(url, ms){
-    return new Promise((resolve, reject) => {
-      const ctrl = new AbortController();
-      const to = setTimeout(() => { try{ ctrl.abort(); }catch{}; reject(new Error('timeout')); }, ms||5000);
-      fetch(url, { signal: ctrl.signal }).then(resolve).catch(reject).finally(() => clearTimeout(to));
-    });
-  }
-  async function fetchCases(params){
-    const qs = new URLSearchParams(params||{ page, limit }).toString();
-    for (const base of Bases) {
-      const prefix = base ? base.replace(/\/$/,'') : '';
-      const u = prefix ? `${prefix}/api/cases?${qs}` : `/api/cases?${qs}`;
-      try {
-        const r = await fetchWithTimeout(u, 6000);
-        if (!r.ok) throw new Error(`status ${r.status}`);
-        const j = await r.json();
-        const arr = Array.isArray(j) ? j : (j.items || []);
-        if (arr && arr.length) return arr;
-      } catch {}
-    }
-    return [];
-  }
-  document.addEventListener('DOMContentLoaded', async function(){
-    try{
-      const items = await fetchCases({ page, limit });
-      if(!items.length) return;
-      const wrap = document.getElementById('cases-container');
-      if(!wrap) return;
-      wrap.innerHTML = items.map(tile).join('');
-      const info = document.getElementById('case-count-info');
-      if(info) info.textContent = `共 ${items.length} 个案例`;
-      const moreBtn = document.getElementById('cases-load-more');
-      if (moreBtn) {
-        moreBtn.onclick = async function(){
-          page += 1;
-          const next = await fetchCases({ page, limit });
-          if(!next.length) return;
-          const wrap = document.getElementById('cases-container');
-          if(!wrap) return;
-          wrap.insertAdjacentHTML('beforeend', next.map(tile).join(''));
-          const info = document.getElementById('case-count-info');
-          if(info) info.textContent = `共 ${(document.querySelectorAll('.case-item')||[]).length} 个案例`;
-        };
-      }
-    }catch{}
-  });
-})();
-</script>
-<script>
-(function(){
-  document.addEventListener('DOMContentLoaded', function(){
-    const info = document.createElement('div');
-    info.className = 'alert alert-info mt-2';
-    info.innerHTML = '<i class="fas fa-wifi me-2"></i>已接入在线数据：行业过滤有效，其他高级参数以静态数据为准';
-    const sidebar = document.querySelector('.col-lg-3 .card .card-body');
-    if (sidebar) sidebar.appendChild(info);
-  });
-})();
 </script>
 
 <style>

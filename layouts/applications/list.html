@@ -15,6 +15,15 @@
     {{ $featuresSet := slice }}
     {{ $techSet := slice }}
     {{ $titleSet := slice }}
+    {{ $casePages := where .Site.RegularPages "Type" "cases" }}
+    {{ $caseFields := slice }}
+    {{ range $casePages }}
+      {{ range .Params.application_field }}
+        {{ if not (in $caseFields .) }}
+          {{ $caseFields = $caseFields | append . }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
     {{ range .Pages }}
       {{ $titleSet = $titleSet | append .Title }}
       {{ if .Params.features }}{{ range .Params.features }}{{ $featuresSet = $featuresSet | append . }}{{ end }}{{ end }}
@@ -34,7 +43,7 @@
           </div>
           <div id="appFilterChips" class="collapse">
             <div class="d-flex flex-wrap gap-1">
-              {{ range $titleSet }}<button class="btn btn-sm btn-outline-dark filter-chip" data-filter-type="title" data-filter-value="{{ . }}">{{ . }}</button>{{ end }}
+              {{ range $titleSet }}{{ if in $caseFields . }}<button class="btn btn-sm btn-outline-dark filter-chip" data-filter-type="title" data-filter-value="{{ . }}">{{ . }}</button>{{ end }}{{ end }}
               {{ range $featuresSet }}<button class="btn btn-sm btn-outline-secondary filter-chip" data-filter-type="feature" data-filter-value="{{ . }}">{{ . }}</button>{{ end }}
               {{ range $techSet }}<button class="btn btn-sm btn-outline-info filter-chip" data-filter-type="tech" data-filter-value="{{ . }}">{{ . }}</button>{{ end }}
             </div>
@@ -148,7 +157,7 @@
     </div>
 </div>
 
-<!-- 联系咨询 -->
+<!-- 联系咨询 
 <div class="contact-section py-5">
     <div class="container">
         <div class="row align-items-center">
@@ -163,7 +172,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 
 <style>
 .filter-chip.active{background:#1976d2;color:#fff;border-color:#1976d2}

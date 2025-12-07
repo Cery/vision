@@ -2,38 +2,38 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>技术文章 on 维森视觉检测仪器</title>
-    <link>//:1319/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/</link>
+    <link>//:1320/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/</link>
     <description>Recent content in 技术文章 on 维森视觉检测仪器</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
     <lastBuildDate>Sat, 08 Nov 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="//:1319/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="//:1320/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>基于AI的缺陷识别在工业内窥中的应用实践</title>
-      <link>//:1319/news/tech-article/2025-ai-defect-detection/</link>
+      <link>//:1320/news/tech-article/2025-ai-defect-detection/</link>
       <pubDate>Sat, 08 Nov 2025 00:00:00 +0000</pubDate>
-      <guid>//:1319/news/tech-article/2025-ai-defect-detection/</guid>
+      <guid>//:1320/news/tech-article/2025-ai-defect-detection/</guid>
       <description>介绍将深度学习用于内窥图像缺陷识别的落地流程与效果评估。</description>
     </item>
     <item>
       <title>内窥镜图像处理算法优化技术详解</title>
-      <link>//:1319/news/2025-07-27-%E5%86%85%E7%AA%A5%E9%95%9C%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/</link>
+      <link>//:1320/news/2025-07-27-%E5%86%85%E7%AA%A5%E9%95%9C%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/</link>
       <pubDate>Sun, 27 Jul 2025 14:30:00 +0800</pubDate>
-      <guid>//:1319/news/2025-07-27-%E5%86%85%E7%AA%A5%E9%95%9C%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/</guid>
+      <guid>//:1320/news/2025-07-27-%E5%86%85%E7%AA%A5%E9%95%9C%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/</guid>
       <description>深入探讨内窥镜图像处理中的关键算法，包括图像增强、噪声抑制、边缘检测等核心技术，为开发者提供实用的优化方案</description>
     </item>
     <item>
       <title>技术文章</title>
-      <link>//:1319/news/tech-article/</link>
+      <link>//:1320/news/tech-article/</link>
       <pubDate>Wed, 15 Jan 2025 10:00:00 +0800</pubDate>
-      <guid>//:1319/news/tech-article/</guid>
+      <guid>//:1320/news/tech-article/</guid>
       <description>&lt;h1 id=&#34;技术文章&#34;&gt;技术文章&lt;/h1&gt;&#xA;&lt;p&gt;欢迎来到技术文章专区，这里汇集了工业内窥镜领域的专业技术内容，包括：&lt;/p&gt;&#xA;&lt;h2 id=&#34;主要内容分类&#34;&gt;主要内容分类&lt;/h2&gt;&#xA;&lt;h3 id=&#34;-图像处理技术&#34;&gt;🔬 图像处理技术&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;图像增强算法&lt;/li&gt;&#xA;&lt;li&gt;缺陷识别技术&lt;/li&gt;&#xA;&lt;li&gt;深度学习应用&lt;/li&gt;&#xA;&lt;li&gt;计算机视觉技术&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;-检测技术原理&#34;&gt;🔧 检测技术原理&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;光学检测原理&lt;/li&gt;&#xA;&lt;li&gt;电子内窥镜技术&lt;/li&gt;&#xA;&lt;li&gt;光纤传输技术&lt;/li&gt;&#xA;&lt;li&gt;传感器技术&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;-数据分析&#34;&gt;📊 数据分析&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;检测数据处理&lt;/li&gt;&#xA;&lt;li&gt;统计分析方法&lt;/li&gt;&#xA;&lt;li&gt;质量评估标准&lt;/li&gt;&#xA;&lt;li&gt;报告生成技术&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;-设备技术&#34;&gt;🛠️ 设备技术&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;硬件设计原理&lt;/li&gt;&#xA;&lt;li&gt;软件架构设计&lt;/li&gt;&#xA;&lt;li&gt;系统集成技术&lt;/li&gt;&#xA;&lt;li&gt;性能优化方法&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;技术特色&#34;&gt;技术特色&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;专业深度&lt;/strong&gt;：由行业专家撰写的深度技术文章&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;实用性强&lt;/strong&gt;：结合实际应用场景的技术解决方案&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;前沿技术&lt;/strong&gt;：跟踪行业最新技术发展趋势&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;案例分析&lt;/strong&gt;：真实项目案例的技术分析&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;适合读者&#34;&gt;适合读者&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;工业检测工程师&lt;/li&gt;&#xA;&lt;li&gt;图像处理算法工程师&lt;/li&gt;&#xA;&lt;li&gt;NDT技术人员&lt;/li&gt;&#xA;&lt;li&gt;质量控制专家&lt;/li&gt;&#xA;&lt;li&gt;技术研发人员&lt;/li&gt;&#xA;&lt;li&gt;高校相关专业师生&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;p&gt;&lt;em&gt;持续更新中，为您提供最新的工业内窥镜技术资讯&lt;/em&gt;&lt;/p&gt;</description>
     </item>
     <item>
       <title>工业内窥镜图像处理算法优化技术研究</title>
-      <link>//:1319/news/tech-article/tech-article-1/</link>
+      <link>//:1320/news/tech-article/tech-article-1/</link>
       <pubDate>Fri, 22 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>//:1319/news/tech-article/tech-article-1/</guid>
+      <guid>//:1320/news/tech-article/tech-article-1/</guid>
       <description>深入探讨工业内窥镜图像处理算法的优化方法，提升检测精度和效率</description>
     </item>
   </channel>

@@ -308,4 +308,14 @@
   "section": "news",
   "date": "2024-03-22",
   "params": {"author":"技术研发部","categories":["技术文章"],"date":"2024-03-22T00:00:00Z","draft":false,"featured_image":"/images/news/新闻.webp","iscjklanguage":true,"lastmod":"2024-03-22T00:00:00Z","publishdate":"2024-03-22T00:00:00Z","related_products":["WS-F2815","WS-O2510","WS-P1210"],"subcategories":["无损检测"],"summary":"深入探讨工业内窥镜图像处理算法的优化方法，提升检测精度和效率","tags":["图像处理","算法优化"],"title":"工业内窥镜图像处理算法优化技术研究","views":245}
+},
+{
+  "uri": "/suppliers/register/",
+  "title": "供应商入驻",
+  "content": "",
+  "summary": "",
+  "type": "suppliers",
+  "section": "suppliers",
+  "date": "0001-01-01",
+  "params": {"draft":false,"iscjklanguage":true,"layout":"suppliers/register","title":"供应商入驻","type":"suppliers","url":"/suppliers/register/"}
 }]

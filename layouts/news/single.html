@@ -185,7 +185,18 @@
                             <div class="card-body p-0">
                                 {{ $currentPage := . }}
                                 {{ $relatedPages := where (where .Site.RegularPages "Type" "news") "Permalink" "ne" .Permalink }}
-                                {{ $relatedByCategory := where $relatedPages "Params.category" .Params.category }}
+                                {{ $relatedByCategory := slice }}
+                                {{ with .Params.categories }}
+                                    {{ $relatedByCategory = where $relatedPages "Params.categories" "intersect" . }}
+                                {{ else }}
+                                    {{ with .Params.category }}
+                                        {{ $relatedByCategory = where $relatedPages "Params.category" . }}
+                                    {{ else }}
+                                        {{ with .Params.tags }}
+                                            {{ $relatedByCategory = where $relatedPages "Params.tags" "intersect" . }}
+                                        {{ end }}
+                                    {{ end }}
+                                {{ end }}
                                 {{ range first 4 $relatedByCategory }}
                                 <div class="related-article-item p-3 border-bottom">
                                     <div class="d-flex">

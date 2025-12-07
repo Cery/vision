@@ -265,7 +265,7 @@
                                     <div class="contact-item">
                                         <i class="bi bi-globe"></i>
                                         <span>官方网站</span>
-                                        <a href="{{ . }}" target="_blank" class="contact-action">访问</a>
+                                        <a href="{{ . }}" target="_blank" rel="noopener noreferrer" class="contact-action">访问</a>
                                     </div>
                                     {{ end }}
                                 </div>
@@ -293,7 +293,7 @@
                                     {{ end }}
                                     {{ with .url }}
                                     <div class="registration-action">
-                                        <a href="{{ . }}" target="_blank" class="registration-btn">
+                                        <a href="{{ . }}" target="_blank" rel="noopener noreferrer" class="registration-btn">
                                             <i class="bi bi-box-arrow-up-right"></i>
                                             立即报名参展
                                         </a>
@@ -393,6 +393,19 @@
                                         <h4 class="product-title">
                                             <a href="{{ $product.RelPermalink }}">{{ $product.Title }}</a>
                                         </h4>
+
+                                        {{ with $product.Params.primary_category }}
+                                        <div class="product-categories">
+                                            <span class="category-badge primary">{{ . }}</span>
+                                            {{ with $product.Params.secondary_category }}
+                                            <span class="category-badge secondary">{{ . }}</span>
+                                            {{ end }}
+                                        </div>
+                                        {{ end }}
+
+                                        {{ with $product.Params.supplier }}
+                                        <div class="product-supplier">供应商：{{ . }}</div>
+                                        {{ end }}
 
                                         {{ with $product.Params.model }}
                                         <div class="product-model">
@@ -1431,6 +1444,43 @@
     font-size: 0.85rem;
     line-height: 1.4;
     margin: 0 0 1rem 0;
+}
+
+.product-categories {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+}
+
+.category-badge {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: #f3f4f6;
+    color: #374151;
+    border: 1px solid #e5e7eb;
+}
+
+.category-badge.primary {
+    background: #eef2ff;
+    color: #3730a3;
+    border-color: #c7d2fe;
+}
+
+.category-badge.secondary {
+    background: #fff7ed;
+    color: #9a3412;
+    border-color: #fed7aa;
+}
+
+.product-supplier {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-bottom: 0.75rem;
 }
 
 .product-actions {

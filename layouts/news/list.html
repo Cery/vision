@@ -23,7 +23,9 @@
                                 <div class="filter-buttons-container">
                                     {{ range $catsData.primary_categories }}
                                         {{ $pname := .name }}
-                                        {{ $pcount := len (where $newsPages "Params.categories" "intersect" (slice $pname)) }}
+                                        {{ $byCats := where $newsPages "Params.categories" "intersect" (slice $pname) }}
+                                        {{ $byCatSingle := where $newsPages "Params.category" $pname }}
+                                        {{ $pcount := len (union $byCats $byCatSingle) }}
                                         <a href="javascript:void(0)"
                                            class="filter-btn category-btn"
                                            data-filter-type="category" data-filter-value="{{ $pname }}">
@@ -32,11 +34,11 @@
                                         </a>
                                         {{ range .subcategories }}
                                             {{ $sc := . }}
-                                            {{/* 计数：主类命中且子类在标签或分类中命中（并集去重） */}}
-                                            {{ $pagesPrimary := where $newsPages "Params.categories" "intersect" (slice $pname) }}
+                                            {{ $pagesPrimary := union (where $newsPages "Params.categories" "intersect" (slice $pname)) (where $newsPages "Params.category" $pname) }}
                                             {{ $pagesByTag := where $pagesPrimary "Params.tags" "intersect" (slice $sc) }}
+                                            {{ $pagesByTagEq := where $pagesPrimary "Params.tags" $sc }}
                                             {{ $pagesByCat := where $pagesPrimary "Params.categories" "intersect" (slice $sc) }}
-                                            {{ $pairUnion := union $pagesByTag $pagesByCat }}
+                                            {{ $pairUnion := union (union $pagesByTag $pagesByTagEq) $pagesByCat }}
                                             {{ $scount := len $pairUnion }}
                                             <a href="javascript:void(0)" class="filter-btn tag-btn" data-filter-type="category" data-filter-value="{{ printf "%s|%s" $pname $sc }}">
                                                 {{ $sc }} <span class="badge bg-light text-dark">{{ $scount }}</span>
@@ -49,7 +51,11 @@
                                 <div class="filter-buttons-container">
                                     {{ $newsCategories := dict }}
                                     {{ range $newsPages }}
-                                        {{ range .Params.categories }}
+                                        {{ $cats := .Params.categories | default (slice) }}
+                                        {{ if and (eq (len $cats) 0) .Params.category }}
+                                            {{ $cats = slice .Params.category }}
+                                        {{ end }}
+                                        {{ range $cats }}
                                             {{ $newsCategories = merge $newsCategories (dict . (add (index $newsCategories . | default 0) 1)) }}
                                         {{ end }}
                                     {{ end }}
@@ -72,8 +78,16 @@
                             {{ $newsPages := where .Site.RegularPages "Type" "news" }}
                             {{ $newsTags := dict }}
                             {{ range $newsPages }}
-                                {{ range .Params.tags }}
-                                    {{ $newsTags = merge $newsTags (dict . (add (index $newsTags . | default 0) 1)) }}
+                                {{ $tags := .Params.tags }}
+                                {{ $tagsType := printf "%T" $tags }}
+                                {{ if eq $tagsType "string" }}
+                                    {{ $tags = split (string $tags) "," }}
+                                {{ else if not $tags }}
+                                    {{ $tags = slice }}
+                                {{ end }}
+                                {{ range $tags }}
+                                    {{ $t := trim . " " }}
+                                    {{ $newsTags = merge $newsTags (dict $t (add (index $newsTags $t | default 0) 1)) }}
                                 {{ end }}
                             {{ end }}
                             {{ $sortedTags := slice }}
@@ -128,9 +142,24 @@
             <div class="row" id="newsList">
                 {{ $allNews := where .Site.RegularPages "Type" "news" }}
                 {{ range $index, $page := $allNews }}
+                {{ $cats := .Params.categories | default (slice) }}
+                {{ if and (eq (len $cats) 0) .Params.category }}
+                    {{ $cats = slice .Params.category }}
+                {{ end }}
+                {{ $tags := .Params.tags }}
+                {{ $tagsType := printf "%T" $tags }}
+                {{ if eq $tagsType "string" }}
+                    {{ $tags = split (string $tags) "," }}
+                {{ else if not $tags }}
+                    {{ $tags = slice }}
+                {{ end }}
+                {{ $tagsTrim := slice }}
+                {{ range $tags }}
+                    {{ $tagsTrim = $tagsTrim | append (trim . " ") }}
+                {{ end }}
                 <div class="col-lg-6 col-xl-4 mb-4 news-item"
-                     data-categories="{{ delimit (.Params.categories | default (slice)) "," }}"
-                     data-tags="{{ delimit (.Params.tags | default (slice)) "," | safeHTMLAttr }}"
+                     data-categories="{{ delimit $cats "," }}"
+                     data-tags="{{ delimit $tagsTrim "," | safeHTMLAttr }}"
                      data-date="{{ .Date.Format "2006-01-02" }}"
                      data-views="{{ .Params.views | default 0 }}"
                      data-permalink="{{ .RelPermalink }}"
@@ -154,10 +183,10 @@
                     </a>
                         <div class="card-body d-flex flex-column">
                             <div class="mb-2">
-                                {{ range .Params.categories }}
+                                {{ range $cats }}
                                 <span class="badge bg-primary me-1">{{ . }}</span>
                                 {{ end }}
-                                {{ range .Params.tags }}
+                                {{ range $tagsTrim }}
                                 <span class="badge bg-secondary me-1">{{ . }}</span>
                                 {{ end }}
                             </div>
@@ -195,11 +224,7 @@
                 </div>
             </div>
 
-            <div class="d-grid my-3">
-                <button id="news-load-more" class="btn btn-outline-primary">
-                    <i class="fas fa-plus-circle me-1"></i> 加载更多
-                </button>
-            </div>
+            
 
             <!-- 增强版分页 -->
             {{ partial "enhanced-pagination.html" (dict "context" . "containerId" "newsList" "itemsPerPage" 6 "itemType" "资讯") }}
@@ -805,7 +830,7 @@ small.text-muted i {
     to { transform: rotate(360deg); }
 }
 </style>
-<script>
+<script type="text/plain">
 // 新闻筛选功能 - 左侧边栏版本
 const LC_APP_ID = 'pUEgNUJ66pc7S4FqVpqxkTkx-MdYXbMMI';
 const LC_APP_KEY = 'K9OXRf3L6Zp0s6TEzJElWQ5r';
@@ -983,11 +1008,24 @@ function fetchViewCountsForPermalinks(permalinks) {
 
 function matchesCategoryFilters(categories, tags, selectedCategories) {
     if (selectedCategories.length === 0) return true;
+    const alias = {
+        '市场动态': ['市场','趋势','分析','预测','格局'],
+        '企业新闻': ['公司','发布','新品','动态','公告'],
+        '行业政策': ['政策','标准','法规','认证','规范'],
+        '原理解析': ['原理','机制','解析','工作原理'],
+        '应用指南': ['应用','指南','实践','方案','教程'],
+        '技术评测': ['评测','对比','性能','测试','测评']
+    };
+    const tagLower = tags.map(t => t.toLowerCase());
     return selectedCategories.some(cat => {
         if (cat.includes('|')) {
             const [primary, secondary] = cat.split('|');
             const primaryOk = categories.includes(primary);
-            const secondaryOk = categories.includes(secondary) || tags.includes(secondary);
+            let secondaryOk = categories.includes(secondary) || tags.includes(secondary);
+            if (!secondaryOk) {
+                const kws = alias[secondary] || [];
+                secondaryOk = kws.some(k => tagLower.some(t => t.includes(k.toLowerCase())));
+            }
             return primaryOk && secondaryOk;
         } else {
             return categories.includes(cat) || tags.includes(cat);
@@ -1154,103 +1192,5 @@ function removeFilter(filterType, value) {
 
 
 </script>
-<script>
-(function(){
-  const host = location.hostname;
-  const isLocal = host === 'localhost' || host === '127.0.0.1';
-  const base = (typeof window !== 'undefined' && window.API_BASE) ? String(window.API_BASE).replace(/\/$/,'') : '';
-  const Bases = isLocal ? [base, ''] : [
-    base,
-    'https://api.visndt.com',
-    'https://visndt.com',
-    'https://www.visndt.com'
-  ];
-  let page = 1;
-  const limit = 12;
-  function card(n){
-    const img = n.cover_image || '/images/news/news-1.jpeg';
-    const slug = n.slug || n.id || '';
-    const cats = Array.isArray(n.category) ? n.category : (n.category ? [n.category] : []);
-    const tags = Array.isArray(n.tags) ? n.tags : String(n.tags||'').split(',').map(s=>s.trim()).filter(Boolean);
-    return `
-    <div class="col-lg-6 col-xl-4 mb-4 news-item"
-         data-categories="${cats.join(',')}"
-         data-tags="${tags.join(',')}"
-         data-date="${(n.published_at||'').slice(0,10)}"
-         data-views="0"
-         data-permalink="/news/${slug}"
-         data-title="${n.title||''}">
-      <div class="card h-100 shadow-sm news-card">
-        <a href="/news/${slug}" class="card-img-link">
-          <div class="card-img-wrapper">
-            <img src="${img}" class="card-img-top object-fit-cover" alt="${n.title||''}" style="height: 200px;">
-          </div>
-        </a>
-        <div class="card-body d-flex flex-column">
-          <div class="mb-2">
-            ${cats.map(c=>`<span class=\"badge bg-primary me-1\">${c}</span>`).join('')}
-            ${tags.map(t=>`<span class=\"badge bg-secondary me-1\">${t}</span>`).join('')}
-          </div>
-          <h5 class="card-title news-title"><a href="/news/${slug}" class="text-decoration-none text-dark hover-primary">${n.title||''}</a></h5>
-          ${n.summary?`<p class=\"card-text text-muted flex-grow-1 news-summary\">${n.summary}</p>`:''}
-          <div class="mt-auto"><div class="d-flex justify-content-between align-items-center"><div><small class="text-muted"><i class="far fa-calendar-alt me-1"></i>${(n.published_at||'').slice(0,10)}</small></div><div><small class="text-muted"><i class="fas fa-eye me-1"></i><span class="view-count-display">0</span></small></div></div></div>
-        </div>
-      </div>
-    </div>`;
-  }
-  function fetchWithTimeout(url, ms){
-    return new Promise((resolve, reject) => {
-      const ctrl = new AbortController();
-      const to = setTimeout(() => { try{ ctrl.abort(); }catch{}; reject(new Error('timeout')); }, ms||5000);
-      fetch(url, { signal: ctrl.signal }).then(resolve).catch(reject).finally(() => clearTimeout(to));
-    });
-  }
-  async function fetchNews(params){
-    const qs = new URLSearchParams(params||{}).toString();
-    for (const base of Bases) {
-      const prefix = base ? base.replace(/\/$/,'') : '';
-      const u = prefix ? `${prefix}/api/news${qs?`?${qs}`:''}` : `/api/news${qs?`?${qs}`:''}`;
-      try {
-        const r = await fetchWithTimeout(u, 6000);
-        if (!r.ok) throw new Error(`status ${r.status}`);
-        const j = await r.json();
-        const arr = Array.isArray(j) ? j : (j.items || []);
-        if (arr && arr.length) return arr;
-      } catch {}
-    }
-    return [];
-  }
-  function render(items){
-    const wrap = document.getElementById('newsList');
-    if(!wrap) return;
-    wrap.innerHTML = items.map(card).join('');
-    const countInfo = document.getElementById('news-count-info');
-    if(countInfo) countInfo.textContent = `找到 ${items.length} 篇资讯`;
-    // 重新初始化列表变量与分页
-    try {
-      window.allNews = Array.from(document.querySelectorAll('.news-item'));
-      window.filteredNews = [...window.allNews];
-      if (typeof applyFiltersAndSort === 'function') applyFiltersAndSort();
-    } catch {}
-  }
-  document.addEventListener('DOMContentLoaded', async function(){
-    try {
-      const items = await fetchNews({ page, limit });
-      if (items && items.length) render(items);
-      const moreBtn = document.getElementById('news-load-more');
-      if (moreBtn) {
-        moreBtn.onclick = async function(){
-          page += 1;
-          const next = await fetchNews({ page, limit });
-          const wrap = document.getElementById('newsList');
-          if (wrap && next.length) wrap.insertAdjacentHTML('beforeend', next.map(card).join(''));
-          const info = document.getElementById('news-count-info');
-          if (info) info.textContent = `找到 ${(document.querySelectorAll('.news-item')||[]).length} 篇资讯`;
-          try { if (typeof applyFiltersAndSort === 'function') applyFiltersAndSort(); } catch {}
-        };
-      }
-    } catch {}
-  });
-})();
-</script>
+<script type="text/plain"></script>
 {{ end }}

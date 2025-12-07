@@ -299,7 +299,7 @@
                                 {{ range . }}
                                 {{ $path := .file_path }}
                                 {{ $href := cond (and $dm (index $dm $path)) (index $dm $path) (cond (or (hasPrefix $path "http://") (hasPrefix $path "https://")) $path ($path | relURL)) }}
-                                <li><a href="{{ $href }}" target="_blank">{{ .file_title }}</a></li>
+                                <li><a href="{{ $href }}" target="_blank" rel="noopener noreferrer">{{ .file_title }}</a></li>
                                 {{ end }}
                             </ul>
                             {{ else }}

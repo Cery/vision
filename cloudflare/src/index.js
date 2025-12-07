@@ -1079,6 +1079,49 @@ export default {
       return json({ ok: true, supplier: { SupplierID: s.supplier_id, Name: s.name, Company: s.company } });
     }
 
+    if (isApi('suppliers/check-company') && request.method === 'GET') {
+      const name = (url.searchParams.get('name') || '').trim();
+      if (!name) return json({ exists: false });
+      try {
+        const row = await env.DB.prepare('SELECT supplier_id FROM suppliers WHERE LOWER(company)=LOWER(?) LIMIT 1').bind(name).first();
+        return json({ exists: !!row });
+      } catch (e) {
+        return json({ exists: false });
+      }
+    }
+
+    if (isApi('suppliers/register') && request.method === 'POST') {
+      try {
+        const body = await bodyJSON(request);
+        const company = String(body.company || '').trim();
+        if (!company) return json({ ok: false, error: 'company required' }, 400);
+        const dup = await env.DB.prepare('SELECT supplier_id FROM suppliers WHERE LOWER(company)=LOWER(?) LIMIT 1').bind(company).first();
+        if (dup) return json({ ok: false, error: 'duplicate company' }, 409);
+        const now = new Date().toISOString();
+        const supplier_id = 'SUP-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*1000);
+        const name = String(body.name || '').trim();
+        const access_password_plain = String(body.access_password || '').trim();
+        const contact_phone = String((body.contact||{}).phone || '').trim();
+        const contact_email = String((body.contact||{}).email || '').trim();
+        const metadata = {
+          contact: body.contact || {},
+          address: body.address || '',
+          website: body.website || '',
+          series: body.series || '',
+          tags: body.tags || '',
+          intro: body.intro || '',
+          gallery_images: Array.isArray(body.gallery_images) ? body.gallery_images.slice(0,6) : [],
+          qualification_images: Array.isArray(body.qualification_images) ? body.qualification_images.slice(0,6) : []
+        };
+        await env.DB.prepare('INSERT INTO suppliers (supplier_id, name, company, access_password_plain, contact_phone, contact_email, status, metadata_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
+          .bind(supplier_id, name, company, access_password_plain, contact_phone, contact_email, 'pending', JSON.stringify(metadata), now, now)
+          .run();
+        return json({ ok: true, supplier_id });
+      } catch (e) {
+        return json({ ok: false, error: String(e && e.message || e) }, 500);
+      }
+    }
+
     // Admin: Assets (R2)
     if (isApi('admin/assets') && request.method === 'GET') {
        if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);

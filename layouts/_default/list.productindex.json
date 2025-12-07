@@ -14,7 +14,6 @@
       "primary_category" (.Params.primary_category | default "")
       "secondary_category" (.Params.secondary_category | default "")
       "supplier" (.Params.supplier | default "")
-      "published" (.Date.Format "2006-01-02T15:04:05Z07:00")
       "slug" (.File.BaseFileName | default (.Title | urlize))
       "url" .RelPermalink
       "section" .Section

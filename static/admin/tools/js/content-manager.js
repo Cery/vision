@@ -823,12 +823,12 @@ draft: false
     getFormFields(type) {
         const commonFields = [
             { key: 'title', label: '标题', type: 'text', width: 12, required: true },
-            { key: 'date', label: '日期', type: 'date', width: 6 },
             { key: 'draft', label: '草稿', type: 'checkbox', width: 6 }
         ];
         
         const typeFields = {
             news: [
+                { key: 'date', label: '日期', type: 'date', width: 6 },
                 { key: 'categories', label: '分类', type: 'select', width: 6, options: [
                     { value: 'tech-article', label: '技术文章' },
                     { value: 'industry', label: '行业资讯' },
@@ -852,6 +852,7 @@ draft: false
                 { key: 'price', label: '价格', type: 'text', width: 6 }
             ],
             cases: [
+                { key: 'date', label: '日期', type: 'date', width: 6 },
                 { key: 'industry', label: '应用行业', type: 'select', width: 6, options: [
                     { value: '汽车制造', label: '汽车制造' },
                     { value: '航空航天', label: '航空航天' },

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1320&amp;path=livereload" data-no-instant defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>资讯中心 - 维森·视觉检测仪器</title>
@@ -26,19 +26,19 @@
 
 
 <meta property="og:type" content="article">
-<meta property="og:url" content="http://localhost:1313/news/">
+<meta property="og:url" content="//:1320/news/">
 <meta property="og:title" content="资讯中心 - 维森视觉检测仪器">
 <meta property="og:description" content="获取最新的行业资讯、技术文章和展会信息，了解工业内窥镜和无损检测领域的前沿动态。">
-<meta property="og:image" content="http://localhost:1313/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta property="og:image" content="//:1320/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 <meta property="og:site_name" content="维森视觉检测仪器">
 <meta property="og:locale" content="zh_CN">
 
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="http://localhost:1313/news/">
+<meta name="twitter:url" content="//:1320/news/">
 <meta name="twitter:title" content="资讯中心 - 维森视觉检测仪器">
 <meta name="twitter:description" content="获取最新的行业资讯、技术文章和展会信息，了解工业内窥镜和无损检测领域的前沿动态。">
-<meta name="twitter:image" content="http://localhost:1313/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
+<meta name="twitter:image" content="//:1320/images/assets/brand/logos/brand_logos_logo-dark_original_v1.svg">
 
 
 
@@ -48,7 +48,7 @@
   "@type": "Article",
   "headline": "资讯中心",
   "description": "获取最新的行业资讯、技术文章和展会信息，了解工业内窥镜和无损检测领域的前沿动态。",
-  "image": "http:\/\/localhost:1313\/images\/assets\/brand\/logos\/brand_logos_logo-dark_original_v1.svg",
+  "image": "\/\/:1320\/images\/assets\/brand\/logos\/brand_logos_logo-dark_original_v1.svg",
   "author": {
     "@type": "Organization",
     "name": "维森视觉检测仪器"
@@ -58,7 +58,7 @@
     "name": "维森视觉检测仪器",
     "logo": {
       "@type": "ImageObject",
-      "url": "http:\/\/localhost:1313\/images\/assets\/brand\/logos\/brand_logos_logo-dark_original_v1.svg"
+      "url": "\/\/:1320\/images\/assets\/brand\/logos\/brand_logos_logo-dark_original_v1.svg"
     }
   },
   "datePublished": "2025-11-12T00:00:00Z",
@@ -68,7 +68,7 @@
 
 
 
-<link rel="canonical" href="http://localhost:1313/news/">
+<link rel="canonical" href="//:1320/news/">
 
 
 <link rel="icon" type="image/svg+xml" href="../images/assets/brand/icons/brand_icons_favicon_original_v1.svg">
@@ -811,15 +811,92 @@
 }
 
  
-#backToTopBtn::before {
-  content: '';
-  position: absolute;
-  inset: -4px;  
-  border-radius: 50%;
-  background: conic-gradient(#90caf9 var(--scroll-progress, 0%), rgba(0,0,0,0.08) 0);
-  z-index: -1;  
-  box-shadow: 0 4px 10px rgba(25,118,210,0.2);
-}
+  #backToTopBtn::before {
+    content: '';
+    position: absolute;
+    inset: -4px;  
+    border-radius: 50%;
+    background: conic-gradient(#90caf9 var(--scroll-progress, 0%), rgba(0,0,0,0.08) 0);
+    z-index: -1;  
+    box-shadow: 0 4px 10px rgba(25,118,210,0.2);
+  }
+
+  .product-item .card,
+  .news-card,
+  .hover-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .product-item .card:hover,
+  .news-card:hover,
+  .hover-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  }
+
+  .product-title,
+  .news-title,
+  .case-title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .product-title a,
+  .news-title a,
+  .case-title a {
+    color: #1f2937;
+    text-decoration: none;
+    transition: color .2s ease;
+  }
+  .product-title a:hover,
+  .news-title a:hover,
+  .case-title a:hover {
+    color: #1976d2;
+  }
+
+  .product-summary,
+  .news-summary,
+  .case-summary {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #6b7280;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .category-badge,
+  .case-tags .tag {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #f3f4f6;
+    color: #374151;
+    border: 1px solid #e5e7eb;
+  }
+
+  small.text-muted,
+  .text-muted.small {
+    font-size: 12px;
+    color: #9e9e9e;
+  }
+
+  .content,
+  .content-body {
+    line-height: 1.6;
+    font-size: 14px;
+    color: #212121;
+  }
+  .content img,
+  .content-body img {
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.06);
+  }
 </style>
 
 
@@ -847,7 +924,7 @@
 </script>
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 
 
 <script>
@@ -1393,6 +1470,8 @@
                                     
                                         
                                         
+                                        
+                                        
                                         <a href="javascript:void(0)"
                                            class="filter-btn category-btn"
                                            data-filter-type="category" data-filter-value="展会资讯">
@@ -1447,6 +1526,8 @@
                                     
                                         
                                         
+                                        
+                                        
                                         <a href="javascript:void(0)"
                                            class="filter-btn category-btn"
                                            data-filter-type="category" data-filter-value="行业资讯">
@@ -1488,6 +1569,8 @@
                                             </a>
                                         
                                     
+                                        
+                                        
                                         
                                         
                                         <a href="javascript:void(0)"
@@ -1546,68 +1629,117 @@
                             
                             
                                 
+                                
+                                
+                                
+                                    
                                     
                                 
                                     
-                                
-                                    
-                                
-                            
-                                
                                     
                                 
                                     
-                                
-                                    
-                                
-                            
-                                
-                                    
-                                
-                                    
-                                
                                     
                                 
                             
                                 
+                                
+                                
+                                
+                                    
                                     
                                 
                                     
-                                
                                     
                                 
                                     
-                                
-                                    
-                                
-                            
-                                
-                                    
-                                
-                                    
-                                
-                                    
-                                
-                                    
-                                
                                     
                                 
                             
                                 
+                                
+                                
+                                
+                                    
                                     
                                 
+                                    
+                                    
+                                
+                                    
                                     
                                 
                             
                                 
+                                
+                                
+                                
+                                    
                                     
                                 
+                                    
+                                    
+                                
+                                    
+                                    
+                                
+                                    
+                                    
+                                
+                                    
                                     
                                 
                             
                                 
+                                
+                                
+                                
+                                    
                                     
                                 
+                                    
+                                    
+                                
+                                    
+                                    
+                                
+                                    
+                                    
+                                
+                                    
+                                    
+                                
+                            
+                                
+                                
+                                
+                                
+                                    
+                                    
+                                
+                                    
+                                    
+                                
+                            
+                                
+                                
+                                
+                                
+                                    
+                                    
+                                
+                                    
+                                    
+                                
+                            
+                                
+                                
+                                
+                                
+                                    
+                                    
+                                
+                                    
                                     
                                 
                             
@@ -1733,6 +1865,19 @@
             <div class="row" id="newsList">
                 
                 
+                
+                
+                
+                
+                
+                
+                
+                    
+                
+                    
+                
+                    
+                
                 <div class="col-lg-6 col-xl-4 mb-4 news-item"
                      data-categories="展会资讯"
                      data-tags="展会,智能制造,无损检测"
@@ -1741,7 +1886,7 @@
                      data-permalink="/news/exhibition/2025-shanghai-ndt-expo/"
                      data-title="2025上海国际无损检测与智能制造展览会">
                     <div class="card h-100 shadow-sm news-card">
-                        <a href="http://localhost:1313/news/exhibition/2025-shanghai-ndt-expo/" class="card-img-link">
+                        <a href="//:1320/news/exhibition/2025-shanghai-ndt-expo/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 
@@ -1766,7 +1911,7 @@
                                 
                             </div>
                             <h5 class="card-title news-title">
-                                <a href="http://localhost:1313/news/exhibition/2025-shanghai-ndt-expo/" class="text-decoration-none text-dark hover-primary">2025上海国际无损检测与智能制造展览会</a>
+                                <a href="//:1320/news/exhibition/2025-shanghai-ndt-expo/" class="text-decoration-none text-dark hover-primary">2025上海国际无损检测与智能制造展览会</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 news-summary">展会聚焦智能检测、机器视觉与内窥技术，行业品牌齐聚，发布多项创新成果。</p>
@@ -1786,6 +1931,19 @@
                     </div>
                 </div>
                 
+                
+                
+                
+                
+                
+                
+                
+                    
+                
+                    
+                
+                    
+                
                 <div class="col-lg-6 col-xl-4 mb-4 news-item"
                      data-categories="行业资讯"
                      data-tags="工业内窥,无损检测,智能识别"
@@ -1794,7 +1952,7 @@
                      data-permalink="/news/industry/2025-industrial-ndt-trends/"
                      data-title="2025年工业内窥与无损检测技术发展趋势">
                     <div class="card h-100 shadow-sm news-card">
-                        <a href="http://localhost:1313/news/industry/2025-industrial-ndt-trends/" class="card-img-link">
+                        <a href="//:1320/news/industry/2025-industrial-ndt-trends/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 
@@ -1819,7 +1977,7 @@
                                 
                             </div>
                             <h5 class="card-title news-title">
-                                <a href="http://localhost:1313/news/industry/2025-industrial-ndt-trends/" class="text-decoration-none text-dark hover-primary">2025年工业内窥与无损检测技术发展趋势</a>
+                                <a href="//:1320/news/industry/2025-industrial-ndt-trends/" class="text-decoration-none text-dark hover-primary">2025年工业内窥与无损检测技术发展趋势</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 news-summary">聚焦高清成像、智能识别与远程协作三大趋势，推动工业检测智能化升级。</p>
@@ -1839,6 +1997,19 @@
                     </div>
                 </div>
                 
+                
+                
+                
+                
+                
+                
+                
+                    
+                
+                    
+                
+                    
+                
                 <div class="col-lg-6 col-xl-4 mb-4 news-item"
                      data-categories="技术文章"
                      data-tags="AI识别,深度学习,工业内窥"
@@ -1847,7 +2018,7 @@
                      data-permalink="/news/tech-article/2025-ai-defect-detection/"
                      data-title="基于AI的缺陷识别在工业内窥中的应用实践">
                     <div class="card h-100 shadow-sm news-card">
-                        <a href="http://localhost:1313/news/tech-article/2025-ai-defect-detection/" class="card-img-link">
+                        <a href="//:1320/news/tech-article/2025-ai-defect-detection/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 
@@ -1872,7 +2043,7 @@
                                 
                             </div>
                             <h5 class="card-title news-title">
-                                <a href="http://localhost:1313/news/tech-article/2025-ai-defect-detection/" class="text-decoration-none text-dark hover-primary">基于AI的缺陷识别在工业内窥中的应用实践</a>
+                                <a href="//:1320/news/tech-article/2025-ai-defect-detection/" class="text-decoration-none text-dark hover-primary">基于AI的缺陷识别在工业内窥中的应用实践</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 news-summary">介绍将深度学习用于内窥图像缺陷识别的落地流程与效果评估。</p>
@@ -1892,6 +2063,23 @@
                     </div>
                 </div>
                 
+                
+                
+                
+                
+                
+                
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
                 <div class="col-lg-6 col-xl-4 mb-4 news-item"
                      data-categories="行业资讯"
                      data-tags="市场分析,行业趋势,工业内窥镜,市场预测,竞争格局"
@@ -1900,7 +2088,7 @@
                      data-permalink="/news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/"
                      data-title="2025年工业内窥镜市场发展趋势分析报告">
                     <div class="card h-100 shadow-sm news-card">
-                        <a href="http://localhost:1313/news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/" class="card-img-link">
+                        <a href="//:1320/news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 <img src="https://picsum.photos/800/450?random=industry-main" class="card-img-top object-fit-cover" alt="2025年工业内窥镜市场发展趋势分析报告" style="height: 200px;">
@@ -1925,7 +2113,7 @@
                                 
                             </div>
                             <h5 class="card-title news-title">
-                                <a href="http://localhost:1313/news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/" class="text-decoration-none text-dark hover-primary">2025年工业内窥镜市场发展趋势分析报告</a>
+                                <a href="//:1320/news/2025-07-27-2025%E5%B9%B4%E5%B7%A5%E4%B8%9A%E5%86%85%E7%AA%A5%E9%95%9C%E5%B8%82%E5%9C%BA%E5%8F%91%E5%B1%95%E8%B6%8B%E5%8A%BF%E5%88%86%E6%9E%90/" class="text-decoration-none text-dark hover-primary">2025年工业内窥镜市场发展趋势分析报告</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 news-summary">深度分析2025年全球工业内窥镜市场发展现状、技术趋势、竞争格局及未来发展机遇，为行业从业者提供权威的市场洞察</p>
@@ -1947,6 +2135,23 @@
                     </div>
                 </div>
                 
+                
+                
+                
+                
+                
+                
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
                 <div class="col-lg-6 col-xl-4 mb-4 news-item"
                      data-categories="技术文章"
                      data-tags="图像处理,算法优化,内窥镜技术,计算机视觉,深度学习"
@@ -1955,7 +2160,7 @@
                      data-permalink="/news/2025-07-27-%E5%86%85%E7%AA%A5%E9%95%9C%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/"
                      data-title="内窥镜图像处理算法优化技术详解">
                     <div class="card h-100 shadow-sm news-card">
-                        <a href="http://localhost:1313/news/2025-07-27-%E5%86%85%E7%AA%A5%E9%95%9C%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/" class="card-img-link">
+                        <a href="//:1320/news/2025-07-27-%E5%86%85%E7%AA%A5%E9%95%9C%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 <img src="https://picsum.photos/800/450?random=tech-main" class="card-img-top object-fit-cover" alt="内窥镜图像处理算法优化技术详解" style="height: 200px;">
@@ -1980,7 +2185,7 @@
                                 
                             </div>
                             <h5 class="card-title news-title">
-                                <a href="http://localhost:1313/news/2025-07-27-%E5%86%85%E7%AA%A5%E9%95%9C%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/" class="text-decoration-none text-dark hover-primary">内窥镜图像处理算法优化技术详解</a>
+                                <a href="//:1320/news/2025-07-27-%E5%86%85%E7%AA%A5%E9%95%9C%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/" class="text-decoration-none text-dark hover-primary">内窥镜图像处理算法优化技术详解</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 news-summary">深入探讨内窥镜图像处理中的关键算法，包括图像增强、噪声抑制、边缘检测等核心技术，为开发者提供实用的优化方案</p>
@@ -2002,6 +2207,17 @@
                     </div>
                 </div>
                 
+                
+                
+                
+                
+                
+                
+                
+                    
+                
+                    
+                
                 <div class="col-lg-6 col-xl-4 mb-4 news-item"
                      data-categories="行业资讯"
                      data-tags="工业内窥镜,无损检测"
@@ -2010,7 +2226,7 @@
                      data-permalink="/news/industry/2025-07-14-industrial-endoscope-market-growth/"
                      data-title="工业内窥镜市场迎来快速增长期 - 无损检测行业最新发展动态">
                     <div class="card h-100 shadow-sm news-card">
-                        <a href="http://localhost:1313/news/industry/2025-07-14-industrial-endoscope-market-growth/" class="card-img-link">
+                        <a href="//:1320/news/industry/2025-07-14-industrial-endoscope-market-growth/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 <img src="../images/news/industrial-endoscope-2025-01.svg" class="card-img-top object-fit-cover" alt="工业内窥镜市场迎来快速增长期 - 无损检测行业最新发展动态" style="height: 200px;">
@@ -2029,7 +2245,7 @@
                                 
                             </div>
                             <h5 class="card-title news-title">
-                                <a href="http://localhost:1313/news/industry/2025-07-14-industrial-endoscope-market-growth/" class="text-decoration-none text-dark hover-primary">工业内窥镜市场迎来快速增长期 - 无损检测行业最新发展动态</a>
+                                <a href="//:1320/news/industry/2025-07-14-industrial-endoscope-market-growth/" class="text-decoration-none text-dark hover-primary">工业内窥镜市场迎来快速增长期 - 无损检测行业最新发展动态</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 news-summary">本文深入分析了工业内窥镜在无损检测领域的最新发展趋势，探讨了相关技术创新、市场动态和未来发展方向，为行业从业者提供有价值的参考信息。</p>
@@ -2049,6 +2265,17 @@
                     </div>
                 </div>
                 
+                
+                
+                
+                
+                
+                
+                
+                    
+                
+                    
+                
                 <div class="col-lg-6 col-xl-4 mb-4 news-item"
                      data-categories="展会信息"
                      data-tags="航空航天,珠海航展"
@@ -2057,7 +2284,7 @@
                      data-permalink="/news/exhibition/exhibition-template-example/"
                      data-title="中国（珠海）国际航空航天展览会">
                     <div class="card h-100 shadow-sm news-card">
-                        <a href="http://localhost:1313/news/exhibition/exhibition-template-example/" class="card-img-link">
+                        <a href="//:1320/news/exhibition/exhibition-template-example/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 <img src="../images/news/zh-202611-01.jpg" class="card-img-top object-fit-cover" alt="中国（珠海）国际航空航天展览会" style="height: 200px;">
@@ -2076,7 +2303,7 @@
                                 
                             </div>
                             <h5 class="card-title news-title">
-                                <a href="http://localhost:1313/news/exhibition/exhibition-template-example/" class="text-decoration-none text-dark hover-primary">中国（珠海）国际航空航天展览会</a>
+                                <a href="//:1320/news/exhibition/exhibition-template-example/" class="text-decoration-none text-dark hover-primary">中国（珠海）国际航空航天展览会</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 news-summary">中国国际航空航天博览会是唯一由中央政府批准举办的国际性专业航空航天展览，以实物展示、贸易洽谈、学术交流和飞行表演为主要特征。</p>
@@ -2096,6 +2323,17 @@
                     </div>
                 </div>
                 
+                
+                
+                
+                
+                
+                
+                
+                    
+                
+                    
+                
                 <div class="col-lg-6 col-xl-4 mb-4 news-item"
                      data-categories="技术文章"
                      data-tags="图像处理,算法优化"
@@ -2104,7 +2342,7 @@
                      data-permalink="/news/tech-article/tech-article-1/"
                      data-title="工业内窥镜图像处理算法优化技术研究">
                     <div class="card h-100 shadow-sm news-card">
-                        <a href="http://localhost:1313/news/tech-article/tech-article-1/" class="card-img-link">
+                        <a href="//:1320/news/tech-article/tech-article-1/" class="card-img-link">
                             <div class="card-img-wrapper">
                                 
                                 <img src="../images/news/%e6%96%b0%e9%97%bb.webp" class="card-img-top object-fit-cover" alt="工业内窥镜图像处理算法优化技术研究" style="height: 200px;">
@@ -2123,7 +2361,7 @@
                                 
                             </div>
                             <h5 class="card-title news-title">
-                                <a href="http://localhost:1313/news/tech-article/tech-article-1/" class="text-decoration-none text-dark hover-primary">工业内窥镜图像处理算法优化技术研究</a>
+                                <a href="//:1320/news/tech-article/tech-article-1/" class="text-decoration-none text-dark hover-primary">工业内窥镜图像处理算法优化技术研究</a>
                             </h5>
                             
                             <p class="card-text text-muted flex-grow-1 news-summary">深入探讨工业内窥镜图像处理算法的优化方法，提升检测精度和效率</p>
@@ -2156,11 +2394,7 @@
                 </div>
             </div>
 
-            <div class="d-grid my-3">
-                <button id="news-load-more" class="btn btn-outline-primary">
-                    <i class="fas fa-plus-circle me-1"></i> 加载更多
-                </button>
-            </div>
+            
 
             
             
@@ -3161,29 +3395,29 @@ small.text-muted i {
     to { transform: rotate(360deg); }
 }
 </style>
-<script>
-
+<script type="text/plain">
+// 新闻筛选功能 - 左侧边栏版本
 const LC_APP_ID = 'pUEgNUJ66pc7S4FqVpqxkTkx-MdYXbMMI';
 const LC_APP_KEY = 'K9OXRf3L6Zp0s6TEzJElWQ5r';
 
-
+// 分页配置
 let NEWS_ITEMS_PER_PAGE = 6;
 let currentPage = 1;
 let filteredNews = [];
 let allNews = [];
 
-
+// 初始化
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 新闻筛选系统初始化');
 
-    
+    // 获取所有新闻元素
     allNews = Array.from(document.querySelectorAll('.news-item'));
     filteredNews = [...allNews];
 
-    
+    // 初始化增强分页
     initEnhancedPagination('newsList', NEWS_ITEMS_PER_PAGE, '资讯');
 
-    
+    // 监听分页变化事件
     document.addEventListener('enhancedPaginationChange', function(event) {
         if (event.detail.containerId === 'newsList') {
             currentPage = event.detail.currentPage;
@@ -3192,34 +3426,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    
+    // 初始化筛选器事件
     initializeFilters();
 
-    
+    // 初始化排序
     initializeSorting();
 
-    
+    // 应用初始筛选和分页
     applyFiltersAndSort();
 
     console.log(`✅ 找到 ${allNews.length} 篇新闻`);
 });
 
 function initializeFilters() {
-    
+    // 分类筛选
     document.querySelectorAll('#category-filters .filter-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             toggleFilter(this, 'category');
         });
     });
 
-    
+    // 标签筛选
     document.querySelectorAll('#tag-filters .filter-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             toggleFilter(this, 'tag');
         });
     });
 
-    
+    // 清除全部筛选
     document.getElementById('clearAllFilters').addEventListener('click', clearAllFilters);
 }
 
@@ -3246,53 +3480,53 @@ function hideLoading() {
 function toggleFilter(button, filterType) {
     const value = button.dataset.filterValue;
 
-    
+    // 如果是"全部"按钮
     if (value === '') {
-        
+        // 清除同类型的其他选中状态
         button.parentElement.querySelectorAll('.filter-btn').forEach(btn => {
             btn.classList.remove('active');
         });
         button.classList.add('active');
     } else {
-        
+        // 取消"全部"按钮的选中状态
         const allBtn = button.parentElement.querySelector('[data-filter-value=""]');
         if (allBtn) allBtn.classList.remove('active');
 
-        
+        // 切换当前按钮状态
         button.classList.toggle('active');
 
-        
+        // 如果没有任何按钮被选中，则选中"全部"
         const activeButtons = button.parentElement.querySelectorAll('.filter-btn.active');
         if (activeButtons.length === 0 && allBtn) {
             allBtn.classList.add('active');
         }
     }
 
-    
+    // 重置到第一页
     currentPage = 1;
 
-    
+    // 应用筛选
     applyFiltersAndSort();
 }
 
 function clearAllFilters() {
-    
+    // 清除所有筛选按钮的选中状态
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.classList.remove('active');
     });
 
-    
+    // 选中所有"全部"按钮
     document.querySelectorAll('[data-filter-value=""]').forEach(btn => {
         btn.classList.add('active');
     });
 
-    
+    // 重置排序
     document.getElementById('sortOrder').value = 'date-desc';
 
-    
+    // 重置到第一页
     currentPage = 1;
 
-    
+    // 应用筛选
     applyFiltersAndSort();
 }
 
@@ -3339,11 +3573,24 @@ function fetchViewCountsForPermalinks(permalinks) {
 
 function matchesCategoryFilters(categories, tags, selectedCategories) {
     if (selectedCategories.length === 0) return true;
+    const alias = {
+        '市场动态': ['市场','趋势','分析','预测','格局'],
+        '企业新闻': ['公司','发布','新品','动态','公告'],
+        '行业政策': ['政策','标准','法规','认证','规范'],
+        '原理解析': ['原理','机制','解析','工作原理'],
+        '应用指南': ['应用','指南','实践','方案','教程'],
+        '技术评测': ['评测','对比','性能','测试','测评']
+    };
+    const tagLower = tags.map(t => t.toLowerCase());
     return selectedCategories.some(cat => {
         if (cat.includes('|')) {
             const [primary, secondary] = cat.split('|');
             const primaryOk = categories.includes(primary);
-            const secondaryOk = categories.includes(secondary) || tags.includes(secondary);
+            let secondaryOk = categories.includes(secondary) || tags.includes(secondary);
+            if (!secondaryOk) {
+                const kws = alias[secondary] || [];
+                secondaryOk = kws.some(k => tagLower.some(t => t.includes(k.toLowerCase())));
+            }
             return primaryOk && secondaryOk;
         } else {
             return categories.includes(cat) || tags.includes(cat);
@@ -3354,7 +3601,7 @@ function matchesCategoryFilters(categories, tags, selectedCategories) {
 function applyFiltersAndSort() {
     console.log('🔄 应用筛选和排序');
 
-    
+    // 获取选中的筛选条件
     const selectedCategories = getSelectedFilters('#category-filters');
     const selectedTags = getSelectedFilters('#tag-filters');
     const sortOrder = document.getElementById('sortOrder').value;
@@ -3365,29 +3612,29 @@ function applyFiltersAndSort() {
         sortOrder: sortOrder
     });
 
-    
+    // 筛选新闻
     filteredNews = allNews.filter(newsItem => {
         const categories = newsItem.dataset.categories ?
             newsItem.dataset.categories.split(',').map(c => c.trim()) : [];
         const tags = newsItem.dataset.tags ?
             newsItem.dataset.tags.split(',').map(t => t.trim()) : [];
 
-        
+        // 检查分类匹配
         let categoryMatch = matchesCategoryFilters(categories, tags, selectedCategories);
 
-        
+        // 检查标签匹配
         let tagMatch = selectedTags.length === 0 ||
             selectedTags.some(tag => tags.includes(tag));
 
         return categoryMatch && tagMatch;
     });
 
-    
+    // 排序
     sortNews(filteredNews, sortOrder);
 
     console.log(`✅ 筛选完成: ${filteredNews.length} / ${allNews.length} 篇新闻符合条件`);
 
-    
+    // 更新显示
     updateNewsDisplay();
     updateEnhancedPagination('newsList', filteredNews, 1);
     updateNewsCount();
@@ -3424,22 +3671,22 @@ function sortNews(news, sortOrder) {
 }
 
 function updateNewsDisplay() {
-    
+    // 隐藏所有新闻
     allNews.forEach(newsItem => {
         newsItem.style.display = 'none';
     });
 
-    
+    // 计算当前页要显示的新闻
     const startIndex = (currentPage - 1) * NEWS_ITEMS_PER_PAGE;
     const endIndex = startIndex + NEWS_ITEMS_PER_PAGE;
     const currentPageNews = filteredNews.slice(startIndex, endIndex);
 
-    
+    // 显示当前页的新闻
     currentPageNews.forEach(newsItem => {
         newsItem.style.display = 'block';
     });
 
-    
+    // 显示/隐藏无结果提示
     const noResultsMessage = document.getElementById('no-news-message');
     if (filteredNews.length === 0) {
         noResultsMessage.style.display = 'block';
@@ -3448,7 +3695,7 @@ function updateNewsDisplay() {
     }
 }
 
-
+// 旧的分页函数已删除，现在使用增强版分页组件
 
 function updateNewsCount() {
     const countInfo = document.getElementById('news-count-info');
@@ -3492,7 +3739,7 @@ function removeFilter(filterType, value) {
     if (button) {
         button.classList.remove('active');
 
-        
+        // 检查是否需要激活"全部"按钮
         const activeButtons = button.parentElement.querySelectorAll('.filter-btn.active');
         if (activeButtons.length === 0) {
             const allBtn = button.parentElement.querySelector('[data-filter-value=""]');
@@ -3503,112 +3750,14 @@ function removeFilter(filterType, value) {
     applyFiltersAndSort();
 }
 
-
+// 旧的goToPage函数已删除，现在使用增强版分页组件
 
 
 
 
 
 </script>
-<script>
-(function(){
-  const host = location.hostname;
-  const isLocal = host === 'localhost' || host === '127.0.0.1';
-  const base = (typeof window !== 'undefined' && window.API_BASE) ? String(window.API_BASE).replace(/\/$/,'') : '';
-  const Bases = isLocal ? [base, ''] : [
-    base,
-    'https://api.visndt.com',
-    'https://visndt.com',
-    'https://www.visndt.com'
-  ];
-  let page = 1;
-  const limit = 12;
-  function card(n){
-    const img = n.cover_image || '/images/news/news-1.jpeg';
-    const slug = n.slug || n.id || '';
-    const cats = Array.isArray(n.category) ? n.category : (n.category ? [n.category] : []);
-    const tags = Array.isArray(n.tags) ? n.tags : String(n.tags||'').split(',').map(s=>s.trim()).filter(Boolean);
-    return `
-    <div class="col-lg-6 col-xl-4 mb-4 news-item"
-         data-categories="${cats.join(',')}"
-         data-tags="${tags.join(',')}"
-         data-date="${(n.published_at||'').slice(0,10)}"
-         data-views="0"
-         data-permalink="/news/${slug}"
-         data-title="${n.title||''}">
-      <div class="card h-100 shadow-sm news-card">
-        <a href="../news/${slug}" class="card-img-link">
-          <div class="card-img-wrapper">
-            <img src="${img}" class="card-img-top object-fit-cover" alt="${n.title||''}" style="height: 200px;">
-          </div>
-        </a>
-        <div class="card-body d-flex flex-column">
-          <div class="mb-2">
-            ${cats.map(c=>`<span class=\"badge bg-primary me-1\">${c}</span>`).join('')}
-            ${tags.map(t=>`<span class=\"badge bg-secondary me-1\">${t}</span>`).join('')}
-          </div>
-          <h5 class="card-title news-title"><a href="../news/${slug}" class="text-decoration-none text-dark hover-primary">${n.title||''}</a></h5>
-          ${n.summary?`<p class=\"card-text text-muted flex-grow-1 news-summary\">${n.summary}</p>`:''}
-          <div class="mt-auto"><div class="d-flex justify-content-between align-items-center"><div><small class="text-muted"><i class="far fa-calendar-alt me-1"></i>${(n.published_at||'').slice(0,10)}</small></div><div><small class="text-muted"><i class="fas fa-eye me-1"></i><span class="view-count-display">0</span></small></div></div></div>
-        </div>
-      </div>
-    </div>`;
-  }
-  function fetchWithTimeout(url, ms){
-    return new Promise((resolve, reject) => {
-      const ctrl = new AbortController();
-      const to = setTimeout(() => { try{ ctrl.abort(); }catch{}; reject(new Error('timeout')); }, ms||5000);
-      fetch(url, { signal: ctrl.signal }).then(resolve).catch(reject).finally(() => clearTimeout(to));
-    });
-  }
-  async function fetchNews(params){
-    const qs = new URLSearchParams(params||{}).toString();
-    for (const base of Bases) {
-      const prefix = base ? base.replace(/\/$/,'') : '';
-      const u = prefix ? `${prefix}/api/news${qs?`?${qs}`:''}` : `/api/news${qs?`?${qs}`:''}`;
-      try {
-        const r = await fetchWithTimeout(u, 6000);
-        if (!r.ok) throw new Error(`status ${r.status}`);
-        const j = await r.json();
-        const arr = Array.isArray(j) ? j : (j.items || []);
-        if (arr && arr.length) return arr;
-      } catch {}
-    }
-    return [];
-  }
-  function render(items){
-    const wrap = document.getElementById('newsList');
-    if(!wrap) return;
-    wrap.innerHTML = items.map(card).join('');
-    const countInfo = document.getElementById('news-count-info');
-    if(countInfo) countInfo.textContent = `找到 ${items.length} 篇资讯`;
-    
-    try {
-      window.allNews = Array.from(document.querySelectorAll('.news-item'));
-      window.filteredNews = [...window.allNews];
-      if (typeof applyFiltersAndSort === 'function') applyFiltersAndSort();
-    } catch {}
-  }
-  document.addEventListener('DOMContentLoaded', async function(){
-    try {
-      const items = await fetchNews({ page, limit });
-      if (items && items.length) render(items);
-      const moreBtn = document.getElementById('news-load-more');
-      if (moreBtn) {
-        moreBtn.onclick = async function(){
-          page += 1;
-          const next = await fetchNews({ page, limit });
-          const wrap = document.getElementById('newsList');
-          if (wrap && next.length) wrap.insertAdjacentHTML('beforeend', next.map(card).join(''));
-          const info = document.getElementById('news-count-info');
-          if (info) info.textContent = `找到 ${(document.querySelectorAll('.news-item')||[]).length} 篇资讯`;
-          try { if (typeof applyFiltersAndSort === 'function') applyFiltersAndSort(); } catch {}
-        };
-      }
-    } catch {}
-  });
-})();
-</script>
+<script type="text/plain"></script>
 
     </main>
 

@@ -3,7 +3,21 @@
   "created": "2025-06-28T04:35:58.462Z",
   "description": "新旧图片路径映射关系",
   "mappings": {
-    "products": {},
+    "products": {
+      "/images/products/F-series/F-main.jpg": "/images/products/vis/F-series/F-main.jpg",
+      "/images/products/F-series/F-2.jpg": "/images/products/vis/F-series/F-2.jpg",
+      "/images/products/F-series/FX-1.jpg": "/images/products/vis/F-series/FX-1.jpg",
+      "/images/products/P60/P-MAIN.jpg": "/images/products/vis/P60/P-MAIN.jpg",
+      "/images/products/P60/P-1.jpg": "/images/products/vis/P60/P-1.jpg",
+      "/images/products/P60/P-2.jpg": "/images/products/vis/P60/P-2.jpg",
+      "/images/products/P60/P-3.svg": "/images/products/vis/P60/P-3.svg",
+      "/images/products/default-product.jpg": "/images/placeholders/general/product-placeholder.svg",
+      "/images/products/placeholder.svg": "/images/placeholders/general/product-placeholder.svg",
+      "/images/products/default-gallery-2.jpg": "/images/placeholders/general/product-main-800x600.svg",
+      "/images/products/default-gallery-3.jpg": "/images/placeholders/general/product-main-800x600.svg",
+      "/images/products/default-gallery-4.jpg": "/images/placeholders/general/product-main-800x600.svg",
+      "/images/products/default-gallery-5.jpg": "/images/placeholders/general/product-main-800x600.svg"
+    },
     "downloads": {},
     "news": {
       "/images/news/news-1.jpeg": "/images/content/news/covers/news_covers_news-1_original_v1.jpeg",
