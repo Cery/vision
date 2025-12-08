@@ -367,6 +367,9 @@
              <button class="btn btn-outline-primary" onclick="App.syncProducts()">同步</button>
              <button class="btn btn-outline-secondary" onclick="App.debugIndex('products')">测试索引</button>
            </div>
+           <select class="form-select form-select-sm" id="importSupplierSelect" style="max-width:240px;">
+             <option value="">导入目标供应商（可选）</option>
+           </select>
            <button class="btn btn-outline-primary btn-sm" onclick="App.triggerBatchImport()"><i class="fa-solid fa-file-import"></i> 批量导入 MD</button>
            <button class="btn btn-primary btn-sm" onclick="App.openProductEditor()"><i class="fa-solid fa-plus"></i> 新增产品</button>
         </div>
@@ -381,12 +384,35 @@
                  <input type="text" class="form-control" id="prodSearch" placeholder="搜索产品名称/型号">
                </div>
              </div>
+             <div class="col-md-5">
+               <div class="input-group input-group-sm">
+                 <span class="input-group-text">排序</span>
+                 <select class="form-select" id="prodSortField">
+                   <option value="name">名称</option>
+                   <option value="model">型号</option>
+                   <option value="primary_category">分类</option>
+                   <option value="status">状态</option>
+                 </select>
+                 <select class="form-select" id="prodSortOrder">
+                   <option value="desc">降序</option>
+                   <option value="asc">升序</option>
+                 </select>
+                 <span class="input-group-text">每页</span>
+                 <select class="form-select" id="prodPageSize">
+                   <option value="12">12</option>
+                   <option value="24">24</option>
+                   <option value="48">48</option>
+                 </select>
+                 <button class="btn btn-outline-secondary" id="prodExportBtn"><i class="fa-solid fa-file-export"></i> 导出</button>
+               </div>
+             </div>
              <div class="col-auto ms-auto">
                 <button class="btn btn-sm btn-outline-secondary" onclick="App.loadProducts()"><i class="fa-solid fa-rotate"></i> 刷新</button>
              </div>
            </div>
         </div>
       </div>
+      <div id="prodSummaryBar" class="mb-2 small text-muted"></div>
       <div class="row g-3" id="prodGrid"></div>
     </div>
 
@@ -395,14 +421,15 @@
       <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
         <h2 class="h4 mb-0">新闻资讯</h2>
         <div class="d-flex align-items-center gap-2">
-           <div class="input-group input-group-sm" style="max-width: 380px;">
+          <div class="input-group input-group-sm" style="max-width: 380px;">
              <span class="input-group-text">同步源</span>
              <input type="text" class="form-control" id="syncBaseNews" placeholder="https://www.visndt.com/data">
              <button class="btn btn-outline-primary" onclick="App.syncNews()">同步</button>
              <button class="btn btn-outline-secondary" onclick="App.debugIndex('news')">测试索引</button>
            </div>
+           <button class="btn btn-outline-secondary btn-sm" onclick="App.exportNews('xlsx')"><i class="fa-solid fa-file-export"></i> 导出</button>
            <button class="btn btn-primary btn-sm" onclick="App.openNewsEditor()"><i class="fa-solid fa-plus"></i> 发布新闻</button>
-        </div>
+         </div>
       </div>
       <div class="card shadow-sm">
         <div class="table-responsive">
@@ -427,14 +454,15 @@
       <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
         <h2 class="h4 mb-0">应用案例</h2>
         <div class="d-flex align-items-center gap-2">
-           <div class="input-group input-group-sm" style="max-width: 380px;">
+          <div class="input-group input-group-sm" style="max-width: 380px;">
              <span class="input-group-text">同步源</span>
              <input type="text" class="form-control" id="syncBaseCases" placeholder="https://www.visndt.com/data">
              <button class="btn btn-outline-primary" onclick="App.syncCases()">同步</button>
              <button class="btn btn-outline-secondary" onclick="App.debugIndex('cases')">测试索引</button>
            </div>
+           <button class="btn btn-outline-secondary btn-sm" onclick="App.exportCases('xlsx')"><i class="fa-solid fa-file-export"></i> 导出</button>
            <button class="btn btn-primary btn-sm" onclick="App.openCaseEditor()"><i class="fa-solid fa-plus"></i> 发布案例</button>
-        </div>
+         </div>
       </div>
       <div class="card shadow-sm">
         <div class="table-responsive">

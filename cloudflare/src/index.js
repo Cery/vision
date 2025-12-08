@@ -30,7 +30,7 @@ export default {
       } catch {}
     }
     const baseHeaders = {
-      'Access-Control-Allow-Origin': allowOrigin,
+      'Access-Control-Allow-Origin': (origin === 'null' || !origin) ? '*' : allowOrigin,
       'Access-Control-Allow-Methods': 'GET,POST,PATCH,DELETE,OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key, x-admin-key',
       'Vary': 'Origin'
@@ -285,7 +285,12 @@ export default {
     function requireAdmin(req) {
       const key = req.headers.get('X-Admin-Key') || req.headers.get('x-admin-key') || '';
       const expected = env.ADMIN_KEY || env.ADMIN_KEY_SECRET || env.ADMIN_TOKEN || '';
-      return Boolean(expected && key === expected);
+      if (expected) return key === expected;
+      const origin = req.headers.get('origin') || '';
+      if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin)) {
+        return !!key; // allow any non-empty key in local dev when ADMIN_KEY is not set
+      }
+      return false;
     }
     function genRequirementID() {
       const d = new Date();
@@ -490,19 +495,11 @@ export default {
     // Admin: Login
     if (isApi('admin/login') && request.method === 'POST') {
       const data = await bodyJSON(request);
-      const user = String(data.username || '').trim();
-      const pass = String(data.password || '').trim();
-      
-      // Hardcoded for this specific request, in production use Env
-      const validUser = env.ADMIN_USER || 'visndt';
-      const validPass = env.ADMIN_PASSWORD || '@Aa123456';
-      
-      if (user === validUser && pass === validPass) {
-         // Generate a simple token (in real world, use JWT or signed token)
-         // Here we just return the password as the key since our requireAdmin checks env.ADMIN_KEY
-         // But wait, requireAdmin checks X-Admin-Key header against env.ADMIN_KEY.
-         // We should probably return env.ADMIN_KEY if login success.
-         return json({ ok: true, token: env.ADMIN_KEY || 'admin123456' });
+      const pass = String((data.password || data.pass || '')).trim();
+      const headerOk = requireAdmin(request);
+      const envPass = String(env.ADMIN_PASSWORD || env.ADMIN_PASS || env.ADMIN_SECRET || '');
+      if (headerOk || (envPass && pass && pass === envPass)) {
+        return json({ ok: true, token: env.ADMIN_KEY || 'admin123456' });
       }
       return json({ error: 'InvalidCredentials' }, 401);
     }
@@ -2244,8 +2241,9 @@ export default {
         const idx = await fetchJsonSafe(idxUrl);
         const list = Array.isArray(idx) ? idx : [];
         const items = list.filter(i => {
-          const t = String(i.type || i.section || '').toLowerCase();
-          return t === 'news' || String(i.section || '').toLowerCase() === 'news';
+          const raw = String(i.type || i.section || '').toLowerCase();
+          const t = raw.replace(/\s+/g,'');
+          return t.includes('news') || t.includes('article') || t.includes('资讯') || t.includes('新闻');
         });
         let upserted = 0;
         for (const i of items) {
@@ -2297,8 +2295,9 @@ export default {
         const idx = await fetchJsonSafe(idxUrl);
         const list = Array.isArray(idx) ? idx : [];
         const items = list.filter(i => {
-          const t = String(i.type || i.section || '').toLowerCase();
-          return t === 'cases' || String(i.section || '').toLowerCase() === 'cases';
+          const raw = String(i.type || i.section || '').toLowerCase();
+          const t = raw.replace(/\s+/g,'');
+          return t.includes('case') || t.includes('cases') || t.includes('应用案例') || t.includes('案例');
         });
         let upserted = 0;
         for (const i of items) {
@@ -2349,8 +2348,9 @@ export default {
         const idx = await fetchJsonSafe(idxUrl);
         const list = Array.isArray(idx) ? idx : [];
         const items = list.filter(i => {
-          const t = String(i.type || i.section || '').toLowerCase();
-          return t === 'products' || String(i.section || '').toLowerCase() === 'products';
+          const raw = String(i.type || i.section || '').toLowerCase();
+          const t = raw.replace(/\s+/g,'');
+          return t.includes('product') || t.includes('products') || t.includes('产品');
         });
         let upserted = 0;
         for (const i of items) {

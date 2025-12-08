@@ -133,6 +133,8 @@ const App = {
     assetPage: 0,
     quotesCache: [],
     productsCache: [],
+    prodSort: { field: 'name', order: 'asc' },
+    prodPageSize: 24,
     demReqCache: [],
     currentReqId: null
   },
@@ -526,6 +528,9 @@ const App = {
       // Ensure suppliers loaded
       if(!this.state.supList.length) await this.loadSuppliers();
       
+      const grid = document.getElementById('prodGrid');
+      if (grid) grid.innerHTML = Array.from({length:12}).map(()=>'<div class="col-md-3"><div class="card"><div class="ratio ratio-4x3 bg-light placeholder-glow"><span class="placeholder col-12 h-100"></span></div><div class="p-2"><span class="placeholder col-6"></span><div class="mt-1"><span class="placeholder col-8"></span></div></div></div></div>').join('');
+
       const res = await apiFetch('/api/admin/products');
       this.state.productsCache = Array.isArray(res) ? res : (res.items || []);
       // 空列表时提示同步
@@ -533,6 +538,7 @@ const App = {
         const tbody = document.getElementById('prodTableBody');
         if (tbody) tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-3">暂无产品 · <button class="btn btn-sm btn-outline-primary" onclick="App.syncProducts()">同步官网内容</button></td></tr>';
       }
+      this.renderProductSummary();
       this.renderProducts();
     } catch (e) {
       showToast('产品加载失败: ' + e.message, 'error');
@@ -576,6 +582,24 @@ const App = {
            description: data.content || '',
            parameters_json: data.params || {}
         };
+        // Supplier mapping
+        const preferred = (document.getElementById('importSupplierSelect')?.value || '').trim();
+        const supHint = data.supplier_id || data.supplier || (data.params && (data.params.supplier_id || data.params.supplier || data.params.company || data.params.vendor || data.params.factory)) || '';
+        let supplier_id = preferred;
+        const norm = (s) => String(s||'').trim().toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g,'');
+        if (!supplier_id && supHint) {
+          const nh = norm(supHint);
+          const s = this.state.supList.find(x => {
+            const sid = String(x.supplier_id||'').trim();
+            if (sid && sid === supHint) return true;
+            const nm = norm(x.company||x.name||'');
+            return nm && (nm === nh || nm.includes(nh) || nh.includes(nm));
+          });
+          if (s) supplier_id = s.supplier_id;
+        }
+        if (!supplier_id && this.state.supList.length === 1) supplier_id = this.state.supList[0].supplier_id;
+        if (!supplier_id && this.state.supList.length > 0) supplier_id = this.state.supList[0].supplier_id;
+        body.supplier_id = supplier_id;
         
         // Try to create (POST)
         // If slug exists, backend might error or we should check. 
@@ -652,6 +676,12 @@ const App = {
               else if (key === 'parameters') {
                  try { res.params = JSON.parse(val); } catch { res.params.parameters = val; }
               }
+              else if (key === 'supplier' || key === 'vendor' || key === 'company' || key === 'factory') {
+                 res.supplier = val;
+              }
+              else if (key === 'supplier_id') {
+                 res.supplier_id = val;
+              }
               else {
                  res.params[key] = val;
               }
@@ -670,11 +700,19 @@ const App = {
   },
 
   renderProducts() {
-     const grid = document.getElementById('prodGrid');
-     const search = document.getElementById('prodSearch').value.trim().toLowerCase();
-     const list = this.state.productsCache.filter(p => {
-        if (search && !((p.name||'').toLowerCase().includes(search) || (p.model||'').toLowerCase().includes(search))) return false;
-        return true;
+    const grid = document.getElementById('prodGrid');
+    const search = document.getElementById('prodSearch').value.trim().toLowerCase();
+    let list = this.state.productsCache.filter(p => {
+      if (search && !((p.name||'').toLowerCase().includes(search) || (p.model||'').toLowerCase().includes(search))) return false;
+      return true;
+    });
+     const f = this.state.prodSort.field; const o = this.state.prodSort.order;
+     list.sort((a,b) => {
+        const av = String(a[f]||'').toLowerCase();
+        const bv = String(b[f]||'').toLowerCase();
+        if (av < bv) return o==='asc' ? -1 : 1;
+        if (av > bv) return o==='asc' ? 1 : -1;
+        return 0;
      });
      
      if (!list.length) {
@@ -682,10 +720,12 @@ const App = {
         return;
      }
      
-     grid.innerHTML = list.map(p => {
-        const img = p.cover_image || p.CoverImage || 'https://via.placeholder.com/300x200?text=No+Image';
-        const status = p.status || 'active';
-        const isFeat = p.is_featured ? '<span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2">推荐</span>' : '';
+    const pageSize = this.state.prodPageSize || 24;
+    const pageList = list.slice(0, pageSize);
+    grid.innerHTML = pageList.map(p => {
+      const img = p.cover_image || p.CoverImage || 'https://via.placeholder.com/300x200?text=No+Image';
+      const status = p.status || 'active';
+      const isFeat = p.is_featured ? '<span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2">推荐</span>' : '';
         
         // Find supplier name
         const sup = this.state.supList.find(s => s.supplier_id === p.supplier_id);
@@ -717,6 +757,25 @@ const App = {
         </div>
         `;
      }).join('');
+  },
+
+  exportProducts(type) {
+    const list = this.state.productsCache || [];
+    if (!list.length) return showToast('无产品可导出', 'info');
+    const rows = list.map(p => ({
+      ID: p.product_id,
+      Name: p.name,
+      Model: p.model,
+      Series: p.series,
+      Category: p.primary_category,
+      Status: p.status,
+      SupplierID: p.supplier_id,
+      UpdatedAt: p.updated_at || ''
+    }));
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Products');
+    if (type === 'csv') XLSX.writeFile(wb, 'Products.csv'); else XLSX.writeFile(wb, 'Products.xlsx');
   },
   
   async openProductEditor(id = null) {
@@ -856,6 +915,23 @@ const App = {
         showToast('加载新闻失败: ' + e.message, 'error');
      }
   },
+  exportNews(type) {
+    const tbody = document.getElementById('newsTableBody');
+    const list = Array.from(tbody.querySelectorAll('tr')).map(tr => {
+      const tds = tr.querySelectorAll('td');
+      return {
+        Title: (tds[0]?.textContent||'').trim(),
+        Category: (tds[1]?.textContent||'').trim(),
+        Status: (tds[2]?.textContent||'').trim(),
+        PublishedAt: (tds[3]?.textContent||'').trim()
+      };
+    });
+    if (!list.length) return showToast('无新闻数据可导出', 'info');
+    const ws = XLSX.utils.json_to_sheet(list);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'News');
+    if (type === 'csv') XLSX.writeFile(wb, 'News.csv'); else XLSX.writeFile(wb, 'News.xlsx');
+  },
 
   async syncNews() {
      try {
@@ -973,6 +1049,24 @@ const App = {
      } catch (e) {
         showToast('加载案例失败: ' + e.message, 'error');
      }
+  },
+  exportCases(type) {
+    const tbody = document.getElementById('caseTableBody');
+    const list = Array.from(tbody.querySelectorAll('tr')).map(tr => {
+      const tds = tr.querySelectorAll('td');
+      return {
+        Title: (tds[0]?.textContent||'').trim(),
+        Industry: (tds[1]?.textContent||'').trim(),
+        RelatedProductID: (tds[2]?.textContent||'').trim(),
+        Status: (tds[3]?.textContent||'').trim(),
+        PublishedAt: (tds[4]?.textContent||'').trim()
+      };
+    });
+    if (!list.length) return showToast('无案例数据可导出', 'info');
+    const ws = XLSX.utils.json_to_sheet(list);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Cases');
+    if (type === 'csv') XLSX.writeFile(wb, 'Cases.csv'); else XLSX.writeFile(wb, 'Cases.xlsx');
   },
 
   async syncCases() {
@@ -1440,6 +1534,21 @@ const App = {
       `;
     }).join('');
   },
+  renderProductSummary() {
+    const el = document.getElementById('prodSummaryBar'); if (!el) return;
+    const list = this.state.productsCache || [];
+    const byCat = {};
+    const bySup = {};
+    for (const p of list) {
+      const c = (p.primary_category||'').trim() || '未分类';
+      byCat[c] = (byCat[c]||0)+1;
+      const s = (p.supplier_id||'').trim();
+      bySup[s||'未知供应商'] = (bySup[s||'未知供应商']||0)+1;
+    }
+    const catHtml = Object.entries(byCat).slice(0,6).map(([k,v])=>`<span class="badge bg-light text-dark border me-1">${escapeHtml(k)} ${v}</span>`).join('');
+    const supHtml = Object.entries(bySup).slice(0,6).map(([k,v])=>`<span class="badge bg-secondary me-1">${escapeHtml(k)}</span><span class="badge bg-light text-dark border me-3">${v}</span>`).join('');
+    el.innerHTML = `分类：${catHtml} 供应商：${supHtml}`;
+  },
   
   async updateQuoteStatus(qid, status) {
     try {
@@ -1676,9 +1785,10 @@ const App = {
           }
         } catch {}
       }
+      this.populateImportSupplierSelect();
       this.renderSuppliers();
     } catch (e) {
-      showToast('加载失败: ' + e.message, 'error');
+      showToast('加载供应商失败: ' + e.message, 'error');
     }
   },
   
@@ -1985,3 +2095,18 @@ const App = {
 // Expose to window
 window.App = App;
 document.addEventListener('DOMContentLoaded', () => App.init());
+  populateImportSupplierSelect() {
+    const sel = document.getElementById('importSupplierSelect');
+    if (!sel) return;
+    const opt = ['<option value="">导入目标供应商（可选）</option>'].concat(
+      this.state.supList.map(s => `<option value="${s.supplier_id}">${escapeHtml(s.company || s.name)}</option>`)
+    );
+    sel.innerHTML = opt.join('');
+    try { const saved = localStorage.getItem('IMPORT_SUPPLIER_ID'); if (saved) sel.value = saved; } catch {}
+    sel.onchange = () => { try { localStorage.setItem('IMPORT_SUPPLIER_ID', sel.value || ''); } catch {} };
+  },
+      // Products toolbar bindings
+      const sf = document.getElementById('prodSortField'); if (sf) sf.onchange = () => { this.state.prodSort.field = sf.value; this.renderProducts(); };
+      const so = document.getElementById('prodSortOrder'); if (so) so.onchange = () => { this.state.prodSort.order = so.value; this.renderProducts(); };
+      const ps = document.getElementById('prodPageSize'); if (ps) ps.onchange = () => { this.state.prodPageSize = parseInt(ps.value||'24',10)||24; this.renderProducts(); };
+      const ex = document.getElementById('prodExportBtn'); if (ex) ex.onclick = () => this.exportProducts('xlsx');
