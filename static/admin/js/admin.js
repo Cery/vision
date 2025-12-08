@@ -224,6 +224,12 @@ const App = {
     if (bulkBtn) bulkBtn.onclick = () => this.bulkIngestSelected();
     const qualBtn = document.getElementById('supQualUploadBtn');
     if (qualBtn) qualBtn.onclick = () => this.uploadQualificationFiles();
+    try {
+      const base = localStorage.getItem('SYNC_BASE_URL') || 'https://www.visndt.com/data';
+      const ip = document.getElementById('syncBaseProducts'); if (ip) ip.value = base;
+      const inews = document.getElementById('syncBaseNews'); if (inews) inews.value = base;
+      const icases = document.getElementById('syncBaseCases'); if (icases) icases.value = base;
+    } catch {}
     
     // Quote bindings
     document.getElementById('quoteFilterStatus').onchange = () => this.renderQuotes();
@@ -602,7 +608,10 @@ const App = {
 
   async syncProducts() {
     try {
-      await apiFetch('/api/admin/import-products', { method: 'POST' });
+      const base = (document.getElementById('syncBaseProducts')?.value || '').trim();
+      if (base) try { localStorage.setItem('SYNC_BASE_URL', base); } catch {}
+      const url = base ? (`/api/admin/import-products?base=${encodeURIComponent(base)}`) : '/api/admin/import-products';
+      await apiFetch(url, { method: 'POST' });
       showToast('已同步产品', 'success');
       this.loadProducts();
     } catch (e) { showToast(e.message, 'error'); }
@@ -611,7 +620,8 @@ const App = {
   parseMarkdown(text) {
      // Simple frontmatter parser
      const res = { content: '', params: {} };
-     const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
+     const cleaned = text.replace(/^\uFEFF/, '');
+     const match = cleaned.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
      
      if (match) {
         const yaml = match[1];
@@ -639,14 +649,22 @@ const App = {
                  // Handle list [a, b] roughly
                  res.category = val.replace(/[\[\]]/g, '').split(',')[0].trim();
               }
+              else if (key === 'parameters') {
+                 try { res.params = JSON.parse(val); } catch { res.params.parameters = val; }
+              }
               else {
                  res.params[key] = val;
               }
            }
         });
      } else {
-        res.content = text;
+        res.content = cleaned;
         res.name = 'Untitled';
+     }
+     // Fallback: derive title from first H1
+     if (!res.name) {
+        const m2 = res.content.match(/^#\s+(.+?)$/m);
+        if (m2) res.name = m2[1].trim();
      }
      return res;
   },
@@ -841,10 +859,13 @@ const App = {
 
   async syncNews() {
      try {
-        await apiFetch('/api/admin/import-news', { method: 'POST' });
+        const base = (document.getElementById('syncBaseNews')?.value || '').trim();
+        if (base) try { localStorage.setItem('SYNC_BASE_URL', base); } catch {}
+        const url = base ? (`/api/admin/import-news?base=${encodeURIComponent(base)}`) : '/api/admin/import-news';
+        await apiFetch(url, { method: 'POST' });
         showToast('已同步新闻', 'success');
         this.loadNews();
-     } catch (e) { showToast(e.message, 'error'); }
+      } catch (e) { showToast(e.message, 'error'); }
   },
 
   async syncAll() {
@@ -860,6 +881,20 @@ const App = {
       this.loadDashboard();
     } catch (e) {
       showToast(e.message, 'error');
+    }
+  },
+  async debugIndex(section) {
+    try {
+      const map = { products: 'syncBaseProducts', news: 'syncBaseNews', cases: 'syncBaseCases' };
+      const inputId = map[section] || 'syncBaseProducts';
+      const base = (document.getElementById(inputId)?.value || '').trim();
+      const url = base ? (`/api/admin/debug-index?base=${encodeURIComponent(base)}`) : '/api/admin/debug-index';
+      const res = await apiFetch(url);
+      const count = res.count || 0;
+      const sample = (res.sample || []).filter(i => String(i.section||'').toLowerCase() === section).slice(0,5).map(i => `${i.title} (${i.uri})`).join('\n');
+      showToast(`索引 ${count} 项，${section} 示例:\n` + (sample || '无'), 'info');
+    } catch (e) {
+      showToast(e.message || '索引调试失败', 'error');
     }
   },
   
@@ -942,10 +977,13 @@ const App = {
 
   async syncCases() {
      try {
-        await apiFetch('/api/admin/import-cases', { method: 'POST' });
+        const base = (document.getElementById('syncBaseCases')?.value || '').trim();
+        if (base) try { localStorage.setItem('SYNC_BASE_URL', base); } catch {}
+        const url = base ? (`/api/admin/import-cases?base=${encodeURIComponent(base)}`) : '/api/admin/import-cases';
+        await apiFetch(url, { method: 'POST' });
         showToast('已同步案例', 'success');
         this.loadCases();
-     } catch (e) { showToast(e.message, 'error'); }
+      } catch (e) { showToast(e.message, 'error'); }
   },
 
   async openCaseEditor(id = null) {
