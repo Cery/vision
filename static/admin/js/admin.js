@@ -205,6 +205,8 @@ const App = {
       document.getElementById('reqSortOrder').onchange = () => { this.state.reqSort.order = document.getElementById('reqSortOrder').value; this.renderRequirements(); };
       document.getElementById('reqPageSize').onchange = () => { const v = document.getElementById('reqPageSize').value; this.state.reqPagination.size = (v==='all') ? 'all' : Number(v); this.state.reqPagination.page = 1; this.renderRequirements(); };
       document.getElementById('reqSaveBtn').onclick = () => this.saveRequirement();
+      const expBtn = document.getElementById('reqExportBtn');
+      if (expBtn) expBtn.onclick = () => this.exportRequirements('xlsx');
     
     // Dem bindings
     document.getElementById('demRefreshBtn').onclick = () => this.loadDemanders();
@@ -218,6 +220,8 @@ const App = {
     
     // Quote bindings
     document.getElementById('quoteFilterStatus').onchange = () => this.renderQuotes();
+    const qpr = document.getElementById('quotesPageRefreshBtn');
+    if (qpr) qpr.onclick = () => this.loadQuotesPage();
     document.getElementById('quoteExportCsv').onclick = () => this.exportQuotes('csv');
     document.getElementById('quoteExportXlsx').onclick = () => this.exportQuotes('xlsx');
   },
@@ -1227,6 +1231,16 @@ const App = {
     document.getElementById('editReqPreview').value = r.PublicPreview || r.public_preview || '';
     document.getElementById('editReqOpenQuotes').checked = (typeof r.AllowOpenQuotes !== 'undefined') ? r.AllowOpenQuotes : r.allow_open_quotes;
     document.getElementById('editReqContactPublic').checked = (typeof r.ContactPublic !== 'undefined') ? r.ContactPublic : r.contact_public;
+    document.getElementById('editReqFeatured').checked = !!(r.IsFeatured || r.is_featured);
+    document.getElementById('editReqUrgent').checked = !!(r.IsUrgent || r.is_urgent);
+    document.getElementById('editReqAdminNotes').value = r.AdminNotes || r.admin_notes || '';
+    document.getElementById('editReqTags').value = r.Tags || r.tags || '';
+    document.getElementById('editReqApproved').checked = ((r.Approved === 1) || (String(r.approved||'').trim() === '1'));
+    try {
+      const apAt = r.ApprovedAt || r.approved_at || '';
+      const v = apAt ? new Date(apAt).toISOString().slice(0,16) : '';
+      document.getElementById('editReqApprovedAt').value = v;
+    } catch { document.getElementById('editReqApprovedAt').value = ''; }
     
     new bootstrap.Modal(document.getElementById('reqEditModal')).show();
   },
@@ -1247,8 +1261,20 @@ const App = {
       description: document.getElementById('editReqDesc').value,
       public_preview: document.getElementById('editReqPreview').value,
       allow_open_quotes: document.getElementById('editReqOpenQuotes').checked,
-      contact_public: document.getElementById('editReqContactPublic').checked
+      contact_public: document.getElementById('editReqContactPublic').checked,
+      is_featured: document.getElementById('editReqFeatured').checked,
+      is_urgent: document.getElementById('editReqUrgent').checked,
+      admin_notes: document.getElementById('editReqAdminNotes').value,
+      tags: document.getElementById('editReqTags').value
     };
+    const approvedAtInput = document.getElementById('editReqApprovedAt').value;
+    if (document.getElementById('editReqApproved').checked || (body.status||'').trim() === '公开') {
+      body.approved = 1;
+      body.approved_at = approvedAtInput ? new Date(approvedAtInput).toISOString() : new Date().toISOString();
+    } else {
+      body.approved = 0;
+      body.approved_at = '';
+    }
     
     try {
       try {
@@ -1262,6 +1288,26 @@ const App = {
     } catch (e) {
       showToast(e.message, 'error');
     }
+  },
+
+  exportRequirements(type) {
+    const list = this.state.reqList || [];
+    if (!list.length) return showToast('无数据可导出', 'info');
+    const rows = list.map(r => ({
+      ID: r.RequirementID || r.requirement_id || r.id || '',
+      Title: r.Title || r.title || '',
+      Company: r.ContactCompany || r.contact_company || '',
+      Category: r.PrimaryCategory || r.primary_category || '',
+      Status: r.Status || r.status || '',
+      Progress: r.Progress || r.progress || '',
+      Budget: r.BudgetRange || r.budget_range || '',
+      PublishedAt: r.PublishedAt || r.published_at || r.created_at || ''
+    }));
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Requirements');
+    if (type === 'csv') XLSX.writeFile(wb, 'Requirements.csv');
+    else XLSX.writeFile(wb, 'Requirements.xlsx');
   },
   
   // --- Quotes ---
@@ -1569,6 +1615,8 @@ const App = {
     
     document.getElementById('supTableBody').innerHTML = list.map(s => {
       const id = s.SupplierID || s.id;
+      const st = s.Status || s.status || 'active';
+      const badge = st === 'pending' ? '<span class="badge bg-warning text-dark">待审核</span>' : (st === 'inactive' ? '<span class="badge bg-secondary">停用</span>' : '<span class="badge bg-success">正常</span>');
       return `
         <tr>
           <td class="font-monospace small">${escapeHtml(id)}</td>
@@ -1576,7 +1624,7 @@ const App = {
           <td>${escapeHtml(s.ContactName || s.name)}</td>
           <td>${escapeHtml(s.Phone || s.contact_phone)}</td>
           <td class="font-monospace text-success fw-bold">${escapeHtml(s.AccessPassword || s.access_password_plain || '')}</td>
-          <td><span class="badge bg-success">正常</span></td>
+          <td>${badge}</td>
           <td>
             <button class="btn btn-sm btn-outline-primary py-0 me-1" onclick="App.editSupplier('${id}')">编辑</button>
             <button class="btn btn-sm btn-outline-info py-0" onclick="App.viewSupplierProducts('${id}', '${escapeHtml(s.CompanyName||s.company)}')">产品</button>
@@ -1746,10 +1794,12 @@ const App = {
       document.getElementById('editSupContact').value = s.ContactName || s.name || '';
       document.getElementById('editSupPhone').value = s.Phone || s.contact_phone || '';
       document.getElementById('editSupPwd').value = s.AccessPassword || s.access_password_plain || '';
+      document.getElementById('editSupStatus').checked = ((s.Status || s.status || 'active') === 'active');
     } else {
       // Add mode
       document.getElementById('editSupId').value = '';
       document.getElementById('supEditForm').reset();
+      document.getElementById('editSupStatus').checked = true;
     }
     new bootstrap.Modal(document.getElementById('supEditModal')).show();
   },
@@ -1768,7 +1818,7 @@ const App = {
     };
     
     try {
-      await apiFetch('/api/admin/suppliers', {
+      await apiFetch('/api/admin/suppliers/upsert', {
         method: 'POST',
         body: JSON.stringify(body)
       });

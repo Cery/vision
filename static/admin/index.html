@@ -309,7 +309,8 @@
                 <th style="min-width:100px;">进度</th>
                 <th style="min-width:100px;">报价</th>
                 <th style="min-width:80px;">前台</th>
-                <th style="min-width:100px;">时间</th>
+                <th style="min-width:110px;">审批时间</th>
+                <th style="min-width:100px;">发布时间</th>
                 <th style="min-width:160px;">操作</th>
               </tr>
             </thead>
@@ -686,6 +687,10 @@
               <h6 class="text-muted mb-3">运营设置</h6>
               <div class="row g-3">
                 <div class="col-md-6">
+                  <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="editReqApproved">
+                    <label class="form-check-label" for="editReqApproved">审批通过 (Approved)</label>
+                  </div>
                   <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="editReqFeatured">
                     <label class="form-check-label" for="editReqFeatured">推荐 (Featured)</label>
@@ -693,6 +698,10 @@
                   <div class="form-check form-switch mt-2">
                     <input class="form-check-input" type="checkbox" id="editReqUrgent">
                     <label class="form-check-label" for="editReqUrgent">加急 (Urgent)</label>
+                  </div>
+                  <div class="mt-2">
+                    <label class="form-label">审批时间</label>
+                    <input type="datetime-local" class="form-control" id="editReqApprovedAt">
                   </div>
                 </div>
                 <div class="col-md-6">

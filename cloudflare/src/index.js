@@ -645,17 +645,19 @@ export default {
     if (isApi('requirements') && request.method === 'GET' || isFn('listRequirements') && request.method === 'GET') {
       const progress = url.searchParams.get('progress');
       const category = url.searchParams.get('category');
+      const company = url.searchParams.get('contact_company');
+      const limit = Math.min(parseInt(url.searchParams.get('limit')||'100',10)||100, 200);
       let q = 'SELECT requirement_id as RequirementID, title as Title, public_preview as PublicPreview, primary_category as PrimaryCategory, secondary_category as SecondaryCategory, approved as Approved, status as Status, contact_public as ContactPublic, contact_name as ContactName, contact_phone as ContactPhone, contact_company as ContactCompany, budget_range as BudgetRange, published_at as PublishedAt, progress as Progress, allow_open_quotes as AllowOpenQuotes, parameters_json as Parameters FROM requirements';
       const where = [];
       const binds = [];
-      // 前台列表仅展示已审核且状态为“公开”的需求
-      where.push('approved = 1');
       where.push("status = '公开'");
+      where.push('IFNULL(approved, 1) = 1');
       if (progress) { where.push('progress = ?'); binds.push(progress); }
       if (category) { where.push('primary_category = ?'); binds.push(category); }
+      if (company) { where.push('contact_company = ?'); binds.push(company); }
       if (where.length) q += ' WHERE ' + where.join(' AND ');
-      q += ' ORDER BY created_at DESC LIMIT 100';
-      const stmt = env.DB.prepare(q).bind(...binds);
+      q += ' ORDER BY created_at DESC LIMIT ?';
+      const stmt = env.DB.prepare(q).bind(...binds, limit);
       const { results } = await stmt.all();
       const items = (results || []).map(r => ({
         ...r,
@@ -670,7 +672,7 @@ export default {
       const category = url.searchParams.get('category');
       const page = Math.max(parseInt(url.searchParams.get('page')||'1',10)||1, 1);
       const limit = Math.min(parseInt(url.searchParams.get('limit')||'20',10)||20, 200);
-      let baseSql = "FROM requirements WHERE approved = 1 AND status = '公开'";
+      let baseSql = "FROM requirements WHERE status = '公开' AND IFNULL(approved, 1) = 1";
       const binds = [];
       const countBinds = [];
       if (progress) { baseSql += ' AND progress = ?'; binds.push(progress); countBinds.push(progress); }
@@ -1187,7 +1189,7 @@ export default {
       const contact = url.searchParams.get('contact');
       const limit = Math.min(Math.max(parseInt(url.searchParams.get('limit') || '500', 10) || 500, 1), 500);
       const offset = Math.max(parseInt(url.searchParams.get('offset') || '0', 10) || 0, 0);
-      let sql = 'SELECT * FROM requirements';
+      let sql = 'SELECT requirements.*, (SELECT COUNT(1) FROM quotes q WHERE q.requirement_id = requirements.requirement_id) AS quote_count FROM requirements';
       const where = [];
       const binds = [];
       if (status) { where.push('status = ?'); binds.push(status); }
