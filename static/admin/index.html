@@ -469,7 +469,10 @@
     <div id="view-suppliers" class="page-view d-none">
       <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
         <h2 class="h4 mb-0">供应商管理</h2>
-        <button class="btn btn-primary btn-sm" id="supAddBtn"><i class="fa-solid fa-plus"></i> 新增供应商</button>
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn btn-outline-success btn-sm" id="supBulkIngestBtn" disabled><i class="fa-solid fa-box-archive"></i> 批量入库</button>
+          <button class="btn btn-primary btn-sm" id="supAddBtn"><i class="fa-solid fa-plus"></i> 新增供应商</button>
+        </div>
       </div>
       <div class="card shadow-sm">
         <div class="card-header bg-white py-2">
@@ -482,6 +485,7 @@
           <table class="table table-hover align-middle mb-0 admin-table">
             <thead class="table-light">
               <tr>
+                <th style="width:32px;"><input type="checkbox" id="supSelectAll"></th>
                 <th>ID</th>
                 <th>供应商名称</th>
                 <th>联系人</th>
@@ -1184,6 +1188,20 @@
             <input class="form-check-input" type="checkbox" id="editSupStatus" checked>
             <label class="form-check-label" for="editSupStatus">账户启用</label>
           </div>
+          <hr class="my-3">
+          <div class="mb-2 d-flex align-items-center justify-content-between">
+            <div class="fw-bold">企业图库</div>
+            <button type="button" class="btn btn-sm btn-outline-primary" id="supIngestBtn" style="display:none;">入库到 R2</button>
+          </div>
+          <div class="small text-muted mb-2">按类别展示：<span id="supGalleryMeta"></span></div>
+          <div class="row g-2" id="supGalleryPreview"></div>
+          <hr class="my-3">
+          <div class="fw-bold mb-2">资质文件</div>
+          <input type="file" class="form-control" id="supQualUpload" multiple accept="image/*,application/pdf">
+          <div class="d-grid mt-2">
+            <button type="button" class="btn btn-sm btn-outline-success" id="supQualUploadBtn">上传资质到 R2</button>
+          </div>
+          <div class="small text-muted mt-2">支持从电脑或手机存储选择，移动端可直接拍照上传图片。</div>
         </form>
       </div>
       <div class="modal-footer">

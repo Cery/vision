@@ -81,11 +81,25 @@
           </div>
 
           <div class="mb-4">
-            <h5 class="fw-semibold">企业图库</h5>
+            <h5 class="fw-semibold">企业图库（限 3 张）</h5>
             <div class="row g-3 mt-2">
+              <div class="col-md-4">
+                <label class="form-label">企业门头</label>
+                <input type="file" class="form-control" id="imgStorefront" accept="image/*" capture="environment">
+                <div class="ratio ratio-4x3 mt-2 bg-light border rounded overflow-hidden" id="prevStorefront"><div class="d-flex align-items-center justify-content-center text-muted">预览</div></div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">工厂</label>
+                <input type="file" class="form-control" id="imgFactory" accept="image/*" capture="environment">
+                <div class="ratio ratio-4x3 mt-2 bg-light border rounded overflow-hidden" id="prevFactory"><div class="d-flex align-items-center justify-content-center text-muted">预览</div></div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">车间</label>
+                <input type="file" class="form-control" id="imgWorkshop" accept="image/*" capture="environment">
+                <div class="ratio ratio-4x3 mt-2 bg-light border rounded overflow-hidden" id="prevWorkshop"><div class="d-flex align-items-center justify-content-center text-muted">预览</div></div>
+              </div>
               <div class="col-12">
-                <input type="file" class="form-control" id="galleryImages" multiple accept="image/*">
-                <div class="form-text">最多选择 6 张，单图不超过 2MB。</div>
+                <div class="form-text">每张不超过 2MB，格式为图片。移动端支持直接拍照，系统将自动压缩优化。</div>
               </div>
             </div>
           </div>
@@ -139,15 +153,63 @@
 
 <script>
 (function(){
-  const apiBase = (window.API_BASE||'').replace(/\/$/,'') || '';
+  const isProd = /(^|\.)visndt\.com$/i.test(location.hostname);
+  const defaultRemote = 'https://api.visndt.com';
+  let saved = '';
+  try { saved = localStorage.getItem('API_BASE') || ''; } catch {}
+  const allowInProd = new Set(['', 'https://api.visndt.com']);
+  const apiBase = ((window.API_BASE && String(window.API_BASE)) || (isProd ? (allowInProd.has(saved) ? saved : '') : (saved || defaultRemote))).replace(/\/$/,'');
   function toBase64(file){
     return new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve(String(r.result||'')); r.onerror=reject; r.readAsDataURL(file); });
   }
-  async function collectFiles(input,max){
-    const files = Array.from(input.files||[]).slice(0,max||6);
-    const out = [];
-    for(const f of files){ if(f.size>2*1024*1024) continue; out.push(await toBase64(f)); }
-    return out;
+  async function compressToDataUrl(file, maxEdge = 1600, quality = 0.85) {
+    if (!file) return '';
+    try {
+      if (typeof createImageBitmap === 'function') {
+        const bmp = await createImageBitmap(file, { imageOrientation: 'from-image' });
+        const w0 = bmp.width, h0 = bmp.height;
+        const long = Math.max(w0, h0);
+        const scale = long > maxEdge ? (maxEdge / long) : 1;
+        const w = Math.max(1, Math.round(w0 * scale));
+        const h = Math.max(1, Math.round(h0 * scale));
+        const cvs = document.createElement('canvas'); cvs.width = w; cvs.height = h;
+        const ctx = cvs.getContext('2d'); ctx.drawImage(bmp, 0, 0, w, h);
+        const q = long > 3000 ? Math.min(quality, 0.8) : (long > 2000 ? quality : Math.min(0.92, quality + 0.05));
+        return cvs.toDataURL('image/jpeg', q);
+      }
+    } catch {}
+    const url = URL.createObjectURL(file);
+    try {
+      const img = await new Promise((resolve, reject) => { const i = new Image(); i.onload = () => resolve(i); i.onerror = reject; i.src = url; });
+      const w0 = img.naturalWidth || img.width;
+      const h0 = img.naturalHeight || img.height;
+      const long = Math.max(w0, h0);
+      const scale = long > maxEdge ? (maxEdge / long) : 1;
+      const w = Math.max(1, Math.round(w0 * scale));
+      const h = Math.max(1, Math.round(h0 * scale));
+      const cvs = document.createElement('canvas'); cvs.width = w; cvs.height = h;
+      const ctx = cvs.getContext('2d'); ctx.drawImage(img, 0, 0, w, h);
+      const q = long > 3000 ? Math.min(quality, 0.8) : (long > 2000 ? quality : Math.min(0.92, quality + 0.05));
+      return cvs.toDataURL('image/jpeg', q);
+    } catch { return await toBase64(file); }
+    finally { URL.revokeObjectURL(url); }
+  }
+  async function collectOneFileById(id){
+    const el = document.getElementById(id);
+    const f = (el && el.files && el.files[0]) ? el.files[0] : null;
+    if (!f) return '';
+    return await compressToDataUrl(f, 1600, 0.85);
+  }
+  function hookPreview(idInput, idPreview){
+    const inp = document.getElementById(idInput);
+    const box = document.getElementById(idPreview);
+    if (!inp || !box) return;
+    inp.addEventListener('change', () => {
+      const f = (inp.files && inp.files[0]) ? inp.files[0] : null;
+      if (!f) { box.innerHTML = '<div class="d-flex align-items-center justify-content-center text-muted">预览</div>'; return; }
+      const url = URL.createObjectURL(f);
+      box.innerHTML = `<img src="${url}" class="object-fit-cover w-100 h-100" alt="preview">`;
+    });
   }
   async function checkCompany(name){
     if(!name) return { exists:false };
@@ -158,6 +220,9 @@
     const companyFull = document.getElementById('companyFull');
     const hint = document.getElementById('companyCheckHint');
     const form = document.getElementById('supplierRegisterForm');
+    hookPreview('imgStorefront','prevStorefront');
+    hookPreview('imgFactory','prevFactory');
+    hookPreview('imgWorkshop','prevWorkshop');
     companyFull.addEventListener('blur', async function(){
       const v = this.value.trim();
       hint.textContent='';
@@ -179,8 +244,15 @@
       const company = companyFull.value.trim();
       const exists = await checkCompany(company);
       if(exists.exists){ btn.disabled=false; btn.textContent='提交入驻申请'; return alert('公司已存在，无法重复注册'); }
-      const gallery = await collectFiles(document.getElementById('galleryImages'),6);
-      const quals = await collectFiles(document.getElementById('qualificationImages'),6);
+      const sf = await collectOneFileById('imgStorefront');
+      const fc = await collectOneFileById('imgFactory');
+      const wk = await collectOneFileById('imgWorkshop');
+      const gallery = [sf,fc,wk].filter(Boolean);
+      const galleryMeta = [];
+      if (sf) galleryMeta.push('门头');
+      if (fc) galleryMeta.push('工厂');
+      if (wk) galleryMeta.push('车间');
+      const quals = [];
       const payload = {
         company: company,
         name: document.getElementById('companyShort').value.trim(),
@@ -196,6 +268,7 @@
         tags: document.getElementById('productTags').value.trim(),
         access_password: document.getElementById('accessPassword').value.trim(),
         gallery_images: gallery,
+        gallery_meta: galleryMeta,
         qualification_images: quals,
         intro: document.getElementById('companyIntro').value.trim()
       };

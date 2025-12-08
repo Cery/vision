@@ -1125,6 +1125,7 @@ export default {
           tags: body.tags || '',
           intro: body.intro || '',
           gallery_images: Array.isArray(body.gallery_images) ? body.gallery_images.slice(0,6) : [],
+          gallery_meta: Array.isArray(body.gallery_meta) ? body.gallery_meta.slice(0,6) : [],
           qualification_images: Array.isArray(body.qualification_images) ? body.qualification_images.slice(0,6) : []
         };
         await env.DB.prepare('INSERT INTO suppliers (supplier_id, name, company, access_password_plain, contact_phone, contact_email, status, metadata_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
@@ -1405,6 +1406,116 @@ export default {
       const stmt = env.DB.prepare(`UPDATE suppliers SET ${sets.join(', ')} WHERE supplier_id = ?`).bind(...binds, id);
       await stmt.run();
       return json({ ok: true });
+    }
+
+    if (isApi('admin/suppliers/') && /\/ingest-gallery$/.test(path) && request.method === 'POST') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const supplier_id = path.split('/').slice(-2, -1)[0];
+      if (!supplier_id) return json({ error: 'MissingSupplierId' }, 400);
+      if (!env.VISPIC || typeof env.VISPIC.put !== 'function') {
+        return json({ error: 'R2Unavailable' }, 500);
+      }
+      const row = await env.DB.prepare('SELECT metadata_json FROM suppliers WHERE supplier_id = ? LIMIT 1').bind(supplier_id).first();
+      if (!row) return json({ error: 'NotFound' }, 404);
+      const meta = parseJSONSafe(row.metadata_json) || {};
+      const imgs = Array.isArray(meta.gallery_images) ? meta.gallery_images : [];
+      const labels = Array.isArray(meta.gallery_meta) ? meta.gallery_meta : [];
+      const isDataUrl = (s) => typeof s === 'string' && /^data:image\//i.test(s);
+      const toBytes = (dataUrl) => {
+        const i = dataUrl.indexOf(',');
+        const head = i >= 0 ? dataUrl.slice(0, i) : '';
+        const ct = head.replace(/^data:/,'').replace(/;base64$/,'') || 'image/jpeg';
+        const s = i >= 0 ? dataUrl.slice(i+1) : dataUrl;
+        const bin = atob(s);
+        const arr = new Uint8Array(bin.length);
+        for (let j = 0; j < bin.length; j++) arr[j] = bin.charCodeAt(j);
+        return { bytes: arr, contentType: ct };
+      };
+      const labelFor = (idx) => {
+        const m = (labels[idx] || '').trim();
+        if (m) return m;
+        return ['门头','工厂','车间'][idx] || `图片${idx+1}`;
+      };
+      const slug = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'') || 'image';
+      const extFor = (ct) => (/jpeg/i.test(ct) ? 'jpg' : (/png/i.test(ct) ? 'png' : 'bin'));
+      const uploaded = [];
+      for (let i = 0; i < imgs.length; i++) {
+        const v = imgs[i];
+        if (!isDataUrl(v)) continue;
+        const lab = labelFor(i);
+        const { bytes, contentType } = toBytes(v);
+        const ext = extFor(contentType);
+        const key = `suppliers/${supplier_id}/gallery/${slug(lab)}.${ext}`;
+        try {
+          await env.VISPIC.put(key, bytes, { httpMetadata: { contentType } });
+          uploaded.push({ key, url: `/api/assets/${encodeURIComponent(key)}`, label: lab });
+        } catch (e) {}
+      }
+      if (!uploaded.length) {
+        return json({ ok: true, uploaded: [], message: 'NoDataUrlFound' });
+      }
+      const newMeta = {
+        ...meta,
+        gallery_images: uploaded.map(x => x.url),
+        gallery_meta: uploaded.map(x => x.label),
+        gallery_source: 'r2'
+      };
+      await env.DB.prepare('UPDATE suppliers SET metadata_json = ?, updated_at = ? WHERE supplier_id = ?')
+        .bind(JSON.stringify(newMeta), new Date().toISOString(), supplier_id).run();
+      return json({ ok: true, uploaded });
+    }
+
+    if (isApi('admin/suppliers/ingest-gallery-bulk') && request.method === 'POST') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const body = await bodyJSON(request);
+      const ids = Array.isArray(body.supplier_ids) ? body.supplier_ids.filter(Boolean) : [];
+      if (!ids.length) return json({ error: 'NoIds' }, 400);
+      if (!env.VISPIC || typeof env.VISPIC.put !== 'function') return json({ error: 'R2Unavailable' }, 500);
+      const out = [];
+      for (const sid of ids) {
+        try {
+          const row = await env.DB.prepare('SELECT metadata_json FROM suppliers WHERE supplier_id = ?').bind(sid).first();
+          if (!row) { out.push({ supplier_id: sid, ok: false, error: 'NotFound' }); continue; }
+          const meta = parseJSONSafe(row.metadata_json) || {};
+          const imgs = Array.isArray(meta.gallery_images) ? meta.gallery_images : [];
+          const labels = Array.isArray(meta.gallery_meta) ? meta.gallery_meta : [];
+          const isDataUrl = (s) => typeof s === 'string' && /^data:image\//i.test(s);
+          const toBytes = (dataUrl) => {
+            const i = dataUrl.indexOf(',');
+            const head = i >= 0 ? dataUrl.slice(0, i) : '';
+            const ct = head.replace(/^data:/,'').replace(/;base64$/,'') || 'image/jpeg';
+            const s = i >= 0 ? dataUrl.slice(i+1) : dataUrl;
+            const bin = atob(s);
+            const arr = new Uint8Array(bin.length);
+            for (let j = 0; j < bin.length; j++) arr[j] = bin.charCodeAt(j);
+            return { bytes: arr, contentType: ct };
+          };
+          const labelFor = (idx) => { const m = (labels[idx] || '').trim(); if (m) return m; return ['门头','工厂','车间'][idx] || `图片${idx+1}`; };
+          const slug = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'') || 'image';
+          const extFor = (ct) => (/jpeg/i.test(ct) ? 'jpg' : (/png/i.test(ct) ? 'png' : 'bin'));
+          const uploaded = [];
+          for (let i = 0; i < imgs.length; i++) {
+            const v = imgs[i];
+            if (!isDataUrl(v)) continue;
+            const lab = labelFor(i);
+            const { bytes, contentType } = toBytes(v);
+            const ext = extFor(contentType);
+            const key = `suppliers/${sid}/gallery/${slug(lab)}.${ext}`;
+            try {
+              await env.VISPIC.put(key, bytes, { httpMetadata: { contentType } });
+              uploaded.push({ key, url: `/api/assets/${encodeURIComponent(key)}`, label: lab });
+            } catch {}
+          }
+          if (uploaded.length) {
+            const newMeta = { ...meta, gallery_images: uploaded.map(x => x.url), gallery_meta: uploaded.map(x => x.label), gallery_source: 'r2' };
+            await env.DB.prepare('UPDATE suppliers SET metadata_json = ?, updated_at = ? WHERE supplier_id = ?').bind(JSON.stringify(newMeta), new Date().toISOString(), sid).run();
+          }
+          out.push({ supplier_id: sid, ok: true, uploaded: uploaded.length });
+        } catch (e) {
+          out.push({ supplier_id: sid, ok: false, error: String(e && e.message || e) });
+        }
+      }
+      return json({ ok: true, results: out });
     }
 
     // Admin: list/update/create/delete demanders (optional)

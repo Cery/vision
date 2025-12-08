@@ -217,6 +217,8 @@ const App = {
     document.getElementById('supSearch').oninput = () => this.renderSuppliers();
     document.getElementById('supAddBtn').onclick = () => this.openSupModal();
     document.getElementById('supSaveBtn').onclick = () => this.saveSupplier();
+    const qualBtn = document.getElementById('supQualUploadBtn');
+    if (qualBtn) qualBtn.onclick = () => this.uploadQualificationFiles();
     
     // Quote bindings
     document.getElementById('quoteFilterStatus').onchange = () => this.renderQuotes();
@@ -1617,6 +1619,9 @@ const App = {
       const id = s.SupplierID || s.id;
       const st = s.Status || s.status || 'active';
       const badge = st === 'pending' ? '<span class="badge bg-warning text-dark">待审核</span>' : (st === 'inactive' ? '<span class="badge bg-secondary">停用</span>' : '<span class="badge bg-success">正常</span>');
+      const meta = s.metadata_json || {};
+      const imgs = Array.isArray(meta.gallery_images) ? meta.gallery_images : [];
+      const canIngest = imgs.some(v => typeof v === 'string' && /^data:image\//i.test(v));
       return `
         <tr>
           <td class="font-monospace small">${escapeHtml(id)}</td>
@@ -1627,6 +1632,7 @@ const App = {
           <td>${badge}</td>
           <td>
             <button class="btn btn-sm btn-outline-primary py-0 me-1" onclick="App.editSupplier('${id}')">编辑</button>
+            <button class="btn btn-sm btn-outline-success py-0 me-1" onclick="App.ingestSupplierGallery('${id}')" ${canIngest?'':'disabled'}>入库</button>
             <button class="btn btn-sm btn-outline-info py-0" onclick="App.viewSupplierProducts('${id}', '${escapeHtml(s.CompanyName||s.company)}')">产品</button>
             <button class="btn btn-sm btn-outline-danger py-0 ms-1" onclick="App.deleteSupplier('${id}')">删除</button>
           </td>
@@ -1795,11 +1801,36 @@ const App = {
       document.getElementById('editSupPhone').value = s.Phone || s.contact_phone || '';
       document.getElementById('editSupPwd').value = s.AccessPassword || s.access_password_plain || '';
       document.getElementById('editSupStatus').checked = ((s.Status || s.status || 'active') === 'active');
+      const meta = s.metadata_json || {};
+      const imgs = Array.isArray(meta.gallery_images) ? meta.gallery_images : [];
+      const labs = Array.isArray(meta.gallery_meta) ? meta.gallery_meta : [];
+      const metaBox = document.getElementById('supGalleryMeta');
+      const grid = document.getElementById('supGalleryPreview');
+      const ingestBtn = document.getElementById('supIngestBtn');
+      const anyDataUrl = imgs.some(v => typeof v === 'string' && /^data:image\//i.test(v));
+      ingestBtn.style.display = anyDataUrl ? '' : 'none';
+      ingestBtn.onclick = () => this.ingestSupplierGallery(id);
+      metaBox.innerHTML = labs.map(l => `<span class="badge bg-secondary me-1">${escapeHtml(l)}</span>`).join('') || '<span class="text-muted">无</span>';
+      grid.innerHTML = imgs.map((src, i) => {
+        const label = labs[i] || `图片${i+1}`;
+        const displaySrc = /^data:image\//i.test(src) ? '/images/placeholder.svg' : src;
+        return `
+          <div class="col-6">
+            <div class="border rounded overflow-hidden">
+              <div class="ratio ratio-4x3"><img src="${escapeHtml(displaySrc)}" class="object-fit-cover w-100 h-100" alt="${escapeHtml(label)}"></div>
+              <div class="small text-muted p-1">${escapeHtml(label)}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
     } else {
       // Add mode
       document.getElementById('editSupId').value = '';
       document.getElementById('supEditForm').reset();
       document.getElementById('editSupStatus').checked = true;
+      document.getElementById('supGalleryMeta').innerHTML = '';
+      document.getElementById('supGalleryPreview').innerHTML = '';
+      document.getElementById('supIngestBtn').style.display = 'none';
     }
     new bootstrap.Modal(document.getElementById('supEditModal')).show();
   },
@@ -1827,6 +1858,44 @@ const App = {
       this.loadSuppliers();
     } catch (e) {
       showToast(e.message, 'error');
+    }
+  },
+  async ingestSupplierGallery(id) {
+    try {
+      await apiFetch(`/api/admin/suppliers/${id}/ingest-gallery`, { method: 'POST' });
+      showToast('图库已入库到 R2', 'success');
+      await this.loadSuppliers();
+      this.openSupModal(id);
+    } catch (e) {
+      showToast(e.message || '入库失败', 'error');
+    }
+  },
+  async uploadQualificationFiles() {
+    const id = document.getElementById('editSupId').value;
+    const input = document.getElementById('supQualUpload');
+    const files = Array.from(input.files||[]);
+    if (!id || !files.length) return;
+    try {
+      const uploaded = [];
+      for (const f of files) {
+        const name = String(f.name || 'file').replace(/[^a-zA-Z0-9._-]/g,'_');
+        const key = `suppliers/${id}/qualification/${Date.now()}-${name}`;
+        const res = await apiFetch(`/api/admin/assets?key=${encodeURIComponent(key)}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': f.type || 'application/octet-stream' },
+          body: f
+        });
+        uploaded.push(res.public_url || (`/api/assets/${encodeURIComponent(key)}`));
+      }
+      const s = this.state.supList.find(x => (x.SupplierID || x.id) == id) || {};
+      const meta = s.metadata_json || {};
+      const newMeta = { ...meta, qualification_images: [...(Array.isArray(meta.qualification_images)?meta.qualification_images:[]), ...uploaded] };
+      await apiFetch(`/api/admin/suppliers/${id}`, { method: 'PATCH', body: JSON.stringify({ metadata_json: newMeta }) });
+      showToast('资质已上传并写回', 'success');
+      await this.loadSuppliers();
+      this.openSupModal(id);
+    } catch (e) {
+      showToast(e.message || '上传失败', 'error');
     }
   },
   
