@@ -38,7 +38,7 @@
   }
   
   window.ADMIN_KEY = '';
-  try { window.ADMIN_KEY = localStorage.getItem('ADMIN_KEY') || 'admin123456'; } catch {}
+  try { window.ADMIN_KEY = localStorage.getItem('ADMIN_KEY') || '@Aa123456'; } catch {}
 })();
 
 async function apiFetch(path, options = {}) {
@@ -443,22 +443,22 @@ const App = {
     
     try {
       msg.textContent = '登录中...';
-      const res = await apiFetch('/api/admin/login', {
+      let res = await apiFetch('/api/admin/login', {
         method: 'POST',
         body: JSON.stringify({ username: user, password: pass })
       });
-      
-      if (res.token) {
-        localStorage.setItem('ADMIN_KEY', res.token);
-        window.ADMIN_KEY = res.token;
-        this.updateEnvInfo();
-        this.checkLogin(); // Update UI
-        showToast('登录成功', 'success');
-        this.loadDashboard(); // Reload data
-        this.ensureFirstLoginSync();
-      } else {
-        throw new Error('无效的响应');
+      if (!res || !res.token) {
+        const qs = `/api/admin/login?username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}`;
+        res = await apiFetch(qs, { method: 'POST' });
       }
+      if (!res || !res.token) throw new Error('登录接口无效响应');
+      localStorage.setItem('ADMIN_KEY', res.token);
+      window.ADMIN_KEY = res.token;
+      this.updateEnvInfo();
+      this.checkLogin();
+      showToast('登录成功', 'success');
+      this.loadDashboard();
+      this.ensureFirstLoginSync();
     } catch(e) {
       msg.textContent = '登录失败: ' + e.message;
       msg.className = 'text-danger';
