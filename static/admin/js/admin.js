@@ -128,6 +128,7 @@ const App = {
     reqSort: { field: 'created_at', order: 'desc' },
     demList: [],
     supList: [],
+    supSelected: new Set(),
     assetList: [],
     assetPage: 0,
     quotesCache: [],
@@ -217,6 +218,10 @@ const App = {
     document.getElementById('supSearch').oninput = () => this.renderSuppliers();
     document.getElementById('supAddBtn').onclick = () => this.openSupModal();
     document.getElementById('supSaveBtn').onclick = () => this.saveSupplier();
+    const selectAll = document.getElementById('supSelectAll');
+    if (selectAll) selectAll.onchange = () => this.toggleSelectAllSuppliers(selectAll.checked);
+    const bulkBtn = document.getElementById('supBulkIngestBtn');
+    if (bulkBtn) bulkBtn.onclick = () => this.bulkIngestSelected();
     const qualBtn = document.getElementById('supQualUploadBtn');
     if (qualBtn) qualBtn.onclick = () => this.uploadQualificationFiles();
     
@@ -226,6 +231,37 @@ const App = {
     if (qpr) qpr.onclick = () => this.loadQuotesPage();
     document.getElementById('quoteExportCsv').onclick = () => this.exportQuotes('csv');
     document.getElementById('quoteExportXlsx').onclick = () => this.exportQuotes('xlsx');
+  },
+  toggleSupplierSelect(id, checked) {
+    if (checked) this.state.supSelected.add(id); else this.state.supSelected.delete(id);
+    const bulkBtn = document.getElementById('supBulkIngestBtn');
+    if (bulkBtn) bulkBtn.disabled = this.state.supSelected.size === 0;
+  },
+  toggleSelectAllSuppliers(checked) {
+    if (checked) {
+      this.state.supSelected = new Set(this.state.supList.map(s => s.SupplierID || s.id));
+    } else {
+      this.state.supSelected.clear();
+    }
+    this.renderSuppliers();
+  },
+  async bulkIngestSelected() {
+    const ids = Array.from(this.state.supSelected);
+    if (!ids.length) return;
+    try {
+      const res = await apiFetch('/api/admin/suppliers/ingest-gallery-bulk', { method: 'POST', body: JSON.stringify({ supplier_ids: ids }) });
+      const okCount = (res.results || []).filter(r => r.ok).length;
+      const failCount = (res.results || []).filter(r => !r.ok).length;
+      showToast(`批量入库完成：成功 ${okCount}，失败 ${failCount}`, failCount ? 'warning' : 'success');
+      await this.loadSuppliers();
+      this.state.supSelected.clear();
+      const bulkBtn = document.getElementById('supBulkIngestBtn');
+      if (bulkBtn) bulkBtn.disabled = true;
+      const selectAll = document.getElementById('supSelectAll');
+      if (selectAll) selectAll.checked = false;
+    } catch (e) {
+      showToast(e.message || '批量入库失败', 'error');
+    }
   },
   
   bindNav() {
@@ -1622,8 +1658,10 @@ const App = {
       const meta = s.metadata_json || {};
       const imgs = Array.isArray(meta.gallery_images) ? meta.gallery_images : [];
       const canIngest = imgs.some(v => typeof v === 'string' && /^data:image\//i.test(v));
+      const checked = this.state.supSelected.has(id) ? 'checked' : '';
       return `
         <tr>
+          <td><input type="checkbox" ${checked} onchange="App.toggleSupplierSelect('${id}', this.checked)"></td>
           <td class="font-monospace small">${escapeHtml(id)}</td>
           <td>${escapeHtml(s.CompanyName || s.company)}</td>
           <td>${escapeHtml(s.ContactName || s.name)}</td>
@@ -1639,6 +1677,8 @@ const App = {
         </tr>
       `;
     }).join('');
+    const bulkBtn = document.getElementById('supBulkIngestBtn');
+    if (bulkBtn) bulkBtn.disabled = this.state.supSelected.size === 0;
   },
   
   async deleteSupplier(id) {

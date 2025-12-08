@@ -360,7 +360,13 @@
     <div id="view-products" class="page-view d-none">
       <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
         <h2 class="h4 mb-0">产品库</h2>
-        <div class="btn-group">
+        <div class="d-flex align-items-center gap-2">
+           <div class="input-group input-group-sm" style="max-width: 380px;">
+             <span class="input-group-text">同步源</span>
+             <input type="text" class="form-control" id="syncBaseProducts" placeholder="https://www.visndt.com/data">
+             <button class="btn btn-outline-primary" onclick="App.syncProducts()">同步</button>
+             <button class="btn btn-outline-secondary" onclick="App.debugIndex('products')">测试索引</button>
+           </div>
            <button class="btn btn-outline-primary btn-sm" onclick="App.triggerBatchImport()"><i class="fa-solid fa-file-import"></i> 批量导入 MD</button>
            <button class="btn btn-primary btn-sm" onclick="App.openProductEditor()"><i class="fa-solid fa-plus"></i> 新增产品</button>
         </div>
@@ -388,7 +394,15 @@
     <div id="view-news" class="page-view d-none">
       <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
         <h2 class="h4 mb-0">新闻资讯</h2>
-        <button class="btn btn-primary btn-sm" onclick="App.openNewsEditor()"><i class="fa-solid fa-plus"></i> 发布新闻</button>
+        <div class="d-flex align-items-center gap-2">
+           <div class="input-group input-group-sm" style="max-width: 380px;">
+             <span class="input-group-text">同步源</span>
+             <input type="text" class="form-control" id="syncBaseNews" placeholder="https://www.visndt.com/data">
+             <button class="btn btn-outline-primary" onclick="App.syncNews()">同步</button>
+             <button class="btn btn-outline-secondary" onclick="App.debugIndex('news')">测试索引</button>
+           </div>
+           <button class="btn btn-primary btn-sm" onclick="App.openNewsEditor()"><i class="fa-solid fa-plus"></i> 发布新闻</button>
+        </div>
       </div>
       <div class="card shadow-sm">
         <div class="table-responsive">
@@ -412,7 +426,15 @@
     <div id="view-cases" class="page-view d-none">
       <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
         <h2 class="h4 mb-0">应用案例</h2>
-        <button class="btn btn-primary btn-sm" onclick="App.openCaseEditor()"><i class="fa-solid fa-plus"></i> 发布案例</button>
+        <div class="d-flex align-items-center gap-2">
+           <div class="input-group input-group-sm" style="max-width: 380px;">
+             <span class="input-group-text">同步源</span>
+             <input type="text" class="form-control" id="syncBaseCases" placeholder="https://www.visndt.com/data">
+             <button class="btn btn-outline-primary" onclick="App.syncCases()">同步</button>
+             <button class="btn btn-outline-secondary" onclick="App.debugIndex('cases')">测试索引</button>
+           </div>
+           <button class="btn btn-primary btn-sm" onclick="App.openCaseEditor()"><i class="fa-solid fa-plus"></i> 发布案例</button>
+        </div>
       </div>
       <div class="card shadow-sm">
         <div class="table-responsive">
