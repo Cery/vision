@@ -2114,8 +2114,10 @@ export default {
     if (isApi('admin/import-news') && request.method === 'POST') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       try {
-        const base = url.searchParams.get('base') || env.SYNC_BASE_URL || 'https://www.visndt.com/data';
-        const idxUrl = (String(base).endsWith('/')) ? (String(base) + 'index.json') : (String(base) + '/index.json');
+        const baseRaw = url.searchParams.get('base') || env.SYNC_BASE_URL || 'https://www.visndt.com/data';
+        const base = String(baseRaw).replace(/\/$/, '');
+        const siteBase = base.replace(/\/data\/?$/i, '');
+        const idxUrl = siteBase + '/index.json';
         const idx = await fetchJsonSafe(idxUrl);
         const list = Array.isArray(idx) ? idx : [];
         const items = list.filter(i => {
@@ -2168,8 +2170,10 @@ export default {
     if (isApi('admin/import-cases') && request.method === 'POST') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       try {
-        const base = url.searchParams.get('base') || env.SYNC_BASE_URL || 'https://www.visndt.com/data';
-        const idxUrl = (String(base).endsWith('/')) ? (String(base) + 'index.json') : (String(base) + '/index.json');
+        const baseRaw = url.searchParams.get('base') || env.SYNC_BASE_URL || 'https://www.visndt.com/data';
+        const base = String(baseRaw).replace(/\/$/, '');
+        const siteBase = base.replace(/\/data\/?$/i, '');
+        const idxUrl = siteBase + '/index.json';
         const idx = await fetchJsonSafe(idxUrl);
         const list = Array.isArray(idx) ? idx : [];
         const items = list.filter(i => {
@@ -2221,8 +2225,10 @@ export default {
     if (isApi('admin/import-products') && request.method === 'POST') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       try {
-        const base = url.searchParams.get('base') || env.SYNC_BASE_URL || 'https://www.visndt.com/data';
-        const idxUrl = (String(base).endsWith('/')) ? (String(base) + 'index.json') : (String(base) + '/index.json');
+        const baseRaw = url.searchParams.get('base') || env.SYNC_BASE_URL || 'https://www.visndt.com/data';
+        const base = String(baseRaw).replace(/\/$/, '');
+        const siteBase = base.replace(/\/data\/?$/i, '');
+        const idxUrl = siteBase + '/index.json';
         const idx = await fetchJsonSafe(idxUrl);
         const list = Array.isArray(idx) ? idx : [];
         const items = list.filter(i => {
