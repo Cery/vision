@@ -750,6 +750,7 @@ const App = {
                </div>
             </div>
             <div class="card-footer bg-white p-2 d-flex justify-content-between">
+               <a class="btn btn-sm btn-outline-secondary py-0 px-2" target="_blank" href="/products/${encodeURIComponent(p.slug||p.product_id||'')}/">预览</a>
                <button class="btn btn-sm btn-outline-primary py-0 px-2" onclick="App.openProductEditor('${p.product_id}')">编辑</button>
                <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="App.deleteProduct('${p.product_id}')">删除</button>
             </div>
@@ -906,7 +907,8 @@ const App = {
              <td><span class="badge ${n.status==='published'?'bg-success':'bg-secondary'}">${escapeHtml(n.status)}</span></td>
              <td class="small">${(n.published_at||'').split('T')[0]}</td>
              <td>
-                <button class="btn btn-sm btn-outline-primary py-0" onclick="App.openNewsEditor('${n.news_id}')">编辑</button>
+                <a class="btn btn-sm btn-outline-secondary py-0" target="_blank" href="/news/${encodeURIComponent(n.slug||'')}/">预览</a>
+                <button class="btn btn-sm btn-outline-primary py-0 ms-1" onclick="App.openNewsEditor('${n.news_id}')">编辑</button>
                 <button class="btn btn-sm btn-outline-danger py-0 ms-1" onclick="App.deleteNews('${n.news_id}')">删除</button>
              </td>
            </tr>
@@ -946,7 +948,21 @@ const App = {
 
   async syncAll() {
     try {
-      if (!confirm('同步全部内容（产品/新闻/案例）？')) return;
+      if (!confirm('同步全部内容（需求/供应商/发布方/产品/新闻/案例）？')) return;
+      try {
+        const base = (localStorage.getItem('SYNC_BASE_URL') || '').trim();
+        const url = base ? (`/api/admin/sync-now?base=${encodeURIComponent(base)}`) : '/api/admin/sync-now';
+        await apiFetch(url, { method: 'POST' });
+        showToast('全部同步完成', 'success');
+        this.loadDashboard();
+        this.loadRequirements();
+        this.loadProducts();
+        this.loadNews();
+        this.loadCases();
+        return;
+      } catch (_) {
+        showToast('快速同步失败，改用逐项同步', 'warning');
+      }
       showToast('开始同步产品', 'info');
       await this.syncProducts();
       showToast('开始同步新闻', 'info');
@@ -1041,7 +1057,8 @@ const App = {
              <td><span class="badge ${c.status==='published'?'bg-success':'bg-secondary'}">${escapeHtml(c.status)}</span></td>
              <td class="small">${(c.published_at||'').split('T')[0]}</td>
              <td>
-                <button class="btn btn-sm btn-outline-primary py-0" onclick="App.openCaseEditor('${c.case_id}')">编辑</button>
+                <a class="btn btn-sm btn-outline-secondary py-0" target="_blank" href="/cases/${encodeURIComponent(c.slug||'')}/">预览</a>
+                <button class="btn btn-sm btn-outline-primary py-0 ms-1" onclick="App.openCaseEditor('${c.case_id}')">编辑</button>
                 <button class="btn btn-sm btn-outline-danger py-0 ms-1" onclick="App.deleteCase('${c.case_id}')">删除</button>
              </td>
            </tr>
@@ -1267,6 +1284,7 @@ const App = {
           <td>${isOpen ? '<i class="fa-solid fa-check text-success" title="开放报价"></i>' : '<span class="text-muted">-</span>'}</td>
           <td class="small text-muted">${(r.PublishedAt || r.published_at || r.CreatedAt || r.created_at || '').split('T')[0]}</td>
           <td>
+            <a class="btn btn-sm btn-outline-secondary py-0" target="_blank" href="/static/view.html?id=${encodeURIComponent(id)}">预览</a>
             <button class="btn btn-sm btn-outline-primary py-0" onclick="App.editRequirement('${id}')">编辑</button>
             ${status !== '公开' ? `<button class="btn btn-sm btn-outline-success py-0 ms-1" onclick="App.quickApprove('${id}')">批准</button>` : ''}
             <button class="btn btn-sm btn-outline-danger py-0 ms-1" onclick="App.deleteRequirement('${id}')">删除</button>

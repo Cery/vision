@@ -663,7 +663,7 @@ export default {
       let q = 'SELECT requirement_id as RequirementID, title as Title, public_preview as PublicPreview, primary_category as PrimaryCategory, secondary_category as SecondaryCategory, approved as Approved, status as Status, contact_public as ContactPublic, contact_name as ContactName, contact_phone as ContactPhone, contact_company as ContactCompany, budget_range as BudgetRange, published_at as PublishedAt, progress as Progress, allow_open_quotes as AllowOpenQuotes, parameters_json as Parameters FROM requirements';
       const where = [];
       const binds = [];
-      where.push("status = '公开'");
+      where.push("status IN ('公开','在线报价')");
       where.push('IFNULL(approved, 1) = 1');
       if (progress) { where.push('progress = ?'); binds.push(progress); }
       if (category) { where.push('primary_category = ?'); binds.push(category); }
@@ -2274,6 +2274,251 @@ export default {
         return json({ ok: true, upserted });
       } catch (e) {
         return json({ error: 'ImportProductsFailed', detail: String(e && e.message || e) }, 500);
+      }
+    }
+
+    if (isApi('admin/sync-now') && request.method === 'POST') {
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      try {
+        const baseRaw = url.searchParams.get('base') || env.SYNC_BASE_URL || 'https://www.visndt.com/data';
+        const base = String(baseRaw).replace(/\/$/, '');
+        const siteBase = base.replace(/\/data\/?$/i, '');
+        let reqs = await fetch(`${base}/markets.json`).then(r => r.json()).catch(() => []);
+        if (!Array.isArray(reqs) || !reqs.length) {
+          reqs = await fetch(`${base}/requirements.json`).then(r => r.json()).catch(() => []);
+        }
+        if (!Array.isArray(reqs) || !reqs.length) {
+          const idx = await fetch(`${siteBase}/index.json`).then(r => r.json()).catch(() => []);
+          const list = Array.isArray(idx) ? idx : [];
+          const items = list.filter(i => {
+            const t = String(i.type || i.section || '').toLowerCase();
+            return t === 'markets' || t === 'requirements';
+          });
+          reqs = items.map(i => {
+            const p = i.params || {};
+            const uri = String(i.uri || '').trim();
+            return {
+              RequirementID: p.RequirementID || p.requirementid || p.slug || (uri.split('/').filter(Boolean).pop() || ''),
+              Title: i.title || p.title || '',
+              PublicPreview: p.PublicPreview || p.publicpreview || i.summary || '',
+              PrimaryCategory: p.PrimaryCategory || p.primarycategory || '',
+              SecondaryCategory: p.SecondaryCategory || p.secondarycategory || '',
+              Status: p.Status || p.status || 'published',
+              ContactName: p.ContactName || p.contactname || '',
+              ContactPhone: p.ContactPhone || p.contactphone || '',
+              ContactCompany: p.ContactCompany || p.contactcompany || '',
+              ContactEmail: p.ContactEmail || p.contactemail || '',
+              ContactDepartment: p.ContactDepartment || p.contactdepartment || '',
+              ContactPublic: (p.ContactPublic || p.contactpublic) ? true : false,
+              AllowOpenQuotes: (p.AllowOpenQuotes || p.allowopenquotes) ? true : false,
+              Parameters: p.Parameters || p.parameters || {},
+              PublishedAt: i.date || p.date || new Date().toISOString(),
+              BudgetRange: p.BudgetRange || p.budgetrange || '',
+              procurementPlan: p.procurementPlan || p.procurementplan || '',
+              Progress: p.Progress || p.progress || '',
+              ViewPasswordPlain: p.ViewPasswordPlain || p.viewpasswordplain || ''
+            };
+          });
+        }
+        let sups = await fetch(`${base}/suppliers.json`).then(r => r.json()).catch(() => []);
+        const dems = await fetch(`${base}/demanders.json`).then(r => r.json()).catch(() => []);
+        const now = new Date().toISOString();
+        let upReq = 0;
+        for (const r of (reqs || [])) {
+          try {
+            await env.DB.prepare(`INSERT OR IGNORE INTO requirements (
+              requirement_id, title, public_preview, primary_category, secondary_category, approved, approved_at, status,
+              contact_name, contact_phone, contact_company, contact_email, contact_department,
+              contact_public, allow_open_quotes, parameters_json, published_at, budget_range, procurement_plan,
+              progress, view_password_plain, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).
+              bind(
+                r.RequirementID || '', r.Title || '', r.PublicPreview || '', r.PrimaryCategory || '', r.SecondaryCategory || '', 1, now, r.Status || '',
+                r.ContactName || '', r.ContactPhone || '', r.ContactCompany || '', r.ContactEmail || '', r.ContactDepartment || '',
+                r.ContactPublic ? 1 : 0, r.AllowOpenQuotes ? 1 : 0, JSON.stringify(r.Parameters || {}), r.PublishedAt || now, r.BudgetRange || '', r.procurementPlan || '',
+                r.Progress || '', r.ViewPasswordPlain || '', r.created_at || now, r.updated_at || now
+              ).run();
+            upReq++;
+          } catch {}
+        }
+        if (!Array.isArray(sups) || !sups.length) {
+          const idx = await fetch(`${siteBase}/index.json`).then(r => r.json()).catch(() => []);
+          const list = Array.isArray(idx) ? idx : [];
+          const items = list.filter(i => {
+            const t = String(i.type || i.section || '').toLowerCase();
+            return t === 'suppliers' || String(i.section || '').toLowerCase() === 'suppliers';
+          });
+          sups = items.map(i => {
+            const p = i.params || {};
+            const uri = String(i.uri || '').trim();
+            const id = String(p.slug || (uri.split('/').filter(Boolean).pop() || '') || p.title || i.title || '').trim();
+            return {
+              SupplierID: id || (p.title || i.title || ''),
+              Name: p.contact_person || '',
+              Company: p.title || i.title || '',
+              AccessPassword: '',
+              ContactPhone: p.phone || '',
+              ContactEmail: p.email || '',
+              Status: 'active',
+              metadata: {
+                website: siteBase ? (siteBase + uri) : uri,
+                type: p.type || '',
+                address: p.address || '',
+                series: Array.isArray(p.series) ? p.series : [],
+                models: Array.isArray(p.models) ? p.models : [],
+                gallery: Array.isArray(p.gallery) ? p.gallery : [],
+                description: p.description || ''
+              }
+            };
+          });
+        }
+        let upSup = 0;
+        for (const s of (sups || [])) {
+          try {
+            await env.DB.prepare(`INSERT INTO suppliers (
+              supplier_id, name, company, access_password_plain, contact_phone, contact_email, status, metadata_json, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(supplier_id) DO UPDATE SET
+              name = excluded.name,
+              company = excluded.company,
+              access_password_plain = excluded.access_password_plain,
+              contact_phone = excluded.contact_phone,
+              contact_email = excluded.contact_email,
+              status = COALESCE(excluded.status, suppliers.status),
+              metadata_json = excluded.metadata_json,
+              updated_at = excluded.updated_at
+            `).
+            bind(
+              s.SupplierID || s.supplier_id || '', s.Name || s.name || '', s.Company || s.company || '', s.AccessPassword || s.access_password_plain || '',
+              s.ContactPhone || s.contact_phone || '', s.ContactEmail || s.contact_email || '', s.Status || s.status || '', JSON.stringify(s.metadata || s.metadata_json || {}),
+              s.created_at || now, s.updated_at || now
+            ).run();
+            upSup++;
+          } catch {}
+        }
+        if (env.DEFAULT_SUPPLIER_PASSWORD) {
+          try {
+            await env.DB.prepare('UPDATE suppliers SET access_password_plain = ?, updated_at = ?').bind(String(env.DEFAULT_SUPPLIER_PASSWORD), now).run();
+          } catch {}
+        }
+        if (env.DEFAULT_REQUIREMENT_PASSWORD) {
+          try {
+            await env.DB.prepare("UPDATE requirements SET view_password_plain = CASE WHEN IFNULL(view_password_plain, '') = '' THEN ? ELSE view_password_plain END, updated_at = ?").bind(String(env.DEFAULT_REQUIREMENT_PASSWORD), now).run();
+          } catch {}
+        }
+        let upDem = 0;
+        for (const d of (dems || [])) {
+          try {
+            await env.DB.prepare(`INSERT OR IGNORE INTO demanders (
+              demander_id, name, company, contact_phone, contact_email, department, metadata_json, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`).
+            bind(
+              d.demander_id || d.DemanderID || '', d.name || d.Name || '', d.company || d.Company || '', d.contact_phone || d.ContactPhone || '', d.contact_email || d.ContactEmail || '',
+              d.department || d.Department || '', JSON.stringify(d.metadata || {}), d.created_at || now, d.updated_at || now
+            ).run();
+            upDem++;
+          } catch {}
+        }
+        const idx = await fetch(`${siteBase}/index.json`).then(r => r.json()).catch(() => []);
+        const list = Array.isArray(idx) ? idx : [];
+        const prods = list.filter(i => {
+          const t = String(i.type || i.section || '').toLowerCase();
+          return t === 'products';
+        });
+        let upProd = 0;
+        for (const p of prods) {
+          try {
+            const params = p.params || {};
+            const pid = params.product_id || params.ProductID || (p.uri||'').split('/').filter(Boolean).pop() || '';
+            if (!pid) continue;
+            const isFeat = params.is_featured ? 1 : 0;
+            const meta = JSON.stringify(params.metadata || {});
+            await env.DB.prepare(`INSERT INTO products (
+                product_id, name, model, series, description, cover_image, supplier_id,
+                primary_category, secondary_category, is_featured, status, metadata_json, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(product_id) DO UPDATE SET
+                name=excluded.name, model=excluded.model, series=excluded.series, description=excluded.description,
+                cover_image=excluded.cover_image, supplier_id=excluded.supplier_id, primary_category=excluded.primary_category,
+                secondary_category=excluded.secondary_category, is_featured=excluded.is_featured, status=excluded.status,
+                metadata_json=excluded.metadata_json, updated_at=excluded.updated_at
+            `).bind(
+                pid, p.title || params.name || '', params.model || '', params.series || '', p.summary || params.description || '',
+                params.cover_image || params.hero || '', params.supplier_id || '',
+                params.primary_category || '', params.secondary_category || '', isFeat,
+                params.status || 'active', meta, p.date || now, now
+            ).run();
+            upProd++;
+          } catch {}
+        }
+        const newsItems = list.filter(i => {
+          const t = String(i.type || i.section || '').toLowerCase();
+          return t.includes('news') || t.includes('article') || t.includes('资讯') || t.includes('新闻');
+        });
+        let upNews = 0;
+        for (const n of newsItems) {
+          try {
+            const params = n.params || {};
+            const slug = params.slug || (n.uri||'').split('/').filter(Boolean).pop() || '';
+            if (!slug) continue;
+            await env.DB.prepare(`INSERT INTO news (
+                title, slug, summary, content, cover_image, category, tags, author, status,
+                seo_title, seo_keywords, seo_description, published_at, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(slug) DO UPDATE SET
+                title=excluded.title, summary=excluded.summary, content=excluded.content,
+                cover_image=excluded.cover_image, category=excluded.category, tags=excluded.tags,
+                author=excluded.author, status=excluded.status, seo_title=excluded.seo_title,
+                seo_keywords=excluded.seo_keywords, seo_description=excluded.seo_description,
+                published_at=excluded.published_at, updated_at=excluded.updated_at
+            `).bind(
+                n.title || params.title || '', slug, n.summary || params.summary || '', '',
+                params.cover_image || params.hero || '', params.category || n.category || '',
+                JSON.stringify(params.tags || []), params.author || '', 'published',
+                params.seo_title || '', params.seo_keywords || '', params.seo_description || '',
+                n.date || now, now, now
+            ).run();
+            upNews++;
+          } catch {}
+        }
+        const caseItems = list.filter(i => {
+          const t = String(i.type || i.section || '').toLowerCase();
+          return t.includes('case') || t.includes('cases') || t.includes('应用案例') || t.includes('案例');
+        });
+        let upCases = 0;
+        for (const c of caseItems) {
+          try {
+            const params = c.params || {};
+            const slug = params.slug || (c.uri||'').split('/').filter(Boolean).pop() || '';
+            if (!slug) continue;
+            await env.DB.prepare(`INSERT INTO cases (
+                title, slug, summary, content, cover_image, industry, related_product_id, status,
+                seo_title, seo_keywords, seo_description, published_at, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(slug) DO UPDATE SET
+                title=excluded.title, summary=excluded.summary, content=excluded.content,
+                cover_image=excluded.cover_image, industry=excluded.industry,
+                related_product_id=excluded.related_product_id, status=excluded.status,
+                seo_title=excluded.seo_title, seo_keywords=excluded.seo_keywords,
+                seo_description=excluded.seo_description, published_at=excluded.published_at,
+                updated_at=excluded.updated_at
+            `).bind(
+                c.title || params.title || '', slug, c.summary || params.summary || '', '',
+                params.cover_image || params.hero || '', params.industry || c.category || '',
+                '', 'published', params.seo_title || '', params.seo_keywords || '',
+                params.seo_description || '', c.date || now, now, now
+            ).run();
+            upCases++;
+          } catch {}
+        }
+        try {
+          const metaStr = JSON.stringify({ base, updated_at: now, type: 'admin-sync', counts: { requirements: upReq, suppliers: upSup, demanders: upDem, products: upProd, news: upNews, cases: upCases } });
+          await env.DB.prepare('INSERT INTO system_config (key, value_json, updated_at) VALUES (?, ?, ?) ON CONFLICT(key) DO UPDATE SET value_json = ?, updated_at = ?')
+            .bind('sync_meta', metaStr, now, metaStr, now).run();
+        } catch {}
+        return json({ ok: true });
+      } catch (e) {
+        return json({ error: String(e && e.message || e) }, 500);
       }
     }
 
