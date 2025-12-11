@@ -655,7 +655,7 @@ export default {
     }
 
     // List Requirements
-    if (isApi('requirements') && request.method === 'GET' || isFn('listRequirements') && request.method === 'GET') {
+    if ((isApi('requirements') || isApi('markets')) && request.method === 'GET' || isFn('listRequirements') && request.method === 'GET') {
       const progress = url.searchParams.get('progress');
       const category = url.searchParams.get('category');
       const company = url.searchParams.get('contact_company');
@@ -680,31 +680,9 @@ export default {
       }));
       return json(items);
     }
-    if (isApi('markets') && request.method === 'GET') {
-      const progress = url.searchParams.get('progress');
-      const category = url.searchParams.get('category');
-      const page = Math.max(parseInt(url.searchParams.get('page')||'1',10)||1, 1);
-      const limit = Math.min(parseInt(url.searchParams.get('limit')||'20',10)||20, 200);
-      let baseSql = "FROM requirements WHERE status = '公开' AND IFNULL(approved, 1) = 1";
-      const binds = [];
-      const countBinds = [];
-      if (progress) { baseSql += ' AND progress = ?'; binds.push(progress); countBinds.push(progress); }
-      if (category) { baseSql += ' AND primary_category = ?'; binds.push(category); countBinds.push(category); }
-      const { results: countRows } = await env.DB.prepare(`SELECT COUNT(1) AS total ${baseSql}`).bind(...countBinds).all();
-      const total = (countRows && countRows[0] && countRows[0].total) || 0;
-      const offset = (page - 1) * limit;
-      const { results } = await env.DB.prepare(`SELECT requirement_id as RequirementID, title as Title, public_preview as PublicPreview, primary_category as PrimaryCategory, secondary_category as SecondaryCategory, approved as Approved, status as Status, contact_public as ContactPublic, contact_name as ContactName, contact_phone as ContactPhone, contact_company as ContactCompany, budget_range as BudgetRange, published_at as PublishedAt, progress as Progress, allow_open_quotes as AllowOpenQuotes, parameters_json as Parameters ${baseSql} ORDER BY created_at DESC LIMIT ? OFFSET ?`).bind(...binds, limit, offset).all();
-      const items = (results || []).map(r => ({
-        ...r,
-        ContactPublic: !!r.ContactPublic,
-        AllowOpenQuotes: !!r.AllowOpenQuotes,
-        Parameters: (function(){ try { return JSON.parse(r.Parameters); } catch { return {}; } })()
-      }));
-      return json({ items, page, limit, total });
-    }
 
     // Requirement Detail
-    if (isApi('requirements/') && request.method === 'GET') {
+    if ((isApi('requirements/') || isApi('markets/')) && request.method === 'GET') {
       const id = path.split('/').pop();
       const stmt = env.DB.prepare('SELECT * FROM requirements WHERE requirement_id = ?').bind(id);
       const { results } = await stmt.all();
@@ -770,68 +748,11 @@ export default {
 
       return json({ role, requirement, quotes });
     }
-    if (isApi('markets/') && request.method === 'GET') {
-      const id = path.split('/').pop();
-      const stmt = env.DB.prepare('SELECT * FROM requirements WHERE requirement_id = ?').bind(id);
-      const { results } = await stmt.all();
-      if (!results || !results.length) return json({ error: 'NotFound' }, 404);
-      const r = results[0];
-      const anyPwd = url.searchParams.get('password') || '';
-      const supplierPwd = url.searchParams.get('supplier_access_password') || '';
-      const viewPwd = url.searchParams.get('view_password') || '';
-      let role = 'public';
-      if (anyPwd) {
-        try {
-          const { results: reqRows } = await env.DB.prepare('SELECT contact_company FROM requirements WHERE requirement_id = ?').bind(id).all();
-          const company = (reqRows && reqRows[0] && reqRows[0].contact_company) || '';
-          if (company) {
-            const like = `%"password_plain":"${anyPwd}"%`;
-            const { results: demRows } = await env.DB.prepare('SELECT 1 FROM demanders WHERE company = ? AND metadata_json LIKE ?').bind(company, like).all();
-            if (demRows && demRows.length) role = 'demander';
-          }
-        } catch {}
-      }
-      if (role === 'public' && anyPwd && typeof r.quote_password === 'string' && r.quote_password && anyPwd === r.quote_password) {
-        role = 'supplier';
-      }
-      if (role === 'public' && anyPwd && ((typeof r.view_password === 'string' && r.view_password && anyPwd === r.view_password) || (anyPwd === r.view_password_plain))) {
-        role = 'guest';
-      }
-      const showSensitiveLegacy = r.contact_public === 1 || (viewPwd && viewPwd === r.view_password_plain) || await verifySupplierPassword(env, supplierPwd);
-      const showSensitive = role !== 'public' ? true : showSensitiveLegacy;
-      const requirement = {
-        RequirementID: r.requirement_id,
-        Title: r.title,
-        PublicPreview: r.public_preview,
-        PrimaryCategory: r.primary_category,
-        SecondaryCategory: r.secondary_category,
-        Status: r.status,
-        BudgetRange: r.budget_range,
-        PublishedAt: r.published_at,
-        Progress: r.progress,
-        AllowOpenQuotes: !!r.allow_open_quotes,
-        Parameters: parseJSONSafe(r.parameters_json)
-      };
-      if (showSensitive) {
-        requirement.ContactName = r.contact_name;
-        requirement.ContactPhone = r.contact_phone;
-        requirement.ContactCompany = r.contact_company;
-        requirement.ContactEmail = r.contact_email;
-        requirement.ContactDepartment = r.contact_department;
-      }
-      let quotes = undefined;
-      if (role === 'demander') {
-        try {
-          const { results: qres } = await env.DB.prepare('SELECT quote_id as QuoteID, supplier_name as SupplierName, supplier_phone as SupplierPhone, amount as Amount, currency as Currency, remarks as Remarks, status as Status, created_at as CreatedAt FROM quotes WHERE requirement_id = ? ORDER BY created_at DESC LIMIT 200').bind(id).all();
-          quotes = qres || [];
-        } catch {}
-      }
-      return json({ role, requirement, quotes });
-    }
 
     // Update Requirement (Admin or Demander)
-    if (isApi('requirements/') && request.method === 'PATCH') {
-      const reqId = path.split('/').filter(p => p && p !== 'api' && p !== 'requirements').shift();
+    if ((isApi('requirements/') || isApi('markets/')) && request.method === 'PATCH') {
+      const reqId = path.split('/').filter(p => p && p !== 'api' && p !== 'requirements' && p !== 'markets').shift();
+
       if (!reqId) return json({ error: 'MissingRequirementID' }, 400);
 
       const data = await bodyJSON(request);
@@ -891,66 +812,6 @@ export default {
       const stmt = env.DB.prepare(sql).bind(...binds, reqId);
       const info = await stmt.run();
       // Sync demander password when view_password_plain updated by admin
-      if (info.changes > 0) {
-        try {
-          if (isAdmin && (Object.prototype.hasOwnProperty.call(data, 'view_password_plain') || Object.prototype.hasOwnProperty.call(data, 'view_password'))) {
-            const { results: reqRows } = await env.DB.prepare('SELECT contact_company FROM requirements WHERE requirement_id = ?').bind(reqId).all();
-            const company = (reqRows && reqRows[0] && reqRows[0].contact_company) || '';
-            if (company) {
-              const { results: demRows } = await env.DB.prepare('SELECT demander_id, metadata_json FROM demanders WHERE company = ?').bind(company).all();
-              if (demRows && demRows.length) {
-                const d = demRows[0];
-                let meta = {};
-                try { meta = JSON.parse(d.metadata_json || '{}'); } catch {}
-                meta.password_plain = String((Object.prototype.hasOwnProperty.call(data,'view_password') ? data.view_password : data.view_password_plain) || '');
-                const nowIso = new Date().toISOString();
-                await env.DB.prepare('UPDATE demanders SET metadata_json = ?, updated_at = ? WHERE demander_id = ?')
-                  .bind(JSON.stringify(meta), nowIso, d.demander_id).run();
-              }
-            }
-          }
-        } catch {}
-        return json({ ok: true, requirement_id: reqId });
-      }
-      return json({ error: 'UpdateFailed' }, 404);
-    }
-    if (isApi('markets/') && request.method === 'PATCH') {
-      const reqId = path.split('/').filter(p => p && p !== 'api' && p !== 'markets').shift();
-      if (!reqId) return json({ error: 'MissingRequirementID' }, 400);
-      const data = await bodyJSON(request);
-      let allowed = requireAdmin(request);
-      let isAdmin = allowed;
-      if (!allowed) {
-        const demPwd = String(data.demander_password || '').trim();
-        if (demPwd) {
-          try {
-            const { results: reqRows } = await env.DB.prepare('SELECT contact_company FROM requirements WHERE requirement_id = ?').bind(reqId).all();
-            const company = (reqRows && reqRows[0] && reqRows[0].contact_company) || '';
-            if (company) {
-              const like = `%"password_plain":"${demPwd}"%`;
-              const { results: demRows } = await env.DB.prepare('SELECT 1 FROM demanders WHERE company = ? AND metadata_json LIKE ?').bind(company, like).all();
-              if (demRows && demRows.length) allowed = true;
-            }
-          } catch {}
-        }
-      }
-      if (!allowed) return json({ error: 'Unauthorized' }, 401);
-      const fieldsAdmin = new Set(['status','progress','contact_public','view_password_plain', 'quote_password', 'view_password']);
-      const fieldsDemander = new Set(['status','progress','contact_public']);
-      const canUse = isAdmin ? fieldsAdmin : fieldsDemander;
-      const sets = [];
-      const binds = [];
-      if (canUse.has('status') && typeof data.status === 'string' && String(data.status).trim()) { sets.push('status = ?'); binds.push(String(data.status).trim()); }
-      if (canUse.has('progress') && typeof data.progress === 'string' && String(data.progress).trim()) { sets.push('progress = ?'); binds.push(String(data.progress).trim()); }
-      if (canUse.has('contact_public') && typeof data.contact_public !== 'undefined') { const v = !!data.contact_public ? 1 : 0; sets.push('contact_public = ?'); binds.push(v); }
-      if (canUse.has('view_password_plain') && typeof data.view_password_plain !== 'undefined') { sets.push('view_password_plain = ?'); binds.push(String(data.view_password_plain||'')); }
-      if (canUse.has('quote_password') && typeof data.quote_password === 'string') { sets.push('quote_password = ?'); binds.push(String(data.quote_password || '').trim()); }
-      if (canUse.has('view_password') && typeof data.view_password === 'string') { const vp = String(data.view_password || '').trim(); sets.push('view_password = ?'); binds.push(vp); sets.push('view_password_plain = ?'); binds.push(vp); }
-      if (!sets.length) return json({ error: 'NoFields' }, 400);
-      sets.push('updated_at = ?'); binds.push(new Date().toISOString());
-      const sql = `UPDATE requirements SET ${sets.join(', ')} WHERE requirement_id = ?`;
-      const stmt = env.DB.prepare(sql).bind(...binds, reqId);
-      const info = await stmt.run();
       if (info.changes > 0) {
         try {
           if (isAdmin && (Object.prototype.hasOwnProperty.call(data, 'view_password_plain') || Object.prototype.hasOwnProperty.call(data, 'view_password'))) {
@@ -1977,7 +1838,8 @@ export default {
 
       // If body is empty, try fetching from base URL
       if (!reqs.length && !sups.length && !dems.length) {
-        reqs = await fetchJsonSafe(`${base}/requirements.json`);
+        reqs = await fetchJsonSafe(`${base}/markets.json`);
+        if (!Array.isArray(reqs) || !reqs.length) reqs = await fetchJsonSafe(`${base}/requirements.json`);
         sups = await fetchJsonSafe(`${base}/suppliers.json`);
         dems = await fetchJsonSafe(`${base}/demanders.json`);
       }
@@ -2818,10 +2680,50 @@ export default {
   ,
   async scheduled(event, env, ctx) {
     // Automatic sync from website JSON if enabled via env or default
-    const base = env.SYNC_BASE_URL || 'https://www.visndt.com/data';
+    const baseRaw = env.SYNC_BASE_URL || 'https://www.visndt.com/data';
+    const base = String(baseRaw).replace(/\/$/, '');
+    const siteBase = base.replace(/\/data\/?$/i, '');
     try {
       // Seed requirements (INSERT OR IGNORE)
-      const reqs = await fetch(`${base}/requirements.json`).then(r => r.json()).catch(() => []);
+      let reqs = await fetch(`${base}/markets.json`).then(r => r.json()).catch(() => []);
+      if (!Array.isArray(reqs) || !reqs.length) {
+         reqs = await fetch(`${base}/requirements.json`).then(r => r.json()).catch(() => []);
+      }
+      // Fallback to index.json for markets/requirements
+      if (!Array.isArray(reqs) || !reqs.length) {
+         const idx = await fetch(`${siteBase}/index.json`).then(r => r.json()).catch(() => []);
+         const list = Array.isArray(idx) ? idx : [];
+         const items = list.filter(i => {
+           const t = String(i.type || i.section || '').toLowerCase();
+           return t === 'markets' || t === 'requirements';
+         });
+         reqs = items.map(i => {
+           const p = i.params || {};
+           const uri = String(i.uri || '').trim();
+           return {
+             RequirementID: p.RequirementID || p.requirementid || p.slug || (uri.split('/').filter(Boolean).pop() || ''),
+             Title: i.title || p.title || '',
+             PublicPreview: p.PublicPreview || p.publicpreview || i.summary || '',
+             PrimaryCategory: p.PrimaryCategory || p.primarycategory || '',
+             SecondaryCategory: p.SecondaryCategory || p.secondarycategory || '',
+             Status: p.Status || p.status || 'published',
+             ContactName: p.ContactName || p.contactname || '',
+             ContactPhone: p.ContactPhone || p.contactphone || '',
+             ContactCompany: p.ContactCompany || p.contactcompany || '',
+             ContactEmail: p.ContactEmail || p.contactemail || '',
+             ContactDepartment: p.ContactDepartment || p.contactdepartment || '',
+             ContactPublic: (p.ContactPublic || p.contactpublic) ? true : false,
+             AllowOpenQuotes: (p.AllowOpenQuotes || p.allowopenquotes) ? true : false,
+             Parameters: p.Parameters || p.parameters || {},
+             PublishedAt: i.date || p.date || new Date().toISOString(),
+             BudgetRange: p.BudgetRange || p.budgetrange || '',
+             procurementPlan: p.procurementPlan || p.procurementplan || '',
+             Progress: p.Progress || p.progress || '',
+             ViewPasswordPlain: p.ViewPasswordPlain || p.viewpasswordplain || ''
+           };
+         });
+      }
+
       let sups = await fetch(`${base}/suppliers.json`).then(r => r.json()).catch(() => []);
       const dems = await fetch(`${base}/demanders.json`).then(r => r.json()).catch(() => []);
       const now = new Date().toISOString();
@@ -2842,7 +2744,6 @@ export default {
         } catch {}
       }
       if (!Array.isArray(sups) || !sups.length) {
-        const siteBase = String(base).replace(/\/?data\/?$/i, '');
         const idx = await fetch(`${siteBase}/index.json`).then(r => r.json()).catch(() => []);
         const list = Array.isArray(idx) ? idx : [];
         const items = list.filter(i => {
@@ -2918,6 +2819,110 @@ export default {
           ).run();
         } catch {}
       }
+
+      // Sync Products, News, Cases from index.json
+      if (!Array.isArray(sups) || !sups.length || true) { // Always check index.json for content types
+         const idx = await fetch(`${siteBase}/index.json`).then(r => r.json()).catch(() => []);
+         const list = Array.isArray(idx) ? idx : [];
+         
+         // 1. Sync Products
+         const products = list.filter(i => {
+             const t = String(i.type || i.section || '').toLowerCase();
+             return t === 'products';
+         });
+         for (const p of products) {
+             try {
+                 const params = p.params || {};
+                 const pid = params.product_id || params.ProductID || (p.uri||'').split('/').filter(Boolean).pop() || '';
+                 if (!pid) continue;
+                 const isFeat = params.is_featured ? 1 : 0;
+                 const meta = JSON.stringify(params.metadata || {});
+                 await env.DB.prepare(`INSERT INTO products (
+                     product_id, name, model, series, description, cover_image, supplier_id,
+                     primary_category, secondary_category, is_featured, status, metadata_json, created_at, updated_at
+                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 ON CONFLICT(product_id) DO UPDATE SET
+                     name=excluded.name, model=excluded.model, series=excluded.series, description=excluded.description,
+                     cover_image=excluded.cover_image, supplier_id=excluded.supplier_id, primary_category=excluded.primary_category,
+                     secondary_category=excluded.secondary_category, is_featured=excluded.is_featured, status=excluded.status,
+                     metadata_json=excluded.metadata_json, updated_at=excluded.updated_at
+                 `).bind(
+                     pid, p.title || params.name || '', params.model || '', params.series || '', p.summary || params.description || '',
+                     params.cover_image || params.hero || '', params.supplier_id || '',
+                     params.primary_category || '', params.secondary_category || '', isFeat,
+                     params.status || 'active', meta, p.date || now, now
+                 ).run();
+             } catch {}
+         }
+
+         // 2. Sync News
+         const newsItems = list.filter(i => {
+             const t = String(i.type || i.section || '').toLowerCase();
+             return t.includes('news') || t.includes('article') || t.includes('资讯') || t.includes('新闻');
+         });
+         for (const n of newsItems) {
+             try {
+                 const params = n.params || {};
+                 const slug = params.slug || (n.uri||'').split('/').filter(Boolean).pop() || '';
+                 if (!slug) continue;
+                 await env.DB.prepare(`INSERT INTO news (
+                     title, slug, summary, content, cover_image, category, tags, author, status,
+                     seo_title, seo_keywords, seo_description, published_at, created_at, updated_at
+                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 ON CONFLICT(slug) DO UPDATE SET
+                     title=excluded.title, summary=excluded.summary, content=excluded.content,
+                     cover_image=excluded.cover_image, category=excluded.category, tags=excluded.tags,
+                     author=excluded.author, status=excluded.status, seo_title=excluded.seo_title,
+                     seo_keywords=excluded.seo_keywords, seo_description=excluded.seo_description,
+                     published_at=excluded.published_at, updated_at=excluded.updated_at
+                 `).bind(
+                     n.title || params.title || '', slug, n.summary || params.summary || '', '',
+                     params.cover_image || params.hero || '', params.category || n.category || '',
+                     JSON.stringify(params.tags || []), params.author || '', 'published',
+                     params.seo_title || '', params.seo_keywords || '', params.seo_description || '',
+                     n.date || now, now, now
+                 ).run();
+             } catch {}
+         }
+
+         // 3. Sync Cases
+         const caseItems = list.filter(i => {
+             const t = String(i.type || i.section || '').toLowerCase();
+             return t.includes('case') || t.includes('cases') || t.includes('应用案例') || t.includes('案例');
+         });
+         for (const c of caseItems) {
+             try {
+                 const params = c.params || {};
+                 const slug = params.slug || (c.uri||'').split('/').filter(Boolean).pop() || '';
+                 if (!slug) continue;
+                 await env.DB.prepare(`INSERT INTO cases (
+                     title, slug, summary, content, cover_image, industry, related_product_id, status,
+                     seo_title, seo_keywords, seo_description, published_at, created_at, updated_at
+                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 ON CONFLICT(slug) DO UPDATE SET
+                     title=excluded.title, summary=excluded.summary, content=excluded.content,
+                     cover_image=excluded.cover_image, industry=excluded.industry,
+                     related_product_id=excluded.related_product_id, status=excluded.status,
+                     seo_title=excluded.seo_title, seo_keywords=excluded.seo_keywords,
+                     seo_description=excluded.seo_description, published_at=excluded.published_at,
+                     updated_at=excluded.updated_at
+                 `).bind(
+                     c.title || params.title || '', slug, c.summary || params.summary || '', '',
+                     params.cover_image || params.hero || '', params.industry || c.category || '',
+                     '', 'published', params.seo_title || '', params.seo_keywords || '',
+                     params.seo_description || '', c.date || now, now, now
+                 ).run();
+             } catch {}
+         }
+      }
+
+      // Update sync meta
+      try {
+        const metaStr = JSON.stringify({ base, updated_at: now, type: 'auto-scheduled' });
+        await env.DB.prepare('INSERT INTO system_config (key, value_json, updated_at) VALUES (?, ?, ?) ON CONFLICT(key) DO UPDATE SET value_json = ?, updated_at = ?')
+          .bind('sync_meta', metaStr, now, metaStr, now).run();
+      } catch {}
+
     } catch (e) {
       // swallow errors to avoid cron failures surfacing
     }

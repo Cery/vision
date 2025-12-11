@@ -19,13 +19,13 @@ function New-Requirement {
     [string]$Title,[string]$Primary,[string]$ContactName,[string]$ContactPhone,[string]$Company,[string]$Preview,[string]$Budget
   )
   $payload = @{ Title=$Title; primaryCategory=$Primary; contactName=$ContactName; contactPhone=$ContactPhone; contactCompany=$Company; PublicPreview=$Preview; BudgetRange=$Budget; ContactPublic=$true }
-  return Invoke-Json -Method 'POST' -Url ("$ApiBase/requirements") -Body $payload
+  return Invoke-Json -Method 'POST' -Url ("$ApiBase/markets") -Body $payload
 }
 
 function Patch-Requirement {
   param([string]$Rid,[hashtable]$Fields)
   $headers = @{ 'X-Admin-Key' = $AdminKey }
-  return Invoke-Json -Method 'PATCH' -Url ("$ApiBase/admin/requirements/$Rid") -Headers $headers -Body $Fields
+  return Invoke-Json -Method 'PATCH' -Url ("$ApiBase/admin/markets/$Rid") -Headers $headers -Body $Fields
 }
 
 function New-Demander {
@@ -52,5 +52,5 @@ New-Demander '华东医疗集团' '张三' '021-66668888' 'z3@eastmed.example.co
 New-Demander '南方医疗设备有限公司' '李四' '0755-12345678' 'l4@nanyishebei.example.com' '123456' | Out-Null
 New-Demander '首都临床中心' '王五' '010-66667777' 'w5@capitalclinic.example.com' '123456' | Out-Null
 
-$list = Invoke-Json -Method 'GET' -Url ("$ApiBase/requirements?limit=50")
+$list = Invoke-Json -Method 'GET' -Url ("$ApiBase/markets?limit=50")
 Write-Host ("Total requirements: " + $list.Length)

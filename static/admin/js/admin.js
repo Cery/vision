@@ -2090,11 +2090,7 @@ const App = {
   loadSettings() {
     // Just view refresh
   }
-};
-
-// Expose to window
-window.App = App;
-document.addEventListener('DOMContentLoaded', () => App.init());
+  ,
   populateImportSupplierSelect() {
     const sel = document.getElementById('importSupplierSelect');
     if (!sel) return;
@@ -2104,9 +2100,16 @@ document.addEventListener('DOMContentLoaded', () => App.init());
     sel.innerHTML = opt.join('');
     try { const saved = localStorage.getItem('IMPORT_SUPPLIER_ID'); if (saved) sel.value = saved; } catch {}
     sel.onchange = () => { try { localStorage.setItem('IMPORT_SUPPLIER_ID', sel.value || ''); } catch {} };
-  },
-      // Products toolbar bindings
-      const sf = document.getElementById('prodSortField'); if (sf) sf.onchange = () => { this.state.prodSort.field = sf.value; this.renderProducts(); };
-      const so = document.getElementById('prodSortOrder'); if (so) so.onchange = () => { this.state.prodSort.order = so.value; this.renderProducts(); };
-      const ps = document.getElementById('prodPageSize'); if (ps) ps.onchange = () => { this.state.prodPageSize = parseInt(ps.value||'24',10)||24; this.renderProducts(); };
-      const ex = document.getElementById('prodExportBtn'); if (ex) ex.onclick = () => this.exportProducts('xlsx');
+  }
+  ,
+  bindProductsToolbar() {
+    const sf = document.getElementById('prodSortField'); if (sf) sf.onchange = () => { this.state.prodSort.field = sf.value; this.renderProducts(); };
+    const so = document.getElementById('prodSortOrder'); if (so) so.onchange = () => { this.state.prodSort.order = so.value; this.renderProducts(); };
+    const ps = document.getElementById('prodPageSize'); if (ps) ps.onchange = () => { this.state.prodPageSize = parseInt(ps.value||'24',10)||24; this.renderProducts(); };
+    const ex = document.getElementById('prodExportBtn'); if (ex) ex.onclick = () => this.exportProducts('xlsx');
+  }
+};
+
+// Expose to window
+window.App = App;
+document.addEventListener('DOMContentLoaded', () => { App.init(); App.bindProductsToolbar(); });

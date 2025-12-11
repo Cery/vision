@@ -17,7 +17,8 @@ function loadJson(rel){
 }
 
 function run(){
-  const reqs = loadJson('data/requirements.json');
+  let reqs = loadJson('data/markets.json');
+  if (!Array.isArray(reqs) || !reqs.length) reqs = loadJson('data/requirements.json');
   const sups = loadJson('data/suppliers.json');
   let out = '';
   out += '-- Import Requirements\n';

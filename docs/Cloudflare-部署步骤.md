@@ -61,8 +61,8 @@
 
 2. 验证（示例）：
    - 管理验证：`POST /api/admin/verify`（请求头 `X-Admin-Key: <你的密钥>`，或在 JSON Body 里提供 `{"password":"<你的密码>"}`）。亦支持 `GET /api/admin/verify`（必须携带 `X-Admin-Key`）。
-   - 发布需求：`POST /api/requirements`（返回 `RequirementID` 与 `ViewPassword`）。
-   - 列表：`GET /api/requirements`。
+   - 发布需求：`POST /api/markets`（返回 `RequirementID` 与 `ViewPassword`）。
+   - 列表：`GET /api/markets`。
    - 报价提交：`POST /api/quotes`。
    - 管理端：带 `X-Admin-Key` 调用 `/api/admin/*` 路由。
 

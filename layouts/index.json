@@ -1,5 +1,5 @@
 [
-{{- range $index, $page := (where .Site.RegularPages "Type" "in" (slice "products" "news" "cases" "applications" "suppliers")) -}}
+{{- range $index, $page := (where .Site.RegularPages "Type" "in" (slice "products" "news" "cases" "applications" "suppliers" "markets")) -}}
 {{- if gt $index 0 }},{{ end }}
 {
   "uri": {{ $page.RelPermalink | jsonify }},

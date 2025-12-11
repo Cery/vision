@@ -473,9 +473,9 @@ class RequirementCenter {
     }
 
     saveToLocalStorage(data) {
-        const requirements = JSON.parse(localStorage.getItem('requirements') || '[]');
+        const requirements = JSON.parse(localStorage.getItem('markets') || '[]');
         requirements.unshift(data);
-        localStorage.setItem('requirements', JSON.stringify(requirements));
+        localStorage.setItem('markets', JSON.stringify(requirements));
     }
 
     generateRequirementMarkdown(data) {
@@ -484,7 +484,7 @@ class RequirementCenter {
         content += 'title: "' + data.contactName + '的需求"\n';
         content += 'date: ' + data.timestamp + '\n';
         content += 'draft: false\n';
-        content += 'type: "requirement"\n';
+        content += 'type: "markets"\n';
         content += '---\n\n';
         content += '# 需求详情\n\n';
         content += '联系人：' + data.contactName + '\n';

@@ -180,16 +180,16 @@ gallery:
 ### 1. API 基础地址与切换
 - 生产环境默认同源 API（`window.API_BASE=''`，调用 `fetch('/api/...')`）。
 - 支持保存任意 `https://` 开头的远程 API 地址，或重置为同源：
-  - 前台：`/requirements/` 页面底部“API设置”内可一键设为本地 `http://127.0.0.1:8787`、线上 `https://api.visndt.com`、或同源。
+  - 前台：`/markets/` 页面底部“API设置”内可一键设为本地 `http://127.0.0.1:8787`、线上 `https://api.visndt.com`、或同源。
   - 后台：`/management.html → 设置 → API Base URL`，点击“保存”，或通过下拉菜单快速切换。
 
 ### 2. 发布→审核→展示 全流程
-- 发布需求：`POST /api/requirements` 返回 `RequirementID` 与 `ViewPassword`。
+- 发布需求：`POST /api/markets` 返回 `RequirementID` 与 `ViewPassword`。
 - 审核公开：在后台“需求管理”搜索该编号，点击“批准发布”，系统会设置：
   - `approved=1`、`approved_at=ISO时间`
   - `status='公开'`、`progress='发布中'`
   - `allow_open_quotes=true`、`contact_public=true`
-- 前台展示：`GET /api/requirements` 仅加载“已审核且公开”的需求。
+- 前台展示：`GET /api/markets` 仅加载“已审核且公开”的需求。
 - 详情与密码：在弹窗中用 `view_password` 或 `supplier_access_password` 解锁联系人与报价表单。
 
 ### 3. 管理后台分区显示（运营可视化）

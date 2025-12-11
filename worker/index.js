@@ -58,18 +58,18 @@ export default {
 
     // --- Requirements ---
 
-    // 8. Get Requirements (KV based now)
-    if (url.pathname === '/api/requirements' && request.method === 'GET') {
+    // 8. Get Requirements/Markets (KV based now)
+    if ((url.pathname === '/api/requirements' || url.pathname === '/api/markets') && request.method === 'GET') {
       return cors(await handleGetRequirements(request, env));
     }
 
-    // 9. Post Requirement (KV + Extract)
-    if (url.pathname === '/api/requirements' && request.method === 'POST') {
+    // 9. Post Requirement/Market (KV + Extract)
+    if ((url.pathname === '/api/requirements' || url.pathname === '/api/markets') && request.method === 'POST') {
       return cors(await handlePostRequirement(request, env, ctx));
     }
 
-    // 10. Patch Requirement (Update Status etc)
-    if (url.pathname.match(/^\/api\/admin\/requirements\/.+/) && request.method === 'PATCH') {
+    // 10. Patch Requirement/Market (Update Status etc)
+    if ((url.pathname.match(/^\/api\/admin\/requirements\/.+/) || url.pathname.match(/^\/api\/admin\/markets\/.+/)) && request.method === 'PATCH') {
         return cors(await handlePatchRequirement(request, env));
     }
 
