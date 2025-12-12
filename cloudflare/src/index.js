@@ -2114,6 +2114,7 @@ export default {
     if (isApi('admin/import-news') && request.method === 'POST') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       try {
+        try { await ensureSchema(env); } catch {}
         const baseRaw = url.searchParams.get('base') || env.SYNC_BASE_URL || 'https://www.visndt.com/data';
         const base = String(baseRaw).replace(/\/$/, '');
         const siteBase = base.replace(/\/data\/?$/i, '');
@@ -2180,6 +2181,7 @@ export default {
     if (isApi('admin/import-cases') && request.method === 'POST') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       try {
+        try { await ensureSchema(env); } catch {}
         const baseRaw = url.searchParams.get('base') || env.SYNC_BASE_URL || 'https://www.visndt.com/data';
         const base = String(baseRaw).replace(/\/$/, '');
         const siteBase = base.replace(/\/data\/?$/i, '');
@@ -2245,6 +2247,7 @@ export default {
     if (isApi('admin/import-products') && request.method === 'POST') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       try {
+        try { await ensureSchema(env); } catch {}
         const baseRaw = url.searchParams.get('base') || env.SYNC_BASE_URL || 'https://www.visndt.com/data';
         const base = String(baseRaw).replace(/\/$/, '');
         const siteBase = base.replace(/\/data\/?$/i, '');
@@ -2316,6 +2319,7 @@ export default {
     if (isApi('admin/sync-now') && request.method === 'POST') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       try {
+        try { await ensureSchema(env); } catch {}
         const baseRaw = url.searchParams.get('base') || env.SYNC_BASE_URL || 'https://www.visndt.com/data';
         const base = String(baseRaw).replace(/\/$/, '');
         const siteBase = base.replace(/\/data\/?$/i, '');
@@ -2561,17 +2565,31 @@ export default {
     if (isApi('admin/debug-index') && request.method === 'GET') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       try {
-        const base = url.searchParams.get('base') || env.SYNC_BASE_URL || 'https://www.visndt.com/data';
-        const idxUrl = (String(base).endsWith('/')) ? (String(base) + 'index.json') : (String(base) + '/index.json');
-        const idx = await fetchJsonSafe(idxUrl);
-        const arr = Array.isArray(idx) ? idx : [];
+        const baseRaw = url.searchParams.get('base') || env.SYNC_BASE_URL || 'https://www.visndt.com/data';
+        const base = String(baseRaw).replace(/\/$/, '');
+        const siteBase = base.replace(/\/data\/?$/i, '');
+        const idxUrl1 = siteBase + '/index.json';
+        const idxUrl2 = base + '/index.json';
+        let arr = [];
+        let used = idxUrl1;
+        try {
+          const d1 = await fetchJsonSafe(idxUrl1);
+          arr = Array.isArray(d1?.items) ? d1.items : (Array.isArray(d1) ? d1 : []);
+        } catch {}
+        if (!arr.length) {
+          used = idxUrl2;
+          try {
+            const d2 = await fetchJsonSafe(idxUrl2);
+            arr = Array.isArray(d2?.items) ? d2.items : (Array.isArray(d2) ? d2 : []);
+          } catch {}
+        }
         const sample = arr.slice(0, 10).map(i => ({
           title: i.title,
           section: i.section || i.type,
           uri: i.uri,
           params: i.params ? Object.keys(i.params) : []
         }));
-        return json({ ok: true, idxUrl, count: arr.length, sample });
+        return json({ ok: true, idxUrl: used, count: arr.length, sample });
       } catch (e) {
         return json({ ok: false, error: String(e && e.message || e) }, 500);
       }
