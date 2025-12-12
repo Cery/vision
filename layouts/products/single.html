@@ -240,9 +240,11 @@
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="detailed-specs-tab" data-bs-toggle="tab" data-bs-target="#detailed-specs" type="button" role="tab" aria-controls="detailed-specs" aria-selected="false">详细参数</button>
                         </li>
+                        {{ with .Params.application_scenarios }}
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="application-tab" data-bs-toggle="tab" data-bs-target="#application" type="button" role="tab" aria-controls="application" aria-selected="false">应用场景</button>
                         </li>
+                        {{ end }}
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="download-tab" data-bs-toggle="tab" data-bs-target="#download" type="button" role="tab" aria-controls="download" aria-selected="false">资料下载</button>
                         </li>
@@ -283,15 +285,13 @@
                             <p>暂无详细参数信息。</p>
                             {{ end }}
                         </div>
+                        {{ with .Params.application_scenarios }}
                         <div class="tab-pane fade" id="application" role="tabpanel" aria-labelledby="application-tab">
-                            {{ with .Params.application_scenarios }}
                             <div class="content application-scenarios">
                                 {{ . | markdownify }}
                             </div>
-                            {{ else }}
-                            <p>暂无应用场景信息。</p>
-                            {{ end }}
                         </div>
+                        {{ end }}
                         <div class="tab-pane fade" id="download" role="tabpanel" aria-labelledby="download-tab">
                             {{ with .Params.data_download }}
                             <ul class="list-unstyled">
@@ -777,6 +777,10 @@ document.addEventListener('DOMContentLoaded', function() {
     background-color: rgba(25, 118, 210, 0.05);
 }
 
+.tab-content {
+    padding-top: 0.75rem;
+}
+
 .detailed-params-table {
     font-size: 14px;
 }
@@ -990,15 +994,33 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .application-scenarios ul {
-    padding-left: 1.5rem;
-    margin-bottom: 1rem;
+    list-style: none;
+    padding-left: 0;
+    margin: 0 0 1rem 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.5rem;
 }
 
 .application-scenarios li {
-    margin-bottom: 0.5rem;
+    margin: 0;
     font-size: 14px;
     color: #212121;
     line-height: 1.5;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background-color: #fafafa;
+    padding: 0.5rem 0.75rem 0.5rem 1.25rem;
+    position: relative;
+}
+
+.application-scenarios li::before {
+    content: "•";
+    position: absolute;
+    left: 0.6rem;
+    top: 0.4rem;
+    color: #1976d2;
+    font-weight: 700;
 }
 /* Related products */
 .related-thumb-wrap {
@@ -1111,6 +1133,27 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var valid = new Set(['intro','detailed-specs','application','download']);
+    var hash = (location.hash || '').replace('#','');
+    if (valid.has(hash)) {
+        var btn = document.querySelector('[data-bs-target="#' + hash + '"]');
+        if (btn && window.bootstrap && bootstrap.Tab) {
+            new bootstrap.Tab(btn).show();
+        }
+    }
+    document.querySelectorAll('#productTab .nav-link').forEach(function(el) {
+        el.addEventListener('shown.bs.tab', function() {
+            var target = el.getAttribute('data-bs-target');
+            if (target) {
+                history.replaceState(null, '', target);
+            }
+        });
+    });
 });
 </script>
 
