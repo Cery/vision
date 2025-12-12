@@ -43,6 +43,15 @@ var worker_default = {
     if ((url.pathname === "/api/admin/products" || url.pathname === "/api/products") && request.method === "POST") {
       return cors(await handlePostProduct(request, env));
     }
+    if (request.method === "GET" && url.pathname.match(/^\/api\/admin\/products\/[^\/]+$/)) {
+      return cors(await handleGetProductById(request, env));
+    }
+    if (request.method === "PATCH" && url.pathname.match(/^\/api\/admin\/products\/[^\/]+$/)) {
+      return cors(await handlePatchProduct(request, env));
+    }
+    if (request.method === "DELETE" && url.pathname.match(/^\/api\/admin\/products\/[^\/]+$/)) {
+      return cors(await handleDeleteProduct(request, env));
+    }
     if (url.pathname === "/api/debug/seed" && request.method === "POST") {
       return cors(await handleSeed(request, env));
     }
@@ -312,6 +321,36 @@ async function handlePostProduct(req, env) {
   return new Response(JSON.stringify({ ok: true, product_id: body.ProductID }), { headers: { "Content-Type": "application/json" } });
 }
 __name(handlePostProduct, "handlePostProduct");
+async function handleGetProductById(req, env) {
+  const u = new URL(req.url);
+  const id = u.pathname.split("/").pop();
+  let list = await env.VISION_KV.get("products", { type: "json" }) || [];
+  const p = list.find((x) => String(x.ProductID || x.product_id || "") === id || String(x.slug || "") === id);
+  if (!p) return new Response(JSON.stringify({ error: "Not Found" }), { status: 404 });
+  return new Response(JSON.stringify(p), { headers: { "Content-Type": "application/json" } });
+}
+__name(handleGetProductById, "handleGetProductById");
+async function handlePatchProduct(req, env) {
+  const u = new URL(req.url);
+  const id = u.pathname.split("/").pop();
+  const body = await req.json();
+  let list = await env.VISION_KV.get("products", { type: "json" }) || [];
+  const idx = list.findIndex((x) => String(x.ProductID || x.product_id || "") === id || String(x.slug || "") === id);
+  if (idx < 0) return new Response(JSON.stringify({ error: "Not Found" }), { status: 404 });
+  list[idx] = { ...list[idx], ...body };
+  await env.VISION_KV.put("products", JSON.stringify(list));
+  return new Response(JSON.stringify({ ok: true }), { headers: { "Content-Type": "application/json" } });
+}
+__name(handlePatchProduct, "handlePatchProduct");
+async function handleDeleteProduct(req, env) {
+  const u = new URL(req.url);
+  const id = u.pathname.split("/").pop();
+  let list = await env.VISION_KV.get("products", { type: "json" }) || [];
+  const filtered = list.filter((x) => String(x.ProductID || x.product_id || "") !== id && String(x.slug || "") !== id);
+  await env.VISION_KV.put("products", JSON.stringify(filtered));
+  return new Response(JSON.stringify({ ok: true }), { headers: { "Content-Type": "application/json" } });
+}
+__name(handleDeleteProduct, "handleDeleteProduct");
 async function handleGetQuotes(req, env) {
   const u = new URL(req.url);
   const reqId = u.searchParams.get("requirement_id");
@@ -588,15 +627,49 @@ async function handleImportContent(req, env, type) {
     const items = all.filter((it) => String(it.section || "") === type);
     if (type === "products") {
       let list = await env.VISION_KV.get("products", { type: "json" }) || [];
+      const suppliers = await env.VISION_KV.get("suppliers", { type: "json" }) || [];
+      let supChanged = false;
       for (const it of items) {
         const uri = String(it.uri || "");
         const slug = it.params?.slug || it.slug || uri.replace(/\/$/, "").split("/").pop();
         const existingIdx = list.findIndex((p) => (p.slug || "") === slug);
         const cover = Array.isArray(it.params?.gallery) ? it.params.gallery[0] || "" : "";
+        let sid = "";
+        const hint = it.params?.supplier_id || it.params?.supplier || it.params?.company || it.params?.vendor || "";
+        if (it.params?.supplier_id) {
+          sid = String(it.params.supplier_id);
+        } else if (hint) {
+          const t = String(hint).trim().toLowerCase();
+          const sup = suppliers.find((s) => String(s.company || "").trim().toLowerCase() === t || String(s.name || "").trim().toLowerCase() === t || String(s.SupplierID || "").trim().toLowerCase() === t || String(s.id || "").trim().toLowerCase() === t);
+          if (sup) sid = sup.SupplierID || sup.id || "";
+        }
+        if (!sid) {
+          const ser = it.params?.series || "";
+          const mod = it.params?.model || "";
+          const sup2 = suppliers.find((s) => {
+            const ss = Array.isArray(s.series) ? s.series : Array.isArray(s.metadata_json?.series) ? s.metadata_json.series : [];
+            const mm = Array.isArray(s.models) ? s.models : Array.isArray(s.metadata_json?.models) ? s.metadata_json.models : [];
+            return ser && ss && ss.includes(ser) || mod && mm && mm.includes(mod);
+          });
+          if (sup2) sid = sup2.SupplierID || sup2.id || "";
+        }
+        if (!sid && uri.startsWith("/products/")) {
+          const parts = uri.replace(/^\//, "").split("/");
+          if (parts.length >= 3 && parts[0] === "products") {
+            const sslug = parts[1];
+            const found = suppliers.find((s) => s.id === sslug || s.SupplierID === sslug);
+            if (found) sid = found.SupplierID || found.id || "";
+            else {
+              sid = sslug;
+              suppliers.push({ id: sslug, SupplierID: sslug, company: sslug, created_at: it.date || (/* @__PURE__ */ new Date()).toISOString(), status: "active" });
+              supChanged = true;
+            }
+          }
+        }
         const record = {
           ProductID: slug ? "PROD-" + slug : "PROD-" + Date.now(),
           CreatedAt: it.date || (/* @__PURE__ */ new Date()).toISOString(),
-          supplier_id: it.params?.supplier_id || "",
+          supplier_id: sid || "",
           name: it.title || "",
           slug,
           detail_path: uri || "/products/" + slug + "/",
@@ -614,6 +687,7 @@ async function handleImportContent(req, env, type) {
         else list.push(record);
       }
       await env.VISION_KV.put("products", JSON.stringify(list));
+      if (supChanged) await env.VISION_KV.put("suppliers", JSON.stringify(suppliers));
       return new Response(JSON.stringify({ ok: true, upserted: items.length }), { headers: { "Content-Type": "application/json" } });
     }
     if (type === "news") {

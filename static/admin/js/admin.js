@@ -550,10 +550,12 @@ const App = {
     try {
       // Ensure suppliers loaded
       if(!this.state.supList.length) await this.loadSuppliers();
+      this.populateSupplierFilterSelect();
       
       const grid = document.getElementById('prodGrid');
       if (grid) grid.innerHTML = Array.from({length:12}).map(()=>'<div class="col-md-3"><div class="card"><div class="ratio ratio-4x3 bg-light placeholder-glow"><span class="placeholder col-12 h-100"></span></div><div class="p-2"><span class="placeholder col-6"></span><div class="mt-1"><span class="placeholder col-8"></span></div></div></div></div>').join('');
 
+      const supFilter = (document.getElementById('prodSupplierFilter')?.value || '').trim();
       const res = await apiFetch('/api/admin/products');
       this.state.productsCache = Array.isArray(res) ? res : (res.items || []);
       // 空列表时提示同步
@@ -725,8 +727,13 @@ const App = {
   renderProducts() {
     const grid = document.getElementById('prodGrid');
     const search = document.getElementById('prodSearch').value.trim().toLowerCase();
+    const supFilter = (document.getElementById('prodSupplierFilter')?.value || '').trim();
     let list = this.state.productsCache.filter(p => {
       if (search && !((p.name||'').toLowerCase().includes(search) || (p.model||'').toLowerCase().includes(search))) return false;
+      if (supFilter) {
+        const sid = p.supplier_id || p.SupplierID || p.SupplierId || '';
+        if (String(sid||'') !== supFilter) return false;
+      }
       return true;
     });
      const f = this.state.prodSort.field; const o = this.state.prodSort.order;
@@ -739,19 +746,23 @@ const App = {
      });
      
      if (!list.length) {
-        grid.innerHTML = '<div class="col-12 text-center text-muted py-5">暂无产品</div>';
+        const supFilter = (document.getElementById('prodSupplierFilter')?.value || '').trim();
+        const tip = supFilter ? `<div class="text-muted mb-2">当前供应商下暂无产品</div><button class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('prodSupplierFilter').value=''; localStorage.setItem('PROD_SUPPLIER_FILTER',''); App.loadProducts();">清空筛选</button>` : '';
+        grid.innerHTML = `<div class="col-12 text-center text-muted py-5">暂无产品${tip?('<div class=\"mt-3\">'+tip+'</div>'):''}</div>`;
         return;
      }
      
     const pageSize = this.state.prodPageSize || 24;
     const pageList = list.slice(0, pageSize);
     grid.innerHTML = pageList.map(p => {
-      const img = p.cover_image || p.CoverImage || 'https://via.placeholder.com/300x200?text=No+Image';
+      let img = 'https://via.placeholder.com/300x200?text=No+Image';
+      const ci = p.cover_image || p.CoverImage || p.image;
+      if (typeof ci === 'string') img = ci; else if (ci && typeof ci === 'object') img = ci.image || ci.url || ci.src || img;
       const status = p.status || 'active';
       const isFeat = p.is_featured ? '<span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2">推荐</span>' : '';
         
         // Find supplier name
-        const sup = this.state.supList.find(s => s.supplier_id === p.supplier_id);
+        const sup = this.state.supList.find(s => (s.supplier_id === p.supplier_id) || (s.SupplierID === p.supplier_id) || (s.id === p.supplier_id));
         const supName = sup ? (sup.company || sup.name) : '-';
         
         return `
@@ -773,14 +784,14 @@ const App = {
                </div>
             </div>
             <div class="card-footer bg-white p-2 d-flex justify-content-between">
-               <a class="btn btn-sm btn-outline-secondary py-0 px-2" target="_blank" href="${escapeHtml(p.detail_path||('/products/'+(p.slug||p.product_id||'')+'/'))}">预览</a>
-               <button class="btn btn-sm btn-outline-primary py-0 px-2" onclick="App.openProductEditor('${p.product_id}')">编辑</button>
-               <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="App.deleteProduct('${p.product_id}')">删除</button>
+               <a class="btn btn-sm btn-outline-secondary py-0 px-2" target="_blank" href="${escapeHtml(p.detail_path||('/products/'+(p.slug||p.product_id||p.ProductID||'')+'/'))}">预览</a>
+               <button class="btn btn-sm btn-outline-primary py-0 px-2" onclick="App.openProductEditor('${p.product_id||p.ProductID}')">编辑</button>
+               <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="App.deleteProduct('${p.product_id||p.ProductID}')">删除</button>
             </div>
-          </div>
         </div>
-        `;
-     }).join('');
+      </div>
+      `;
+    }).join('');
   },
 
   exportProducts(type) {
@@ -2143,11 +2154,23 @@ const App = {
     sel.onchange = () => { try { localStorage.setItem('IMPORT_SUPPLIER_ID', sel.value || ''); } catch {} };
   }
   ,
+  populateSupplierFilterSelect() {
+    const sel = document.getElementById('prodSupplierFilter');
+    if (!sel) return;
+    const opts = ['<option value="">全部供应商</option>'].concat(
+      this.state.supList.map(s => `<option value="${s.supplier_id||s.SupplierID||s.id||''}">${escapeHtml(s.company || s.name || '')}</option>`)
+    );
+    sel.innerHTML = opts.join('');
+    try { const saved = localStorage.getItem('PROD_SUPPLIER_FILTER'); if (saved) sel.value = saved; } catch {}
+    sel.onchange = () => { try { localStorage.setItem('PROD_SUPPLIER_FILTER', sel.value || ''); } catch {}; this.loadProducts(); };
+  }
+  ,
   bindProductsToolbar() {
     const sf = document.getElementById('prodSortField'); if (sf) sf.onchange = () => { this.state.prodSort.field = sf.value; this.renderProducts(); };
     const so = document.getElementById('prodSortOrder'); if (so) so.onchange = () => { this.state.prodSort.order = so.value; this.renderProducts(); };
     const ps = document.getElementById('prodPageSize'); if (ps) ps.onchange = () => { this.state.prodPageSize = parseInt(ps.value||'24',10)||24; this.renderProducts(); };
     const ex = document.getElementById('prodExportBtn'); if (ex) ex.onclick = () => this.exportProducts('xlsx');
+    const pf = document.getElementById('prodSupplierFilter'); if (pf) pf.onchange = () => { this.loadProducts(); };
   }
 };
 

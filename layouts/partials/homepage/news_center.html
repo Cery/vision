@@ -273,11 +273,7 @@
   const host = location.hostname;
   const isLocal = host === 'localhost' || host === '127.0.0.1';
   const base = (typeof window !== 'undefined' && window.API_BASE) ? String(window.API_BASE).replace(/\/$/,'') : '';
-  const Bases = isLocal ? [
-    'https://api.visndt.com',
-    base,
-    ''
-  ] : [
+  const Bases = isLocal ? [] : [
     base,
     'https://api.visndt.com'
   ];
@@ -286,7 +282,7 @@
     if (!el) return;
     el.innerHTML = items.map(n => (
       `<div class="news-item d-flex mb-2">`
-      + `<div class="news-image me-3 flex-shrink-0"><img src="${n.cover_image||'/images/news/news-1.jpeg'}" alt="${n.title}" class="news-thumbnail"></div>`
+      + `<div class="news-image me-3 flex-shrink-0"><img src="${n.cover_image||n.hero||'/images/assets/brand/brand_general_placeholder_original_v1.svg'}" alt="${n.title}" class="news-thumbnail"></div>`
       + `<div class="news-content flex-grow-1">`
       + `<h4 class="news-title mb-1"><a href="/news/${n.slug||n.id}" class="text-dark text-decoration-none hover-primary">${n.title}</a></h4>`
       + `<p class="news-summary mb-1">${(n.summary||'').slice(0,80)}</p>`
@@ -316,11 +312,22 @@
       fetch(url, { signal: ctrl.signal }).then(resolve).catch(reject).finally(() => clearTimeout(to));
     });
   }
+  async function fetchStaticCat(cat, limit){
+    try{
+      const r = await fetchWithTimeout('/data/news.json', 6000);
+      if (!r.ok) return [];
+      const j = await r.json();
+      const items = Array.isArray(j) ? j : (j.items || []);
+      let arr = items.filter(n => String(n.category||'') === String(cat||''));
+      if (!arr.length) arr = items;
+      return arr.slice(0, limit);
+    }catch{ return []; }
+  }
   async function fetchCat(cat, limit){
     const qs = `category=${encodeURIComponent(cat)}&limit=${limit}`;
     for (const base of Bases) {
       const prefix = base ? base.replace(/\/$/,'') : '';
-      const u = prefix ? `${prefix}/api/news?${qs}` : `/api/news?${qs}`;
+      const u = `${prefix}/api/news?${qs}`;
       try {
         const r = await fetchWithTimeout(u, 6000);
         if (!r.ok) throw new Error(`status ${r.status}`);
@@ -329,7 +336,7 @@
         if (arr && arr.length) return arr;
       } catch {}
     }
-    return [];
+    return await fetchStaticCat(cat, limit);
   }
   document.addEventListener('DOMContentLoaded', async function(){
     try {
