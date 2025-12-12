@@ -525,7 +525,7 @@ export default {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       try {
         try { await ensureSchema(env); } catch {}
-        const { results: reqRes } = await env.DB.prepare("SELECT COUNT(1) as total, SUM(CASE WHEN status != '公开' THEN 1 ELSE 0 END) as pending FROM requirements").all();
+        const { results: reqRes } = await env.DB.prepare("SELECT COUNT(1) as total, SUM(CASE WHEN NOT (approved = 1 AND status IN ('公开','在线报价')) THEN 1 ELSE 0 END) as pending FROM requirements").all();
         const { results: prodRes } = await (async()=>{ try { return await env.DB.prepare("SELECT COUNT(1) as total FROM products").all(); } catch { return { results:[{ total:0 }] }; } })();
         const { results: supRes } = await (async()=>{ try { return await env.DB.prepare("SELECT COUNT(1) as total FROM suppliers").all(); } catch { return { results:[{ total:0 }] }; } })();
         const { results: newsRes } = await (async()=>{ try { return await env.DB.prepare("SELECT COUNT(1) as total FROM news").all(); } catch { return { results:[{ total:0 }] }; } })();
@@ -2117,9 +2117,19 @@ export default {
         const baseRaw = url.searchParams.get('base') || env.SYNC_BASE_URL || 'https://www.visndt.com/data';
         const base = String(baseRaw).replace(/\/$/, '');
         const siteBase = base.replace(/\/data\/?$/i, '');
-        const idxUrl = siteBase + '/index.json';
-        const idx = await fetchJsonSafe(idxUrl);
-        const list = Array.isArray(idx) ? idx : [];
+        const idxUrl1 = siteBase + '/index.json';
+        const idxUrl2 = base + '/index.json';
+        let list = [];
+        try {
+          const d1 = await fetchJsonSafe(idxUrl1);
+          list = Array.isArray(d1?.items) ? d1.items : (Array.isArray(d1) ? d1 : []);
+        } catch {}
+        if (!list.length) {
+          try {
+            const d2 = await fetchJsonSafe(idxUrl2);
+            list = Array.isArray(d2?.items) ? d2.items : (Array.isArray(d2) ? d2 : []);
+          } catch {}
+        }
         const items = list.filter(i => {
           const raw = String(i.type || i.section || '').toLowerCase();
           const t = raw.replace(/\s+/g,'');
@@ -2173,9 +2183,19 @@ export default {
         const baseRaw = url.searchParams.get('base') || env.SYNC_BASE_URL || 'https://www.visndt.com/data';
         const base = String(baseRaw).replace(/\/$/, '');
         const siteBase = base.replace(/\/data\/?$/i, '');
-        const idxUrl = siteBase + '/index.json';
-        const idx = await fetchJsonSafe(idxUrl);
-        const list = Array.isArray(idx) ? idx : [];
+        const idxUrl1 = siteBase + '/index.json';
+        const idxUrl2 = base + '/index.json';
+        let list = [];
+        try {
+          const d1 = await fetchJsonSafe(idxUrl1);
+          list = Array.isArray(d1?.items) ? d1.items : (Array.isArray(d1) ? d1 : []);
+        } catch {}
+        if (!list.length) {
+          try {
+            const d2 = await fetchJsonSafe(idxUrl2);
+            list = Array.isArray(d2?.items) ? d2.items : (Array.isArray(d2) ? d2 : []);
+          } catch {}
+        }
         const items = list.filter(i => {
           const raw = String(i.type || i.section || '').toLowerCase();
           const t = raw.replace(/\s+/g,'');
@@ -2228,9 +2248,19 @@ export default {
         const baseRaw = url.searchParams.get('base') || env.SYNC_BASE_URL || 'https://www.visndt.com/data';
         const base = String(baseRaw).replace(/\/$/, '');
         const siteBase = base.replace(/\/data\/?$/i, '');
-        const idxUrl = siteBase + '/index.json';
-        const idx = await fetchJsonSafe(idxUrl);
-        const list = Array.isArray(idx) ? idx : [];
+        const idxUrl1 = siteBase + '/index.json';
+        const idxUrl2 = base + '/index.json';
+        let list = [];
+        try {
+          const d1 = await fetchJsonSafe(idxUrl1);
+          list = Array.isArray(d1?.items) ? d1.items : (Array.isArray(d1) ? d1 : []);
+        } catch {}
+        if (!list.length) {
+          try {
+            const d2 = await fetchJsonSafe(idxUrl2);
+            list = Array.isArray(d2?.items) ? d2.items : (Array.isArray(d2) ? d2 : []);
+          } catch {}
+        }
         const items = list.filter(i => {
           const raw = String(i.type || i.section || '').toLowerCase();
           const t = raw.replace(/\s+/g,'');
