@@ -34,7 +34,7 @@
           <button type="submit" class="btn btn-primary">进入管理</button>
         </div>
         <div class="text-center mt-3">
-          <a href="/static/market.html" class="text-decoration-none small">返回需求市场</a>
+          <a href="/markets/" class="text-decoration-none small">返回需求市场</a>
         </div>
       </form>
     </div>
@@ -94,13 +94,16 @@
               <thead class="table-light">
                 <tr>
                   <th>供应商</th>
+                  <th>电话</th>
                   <th>报价金额</th>
+                  <th>币种</th>
                   <th>备注</th>
+                  <th>状态</th>
                   <th>时间</th>
                 </tr>
               </thead>
               <tbody id="quoteBody"></tbody>
-            </table>
+              </table>
           </div>
         </div>
       </div>
@@ -296,8 +299,11 @@ const App = {
     document.getElementById('quoteBody').innerHTML = this.quotes.map(q => `
       <tr>
         <td>${q.SupplierCompanyName || q.supplier_name || '未知供应商'}</td>
+        <td>${q.SupplierPhone || q.supplier_phone || '-'}</td>
         <td class="fw-bold text-primary">${q.Price || q.amount}</td>
-        <td class="text-truncate" style="max-width: 200px;" title="${q.Remarks||q.remarks}">${q.Remarks||q.remarks||'-'}</td>
+        <td>${q.Currency || q.currency || ''}</td>
+        <td class="text-truncate" style="max-width: 240px;" title="${q.Remarks||q.remarks}">${q.Remarks||q.remarks||'-'}</td>
+        <td class="small">${q.Status || q.status || ''}</td>
         <td class="small text-muted">${(q.CreatedAt||q.created_at||'').split('T')[0]}</td>
       </tr>
     `).join('');

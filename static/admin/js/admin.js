@@ -85,6 +85,29 @@ async function apiFetch(path, options = {}) {
     return res.text();
   } catch (e) {
     if (e instanceof TypeError && (e.message === 'Failed to fetch' || e.message.includes('NetworkError'))) {
+      try {
+        const base = String(window.API_BASE || '');
+        if (base) {
+          let alt = '';
+          if (/127\.0\.0\.1/.test(base)) alt = base.replace(/127\.0\.0\.1/g, 'localhost');
+          else if (/localhost/.test(base)) alt = base.replace(/localhost/g, '127.0.0.1');
+          if (alt) {
+            const altUrl = alt.replace(/\/$/, '') + path;
+            try {
+              const altRes = await fetch(altUrl, { ...options, headers });
+              if (altRes.ok) {
+                window.API_BASE = alt.replace(/\/$/, '');
+                try { localStorage.setItem('API_BASE', window.API_BASE); } catch (__) {}
+                const ct = altRes.headers.get('content-type') || '';
+                if (ct.includes('application/json')) return altRes.json();
+                if (ct.includes('text/html')) return altRes.text();
+                return altRes.text();
+              }
+            } catch (_) {
+            }
+          }
+        }
+      } catch (_) {}
       throw new Error(`无法连接到服务器 (${url})，请检查 API 地址配置或后端服务是否启动。`);
     }
     throw e;
@@ -750,7 +773,7 @@ const App = {
                </div>
             </div>
             <div class="card-footer bg-white p-2 d-flex justify-content-between">
-               <a class="btn btn-sm btn-outline-secondary py-0 px-2" target="_blank" href="/products/${encodeURIComponent(p.slug||p.product_id||'')}/">预览</a>
+               <a class="btn btn-sm btn-outline-secondary py-0 px-2" target="_blank" href="${escapeHtml(p.detail_path||('/products/'+(p.slug||p.product_id||'')+'/'))}">预览</a>
                <button class="btn btn-sm btn-outline-primary py-0 px-2" onclick="App.openProductEditor('${p.product_id}')">编辑</button>
                <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="App.deleteProduct('${p.product_id}')">删除</button>
             </div>
@@ -907,7 +930,7 @@ const App = {
              <td><span class="badge ${n.status==='published'?'bg-success':'bg-secondary'}">${escapeHtml(n.status)}</span></td>
              <td class="small">${(n.published_at||'').split('T')[0]}</td>
              <td>
-                <a class="btn btn-sm btn-outline-secondary py-0" target="_blank" href="/news/${encodeURIComponent(n.slug||'')}/">预览</a>
+                <a class="btn btn-sm btn-outline-secondary py-0" target="_blank" href="${escapeHtml(n.detail_path||('/news/'+(n.slug||'')+'/'))}">预览</a>
                 <button class="btn btn-sm btn-outline-primary py-0 ms-1" onclick="App.openNewsEditor('${n.news_id}')">编辑</button>
                 <button class="btn btn-sm btn-outline-danger py-0 ms-1" onclick="App.deleteNews('${n.news_id}')">删除</button>
              </td>
@@ -1057,7 +1080,7 @@ const App = {
              <td><span class="badge ${c.status==='published'?'bg-success':'bg-secondary'}">${escapeHtml(c.status)}</span></td>
              <td class="small">${(c.published_at||'').split('T')[0]}</td>
              <td>
-                <a class="btn btn-sm btn-outline-secondary py-0" target="_blank" href="/cases/${encodeURIComponent(c.slug||'')}/">预览</a>
+                <a class="btn btn-sm btn-outline-secondary py-0" target="_blank" href="${escapeHtml(c.detail_path||('/cases/'+(c.slug||'')+'/'))}">预览</a>
                 <button class="btn btn-sm btn-outline-primary py-0 ms-1" onclick="App.openCaseEditor('${c.case_id}')">编辑</button>
                 <button class="btn btn-sm btn-outline-danger py-0 ms-1" onclick="App.deleteCase('${c.case_id}')">删除</button>
              </td>
@@ -1284,7 +1307,7 @@ const App = {
           <td>${isOpen ? '<i class="fa-solid fa-check text-success" title="开放报价"></i>' : '<span class="text-muted">-</span>'}</td>
           <td class="small text-muted">${(r.PublishedAt || r.published_at || r.CreatedAt || r.created_at || '').split('T')[0]}</td>
           <td>
-            <a class="btn btn-sm btn-outline-secondary py-0" target="_blank" href="/static/view.html?id=${encodeURIComponent(id)}">预览</a>
+            <a class="btn btn-sm btn-outline-secondary py-0" target="_blank" href="/view.html?id=${encodeURIComponent(id)}">预览</a>
             <button class="btn btn-sm btn-outline-primary py-0" onclick="App.editRequirement('${id}')">编辑</button>
             ${status !== '公开' ? `<button class="btn btn-sm btn-outline-success py-0 ms-1" onclick="App.quickApprove('${id}')">批准</button>` : ''}
             <button class="btn btn-sm btn-outline-danger py-0 ms-1" onclick="App.deleteRequirement('${id}')">删除</button>

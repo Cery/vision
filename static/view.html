@@ -19,9 +19,9 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
   <div class="container">
-    <a class="navbar-brand fw-bold text-primary" href="/static/market.html"><i class="fa-solid fa-globe me-2"></i>Vision Market</a>
+    <a class="navbar-brand fw-bold text-primary" href="/markets/"><i class="fa-solid fa-globe me-2"></i>Vision Market</a>
     <div class="ms-auto">
-       <a href="/static/market.html" class="btn btn-outline-secondary btn-sm">返回列表</a>
+       <a href="/markets/" class="btn btn-outline-secondary btn-sm">返回列表</a>
     </div>
   </div>
 </nav>
@@ -132,7 +132,7 @@ const App = {
   async init() {
     if (!this.id) {
       alert('无效的需求ID');
-      location.href = '/static/market.html';
+      location.href = '/markets/';
       return;
     }
     await this.loadDetail();
@@ -204,13 +204,11 @@ const App = {
   
   bindEvents() {
     document.getElementById('actionEntry').addEventListener('click', () => {
-      location.href = `/static/entry.html?id=${encodeURIComponent(this.id)}`;
+      location.href = `/entry-demand.html?id=${encodeURIComponent(this.id)}`;
     });
     document.getElementById('actionQuote').addEventListener('click', () => {
       if (document.getElementById('actionQuote').classList.contains('disabled')) return;
-      // Redirect to supplier portal with pre-fill intent, or entry.html
-      // Let's send them to entry.html which handles both general access and jumping to supplier flow if implemented
-      location.href = `/static/entry.html?id=${encodeURIComponent(this.id)}`;
+      location.href = `/entry-supplier.html?id=${encodeURIComponent(this.id)}`;
     });
   }
 };

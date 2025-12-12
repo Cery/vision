@@ -1,4 +1,4 @@
-{{- $pages := where .Site.RegularPages "Type" "in" (slice "news" "cases" "products") -}}
+{{- $pages := where .Site.RegularPages "Section" "in" (slice "news" "cases" "products" "markets" "suppliers") -}}
 {{- $sorted := sort $pages "Date" "desc" -}}
 {{- $.Scratch.Set "items" (slice) -}}
 {{- range $sorted -}}
