@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台 - Vision NDT</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-width: 260px;
+            --primary-color: #4f46e5;
+            --secondary-color: #7c3aed;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f8fafc;
+            margin: 0;
+        }
+        
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-header h4 {
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .nav-item {
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .nav-link i {
+            margin-right: 0.75rem;
+            width: 20px;
+        }
+        
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .stat-card h6 {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin: 0 0 0.5rem 0;
+            text-transform: uppercase;
+        }
+        
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .content-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .login-container {
+            max-width: 400px;
+            margin: 10vh auto;
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container" style="display: none;">
+        <h3 class="mb-4">管理员登录</h3>
+        <form id="loginForm">
+            <div class="mb-3">
+                <label class="form-label">用户名</label>
+                <input type="text" class="form-control" id="username" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">密码</label>
+                <input type="password" class="form-control" id="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">登录</button>
+        </form>
+        <div id="loginError" class="alert alert-danger mt-3" style="display: none;"></div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard" style="display: none;">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h4><i class="bi bi-speedometer2"></i> 管理后台</h4>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-section="overview">
+                        <i class="bi bi-house-door"></i> 概览
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="requirements">
+                        <i class="bi bi-clipboard-check"></i> 需求市场
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="content">
+                        <i class="bi bi-file-text"></i> 内容管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="suppliers">
+                        <i class="bi bi-people"></i> 供应商管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="backup">
+                        <i class="bi bi-database"></i> 数据备份
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="reports">
+                        <i class="bi bi-graph-up"></i> 数据报表
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="logs">
+                        <i class="bi bi-journal-text"></i> 操作日志
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="notifications">
+                        <i class="bi bi-bell"></i> 通知管理
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Overview Section -->
+            <div id="section-overview" class="content-section">
+                <div class="section-header">
+                    <h5>系统概览</h5>
+                    <button class="btn btn-sm btn-outline-primary" onclick="loadStats()">
+                        <i class="bi bi-arrow-clockwise"></i> 刷新
+                    </button>
+                </div>
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-card">
+                        <h6>需求总数</h6>
+                        <div class="number" id="stat-requirements">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h6>待审核需求</h6>
+                        <div class="number" id="stat-pending">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h6>产品总数</h6>
+                        <div class="number" id="stat-products">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h6>供应商总数</h6>
+                        <div class="number" id="stat-suppliers">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h6>报价总数</h6>
+                        <div class="number" id="stat-quotes">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h6>新闻总数</h6>
+                        <div class="number" id="stat-news">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other sections will be loaded dynamically -->
+            <div id="section-content" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <h5>内容管理</h5>
+                </div>
+                <p>内容管理功能已整合到 <a href="/admin/tools/content-manager.html" target="_blank">内容管理器</a></p>
+            </div>
+
+            <div id="section-requirements" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <h5>需求市场管理</h5>
+                </div>
+                <p>需求市场管理功能已整合到 <a href="/admin/tools/requirements-admin.html" target="_blank">需求管理后台</a></p>
+            </div>
+
+            <div id="section-suppliers" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <h5>供应商管理</h5>
+                </div>
+                <p>供应商管理功能已整合到 <a href="/admin/tools/content-manager.html" target="_blank">内容管理器</a></p>
+            </div>
+
+            <div id="section-backup" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <h5>数据备份</h5>
+                    <button class="btn btn-primary" onclick="createBackup()">
+                        <i class="bi bi-download"></i> 创建备份
+                    </button>
+                </div>
+                <div id="backupList"></div>
+            </div>
+
+            <div id="section-reports" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <h5>数据报表</h5>
+                    <button class="btn btn-sm btn-outline-primary" onclick="loadReports()">
+                        <i class="bi bi-arrow-clockwise"></i> 刷新
+                    </button>
+                </div>
+                <div id="reportsContent"></div>
+            </div>
+
+            <div id="section-logs" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <h5>操作日志</h5>
+                    <button class="btn btn-sm btn-outline-primary" onclick="loadLogs()">
+                        <i class="bi bi-arrow-clockwise"></i> 刷新
+                    </button>
+                </div>
+                <div id="logsContent"></div>
+            </div>
+
+            <div id="section-notifications" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <h5>通知管理</h5>
+                    <button class="btn btn-primary" onclick="showCreateNotification()">
+                        <i class="bi bi-plus-circle"></i> 创建通知
+                    </button>
+                </div>
+                <div id="notificationsContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = localStorage.getItem('API_BASE') || 'https://api.visndt.com';
+        let authToken = localStorage.getItem('ADMIN_TOKEN') || '';
+
+        // Check authentication on load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (authToken) {
+                checkAuth();
+            } else {
+                showLogin();
+            }
+        });
+
+        async function checkAuth() {
+            try {
+                const res = await fetch(`${API_BASE}/api/admin/stats`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'X-Admin-Key': authToken
+                    }
+                });
+                if (res.ok) {
+                    showDashboard();
+                    loadStats();
+                } else {
+                    showLogin();
+                }
+            } catch (e) {
+                showLogin();
+            }
+        }
+
+        function showLogin() {
+            document.getElementById('loginScreen').style.display = 'block';
+            document.getElementById('dashboard').style.display = 'none';
+        }
+
+        function showDashboard() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+
+            try {
+                const res = await fetch(`${API_BASE}/api/admin/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await res.json();
+                if (data.ok && data.token) {
+                    authToken = data.token;
+                    localStorage.setItem('ADMIN_TOKEN', authToken);
+                    showDashboard();
+                    loadStats();
+                } else {
+                    errorDiv.textContent = data.error || '登录失败';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (e) {
+                errorDiv.textContent = '网络错误: ' + e.message;
+                errorDiv.style.display = 'block';
+            }
+        });
+
+        // Navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = link.dataset.section;
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                document.querySelectorAll('[id^="section-"]').forEach(s => s.style.display = 'none');
+                document.getElementById(`section-${section}`).style.display = 'block';
+                
+                // Load section content
+                if (section === 'backup') loadBackups();
+                if (section === 'reports') loadReports();
+                if (section === 'logs') loadLogs();
+                if (section === 'notifications') loadNotifications();
+            });
+        });
+
+        async function loadStats() {
+            try {
+                const res = await fetch(`${API_BASE}/api/admin/stats`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'X-Admin-Key': authToken
+                    }
+                });
+                const data = await res.json();
+                document.getElementById('stat-requirements').textContent = data.requirements?.total || 0;
+                document.getElementById('stat-pending').textContent = data.requirements?.pending || 0;
+                document.getElementById('stat-products').textContent = data.products || 0;
+                document.getElementById('stat-suppliers').textContent = data.suppliers || 0;
+                document.getElementById('stat-quotes').textContent = data.quotes || 0;
+                document.getElementById('stat-news').textContent = data.news?.total || 0;
+            } catch (e) {
+                console.error('Failed to load stats:', e);
+            }
+        }
+
+        async function loadBackups() {
+            const container = document.getElementById('backupList');
+            try {
+                const res = await fetch(`${API_BASE}/api/admin/backups`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'X-Admin-Key': authToken
+                    }
+                });
+                const data = await res.json();
+                if (data.backups && data.backups.length > 0) {
+                    container.innerHTML = data.backups.map(b => `
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <h6>${b.backupId}</h6>
+                                <p class="mb-1"><small>类型: ${b.type} | 大小: ${(b.size / 1024).toFixed(2)} KB</small></p>
+                                <p class="mb-0"><small>创建时间: ${new Date(b.createdAt).toLocaleString('zh-CN')}</small></p>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p class="text-muted">暂无备份记录</p>';
+                }
+            } catch (e) {
+                container.innerHTML = '<p class="text-danger">加载失败: ' + e.message + '</p>';
+            }
+        }
+
+        async function createBackup() {
+            if (!confirm('确定要创建数据备份吗？')) return;
+            try {
+                const res = await fetch(`${API_BASE}/api/admin/backup`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'X-Admin-Key': authToken,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ type: 'full' })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    alert('备份创建成功！');
+                    loadBackups();
+                } else {
+                    alert('备份失败: ' + (data.error || '未知错误'));
+                }
+            } catch (e) {
+                alert('备份失败: ' + e.message);
+            }
+        }
+
+        async function loadReports() {
+            const container = document.getElementById('reportsContent');
+            container.innerHTML = '<p>加载中...</p>';
+            try {
+                const res = await fetch(`${API_BASE}/api/admin/reports?type=overview`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'X-Admin-Key': authToken
+                    }
+                });
+                const data = await res.json();
+                container.innerHTML = `
+                    <h6>需求统计</h6>
+                    <pre>${JSON.stringify(data.report?.requirements || {}, null, 2)}</pre>
+                    <h6>报价统计</h6>
+                    <pre>${JSON.stringify(data.report?.quotes || {}, null, 2)}</pre>
+                `;
+            } catch (e) {
+                container.innerHTML = '<p class="text-danger">加载失败: ' + e.message + '</p>';
+            }
+        }
+
+        async function loadLogs() {
+            const container = document.getElementById('logsContent');
+            container.innerHTML = '<p>加载中...</p>';
+            try {
+                const res = await fetch(`${API_BASE}/api/admin/logs?limit=50`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'X-Admin-Key': authToken
+                    }
+                });
+                const data = await res.json();
+                if (data.logs && data.logs.length > 0) {
+                    container.innerHTML = data.logs.map(log => `
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <h6>${log.action} - ${log.module}</h6>
+                                <p class="mb-1"><small>用户: ${log.username} | 时间: ${new Date(log.createdAt).toLocaleString('zh-CN')}</p>
+                                <p class="mb-0"><small>资源: ${log.resourceType} - ${log.resourceId}</small></p>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p class="text-muted">暂无日志记录</p>';
+                }
+            } catch (e) {
+                container.innerHTML = '<p class="text-danger">加载失败: ' + e.message + '</p>';
+            }
+        }
+
+        async function loadNotifications() {
+            const container = document.getElementById('notificationsContent');
+            container.innerHTML = '<p>加载中...</p>';
+            try {
+                const res = await fetch(`${API_BASE}/api/admin/notifications?limit=50`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'X-Admin-Key': authToken
+                    }
+                });
+                const data = await res.json();
+                if (data.notifications && data.notifications.length > 0) {
+                    container.innerHTML = data.notifications.map(n => `
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <h6>${n.subject || '无标题'}</h6>
+                                <p class="mb-1">${n.content}</p>
+                                <p class="mb-0"><small>状态: ${n.status} | 收件人: ${n.recipientEmail || n.recipientPhone} | ${new Date(n.createdAt).toLocaleString('zh-CN')}</small></p>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p class="text-muted">暂无通知记录</p>';
+                }
+            } catch (e) {
+                container.innerHTML = '<p class="text-danger">加载失败: ' + e.message + '</p>';
+            }
+        }
+
+        function showCreateNotification() {
+            const subject = prompt('通知标题:');
+            if (!subject) return;
+            const content = prompt('通知内容:');
+            if (!content) return;
+            const email = prompt('收件人邮箱:');
+            if (!email) return;
+            
+            fetch(`${API_BASE}/api/admin/notifications`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    'X-Admin-Key': authToken,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    type: 'email',
+                    recipient_type: 'user',
+                    recipient_email: email,
+                    subject,
+                    content
+                })
+            }).then(r => r.json()).then(data => {
+                if (data.ok) {
+                    alert('通知已创建，请手动发送');
+                    loadNotifications();
+                } else {
+                    alert('创建失败: ' + (data.error || '未知错误'));
+                }
+            }).catch(e => alert('创建失败: ' + e.message));
+        }
+    </script>
+</body>
+</html>
+

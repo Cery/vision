@@ -266,8 +266,106 @@ export default {
           created_at TEXT
         )`).run();
 
+        // Admin Users (for JWT authentication)
+        await env.DB.prepare(`CREATE TABLE IF NOT EXISTS admin_users (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id TEXT UNIQUE,
+          username TEXT UNIQUE,
+          password_hash TEXT,
+          role TEXT DEFAULT 'admin',
+          status TEXT DEFAULT 'active',
+          last_login_at TEXT,
+          created_at TEXT,
+          updated_at TEXT
+        )`).run();
+        await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_admin_users_username ON admin_users(username)').run();
+
+        // Admin Logs (audit trail)
+        await env.DB.prepare(`CREATE TABLE IF NOT EXISTS admin_logs (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          log_id TEXT UNIQUE,
+          user_id TEXT,
+          username TEXT,
+          action TEXT,
+          module TEXT,
+          resource_type TEXT,
+          resource_id TEXT,
+          details_json TEXT,
+          ip_address TEXT,
+          user_agent TEXT,
+          created_at TEXT
+        )`).run();
+        await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_admin_logs_user ON admin_logs(user_id)').run();
+        await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_admin_logs_module ON admin_logs(module)').run();
+        await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_admin_logs_created ON admin_logs(created_at)').run();
+
+        // Backup History
+        await env.DB.prepare(`CREATE TABLE IF NOT EXISTS backup_history (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          backup_id TEXT UNIQUE,
+          backup_type TEXT,
+          backup_file TEXT,
+          size INTEGER,
+          tables_included TEXT,
+          created_by TEXT,
+          created_at TEXT
+        )`).run();
+        await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_backup_history_created ON backup_history(created_at)').run();
+
+        // Notifications (structure only, no actual sending)
+        await env.DB.prepare(`CREATE TABLE IF NOT EXISTS notifications (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          notification_id TEXT UNIQUE,
+          type TEXT,
+          recipient_type TEXT,
+          recipient_id TEXT,
+          recipient_email TEXT,
+          recipient_phone TEXT,
+          subject TEXT,
+          content TEXT,
+          template_id TEXT,
+          status TEXT DEFAULT 'pending',
+          scheduled_at TEXT,
+          sent_at TEXT,
+          error_message TEXT,
+          created_at TEXT,
+          updated_at TEXT
+        )`).run();
+        await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_notifications_status ON notifications(status)').run();
+        await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_notifications_recipient ON notifications(recipient_type, recipient_id)').run();
+
+        // Notification Templates
+        await env.DB.prepare(`CREATE TABLE IF NOT EXISTS notification_templates (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          template_id TEXT UNIQUE,
+          name TEXT,
+          type TEXT,
+          subject TEXT,
+          content TEXT,
+          variables_json TEXT,
+          is_active INTEGER DEFAULT 1,
+          created_at TEXT,
+          updated_at TEXT
+        )`).run();
+
+        // Supplier Tags (for matching)
+        await env.DB.prepare(`CREATE TABLE IF NOT EXISTS supplier_tags (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          supplier_id TEXT,
+          tag TEXT,
+          created_at TEXT,
+          FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id) ON DELETE CASCADE
+        )`).run();
+        await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_supplier_tags_supplier ON supplier_tags(supplier_id)').run();
+        await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_supplier_tags_tag ON supplier_tags(tag)').run();
+
+        // Migrations for new tables
+        try { await env.DB.prepare('ALTER TABLE suppliers ADD COLUMN tags_json TEXT').run(); } catch {}
+        try { await env.DB.prepare('ALTER TABLE suppliers ADD COLUMN product_categories_json TEXT').run(); } catch {}
+
       } catch (e) {
         // Best-effort; if schema fails, subsequent queries will surface errors.
+        console.error('Schema error:', e);
       }
     }
 
@@ -282,13 +380,16 @@ export default {
     async function bodyJSON(req) {
       try { return await req.json(); } catch { return {}; }
     }
+    // Legacy requireAdmin function (kept for backward compatibility)
     function requireAdmin(req) {
       const key = req.headers.get('X-Admin-Key') || req.headers.get('x-admin-key') || '';
-      const expected = env.ADMIN_KEY || env.ADMIN_KEY_SECRET || env.ADMIN_TOKEN || '@Aa123456';
-      if (expected) return key === expected;
+      const expected = env.ADMIN_KEY || env.ADMIN_KEY_SECRET || env.ADMIN_TOKEN;
+      // REMOVED: Hardcoded default password '@Aa123456' for security
+      if (expected && key === expected) return true;
       const origin = req.headers.get('origin') || '';
-      if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin)) {
-        return !!key; // allow any non-empty key in local dev when ADMIN_KEY is not set
+      // Only allow in local dev when ADMIN_KEY is explicitly not set
+      if (!expected && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin)) {
+        return !!key;
       }
       return false;
     }
@@ -316,6 +417,102 @@ export default {
     }
     function genViewPassword() {
       return String(Math.floor(Math.random() * 900000) + 100000);
+    }
+
+    // JWT utilities (simplified implementation using Web Crypto API)
+    async function generateJWT(payload, secret) {
+      const header = { alg: 'HS256', typ: 'JWT' };
+      const encodedHeader = btoa(JSON.stringify(header)).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+      const encodedPayload = btoa(JSON.stringify(payload)).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+      const data = `${encodedHeader}.${encodedPayload}`;
+      
+      const key = await crypto.subtle.importKey(
+        'raw',
+        new TextEncoder().encode(secret),
+        { name: 'HMAC', hash: 'SHA-256' },
+        false,
+        ['sign']
+      );
+      const signature = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(data));
+      const encodedSignature = btoa(String.fromCharCode(...new Uint8Array(signature)))
+        .replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+      
+      return `${data}.${encodedSignature}`;
+    }
+
+    async function verifyJWT(token, secret) {
+      try {
+        const parts = token.split('.');
+        if (parts.length !== 3) return null;
+        
+        const [encodedHeader, encodedPayload, encodedSignature] = parts;
+        const data = `${encodedHeader}.${encodedPayload}`;
+        
+        const key = await crypto.subtle.importKey(
+          'raw',
+          new TextEncoder().encode(secret),
+          { name: 'HMAC', hash: 'SHA-256' },
+          false,
+          ['verify']
+        );
+        
+        const signature = Uint8Array.from(atob(encodedSignature.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
+        const isValid = await crypto.subtle.verify('HMAC', key, signature, new TextEncoder().encode(data));
+        
+        if (!isValid) return null;
+        
+        const payload = JSON.parse(atob(encodedPayload.replace(/-/g, '+').replace(/_/g, '/')));
+        if (payload.exp && payload.exp < Date.now() / 1000) return null;
+        
+        return payload;
+      } catch {
+        return null;
+      }
+    }
+
+    // Admin log utility
+    async function logAdminAction(env, userId, username, action, module, resourceType, resourceId, details, request) {
+      try {
+        const logId = `LOG-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        const ipAddress = request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For') || 'unknown';
+        const userAgent = request.headers.get('User-Agent') || 'unknown';
+        
+        await env.DB.prepare(`INSERT INTO admin_logs (
+          log_id, user_id, username, action, module, resource_type, resource_id, details_json, ip_address, user_agent, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+          logId, userId || '', username || '', action, module || '', resourceType || '', resourceId || '',
+          JSON.stringify(details || {}), ipAddress, userAgent, new Date().toISOString()
+        ).run();
+      } catch (e) {
+        console.error('Failed to log admin action:', e);
+      }
+    }
+
+    // Get current admin user from JWT or header
+    async function getCurrentAdmin(env, request) {
+      const authHeader = request.headers.get('Authorization') || '';
+      const token = authHeader.startsWith('Bearer ') ? authHeader.substring(7) : null;
+      const adminKey = request.headers.get('X-Admin-Key') || request.headers.get('x-admin-key') || '';
+      
+      // Try JWT first
+      if (token) {
+        const secret = env.JWT_SECRET || env.ADMIN_KEY || 'default-secret-change-in-production';
+        const payload = await verifyJWT(token, secret);
+        if (payload && payload.userId) {
+          const user = await env.DB.prepare('SELECT * FROM admin_users WHERE user_id = ? AND status = ?').bind(payload.userId, 'active').first();
+          if (user) return { userId: user.user_id, username: user.username, role: user.role || 'admin' };
+        }
+      }
+      
+      // Fallback to admin key (legacy support)
+      if (adminKey) {
+        const expected = env.ADMIN_KEY || env.ADMIN_KEY_SECRET || env.ADMIN_TOKEN;
+        if (expected && adminKey === expected) {
+          return { userId: 'system', username: 'system', role: 'admin' };
+        }
+      }
+      
+      return null;
     }
 
     const path = url.pathname;
@@ -492,37 +689,82 @@ export default {
       return json({ items });
     }
 
-    // Admin: Login
+    // Admin: Login (Updated with JWT support)
     if (isApi('admin/login') && request.method === 'POST') {
       const data = await bodyJSON(request);
       const user = String((data.username || new URL(request.url).searchParams.get('username') || '')).trim().toLowerCase();
       const pass = String((data.password || data.pass || new URL(request.url).searchParams.get('password') || '')).trim();
-      const headerOk = requireAdmin(request);
-      const envPass = String(env.ADMIN_PASSWORD || env.ADMIN_PASS || env.ADMIN_SECRET || '');
-      const envUser = String(env.ADMIN_USER || '').trim().toLowerCase();
-      const originStr = request.headers.get('origin') || '';
-      const devDefaultPass = pass && (pass === 'admin123456' || pass === 'admin-123456');
-      const defaultPairOk = (user === 'visndt' && pass === 'admin123456');
-      const isLocalOrigin = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(originStr) || originStr === 'null' || originStr === '';
-      const userOk = !user || user === envUser || user === 'visndt';
-      console.log(`Login attempt: user=${user}, pass=${pass ? '[set]' : '[empty]'}, headerOk=${headerOk}, envUser=${envUser||'[unset]'}, envPass=${envPass? '[set]' : '[unset]'}, origin=${originStr||'[none]'}, isLocal=${isLocalOrigin}`);
-      if (defaultPairOk) {
-        const token = env.ADMIN_KEY || env.ADMIN_KEY_SECRET || env.ADMIN_TOKEN || '@Aa123456';
-        console.log(`Login success (defaultPair): token=${token ? '[set]' : '[unset]'}`);
-        return json({ ok: true, token });
+      
+      if (!user || !pass) {
+        return json({ error: 'MissingCredentials' }, 400);
       }
-      if (headerOk || ((envPass && pass === envPass) && userOk) || (isLocalOrigin && devDefaultPass && userOk)) {
-        const token = env.ADMIN_KEY || env.ADMIN_KEY_SECRET || env.ADMIN_TOKEN || '@Aa123456';
-        console.log(`Login success: token=${token ? '[set]' : '[unset]'}`);
-        return json({ ok: true, token });
+
+      try {
+        // Try to find user in database
+        const dbUser = await env.DB.prepare('SELECT * FROM admin_users WHERE username = ? AND status = ?').bind(user, 'active').first();
+        
+        if (dbUser) {
+          // Verify password (simple comparison for now, should use bcrypt in production)
+          const passwordHash = dbUser.password_hash || '';
+          // For migration: if password_hash is empty, check against env password
+          const envPass = String(env.ADMIN_PASSWORD || env.ADMIN_PASS || env.ADMIN_SECRET || '');
+          const passwordOk = passwordHash && pass === passwordHash || (!passwordHash && envPass && pass === envPass);
+          
+          if (passwordOk) {
+            // Generate JWT
+            const secret = env.JWT_SECRET || env.ADMIN_KEY || 'default-secret-change-in-production';
+            const payload = {
+              userId: dbUser.user_id,
+              username: dbUser.username,
+              role: dbUser.role || 'admin',
+              exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60) // 24 hours
+            };
+            const token = await generateJWT(payload, secret);
+            
+            // Update last login
+            await env.DB.prepare('UPDATE admin_users SET last_login_at = ? WHERE user_id = ?')
+              .bind(new Date().toISOString(), dbUser.user_id).run();
+            
+            // Log login action
+            await logAdminAction(env, dbUser.user_id, dbUser.username, 'login', 'auth', 'user', dbUser.user_id, {}, request);
+            
+            return json({ ok: true, token, user: { userId: dbUser.user_id, username: dbUser.username, role: dbUser.role || 'admin' } });
+          }
+        } else {
+          // Fallback to legacy authentication for backward compatibility
+          const headerOk = requireAdmin(request);
+          const envPass = String(env.ADMIN_PASSWORD || env.ADMIN_PASS || env.ADMIN_SECRET || '');
+          const envUser = String(env.ADMIN_USER || '').trim().toLowerCase();
+          const originStr = request.headers.get('origin') || '';
+          const isLocalOrigin = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(originStr) || originStr === 'null' || originStr === '';
+          const userOk = user === envUser || user === 'visndt';
+          
+          // REMOVED: Hardcoded default passwords for security
+          // Only allow if env password is set and matches
+          if ((envPass && pass === envPass && userOk) || headerOk) {
+            const secret = env.JWT_SECRET || env.ADMIN_KEY || 'default-secret-change-in-production';
+            const payload = {
+              userId: 'system',
+              username: user || 'system',
+              role: 'admin',
+              exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60)
+            };
+            const token = await generateJWT(payload, secret);
+            return json({ ok: true, token, user: { userId: 'system', username: user || 'system', role: 'admin' } });
+          }
+        }
+        
+        return json({ error: 'InvalidCredentials' }, 401);
+      } catch (e) {
+        console.error('Login error:', e);
+        return json({ error: 'LoginFailed', message: e.message }, 500);
       }
-      console.log('Login failed');
-      return json({ error: 'InvalidCredentials' }, 401);
     }
 
     // Admin: Dashboard Stats
     if (isApi('admin/stats') && request.method === 'GET') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      const admin = await getCurrentAdmin(env, request);
+      if (!admin) return json({ error: 'Unauthorized' }, 401);
       try {
         try { await ensureSchema(env); } catch {}
         const { results: reqRes } = await env.DB.prepare("SELECT COUNT(1) as total, SUM(CASE WHEN NOT (approved = 1 AND status IN ('公开','在线报价')) THEN 1 ELSE 0 END) as pending FROM requirements").all();
@@ -554,6 +796,471 @@ export default {
           quotes: quoteRes?.[0]?.total || 0,
           sync: syncMeta
         });
+      } catch (e) {
+        return json({ error: e.message }, 500);
+      }
+    }
+
+    // Admin: Operation Logs
+    if (isApi('admin/logs') && request.method === 'GET') {
+      const admin = await getCurrentAdmin(env, request);
+      if (!admin) return json({ error: 'Unauthorized' }, 401);
+      
+      try {
+        const module = url.searchParams.get('module');
+        const action = url.searchParams.get('action');
+        const userId = url.searchParams.get('user_id');
+        const page = Math.max(parseInt(url.searchParams.get('page') || '1', 10) || 1, 1);
+        const limit = Math.min(parseInt(url.searchParams.get('limit') || '50', 10) || 50, 200);
+        const offset = (page - 1) * limit;
+        
+        let sql = 'SELECT * FROM admin_logs WHERE 1=1';
+        const binds = [];
+        
+        if (module) { sql += ' AND module = ?'; binds.push(module); }
+        if (action) { sql += ' AND action = ?'; binds.push(action); }
+        if (userId) { sql += ' AND user_id = ?'; binds.push(userId); }
+        
+        sql += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
+        binds.push(limit, offset);
+        
+        const { results } = await env.DB.prepare(sql).bind(...binds).all();
+        const { results: countRows } = await env.DB.prepare(sql.replace('SELECT *', 'SELECT COUNT(1) as total').replace('ORDER BY created_at DESC LIMIT ? OFFSET ?', '')).bind(...binds.slice(0, -2)).all();
+        const total = countRows?.[0]?.total || 0;
+        
+        const logs = (results || []).map(r => ({
+          logId: r.log_id,
+          userId: r.user_id,
+          username: r.username,
+          action: r.action,
+          module: r.module,
+          resourceType: r.resource_type,
+          resourceId: r.resource_id,
+          details: r.details_json ? JSON.parse(r.details_json) : {},
+          ipAddress: r.ip_address,
+          userAgent: r.user_agent,
+          createdAt: r.created_at
+        }));
+        
+        return json({ logs, page, limit, total });
+      } catch (e) {
+        return json({ error: e.message }, 500);
+      }
+    }
+
+    // Admin: Data Backup
+    if (isApi('admin/backup') && request.method === 'POST') {
+      const admin = await getCurrentAdmin(env, request);
+      if (!admin) return json({ error: 'Unauthorized' }, 401);
+      
+      try {
+        const data = await bodyJSON(request);
+        const backupType = data.type || 'full';
+        const tables = data.tables || ['requirements', 'suppliers', 'demanders', 'quotes', 'products', 'news', 'cases'];
+        
+        const backupId = `BACKUP-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        const backupData = {};
+        
+        for (const table of tables) {
+          try {
+            const { results } = await env.DB.prepare(`SELECT * FROM ${table}`).all();
+            backupData[table] = results || [];
+          } catch (e) {
+            console.error(`Failed to backup table ${table}:`, e);
+          }
+        }
+        
+        const backupJson = JSON.stringify(backupData, null, 2);
+        const size = new TextEncoder().encode(backupJson).length;
+        
+        // Store in R2 if available, otherwise return as JSON
+        let backupFile = null;
+        if (env.VISPIC) {
+          const r2Key = `backups/${backupId}.json`;
+          await env.VISPIC.put(r2Key, backupJson, {
+            httpMetadata: { contentType: 'application/json' }
+          });
+          backupFile = r2Key;
+        }
+        
+        // Record backup history
+        await env.DB.prepare(`INSERT INTO backup_history (
+          backup_id, backup_type, backup_file, size, tables_included, created_by, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)`).bind(
+          backupId, backupType, backupFile || 'inline', size, JSON.stringify(tables), admin.userId, new Date().toISOString()
+        ).run();
+        
+        await logAdminAction(env, admin.userId, admin.username, 'backup', 'system', 'backup', backupId, { type: backupType, tables }, request);
+        
+        return json({
+          ok: true,
+          backupId,
+          size,
+          type: backupType,
+          tables,
+          data: backupFile ? null : backupData, // Return data if not stored in R2
+          file: backupFile
+        });
+      } catch (e) {
+        return json({ error: e.message }, 500);
+      }
+    }
+
+    // Admin: Backup History
+    if (isApi('admin/backups') && request.method === 'GET') {
+      const admin = await getCurrentAdmin(env, request);
+      if (!admin) return json({ error: 'Unauthorized' }, 401);
+      
+      try {
+        const limit = Math.min(parseInt(url.searchParams.get('limit') || '20', 10) || 20, 100);
+        const { results } = await env.DB.prepare('SELECT * FROM backup_history ORDER BY created_at DESC LIMIT ?').bind(limit).all();
+        
+        const backups = (results || []).map(r => ({
+          backupId: r.backup_id,
+          type: r.backup_type,
+          file: r.backup_file,
+          size: r.size,
+          tables: r.tables_included ? JSON.parse(r.tables_included) : [],
+          createdBy: r.created_by,
+          createdAt: r.created_at
+        }));
+        
+        return json({ backups });
+      } catch (e) {
+        return json({ error: e.message }, 500);
+      }
+    }
+
+    // Admin: Match Suppliers (需求撮合)
+    if (isApi('admin/match-suppliers') && request.method === 'POST') {
+      const admin = await getCurrentAdmin(env, request);
+      if (!admin) return json({ error: 'Unauthorized' }, 401);
+      
+      try {
+        const data = await bodyJSON(request);
+        const requirementId = data.requirement_id;
+        
+        if (!requirementId) {
+          return json({ error: 'Missing requirement_id' }, 400);
+        }
+        
+        // Get requirement details
+        const req = await env.DB.prepare('SELECT * FROM requirements WHERE requirement_id = ?').bind(requirementId).first();
+        if (!req) {
+          return json({ error: 'Requirement not found' }, 404);
+        }
+        
+        // Extract keywords from requirement
+        const keywords = [];
+        if (req.title) keywords.push(...req.title.split(/[\s，,、]+/));
+        if (req.primary_category) keywords.push(req.primary_category);
+        if (req.secondary_category) keywords.push(req.secondary_category);
+        if (req.tags) {
+          try {
+            const tags = JSON.parse(req.tags);
+            if (Array.isArray(tags)) keywords.push(...tags);
+          } catch {}
+        }
+        
+        // Get all active suppliers
+        const { results: suppliers } = await env.DB.prepare("SELECT * FROM suppliers WHERE status = 'active'").all();
+        
+        // Calculate match scores
+        const matches = [];
+        for (const supplier of suppliers || []) {
+          let score = 0;
+          const supplierTags = [];
+          
+          // Check supplier tags
+          if (supplier.metadata_json) {
+            try {
+              const meta = JSON.parse(supplier.metadata_json);
+              if (meta.tags && Array.isArray(meta.tags)) {
+                supplierTags.push(...meta.tags);
+              }
+              if (meta.product_categories && Array.isArray(meta.product_categories)) {
+                supplierTags.push(...meta.product_categories);
+              }
+            } catch {}
+          }
+          
+          // Check supplier_tags table
+          const { results: tagRows } = await env.DB.prepare('SELECT tag FROM supplier_tags WHERE supplier_id = ?').bind(supplier.supplier_id).all();
+          supplierTags.push(...(tagRows || []).map(r => r.tag));
+          
+          // Calculate score based on keyword matches
+          for (const keyword of keywords) {
+            const lowerKeyword = keyword.toLowerCase();
+            for (const tag of supplierTags) {
+              if (tag.toLowerCase().includes(lowerKeyword) || lowerKeyword.includes(tag.toLowerCase())) {
+                score += 10;
+              }
+            }
+            if (supplier.company && supplier.company.toLowerCase().includes(lowerKeyword)) {
+              score += 5;
+            }
+          }
+          
+          // Check supplier products
+          const { results: products } = await env.DB.prepare('SELECT primary_category, secondary_category FROM products WHERE supplier_id = ?').bind(supplier.supplier_id).all();
+          for (const product of products || []) {
+            if (product.primary_category === req.primary_category) score += 15;
+            if (product.secondary_category === req.secondary_category) score += 10;
+          }
+          
+          if (score > 0) {
+            matches.push({
+              supplier: {
+                supplierId: supplier.supplier_id,
+                name: supplier.name,
+                company: supplier.company,
+                phone: supplier.contact_phone,
+                email: supplier.contact_email
+              },
+              score,
+              matchedKeywords: keywords.filter(k => 
+                supplierTags.some(t => t.toLowerCase().includes(k.toLowerCase()))
+              )
+            });
+          }
+        }
+        
+        // Sort by score descending
+        matches.sort((a, b) => b.score - a.score);
+        
+        await logAdminAction(env, admin.userId, admin.username, 'match_suppliers', 'requirements', 'requirement', requirementId, { matchesCount: matches.length }, request);
+        
+        return json({ matches: matches.slice(0, 20) }); // Return top 20
+      } catch (e) {
+        return json({ error: e.message }, 500);
+      }
+    }
+
+    // Admin: Notifications (structure only, no actual sending)
+    if (isApi('admin/notifications') && request.method === 'POST') {
+      const admin = await getCurrentAdmin(env, request);
+      if (!admin) return json({ error: 'Unauthorized' }, 401);
+      
+      try {
+        const data = await bodyJSON(request);
+        const notificationId = `NOTIF-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        
+        // Create notification record (status: pending, will be processed by admin manually)
+        await env.DB.prepare(`INSERT INTO notifications (
+          notification_id, type, recipient_type, recipient_id, recipient_email, recipient_phone,
+          subject, content, template_id, status, scheduled_at, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+          notificationId,
+          data.type || 'email',
+          data.recipient_type || 'user',
+          data.recipient_id || '',
+          data.recipient_email || '',
+          data.recipient_phone || '',
+          data.subject || '',
+          data.content || '',
+          data.template_id || '',
+          'pending', // Status: pending - admin will send manually
+          data.scheduled_at || null,
+          new Date().toISOString(),
+          new Date().toISOString()
+        ).run();
+        
+        await logAdminAction(env, admin.userId, admin.username, 'create_notification', 'notifications', 'notification', notificationId, { type: data.type }, request);
+        
+        return json({
+          ok: true,
+          notificationId,
+          status: 'pending',
+          message: 'Notification created. Admin will send manually via phone/email.'
+        });
+      } catch (e) {
+        return json({ error: e.message }, 500);
+      }
+    }
+
+    // Admin: Get Notifications
+    if (isApi('admin/notifications') && request.method === 'GET') {
+      const admin = await getCurrentAdmin(env, request);
+      if (!admin) return json({ error: 'Unauthorized' }, 401);
+      
+      try {
+        const status = url.searchParams.get('status');
+        const recipientType = url.searchParams.get('recipient_type');
+        const limit = Math.min(parseInt(url.searchParams.get('limit') || '50', 10) || 50, 200);
+        
+        let sql = 'SELECT * FROM notifications WHERE 1=1';
+        const binds = [];
+        
+        if (status) { sql += ' AND status = ?'; binds.push(status); }
+        if (recipientType) { sql += ' AND recipient_type = ?'; binds.push(recipientType); }
+        
+        sql += ' ORDER BY created_at DESC LIMIT ?';
+        binds.push(limit);
+        
+        const { results } = await env.DB.prepare(sql).bind(...binds).all();
+        
+        const notifications = (results || []).map(r => ({
+          notificationId: r.notification_id,
+          type: r.type,
+          recipientType: r.recipient_type,
+          recipientId: r.recipient_id,
+          recipientEmail: r.recipient_email,
+          recipientPhone: r.recipient_phone,
+          subject: r.subject,
+          content: r.content,
+          templateId: r.template_id,
+          status: r.status,
+          scheduledAt: r.scheduled_at,
+          sentAt: r.sent_at,
+          errorMessage: r.error_message,
+          createdAt: r.created_at
+        }));
+        
+        return json({ notifications });
+      } catch (e) {
+        return json({ error: e.message }, 500);
+      }
+    }
+
+    // Admin: Reports (数据报表)
+    if (isApi('admin/reports') && request.method === 'GET') {
+      const admin = await getCurrentAdmin(env, request);
+      if (!admin) return json({ error: 'Unauthorized' }, 401);
+      
+      try {
+        const reportType = url.searchParams.get('type') || 'overview';
+        const startDate = url.searchParams.get('start_date');
+        const endDate = url.searchParams.get('end_date');
+        
+        let report = {};
+        
+        if (reportType === 'overview' || reportType === 'requirements') {
+          // Requirements statistics
+          let sql = 'SELECT status, progress, COUNT(1) as count FROM requirements WHERE 1=1';
+          const binds = [];
+          if (startDate) { sql += ' AND created_at >= ?'; binds.push(startDate); }
+          if (endDate) { sql += ' AND created_at <= ?'; binds.push(endDate); }
+          sql += ' GROUP BY status, progress';
+          
+          const { results: reqStats } = await env.DB.prepare(sql).bind(...binds).all();
+          report.requirements = {
+            byStatus: {},
+            byProgress: {},
+            total: 0
+          };
+          
+          for (const row of reqStats || []) {
+            report.requirements.byStatus[row.status] = (report.requirements.byStatus[row.status] || 0) + row.count;
+            report.requirements.byProgress[row.progress] = (report.requirements.byProgress[row.progress] || 0) + row.count;
+            report.requirements.total += row.count;
+          }
+        }
+        
+        if (reportType === 'overview' || reportType === 'quotes') {
+          // Quotes statistics
+          let sql = 'SELECT status, COUNT(1) as count FROM quotes WHERE 1=1';
+          const binds = [];
+          if (startDate) { sql += ' AND created_at >= ?'; binds.push(startDate); }
+          if (endDate) { sql += ' AND created_at <= ?'; binds.push(endDate); }
+          sql += ' GROUP BY status';
+          
+          const { results: quoteStats } = await env.DB.prepare(sql).bind(...binds).all();
+          report.quotes = {
+            byStatus: {},
+            total: 0
+          };
+          
+          for (const row of quoteStats || []) {
+            report.quotes.byStatus[row.status] = row.count;
+            report.quotes.total += row.count;
+          }
+        }
+        
+        if (reportType === 'overview' || reportType === 'suppliers') {
+          // Supplier activity
+          let sql = 'SELECT s.supplier_id, s.company, COUNT(q.quote_id) as quote_count FROM suppliers s LEFT JOIN quotes q ON s.supplier_id = q.supplier_id WHERE 1=1';
+          const binds = [];
+          if (startDate) { sql += ' AND q.created_at >= ?'; binds.push(startDate); }
+          if (endDate) { sql += ' AND q.created_at <= ?'; binds.push(endDate); }
+          sql += ' GROUP BY s.supplier_id, s.company ORDER BY quote_count DESC LIMIT 20';
+          
+          const { results: supplierActivity } = await env.DB.prepare(sql).bind(...binds).all();
+          report.suppliers = {
+            topActive: (supplierActivity || []).map(r => ({
+              supplierId: r.supplier_id,
+              company: r.company,
+              quoteCount: r.quote_count || 0
+            }))
+          };
+        }
+        
+        return json({ report, type: reportType, period: { startDate, endDate } });
+      } catch (e) {
+        return json({ error: e.message }, 500);
+      }
+    }
+
+    // Admin: Export Data (CSV format)
+    if (isApi('admin/export') && request.method === 'GET') {
+      const admin = await getCurrentAdmin(env, request);
+      if (!admin) return json({ error: 'Unauthorized' }, 401);
+      
+      try {
+        const table = url.searchParams.get('table');
+        const format = url.searchParams.get('format') || 'csv';
+        
+        if (!table) {
+          return json({ error: 'Missing table parameter' }, 400);
+        }
+        
+        // Get all data from table
+        const { results } = await env.DB.prepare(`SELECT * FROM ${table} ORDER BY created_at DESC`).all();
+        
+        if (format === 'csv') {
+          // Convert to CSV
+          if (!results || results.length === 0) {
+            return new Response('No data', {
+              headers: {
+                'Content-Type': 'text/csv; charset=utf-8',
+                'Content-Disposition': `attachment; filename="${table}_export.csv"`,
+                ...baseHeaders
+              }
+            });
+          }
+          
+          const headers = Object.keys(results[0]);
+          const csvRows = [
+            headers.join(','),
+            ...results.map(row => 
+              headers.map(header => {
+                const value = row[header];
+                if (value === null || value === undefined) return '';
+                const str = String(value);
+                // Escape quotes and wrap in quotes if contains comma, quote, or newline
+                if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                  return `"${str.replace(/"/g, '""')}"`;
+                }
+                return str;
+              }).join(',')
+            )
+          ];
+          
+          const csv = csvRows.join('\n');
+          
+          await logAdminAction(env, admin.userId, admin.username, 'export', 'data', table, '', { format: 'csv', rows: results.length }, request);
+          
+          return new Response(csv, {
+            headers: {
+              'Content-Type': 'text/csv; charset=utf-8',
+              'Content-Disposition': `attachment; filename="${table}_export_${Date.now()}.csv"`,
+              ...baseHeaders
+            }
+          });
+        } else {
+          // JSON format
+          await logAdminAction(env, admin.userId, admin.username, 'export', 'data', table, '', { format: 'json', rows: results.length }, request);
+          return json({ data: results, count: results.length });
+        }
       } catch (e) {
         return json({ error: e.message }, 500);
       }
