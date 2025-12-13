@@ -3,6 +3,7 @@
   const defaultRemote = 'https://api.visndt.com';
   let saved = '';
   try { saved = localStorage.getItem('API_BASE') || ''; } catch {}
+  if (saved) saved = String(saved).replace(/\/+$/, '').replace(/\/(?:api)$/i, '');
   // 生产环境允许任意 https 地址或同源
   const allowInProd = {
     has: (v) => {
@@ -31,7 +32,7 @@
     console.warn('Mixed content blocked: HTTP API on HTTPS page');
     window.API_BASE = ''; 
   }
-  window.API_BASE = String(window.API_BASE).replace(/\/$/, '');
+  window.API_BASE = String(window.API_BASE).replace(/\/+$/, '').replace(/\/(?:api)$/i, '');
   if (isProd && window.API_BASE && /visndt\.com$/i.test(window.API_BASE) && !/api\.visndt\.com$/i.test(window.API_BASE)) {
     window.API_BASE = defaultRemote;
     try { localStorage.setItem('API_BASE', window.API_BASE); } catch {}
@@ -360,8 +361,9 @@ const App = {
   
   setApiBase(val) {
       if (val) {
-          localStorage.setItem('API_BASE', val);
-          window.API_BASE = val;
+          const v = String(val).replace(/\/+$/, '').replace(/\/(?:api)$/i, '');
+          localStorage.setItem('API_BASE', v);
+          window.API_BASE = v;
           showToast('API 地址已更新，即将刷新...', 'success');
       } else {
           localStorage.removeItem('API_BASE');

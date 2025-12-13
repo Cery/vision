@@ -12,10 +12,14 @@ class RequirementCenter {
         this.init();
     }
     
-    // 检测API服务地址（优先使用全局 API_BASE，其次使用相对路径）
+    // 检测API服务地址（优先使用全局 API_BASE，其次根据域名选择生产API）
     detectApiBase() {
         if (typeof window !== 'undefined' && window.API_BASE) {
             return String(window.API_BASE).replace(/\/$/, '');
+        }
+        const h = (typeof window !== 'undefined' ? window.location.hostname : '').toLowerCase();
+        if (h.endsWith('visndt.com')) {
+            return 'https://api.visndt.com';
         }
         return '';
     }
@@ -615,15 +619,23 @@ ${data.description}
 
     // 从API加载需求
     async loadFromApi() {
-        let response = await fetch(`${this.apiBase}/api/markets`);
-        if (!response.ok) {
-            response = await fetch(`${this.apiBase}/api/requirements`);
+        const base = String(this.apiBase || '').replace(/\/$/, '');
+        const tryFetch = async (u) => {
+            const r = await fetch(u);
+            if (r.ok) {
+                const j = await r.json();
+                return Array.isArray(j) ? j : (j.items || []);
+            }
+            return null;
+        };
+        let items = await tryFetch(`${base}/api/markets`);
+        if (!items) items = await tryFetch(`${base}/api/requirements`);
+        if (!items && !base) {
+            items = await tryFetch(`https://api.visndt.com/api/markets`);
+            if (!items) items = await tryFetch(`https://api.visndt.com/api/requirements`);
         }
-        if (!response.ok) {
-            throw new Error('API请求失败');
-        }
-        const result = await response.json();
-        return Array.isArray(result) ? result : (result.items || []);
+        if (!items) throw new Error('API请求失败');
+        return items;
     }
 
     // 从本地存储或示例数据加载

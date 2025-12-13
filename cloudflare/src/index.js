@@ -2316,7 +2316,7 @@ export default {
       }
     }
 
-    if (isApi('admin/sync-now') && request.method === 'POST') {
+    if (isApi('admin/sync-now') && (request.method === 'POST' || request.method === 'GET')) {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
       try {
         try { await ensureSchema(env); } catch {}
