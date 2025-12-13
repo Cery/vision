@@ -59,6 +59,21 @@ async function apiFetch(path, options = {}) {
       try { msg = JSON.parse(txt).error || txt; } catch {}
       if (ctErr.includes('text/html')) msg = '站点返回了 HTML 页面，可能 API 地址不正确';
       if (res.status === 401) msg += ' (请在设置中检查 Admin Key)';
+      // 当本地函数端口不可用或返回404/5xx时，自动回退到线上API
+      const isLocalBase = /^(http:\/\/)?(localhost|127\.0\.0\.1)(:\d+)?$/i.test(String(window.API_BASE||''));
+      if (isLocalBase) {
+        try {
+          const fbUrl = 'https://api.visndt.com' + path;
+          const fbRes = await fetch(fbUrl, { ...options, headers });
+          if (fbRes.ok) {
+            window.API_BASE = 'https://api.visndt.com';
+            try { localStorage.setItem('API_BASE', window.API_BASE); } catch {}
+            if (window.App && typeof App.updateEnvInfo === 'function') App.updateEnvInfo();
+            const ct = fbRes.headers.get('content-type') || '';
+            return ct.includes('application/json') ? fbRes.json() : fbRes.text();
+          }
+        } catch (_) {}
+      }
       if (ctErr.includes('text/html') && /https:\/\/(?:www\.)?visndt\.com/i.test(url) && !/api\.visndt\.com/i.test(url)) {
         const fbUrl = 'https://api.visndt.com' + path;
         const fbRes = await fetch(fbUrl, { ...options, headers });
@@ -106,6 +121,20 @@ async function apiFetch(path, options = {}) {
               }
             } catch (_) {
             }
+          }
+          const isLocal = /^(http:\/\/)?(localhost|127\.0\.0\.1)(:\d+)?$/i.test(base);
+          if (isLocal) {
+            const remoteUrl = 'https://api.visndt.com' + path;
+            try {
+              const r = await fetch(remoteUrl, { ...options, headers });
+              if (r.ok) {
+                window.API_BASE = 'https://api.visndt.com';
+                try { localStorage.setItem('API_BASE', window.API_BASE); } catch {}
+                if (window.App && typeof App.updateEnvInfo === 'function') App.updateEnvInfo();
+                const ct = r.headers.get('content-type') || '';
+                return ct.includes('application/json') ? r.json() : r.text();
+              }
+            } catch (_) {}
           }
         }
       } catch (_) {}
@@ -1321,9 +1350,9 @@ const App = {
           <td class="small text-muted">${(r.PublishedAt || r.published_at || r.CreatedAt || r.created_at || '').split('T')[0]}</td>
           <td>
             <a class="btn btn-sm btn-outline-secondary py-0" target="_blank" href="/view.html?id=${encodeURIComponent(id)}">预览</a>
-            <button class="btn btn-sm btn-outline-primary py-0" onclick="App.editRequirement('${id}')">编辑</button>
-            ${status !== '公开' ? `<button class="btn btn-sm btn-outline-success py-0 ms-1" onclick="App.quickApprove('${id}')">批准</button>` : ''}
-            <button class="btn btn-sm btn-outline-danger py-0 ms-1" onclick="App.deleteRequirement('${id}')">删除</button>
+            <button class="btn btn-sm btn-outline-primary py-0" data-id="${String(id||'')}" onclick="App.editRequirement(this.getAttribute('data-id'))">编辑</button>
+            ${status !== '公开' ? `<button class="btn btn-sm btn-outline-success py-0 ms-1" data-id="${String(id||'')}" onclick="App.quickApprove(this.getAttribute('data-id'))">批准</button>` : ''}
+            <button class="btn btn-sm btn-outline-danger py-0 ms-1" data-id="${String(id||'')}" onclick="App.deleteRequirement(this.getAttribute('data-id'))">删除</button>
           </td>
         </tr>
       `;
@@ -1400,11 +1429,13 @@ const App = {
   
   async deleteRequirement(id) {
     if(!confirm('确定要删除该需求吗？此操作不可恢复，且会删除关联的报价信息。')) return;
+    id = String(id||'').trim();
+    if (!id) { showToast('删除失败：未获取到需求编号', 'error'); return; }
     try {
       try {
-        await apiFetch(`/api/admin/markets/${id}`, { method: 'DELETE' });
+        await apiFetch(`/api/admin/markets/${encodeURIComponent(id)}`, { method: 'DELETE' });
       } catch (_) {
-        await apiFetch(`/api/admin/requirements/${id}`, { method: 'DELETE' });
+        await apiFetch(`/api/admin/requirements/${encodeURIComponent(id)}`, { method: 'DELETE' });
       }
       showToast('需求已删除', 'success');
       this.loadRequirements();

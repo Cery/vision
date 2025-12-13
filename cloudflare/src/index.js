@@ -1776,9 +1776,9 @@ export default {
 
     // Admin: Seed Content (News, Exhibitions, Products, Cases)
     if (isApi('admin/seed-content') && request.method === 'POST') {
-       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-       try {
-          const now = new Date().toISOString();
+      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      try {
+        const now = new Date().toISOString();
           // Seed News
           const newsCount = (await env.DB.prepare('SELECT COUNT(1) as c FROM news').first()).c;
           if (newsCount === 0) {
@@ -1813,9 +1813,45 @@ export default {
              ('c1', '某航空公司发动机孔探案例', 'airline-engine-inspection', '航空航天', 'published', '使用P60进行发动机内部叶片损伤检测，提高效率30%。', '${now}', '${now}', '${now}')
              `).run();
           }
-          
-          return json({ ok: true, message: 'Seeded missing content' });
-       } catch(e) { return json({ error: e.message }, 500); }
+
+          const reqExists = await env.DB.prepare('SELECT 1 FROM requirements WHERE requirement_id = ?').bind('REQ-2025-001').first();
+          if (!reqExists) {
+            await env.DB.prepare(`INSERT OR IGNORE INTO requirements (requirement_id, title, public_preview, primary_category, secondary_category, approved, approved_at, status, contact_name, contact_phone, contact_company, contact_email, contact_department, contact_public, allow_open_quotes, parameters_json, published_at, budget_range, procurement_plan, progress, view_password_plain, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+              .bind('REQ-2025-001', '电子内窥镜需求', '需要3.9mm直径、2m长度的电子内窥镜用于3D打印流道检测', '电子内窥镜', '', 1, now, '公开', '万经理', '', '天津华清航天', '', '质量管理部', 0, 1, JSON.stringify({ diameter: '3.9mm', length: '2m', application: '3D打印流道检测' }), now, '', '', '发布中', '123456', now, now).run();
+          }
+
+          const supExists = await env.DB.prepare('SELECT 1 FROM suppliers WHERE supplier_id = ?').bind('SUP-2025-001').first();
+          if (!supExists) {
+            await env.DB.prepare(`INSERT OR IGNORE INTO suppliers (supplier_id, name, company, access_password_plain, contact_phone, contact_email, status, metadata_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+              .bind('SUP-2025-001', '宁博', '深圳华视', '', '1537556566', '', 'active', JSON.stringify({ address: '广东深圳', department: '市场部', description: '专业制造工业内窥镜厂家' }), now, now).run();
+          }
+
+          const quoteExists = await env.DB.prepare('SELECT 1 FROM quotes WHERE quote_id = ?').bind('Q-2025-001').first();
+          if (!quoteExists) {
+            await env.DB.prepare(`INSERT OR IGNORE INTO quotes (quote_id, requirement_id, supplier_id, supplier_name, supplier_phone, amount, currency, remarks, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+              .bind('Q-2025-001', 'REQ-2025-001', 'SUP-2025-001', '宁博', '1537556566', 20000, 'CNY', '按照已有参数提供的报价', 'submitted', now, now).run();
+          }
+
+          const realNewsExists = await env.DB.prepare('SELECT 1 FROM news WHERE slug = ?').bind('olympus-china-endoscope-factory').first();
+          if (!realNewsExists) {
+            await env.DB.prepare(`INSERT INTO news (news_id, title, slug, category, summary, content, status, published_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(slug) DO UPDATE SET title=excluded.title, category=excluded.category, summary=excluded.summary, content=excluded.content, status=excluded.status, published_at=excluded.published_at, updated_at=excluded.updated_at`)
+              .bind('n4', '奥林巴斯中国内窥镜工厂将启动运营', 'olympus-china-endoscope-factory', '行业资讯', '奥林巴斯宣布将在苏州启动内窥镜组装工厂运营。', '来源：腾讯新闻 器械之家，2025-05-16。', 'published', '2025-05-16T00:00:00Z', now, now).run();
+          }
+
+          const realExhExists = await env.DB.prepare('SELECT 1 FROM exhibitions WHERE slug = ?').bind('qc-china-2025-shanghai').first();
+          if (!realExhExists) {
+            await env.DB.prepare(`INSERT INTO exhibitions (exhibition_id, title, slug, location, booth_number, start_date, end_date, status, description, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(slug) DO UPDATE SET title=excluded.title, location=excluded.location, booth_number=excluded.booth_number, start_date=excluded.start_date, end_date=excluded.end_date, status=excluded.status, description=excluded.description, updated_at=excluded.updated_at`)
+              .bind('e2', '中国国际质量控制与测试工业设备展（QC China）', 'qc-china-2025-shanghai', '上海世贸展馆', 'N/A', '2025-10-29', '2025-10-31', 'published', '工业检测与质量控制领域重要展会，涵盖无损检测、测试测量等。', now, now).run();
+          }
+
+          const realArticleExists = await env.DB.prepare('SELECT 1 FROM news WHERE slug = ?').bind('borescope-aero-engine-tech-review').first();
+          if (!realArticleExists) {
+            await env.DB.prepare(`INSERT INTO news (news_id, title, slug, category, summary, content, status, published_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(slug) DO UPDATE SET title=excluded.title, category=excluded.category, summary=excluded.summary, content=excluded.content, status=excluded.status, published_at=excluded.published_at, updated_at=excluded.updated_at`)
+              .bind('n5', '航空发动机孔探技术综述', 'borescope-aero-engine-tech-review', '技术文章', '工业内窥镜在航空发动机孔探中的应用及技术演进。', '参考资料：航空发动机孔探技术探索与研究（参考网），以及古安泰3D测量工业内窥镜技术白皮书。', 'published', now, now, now).run();
+          }
+
+          return json({ ok: true, message: 'Seeded missing content and specified test data' });
+      } catch(e) { return json({ error: e.message }, 500); }
     }
 
     // Admin: dev seed from static JSON files (local development helper)
