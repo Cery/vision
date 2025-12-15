@@ -153,6 +153,9 @@ export default {
         )`).run();
         await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_products_supplier ON products(supplier_id)').run();
         await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_products_slug ON products(slug)').run();
+        await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_products_primary_category ON products(primary_category)').run();
+        await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_products_secondary_category ON products(secondary_category)').run();
+        await env.DB.prepare('CREATE INDEX IF NOT EXISTS idx_suppliers_status ON suppliers(status)').run();
         // Migrations for products
         try { await env.DB.prepare('ALTER TABLE products ADD COLUMN slug TEXT UNIQUE').run(); } catch {}
         try { await env.DB.prepare('ALTER TABLE products ADD COLUMN secondary_category TEXT').run(); } catch {}
@@ -417,6 +420,264 @@ export default {
     }
     function genViewPassword() {
       return String(Math.floor(Math.random() * 900000) + 100000);
+    }
+
+    // Unified error response helper
+    function errorResponse(message, statusCode = 400, details = null) {
+      const response = { error: message };
+      if (details) {
+        response.details = details;
+      }
+      return json(response, statusCode);
+    }
+
+    // Input validation and sanitization utilities
+    function validateInput(data, schema) {
+      const errors = [];
+      const sanitized = {};
+      
+      for (const [key, rules] of Object.entries(schema)) {
+        const value = data[key];
+        const isRequired = rules.required !== false;
+        
+        // Check required fields
+        if (isRequired && (value === undefined || value === null || value === '')) {
+          errors.push(`${key} is required`);
+          continue;
+        }
+        
+        // Skip validation if value is optional and not provided
+        if (!isRequired && (value === undefined || value === null || value === '')) {
+          continue;
+        }
+        
+        // Type validation
+        if (rules.type) {
+          const actualType = Array.isArray(value) ? 'array' : typeof value;
+          if (rules.type === 'array' && !Array.isArray(value)) {
+            errors.push(`${key} must be an array`);
+            continue;
+          } else if (rules.type !== 'array' && actualType !== rules.type) {
+            errors.push(`${key} must be of type ${rules.type}`);
+            continue;
+          }
+        }
+        
+        // String validations
+        if (typeof value === 'string') {
+          // Length validation
+          if (rules.minLength && value.length < rules.minLength) {
+            errors.push(`${key} must be at least ${rules.minLength} characters long`);
+          }
+          if (rules.maxLength && value.length > rules.maxLength) {
+            errors.push(`${key} must not exceed ${rules.maxLength} characters`);
+          }
+          
+          // Pattern validation
+          if (rules.pattern && !rules.pattern.test(value)) {
+            errors.push(`${key} format is invalid`);
+          }
+          
+          // Sanitize: trim whitespace
+          sanitized[key] = value.trim();
+          
+          // Sanitize: prevent SQL injection (basic)
+          if (rules.sanitize !== false) {
+            // Remove potentially dangerous characters for SQL
+            sanitized[key] = sanitized[key].replace(/['";\\]/g, '');
+          }
+        }
+        
+        // Number validations
+        if (typeof value === 'number') {
+          if (rules.min !== undefined && value < rules.min) {
+            errors.push(`${key} must be at least ${rules.min}`);
+          }
+          if (rules.max !== undefined && value > rules.max) {
+            errors.push(`${key} must not exceed ${rules.max}`);
+          }
+          sanitized[key] = value;
+        }
+        
+        // Array validations
+        if (Array.isArray(value)) {
+          if (rules.minItems && value.length < rules.minItems) {
+            errors.push(`${key} must contain at least ${rules.minItems} items`);
+          }
+          if (rules.maxItems && value.length > rules.maxItems) {
+            errors.push(`${key} must not contain more than ${rules.maxItems} items`);
+          }
+          if (rules.items && value.length > 0) {
+            const itemErrors = [];
+            value.forEach((item, index) => {
+              const itemValidation = validateInput({ item }, { item: rules.items });
+              if (itemValidation.errors.length > 0) {
+                itemErrors.push(`Item ${index}: ${itemValidation.errors.join(', ')}`);
+              }
+            });
+            if (itemErrors.length > 0) {
+              errors.push(`${key} contains invalid items: ${itemErrors.join('; ')}`);
+            }
+          }
+          sanitized[key] = value;
+        }
+        
+        // Custom validation function
+        if (rules.validate && typeof rules.validate === 'function') {
+          const customError = rules.validate(value);
+          if (customError) {
+            errors.push(`${key}: ${customError}`);
+          }
+        }
+        
+        // If no sanitization happened, copy value as-is
+        if (!(key in sanitized)) {
+          sanitized[key] = value;
+        }
+      }
+      
+      return {
+        valid: errors.length === 0,
+        errors,
+        data: sanitized
+      };
+    }
+
+    // Common validation schemas
+    const validationSchemas = {
+      backupId: {
+        backup_id: { type: 'string', required: true, minLength: 1, maxLength: 100, pattern: /^BACKUP-[A-Za-z0-9-]+$/ }
+      },
+      restoreRequest: {
+        backup_id: { type: 'string', required: true, minLength: 1, maxLength: 100 },
+        tables: { type: 'array', required: true, minItems: 1, maxItems: 20 },
+        confirm: { type: 'boolean', required: true }
+      },
+      tableName: (name) => ({
+        [name]: { 
+          type: 'string', 
+          required: true,
+          validate: (value) => {
+            const allowedTables = ['requirements', 'suppliers', 'demanders', 'quotes', 'products', 'news', 'cases', 'admin_users', 'admin_logs', 'notifications', 'supplier_tags'];
+            if (!allowedTables.includes(value)) {
+              return `Invalid table name. Allowed: ${allowedTables.join(', ')}`;
+            }
+            return null;
+          }
+        }
+      })
+    };
+
+    // Password strength validation
+    function validatePasswordStrength(password) {
+      if (!password || typeof password !== 'string') {
+        return { valid: false, errors: ['Password is required'] };
+      }
+      
+      const errors = [];
+      const warnings = [];
+      
+      // Minimum length
+      if (password.length < 8) {
+        errors.push('Password must be at least 8 characters long');
+      } else if (password.length < 12) {
+        warnings.push('Consider using a password longer than 12 characters for better security');
+      }
+      
+      // Maximum length (prevent DoS)
+      if (password.length > 128) {
+        errors.push('Password must not exceed 128 characters');
+      }
+      
+      // Check for uppercase letters
+      if (!/[A-Z]/.test(password)) {
+        errors.push('Password must contain at least one uppercase letter');
+      }
+      
+      // Check for lowercase letters
+      if (!/[a-z]/.test(password)) {
+        errors.push('Password must contain at least one lowercase letter');
+      }
+      
+      // Check for numbers
+      if (!/[0-9]/.test(password)) {
+        errors.push('Password must contain at least one number');
+      }
+      
+      // Check for special characters
+      if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+        errors.push('Password must contain at least one special character (!@#$%^&*()_+-=[]{}|;:,.<>?)');
+      }
+      
+      // Check for common weak passwords
+      const commonPasswords = ['password', '12345678', 'admin123', 'password123', 'qwerty123'];
+      const lowerPassword = password.toLowerCase();
+      if (commonPasswords.some(weak => lowerPassword.includes(weak))) {
+        warnings.push('Password contains common patterns, consider using a more unique password');
+      }
+      
+      // Check for repeated characters
+      if (/(.)\1{3,}/.test(password)) {
+        warnings.push('Password contains repeated characters, consider using more variation');
+      }
+      
+      return {
+        valid: errors.length === 0,
+        errors,
+        warnings,
+        strength: errors.length === 0 ? (password.length >= 12 && warnings.length === 0 ? 'strong' : 'medium') : 'weak'
+      };
+    }
+
+    // Password hashing utilities (using Web Crypto API PBKDF2)
+    async function hashPassword(password, salt = null) {
+      // Generate salt if not provided
+      if (!salt) {
+        const saltArray = new Uint8Array(16);
+        crypto.getRandomValues(saltArray);
+        salt = Array.from(saltArray).map(b => b.toString(16).padStart(2, '0')).join('');
+      }
+      
+      // Import password as key
+      const encoder = new TextEncoder();
+      const passwordKey = await crypto.subtle.importKey(
+        'raw',
+        encoder.encode(password),
+        'PBKDF2',
+        false,
+        ['deriveBits']
+      );
+      
+      // Derive key using PBKDF2
+      const saltBuffer = new Uint8Array(salt.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+      const keyMaterial = await crypto.subtle.deriveBits(
+        {
+          name: 'PBKDF2',
+          salt: saltBuffer,
+          iterations: 100000,
+          hash: 'SHA-256'
+        },
+        passwordKey,
+        256
+      );
+      
+      // Convert to hex string
+      const hashArray = Array.from(new Uint8Array(keyMaterial));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      
+      // Return salt:hash format
+      return `${salt}:${hashHex}`;
+    }
+    
+    async function verifyPassword(password, storedHash) {
+      if (!storedHash || !storedHash.includes(':')) {
+        // Legacy plain text password (for migration)
+        return password === storedHash;
+      }
+      
+      const [salt, hash] = storedHash.split(':');
+      const computedHash = await hashPassword(password, salt);
+      return computedHash === storedHash;
     }
 
     // JWT utilities (simplified implementation using Web Crypto API)
@@ -704,11 +965,24 @@ export default {
         const dbUser = await env.DB.prepare('SELECT * FROM admin_users WHERE username = ? AND status = ?').bind(user, 'active').first();
         
         if (dbUser) {
-          // Verify password (simple comparison for now, should use bcrypt in production)
+          // Verify password using hash verification
           const passwordHash = dbUser.password_hash || '';
-          // For migration: if password_hash is empty, check against env password
           const envPass = String(env.ADMIN_PASSWORD || env.ADMIN_PASS || env.ADMIN_SECRET || '');
-          const passwordOk = passwordHash && pass === passwordHash || (!passwordHash && envPass && pass === envPass);
+          
+          // Try hash verification first
+          let passwordOk = false;
+          if (passwordHash) {
+            passwordOk = await verifyPassword(pass, passwordHash);
+          }
+          
+          // Fallback to env password for migration (if hash is empty)
+          if (!passwordOk && !passwordHash && envPass && pass === envPass) {
+            passwordOk = true;
+            // Auto-upgrade: hash the password and save it
+            const hashedPassword = await hashPassword(pass);
+            await env.DB.prepare('UPDATE admin_users SET password_hash = ? WHERE user_id = ?')
+              .bind(hashedPassword, dbUser.user_id).run();
+          }
           
           if (passwordOk) {
             // Generate JWT
@@ -801,34 +1075,70 @@ export default {
       }
     }
 
-    // Admin: Operation Logs
+    // Admin: Operation Logs (Optimized with better pagination and indexing)
     if (isApi('admin/logs') && request.method === 'GET') {
       const admin = await getCurrentAdmin(env, request);
-      if (!admin) return json({ error: 'Unauthorized' }, 401);
+      if (!admin) return errorResponse('Unauthorized', 401);
       
       try {
         const module = url.searchParams.get('module');
         const action = url.searchParams.get('action');
         const userId = url.searchParams.get('user_id');
+        const startDate = url.searchParams.get('start_date');
+        const endDate = url.searchParams.get('end_date');
         const page = Math.max(parseInt(url.searchParams.get('page') || '1', 10) || 1, 1);
         const limit = Math.min(parseInt(url.searchParams.get('limit') || '50', 10) || 50, 200);
         const offset = (page - 1) * limit;
         
-        let sql = 'SELECT * FROM admin_logs WHERE 1=1';
+        // Build WHERE clause with indexed columns first for better performance
+        let whereClause = [];
         const binds = [];
+        const countBinds = [];
         
-        if (module) { sql += ' AND module = ?'; binds.push(module); }
-        if (action) { sql += ' AND action = ?'; binds.push(action); }
-        if (userId) { sql += ' AND user_id = ?'; binds.push(userId); }
+        // Use indexed columns for filtering (user_id, module, action have indexes)
+        if (userId) {
+          whereClause.push('user_id = ?');
+          binds.push(userId);
+          countBinds.push(userId);
+        }
+        if (module) {
+          whereClause.push('module = ?');
+          binds.push(module);
+          countBinds.push(module);
+        }
+        if (action) {
+          whereClause.push('action = ?');
+          binds.push(action);
+          countBinds.push(action);
+        }
+        if (startDate) {
+          whereClause.push('created_at >= ?');
+          binds.push(startDate);
+          countBinds.push(startDate);
+        }
+        if (endDate) {
+          whereClause.push('created_at <= ?');
+          binds.push(endDate);
+          countBinds.push(endDate);
+        }
         
-        sql += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
-        binds.push(limit, offset);
+        const whereSql = whereClause.length > 0 ? ' WHERE ' + whereClause.join(' AND ') : '';
         
-        const { results } = await env.DB.prepare(sql).bind(...binds).all();
-        const { results: countRows } = await env.DB.prepare(sql.replace('SELECT *', 'SELECT COUNT(1) as total').replace('ORDER BY created_at DESC LIMIT ? OFFSET ?', '')).bind(...binds.slice(0, -2)).all();
-        const total = countRows?.[0]?.total || 0;
+        // Optimized: Use indexed column (created_at) for ordering, select only needed columns
+        const selectSql = `SELECT log_id, user_id, username, action, module, resource_type, resource_id, details_json, ip_address, user_agent, created_at FROM admin_logs${whereSql} ORDER BY created_at DESC LIMIT ? OFFSET ?`;
         
-        const logs = (results || []).map(r => ({
+        // Optimized COUNT query - use same WHERE clause but without ORDER BY and LIMIT
+        const countSql = `SELECT COUNT(1) as total FROM admin_logs${whereSql}`;
+        
+        // Execute queries in parallel for better performance
+        const [logsResult, countResult] = await Promise.all([
+          env.DB.prepare(selectSql).bind(...binds, limit, offset).all(),
+          env.DB.prepare(countSql).bind(...countBinds).first()
+        ]);
+        
+        const total = countResult?.total || 0;
+        
+        const logs = (logsResult.results || []).map(r => ({
           logId: r.log_id,
           userId: r.user_id,
           username: r.username,
@@ -842,32 +1152,59 @@ export default {
           createdAt: r.created_at
         }));
         
-        return json({ logs, page, limit, total });
+        return json({ logs, page, limit, total, hasMore: (page * limit) < total });
       } catch (e) {
-        return json({ error: e.message }, 500);
+        console.error('Logs query error:', e);
+        return errorResponse('Failed to fetch logs', 500, { message: e.message });
       }
     }
 
-    // Admin: Data Backup
+    // Admin: Data Backup (Optimized with parallel table queries)
     if (isApi('admin/backup') && request.method === 'POST') {
       const admin = await getCurrentAdmin(env, request);
-      if (!admin) return json({ error: 'Unauthorized' }, 401);
+      if (!admin) return errorResponse('Unauthorized', 401);
       
       try {
         const data = await bodyJSON(request);
         const backupType = data.type || 'full';
         const tables = data.tables || ['requirements', 'suppliers', 'demanders', 'quotes', 'products', 'news', 'cases'];
         
+        // Validate table names
+        const allowedTables = ['requirements', 'suppliers', 'demanders', 'quotes', 'products', 'news', 'cases', 'admin_users', 'admin_logs', 'notifications', 'supplier_tags', 'backup_history'];
+        const invalidTables = tables.filter(t => !allowedTables.includes(t));
+        if (invalidTables.length > 0) {
+          return errorResponse('Invalid table names', 400, { invalidTables, allowedTables });
+        }
+        
         const backupId = `BACKUP-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
         const backupData = {};
+        const errors = [];
         
-        for (const table of tables) {
+        // Optimized: Query tables in parallel for better performance
+        const tableQueries = tables.map(async (table) => {
           try {
             const { results } = await env.DB.prepare(`SELECT * FROM ${table}`).all();
-            backupData[table] = results || [];
+            return { table, data: results || [], error: null };
           } catch (e) {
             console.error(`Failed to backup table ${table}:`, e);
+            return { table, data: null, error: e.message };
           }
+        });
+        
+        const tableResults = await Promise.all(tableQueries);
+        
+        // Process results
+        for (const result of tableResults) {
+          if (result.error) {
+            errors.push({ table: result.table, error: result.error });
+          } else {
+            backupData[result.table] = result.data;
+          }
+        }
+        
+        // If all tables failed, return error
+        if (Object.keys(backupData).length === 0) {
+          return errorResponse('All table backups failed', 500, { errors });
         }
         
         const backupJson = JSON.stringify(backupData, null, 2);
@@ -890,19 +1227,22 @@ export default {
           backupId, backupType, backupFile || 'inline', size, JSON.stringify(tables), admin.userId, new Date().toISOString()
         ).run();
         
-        await logAdminAction(env, admin.userId, admin.username, 'backup', 'system', 'backup', backupId, { type: backupType, tables }, request);
+        await logAdminAction(env, admin.userId, admin.username, 'backup', 'system', 'backup', backupId, { type: backupType, tables, size }, request);
         
         return json({
           ok: true,
           backupId,
           size,
           type: backupType,
-          tables,
+          tables: Object.keys(backupData),
           data: backupFile ? null : backupData, // Return data if not stored in R2
-          file: backupFile
+          file: backupFile,
+          errors: errors.length > 0 ? errors : undefined,
+          warning: errors.length > 0 ? 'Some tables failed to backup' : undefined
         });
       } catch (e) {
-        return json({ error: e.message }, 500);
+        console.error('Backup error:', e);
+        return errorResponse('Backup operation failed', 500, { message: e.message });
       }
     }
 
@@ -931,23 +1271,504 @@ export default {
       }
     }
 
-    // Admin: Match Suppliers (需求撮合)
+    // Admin: Data Restore (数据恢复功能)
+    if (isApi('admin/restore') && request.method === 'POST') {
+      const admin = await getCurrentAdmin(env, request);
+      if (!admin) return errorResponse('Unauthorized', 401);
+      
+      try {
+        const data = await bodyJSON(request);
+        
+        // Use unified input validation
+        const validation = validateInput(data, validationSchemas.restoreRequest);
+        if (!validation.valid) {
+          return errorResponse('Validation failed', 400, validation.errors);
+        }
+        
+        const { backup_id: backupId, tables, confirm } = validation.data;
+        
+        // Validate table names to prevent SQL injection
+        const allowedTables = ['requirements', 'suppliers', 'demanders', 'quotes', 'products', 'news', 'cases', 'admin_users', 'admin_logs', 'notifications', 'supplier_tags'];
+        const invalidTables = tables.filter(t => !allowedTables.includes(t));
+        if (invalidTables.length > 0) {
+          return errorResponse('Invalid table names', 400, { invalidTables, allowedTables });
+        }
+        
+        // Get backup record
+        const backupRecord = await env.DB.prepare('SELECT * FROM backup_history WHERE backup_id = ?').bind(backupId).first();
+        if (!backupRecord) {
+          return errorResponse('Backup not found', 404);
+        }
+        
+        // Load backup data
+        let backupData = null;
+        if (backupRecord.backup_file && backupRecord.backup_file.startsWith('backups/') && env.VISPIC) {
+          // Load from R2
+          try {
+            const r2Object = await env.VISPIC.get(backupRecord.backup_file);
+            if (r2Object) {
+              backupData = JSON.parse(await r2Object.text());
+            }
+          } catch (e) {
+            console.error('Failed to load backup from R2:', e);
+            return errorResponse('Failed to load backup file from storage', 500);
+          }
+        } else {
+          // For inline backups, we need to get it from the backup request
+          // Since we can't store large JSON in backup_history, we'll need to request it
+          return errorResponse('Inline backup restore not supported. Please use backups stored in R2 storage', 400);
+        }
+        
+        if (!backupData) {
+          return errorResponse('Backup data not found or corrupted', 404);
+        }
+        
+        // Create automatic backup before restore (safety measure)
+        const safetyBackupId = `SAFETY-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        const safetyBackupData = {};
+        
+        for (const table of tables) {
+          try {
+            const { results } = await env.DB.prepare(`SELECT * FROM ${table}`).all();
+            safetyBackupData[table] = results || [];
+          } catch (e) {
+            console.error(`Failed to create safety backup for table ${table}:`, e);
+          }
+        }
+        
+        const safetyBackupJson = JSON.stringify(safetyBackupData, null, 2);
+        const safetyBackupSize = new TextEncoder().encode(safetyBackupJson).length;
+        
+        let safetyBackupFile = null;
+        if (env.VISPIC) {
+          const r2Key = `backups/${safetyBackupId}.json`;
+          await env.VISPIC.put(r2Key, safetyBackupJson, {
+            httpMetadata: { contentType: 'application/json' }
+          });
+          safetyBackupFile = r2Key;
+        }
+        
+        await env.DB.prepare(`INSERT INTO backup_history (
+          backup_id, backup_type, backup_file, size, tables_included, created_by, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)`).bind(
+          safetyBackupId, 'safety', safetyBackupFile || 'inline', safetyBackupSize, JSON.stringify(tables), admin.userId, new Date().toISOString()
+        ).run();
+        
+        // Validate backup data structure
+        const missingTables = tables.filter(t => !backupData[t]);
+        if (missingTables.length > 0) {
+          return errorResponse('Backup data incomplete', 400, { 
+            missingTables,
+            message: 'Some requested tables are missing from the backup'
+          });
+        }
+        
+        // Perform restore operation
+        const restoreResults = {};
+        const errors = [];
+        
+        for (const table of tables) {
+          try {
+            const tableData = backupData[table];
+            if (!Array.isArray(tableData)) {
+              errors.push({ table, error: 'Invalid data format: expected array' });
+              continue;
+            }
+            
+            // Clear existing data (optional - could also do upsert)
+            // For safety, we'll do DELETE then INSERT
+            await env.DB.prepare(`DELETE FROM ${table}`).run();
+            
+            // Insert restored data
+            let inserted = 0;
+            for (const row of tableData) {
+              try {
+                // Build INSERT statement dynamically based on row keys
+                const keys = Object.keys(row).filter(k => k !== 'id'); // Exclude auto-increment id
+                if (keys.length === 0) continue;
+                
+                const placeholders = keys.map(() => '?').join(', ');
+                const values = keys.map(k => row[k]);
+                
+                await env.DB.prepare(`INSERT INTO ${table} (${keys.join(', ')}) VALUES (${placeholders})`).bind(...values).run();
+                inserted++;
+              } catch (e) {
+                errors.push({ table, row: row.id || 'unknown', error: e.message });
+              }
+            }
+            
+            restoreResults[table] = { inserted, total: tableData.length };
+          } catch (e) {
+            errors.push({ table, error: e.message });
+          }
+        }
+        
+        // Log restore action
+        await logAdminAction(env, admin.userId, admin.username, 'restore', 'system', 'backup', backupId, {
+          backupId,
+          tables,
+          safetyBackupId,
+          results: restoreResults,
+          errors: errors.length > 0 ? errors : undefined
+        }, request);
+        
+        return json({
+          ok: true,
+          message: 'Data restored successfully',
+          backupId,
+          safetyBackupId,
+          tables,
+          results: restoreResults,
+          errors: errors.length > 0 ? errors : undefined,
+          warning: errors.length > 0 ? 'Some data may not have been restored. Check errors array.' : undefined
+        });
+      } catch (e) {
+        console.error('Restore error:', e);
+        return errorResponse('Restore operation failed', 500, { message: e.message });
+      }
+    }
+
+    // Admin: User Management (用户管理)
+    if (isApi('admin/users') && request.method === 'POST') {
+      const admin = await getCurrentAdmin(env, request);
+      if (!admin) return errorResponse('Unauthorized', 401);
+      
+      try {
+        const data = await bodyJSON(request);
+        const username = String(data.username || '').trim().toLowerCase();
+        const password = String(data.password || '').trim();
+        const role = String(data.role || 'admin').trim();
+        
+        // Input validation
+        if (!username || username.length < 3) {
+          return errorResponse('Username must be at least 3 characters long', 400);
+        }
+        if (username.length > 50) {
+          return errorResponse('Username must not exceed 50 characters', 400);
+        }
+        if (!/^[a-z0-9_-]+$/.test(username)) {
+          return errorResponse('Username can only contain lowercase letters, numbers, underscores, and hyphens', 400);
+        }
+        
+        // Password strength validation
+        const passwordValidation = validatePasswordStrength(password);
+        if (!passwordValidation.valid) {
+          return errorResponse('Password validation failed', 400, {
+            errors: passwordValidation.errors,
+            warnings: passwordValidation.warnings
+          });
+        }
+        
+        // Check if user already exists
+        const existingUser = await env.DB.prepare('SELECT * FROM admin_users WHERE username = ?').bind(username).first();
+        if (existingUser) {
+          return errorResponse('Username already exists', 409);
+        }
+        
+        // Hash password
+        const passwordHash = await hashPassword(password);
+        
+        // Generate user ID
+        const userId = `USER-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        
+        // Create user
+        await env.DB.prepare(`INSERT INTO admin_users (
+          user_id, username, password_hash, role, status, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)`).bind(
+          userId, username, passwordHash, role, 'active', new Date().toISOString(), new Date().toISOString()
+        ).run();
+        
+        // Log action
+        await logAdminAction(env, admin.userId, admin.username, 'create', 'users', 'user', userId, {
+          username,
+          role
+        }, request);
+        
+        return json({
+          ok: true,
+          user: {
+            userId,
+            username,
+            role,
+            status: 'active'
+          },
+          message: 'User created successfully'
+        });
+      } catch (e) {
+        console.error('Create user error:', e);
+        return errorResponse('Failed to create user', 500, { message: e.message });
+      }
+    }
+
+    // Admin: Update User Password
+    if (isApi('admin/users') && request.method === 'PATCH') {
+      const admin = await getCurrentAdmin(env, request);
+      if (!admin) return errorResponse('Unauthorized', 401);
+      
+      try {
+        const data = await bodyJSON(request);
+        const userId = data.user_id || data.userId;
+        const password = String(data.password || '').trim();
+        
+        if (!userId) {
+          return errorResponse('Missing user_id parameter', 400);
+        }
+        
+        // Password strength validation
+        const passwordValidation = validatePasswordStrength(password);
+        if (!passwordValidation.valid) {
+          return errorResponse('Password validation failed', 400, {
+            errors: passwordValidation.errors,
+            warnings: passwordValidation.warnings
+          });
+        }
+        
+        // Check if user exists
+        const user = await env.DB.prepare('SELECT * FROM admin_users WHERE user_id = ?').bind(userId).first();
+        if (!user) {
+          return errorResponse('User not found', 404);
+        }
+        
+        // Hash new password
+        const passwordHash = await hashPassword(password);
+        
+        // Update password
+        await env.DB.prepare('UPDATE admin_users SET password_hash = ?, updated_at = ? WHERE user_id = ?')
+          .bind(passwordHash, new Date().toISOString(), userId).run();
+        
+        // Log action
+        await logAdminAction(env, admin.userId, admin.username, 'update', 'users', 'user', userId, {
+          action: 'password_change'
+        }, request);
+        
+        return json({
+          ok: true,
+          message: 'Password updated successfully'
+        });
+      } catch (e) {
+        console.error('Update password error:', e);
+        return errorResponse('Failed to update password', 500, { message: e.message });
+      }
+    }
+
+    // Admin: List Users
+    if (isApi('admin/users') && request.method === 'GET') {
+      const admin = await getCurrentAdmin(env, request);
+      if (!admin) return errorResponse('Unauthorized', 401);
+      
+      try {
+        const { results } = await env.DB.prepare('SELECT user_id, username, role, status, last_login_at, created_at FROM admin_users ORDER BY created_at DESC').all();
+        
+        const users = (results || []).map(u => ({
+          userId: u.user_id,
+          username: u.username,
+          role: u.role,
+          status: u.status,
+          lastLoginAt: u.last_login_at,
+          createdAt: u.created_at
+        }));
+        
+        return json({ users });
+      } catch (e) {
+        console.error('List users error:', e);
+        return errorResponse('Failed to list users', 500, { message: e.message });
+      }
+    }
+
+    // Admin: Batch Operations (批量操作)
+    if (isApi('admin/batch') && request.method === 'POST') {
+      const admin = await getCurrentAdmin(env, request);
+      if (!admin) return errorResponse('Unauthorized', 401);
+      
+      try {
+        const data = await bodyJSON(request);
+        const operation = data.operation; // 'delete', 'update_status', 'export'
+        const resourceType = data.resource_type; // 'requirements', 'suppliers', 'quotes'
+        const ids = data.ids || [];
+        const confirm = data.confirm === true;
+        
+        // Input validation
+        if (!operation) {
+          return errorResponse('Missing operation parameter', 400);
+        }
+        
+        if (!resourceType) {
+          return errorResponse('Missing resource_type parameter', 400);
+        }
+        
+        if (!Array.isArray(ids) || ids.length === 0) {
+          return errorResponse('Missing or empty ids array', 400);
+        }
+        
+        if (ids.length > 100) {
+          return errorResponse('Too many items. Maximum 100 items per batch operation', 400);
+        }
+        
+        // Validate resource type
+        const allowedResourceTypes = ['requirements', 'suppliers', 'quotes', 'products', 'news', 'cases'];
+        if (!allowedResourceTypes.includes(resourceType)) {
+          return errorResponse('Invalid resource_type', 400, { 
+            allowed: allowedResourceTypes 
+          });
+        }
+        
+        // Validate operation type
+        const allowedOperations = ['delete', 'update_status', 'export'];
+        if (!allowedOperations.includes(operation)) {
+          return errorResponse('Invalid operation', 400, { 
+            allowed: allowedOperations 
+          });
+        }
+        
+        // For destructive operations, require confirmation
+        if ((operation === 'delete' || operation === 'update_status') && !confirm) {
+          return errorResponse('Batch operation requires explicit confirmation. Set confirm: true', 400);
+        }
+        
+        const results = {
+          success: [],
+          failed: [],
+          total: ids.length
+        };
+        
+        if (operation === 'delete') {
+          // Batch delete
+          for (const id of ids) {
+            try {
+              if (resourceType === 'requirements') {
+                // Cascade delete quotes first
+                await env.DB.prepare('DELETE FROM quotes WHERE requirement_id = ?').bind(id).run();
+                await env.DB.prepare('DELETE FROM requirements WHERE requirement_id = ?').bind(id).run();
+              } else if (resourceType === 'suppliers') {
+                await env.DB.prepare('DELETE FROM suppliers WHERE supplier_id = ?').bind(id).run();
+              } else if (resourceType === 'quotes') {
+                await env.DB.prepare('DELETE FROM quotes WHERE quote_id = ?').bind(id).run();
+              } else if (resourceType === 'products') {
+                await env.DB.prepare('DELETE FROM products WHERE product_id = ?').bind(id).run();
+              } else if (resourceType === 'news') {
+                await env.DB.prepare('DELETE FROM news WHERE news_id = ?').bind(id).run();
+              } else if (resourceType === 'cases') {
+                await env.DB.prepare('DELETE FROM cases WHERE case_id = ?').bind(id).run();
+              }
+              
+              results.success.push(id);
+              
+              // Log action
+              await logAdminAction(env, admin.userId, admin.username, 'delete', resourceType, resourceType.slice(0, -1), id, {}, request);
+            } catch (e) {
+              results.failed.push({ id, error: e.message });
+            }
+          }
+        } else if (operation === 'update_status') {
+          // Batch update status
+          const newStatus = data.status;
+          if (!newStatus) {
+            return errorResponse('Missing status parameter for update_status operation', 400);
+          }
+          
+          for (const id of ids) {
+            try {
+              let idField = '';
+              if (resourceType === 'requirements') idField = 'requirement_id';
+              else if (resourceType === 'suppliers') idField = 'supplier_id';
+              else if (resourceType === 'quotes') idField = 'quote_id';
+              else if (resourceType === 'products') idField = 'product_id';
+              else if (resourceType === 'news') idField = 'news_id';
+              else if (resourceType === 'cases') idField = 'case_id';
+              
+              await env.DB.prepare(`UPDATE ${resourceType} SET status = ?, updated_at = ? WHERE ${idField} = ?`)
+                .bind(newStatus, new Date().toISOString(), id).run();
+              
+              results.success.push(id);
+              
+              // Log action
+              await logAdminAction(env, admin.userId, admin.username, 'update', resourceType, resourceType.slice(0, -1), id, { 
+                field: 'status', 
+                value: newStatus 
+              }, request);
+            } catch (e) {
+              results.failed.push({ id, error: e.message });
+            }
+          }
+        } else if (operation === 'export') {
+          // Batch export (return selected items as JSON)
+          const items = [];
+          for (const id of ids) {
+            try {
+              let idField = '';
+              if (resourceType === 'requirements') idField = 'requirement_id';
+              else if (resourceType === 'suppliers') idField = 'supplier_id';
+              else if (resourceType === 'quotes') idField = 'quote_id';
+              else if (resourceType === 'products') idField = 'product_id';
+              else if (resourceType === 'news') idField = 'news_id';
+              else if (resourceType === 'cases') idField = 'case_id';
+              
+              const item = await env.DB.prepare(`SELECT * FROM ${resourceType} WHERE ${idField} = ?`).bind(id).first();
+              if (item) {
+                items.push(item);
+                results.success.push(id);
+              } else {
+                results.failed.push({ id, error: 'Not found' });
+              }
+            } catch (e) {
+              results.failed.push({ id, error: e.message });
+            }
+          }
+          
+          // Log export action
+          await logAdminAction(env, admin.userId, admin.username, 'export', resourceType, 'batch', 'multiple', {
+            count: items.length,
+            ids: ids.slice(0, 10) // Log first 10 IDs
+          }, request);
+          
+          return json({
+            ok: true,
+            operation: 'export',
+            resourceType,
+            items,
+            results
+          });
+        }
+        
+        // Log batch operation
+        await logAdminAction(env, admin.userId, admin.username, operation, resourceType, 'batch', 'multiple', {
+          operation,
+          resourceType,
+          total: ids.length,
+          successCount: results.success.length,
+          failedCount: results.failed.length
+        }, request);
+        
+        return json({
+          ok: true,
+          operation,
+          resourceType,
+          results,
+          message: `Batch ${operation} completed: ${results.success.length} succeeded, ${results.failed.length} failed`
+        });
+      } catch (e) {
+        console.error('Batch operation error:', e);
+        return errorResponse('Batch operation failed', 500, { message: e.message });
+      }
+    }
+
+    // Admin: Match Suppliers (需求撮合) - Optimized with batch queries
     if (isApi('admin/match-suppliers') && request.method === 'POST') {
       const admin = await getCurrentAdmin(env, request);
-      if (!admin) return json({ error: 'Unauthorized' }, 401);
+      if (!admin) return errorResponse('Unauthorized', 401);
       
       try {
         const data = await bodyJSON(request);
         const requirementId = data.requirement_id;
         
         if (!requirementId) {
-          return json({ error: 'Missing requirement_id' }, 400);
+          return errorResponse('Missing requirement_id', 400);
         }
         
-        // Get requirement details
+        // Get requirement details (using indexed query)
         const req = await env.DB.prepare('SELECT * FROM requirements WHERE requirement_id = ?').bind(requirementId).first();
         if (!req) {
-          return json({ error: 'Requirement not found' }, 404);
+          return errorResponse('Requirement not found', 404);
         }
         
         // Extract keywords from requirement
@@ -962,16 +1783,50 @@ export default {
           } catch {}
         }
         
-        // Get all active suppliers
-        const { results: suppliers } = await env.DB.prepare("SELECT * FROM suppliers WHERE status = 'active'").all();
+        if (keywords.length === 0) {
+          return json({ matches: [], message: 'No keywords extracted from requirement' });
+        }
         
-        // Calculate match scores
+        // Optimized: Get all active suppliers using indexed query
+        const { results: suppliers } = await env.DB.prepare("SELECT supplier_id, name, company, contact_phone, contact_email, metadata_json FROM suppliers WHERE status = 'active'").all();
+        
+        if (!suppliers || suppliers.length === 0) {
+          return json({ matches: [] });
+        }
+        
+        const supplierIds = suppliers.map(s => s.supplier_id);
+        
+        // Optimized: Batch query all supplier tags at once (instead of N queries in loop)
+        const placeholders = supplierIds.map(() => '?').join(',');
+        const { results: allTagRows } = await env.DB.prepare(`SELECT supplier_id, tag FROM supplier_tags WHERE supplier_id IN (${placeholders})`).bind(...supplierIds).all();
+        
+        // Optimized: Batch query all products at once (instead of N queries in loop)
+        const { results: allProducts } = await env.DB.prepare(`SELECT supplier_id, primary_category, secondary_category FROM products WHERE supplier_id IN (${placeholders})`).bind(...supplierIds).all();
+        
+        // Build lookup maps for O(1) access
+        const tagsBySupplier = {};
+        for (const row of allTagRows || []) {
+          if (!tagsBySupplier[row.supplier_id]) {
+            tagsBySupplier[row.supplier_id] = [];
+          }
+          tagsBySupplier[row.supplier_id].push(row.tag);
+        }
+        
+        const productsBySupplier = {};
+        for (const product of allProducts || []) {
+          if (!productsBySupplier[product.supplier_id]) {
+            productsBySupplier[product.supplier_id] = [];
+          }
+          productsBySupplier[product.supplier_id].push(product);
+        }
+        
+        // Calculate match scores (now using pre-loaded data)
         const matches = [];
-        for (const supplier of suppliers || []) {
+        for (const supplier of suppliers) {
           let score = 0;
           const supplierTags = [];
           
-          // Check supplier tags
+          // Check supplier metadata tags
           if (supplier.metadata_json) {
             try {
               const meta = JSON.parse(supplier.metadata_json);
@@ -984,9 +1839,10 @@ export default {
             } catch {}
           }
           
-          // Check supplier_tags table
-          const { results: tagRows } = await env.DB.prepare('SELECT tag FROM supplier_tags WHERE supplier_id = ?').bind(supplier.supplier_id).all();
-          supplierTags.push(...(tagRows || []).map(r => r.tag));
+          // Add tags from supplier_tags table (from batch query)
+          if (tagsBySupplier[supplier.supplier_id]) {
+            supplierTags.push(...tagsBySupplier[supplier.supplier_id]);
+          }
           
           // Calculate score based on keyword matches
           for (const keyword of keywords) {
@@ -1001,9 +1857,9 @@ export default {
             }
           }
           
-          // Check supplier products
-          const { results: products } = await env.DB.prepare('SELECT primary_category, secondary_category FROM products WHERE supplier_id = ?').bind(supplier.supplier_id).all();
-          for (const product of products || []) {
+          // Check supplier products (from batch query)
+          const products = productsBySupplier[supplier.supplier_id] || [];
+          for (const product of products) {
             if (product.primary_category === req.primary_category) score += 15;
             if (product.secondary_category === req.secondary_category) score += 10;
           }
@@ -1028,11 +1884,15 @@ export default {
         // Sort by score descending
         matches.sort((a, b) => b.score - a.score);
         
-        await logAdminAction(env, admin.userId, admin.username, 'match_suppliers', 'requirements', 'requirement', requirementId, { matchesCount: matches.length }, request);
+        await logAdminAction(env, admin.userId, admin.username, 'match_suppliers', 'requirements', 'requirement', requirementId, { 
+          matchesCount: matches.length,
+          suppliersChecked: suppliers.length 
+        }, request);
         
         return json({ matches: matches.slice(0, 20) }); // Return top 20
       } catch (e) {
-        return json({ error: e.message }, 500);
+        console.error('Match suppliers error:', e);
+        return errorResponse('Match suppliers failed', 500, { message: e.message });
       }
     }
 
@@ -1763,7 +2623,7 @@ export default {
 
     // Admin: list/update requirements
     if (isFn('adminListRequirements') && request.method === 'GET' || isApi('admin/requirements') && request.method === 'GET' || isApi('admin/markets') && request.method === 'GET') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
       // Basic search filters (optional)
       const q = (url.searchParams.get('q') || '').trim().toLowerCase();
       const status = (url.searchParams.get('status') || '').trim();
@@ -1796,17 +2656,18 @@ export default {
     }
     if (isFn('adminUpdateRequirement') && request.method === 'POST' || isApi('admin/requirements') && (request.method === 'POST') || isApi('admin/markets') && (request.method === 'POST')) {
       // Apply-to-all update
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-      const data = await bodyJSON(request);
-      if (data.applyToAll) {
-        const sets = [];
-        const binds = [];
-        if (typeof data.allowOpenQuotes === 'boolean') { sets.push('allow_open_quotes = ?'); binds.push(data.allowOpenQuotes ? 1 : 0); }
-        if (typeof data.contactPublic === 'boolean') { sets.push('contact_public = ?'); binds.push(data.contactPublic ? 1 : 0); }
-        if (data.newPasswordPlain) { sets.push('view_password_plain = ?'); binds.push(String(data.newPasswordPlain)); }
-        if (typeof data.status === 'string' && data.status.trim()) { sets.push('status = ?'); binds.push(String(data.status).trim()); }
-        sets.push('updated_at = ?'); binds.push(new Date().toISOString());
-        if (!sets.length) return json({ error: 'NoFields' }, 400);
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
+      try {
+        const data = await bodyJSON(request);
+        if (data.applyToAll) {
+          const sets = [];
+          const binds = [];
+          if (typeof data.allowOpenQuotes === 'boolean') { sets.push('allow_open_quotes = ?'); binds.push(data.allowOpenQuotes ? 1 : 0); }
+          if (typeof data.contactPublic === 'boolean') { sets.push('contact_public = ?'); binds.push(data.contactPublic ? 1 : 0); }
+          if (data.newPasswordPlain) { sets.push('view_password_plain = ?'); binds.push(String(data.newPasswordPlain)); }
+          if (typeof data.status === 'string' && data.status.trim()) { sets.push('status = ?'); binds.push(String(data.status).trim()); }
+          sets.push('updated_at = ?'); binds.push(new Date().toISOString());
+          if (!sets.length) return errorResponse('No fields to update', 400);
         const stmt = env.DB.prepare(`UPDATE requirements SET ${sets.join(', ')}`);
         await stmt.bind(...binds).run();
         // Sync all demanders password when newPasswordPlain provided
@@ -1823,46 +2684,50 @@ export default {
             }
           }
         } catch {}
-        // D1 doesn't return affected count; best-effort: return ok=true
-        return json({ updated: 'all' });
-      }
-      // If body provides requirementID, update single
-      if (data.requirementID) {
-        const fields = ['title','public_preview','primary_category','secondary_category','approved','approved_at','status','contact_name','contact_phone','contact_company','contact_email','contact_department','contact_public','allow_open_quotes','parameters_json','published_at','budget_range','procurement_plan','progress','view_password_plain','quote_password','view_password'];
-        const sets = [];
-        const binds = [];
-        for (const f of fields) {
-          if (f in data) { sets.push(`${f} = ?`); binds.push(f === 'parameters_json' ? JSON.stringify(data[f]) : data[f]); }
+          // D1 doesn't return affected count; best-effort: return ok=true
+          return json({ updated: 'all' });
         }
-        sets.push('updated_at = ?'); binds.push(new Date().toISOString());
-        if (!sets.length) return json({ error: 'NoFields' }, 400);
-        const stmt = env.DB.prepare(`UPDATE requirements SET ${sets.join(', ')} WHERE requirement_id = ?`).bind(...binds, String(data.requirementID));
-        await stmt.run();
-        // Sync demander password when updating single requirement with view_password_plain
-        try {
-          if (Object.prototype.hasOwnProperty.call(data, 'view_password_plain') || Object.prototype.hasOwnProperty.call(data, 'view_password')) {
-            const { results: reqRows } = await env.DB.prepare('SELECT contact_company FROM requirements WHERE requirement_id = ?').bind(String(data.requirementID)).all();
-            const company = (reqRows && reqRows[0] && reqRows[0].contact_company) || '';
-            if (company) {
-              const { results: demRows } = await env.DB.prepare('SELECT demander_id, metadata_json FROM demanders WHERE company = ?').bind(company).all();
-              if (demRows && demRows.length) {
-                const d = demRows[0];
-                let meta = {};
-                try { meta = JSON.parse(d.metadata_json || '{}'); } catch {}
-                meta.password_plain = String((Object.prototype.hasOwnProperty.call(data,'view_password') ? data.view_password : data.view_password_plain) || '');
-                const nowIso = new Date().toISOString();
-                await env.DB.prepare('UPDATE demanders SET metadata_json = ?, updated_at = ? WHERE demander_id = ?')
-                  .bind(JSON.stringify(meta), nowIso, d.demander_id).run();
+        // If body provides requirementID, update single
+        if (data.requirementID) {
+          const fields = ['title','public_preview','primary_category','secondary_category','approved','approved_at','status','contact_name','contact_phone','contact_company','contact_email','contact_department','contact_public','allow_open_quotes','parameters_json','published_at','budget_range','procurement_plan','progress','view_password_plain','quote_password','view_password'];
+          const sets = [];
+          const binds = [];
+          for (const f of fields) {
+            if (f in data) { sets.push(`${f} = ?`); binds.push(f === 'parameters_json' ? JSON.stringify(data[f]) : data[f]); }
+          }
+          sets.push('updated_at = ?'); binds.push(new Date().toISOString());
+          if (!sets.length) return errorResponse('No fields to update', 400);
+          const stmt = env.DB.prepare(`UPDATE requirements SET ${sets.join(', ')} WHERE requirement_id = ?`).bind(...binds, String(data.requirementID));
+          await stmt.run();
+          // Sync demander password when updating single requirement with view_password_plain
+          try {
+            if (Object.prototype.hasOwnProperty.call(data, 'view_password_plain') || Object.prototype.hasOwnProperty.call(data, 'view_password')) {
+              const { results: reqRows } = await env.DB.prepare('SELECT contact_company FROM requirements WHERE requirement_id = ?').bind(String(data.requirementID)).all();
+              const company = (reqRows && reqRows[0] && reqRows[0].contact_company) || '';
+              if (company) {
+                const { results: demRows } = await env.DB.prepare('SELECT demander_id, metadata_json FROM demanders WHERE company = ?').bind(company).all();
+                if (demRows && demRows.length) {
+                  const d = demRows[0];
+                  let meta = {};
+                  try { meta = JSON.parse(d.metadata_json || '{}'); } catch {}
+                  meta.password_plain = String((Object.prototype.hasOwnProperty.call(data,'view_password') ? data.view_password : data.view_password_plain) || '');
+                  const nowIso = new Date().toISOString();
+                  await env.DB.prepare('UPDATE demanders SET metadata_json = ?, updated_at = ? WHERE demander_id = ?')
+                    .bind(JSON.stringify(meta), nowIso, d.demander_id).run();
+                }
               }
             }
-          }
-        } catch {}
-        return json({ ok: true });
+          } catch {}
+          return json({ ok: true });
+        }
+        return errorResponse('Invalid request. Provide applyToAll or requirementID', 400);
+      } catch (e) {
+        console.error('Requirement update error:', e);
+        return errorResponse('Failed to update requirement', 500, { message: e.message });
       }
-      return json({ error: 'InvalidRequest' }, 400);
     }
     if (isApi('admin/requirements/') && request.method === 'PATCH' || isApi('admin/markets/') && request.method === 'PATCH') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
       const id = path.split('/').pop();
       const data = await bodyJSON(request);
       const fields = ['title','public_preview','primary_category','secondary_category','approved','approved_at','status','contact_name','contact_phone','contact_company','contact_email','contact_department','contact_public','allow_open_quotes','parameters_json','published_at','budget_range','procurement_plan','progress','view_password_plain','quote_password','view_password','is_featured','is_urgent','admin_notes','tags'];
@@ -1894,6 +2759,30 @@ export default {
     // Admin: list/update suppliers
     if (isFn('adminListSuppliers') && request.method === 'GET' || isApi('admin/suppliers') && request.method === 'GET') {
       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      
+      // Check if requesting single supplier detail (GET /api/admin/suppliers/{id})
+      const parts = path.split('/');
+      const possibleId = parts[parts.length - 1];
+      if (possibleId && possibleId !== 'suppliers' && !possibleId.includes('export') && !possibleId.includes('search') && !possibleId.includes('ingest')) {
+        // Single supplier detail
+        const { results } = await env.DB.prepare('SELECT * FROM suppliers WHERE supplier_id = ?').bind(possibleId).all();
+        if (!results || !results.length) return json({ error: 'NotFound' }, 404);
+        const s = results[0];
+        return json({
+          supplier_id: s.supplier_id,
+          name: s.name,
+          company: s.company,
+          access_password_plain: s.access_password_plain,
+          contact_phone: s.contact_phone,
+          contact_email: s.contact_email,
+          status: s.status,
+          metadata_json: parseJSONSafe(s.metadata_json),
+          created_at: s.created_at,
+          updated_at: s.updated_at
+        });
+      }
+      
+      // List suppliers
       const q = (url.searchParams.get('q') || '').trim().toLowerCase();
       const onlyPublic = (url.searchParams.get('public') || '').trim().toLowerCase() === 'true';
       const limit = Math.min(Math.max(parseInt(url.searchParams.get('limit') || '20', 10) || 20, 1), 200);
@@ -1957,36 +2846,48 @@ export default {
     }
     // Admin: bulk update suppliers (apply-to-all)
     if (isApi('admin/suppliers') && request.method === 'POST') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-      const data = await bodyJSON(request);
-      const sets = [];
-      const binds = [];
-      if (data.applyToAll) {
-        if (data.newPasswordPlain) { sets.push('access_password_plain = ?'); binds.push(String(data.newPasswordPlain)); }
-        if (typeof data.status === 'string' && data.status.trim()) { sets.push('status = ?'); binds.push(String(data.status).trim()); }
-        sets.push('updated_at = ?'); binds.push(new Date().toISOString());
-        if (!sets.length) return json({ error: 'NoFields' }, 400);
-        const stmt = env.DB.prepare(`UPDATE suppliers SET ${sets.join(', ')}`);
-        await stmt.bind(...binds).run();
-        return json({ updated: 'all' });
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
+      try {
+        const data = await bodyJSON(request);
+        const sets = [];
+        const binds = [];
+        if (data.applyToAll) {
+          if (data.newPasswordPlain) { sets.push('access_password_plain = ?'); binds.push(String(data.newPasswordPlain)); }
+          if (typeof data.status === 'string' && data.status.trim()) { sets.push('status = ?'); binds.push(String(data.status).trim()); }
+          sets.push('updated_at = ?'); binds.push(new Date().toISOString());
+          if (!sets.length) return errorResponse('No fields to update', 400);
+          const stmt = env.DB.prepare(`UPDATE suppliers SET ${sets.join(', ')}`);
+          await stmt.bind(...binds).run();
+          return json({ updated: 'all' });
+        }
+        return errorResponse('Invalid request. Set applyToAll: true for bulk update', 400);
+      } catch (e) {
+        console.error('Bulk supplier update error:', e);
+        return errorResponse('Failed to update suppliers', 500, { message: e.message });
       }
-      return json({ error: 'InvalidRequest' }, 400);
     }
     if (isFn('adminUpdateSupplier') && request.method === 'POST' || isApi('admin/suppliers/') && request.method === 'PATCH') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-      const data = await bodyJSON(request);
-      const id = data.id || path.split('/').pop();
-      const fields = ['name','company','access_password_plain','contact_phone','contact_email','status','metadata_json'];
-      const sets = [];
-      const binds = [];
-      for (const f of fields) {
-        if (f in data) { sets.push(`${f} = ?`); binds.push(f === 'metadata_json' ? JSON.stringify(data[f]) : data[f]); }
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
+      try {
+        const data = await bodyJSON(request);
+        const id = data.id || path.split('/').pop();
+        if (!id) return errorResponse('Missing supplier ID', 400);
+        
+        const fields = ['name','company','access_password_plain','contact_phone','contact_email','status','metadata_json'];
+        const sets = [];
+        const binds = [];
+        for (const f of fields) {
+          if (f in data) { sets.push(`${f} = ?`); binds.push(f === 'metadata_json' ? JSON.stringify(data[f]) : data[f]); }
+        }
+        sets.push('updated_at = ?'); binds.push(new Date().toISOString());
+        if (!sets.length) return errorResponse('No fields to update', 400);
+        const stmt = env.DB.prepare(`UPDATE suppliers SET ${sets.join(', ')} WHERE supplier_id = ?`).bind(...binds, id);
+        await stmt.run();
+        return json({ ok: true });
+      } catch (e) {
+        console.error('Supplier update error:', e);
+        return errorResponse('Failed to update supplier', 500, { message: e.message });
       }
-      sets.push('updated_at = ?'); binds.push(new Date().toISOString());
-      if (!sets.length) return json({ error: 'NoFields' }, 400);
-      const stmt = env.DB.prepare(`UPDATE suppliers SET ${sets.join(', ')} WHERE supplier_id = ?`).bind(...binds, id);
-      await stmt.run();
-      return json({ ok: true });
     }
 
     if (isApi('admin/suppliers/') && /\/ingest-gallery$/.test(path) && request.method === 'POST') {
@@ -2207,42 +3108,52 @@ export default {
       }
     }
     if (isFn('adminUpdateDemander') && request.method === 'POST' || isApi('admin/demanders/') && request.method === 'PATCH') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-      const data = await bodyJSON(request);
-      const id = data.id || path.split('/').pop();
-      const fields = ['name','company','contact_phone','contact_email','department','metadata_json'];
-      const sets = [];
-      const binds = [];
-      for (const f of fields) {
-        if (f in data) { sets.push(`${f} = ?`); binds.push(f === 'metadata_json' ? JSON.stringify(data[f]) : data[f]); }
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
+      try {
+        const data = await bodyJSON(request);
+        const id = data.id || path.split('/').pop();
+        if (!id) return errorResponse('Missing demander ID', 400);
+        const fields = ['name','company','contact_phone','contact_email','department','metadata_json'];
+        const sets = [];
+        const binds = [];
+        for (const f of fields) {
+          if (f in data) { sets.push(`${f} = ?`); binds.push(f === 'metadata_json' ? JSON.stringify(data[f]) : data[f]); }
+        }
+        sets.push('updated_at = ?'); binds.push(new Date().toISOString());
+        if (!sets.length) return errorResponse('No fields to update', 400);
+        const stmt = env.DB.prepare(`UPDATE demanders SET ${sets.join(', ')} WHERE demander_id = ?`).bind(...binds, id);
+        await stmt.run();
+        return json({ ok: true });
+      } catch (e) {
+        console.error('Demander update error:', e);
+        return errorResponse('Failed to update demander', 500, { message: e.message });
       }
-      sets.push('updated_at = ?'); binds.push(new Date().toISOString());
-      if (!sets.length) return json({ error: 'NoFields' }, 400);
-      const stmt = env.DB.prepare(`UPDATE demanders SET ${sets.join(', ')} WHERE demander_id = ?`).bind(...binds, id);
-      await stmt.run();
-      return json({ ok: true });
     }
     if (isApi('admin/demanders/') && request.method === 'DELETE') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
       const id = path.split('/').pop();
+      if (!id) return errorResponse('Missing demander ID', 400);
       try {
         await env.DB.prepare('DELETE FROM demanders WHERE demander_id = ?').bind(id).run();
         return json({ ok: true });
       } catch (e) {
-        return json({ error: 'DeleteDemanderFailed', detail: String(e && e.message || e) }, 500);
+        console.error('Demander delete error:', e);
+        return errorResponse('Failed to delete demander', 500, { message: e.message });
       }
     }
 
 
     // Admin: suppliers delete
     if (isApi('admin/suppliers/') && request.method === 'DELETE') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
       const id = path.split('/').pop();
+      if (!id) return errorResponse('Missing supplier ID', 400);
       try {
         await env.DB.prepare('DELETE FROM suppliers WHERE supplier_id = ?').bind(id).run();
         return json({ ok: true });
       } catch (e) {
-        return json({ error: 'DeleteSupplierFailed', detail: String(e && e.message || e) }, 500);
+        console.error('Supplier delete error:', e);
+        return errorResponse('Failed to delete supplier', 500, { message: e.message });
       }
     }
     // Admin: suppliers export CSV
@@ -2282,184 +3193,244 @@ export default {
 
     // Admin: list/create products
     if (isApi('admin/products') && request.method === 'GET') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-      const supplier_id = url.searchParams.get('supplier_id');
-      const product_id = path.split('/').pop(); // Check if it's /admin/products/:id pattern handled below or here
-      // Actually the pattern matcher isApi('admin/products') matches /admin/products...
-      // Let's check if there's an ID in the path for DETAIL view
-      const parts = path.split('/');
-      const possibleId = parts[parts.length-1];
-      if (possibleId && possibleId !== 'products') {
-         const { results } = await env.DB.prepare('SELECT * FROM products WHERE product_id = ? OR slug = ?').bind(possibleId, possibleId).all();
-         if (!results || !results.length) return json({ error: 'NotFound' }, 404);
-         const p = results[0];
-         return json({
-            product_id: p.product_id,
-            supplier_id: p.supplier_id,
-            name: p.name,
-            slug: p.slug,
-            model: p.model,
-            series: p.series,
-            primary_category: p.primary_category,
-            secondary_category: p.secondary_category,
-            summary: p.summary,
-            description: p.description,
-            parameters_json: parseJSONSafe(p.parameters_json),
-            cover_image: p.cover_image,
-            gallery_json: parseJSONSafe(p.gallery_json),
-            documents_json: parseJSONSafe(p.documents_json),
-            seo_title: p.seo_title,
-            seo_keywords: p.seo_keywords,
-            seo_description: p.seo_description,
-            status: p.status,
-            is_featured: !!p.is_featured,
-            created_at: p.created_at
-         });
-      }
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
+      try {
+        const supplier_id = url.searchParams.get('supplier_id');
+        const product_id = path.split('/').pop(); // Check if it's /admin/products/:id pattern handled below or here
+        // Actually the pattern matcher isApi('admin/products') matches /admin/products...
+        // Let's check if there's an ID in the path for DETAIL view
+        const parts = path.split('/');
+        const possibleId = parts[parts.length-1];
+        if (possibleId && possibleId !== 'products' && possibleId !== 'search') {
+           const { results } = await env.DB.prepare('SELECT * FROM products WHERE product_id = ? OR slug = ?').bind(possibleId, possibleId).all();
+           if (!results || !results.length) return errorResponse('Product not found', 404);
+           const p = results[0];
+           return json({
+              product_id: p.product_id,
+              supplier_id: p.supplier_id,
+              name: p.name,
+              slug: p.slug,
+              model: p.model,
+              series: p.series,
+              primary_category: p.primary_category,
+              secondary_category: p.secondary_category,
+              summary: p.summary,
+              description: p.description,
+              parameters_json: parseJSONSafe(p.parameters_json),
+              cover_image: p.cover_image,
+              gallery_json: parseJSONSafe(p.gallery_json),
+              documents_json: parseJSONSafe(p.documents_json),
+              seo_title: p.seo_title,
+              seo_keywords: p.seo_keywords,
+              seo_description: p.seo_description,
+              status: p.status,
+              is_featured: !!p.is_featured,
+              created_at: p.created_at
+           });
+        }
 
-      let q = 'SELECT * FROM products';
-      const where = [];
-      const binds = [];
-      if (supplier_id) { where.push('supplier_id = ?'); binds.push(supplier_id); }
-      if (where.length) q += ' WHERE ' + where.join(' AND ');
-      const limitAdminProd = Math.min(parseInt(url.searchParams.get('limit')||'100',10)||100, 1000);
-      q += ' ORDER BY created_at DESC LIMIT ?';
-      binds.push(limitAdminProd);
-      const { results } = await env.DB.prepare(q).bind(...binds).all();
-      const items = (results || []).map(p => ({
-        product_id: p.product_id,
-        supplier_id: p.supplier_id,
-        name: p.name,
-        slug: p.slug,
-        model: p.model,
-        series: p.series,
-        primary_category: p.primary_category,
-        secondary_category: p.secondary_category,
-        summary: p.summary,
-        cover_image: p.cover_image,
-        status: p.status,
-        is_featured: !!p.is_featured,
-        parameters_json: parseJSONSafe(p.parameters_json),
-        created_at: p.created_at
-      }));
-      return json(items);
+        let q = 'SELECT * FROM products';
+        const where = [];
+        const binds = [];
+        if (supplier_id) { where.push('supplier_id = ?'); binds.push(supplier_id); }
+        if (where.length) q += ' WHERE ' + where.join(' AND ');
+        const limitAdminProd = Math.min(parseInt(url.searchParams.get('limit')||'100',10)||100, 1000);
+        q += ' ORDER BY created_at DESC LIMIT ?';
+        binds.push(limitAdminProd);
+        const { results } = await env.DB.prepare(q).bind(...binds).all();
+        const items = (results || []).map(p => ({
+          product_id: p.product_id,
+          supplier_id: p.supplier_id,
+          name: p.name,
+          slug: p.slug,
+          model: p.model,
+          series: p.series,
+          primary_category: p.primary_category,
+          secondary_category: p.secondary_category,
+          summary: p.summary,
+          cover_image: p.cover_image,
+          status: p.status,
+          is_featured: !!p.is_featured,
+          parameters_json: parseJSONSafe(p.parameters_json),
+          created_at: p.created_at
+        }));
+        return json(items);
+      } catch (e) {
+        console.error('Products list error:', e);
+        return errorResponse('Failed to fetch products', 500, { message: e.message });
+      }
     }
     // Unify products POST handler under /api/admin/products (moved below)
 
     // Admin: News CRUD
     if (isApi('admin/news') && request.method === 'GET') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
       try {
         const parts = path.split('/');
         const possibleId = parts[parts.length-1];
         if (possibleId && possibleId !== 'news') {
           const { results } = await env.DB.prepare('SELECT * FROM news WHERE news_id = ? OR id = ? OR slug = ?').bind(possibleId, possibleId, possibleId).all();
-          if (!results || !results.length) return json({ error: 'NotFound' }, 404);
+          if (!results || !results.length) return errorResponse('News not found', 404);
           return json(results[0]);
         }
         const limitAdminNews = Math.min(parseInt(url.searchParams.get('limit')||'100',10)||100, 1000);
         const { results } = await env.DB.prepare('SELECT * FROM news ORDER BY created_at DESC LIMIT ?').bind(limitAdminNews).all();
         return json(results || []);
       } catch (e) {
-        return json([]);
+        console.error('News list error:', e);
+        return errorResponse('Failed to fetch news', 500, { message: e.message });
       }
     }
     if (isApi('admin/news') && request.method === 'POST') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-      const data = await bodyJSON(request);
-      const now = new Date().toISOString();
-      const news_id = 'NEWS-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*1000);
-      const fields = ['news_id','title','slug','summary','content','cover_image','category','tags','author','status','seo_title','seo_keywords','seo_description','published_at','created_at','updated_at'];
-      const vals = [
-        news_id, data.title||'', data.slug||null, data.summary||'', data.content||'', data.cover_image||'',
-        data.category||'', JSON.stringify(data.tags||[]), data.author||'', data.status||'draft',
-        data.seo_title||'', data.seo_keywords||'', data.seo_description||'', data.published_at||now, now, now
-      ];
-      const placeholders = fields.map(()=>'?').join(',');
-      await env.DB.prepare(`INSERT INTO news (${fields.join(',')}) VALUES (${placeholders}) ON CONFLICT(slug) DO UPDATE SET title=excluded.title, summary=excluded.summary, content=excluded.content, cover_image=excluded.cover_image, category=excluded.category, tags=excluded.tags, author=excluded.author, status=excluded.status, seo_title=excluded.seo_title, seo_keywords=excluded.seo_keywords, seo_description=excluded.seo_description, published_at=excluded.published_at, updated_at=excluded.updated_at`).bind(...vals).run();
-      return json({ ok: true, news_id });
-    }
-    if (isApi('admin/news') && request.method === 'PATCH') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-      const id = path.split('/').pop();
-      const data = await bodyJSON(request);
-      const fields = ['title','slug','summary','content','cover_image','category','tags','author','status','seo_title','seo_keywords','seo_description','published_at'];
-      const sets = [];
-      const binds = [];
-      for (const f of fields) {
-        if (f in data) {
-          let val = data[f];
-          if (f === 'tags' && typeof val === 'object') val = JSON.stringify(val);
-          sets.push(`${f} = ?`);
-          binds.push(val);
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
+      try {
+        const data = await bodyJSON(request);
+        
+        // Input validation
+        if (!data.title || !data.title.trim()) {
+          return errorResponse('News title is required', 400);
         }
+        
+        const now = new Date().toISOString();
+        const news_id = 'NEWS-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*1000);
+        const fields = ['news_id','title','slug','summary','content','cover_image','category','tags','author','status','seo_title','seo_keywords','seo_description','published_at','created_at','updated_at'];
+        const vals = [
+          news_id, data.title||'', data.slug||null, data.summary||'', data.content||'', data.cover_image||'',
+          data.category||'', JSON.stringify(data.tags||[]), data.author||'', data.status||'draft',
+          data.seo_title||'', data.seo_keywords||'', data.seo_description||'', data.published_at||now, now, now
+        ];
+        const placeholders = fields.map(()=>'?').join(',');
+        await env.DB.prepare(`INSERT INTO news (${fields.join(',')}) VALUES (${placeholders}) ON CONFLICT(slug) DO UPDATE SET title=excluded.title, summary=excluded.summary, content=excluded.content, cover_image=excluded.cover_image, category=excluded.category, tags=excluded.tags, author=excluded.author, status=excluded.status, seo_title=excluded.seo_title, seo_keywords=excluded.seo_keywords, seo_description=excluded.seo_description, published_at=excluded.published_at, updated_at=excluded.updated_at`).bind(...vals).run();
+        return json({ ok: true, news_id });
+      } catch (e) {
+        console.error('News create error:', e);
+        return errorResponse('Failed to create news', 500, { message: e.message });
       }
-      sets.push('updated_at = ?'); binds.push(new Date().toISOString());
-      if (!sets.length) return json({ error: 'NoFields' }, 400);
-      await env.DB.prepare(`UPDATE news SET ${sets.join(', ')} WHERE news_id = ? OR slug = ?`).bind(...binds, id, id).run();
-      return json({ ok: true });
     }
-    if (isApi('admin/news') && request.method === 'DELETE') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+    if ((isApi('admin/news/') && request.method === 'PATCH') || (isApi('admin/news') && request.method === 'PATCH' && path.split('/').pop() !== 'news')) {
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
       const id = path.split('/').pop();
+      if (!id || id === 'news') return errorResponse('Missing news ID', 400);
+      try {
+        const data = await bodyJSON(request);
+        const fields = ['title','slug','summary','content','cover_image','category','tags','author','status','seo_title','seo_keywords','seo_description','published_at'];
+        const sets = [];
+        const binds = [];
+        for (const f of fields) {
+          if (f in data) {
+            let val = data[f];
+            if (f === 'tags' && typeof val === 'object') val = JSON.stringify(val);
+            sets.push(`${f} = ?`);
+            binds.push(val);
+          }
+        }
+        sets.push('updated_at = ?'); binds.push(new Date().toISOString());
+        if (!sets.length) return errorResponse('No fields to update', 400);
+        await env.DB.prepare(`UPDATE news SET ${sets.join(', ')} WHERE news_id = ? OR slug = ?`).bind(...binds, id, id).run();
+        return json({ ok: true });
+      } catch (e) {
+        console.error('News update error:', e);
+        return errorResponse('Failed to update news', 500, { message: e.message });
+      }
+    }
+    if ((isApi('admin/news/') && request.method === 'DELETE') || (isApi('admin/news') && request.method === 'DELETE' && path.split('/').pop() !== 'news')) {
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
+      const id = path.split('/').pop();
+      if (!id || id === 'news') return errorResponse('Missing news ID', 400);
       await env.DB.prepare('DELETE FROM news WHERE news_id = ? OR slug = ?').bind(id, id).run();
       return json({ ok: true });
     }
 
     // Admin: Cases CRUD
     if (isApi('admin/cases') && request.method === 'GET') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
       try {
         const parts = path.split('/');
         const possibleId = parts[parts.length-1];
         if (possibleId && possibleId !== 'cases') {
           const { results } = await env.DB.prepare('SELECT * FROM cases WHERE case_id = ? OR slug = ?').bind(possibleId, possibleId).all();
-          if (!results || !results.length) return json({ error: 'NotFound' }, 404);
+          if (!results || !results.length) return errorResponse('Case not found', 404);
           return json(results[0]);
         }
         const limitAdminCases = Math.min(parseInt(url.searchParams.get('limit')||'100',10)||100, 1000);
         const { results } = await env.DB.prepare('SELECT * FROM cases ORDER BY created_at DESC LIMIT ?').bind(limitAdminCases).all();
         return json(results || []);
       } catch (e) {
-        return json([]);
+        console.error('Cases list error:', e);
+        return errorResponse('Failed to fetch cases', 500, { message: e.message });
       }
     }
     if (isApi('admin/cases') && request.method === 'POST') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-      const data = await bodyJSON(request);
-      const now = new Date().toISOString();
-      const case_id = 'CASE-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*1000);
-      const fields = ['case_id','title','slug','summary','content','cover_image','industry','related_product_id','status','seo_title','seo_keywords','seo_description','published_at','created_at','updated_at'];
-      const vals = [
-        case_id, data.title||'', data.slug||null, data.summary||'', data.content||'', data.cover_image||'',
-        data.industry||'', data.related_product_id||'', data.status||'draft',
-        data.seo_title||'', data.seo_keywords||'', data.seo_description||'', data.published_at||now, now, now
-      ];
-      const placeholders = fields.map(()=>'?').join(',');
-      await env.DB.prepare(`INSERT INTO cases (${fields.join(',')}) VALUES (${placeholders}) ON CONFLICT(slug) DO UPDATE SET title=excluded.title, summary=excluded.summary, content=excluded.content, cover_image=excluded.cover_image, industry=excluded.industry, related_product_id=excluded.related_product_id, status=excluded.status, seo_title=excluded.seo_title, seo_keywords=excluded.seo_keywords, seo_description=excluded.seo_description, published_at=excluded.published_at, updated_at=excluded.updated_at`).bind(...vals).run();
-      return json({ ok: true, case_id });
-    }
-    if (isApi('admin/cases') && request.method === 'PATCH') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-      const id = path.split('/').pop();
-      const data = await bodyJSON(request);
-      const fields = ['title','slug','summary','content','cover_image','industry','related_product_id','status','seo_title','seo_keywords','seo_description','published_at'];
-      const sets = [];
-      const binds = [];
-      for (const f of fields) {
-        if (f in data) {
-          sets.push(`${f} = ?`);
-          binds.push(data[f]);
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
+      try {
+        const data = await bodyJSON(request);
+        
+        // Input validation
+        if (!data.title || !data.title.trim()) {
+          return errorResponse('Case title is required', 400);
         }
+        
+        // Validate related_product_id if provided
+        if (data.related_product_id && data.related_product_id.trim()) {
+          const prodCheck = await env.DB.prepare('SELECT product_id FROM products WHERE product_id = ?').bind(data.related_product_id).first();
+          if (!prodCheck) {
+            return errorResponse('Related product not found', 400, { related_product_id: data.related_product_id });
+          }
+        }
+        
+        const now = new Date().toISOString();
+        const case_id = 'CASE-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*1000);
+        const fields = ['case_id','title','slug','summary','content','cover_image','industry','related_product_id','status','seo_title','seo_keywords','seo_description','published_at','created_at','updated_at'];
+        const vals = [
+          case_id, data.title||'', data.slug||null, data.summary||'', data.content||'', data.cover_image||'',
+          data.industry||'', data.related_product_id||'', data.status||'draft',
+          data.seo_title||'', data.seo_keywords||'', data.seo_description||'', data.published_at||now, now, now
+        ];
+        const placeholders = fields.map(()=>'?').join(',');
+        await env.DB.prepare(`INSERT INTO cases (${fields.join(',')}) VALUES (${placeholders}) ON CONFLICT(slug) DO UPDATE SET title=excluded.title, summary=excluded.summary, content=excluded.content, cover_image=excluded.cover_image, industry=excluded.industry, related_product_id=excluded.related_product_id, status=excluded.status, seo_title=excluded.seo_title, seo_keywords=excluded.seo_keywords, seo_description=excluded.seo_description, published_at=excluded.published_at, updated_at=excluded.updated_at`).bind(...vals).run();
+        return json({ ok: true, case_id });
+      } catch (e) {
+        console.error('Case create error:', e);
+        return errorResponse('Failed to create case', 500, { message: e.message });
       }
-      sets.push('updated_at = ?'); binds.push(new Date().toISOString());
-      if (!sets.length) return json({ error: 'NoFields' }, 400);
-      await env.DB.prepare(`UPDATE cases SET ${sets.join(', ')} WHERE case_id = ? OR slug = ?`).bind(...binds, id, id).run();
-      return json({ ok: true });
     }
-    if (isApi('admin/cases') && request.method === 'DELETE') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+    if ((isApi('admin/cases/') && request.method === 'PATCH') || (isApi('admin/cases') && request.method === 'PATCH' && path.split('/').pop() !== 'cases')) {
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
       const id = path.split('/').pop();
+      if (!id || id === 'cases') return errorResponse('Missing case ID', 400);
+      try {
+        const data = await bodyJSON(request);
+        const fields = ['title','slug','summary','content','cover_image','industry','related_product_id','status','seo_title','seo_keywords','seo_description','published_at'];
+        const sets = [];
+        const binds = [];
+        for (const f of fields) {
+          if (f in data) {
+            sets.push(`${f} = ?`);
+            binds.push(data[f]);
+          }
+        }
+        sets.push('updated_at = ?'); binds.push(new Date().toISOString());
+        if (!sets.length) return errorResponse('No fields to update', 400);
+        
+        // Validate related_product_id if provided
+        if ('related_product_id' in data && data.related_product_id && data.related_product_id.trim()) {
+          const prodCheck = await env.DB.prepare('SELECT product_id FROM products WHERE product_id = ?').bind(data.related_product_id).first();
+          if (!prodCheck) {
+            return errorResponse('Related product not found', 400, { related_product_id: data.related_product_id });
+          }
+        }
+        
+        await env.DB.prepare(`UPDATE cases SET ${sets.join(', ')} WHERE case_id = ? OR slug = ?`).bind(...binds, id, id).run();
+        return json({ ok: true });
+      } catch (e) {
+        console.error('Case update error:', e);
+        return errorResponse('Failed to update case', 500, { message: e.message });
+      }
+    }
+    if ((isApi('admin/cases/') && request.method === 'DELETE') || (isApi('admin/cases') && request.method === 'DELETE' && path.split('/').pop() !== 'cases')) {
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
+      const id = path.split('/').pop();
+      if (!id || id === 'cases') return errorResponse('Missing case ID', 400);
       await env.DB.prepare('DELETE FROM cases WHERE case_id = ? OR slug = ?').bind(id, id).run();
       return json({ ok: true });
     }
@@ -3464,7 +4435,7 @@ export default {
     }
 
     if (isApi('admin/assets') && request.method === 'POST') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
       const data = await bodyJSON(request);
       const now = new Date().toISOString();
       const asset_id = 'AST-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*10000);
@@ -3508,23 +4479,31 @@ export default {
             public_url = `/api/assets/${encodeURIComponent(r2_key)}`;
           }
         }
-      } catch {}
+      } catch (e) {
+        console.error('Asset upload error:', e);
+        // Continue with placeholder if R2 upload fails
+      }
       if (!public_url) {
         public_url = `https://via.placeholder.com/150?text=${encodeURIComponent(data.filename||'Asset')}`;
       }
-      await env.DB.prepare(`INSERT INTO assets (
-        asset_id, filename, r2_key, public_url, file_type, file_size, alt_text, uploaded_by, created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
-        asset_id, data.filename || 'unknown', r2_key, public_url,
-        file_type, file_size, data.alt_text || '', 'admin', now
-      ).run();
-      return json({ ok: true, asset: { asset_id, public_url, filename: data.filename } });
+      try {
+        await env.DB.prepare(`INSERT INTO assets (
+          asset_id, filename, r2_key, public_url, file_type, file_size, alt_text, uploaded_by, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+          asset_id, data.filename || 'unknown', r2_key, public_url,
+          file_type, file_size, data.alt_text || '', 'admin', now
+        ).run();
+        return json({ ok: true, asset: { asset_id, public_url, filename: data.filename } });
+      } catch (e) {
+        console.error('Asset save error:', e);
+        return errorResponse('Failed to save asset record', 500, { message: e.message });
+      }
     }
     
     if (isApi('admin/assets') && request.method === 'PUT') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
       const key = url.searchParams.get('key') || '';
-      if (!key) return json({ error: 'MissingKey' }, 400);
+      if (!key) return errorResponse('Missing key parameter', 400);
       const ct = request.headers.get('content-type') || 'application/octet-stream';
       let ok = false;
       let size = 0;
@@ -3536,7 +4515,7 @@ export default {
           ok = true;
         }
       } catch {}
-      if (!ok) return json({ error: 'UploadFailed' }, 500);
+      if (!ok) return errorResponse('Upload failed. R2 storage may not be configured.', 500);
       const now = new Date().toISOString();
       const asset_id = 'AST-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*10000);
       const public_url = `/api/assets/${encodeURIComponent(key)}`;
@@ -3548,16 +4527,29 @@ export default {
       return json({ ok: true, key, public_url });
     }
     if (isApi('admin/assets') && request.method === 'DELETE') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-      const key = url.searchParams.get('key');
-      if (key) {
-        try { if (env.VISPIC && typeof env.VISPIC.delete === 'function') await env.VISPIC.delete(key); } catch {}
-        try { await env.DB.prepare('DELETE FROM assets WHERE r2_key = ?').bind(key).run(); } catch {}
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
+      try {
+        const key = url.searchParams.get('key');
+        if (key) {
+          try { if (env.VISPIC && typeof env.VISPIC.delete === 'function') await env.VISPIC.delete(key); } catch (e) {
+            console.warn('R2 delete failed:', e);
+          }
+          try { await env.DB.prepare('DELETE FROM assets WHERE r2_key = ?').bind(key).run(); } catch (e) {
+            console.warn('Asset DB delete failed:', e);
+          }
+          return json({ ok: true });
+        }
+        const id = path.split('/').pop();
+        if (!id) return errorResponse('Missing asset ID or key', 400);
+        try { await env.DB.prepare('DELETE FROM assets WHERE asset_id = ?').bind(id).run(); } catch (e) {
+          console.error('Asset delete error:', e);
+          return errorResponse('Failed to delete asset', 500, { message: e.message });
+        }
         return json({ ok: true });
+      } catch (e) {
+        console.error('Asset delete error:', e);
+        return errorResponse('Failed to delete asset', 500, { message: e.message });
       }
-      const id = path.split('/').pop();
-      try { await env.DB.prepare('DELETE FROM assets WHERE asset_id = ?').bind(id).run(); } catch {}
-      return json({ ok: true });
     }
     if (isApi('assets/') && request.method === 'GET') {
       const k = decodeURIComponent(path.replace('/api/assets/',''));
@@ -3576,30 +4568,44 @@ export default {
 
     // Admin: Products Create
     if (isApi('admin/products') && request.method === 'POST') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-      const data = await bodyJSON(request);
-      const now = new Date().toISOString();
-      const product_id = data.ProductID || data.product_id || ('PROD-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*10000));
-      const supplier_id = data.SupplierID || data.supplier_id || '';
-      const name = data.Name || data.name || '';
-      const slug = data.Slug || data.slug || null;
-      const model = data.Model || data.model || '';
-      const series = data.Series || data.series || '';
-      const primary_category = data.PrimaryCategory || data.primary_category || '';
-      const secondary_category = data.SecondaryCategory || data.secondary_category || '';
-      const summary = data.Summary || data.summary || '';
-      const description = data.Description || data.description || '';
-      const parameters_json = JSON.stringify(data.Parameters || data.parameters_json || {});
-      const cover_image = data.CoverImage || data.cover_image || '';
-      const gallery_json = JSON.stringify(data.Gallery || data.gallery_json || []);
-      const documents_json = JSON.stringify(data.Documents || data.documents_json || []);
-      const seo_title = data.SeoTitle || data.seo_title || '';
-      const seo_keywords = data.SeoKeywords || data.seo_keywords || '';
-      const seo_description = data.SeoDescription || data.seo_description || '';
-      const status = (data.Status || data.status || 'active');
-      const is_featured = (data.IsFeatured || data.is_featured) ? 1 : 0;
-
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
       try {
+        const data = await bodyJSON(request);
+        
+        // Input validation
+        if (!data.name && !data.Name) {
+          return errorResponse('Product name is required', 400);
+        }
+        if (data.supplier_id || data.SupplierID) {
+          // Validate supplier exists
+          const sid = data.supplier_id || data.SupplierID;
+          const supCheck = await env.DB.prepare('SELECT supplier_id FROM suppliers WHERE supplier_id = ?').bind(sid).first();
+          if (!supCheck) {
+            return errorResponse('Supplier not found', 400, { supplier_id: sid });
+          }
+        }
+        
+        const now = new Date().toISOString();
+        const product_id = data.ProductID || data.product_id || ('PROD-' + now.replace(/[-:T.Z]/g,'') + '-' + Math.floor(Math.random()*10000));
+        const supplier_id = data.SupplierID || data.supplier_id || '';
+        const name = data.Name || data.name || '';
+        const slug = data.Slug || data.slug || null;
+        const model = data.Model || data.model || '';
+        const series = data.Series || data.series || '';
+        const primary_category = data.PrimaryCategory || data.primary_category || '';
+        const secondary_category = data.SecondaryCategory || data.secondary_category || '';
+        const summary = data.Summary || data.summary || '';
+        const description = data.Description || data.description || '';
+        const parameters_json = JSON.stringify(data.Parameters || data.parameters_json || {});
+        const cover_image = data.CoverImage || data.cover_image || '';
+        const gallery_json = JSON.stringify(data.Gallery || data.gallery_json || []);
+        const documents_json = JSON.stringify(data.Documents || data.documents_json || []);
+        const seo_title = data.SeoTitle || data.seo_title || '';
+        const seo_keywords = data.SeoKeywords || data.seo_keywords || '';
+        const seo_description = data.SeoDescription || data.seo_description || '';
+        const status = (data.Status || data.status || 'active');
+        const is_featured = (data.IsFeatured || data.is_featured) ? 1 : 0;
+
         const fields = 'product_id, supplier_id, name, slug, model, series, primary_category, secondary_category, summary, description, parameters_json, cover_image, gallery_json, documents_json, seo_title, seo_keywords, seo_description, status, is_featured, created_at, updated_at';
         const vals = [product_id, supplier_id, name, slug, model, series, primary_category, secondary_category, summary, description, parameters_json, cover_image, gallery_json, documents_json, seo_title, seo_keywords, seo_description, status, is_featured, now, now];
         if (slug) {
@@ -3609,7 +4615,8 @@ export default {
         }
         return json({ ok: true, product_id });
       } catch (e) {
-        return json({ error: 'CreateFailed', detail: e.message }, 500);
+        console.error('Product create error:', e);
+        return errorResponse('Failed to create product', 500, { message: e.message });
       }
     }
 
@@ -3617,30 +4624,41 @@ export default {
 
     // Admin: Product Search (for association)
     if (isApi('admin/products/search') && request.method === 'GET') {
-       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-       const q = (url.searchParams.get('q') || '').trim();
-       if (!q) return json([]);
-       const like = `%${q}%`;
-       const { results } = await env.DB.prepare('SELECT product_id, name, model FROM products WHERE name LIKE ? OR model LIKE ? LIMIT 20').bind(like, like).all();
-       return json(results || []);
+       if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
+       try {
+         const q = (url.searchParams.get('q') || '').trim();
+         if (!q) return json([]);
+         const like = `%${q}%`;
+         const { results } = await env.DB.prepare('SELECT product_id, name, model FROM products WHERE name LIKE ? OR model LIKE ? LIMIT 20').bind(like, like).all();
+         return json(results || []);
+       } catch (e) {
+         console.error('Product search error:', e);
+         return errorResponse('Product search failed', 500, { message: e.message });
+       }
     }
 
     // Admin: Supplier Search
     if (isApi('admin/suppliers/search') && request.method === 'GET') {
-       if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
-       const q = (url.searchParams.get('q') || '').trim();
-       if (!q) return json([]);
-       const like = `%${q}%`;
-       const { results } = await env.DB.prepare('SELECT supplier_id, company, name FROM suppliers WHERE company LIKE ? OR name LIKE ? LIMIT 20').bind(like, like).all();
-       return json(results || []);
+       if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
+       try {
+         const q = (url.searchParams.get('q') || '').trim();
+         if (!q) return json([]);
+         const like = `%${q}%`;
+         const { results } = await env.DB.prepare('SELECT supplier_id, company, name FROM suppliers WHERE company LIKE ? OR name LIKE ? LIMIT 20').bind(like, like).all();
+         return json(results || []);
+       } catch (e) {
+         console.error('Supplier search error:', e);
+         return errorResponse('Supplier search failed', 500, { message: e.message });
+       }
     }
 
     // Admin: Products Update/Delete
-    if (isApi('admin/products') && request.method === 'PATCH') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+    if ((isApi('admin/products/') && request.method === 'PATCH') || (isApi('admin/products') && request.method === 'PATCH' && path.split('/').pop() !== 'products' && path.split('/').pop() !== 'search')) {
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
       const id = path.split('/').pop();
+      if (!id || id === 'products' || id === 'search') return errorResponse('Missing product ID', 400);
       const data = await bodyJSON(request);
-      const fields = ['name','slug','model','series','primary_category','secondary_category','summary','description','parameters_json','cover_image','gallery_json','documents_json','seo_title','seo_keywords','seo_description','status','is_featured'];
+      const fields = ['name','slug','model','series','primary_category','secondary_category','summary','description','parameters_json','cover_image','gallery_json','documents_json','seo_title','seo_keywords','seo_description','status','is_featured','supplier_id'];
       const sets = [];
       const binds = [];
       for (const f of fields) {
@@ -3652,15 +4670,25 @@ export default {
         }
       }
       sets.push('updated_at = ?'); binds.push(new Date().toISOString());
-      if (!sets.length) return json({ error: 'NoFields' }, 400);
+      if (!sets.length) return errorResponse('No fields to update', 400);
+      
+      // Validate supplier_id if provided
+      if ('supplier_id' in data && data.supplier_id) {
+        const supCheck = await env.DB.prepare('SELECT supplier_id FROM suppliers WHERE supplier_id = ?').bind(data.supplier_id).first();
+        if (!supCheck) {
+          return errorResponse('Supplier not found', 400, { supplier_id: data.supplier_id });
+        }
+      }
+      
       const stmt = env.DB.prepare(`UPDATE products SET ${sets.join(', ')} WHERE product_id = ? OR slug = ?`).bind(...binds, id, id);
       await stmt.run();
       return json({ ok: true });
     }
 
-    if (isApi('admin/products') && request.method === 'DELETE') {
-      if (!requireAdmin(request)) return json({ error: 'Unauthorized' }, 401);
+    if ((isApi('admin/products/') && request.method === 'DELETE') || (isApi('admin/products') && request.method === 'DELETE' && path.split('/').pop() !== 'products')) {
+      if (!requireAdmin(request)) return errorResponse('Unauthorized', 401);
       const id = path.split('/').pop();
+      if (!id || id === 'products') return errorResponse('Missing product ID', 400);
       await env.DB.prepare('DELETE FROM products WHERE product_id = ? OR slug = ?').bind(id, id).run();
       return json({ ok: true });
     }
