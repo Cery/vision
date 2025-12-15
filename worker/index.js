@@ -103,6 +103,10 @@ export default {
         return cors(await handlePatchRequirement(request, env));
     }
 
+    if ((url.pathname.match(/^\/api\/admin\/requirements\/.+/) || url.pathname.match(/^\/api\/admin\/markets\/.+/)) && request.method === 'DELETE') {
+        return cors(await handleDeleteRequirement(request, env));
+    }
+
     // 11. Quotes (Simple KV)
     if (url.pathname === '/api/quotes' && request.method === 'GET') {
         return cors(await handleGetQuotes(request, env));
@@ -132,8 +136,36 @@ export default {
       return cors(await handleGetNews(request, env));
     }
 
+    if (url.pathname === '/api/admin/news' && request.method === 'POST') {
+      return cors(await handlePostNews(request, env));
+    }
+
+    if (request.method === 'GET' && url.pathname.match(/^\/api\/admin\/news\/[^\/]+$/)) {
+      return cors(await handleGetNewsById(request, env));
+    }
+    if (request.method === 'PATCH' && url.pathname.match(/^\/api\/admin\/news\/[^\/]+$/)) {
+      return cors(await handlePatchNews(request, env));
+    }
+    if (request.method === 'DELETE' && url.pathname.match(/^\/api\/admin\/news\/[^\/]+$/)) {
+      return cors(await handleDeleteNews(request, env));
+    }
+
     if (url.pathname === '/api/admin/cases' && request.method === 'GET') {
       return cors(await handleGetCases(request, env));
+    }
+
+    if (url.pathname === '/api/admin/cases' && request.method === 'POST') {
+      return cors(await handlePostCase(request, env));
+    }
+
+    if (request.method === 'GET' && url.pathname.match(/^\/api\/admin\/cases\/[^\/]+$/)) {
+      return cors(await handleGetCaseById(request, env));
+    }
+    if (request.method === 'PATCH' && url.pathname.match(/^\/api\/admin\/cases\/[^\/]+$/)) {
+      return cors(await handlePatchCase(request, env));
+    }
+    if (request.method === 'DELETE' && url.pathname.match(/^\/api\/admin\/cases\/[^\/]+$/)) {
+      return cors(await handleDeleteCase(request, env));
     }
 
     if (url.pathname === '/api/admin/import-products' && request.method === 'POST') {
@@ -289,7 +321,7 @@ async function handlePatchRequirement(req, env) {
     const body = await req.json();
 
     let list = (await env.VISION_KV.get('requirements', { type: 'json' })) || [];
-    const idx = list.findIndex(r => r.RequirementID === id);
+    const idx = list.findIndex(r => (r.RequirementID || r.ReqID || r.requirement_id || r.id) === id);
     
     if (idx >= 0) {
         list[idx] = { ...list[idx], ...body };
@@ -297,6 +329,16 @@ async function handlePatchRequirement(req, env) {
         return new Response(JSON.stringify({ ok: true }), { headers: { 'Content-Type': 'application/json' } });
     }
     return new Response(JSON.stringify({ error: 'Not Found' }), { status: 404 });
+}
+
+async function handleDeleteRequirement(req, env) {
+  const u = new URL(req.url);
+  const id = u.pathname.split('/').pop();
+  let list = (await env.VISION_KV.get('requirements', { type: 'json' })) || [];
+  const before = Array.isArray(list) ? list.length : 0;
+  list = (Array.isArray(list) ? list : []).filter(r => (r.RequirementID || r.ReqID || r.requirement_id || r.id) !== id);
+  await env.VISION_KV.put('requirements', JSON.stringify(list));
+  return new Response(JSON.stringify({ ok: true, deleted: before - list.length }), { headers: { 'Content-Type': 'application/json' } });
 }
 
 async function handleAdminDemanders(req, env) {
@@ -600,7 +642,7 @@ async function handleGetRequirementById(req, env) {
   const u = new URL(req.url);
   const id = u.pathname.split('/').pop();
   const list = (await env.VISION_KV.get('requirements', { type: 'json' })) || [];
-  const r = list.find(x => x.RequirementID === id || x.id === id);
+  const r = list.find(x => (x.RequirementID || x.ReqID || x.requirement_id || x.id) === id);
   if (!r) return new Response(JSON.stringify({ error: 'Not Found' }), { status: 404 });
   return new Response(JSON.stringify(r), { headers: { 'Content-Type': 'application/json' } });
 }
@@ -681,12 +723,138 @@ async function handleGetNews(req, env) {
   return new Response(JSON.stringify(Array.isArray(list) ? list : []), { headers: { 'Content-Type': 'application/json' } });
 }
 
+async function handleGetNewsById(req, env) {
+  const u = new URL(req.url);
+  const id = u.pathname.split('/').pop();
+  let list = (await env.VISION_KV.get('news', { type: 'json' })) || [];
+  if (typeof list === 'string') {
+    try { list = JSON.parse(list); } catch {}
+  }
+  const item = (Array.isArray(list) ? list : []).find(n => (n.news_id || n.id) === id);
+  if (!item) return new Response(JSON.stringify({ error: 'Not Found' }), { status: 404 });
+  return new Response(JSON.stringify(item), { headers: { 'Content-Type': 'application/json' } });
+}
+
+async function handlePostNews(req, env) {
+  const body = await req.json();
+  let list = (await env.VISION_KV.get('news', { type: 'json' })) || [];
+  if (typeof list === 'string') {
+    try { list = JSON.parse(list); } catch { list = []; }
+  }
+  const now = new Date().toISOString();
+  const slug = body.slug || (body.title ? String(body.title).trim().toLowerCase().replace(/\s+/g, '-') : '') || ('news-' + Date.now());
+  const id = body.news_id || ('NEWS-' + slug);
+  const rec = {
+    ...body,
+    news_id: id,
+    slug,
+    title: body.title || '',
+    detail_path: body.detail_path || ('/news/' + slug + '/'),
+    published_at: body.published_at || now,
+    status: body.status || 'published'
+  };
+  list.push(rec);
+  await env.VISION_KV.put('news', JSON.stringify(list));
+  return new Response(JSON.stringify({ ok: true, news_id: id }), { headers: { 'Content-Type': 'application/json' } });
+}
+
+async function handlePatchNews(req, env) {
+  const u = new URL(req.url);
+  const id = u.pathname.split('/').pop();
+  const body = await req.json();
+  let list = (await env.VISION_KV.get('news', { type: 'json' })) || [];
+  if (typeof list === 'string') {
+    try { list = JSON.parse(list); } catch { list = []; }
+  }
+  const idx = (Array.isArray(list) ? list : []).findIndex(n => (n.news_id || n.id) === id);
+  if (idx < 0) return new Response(JSON.stringify({ error: 'Not Found' }), { status: 404 });
+  list[idx] = { ...list[idx], ...body, news_id: list[idx].news_id || id };
+  await env.VISION_KV.put('news', JSON.stringify(list));
+  return new Response(JSON.stringify({ ok: true }), { headers: { 'Content-Type': 'application/json' } });
+}
+
+async function handleDeleteNews(req, env) {
+  const u = new URL(req.url);
+  const id = u.pathname.split('/').pop();
+  let list = (await env.VISION_KV.get('news', { type: 'json' })) || [];
+  if (typeof list === 'string') {
+    try { list = JSON.parse(list); } catch { list = []; }
+  }
+  const before = Array.isArray(list) ? list.length : 0;
+  list = (Array.isArray(list) ? list : []).filter(n => (n.news_id || n.id) !== id);
+  await env.VISION_KV.put('news', JSON.stringify(list));
+  return new Response(JSON.stringify({ ok: true, deleted: before - list.length }), { headers: { 'Content-Type': 'application/json' } });
+}
+
 async function handleGetCases(req, env) {
   let list = (await env.VISION_KV.get('cases', { type: 'json' })) || [];
   if (typeof list === 'string') {
     try { list = JSON.parse(list); } catch {}
   }
   return new Response(JSON.stringify(Array.isArray(list) ? list : []), { headers: { 'Content-Type': 'application/json' } });
+}
+
+async function handleGetCaseById(req, env) {
+  const u = new URL(req.url);
+  const id = u.pathname.split('/').pop();
+  let list = (await env.VISION_KV.get('cases', { type: 'json' })) || [];
+  if (typeof list === 'string') {
+    try { list = JSON.parse(list); } catch {}
+  }
+  const item = (Array.isArray(list) ? list : []).find(c => (c.case_id || c.id) === id);
+  if (!item) return new Response(JSON.stringify({ error: 'Not Found' }), { status: 404 });
+  return new Response(JSON.stringify(item), { headers: { 'Content-Type': 'application/json' } });
+}
+
+async function handlePostCase(req, env) {
+  const body = await req.json();
+  let list = (await env.VISION_KV.get('cases', { type: 'json' })) || [];
+  if (typeof list === 'string') {
+    try { list = JSON.parse(list); } catch { list = []; }
+  }
+  const now = new Date().toISOString();
+  const slug = body.slug || (body.title ? String(body.title).trim().toLowerCase().replace(/\s+/g, '-') : '') || ('case-' + Date.now());
+  const id = body.case_id || ('CASE-' + slug);
+  const rec = {
+    ...body,
+    case_id: id,
+    slug,
+    title: body.title || '',
+    detail_path: body.detail_path || ('/cases/' + slug + '/'),
+    published_at: body.published_at || now,
+    status: body.status || 'published'
+  };
+  list.push(rec);
+  await env.VISION_KV.put('cases', JSON.stringify(list));
+  return new Response(JSON.stringify({ ok: true, case_id: id }), { headers: { 'Content-Type': 'application/json' } });
+}
+
+async function handlePatchCase(req, env) {
+  const u = new URL(req.url);
+  const id = u.pathname.split('/').pop();
+  const body = await req.json();
+  let list = (await env.VISION_KV.get('cases', { type: 'json' })) || [];
+  if (typeof list === 'string') {
+    try { list = JSON.parse(list); } catch { list = []; }
+  }
+  const idx = (Array.isArray(list) ? list : []).findIndex(c => (c.case_id || c.id) === id);
+  if (idx < 0) return new Response(JSON.stringify({ error: 'Not Found' }), { status: 404 });
+  list[idx] = { ...list[idx], ...body, case_id: list[idx].case_id || id };
+  await env.VISION_KV.put('cases', JSON.stringify(list));
+  return new Response(JSON.stringify({ ok: true }), { headers: { 'Content-Type': 'application/json' } });
+}
+
+async function handleDeleteCase(req, env) {
+  const u = new URL(req.url);
+  const id = u.pathname.split('/').pop();
+  let list = (await env.VISION_KV.get('cases', { type: 'json' })) || [];
+  if (typeof list === 'string') {
+    try { list = JSON.parse(list); } catch { list = []; }
+  }
+  const before = Array.isArray(list) ? list.length : 0;
+  list = (Array.isArray(list) ? list : []).filter(c => (c.case_id || c.id) !== id);
+  await env.VISION_KV.put('cases', JSON.stringify(list));
+  return new Response(JSON.stringify({ ok: true, deleted: before - list.length }), { headers: { 'Content-Type': 'application/json' } });
 }
 
 async function handleImportContent(req, env, type) {
@@ -714,9 +882,18 @@ async function handleImportContent(req, env, type) {
       }
       if (!all.length) return new Response(JSON.stringify({ error: 'IndexFetchFailed', status: 404 }), { status: 502 });
     } else {
-      let resp = await fetch(idxPrimary);
-      if (!resp.ok) resp = await fetch(idxAlt);
-      if (!resp.ok) return new Response(JSON.stringify({ error: 'IndexFetchFailed', status: resp.status }), { status: 502 });
+      const candidates = [
+        idxPrimary,
+        idxAlt,
+        b + '/search-index.json',
+        bAlt + '/search-index.json'
+      ];
+      let resp = null;
+      for (const cand of candidates) {
+        resp = await fetch(cand);
+        if (resp && resp.ok) break;
+      }
+      if (!resp || !resp.ok) return new Response(JSON.stringify({ error: 'IndexFetchFailed', status: resp ? resp.status : 0 }), { status: 502 });
       const data = await resp.json();
       all = Array.isArray(data.items) ? data.items : (Array.isArray(data) ? data : []);
     }
@@ -832,18 +1009,29 @@ async function handleImportContent(req, env, type) {
       for (const it of items) {
         const uri = String(it.uri||'');
         const slug = (it.params?.slug || it.slug || uri.replace(/\/$/, '').split('/').pop());
-        const idx = list.findIndex(r => (r.slug||'') === slug);
-        const approved = Number(it.params?.approved || 0);
-        const status = approved === 1 ? '在线报价' : '草稿';
+        const idx = list.findIndex(r => (r.slug||'') === slug || (r.RequirementID || r.ReqID || r.id) === (it.params?.RequirementID || it.params?.requirement_id));
+        const approved = Number(it.params?.approved ?? it.params?.Approved ?? 1);
+        const rawStatus = String(it.params?.Status || it.params?.status || '').trim();
+        const status = rawStatus || (approved === 1 ? '公开' : '待审核');
         const rec = {
-          ReqID: slug ? 'REQ-' + slug : 'REQ-' + Date.now(),
+          RequirementID: String(it.params?.RequirementID || it.params?.requirement_id || (slug ? 'REQ-' + slug : 'REQ-' + Date.now())),
           Title: it.title || '',
           slug: slug,
           Approved: approved,
           Status: status,
-          DemanderName: it.params?.demander_name || it.params?.company || '',
-          DemanderContact: it.params?.contact || '',
-          CreatedAt: it.date || new Date().toISOString()
+          Progress: it.params?.Progress || it.params?.progress || (approved === 1 ? '发布中' : '待发布'),
+          PrimaryCategory: it.params?.PrimaryCategory || it.params?.primary_category || it.params?.product_type || '',
+          BudgetRange: it.params?.BudgetRange || it.params?.budget || '',
+          ContactCompany: it.params?.ContactCompany || it.params?.contact_company || it.params?.company_name || it.params?.company || '',
+          ContactName: it.params?.ContactName || it.params?.contact_name || '',
+          ContactPhone: it.params?.ContactPhone || it.params?.contact_phone || '',
+          ContactEmail: it.params?.ContactEmail || it.params?.contact_email || '',
+          PublicPreview: it.params?.PublicPreview || it.params?.public_preview || it.summary || '',
+          Description: it.params?.Description || it.params?.description || it.content || '',
+          AllowOpenQuotes: (typeof it.params?.AllowOpenQuotes !== 'undefined') ? it.params.AllowOpenQuotes : (it.params?.allow_open_quotes ?? (status === '在线报价')),
+          ContactPublic: (typeof it.params?.ContactPublic !== 'undefined') ? it.params.ContactPublic : (it.params?.contact_public ?? false),
+          PublishedAt: it.params?.PublishedAt || it.params?.published_at || it.date || new Date().toISOString(),
+          CreatedAt: it.params?.CreatedAt || it.params?.created_at || it.date || new Date().toISOString()
         };
         if (idx >= 0) list[idx] = { ...list[idx], ...rec }; else list.push(rec);
       }

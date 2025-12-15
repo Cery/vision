@@ -104,6 +104,16 @@
   to = "/admin/index.html"
   status = 200
 
+[[redirects]]
+  from = "/cases"
+  to = "/cases/"
+  status = 301
+
+[[redirects]]
+  from = "/news"
+  to = "/news/"
+  status = 301
+
 # 移除有问题的.netlify路径重定向
 # [[redirects]]
 #   from = "/.netlify/git/github"

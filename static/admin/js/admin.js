@@ -42,12 +42,22 @@
   try { window.ADMIN_KEY = localStorage.getItem('ADMIN_KEY') || '@Aa123456'; } catch {}
 })();
 
+function isJwtToken(value) {
+  if (!value) return false;
+  const v = String(value).trim();
+  return /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(v);
+}
+
 async function apiFetch(path, options = {}) {
   const url = (window.API_BASE || '') + path;
-  const headers = { 
-    'Content-Type': 'application/json',
-    'X-Admin-Key': window.ADMIN_KEY
-  };
+  const headers = { 'Content-Type': 'application/json' };
+  if (window.ADMIN_KEY) {
+    if (isJwtToken(window.ADMIN_KEY)) {
+      headers['Authorization'] = `Bearer ${window.ADMIN_KEY}`;
+    } else {
+      headers['X-Admin-Key'] = window.ADMIN_KEY;
+    }
+  }
   if (options.headers) Object.assign(headers, options.headers);
   
   try {
@@ -58,7 +68,7 @@ async function apiFetch(path, options = {}) {
       let msg = txt;
       try { msg = JSON.parse(txt).error || txt; } catch {}
       if (ctErr.includes('text/html')) msg = '站点返回了 HTML 页面，可能 API 地址不正确';
-      if (res.status === 401) msg += ' (请在设置中检查 Admin Key)';
+      if (res.status === 401) msg += ' (请在设置中检查 Admin Key 或重新登录)';
       // 当本地函数端口不可用或返回404/5xx时，自动回退到线上API
       const isLocalBase = /^(http:\/\/)?(localhost|127\.0\.0\.1)(:\d+)?$/i.test(String(window.API_BASE||''));
       if (isLocalBase) {

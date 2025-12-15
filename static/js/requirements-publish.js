@@ -16,7 +16,7 @@ class RequirementCenter {
         // 检测是否有本地服务运行
         const hostname = window.location.hostname;
         if (hostname === 'localhost' || hostname === '127.0.0.1') {
-            return 'http://localhost:3002'; // content-server.js
+            return 'http://127.0.0.1:8787/api'; // wrangler dev
         }
         return '/api'; // 生产环境API
     }

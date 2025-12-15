@@ -27,13 +27,13 @@ paginate = 12
     weight = 10
   [[menu.main]]
     name = "产品中心"
-    url = "/products"
+    url = "/products/"
     weight = 20
 
     # 产品中心子菜单（按供应商分类）
     [[menu.main]]
       name = "天津维森科技"
-      url = "/products/vis"
+      url = "/products/vis/"
       parent = "产品中心"
       weight = 21
     [[menu.main]]
@@ -49,7 +49,7 @@ paginate = 12
 
   [[menu.main]]
     name = "资讯中心"
-    url = "/news"
+    url = "/news/"
     weight = 50
 
     # 资讯中心子菜单
@@ -70,7 +70,7 @@ paginate = 12
       weight = 53
   [[menu.main]]
     name = "需求市场"
-    url = "/markets"
+    url = "/markets/"
     weight = 60
 
     # 需求市场子菜单
@@ -96,7 +96,7 @@ paginate = 12
       weight = 64
   [[menu.main]]
     name = "商务合作"
-    url = "/cooperation"
+    url = "/cooperation/"
     weight = 70
 
 # SEO配置
